@@ -1,7 +1,7 @@
 import { computed, effect, peek, tick, type ReadSignal, type WriteSignal } from 'maverick.js';
-import { isArray, isString } from 'maverick.js/std';
+import { isArray, isString, noop } from 'maverick.js/std';
 
-import { preconnect } from '../../../utils/network';
+import { getRequestCredentials, preconnect } from '../../../utils/network';
 import type { MediaContext } from '../api/context';
 import type { PlayerProps } from '../api/player-props';
 import type { MediaSrc } from '../api/types';
@@ -9,6 +9,8 @@ import { AudioProviderLoader } from '../providers/audio/loader';
 import { HLSProviderLoader } from '../providers/hls/loader';
 import type { MediaProviderLoader } from '../providers/types';
 import { VideoProviderLoader } from '../providers/video/loader';
+
+let warned = __DEV__ ? new Set<any>() : undefined;
 
 export class SourceSelection {
   private _loaders: ReadSignal<MediaProviderLoader[]>;
@@ -59,8 +61,54 @@ export class SourceSelection {
 
     // Read sources off store here because it's normalized above.
     const sources = $store.sources(),
-      currentSource = peek($store.source);
+      currentSource = peek($store.source),
+      newSource = this._findNewSource(currentSource, sources),
+      noMatch = sources[0]?.src && !newSource.src && !newSource.type;
 
+    if (__DEV__ && noMatch && !warned!.has(newSource.src) && !peek(this._loader)) {
+      const source = sources[0];
+      console.warn(
+        '[vidstack] could not find a loader for any of the given media sources,' +
+          ' consider providing `type`:' +
+          `\n\n<media-outlet>\n  <source src="${source.src}" type="video/mp4" />\n</media-outlet>"` +
+          '\n\nFalling back to fetching source headers...',
+      );
+      warned!.add(newSource.src);
+    }
+
+    if (noMatch) {
+      const { crossorigin } = $store,
+        credentials = getRequestCredentials(crossorigin()),
+        abort = new AbortController();
+
+      Promise.all(
+        sources.map((source) =>
+          isString(source.src) && source.type === '?'
+            ? fetch(source.src, {
+                method: 'HEAD',
+                credentials,
+                signal: abort.signal,
+              })
+                .then((res) => {
+                  source.type = res.headers.get('content-type') || '??';
+                  return source;
+                })
+                .catch(() => source)
+            : source,
+        ),
+      ).then((sources) => {
+        if (abort.signal.aborted) return;
+        this._findNewSource(peek($store.source), sources);
+        tick();
+      });
+
+      return () => abort.abort();
+    }
+
+    tick();
+  }
+
+  protected _findNewSource(currentSource: MediaSrc, sources: MediaSrc[]) {
     let newSource: MediaSrc = { src: '', type: '' },
       newLoader: MediaProviderLoader | null = null;
 
@@ -72,21 +120,33 @@ export class SourceSelection {
       }
     }
 
-    if (newSource.src !== currentSource.src || newSource.type !== currentSource.type) {
-      this._media.delegate._dispatch('source-change', { detail: newSource });
-      this._media.delegate._dispatch('media-type-change', {
-        detail: newLoader?.mediaType(newSource) || 'unknown',
-      });
-    }
+    this._notifySourceChange(currentSource, newSource, newLoader);
+    this._notifyLoaderChange(peek(this._loader), newLoader);
 
-    if (newLoader !== peek(this._loader)) {
-      this._media.delegate._dispatch('provider-change', { detail: null });
-      newLoader && peek(() => newLoader!.preconnect?.(this._media));
-      this._loader.set(newLoader);
-      this._media.delegate._dispatch('provider-loader-change', { detail: newLoader });
-    }
+    return newSource;
+  }
 
-    tick();
+  protected _notifySourceChange(
+    currentSource: MediaSrc,
+    newSource: MediaSrc,
+    newLoader: MediaProviderLoader | null,
+  ) {
+    if (newSource.src === currentSource.src && newSource.type === currentSource.type) return;
+    this._media.delegate._dispatch('source-change', { detail: newSource });
+    this._media.delegate._dispatch('media-type-change', {
+      detail: newLoader?.mediaType(newSource) || 'unknown',
+    });
+  }
+
+  protected _notifyLoaderChange(
+    currentLoader: MediaProviderLoader | null,
+    newLoader: MediaProviderLoader | null,
+  ) {
+    if (newLoader === currentLoader) return;
+    this._media.delegate._dispatch('provider-change', { detail: null });
+    newLoader && peek(() => newLoader!.preconnect?.(this._media));
+    this._loader.set(newLoader);
+    this._media.delegate._dispatch('provider-loader-change', { detail: newLoader });
   }
 
   private _onPreconnect() {

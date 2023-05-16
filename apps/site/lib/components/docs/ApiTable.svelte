@@ -122,7 +122,7 @@
                       {#each info as [title, value]}
                         <div class="mt-2">
                           <span class="text-sm font-medium block">{title}</span>
-                          <code class="inline-block text-xs mt-2 py-0 whitespace-pre-wrap">
+                          <code class="inline-block text-xs mt-2 py-0.5 whitespace-pre-wrap">
                             {value}
                           </code>
                         </div>
