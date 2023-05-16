@@ -1,3 +1,18 @@
+## [0.5.4](https://github.com/vidstack/player/compare/v0.5.3...v0.5.4) (2023-05-16)
+
+### Bug Fixes
+
+- observe source/track attr changes ([242dd1b](https://github.com/vidstack/player/commit/242dd1bd1b85d10d7d9265b824891c82d9b7c668))
+- **react:** menu hydration issues ([0ee019f](https://github.com/vidstack/player/commit/0ee019f7b08325b340e97734c0e6dfae8d05521b))
+- **react:** return array copy from store hooks ([84132b2](https://github.com/vidstack/player/commit/84132b26c0f182fcff343d2461b2dc6385ef3b37))
+- **react:** tooltip attach error ([b665c4b](https://github.com/vidstack/player/commit/b665c4b8f317b1869553980e3ec3b158066b827c))
+- **react:** use media player hook not updating ([a89a58c](https://github.com/vidstack/player/commit/a89a58cecdfe64c05a0e59110b969465c1771efc))
+- sort quality menu items in descending order ([89f6726](https://github.com/vidstack/player/commit/89f6726cb827458197bc343e749b7f8413e52378))
+
+### Features
+
+- fallback to checking source headers for media type ([053f03a](https://github.com/vidstack/player/commit/053f03a63c2cb85a73a7886fc29ea3bbbab3391c))
+
 ## [0.5.3](https://github.com/vidstack/player/compare/v0.5.2...v0.5.3) (2023-05-13)
 
 ### Bug Fixes
