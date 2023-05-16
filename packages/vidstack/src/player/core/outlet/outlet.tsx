@@ -63,7 +63,7 @@ export class Outlet extends Component<OutletAPI> {
     resize.observe(el);
 
     const mutation = new MutationObserver(this._onMutation.bind(this));
-    mutation.observe(el, { childList: true });
+    mutation.observe(el, { attributes: true, childList: true });
 
     return () => {
       resize.disconnect();
