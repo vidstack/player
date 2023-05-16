@@ -13,13 +13,13 @@ export function useMediaPlayer(): MediaPlayerElement | null {
 
   if (__DEV__ && !context) {
     throw Error(
-      '[vidstack] no media context was found - was this called outside of `<MediaPlayer`?',
+      '[vidstack] no media context was found - was this called outside of `<MediaPlayer>`?',
     );
   }
 
   useEffect(() => {
     if (!context) return;
-    context.player!.onAttach(() => void setPlayer(player));
+    setPlayer(context.player);
     return () => setPlayer(null);
   }, []);
 
