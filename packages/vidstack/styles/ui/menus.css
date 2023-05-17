@@ -345,10 +345,11 @@
   border: var(--media-menu-radio-check-border, 2px solid rgb(245 245 245 / 0.5));
   box-sizing: border-box;
   display: flex;
-  height: var(--media-menu-radio-check-size, 10px);
+  height: var(--media-menu-radio-check-size, 9px);
   justify-content: center;
   margin-right: 8px;
-  width: var(--media-menu-radio-check-size, 10px);
+  width: var(--media-menu-radio-check-size, 9px);
+  border-width: unset !important; /* prevent tailwind breaking */
 }
 
 :where(media-radio[aria-checked='true'] [part='check']) {
@@ -362,6 +363,7 @@
   box-sizing: border-box;
   height: var(--media-menu-radio-check-inner-size, 4px);
   width: var(--media-menu-radio-check-inner-size, 4px);
+  border-width: unset !important; /* prevent tailwind breaking */
 }
 
 /*
