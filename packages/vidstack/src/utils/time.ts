@@ -88,8 +88,8 @@ export function formatTime(
  * @param shouldPadHours - Whether to pad the hours to be length of 2.
  * @param shouldPadMinutes - Whether to pad the minutes to be length of 2.
  * @param shouldAlwaysShowHours - Whether to always show the hours unit.
- * @example `01:20:06 -> minutes:seconds`
- * @example `3:01:20:21 -> hours:minutes:seconds`
+ * @example `01:20:06 -> minutes:seconds:frame`
+ * @example `3:01:20:21 -> hours:minutes:seconds:frame`
  * @example If `shouldPadHours` is `true` - `03:01:20:12`
  * @example If `shouldAlwaysShowHours` is `true` - `0:01:20:01`
  */
