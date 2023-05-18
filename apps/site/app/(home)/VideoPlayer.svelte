@@ -55,6 +55,10 @@
         </media-menu-button>
         <media-menu-items>
           <media-menu>
+            <media-audio-menu-button />
+            <media-audio-menu-items />
+          </media-menu>
+          <media-menu>
             <media-playback-rate-menu-button />
             <media-playback-rate-menu-items />
           </media-menu>
