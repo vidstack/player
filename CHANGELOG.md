@@ -1,3 +1,10 @@
+## [0.5.5](https://github.com/vidstack/player/compare/v0.5.4...v0.5.5) (2023-05-18)
+
+### Bug Fixes
+
+- prevent tailwind normalization breaking menu radio check ([83e95d6](https://github.com/vidstack/player/commit/83e95d62846cfe0c82dbd851f25bd68aae0e3f2a))
+- **react:** hmr element register error ([f66d78d](https://github.com/vidstack/player/commit/f66d78dfd0179eb8c09320ea998adec4adb272c8))
+
 ## [0.5.4](https://github.com/vidstack/player/compare/v0.5.3...v0.5.4) (2023-05-16)
 
 ### Bug Fixes
