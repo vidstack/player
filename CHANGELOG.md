@@ -1,3 +1,9 @@
+## [0.5.6](https://github.com/vidstack/player/compare/v0.5.5...v0.5.6) (2023-05-18)
+
+### Bug Fixes
+
+- **react:** hmr issue in remix ([02ac082](https://github.com/vidstack/player/commit/02ac0827e8a6a3749e1a6bb2b5c65346d00736bb))
+
 ## [0.5.5](https://github.com/vidstack/player/compare/v0.5.4...v0.5.5) (2023-05-18)
 
 ### Bug Fixes
