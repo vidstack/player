@@ -56,8 +56,8 @@ importers:
       '@tailwindcss/typography': ^0.5.0
       '@types/markdown-it': ^12.2.0
       '@types/react': ^17.0.0
-      '@vessel-js/app': 0.3.2
-      '@vessel-js/svelte': 0.3.2
+      '@vessel-js/app': 0.3.3
+      '@vessel-js/svelte': 0.3.3
       '@vidstack/react': workspace:*
       autoprefixer: ^10.4.0
       clsx: ^1.2.0
@@ -95,8 +95,8 @@ importers:
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.2
       '@types/markdown-it': 12.2.3
       '@types/react': 17.0.59
-      '@vessel-js/app': 0.3.2_bf2mibhfirb33bmr4l4tfgibza
-      '@vessel-js/svelte': 0.3.2_2grd7zekpnv4es4nixlt5r6lou
+      '@vessel-js/app': 0.3.3_bf2mibhfirb33bmr4l4tfgibza
+      '@vessel-js/svelte': 0.3.3_5hyo7dllmdjywcqgtauslztgpy
       autoprefixer: 10.4.14_postcss@8.4.23
       gray-matter: 4.0.3
       markdown-it: 13.0.1
@@ -1433,8 +1433,8 @@ packages:
       '@types/node': 20.1.0
     dev: true
 
-  /@vessel-js/app/0.3.2_bf2mibhfirb33bmr4l4tfgibza:
-    resolution: {integrity: sha512-Ij+NK3GPIl5FHROx2a6kmywP6X3yePsBRid70C8AnnZRwlZRwfijhhY60rg4Cijtmzzv/vGSFml9DsLzf3XrSw==}
+  /@vessel-js/app/0.3.3_bf2mibhfirb33bmr4l4tfgibza:
+    resolution: {integrity: sha512-TSM74KNRA/7OG4jmoxWpOsuqCob1bLsgzQGtq/uqZUzjE5I5aZQ/I2EckPerMdOp2BmnjfuxLF3dNogga713Nw==}
     engines: {node: '>=16'}
     peerDependencies:
       vite: ^4.0.0
@@ -1466,14 +1466,14 @@ packages:
       - rollup
     dev: true
 
-  /@vessel-js/svelte/0.3.2_2grd7zekpnv4es4nixlt5r6lou:
-    resolution: {integrity: sha512-j803eJEwxJcUyUzP6Asxa8Zl1YViNyVtjUVoCsv7AL5Q/2RVUejhpTWVTIJ2Du/tvAwCGyCgREy+uRnnd2hOiQ==}
+  /@vessel-js/svelte/0.3.3_5hyo7dllmdjywcqgtauslztgpy:
+    resolution: {integrity: sha512-TKCjjwxWEJmJAIqx5xmufs9bpYpFsx4g0f48BYiCH3pC88wfWns9dGGw8bUKPqH1hmUh7Of56FODx0F6ysrcvQ==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@vessel-js/app': 0.3.2
+      '@vessel-js/app': 0.3.3
       svelte: ^3.55.0
     dependencies:
-      '@vessel-js/app': 0.3.2_bf2mibhfirb33bmr4l4tfgibza
+      '@vessel-js/app': 0.3.3_bf2mibhfirb33bmr4l4tfgibza
       globby: 13.1.4
       pathe: 1.1.0
       svelte: 3.59.0

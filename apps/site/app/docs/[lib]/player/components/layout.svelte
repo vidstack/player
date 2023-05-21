@@ -12,6 +12,7 @@
 <script lang="ts">
   import type { StaticLoader } from '@vessel-js/app/server';
   import { frontmatter, markdown, matches, useStaticData } from '@vessel-js/svelte';
+  import { onDestroy } from 'svelte';
 
   import ApiTable from '$lib/components/docs/ApiTable.svelte';
   import { getOnThisPageContext } from '$lib/layouts/toc/context';
@@ -22,11 +23,6 @@
 
   const data = useStaticData(staticLoader),
     toc = getOnThisPageContext();
-
-  $: {
-    const match = $matches.find((match) => match.id === '/docs/[lib]/player/components');
-    if (match?.layout) match.layout.stale = true;
-  }
 
   $: apiCategories = Object.keys($data?.api || {}).filter((key) => $data.api[key]);
 
@@ -44,6 +40,10 @@
       ]);
     }
   }
+
+  onDestroy(() => {
+    toc.override.set(null);
+  });
 </script>
 
 <h1 class="flex flex-row">
