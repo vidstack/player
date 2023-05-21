@@ -36,7 +36,7 @@
       <media-menu>
         <media-menu-button>
           <media-icon type="arrow-left" slot="close-icon" />
-          <media-icon type="closed-captions" slot="icon" />
+          <media-icon type="settings-menu" slot="icon" />
           <span slot="label">Quality</span>
           <span class="ml-auto hint-text">{hint}</span>
           <media-icon class="ml-0" type="chevron-right" slot="open-icon" />
