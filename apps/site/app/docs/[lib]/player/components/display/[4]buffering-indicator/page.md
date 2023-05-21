@@ -9,7 +9,7 @@ description: This component is used to display a loading indicator when media is
 ## Custom
 
 You can create a custom buffering indicator with some HTML, CSS,
-and [media data attributes](/docs/player/styling/references#media-attributes). The `data-waiting`
+and [media data attributes](/docs/player/components/media/player#data-attributes). The `data-waiting`
 attribute can be used to show the indicator while media is buffering. Optionally, the
 `data-can-play` attribute could also be used to display the indicator while media is initially
 loading.
