@@ -7,6 +7,7 @@ import {
 } from 'maverick.js';
 
 import type { Logger } from '../../../foundation/logger/controller';
+import type { MediaFramesInstance } from '../frames/media-frames';
 import type { MediaKeyShortcuts } from '../keyboard/types';
 import type { MediaPlayerElement } from '../player';
 import type { MediaProvider } from '../providers/types';
@@ -28,6 +29,7 @@ export interface MediaContext {
   textTracks: TextTrackList;
   textRenderers: TextRenderers;
   ariaKeys: MediaKeyShortcuts;
+  frames: MediaFramesInstance;
   logger?: Logger;
   $provider: WriteSignal<MediaProvider | null>;
   $iosControls: ReadSignal<boolean>;

@@ -31,6 +31,7 @@ import type { FindPlayerEvent, PlayerConnectEvent, PlayerEvents } from './api/pl
 import { mediaPlayerProps, type MediaStateAccessors, type PlayerProps } from './api/player-props';
 import type { MediaFullscreenRequestTarget } from './api/request-events';
 import { MediaStoreFactory, type MediaStore } from './api/store';
+import { MediaFramesInstance } from './frames/media-frames';
 import { MediaKeyboardController } from './keyboard/controller';
 import type { AnyMediaProvider, MediaProviderLoader } from './providers/types';
 import { VideoQualityList } from './quality/video-quality';
@@ -116,6 +117,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     if (__DEV__) context.logger = new Logger();
     context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
+    context.frames = new MediaFramesInstance();
     context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList();
     context.textTracks[TEXT_TRACK_CROSSORIGIN] = this.$props.crossorigin;
@@ -165,6 +167,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     this._media.player = el as MediaPlayerElement;
     this._media.remote.setTarget(el);
+    this._media.frames.setPlayer(el as MediaPlayerElement);
     this._media.remote.setPlayer(el as MediaPlayerElement);
 
     listenEvent(el, 'find-media-player', this._onFindPlayer.bind(this));

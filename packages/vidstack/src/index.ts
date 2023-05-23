@@ -42,6 +42,7 @@ export * from './player/core/tracks/text/text-track';
 export * from './player/core/tracks/text/text-tracks';
 export * from './player/core/tracks/audio-tracks';
 export * from './player/core/quality/video-quality';
+export * from './player/core/frames/media-frames';
 
 // Providers
 export {
