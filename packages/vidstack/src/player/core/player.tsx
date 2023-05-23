@@ -301,6 +301,11 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
   @prop
   readonly orientation: ScreenOrientationController;
 
+  @prop
+  get frames(): MediaFramesInstance {
+    return this._media.frames;
+  }
+
   /**
    * A list of all `VideoQuality` objects representing the set of available video renditions.
    *
