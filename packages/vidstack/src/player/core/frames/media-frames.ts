@@ -23,7 +23,7 @@ export class MediaFramesInstance implements MediaFrames {
 
     const seconds = this._player?.$store.currentTime();
 
-    return Math.floor((Number.parseFloat(seconds.toFixed(5)) * this.rate) % this.rate);
+    return Math.floor(Number.parseFloat(seconds.toFixed(5)) * this.rate);
   }
 
   toSMPTE(frame: number): string {
