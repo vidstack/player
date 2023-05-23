@@ -31,7 +31,7 @@ import type { FindPlayerEvent, PlayerConnectEvent, PlayerEvents } from './api/pl
 import { mediaPlayerProps, type MediaStateAccessors, type PlayerProps } from './api/player-props';
 import type { MediaFullscreenRequestTarget } from './api/request-events';
 import { MediaStoreFactory, type MediaStore } from './api/store';
-import { MediaFramesInstance } from './frames/media-frames';
+import { MediaFramesInstance, type MediaFrames } from './frames/media-frames';
 import { MediaKeyboardController } from './keyboard/controller';
 import type { AnyMediaProvider, MediaProviderLoader } from './providers/types';
 import { VideoQualityList } from './quality/video-quality';
@@ -302,7 +302,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
   readonly orientation: ScreenOrientationController;
 
   @prop
-  get frames(): MediaFramesInstance {
+  get frames(): MediaFrames {
     return this._media.frames;
   }
 
