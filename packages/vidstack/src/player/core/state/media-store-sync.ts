@@ -21,6 +21,7 @@ export class MediaStoreSync extends ComponentController<PlayerAPI> {
     effect(this._onLiveEdgeChange.bind(this));
     effect(this._onThumbnailsChange.bind(this));
     effect(this._onTitleChange.bind(this));
+    effect(this._onFramesChange.bind(this));
   }
 
   private _onLogLevelChange() {
