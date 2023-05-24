@@ -28,6 +28,11 @@ export class MediaStoreSync extends ComponentController<PlayerAPI> {
     this.$store.logLevel.set(this.$props.logLevel());
   }
 
+  private _onFramesChange() {
+    if (!__DEV__) return;
+    this.$store.frameRate.set(this.$props.frameRate());
+  }
+
   private _onAutoplayChange() {
     const autoplay = this.$props.autoplay();
     this.$store.autoplay.set(autoplay);
