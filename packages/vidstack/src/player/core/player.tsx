@@ -117,7 +117,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     if (__DEV__) context.logger = new Logger();
     context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
-    context.frames = new MediaFrames();
+    context.frames = new MediaFrames(this.$store);
     context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList();
     context.textTracks[TEXT_TRACK_CROSSORIGIN] = this.$props.crossorigin;
@@ -167,7 +167,6 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     this._media.player = el as MediaPlayerElement;
     this._media.remote.setTarget(el);
-    this._media.frames.setPlayer(el as MediaPlayerElement);
     this._media.remote.setPlayer(el as MediaPlayerElement);
 
     listenEvent(el, 'find-media-player', this._onFindPlayer.bind(this));

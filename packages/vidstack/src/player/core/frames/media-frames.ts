@@ -1,22 +1,16 @@
 import { formatTimeSmpte } from '../../../utils/time';
+import type { MediaStore } from '../api/store';
 import type { MediaPlayerElement } from '../player';
 
 export class MediaFrames {
-  private _player: MediaPlayerElement | null = null;
-
-  /**
-   * Set the current `<media-player>` element.
-   */
-  setPlayer(player: MediaPlayerElement | null) {
-    this._player = player;
-  }
+  constructor(private _store: MediaStore) {}
 
   /**
    * The framerate of the video, as provided
    * or estimated.
    */
   get rate(): number {
-    return this._player?.$store.frameRate() ?? -1; // todo: frame rate estimation
+    return this._store.frameRate() ?? -1; // todo: frame rate estimation
   }
 
   /**
@@ -24,12 +18,7 @@ export class MediaFrames {
    * -1 if unknown
    */
   get frame(): number {
-    if (!this._player) {
-      if (__DEV__) this._noPlayerWarning(this.toSMPTE.name);
-      return -1;
-    }
-
-    const seconds = this._player?.$store.currentTime();
+    const seconds = this._store.currentTime();
 
     return Math.floor(Number.parseFloat(seconds.toFixed(5)) * this.rate);
   }
@@ -40,12 +29,7 @@ export class MediaFrames {
    * @param frame the current frame
    */
   toSMPTE(frame: number): string {
-    if (!this._player) {
-      if (__DEV__) this._noPlayerWarning(this.toSMPTE.name);
-      return '';
-    }
-
-    const seconds = this._player.$store.currentTime();
+    const seconds = this._store.currentTime();
 
     return formatTimeSmpte(frame, seconds, this.rate);
   }
@@ -76,22 +60,8 @@ export class MediaFrames {
    * @param frames number of frames forwards or backwards (negative)
    */
   seek(frames: number): void {
-    if (!this._player) {
-      if (__DEV__) this._noPlayerWarning(this.toSMPTE.name);
-      return;
-    }
-
     // we add 0.00001 for proper interactivity
     // todo: check if this is necessary
-    this._player.currentTime = (this.frame + frames) / this.rate + 0.00001;
-  }
-
-  private _noPlayerWarning(method: string) {
-    if (__DEV__) {
-      console.warn(
-        `[vidstack] attempted to call \`MediaFrameInstance.${method}\`() that requires` +
-          ' player but failed because frames could not find a defined player element',
-      );
-    }
+    this._store.currentTime.set((this.frame + frames) / this.rate + 0.00001);
   }
 }
