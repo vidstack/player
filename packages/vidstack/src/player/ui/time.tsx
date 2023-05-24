@@ -34,7 +34,7 @@ export class Time extends Component<TimeAPI> {
       padHours: false,
       padMinutes: false,
       remainder: false,
-      format: 'normal',
+      format: '',
     },
   });
 
@@ -122,7 +122,7 @@ export interface TimeProps {
    * @example `5:22`
    * @example `5:22:03
    */
-  format: 'normal' | 'smpte';
+  format: '' | 'smpte';
 }
 
 export interface MediaTimeElement extends HTMLCustomElement<Time> {}
