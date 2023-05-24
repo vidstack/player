@@ -31,7 +31,7 @@ import type { FindPlayerEvent, PlayerConnectEvent, PlayerEvents } from './api/pl
 import { mediaPlayerProps, type MediaStateAccessors, type PlayerProps } from './api/player-props';
 import type { MediaFullscreenRequestTarget } from './api/request-events';
 import { MediaStoreFactory, type MediaStore } from './api/store';
-import { MediaFramesInstance, type MediaFrames } from './frames/media-frames';
+import { MediaFrames } from './frames/media-frames';
 import { MediaKeyboardController } from './keyboard/controller';
 import type { AnyMediaProvider, MediaProviderLoader } from './providers/types';
 import { VideoQualityList } from './quality/video-quality';
@@ -117,7 +117,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     if (__DEV__) context.logger = new Logger();
     context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
-    context.frames = new MediaFramesInstance();
+    context.frames = new MediaFrames();
     context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList();
     context.textTracks[TEXT_TRACK_CROSSORIGIN] = this.$props.crossorigin;

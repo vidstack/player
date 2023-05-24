@@ -1,7 +1,7 @@
 import { formatTimeSmpte } from '../../../utils/time';
 import type { MediaPlayerElement } from '../player';
 
-export class MediaFramesInstance implements MediaFrames {
+export class MediaFrames {
   private _player: MediaPlayerElement | null = null;
 
   /**
@@ -11,10 +11,18 @@ export class MediaFramesInstance implements MediaFrames {
     this._player = player;
   }
 
+  /**
+   * The framerate of the video, as provided
+   * or estimated.
+   */
   get rate(): number {
     return this._player?.$store.frameRate() ?? -1; // todo: frame rate estimation
   }
 
+  /**
+   * The current frame the video is on.
+   * -1 if unknown
+   */
   get frame(): number {
     if (!this._player) {
       if (__DEV__) this._noPlayerWarning(this.toSMPTE.name);
@@ -26,6 +34,11 @@ export class MediaFramesInstance implements MediaFrames {
     return Math.floor(Number.parseFloat(seconds.toFixed(5)) * this.rate);
   }
 
+  /**
+   * Returns an SMPTE timecode.
+   *
+   * @param frame the current frame
+   */
   toSMPTE(frame: number): string {
     if (!this._player) {
       if (__DEV__) this._noPlayerWarning(this.toSMPTE.name);
@@ -37,6 +50,11 @@ export class MediaFramesInstance implements MediaFrames {
     return formatTimeSmpte(frame, seconds, this.rate);
   }
 
+  /**
+   * Returns seconds from an SMPTE timecode.
+   *
+   * @param smpte the SMPTE timecode to parse
+   */
   fromSMPTE(smpte: string): number {
     const time = smpte.split(':');
 
@@ -51,6 +69,12 @@ export class MediaFramesInstance implements MediaFrames {
     return hours + minutes + seconds;
   }
 
+  /**
+   * How many frames ahead to skip. Use a
+   * negative number to seek backwards.
+   *
+   * @param frames number of frames forwards or backwards (negative)
+   */
   seek(frames: number): void {
     if (!this._player) {
       if (__DEV__) this._noPlayerWarning(this.toSMPTE.name);
@@ -70,40 +94,4 @@ export class MediaFramesInstance implements MediaFrames {
       );
     }
   }
-}
-
-export interface MediaFrames {
-  /**
-   * The current frame the video is on.
-   * -1 if unknown
-   */
-  readonly frame: number;
-
-  /**
-   * The framerate of the video, as provided
-   * or estimated.
-   */
-  readonly rate: number;
-
-  /**
-   * Returns an SMPTE timecode.
-   *
-   * @param frame the current frame
-   */
-  toSMPTE(frame: number): string;
-
-  /**
-   * Returns seconds from an SMPTE timecode.
-   *
-   * @param smpte the SMPTE timecode to parse
-   */
-  fromSMPTE(smpte: string): number;
-
-  /**
-   * How many frames ahead to skip. Use a
-   * negative number to seek backwards.
-   *
-   * @param frames number of frames forwards or backwards (negative)
-   */
-  seek(frames: number): void;
 }
