@@ -85,34 +85,18 @@ export function formatTime(
  * @param frame - The current frame in the video
  * @param duration - The length of time to parse in seconds.
  * @param frameRate - The frame rate (frames per second) of the video.
- * @param shouldPadHours - Whether to pad the hours to be length of 2.
- * @param shouldPadMinutes - Whether to pad the minutes to be length of 2.
- * @param shouldAlwaysShowHours - Whether to always show the hours unit.
- * @example `01:20:06 -> minutes:seconds:frame`
- * @example `3:01:20:21 -> hours:minutes:seconds:frame`
- * @example If `shouldPadHours` is `true` - `03:01:20:12`
- * @example If `shouldAlwaysShowHours` is `true` - `0:01:20:01`
+ * @example `00:01:20:06 -> hours:minutes:seconds:frame`
+ * @example `03:01:20:21 -> hours:minutes:seconds:frame`
  */
-export function formatTimeSmpte(
-  frame: number,
-  duration: number,
-  frameRate: number,
-  shouldPadHours = false,
-  shouldPadMinutes = false,
-  shouldAlwaysShowHours = false,
-): string {
+export function formatTimeSmpte(frame: number, duration: number, frameRate: number): string {
   const { hours, minutes, seconds } = parseTime(duration);
-  const paddedHours = shouldPadHours ? padNumberWithZeroes(hours, 2) : hours;
-  const paddedMinutes = shouldPadMinutes ? padNumberWithZeroes(minutes, 2) : minutes;
+  const paddedHours = padNumberWithZeroes(hours, 2);
+  const paddedMinutes = padNumberWithZeroes(minutes, 2);
   const paddedSeconds = padNumberWithZeroes(seconds, 2);
 
   const smpteSuffix = padNumberWithZeroes(Math.floor(frame % frameRate), 2);
 
-  if (hours > 0 || shouldAlwaysShowHours) {
-    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}:${smpteSuffix}`;
-  }
-
-  return `${paddedMinutes}:${paddedSeconds}:${smpteSuffix}`;
+  return `${paddedHours}:${paddedMinutes}:${paddedSeconds}:${smpteSuffix}`;
 }
 
 /**
