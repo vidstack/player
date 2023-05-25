@@ -1,35 +1,19 @@
-import { computed, effect, peek, signal } from 'maverick.js';
+import { effect } from 'maverick.js';
 import { ComponentController } from 'maverick.js/element';
 import { listenEvent } from 'maverick.js/std';
 
 import type { PlayerAPI } from './player';
 
-const STOP_IDLE_EVENTS = ['pointerup', 'pointermove', 'focus', 'keydown', 'playing'] as const;
-
 export class MediaUserController extends ComponentController<PlayerAPI> {
-  private _idleTimeout: any;
+  private _idleTimer = -2;
   private _delay = 2000;
-  private _trigger: Event | undefined;
-  private _idle = signal(false);
-  private _userPaused = signal(false);
-  private _paused = computed(() => this._userPaused() || this.$store.paused());
+  private _pausedTracking = false;
 
   /**
    * Whether the media user is currently idle.
    */
   get idling() {
-    return this._idle();
-  }
-
-  /**
-   * Whether idle state tracking has been paused.
-   */
-  get idlePaused() {
-    return this._userPaused();
-  }
-
-  set idlePaused(paused) {
-    this._userPaused.set(paused);
+    return this.$store.userIdle();
   }
 
   /**
@@ -46,40 +30,82 @@ export class MediaUserController extends ComponentController<PlayerAPI> {
     this._delay = newDelay;
   }
 
-  protected override onConnect() {
-    effect(this._watchPaused.bind(this));
-    effect(this._watchIdle.bind(this));
+  /**
+   * Change the user idle state.
+   */
+  idle(idle: boolean, delay = this._delay, trigger?: Event) {
+    this._clearIdleTimer();
+    if (!this._pausedTracking) this._requestIdleChange(idle, delay, trigger);
   }
 
-  protected override onDisconnect() {
-    this._idle.set(false);
-  }
-
-  private _watchPaused() {
-    if (this._paused()) return;
-    for (const eventType of STOP_IDLE_EVENTS) {
-      listenEvent(this.el!, eventType, this._stopIdling.bind(this));
+  /**
+   * Whether all idle tracking should be paused until resumed again.
+   */
+  pauseIdleTracking(paused: boolean, trigger?: Event) {
+    this._pausedTracking = paused;
+    if (paused) {
+      this._clearIdleTimer();
+      this._requestIdleChange(false, 0, trigger);
     }
   }
 
-  private _watchIdle() {
-    window.clearTimeout(this._idleTimeout);
-    const idle = this._idle() && !this._paused();
-
-    this.$store.userIdle.set(idle);
-
-    this.dispatch('user-idle-change', {
-      detail: idle,
-      trigger: this._trigger,
-    });
-
-    this._trigger = undefined;
+  protected override onConnect() {
+    effect(this._watchPaused.bind(this));
+    listenEvent(this.el!, 'play', this._onMediaPlay.bind(this));
+    listenEvent(this.el!, 'pause', this._onMediaPause.bind(this));
   }
 
-  private _stopIdling(event: Event) {
-    if (this._idle()) this._trigger = event;
-    this._idle.set(false);
-    window.clearTimeout(this._idleTimeout);
-    this._idleTimeout = window.setTimeout(() => this._idle.set(!peek(this._paused)), this._delay);
+  private _watchPaused() {
+    if (this.$store.paused()) return;
+
+    const onStopIdle = this._onStopIdle.bind(this);
+
+    for (const eventType of ['pointerup', 'keydown'] as const) {
+      listenEvent(this.el!, eventType, onStopIdle);
+    }
+
+    effect(() => {
+      if (!this.$store.touchPointer()) listenEvent(this.el!, 'pointermove', onStopIdle);
+    });
+  }
+
+  private _onMediaPlay(event: Event) {
+    this.idle(true, this._delay, event);
+  }
+
+  private _onMediaPause(event) {
+    this.idle(false, 0, event);
+  }
+
+  private _clearIdleTimer() {
+    window.clearTimeout(this._idleTimer);
+    this._idleTimer = -1;
+  }
+
+  private _onStopIdle(event: Event) {
+    // @ts-expect-error
+    if (event.MEDIA_GESTURE) return;
+    this.idle(false, 0, event);
+    this.idle(true, this._delay, event);
+  }
+
+  private _requestIdleChange(idle: boolean, delay: number, trigger?: Event) {
+    if (delay === 0) {
+      this._onIdleChange(idle, trigger);
+      return;
+    }
+
+    this._idleTimer = window.setTimeout(() => {
+      this._onIdleChange(idle && !this._pausedTracking, trigger);
+    }, delay);
+  }
+
+  private _onIdleChange(idle: boolean, trigger?: Event) {
+    if (this.$store.userIdle() === idle) return;
+    this.$store.userIdle.set(idle);
+    this.dispatch('user-idle-change', {
+      detail: idle,
+      trigger,
+    });
   }
 }

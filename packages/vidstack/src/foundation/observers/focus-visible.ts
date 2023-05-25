@@ -67,4 +67,5 @@ function updateFocusAttr(el: Element, isFocused: boolean) {
 
 function updateHoverAttr(el: Element, isHovering: boolean) {
   setAttribute(el, 'data-hocus', isHovering);
+  setAttribute(el, 'data-hover', isHovering);
 }

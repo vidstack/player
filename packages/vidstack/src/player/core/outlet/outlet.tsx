@@ -5,9 +5,10 @@ import {
   defineElement,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { setStyle } from 'maverick.js/std';
+import { animationFrameThrottle, listenEvent, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
+import { IS_SAFARI } from '../../../utils/support';
 import { useMedia, type MediaContext } from '../api/context';
 import type { MediaSrc } from '../api/types';
 import type { MediaProviderLoader } from '../providers/types';
@@ -59,11 +60,16 @@ export class Outlet extends Component<OutletAPI> {
     this._onResize();
     this._onMutation();
 
-    const resize = new ResizeObserver(this._onResize.bind(this));
+    const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
     resize.observe(el);
 
     const mutation = new MutationObserver(this._onMutation.bind(this));
     mutation.observe(el, { attributes: true, childList: true });
+
+    if (IS_SAFARI) {
+      // Prevent delay on pointer/click events.
+      listenEvent(el, 'touchstart', (e) => e.preventDefault(), { passive: false });
+    }
 
     return () => {
       resize.disconnect();
@@ -75,19 +81,16 @@ export class Outlet extends Component<OutletAPI> {
     this._media.$store.currentTime.set(0);
   }
 
-  protected _rafId = -1;
   protected _onResize() {
-    if (this._rafId >= 0) return;
-    this._rafId = window.requestAnimationFrame(() => {
-      const player = this._media.player!,
-        width = this.el!.offsetWidth,
-        height = this.el!.offsetHeight;
+    const player = this._media.player!,
+      width = this.el!.offsetWidth,
+      height = this.el!.offsetHeight;
 
-      setStyle(player, '--media-width', width + 'px');
-      setStyle(player, '--media-height', height + 'px');
+    player.$store.mediaWidth.set(width);
+    player.$store.mediaHeight.set(height);
 
-      this._rafId = -1;
-    });
+    setStyle(player, '--media-width', width + 'px');
+    setStyle(player, '--media-height', height + 'px');
   }
 
   private _onMutation() {

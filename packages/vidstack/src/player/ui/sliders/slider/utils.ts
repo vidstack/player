@@ -5,10 +5,10 @@ export function getClampedValue(min: number, max: number, value: number, step: n
 }
 
 export function getValueFromRate(min: number, max: number, rate: number, step: number) {
-  const boundRate = clampNumber(0, rate, 1);
-  const range = max - min;
-  const fill = range * boundRate;
-  const stepRatio = Math.round(fill / step);
-  const steps = step * stepRatio;
+  const boundRate = clampNumber(0, rate, 1),
+    range = max - min,
+    fill = range * boundRate,
+    stepRatio = fill / step,
+    steps = step * stepRatio;
   return min + steps;
 }

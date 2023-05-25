@@ -26,6 +26,7 @@ import {
 
 import { $ariaBool } from '../../../utils/aria';
 import { isElementParent, onPress, setAttributeIfEmpty } from '../../../utils/dom';
+import { useMedia, type MediaContext } from '../../core/api/context';
 import { menuContext, type MenuContext } from './menu-context';
 import { MenuFocusController } from './menu-focus-controller';
 
@@ -59,6 +60,8 @@ export class Menu extends Component<MenuAPI> {
     props: { position: null },
   });
 
+  protected _media: MediaContext;
+
   protected _menuId: string;
   protected _menuButtonId: string;
 
@@ -76,6 +79,8 @@ export class Menu extends Component<MenuAPI> {
 
   constructor(instance: ComponentInstance<MenuAPI>) {
     super(instance);
+
+    this._media = useMedia();
 
     const currentIdCount = ++idCount;
     this._menuId = `media-menu-${currentIdCount}`;
@@ -99,19 +104,64 @@ export class Menu extends Component<MenuAPI> {
   }
 
   protected override onAttach(el: HTMLElement) {
-    if (this._parentMenu) setAttribute(el, 'data-submenu', '');
     const { position } = this.$props;
-    this.setAttributes({ position });
+    this.setAttributes({
+      position,
+      'data-open': this._expanded,
+      'data-submenu': !!this._parentMenu,
+      'data-disabled': this._isDisabled.bind(this),
+      'data-media-menu': true,
+    });
   }
 
   protected override onConnect(el: HTMLElement) {
+    if (!this._parentMenu) {
+      effect(this._watchBreakpoint.bind(this));
+    }
+
     effect(this._watchExpanded.bind(this));
+
     this._parentMenu?._addSubmenu(el as MediaMenuElement);
   }
 
   protected override onDestroy() {
+    this._removePopupMenu();
     this._menuButton = null;
     this._menuItems = null;
+  }
+
+  protected _removePopupMenu() {
+    if (!this._menuItems || this.el!.contains(this._menuItems)) return;
+
+    const menu = this._menuItems?.parentElement;
+    this.el!.append(this._menuItems);
+
+    if (menu?.localName === 'media-menu') {
+      (menu as MediaMenuElement).destroy();
+      menu.remove();
+    }
+  }
+
+  protected _watchBreakpoint() {
+    const { breakpointX, breakpointY, viewType, orientation, fullscreen } = this._media.$store,
+      popup = viewType() === 'audio' ? breakpointX() === 'sm' : breakpointY() === 'sm';
+
+    if (!this._menuItems || this._parentMenu) return;
+
+    setAttribute(this.el!, 'data-popup', popup);
+    setAttribute(this.el!, 'data-popup-wide', popup && orientation() === 'landscape');
+
+    const containsItems = this.el!.contains(this._menuItems);
+    if (popup && !fullscreen()) {
+      if (containsItems) {
+        const menu = this.el!.cloneNode();
+        menu.appendChild(this._menuItems);
+        document.body.append(menu);
+      }
+    }
+
+    this._onResize();
+    return () => this._removePopupMenu();
   }
 
   protected _watchExpanded() {
@@ -141,6 +191,7 @@ export class Menu extends Component<MenuAPI> {
 
     setAttributeIfEmpty(el, 'tabindex', isMenuItem ? '-1' : '0');
     setAttributeIfEmpty(el, 'role', isMenuItem ? 'menuitem' : 'button');
+
     setAttribute(el, 'id', this._menuButtonId);
     setAttribute(el, 'aria-controls', this._menuId);
     setAttribute(el, 'aria-haspopup', 'true');
@@ -170,6 +221,7 @@ export class Menu extends Component<MenuAPI> {
     this._menuItems = el;
     this._focus._attach(el);
 
+    this._watchBreakpoint();
     this._updateMenuItemsHidden(peek(this._expanded));
   }
 
@@ -183,8 +235,12 @@ export class Menu extends Component<MenuAPI> {
 
   protected _onMenuButtonPress(event: Event) {
     if (this._parentMenu) event.stopPropagation();
+
     if (this._isDisabled()) return;
+
     this._expanded.set((expanded) => !expanded);
+    this._changeIdleTracking();
+
     tick();
     if (isKeyboardEvent(event)) this._menuItems?.focus();
     this._onChange(event);
@@ -226,6 +282,13 @@ export class Menu extends Component<MenuAPI> {
   protected _getCloseTarget() {
     const target = this.el!.querySelector('[slot="close-target"]');
     return isElementParent(this.el!, target) ? target : null;
+  }
+
+  protected _changeIdleTracking(trigger?: Event) {
+    if (this._parentMenu) return;
+
+    if (this._expanded()) this._media.remote.pauseUserIdle(trigger);
+    else this._media.remote.resumeUserIdle(trigger);
   }
 
   protected _addSubmenu(el: MediaMenuElement) {
@@ -271,11 +334,13 @@ export class Menu extends Component<MenuAPI> {
     }
 
     requestAnimationFrame(() => {
-      setAttribute(this._menuItems!, 'data-resizing', '');
+      if (!this._menuItems) return;
+      setAttribute(this._menuItems, 'data-resizing', '');
       setTimeout(() => {
-        setAttribute(this._menuItems!, 'data-resizing', false);
+        if (!this._menuItems) return;
+        setAttribute(this._menuItems, 'data-resizing', false);
       }, 250);
-      setStyle(this._menuItems!, '--menu-height', height + 'px');
+      setStyle(this._menuItems, '--menu-height', height + 'px');
     });
   }
 
@@ -288,6 +353,7 @@ export class Menu extends Component<MenuAPI> {
     tick();
     this._onChange(trigger);
     if (isKeyboardEvent(trigger)) this._menuItems?.focus();
+    this._changeIdleTracking(trigger);
   }
 
   /**
@@ -306,6 +372,7 @@ export class Menu extends Component<MenuAPI> {
     }
 
     this._onChange(trigger);
+    this._changeIdleTracking(trigger);
   }
 }
 

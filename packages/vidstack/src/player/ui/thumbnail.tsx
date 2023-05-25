@@ -5,6 +5,7 @@ import {
   defineElement,
   type HTMLCustomElement,
 } from 'maverick.js/element';
+import { animationFrameThrottle } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import { $ariaBool } from '../../utils/aria';
@@ -143,14 +144,7 @@ export class Thumbnail extends Component<ThumbnailAPI> {
     return resolvedCoords as ThumbnailCoords;
   }
 
-  protected _rafId = -1;
-  protected _requestResize() {
-    if (this._rafId > 0) return;
-    this._rafId = requestAnimationFrame(() => {
-      this._resize();
-      this._rafId = -1;
-    });
-  }
+  protected _requestResize = animationFrameThrottle(this._resize.bind(this));
 
   protected _resize() {
     if (!this._img || !this._coords) return;

@@ -376,6 +376,7 @@ export class MediaStateManager extends ComponentController<PlayerAPI> {
     setTimeout(() => this._resetTracking(), 0);
 
     const { paused, playing, seeking, ended } = this._store;
+
     paused.set(false);
     playing.set(true);
     seeking.set(false);

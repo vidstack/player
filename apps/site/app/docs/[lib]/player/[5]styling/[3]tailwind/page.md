@@ -51,17 +51,10 @@ module.exports = {
 
 ## Usage
 
-The `<media-player>` element exposes media state as HTML data attributes and CSS vars like so:
+The `<media-player>` element exposes media state as HTML data attributes vars like so:
 
 ```html
-<media-player
-  data-paused
-  data-waiting
-  data-seeking
-  data-can-play
-  ...
-  style="--media-current-time: 500; --media-duration: 1000; ..."
->
+<media-player data-paused data-waiting data-seeking data-can-play ...>
   <!-- ... -->
 </media-player>
 ```
@@ -101,20 +94,6 @@ Few examples:
 media-player:not([data-paused]) .not-paused\:opacity-0 {
   opacity: 0;
 }
-```
-
-## Media CSS Variables
-
-You can take advantage of [arbitrary values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values)
-if you're using Tailwind CSS v3+ and use the following CSS media variables.
-
-{% component this="../.tables/vars-table.md" /%}
-
-```html
-<!-- example -->
-<div
-  class="origin-left scale-x-[calc(var(--media-current-time)/var(--media-duration))] transform"
-></div>
 ```
 
 ## Data Attributes

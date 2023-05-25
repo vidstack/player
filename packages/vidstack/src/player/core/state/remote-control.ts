@@ -262,20 +262,6 @@ export class MediaRemoteControl {
   }
 
   /**
-   * Dispatch a request to load and show the native poster element.
-   */
-  showPoster(trigger?: Event) {
-    this._dispatchRequest('media-show-poster-request', trigger);
-  }
-
-  /**
-   * Dispatch a request to prevent loading and to hide the native poster element.
-   */
-  hidePoster(trigger?: Event) {
-    this._dispatchRequest('media-hide-poster-request', trigger);
-  }
-
-  /**
    * Dispatch a request to toggle the media playback state.
    */
   togglePaused(trigger?: Event) {
@@ -288,6 +274,20 @@ export class MediaRemoteControl {
 
     if (player.state.paused) this.play(trigger);
     else this.pause(trigger);
+  }
+
+  /**
+   * Dispatch a request to toggle the user idle state.
+   */
+  toggleUserIdle(trigger?: Event) {
+    const player = this.getPlayer(trigger?.target);
+
+    if (!player) {
+      if (__DEV__) this._noPlayerWarning(this.toggleUserIdle.name);
+      return;
+    }
+
+    player.user.idle(!player.user.idling, 0, trigger);
   }
 
   /**
@@ -390,12 +390,16 @@ export class MediaRemoteControl {
       trigger,
     });
 
-    const target =
-      trigger?.target === document ||
-      trigger?.target === window ||
-      trigger?.target === document.body
-        ? this._target ?? this.getPlayer()
-        : trigger?.target ?? this._target;
+    const shouldUsePlayer =
+      trigger?.target &&
+      (trigger.target === document ||
+        trigger.target === window ||
+        trigger.target === document.body ||
+        (this._player && !this._player.contains(trigger.target as Node)));
+
+    const target = shouldUsePlayer
+      ? this._target ?? this.getPlayer()
+      : trigger?.target ?? this._target;
 
     if (__DEV__) {
       this._logger

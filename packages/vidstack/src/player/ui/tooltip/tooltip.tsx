@@ -1,4 +1,4 @@
-import { getScope, hasProvidedContext, scoped, useContext } from 'maverick.js';
+import { hasProvidedContext, useContext } from 'maverick.js';
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
 import { scopedRaf } from '../../../utils/dom';

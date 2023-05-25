@@ -1,4 +1,4 @@
-import { onDispose } from 'maverick.js';
+import { effect, onDispose } from 'maverick.js';
 import { DOMEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
 
 import { RAFLoop } from '../../../../foundation/observers/raf-loop';
@@ -27,6 +27,7 @@ export class HTMLMediaEvents {
 
   constructor(private _provider: HTMLMediaProvider, private _context: MediaSetupContext) {
     this._attachInitialListeners();
+    effect(this._attachTimeUpdate.bind(this));
     onDispose(this._onDispose.bind(this));
   }
 
@@ -172,7 +173,6 @@ export class HTMLMediaEvents {
   }
 
   private _onStreamTypeChange() {
-    if (this._context.$store.streamType() !== 'unknown') return;
     const isLive = !Number.isFinite(this._media.duration);
     this._delegate._dispatch('stream-type-change', {
       detail: isLive ? 'live' : 'on-demand',
@@ -236,7 +236,19 @@ export class HTMLMediaEvents {
     }
   }
 
+  protected _attachTimeUpdate() {
+    if (this._context.$store.paused()) {
+      listenEvent(this._media, 'timeupdate', this._onTimeUpdate.bind(this));
+    }
+  }
+
+  protected _onTimeUpdate(event: Event) {
+    this._updateCurrentTime(this._media.currentTime, event);
+  }
+
   private _onDurationChange(event: Event) {
+    this._onStreamTypeChange();
+
     if (this._context.$store.ended()) {
       this._updateCurrentTime(this._media.duration, event);
     }

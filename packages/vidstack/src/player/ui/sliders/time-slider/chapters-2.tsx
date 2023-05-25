@@ -36,7 +36,7 @@ export class SliderChaptersRenderer {
       this._refs.push(el);
     }
 
-    effect(this._watchBufferedPercent.bind(this));
+    // effect(this._watchBufferedPercent.bind(this));
 
     onDispose(() => {
       this._refs = [];
@@ -49,10 +49,15 @@ export class SliderChaptersRenderer {
     const width = round(this._calcWidth(chapter, endTime), 5) + '%',
       $fill = this._calcFillPercent.bind(this, chapter);
     return (
-      <div part="chapter-container" $style:width={width}>
+      <div
+        part="chapter-container"
+        $cssvar:width={width}
+        $cssvar:slider-fill-percent={$fill()}
+        $cssvar:media-buffered-percent="0%"
+      >
         <div part="chapter">
           <div part="track" />
-          <div part="track track-fill" $style:width={$fill()} />
+          <div part="track track-fill" />
           <div part="track track-progress" />
         </div>
       </div>
@@ -83,9 +88,9 @@ export class SliderChaptersRenderer {
 
   protected _updateBufferedPercent = animationFrameThrottle((bufferedPercent: number) => {
     for (let i = 0; i < this._refs.length; i++) {
-      const el = this._refs[i].querySelector('[part~="track-progress"]') as HTMLDivElement,
-        percent = this._calcChapterPercent(this._chapters[i], bufferedPercent);
-      el.style.width = percent + '%';
+      const percent = this._calcChapterPercent(this._chapters[i], bufferedPercent);
+      this._refs[i].style.setProperty('--media-buffered-percent', percent + '%');
+      if (percent > 0 && percent < 100) break;
     }
   });
 

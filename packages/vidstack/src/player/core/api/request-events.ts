@@ -6,7 +6,6 @@ export interface MediaRequestEvents {
   'media-exit-fullscreen-request': MediaExitFullscreenRequestEvent;
   'media-enter-pip-request': MediaEnterPIPRequestEvent;
   'media-exit-pip-request': MediaExitPIPRequestEvent;
-  'media-hide-poster-request': MediaHidePosterRequestEvent;
   'media-live-edge-request': MediaLiveEdgeRequestEvent;
   'media-loop-request': MediaLoopRequestEvent;
   'media-mute-request': MediaMuteRequestEvent;
@@ -18,7 +17,6 @@ export interface MediaRequestEvents {
   'media-resume-user-idle-request': MediaResumeUserIdleRequestEvent;
   'media-seek-request': MediaSeekRequestEvent;
   'media-seeking-request': MediaSeekingRequestEvent;
-  'media-show-poster-request': MediaShowPosterRequestEvent;
   'media-start-loading': MediaStartLoadingRequestEvent;
   'media-text-track-change-request': MediaTextTrackChangeRequestEvent;
   'media-unmute-request': MediaUnmuteRequestEvent;

@@ -85,9 +85,19 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
   get seekableWindow() {
     return Math.max(0, this.seekableEnd - this.seekableStart);
   },
+
+  // ~~ responsive design ~~
+  touchPointer: false,
+  orientation: 'landscape',
+  mediaWidth: 0,
+  mediaHeight: 0,
+  breakpointX: 'sm',
+  breakpointY: 'sm',
+
   // ~~ user props ~~
   userIdle: false,
   userBehindLiveEdge: false,
+
   // ~~ live props ~~
   liveEdgeTolerance: 10,
   minLiveDVRWindow: 60,
@@ -117,9 +127,9 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
       ? this.seekableEnd - this.liveEdgeStart
       : 0;
   },
+
   // ~~ internal props ~~
   autoplaying: false,
-  canLoadPoster: null,
   providedViewType: 'unknown',
   providedStreamType: 'unknown',
   inferredStreamType: 'unknown',
@@ -148,7 +158,6 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'thumbnails',
   'thumbnailCues',
   'volume',
-  'canLoadPoster',
   'providedStreamType',
   'providedViewType',
 ]);
@@ -616,12 +625,47 @@ export interface MediaState {
    */
   waiting: boolean;
 
+  // !!! Responsive Design !!!
+
+  /**
+   * Whether the user is using a touch pointer.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer}
+   */
+  touchPointer: boolean;
+  /**
+   * The current screen orientation.
+   */
+  orientation: 'portrait' | 'landscape';
+  /**
+   * The width of the media outlet in pixels.
+   */
+  mediaWidth: number;
+  /**
+   * The height of the media in outlet pixels.
+   */
+  mediaHeight: number;
+  /**
+   * Horizontal breakpoint based on player container width:
+   *
+   * - `sm` (small): x < 600px
+   * - `md` (medium): 600px <= x < 980px
+   * - `lg` (large): x >= 980px
+   */
+  breakpointX: 'sm' | 'md' | 'lg';
+  /**
+   * Vertical breakpoint based on player container height:
+   *
+   * - `sm` (small): x < 480px
+   * - `md` (medium): 480px <= x < 980px
+   * - `lg` (large): x >= 980px
+   */
+  breakpointY: 'sm' | 'md' | 'lg';
+
   // !!! INTERNALS !!!
 
   /* @internal */
   autoplaying: boolean;
-  /* @internal */
-  canLoadPoster: boolean | null;
   /* @internal */
   providedViewType: MediaViewType;
   /* @internal */

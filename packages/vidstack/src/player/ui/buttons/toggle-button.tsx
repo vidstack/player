@@ -7,7 +7,7 @@ import {
   type HTMLCustomElement,
   type PropDeclarations,
 } from 'maverick.js/element';
-import { ariaBool, isKeyboardClick, isKeyboardEvent } from 'maverick.js/std';
+import { ariaBool } from 'maverick.js/std';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { onPress, setAttributeIfEmpty } from '../../../utils/dom';

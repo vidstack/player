@@ -60,21 +60,28 @@ of the variables can be set to adjust the default button and tooltip styles:
 ```css {% copy=true %}
 media-player {
   --media-button-color: #f5f5f5;
-  --media-button-border-radius: 0;
-  --media-button-size: 48px;
-  --media-button-hover-transform: scale(1.1);
+  --media-button-border-radius: 2px;
+  --media-button-size: 40px;
+  --media-button-icon-size: 80%;
 
-  --media-button-icon-size: 66.66%;
-  --media-button-icon-border-radius: 2px;
+  --media-fullscreen-button-size: 42px;
+  --media-mobile-fullscreen-button-size: 42px;
+
+  --media-button-hover-transform: scale(1.1);
+  --media-button-hover-bg: rgb(255 255 255 / 0.2);
+  --media-button-hover-transition: transform 0.2s ease-in;
+
+  --media-button-touch-hover-border-radius: 100%;
+  --media-button-touch-hover-bg: rgb(255 255 255 / 0.2);
 
   --media-tooltip-font-size: 13px;
   --media-tooltip-font-weight: 500;
   --media-tooltip-color: hsl(0, 0%, 80%);
   --media-tooltip-bg-color: black;
-  --media-tooltip-padding: 2.5px 8px;
+  --media-tooltip-padding: 4px 8px;
   --media-tooltip-border-radius: 2px;
-  --media-tooltip-x-offset: 8px;
-  --media-tooltip-y-offset: 8px;
+  --media-tooltip-x-offset: 0;
+  --media-tooltip-y-offset: 12px;
 }
 ```
 

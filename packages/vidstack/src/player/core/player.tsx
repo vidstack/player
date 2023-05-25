@@ -24,6 +24,7 @@ import { ScreenOrientationController } from '../../foundation/orientation/contro
 import { RequestQueue } from '../../foundation/queue/request-queue';
 import { setAttributeIfEmpty } from '../../utils/dom';
 import { clampNumber } from '../../utils/number';
+import { IS_IPHONE } from '../../utils/support';
 import { mediaContext, type MediaContext } from './api/context';
 import { MEDIA_ATTRIBUTES } from './api/media-attrs';
 import type { PlayerCSSVars } from './api/player-cssvars';
@@ -142,14 +143,6 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
       context,
     );
 
-    effect(this._watchCanPlay.bind(this));
-    effect(this._watchMuted.bind(this));
-    effect(this._watchPaused.bind(this));
-    effect(this._watchVolume.bind(this));
-    effect(this._watchCurrentTime.bind(this));
-    effect(this._watchPlaysinline.bind(this));
-    effect(this._watchPlaybackRate.bind(this));
-
     new MediaLoadController(instance, this.startLoading.bind(this));
   }
 
@@ -159,6 +152,17 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     if (__SERVER__) this._watchTitle();
     else effect(this._watchTitle.bind(this));
+
+    if (__SERVER__) this._watchOrientation();
+    else effect(this._watchOrientation.bind(this));
+
+    effect(this._watchCanPlay.bind(this));
+    effect(this._watchMuted.bind(this));
+    effect(this._watchPaused.bind(this));
+    effect(this._watchVolume.bind(this));
+    effect(this._watchCurrentTime.bind(this));
+    effect(this._watchPlaysinline.bind(this));
+    effect(this._watchPlaybackRate.bind(this));
 
     this._setMediaAttributes();
     this._setMediaVars();
@@ -171,22 +175,31 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
   }
 
   protected override onConnect(el: HTMLElement) {
+    if (IS_IPHONE) setAttribute(el, 'data-iphone', '');
+
+    const pointerQuery = window.matchMedia('(pointer: coarse)');
+    this._onTouchChange(pointerQuery);
+    pointerQuery.onchange = this._onTouchChange.bind(this);
+
+    const resize = new ResizeObserver(this._onResize.bind(this));
+    this._onResize();
+    resize.observe(el);
+
     this.dispatch('media-player-connect', {
       detail: this.el as MediaPlayerElement,
       bubbles: true,
       composed: true,
     });
 
-    window.requestAnimationFrame(() => {
-      if (isNull(this.$store.canLoadPoster())) {
-        this.$store.canLoadPoster.set(true);
-      }
-    });
-
     if (__DEV__) {
       this._media.logger!.setTarget(el);
       return () => this._media.logger!.setTarget(null);
     }
+
+    return () => {
+      resize.disconnect();
+      pointerQuery.onchange = null;
+    };
   }
 
   private _initStore() {
@@ -215,6 +228,13 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
       'aria-label',
       title() ? `${typeText} - ${title()}` : typeText + ' Player',
     );
+  }
+
+  private _watchOrientation() {
+    const orientation = this.orientation.landscape ? 'landscape' : 'portrait';
+    this.$store.orientation.set(orientation);
+    setAttribute(this.el!, 'data-orientation', orientation);
+    this._onResize();
   }
 
   private _watchCanPlay() {
@@ -256,17 +276,34 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
         const ratio = this.$props.aspectRatio();
         return ratio ? +ratio.toFixed(4) : null;
       },
-      '--media-buffered': () => +this.$store.bufferedEnd().toFixed(3),
-      '--media-current-time': () => +this.$store.currentTime().toFixed(3),
-      '--media-duration': () => {
-        const duration = this.$store.duration();
-        return Number.isFinite(duration) ? +duration.toFixed(3) : 0;
-      },
     });
   }
 
   private _onFindPlayer(event: FindPlayerEvent) {
     event.detail(this.el! as MediaPlayerElement);
+  }
+
+  private _onResize() {
+    if (__SERVER__) return;
+
+    const width = this.el!.clientWidth,
+      height = this.el!.clientHeight,
+      bpx = width < 600 ? 'sm' : width < 980 ? 'md' : 'lg',
+      bpy = height < 480 ? 'sm' : height < 980 ? 'md' : 'lg';
+
+    this.$store.breakpointX.set(bpx);
+    this.$store.breakpointY.set(bpy);
+
+    setAttribute(this.el!, 'data-bp-x', bpx);
+    setAttribute(this.el!, 'data-bp-y', bpy);
+  }
+
+  private _onTouchChange(queryList: MediaQueryList | MediaQueryListEvent) {
+    if (__SERVER__) return;
+    const isTouch = queryList.matches;
+    setAttribute(this.el!, 'data-touch', isTouch);
+    this.$store.touchPointer.set(isTouch);
+    this._onResize();
   }
 
   private _isIOSControls() {

@@ -1,4 +1,4 @@
-import { effect, peek, provideContext, type JSX } from 'maverick.js';
+import { effect, peek, provideContext } from 'maverick.js';
 import {
   Component,
   ComponentInstance,
@@ -116,6 +116,10 @@ export class Slider<T extends SliderAPI = SliderAPI> extends Component<T> {
     return this.$props.keyStep();
   }
 
+  _roundValue(value: number) {
+    return Math.round(value);
+  }
+
   _isDisabled() {
     return this.$props.disabled();
   }
@@ -174,18 +178,8 @@ export class Slider<T extends SliderAPI = SliderAPI> extends Component<T> {
   // -------------------------------------------------------------------------------------------
 
   protected _setAttrs() {
-    const { disabled } = this.$props;
-    const {
-      dragging,
-      fillPercent,
-      fillRate,
-      interactive,
-      pointerPercent,
-      pointerRate,
-      pointerValue,
-      pointing,
-      value,
-    } = this.$store;
+    const { disabled } = this.$props,
+      { dragging, fillPercent, interactive, pointerPercent, pointing } = this.$store;
 
     this.setAttributes({
       disabled,
@@ -202,12 +196,8 @@ export class Slider<T extends SliderAPI = SliderAPI> extends Component<T> {
     });
 
     this.setCSSVars<SliderCSSVars>({
-      '--slider-fill-rate': fillRate,
-      '--slider-fill-value': value,
-      '--slider-fill-percent': () => fillPercent() + '%',
-      '--slider-pointer-rate': pointerRate,
-      '--slider-pointer-value': pointerValue,
-      '--slider-pointer-percent': () => pointerPercent() + '%',
+      '--slider-fill-percent': () => round(fillPercent(), 3) + '%',
+      '--slider-pointer-percent': () => round(pointerPercent(), 3) + '%',
     });
   }
 

@@ -73,7 +73,7 @@ export class CaptionsMenuItems extends MenuItems<CaptionsMenuItemsAPI> {
 
   protected _isDisabled() {
     const { textTracks } = this._media.$store;
-    return textTracks().length === 0;
+    return textTracks().filter(isTrackCaptionKind).length === 0;
   }
 
   protected _onChange(event: RadioGroupChangeEvent) {

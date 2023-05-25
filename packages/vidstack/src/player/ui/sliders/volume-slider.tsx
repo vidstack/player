@@ -1,9 +1,11 @@
 import throttle from 'just-throttle';
 import { effect } from 'maverick.js';
 import { defineElement, defineProp, type HTMLCustomElement } from 'maverick.js/element';
+import { setAttribute } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
+import { canChangeVolume } from '../../../utils/support';
 import type { SliderDragValueChangeEvent, SliderValueChangeEvent } from './slider/api/events';
 import { sliderProps } from './slider/api/props';
 import { SliderStoreFactory } from './slider/api/store';
@@ -51,6 +53,13 @@ export class VolumeSlider extends Slider<VolumeSliderAPI> {
   protected override onAttach(el: HTMLElement) {
     setAttributeIfEmpty(el, 'aria-label', 'Media volume');
     super.onAttach(el);
+
+    if (!__SERVER__) {
+      canChangeVolume().then((canSet) => {
+        if (!canSet) setAttribute(el, 'aria-hidden', 'true');
+      });
+    }
+
     effect(this._watchVolume.bind(this));
   }
 

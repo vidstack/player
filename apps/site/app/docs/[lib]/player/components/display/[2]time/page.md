@@ -33,11 +33,12 @@ of the variables can be set to adjust the default time styles:
 
 ```css {% copy=true %}
 media-player {
-  --media-time-font-size: 18px;
+  --media-time-font-size: 14px;
   --media-time-font-weight: 500;
   --media-font-family: sans-serif;
   --media-time-color: inherit;
   --media-time-bg: unset;
   --media-time-border-radius: unset;
+  --media-time-letter-spacing: 0.025em;
 }
 ```

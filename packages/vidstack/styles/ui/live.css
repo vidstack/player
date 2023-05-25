@@ -10,8 +10,8 @@
 }
 
 :where(media-live-indicator [part='container']) {
-  width: var(--media-live-indicator-width, 48px);
-  height: var(--media-live-indicator-height, 48px);
+  width: var(--media-live-indicator-width, 40px);
+  height: var(--media-live-indicator-height, 40px);
   display: flex;
   align-items: center;
   justify-content: center;

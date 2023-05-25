@@ -1,16 +1,21 @@
-import { effect, getScope, peek, scoped } from 'maverick.js';
+import { effect, peek } from 'maverick.js';
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { isMouseEvent, isPointerEvent, isTouchEvent, listenEvent } from 'maverick.js/std';
+import {
+  isMouseEvent,
+  isPointerEvent,
+  isTouchEvent,
+  kebabToCamelCase,
+  listenEvent,
+} from 'maverick.js/std';
 
 import { scopedRaf } from '../../utils/dom';
 import { useMedia, type MediaContext } from '../core/api/context';
 
-/**
- * Map of outlet element to last gesture that occurred. This is used to ensure double interaction
- * events (e.g., `dblpointerup`) override single interaction events (e.g., `pointerup`) per
- * player instance.
- */
-const lastGesture = new WeakMap<HTMLElement, Gesture>();
+declare global {
+  interface MaverickElements {
+    'media-gesture': MediaGestureElement;
+  }
+}
 
 /**
  * This component enables actions to be performed on the media based on user gestures.
@@ -57,12 +62,6 @@ export class Gesture extends Component<GestureAPI> {
     });
   }
 
-  protected override onDisconnect() {
-    if (this._outlet && lastGesture.get(this._outlet) === this) {
-      lastGesture.delete(this._outlet);
-    }
-  }
-
   protected _attachListener() {
     let eventType = this.$props.event();
 
@@ -75,26 +74,37 @@ export class Gesture extends Component<GestureAPI> {
     listenEvent(this._outlet, eventType as keyof HTMLElementEventMap, this._acceptEvent.bind(this));
   }
 
-  protected _lastEventTime = 0;
+  protected _presses = 0;
+  protected _pressTimerId = -1;
+
   protected _acceptEvent(event: Event) {
     if (!this._inBounds(event)) return;
 
-    if (!peek(this.$props.event)?.startsWith('dbl')) {
-      lastGesture.set(this._outlet!, this);
-      setTimeout(() => {
-        // Ensure dbl events have priority.
-        if (lastGesture.get(this._outlet!) === this) {
-          this._handleEvent(event);
-        }
-      }, 220);
-    } else if (Date.now() - this._lastEventTime <= 200) {
-      lastGesture.set(this._outlet!, this);
-      queueMicrotask(() => {
-        this._handleEvent(event);
-      });
+    // @ts-expect-error
+    event.MEDIA_GESTURE = true;
+    event.preventDefault();
+
+    const isDblEvent = peek(this.$props.event)?.startsWith('dbl');
+    if (!isDblEvent) {
+      if (this._presses === 0) {
+        setTimeout(() => {
+          if (this._presses === 1) this._handleEvent(event);
+        }, 250);
+      }
+    } else if (this._presses === 1) {
+      queueMicrotask(() => this._handleEvent(event));
+      clearTimeout(this._pressTimerId);
+      this._presses = 0;
+      return;
     }
 
-    this._lastEventTime = Date.now();
+    if (this._presses === 0) {
+      this._pressTimerId = window.setTimeout(() => {
+        this._presses = 0;
+      }, 275);
+    }
+
+    this._presses++;
   }
 
   protected _handleEvent(event: Event) {
@@ -132,7 +142,7 @@ export class Gesture extends Component<GestureAPI> {
 
   /** Validate gesture has the highest z-index in this triggered group. */
   protected _isTopLayer() {
-    const gestures = this._outlet!.querySelectorAll(
+    const gestures = this._media.player!.querySelectorAll(
       'media-gesture[data-triggered]',
     ) as NodeListOf<MediaGestureElement>;
     return (
@@ -144,13 +154,13 @@ export class Gesture extends Component<GestureAPI> {
 
   protected _performAction(action: string | undefined, trigger: Event) {
     if (!action) return;
-    const [method, value] = action.replace(/:([a-z])/, (_, $1) => $1.toUpperCase()).split(':');
+    const [method, value] = action.replace(/:([a-z])/, '-$1').split(':');
     if (action.includes(':fullscreen')) {
       this._media.remote.toggleFullscreen('prefer-media', trigger);
     } else if (action.includes('seek:')) {
       this._media.remote.seek(peek(this._media.$store.currentTime) + (+value || 0), trigger);
     } else {
-      this._media.remote[method](trigger);
+      this._media.remote[kebabToCamelCase(method)](trigger);
     }
   }
 }
@@ -187,6 +197,6 @@ export type GestureAction =
   | 'play'
   | 'pause'
   | `seek:${number}`
-  | `toggle:${'paused' | 'muted' | 'fullscreen'}`;
+  | `toggle:${'paused' | 'muted' | 'fullscreen' | 'user-idle'}`;
 
 export interface MediaGestureElement extends HTMLCustomElement<Gesture> {}

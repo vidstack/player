@@ -19,13 +19,19 @@ for (const entry of Object.keys(defineEntries)) {
 
 // CSS merge.
 
-let defaultStyles = fs.readFileSync('styles/base.css', 'utf-8');
+let defaultStyles = fs.readFileSync('styles/base.css', 'utf-8'),
+  communityAudioSkin = fs.readFileSync('src/player/skins/community/audio.css', 'utf-8'),
+  communityVideoSkin = fs.readFileSync('src/player/skins/community/video.css', 'utf-8');
 
 for (const file of fs.readdirSync('styles/ui', 'utf-8')) {
   defaultStyles += '\n' + fs.readFileSync(`styles/ui/${file}`, 'utf-8');
 }
 
 fs.writeFileSync('styles/defaults.css', defaultStyles);
+
+if (!fs.existsSync('styles/community-skin')) fs.mkdirSync('styles/community-skin');
+fs.writeFileSync('styles/community-skin/audio.css', communityAudioSkin);
+fs.writeFileSync('styles/community-skin/video.css', communityVideoSkin);
 
 // Build configurations.
 
@@ -67,7 +73,9 @@ function dist({ dev, server, hydrate }: BundleOptions): Options {
       maverick({
         include: 'src/**/*.tsx',
         generate: server ? 'ssr' : 'dom',
-        hydratable: hydrate ? (id) => !id.includes('time-slider/chapters') : false,
+        hydratable: hydrate
+          ? (id) => !id.includes('time-slider/chapters') && !id.includes('skins/community')
+          : false,
         diffArrays: false,
       }),
     ],

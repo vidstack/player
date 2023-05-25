@@ -38,7 +38,9 @@ export function onPress(
   target: EventTarget,
   handler: (event: PointerEvent | KeyboardEvent) => void,
 ) {
-  listenEvent(target, 'pointerup', handler as any);
+  listenEvent(target, 'pointerup', (event) => {
+    if (event.button === 0) handler(event);
+  });
   listenEvent(target, 'keydown', (event) => {
     if (isKeyboardClick(event)) handler(event);
   });
@@ -48,4 +50,10 @@ export function scopedRaf(callback: () => void) {
   if (__SERVER__) return callback();
   const scope = getScope();
   requestAnimationFrame(() => scoped(callback, scope));
+}
+
+export function repaint(el: HTMLElement) {
+  el.style.display = 'none';
+  el.offsetHeight;
+  el.style.removeProperty('display');
 }
