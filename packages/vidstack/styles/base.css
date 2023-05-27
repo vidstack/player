@@ -166,9 +166,8 @@
 }
 
 :where(media-time-slider) {
-  --media-buffered-percent: calc(
-    min(calc(var(--media-buffered) / max(var(--media-duration), 1)), 1) * 100%
-  );
+  --calc-min: min(calc(var(--media-buffered) / max(var(--media-duration), 1)), 1);
+  --media-buffered-percent: calc(var(--calc-min) * 100%);
 }
 
 :where(media-time-slider[data-chapters] > :not(shadow-root, [slot])),
