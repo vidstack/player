@@ -10,7 +10,7 @@ function dist({ dev, server }: BundleOptions): Options {
     entry: {
       [server ? 'server' : dev ? 'dev' : 'prod']: 'src/index.ts',
     },
-    format: server ? ['esm', 'cjs'] : 'esm',
+    format: 'esm',
     tsconfig: 'tsconfig.build.json',
     target: server ? 'node16' : 'esnext',
     platform: server ? 'node' : 'browser',

@@ -79,7 +79,6 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "test": "./dist/dev/index.js",
-      "require": "./dist/server/index.cjs",
       "node": "./dist/server/index.js",
       "deno": "./dist/server/index.js",
       "development": "./dist/dev/index.js",
@@ -88,7 +87,6 @@
     "./elements": {
       "types": "./dist/types/elements.d.ts",
       "test": "./dist/dev/elements.js",
-      "require": "./dist/server/elements.cjs",
       "node": "./dist/server/elements.js",
       "deno": "./dist/server/elements.js",
       "development": "./dist/dev/elements.js",
@@ -97,7 +95,6 @@
     "./define/*": {
       "types": "./dist/types/define/*.d.ts",
       "test": "./dist/dev/define/*",
-      "require": "./dist/server/define/*",
       "node": "./dist/server/define/*",
       "deno": "./dist/server/define/*",
       "development": "./dist/dev/define/*",

@@ -54,7 +54,7 @@ function dist({ dev, server, hydrate }: BundleOptions): Options {
       elements: 'src/elements.ts',
       ...defineEntries,
     },
-    format: server ? ['esm', 'cjs'] : 'esm',
+    format: 'esm',
     external: ['maverick.js', 'hls.js'],
     clean: false,
     treeshake: true,
