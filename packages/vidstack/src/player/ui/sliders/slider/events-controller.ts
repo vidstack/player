@@ -285,7 +285,7 @@ export class SliderEventsController extends ComponentController<SliderAPI> {
       newValue = min();
     } else if (key === 'End' || key === 'PageDown') {
       newValue = max();
-    } else if (/[0-9]/.test(key)) {
+    } else if (!event.metaKey && /[0-9]/.test(key)) {
       newValue = ((max() - min()) / 10) * Number(key);
     }
 
