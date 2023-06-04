@@ -4,7 +4,6 @@ if (__DEV__) {
 
 // Icons
 export * from './icons/types';
-export * from './icons/component';
 
 // Foundation
 export * from './foundation/list/list';

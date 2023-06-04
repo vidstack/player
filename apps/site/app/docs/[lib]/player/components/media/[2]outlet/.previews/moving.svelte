@@ -25,7 +25,7 @@
 </script>
 
 <media-player
-  class={`w-full max-w-sm min-w-sm z-0 aspect-video${floating ? 'bg-black' : ''}`}
+  class={`w-full max-w-sm min-w-sm z-0 overflow-visible aspect-video${floating ? 'bg-black' : ''}`}
   src="https://media-files.vidstack.io/720p.mp4"
   poster="https://media-files.vidstack.io/poster.png"
   aspect-ratio="16/9"

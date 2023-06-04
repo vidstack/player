@@ -6,7 +6,8 @@
   "type": "module",
   "types": "dist/types/index.d.ts",
   "sideEffects": [
-    "./dist/*/define/*.js"
+    "./dist/*/define/*.js",
+    "./dist/*/icons.js"
   ],
   "engines": {
     "node": ">=16"
@@ -37,7 +38,6 @@
   "dependencies": {
     "maverick.js": "0.37.0",
     "media-captions": "0.0.13",
-    "media-icons": "0.5.0",
     "type-fest": "^3.8.0"
   },
   "devDependencies": {
@@ -52,6 +52,7 @@
     "jsdom": "^21.0.0",
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
+    "media-icons": "0.7.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
     "tailwindcss": "^3.2.0",
@@ -91,6 +92,14 @@
       "deno": "./dist/server/elements.js",
       "development": "./dist/dev/elements.js",
       "default": "./dist/prod/elements.js"
+    },
+    "./icons": {
+      "types": "./dist/types/icons.d.ts",
+      "test": "./dist/dev/icons.js",
+      "node": "./dist/server/icons.js",
+      "deno": "./dist/server/icons.js",
+      "development": "./dist/dev/icons.js",
+      "default": "./dist/prod/icons.js"
     },
     "./define/*": {
       "types": "./dist/types/define/*.d.ts",

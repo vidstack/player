@@ -33,7 +33,6 @@ export class CommunitySkin extends Component<CommunitySkinAPI> {
     tagName: 'media-community-skin',
     nohydrate: true,
     props: {
-      posterAlt: null,
       i18n: null,
     },
   });
@@ -114,11 +113,6 @@ export interface CommunitySkinAPI {
 }
 
 export interface CommunitySkinProps {
-  /**
-   * ♿ **ARIA:** Provides alternative information for a poster image if a user for some reason
-   * cannot view it.
-   */
-  posterAlt: string | null;
   /**
    * Translation map from english to your desired language for words used throughout the skin.
    */

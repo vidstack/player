@@ -4,6 +4,7 @@ import {
   onDispose,
   peek,
   provideContext,
+  scoped,
   signal,
   tick,
   useContext,
@@ -156,7 +157,9 @@ export class Menu extends Component<MenuAPI> {
       if (containsItems) {
         const menu = this.el!.cloneNode();
         menu.appendChild(this._menuItems);
-        document.body.append(menu);
+        scoped(() => {
+          document.body.append(menu);
+        }, this._media.scope);
       }
     }
 

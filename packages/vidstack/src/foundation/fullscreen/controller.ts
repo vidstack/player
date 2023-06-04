@@ -28,8 +28,8 @@ export class FullscreenController
   }
 
   protected override onConnect() {
-    listenEvent(fscreen as any, 'fullscreenchange', this._onFullscreenChange.bind(this));
-    listenEvent(fscreen as any, 'fullscreenerror', this._onFullscreenError.bind(this));
+    listenEvent(fscreen as any, 'fullscreenchange', this._onFullscreenChange.bind(this) as any);
+    listenEvent(fscreen as any, 'fullscreenerror', this._onFullscreenError.bind(this) as any);
   }
 
   protected override async onDisconnect() {

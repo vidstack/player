@@ -109,10 +109,10 @@ for simple customization of the default button and tooltip styles.
 
 The following is a headless example using Tailwind:
 
-{% code_snippet name="tailwind" copyHighlight=true highlight="react:3-" /%}
+{% code_snippet name="tailwind" copyHighlight=true highlight="react:4-" /%}
 
 ### Tooltips
 
 The following extends the example above with tooltips:
 
-{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:8-" /%}
+{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:4-" /%}

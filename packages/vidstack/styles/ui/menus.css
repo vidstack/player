@@ -89,12 +89,6 @@
   justify-content: center;
 }
 
-:where(media-menu [data-media-menu-button][role='button'] [data-media-icon]),
-:where(media-menu [data-media-menu-button][role='button'] svg) {
-  width: var(--media-button-icon-size, 80%);
-  height: var(--media-button-icon-size, 80%);
-}
-
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Menu Button Parts

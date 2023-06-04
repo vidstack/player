@@ -95,14 +95,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(media-icon, svg[data-media-icon]) {
-  width: 32px;
-  height: 32px;
-}
-
-:where(media-icon svg) {
+:where(media-icon, media-icon svg) {
+  display: block;
   width: 100%;
   height: 100%;
+  vertical-align: middle;
 }
 
 :where(media-time) {
@@ -229,7 +226,7 @@
   contain: strict;
   overflow: hidden;
   box-sizing: border-box;
-  border: var(--media-thumbnail-border);
+  border: var(--media-thumbnail-border, 1px solid white);
   min-width: var(--media-thumbnail-min-width, 120px);
   min-height: var(--media-thumbnail-min-height, 80px);
   max-width: var(--media-thumbnail-max-width, 180px);
@@ -252,6 +249,7 @@
   box-sizing: border-box;
   contain: content;
   display: inline-block;
+  border: var(--media-thumbnail-border, 1px solid white);
 }
 
 :where(media-slider-video [part='video']) {

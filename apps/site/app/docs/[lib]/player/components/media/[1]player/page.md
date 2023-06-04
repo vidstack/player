@@ -36,6 +36,12 @@ DOM so you can obtain a reference to it when it's ready:
 
 {% code_snippet name="connect-event" copy=true  /%}
 
+## Media Store
+
+👉 See [State Management](/docs/player/core-concepts/state-management) docs for more information.
+
+{% code_snippet name="media-store" copy=true  /%}
+
 ## Data Attributes
 
 All media data attributes that are set on the `<media-player>` element that can be used

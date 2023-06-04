@@ -172,8 +172,12 @@
 }
 
 :where(media-community-skin[data-video] media-slider-value) {
-  margin-top: 2px;
+  margin-top: 4px;
   border-radius: var(--media-slider-value-border-radius, 2px);
+}
+
+:where(media-community-skin[data-video] [part='chapter-title'] + media-slider-value) {
+  margin-top: 0;
 }
 
 :where(media-community-skin[data-video] media-time-slider media-slider-value) {

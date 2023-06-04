@@ -8,7 +8,8 @@ interface BundleOptions {
 function dist({ dev, server }: BundleOptions): Options {
   return {
     entry: {
-      [server ? 'server' : dev ? 'dev' : 'prod']: 'src/index.ts',
+      index: 'src/index.ts',
+      icons: 'src/icons.ts',
     },
     format: 'esm',
     tsconfig: 'tsconfig.build.json',
@@ -16,10 +17,15 @@ function dist({ dev, server }: BundleOptions): Options {
     platform: server ? 'node' : 'browser',
     bundle: true,
     clean: false,
-    outDir: 'dist',
+    outDir: `dist/${server ? 'server' : dev ? 'dev' : 'prod'}`,
     define: {
       __DEV__: dev ? 'true' : 'false',
       __SERVER__: server ? 'true' : 'false',
+    },
+    esbuildOptions(opts) {
+      if (!dev && !server) opts.mangleProps = /^_/;
+      opts.conditions = dev ? ['development', 'production', 'default'] : ['production', 'default'];
+      opts.chunkNames = 'chunks/[name]-[hash]';
     },
   };
 }

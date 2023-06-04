@@ -6,7 +6,7 @@
   import AudioPlayer from './AudioPlayer.svelte';
 </script>
 
-<section class="flex mx-auto max-w-[1440px] px-6 1460:px-0 w-full">
+<section class="flex flex-col 1200:flex-row mx-auto max-w-[1440px] px-6 1460:px-0 w-full">
   <div class="relative z-20 768:mt-4 flex flex-col w-full 1200:w-auto">
     <div
       class="flex flex-col text-center items-center 1200:text-left 1200:items-start justify-center"
@@ -132,7 +132,9 @@
       </div>
     </div>
   </div>
-  <div class="items-end flex-col hidden 1200:flex justify-center 1280:justify-end flex-1 pl-4">
+  <div
+    class="flex-col flex items-center mt-12 1200:mt-0 1200:items-end 1200:justify-center 1200:flex-1 1200:pl-4"
+  >
     <VideoPlayer />
     <AudioPlayer />
   </div>

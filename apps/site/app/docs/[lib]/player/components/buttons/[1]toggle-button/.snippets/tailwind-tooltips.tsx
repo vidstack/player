@@ -1,4 +1,5 @@
-import { MediaToggleButton, MediaTooltip, ThumbsDownIcon, ThumbsUpIcon } from '@vidstack/react';
+import { MediaToggleButton, MediaTooltip } from '@vidstack/react';
+import { ThumbsDownIcon, ThumbsUpIcon } from '@vidstack/react/icons';
 
 <MediaToggleButton className="group flex h-12 w-12 items-center justify-center rounded-sm text-white outline-none data-[focus]:ring-4 data-[focus]:ring-blue-400">
   {/* icons */}

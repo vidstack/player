@@ -24,14 +24,13 @@
   "peerDependencies": {
     "@types/react": "^18.0.0",
     "maverick.js": "0.37.0",
-    "media-icons": "0.5.0",
     "react": "^18.0.0",
     "vidstack": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "maverick.js": "0.37.0",
-    "media-icons": "0.5.0",
+    "media-icons": "0.7.0",
     "react": "^18.0.0",
     "rimraf": "^3.0.0",
     "tsup": "^6.7.0",
@@ -52,10 +51,17 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "node": "./dist/server.js",
-      "deno": "./dist/server.js",
-      "development": "./dist/dev.js",
-      "default": "./dist/prod.js"
+      "node": "./dist/server/index.js",
+      "deno": "./dist/server/index.js",
+      "development": "./dist/dev/index.js",
+      "default": "./dist/prod/index.js"
+    },
+    "./icons": {
+      "types": "./dist/types/icons.d.ts",
+      "node": "./dist/server/icons.js",
+      "deno": "./dist/server/icons.js",
+      "development": "./dist/dev/icons.js",
+      "default": "./dist/prod/icons.js"
     }
   },
   "publishConfig": {

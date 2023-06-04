@@ -17,8 +17,8 @@
 
 <svelte:window on:pointerup={onWindowPointerUp} />
 
-<div
-  class="w-full h-full flex items-center justify-center"
+<media-player
+  class="w-full h-[400px] flex items-center justify-center"
   on:pointerup|stopPropagation={onPointerUp}
 >
   <media-menu class="mt-32" on:attached={onAttached}>
@@ -33,4 +33,4 @@
       </media-radio-group>
     </media-menu-items>
   </media-menu>
-</div>
+</media-player>

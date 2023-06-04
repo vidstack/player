@@ -10,7 +10,7 @@ as radio buttons and updating the player when a quality is selected. The menu wi
 disabled if qualities are not available for the current media. It can be used standalone
 or as a submenu.
 
-{% code_preview name="usage" size="large" copyHighlight=true highlight="html:6-9|react:8-11" /%}
+{% code_preview name="usage" size="large" copyHighlight=true highlight="html:6-9|react:15-18" /%}
 
 ## Custom Button
 

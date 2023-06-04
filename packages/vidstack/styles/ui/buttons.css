@@ -6,6 +6,9 @@
 
 :where(media-player [data-media-button]) {
   -webkit-tap-highlight-color: transparent;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   user-select: none;
   border-radius: var(--media-button-border-radius, 2px);
   color: var(--media-button-color, #f5f5f5);
@@ -24,7 +27,13 @@
   height: var(--media-mobile-fullscreen-button-size, 42px);
 }
 
-:where(media-player [data-media-button] svg) {
+:where(media-player)
+  :where(
+    [data-media-button] > svg,
+    [data-media-button] > media-icon,
+    [data-media-button] > shadow-root > svg,
+    [data-media-button] > shadow-root > media-icon
+  ) {
   width: var(--media-button-icon-size, 80%);
   height: var(--media-button-icon-size, 80%);
 }
@@ -39,14 +48,6 @@
 
 :where(media-player [data-media-button] [slot]) {
   display: none !important;
-}
-
-:where(media-player [data-media-button]:not([aria-expanded]))
-  :where(media-icon[slot], svg[slot], svg[data-media-icon]) {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 :where(media-player)

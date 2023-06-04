@@ -13,7 +13,7 @@ The menu will be displayed as a popup menu from the bottom of the screen on mobi
 viewport width), or if a coarse pointer device (e.g., touch) input is detected and orientation
 is landscape.
 
-{% code_preview name="usage" copyHighlight=true highlight="react:3-" /%}
+{% code_preview name="usage" copyHighlight=true highlight="react:4-" /%}
 
 ## Menu Position
 

@@ -208,13 +208,6 @@ export function TimeSlider() {
   );
 }
 
-export function Poster() {
-  const {
-    $props: { posterAlt },
-  } = useCommunitySkin();
-  return <media-poster alt={posterAlt()} />;
-}
-
 export function TimeGroup() {
   return (
     <div part="time-group">

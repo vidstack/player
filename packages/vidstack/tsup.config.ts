@@ -52,6 +52,7 @@ function dist({ dev, server, hydrate }: BundleOptions): Options {
     entry: {
       index: 'src/index.ts',
       elements: 'src/elements.ts',
+      icons: 'src/icons.ts',
       ...defineEntries,
     },
     format: 'esm',

@@ -173,6 +173,7 @@ function typography(theme) {
           backgroundColor: 'var(--code-fence-bg)',
           boxShadow: 'none',
           display: 'flex',
+          lineHeight: '24px',
         },
         'p + pre': {
           marginTop: `${-4 / 14}em`,

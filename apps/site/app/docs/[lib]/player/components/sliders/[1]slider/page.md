@@ -188,6 +188,7 @@ media-player {
   --media-slider-chapter-hover-transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
 
   --media-thumbnail-bg: black;
+  --media-thumbnail-border: 1px solid white;
   /* Applies when scaling thumbnails up. */
   --media-thumbnail-min-width: 120px;
   --media-thumbnail-min-height: 80px;

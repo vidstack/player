@@ -5,7 +5,7 @@ description: This component is used to display a set of options where only one c
 
 ## Usage
 
-{% code_preview name="usage" copyHighlight=true size="large" highlight="html:6-10|react:8-12" /%}
+{% code_preview name="usage" copyHighlight=true size="large" highlight="html:6-10|react:15-19" /%}
 
 ## Styling
 

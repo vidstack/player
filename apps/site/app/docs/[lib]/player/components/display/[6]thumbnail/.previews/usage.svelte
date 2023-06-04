@@ -12,12 +12,12 @@
 </script>
 
 <media-player
-  class="w-full max-w-md relative"
+  class="w-full max-w-md relative flex items-center justify-center flex-col"
   thumbnails="https://media-files.vidstack.io/thumbnails.vtt"
   on:media-player-connect={onConnect}
 >
   <media-outlet />
-  <div class="flex items-center justify-center">
+  <div class="flex items-center justify-center mt-1">
     <media-thumbnail {time} />
   </div>
   <media-slider class="mt-4" on:value-change={onValueChange} />

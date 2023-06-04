@@ -1,4 +1,5 @@
-import { MediaToggleButton, MediaTooltip, ThumbsDownIcon, ThumbsUpIcon } from '@vidstack/react';
+import { MediaToggleButton, MediaTooltip } from '@vidstack/react';
+import { ThumbsDownIcon, ThumbsUpIcon } from '@vidstack/react/icons';
 
 <MediaToggleButton>
   <ThumbsUpIcon slot="on" />

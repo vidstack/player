@@ -4,10 +4,10 @@
   --color-secondary: 249 115 22;
   --color-focus: 79 70 229;
   --color-soft: 68 78 94;
-  --color-body: 250 250 250;
-  --color-elevate: 239 239 239;
+  --color-body: 255 255 255;
+  --color-elevate: 240 242 245;
   --color-inverse: 5 11 23;
-  --color-border: 209 213 219;
+  --color-border: 229 231 235;
 }
 
 :root {
@@ -55,9 +55,9 @@
   --color-secondary: 249 115 22;
   --color-soft: 150 155 166;
   --color-inverse: 245 245 245;
-  --color-border: 38 48 64;
-  --color-elevate: 10 19 33;
-  --color-body: 5 11 23;
+  --color-border: 55 65 81;
+  --color-elevate: 17 24 39;
+  --color-body: 3 7 18;
   --color-focus: 129 140 248;
 }
 

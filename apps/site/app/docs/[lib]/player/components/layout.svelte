@@ -10,8 +10,10 @@
 </script>
 
 <script lang="ts">
+  import 'vidstack/icons';
+
   import type { StaticLoader } from '@vessel-js/app/server';
-  import { frontmatter, markdown, matches, useStaticData } from '@vessel-js/svelte';
+  import { frontmatter, markdown, useStaticData } from '@vessel-js/svelte';
   import { onDestroy } from 'svelte';
 
   import ApiTable from '$lib/components/docs/ApiTable.svelte';

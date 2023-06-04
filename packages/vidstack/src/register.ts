@@ -1,6 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { Icon } from './icons/component';
 import { Outlet } from './player/core/outlet/outlet';
 import { Player } from './player/core/player';
 import { CommunitySkin } from './player/skins/community/skin';
@@ -81,5 +80,5 @@ export function getUIComponents() {
 }
 
 export default function registerAllElements(): void {
-  [Player, Outlet, Icon, ...getUIComponents(), CommunitySkin].map(registerLiteCustomElement);
+  [Player, Outlet, ...getUIComponents(), CommunitySkin].map(registerLiteCustomElement);
 }

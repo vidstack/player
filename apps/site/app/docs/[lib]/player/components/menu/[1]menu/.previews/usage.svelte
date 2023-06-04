@@ -1,31 +1,37 @@
 <script>
-  let menu;
+  let menu,
+    allow = Symbol();
 
   function onAttached(event) {
     menu = event.target;
-    menu.open(event);
+    requestAnimationFrame(() => {
+      menu.open(event);
+    });
   }
 
   function onPointerUp(event) {
     menu?.close(event);
+    const forward = new PointerEvent('pointerup', event);
+    forward[allow] = true;
+    window.dispatchEvent(forward);
   }
 
   function onWindowPointerUp(event) {
-    event.stopImmediatePropagation();
+    if (!event[allow]) event.stopImmediatePropagation();
   }
 </script>
 
 <svelte:window on:pointerup={onWindowPointerUp} />
 
-<div
-  class="w-full h-full flex items-center justify-center"
+<media-player
+  class="w-full h-[400px] flex items-center justify-center"
   on:pointerup|stopPropagation={onPointerUp}
 >
-  <media-menu class="mt-32" on:attached={onAttached}>
+  <media-menu on:attached={onAttached}>
     <media-menu-button aria-label="Settings">
       <media-icon type="settings" data-rotate />
     </media-menu-button>
-    <media-menu-items>
+    <media-menu-items style="--menu-height: 114px;">
       <media-menu>
         <media-menu-button>
           <media-icon type="arrow-left" slot="close-icon" />
@@ -56,4 +62,4 @@
       </media-menu>
     </media-menu-items>
   </media-menu>
-</div>
+</media-player>

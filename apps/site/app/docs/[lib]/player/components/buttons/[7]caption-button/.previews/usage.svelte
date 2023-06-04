@@ -18,11 +18,13 @@
   Hello, I'm a captions box!
 </div>
 
-<media-toggle-button
-  default-pressed
-  on:click={onPress}
-  on:keyup={(e) => isKeyboardClick(e) && onPress()}
->
-  <media-icon type="closed-captions-on" slot="on" />
-  <media-icon type="closed-captions" slot="off" />
-</media-toggle-button>
+<media-player class="w-full flex justify-center">
+  <media-toggle-button
+    default-pressed
+    on:click={onPress}
+    on:keyup={(e) => isKeyboardClick(e) && onPress()}
+  >
+    <media-icon type="closed-captions-on" slot="on" />
+    <media-icon type="closed-captions" slot="off" />
+  </media-toggle-button>
+</media-player>

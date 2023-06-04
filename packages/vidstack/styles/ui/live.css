@@ -50,3 +50,9 @@
   ) {
   display: none;
 }
+
+@media (pointer: fine) {
+  :where(media-live-indicator[data-hover]) {
+    background-color: unset;
+  }
+}

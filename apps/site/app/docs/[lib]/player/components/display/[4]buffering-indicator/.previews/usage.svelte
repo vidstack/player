@@ -24,12 +24,12 @@
   <div class="my-4 flex space-x-4 px-2">
     <label>
       Can Play
-      <input type="checkbox" bind:checked={canPlay} />
+      <input class="cursor-pointer" type="checkbox" bind:checked={canPlay} />
     </label>
 
     <label>
       Buffering
-      <input type="checkbox" bind:checked={waiting} />
+      <input class="cursor-pointer" type="checkbox" bind:checked={waiting} />
     </label>
   </div>
 </div>

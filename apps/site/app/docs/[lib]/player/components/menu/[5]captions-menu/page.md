@@ -9,7 +9,7 @@ The captions menu components handle rendering the current captions/subtitles tex
 as radio buttons and updating the player when a track is selected. The menu will be
 disabled if there no tracks. This menu can be used as standalone or as a submenu.
 
-{% code_preview name="usage" size="large" copyHighlight=true highlight="html:6-9|react:8-11" /%}
+{% code_preview name="usage" size="large" copyHighlight=true highlight="html:6-9|react:15-18" /%}
 
 ## Custom Button
 

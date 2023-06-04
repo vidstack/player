@@ -1,4 +1,4 @@
-import { computed, effect, peek, provideContext, signal } from 'maverick.js';
+import { computed, effect, getScope, peek, provideContext, signal } from 'maverick.js';
 import {
   Component,
   ComponentInstance,
@@ -95,6 +95,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     const context = {
       player: null,
+      scope: getScope(),
       qualities: new VideoQualityList(),
       audioTracks: new AudioTrackList(),
       $provider: signal<MediaProvider | null>(null),
@@ -282,7 +283,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     const width = this.el!.clientWidth,
       height = this.el!.clientHeight,
       bpx = width < 600 ? 'sm' : width < 980 ? 'md' : 'lg',
-      bpy = height < 480 ? 'sm' : height < 980 ? 'md' : 'lg';
+      bpy = height < 380 ? 'sm' : height < 600 ? 'md' : 'lg';
 
     this.$store.breakpointX.set(bpx);
     this.$store.breakpointY.set(bpy);

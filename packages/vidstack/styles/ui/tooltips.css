@@ -18,7 +18,7 @@
   margin-left: unset;
   margin-bottom: var(--media-tooltip-y-offset, 12px);
   opacity: 0;
-  padding: var(--media-tooltip-padding, 4px 8px);
+  padding: var(--media-tooltip-padding, 2px 8px);
   pointer-events: none;
   position: absolute;
   transform-origin: 50% 100%;

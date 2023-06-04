@@ -7,7 +7,6 @@ import {
   MuteButton,
   PiPButton,
   PlayButton,
-  Poster,
   SettingsMenu,
   TimeGroup,
   TimeSlider,
@@ -24,8 +23,6 @@ function MobileUI() {
   return (
     <div part="media-ui vod live:dvr mobile">
       <VideoGestures />
-      <Poster />
-
       <media-captions />
       <media-buffering-indicator />
 
@@ -66,7 +63,6 @@ function DesktopUI() {
   return (
     <div part="media-ui vod live:dvr desktop ">
       <VideoGestures />
-      <Poster />
       <media-captions />
       <media-buffering-indicator />
 

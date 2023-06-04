@@ -3,6 +3,7 @@ import {
   useContext,
   type ReadSignal,
   type ReadSignalRecord,
+  type Scope,
   type WriteSignal,
 } from 'maverick.js';
 
@@ -21,6 +22,7 @@ import type { MediaStore } from './store';
 
 export interface MediaContext {
   player: MediaPlayerElement | null;
+  scope: Scope;
   remote: MediaRemoteControl;
   delegate: MediaPlayerDelegate;
   qualities: VideoQualityList;

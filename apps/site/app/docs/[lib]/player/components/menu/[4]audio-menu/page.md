@@ -9,7 +9,7 @@ The audio menu components handle rendering the current audio track options as ra
 updating the player when a track is selected. The menu will be disabled if there no tracks. It
 can be used standalone or as a submenu.
 
-{% code_preview name="usage" size="large" copyHighlight=true highlight="html:6-9|react:8-11" /%}
+{% code_preview name="usage" size="large" copyHighlight=true highlight="html:6-9|react:15-18" /%}
 
 ## Custom Button
 

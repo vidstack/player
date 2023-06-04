@@ -43,3 +43,52 @@ depending on the type of installation method (NPM or CDN), library (HTML, React,
 <slot />
 
 {% /steps %}
+
+## Media Icons
+
+**This step is optional.** Media Icons is a collection of icons we've designed at Vidstack to help
+with building audio and video player user interfaces. If you plan on building your components up
+yourself (i.e., _not_ using a skin or any defaults), then you can follow the instructions below to
+use our icons.
+
+First, install the [`media-icons`](https://github.com/vidstack/media-icons) package:
+
+```bash
+npm i media-icons
+```
+
+{% if_js_lib is="html" %}
+
+Next, import the icons:
+
+```ts {% copy=true %}
+import 'vidstack/icons';
+```
+
+Finally, use them like so:
+
+```html {% copy=true %}
+<media-icon type="chromecast" />
+```
+
+👉 Preview the entire collection in our [media icons catalog](/media-icons?lib=html).
+
+{% /if_js_lib %}
+
+{% if_js_lib is="react" %}
+
+Next, import the icon:
+
+```tsx {% copy=true %}
+import { PlayIcon } from '@vidstack/react/icons';
+```
+
+Finally, use them like so:
+
+```tsx {% copy=true %}
+<PlayIcon size={40} />
+```
+
+👉 Preview the entire collection in our [media icons catalog](/media-icons?lib=react).
+
+{% /if_js_lib %}

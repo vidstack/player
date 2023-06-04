@@ -144,16 +144,15 @@ export class SliderEventsController extends ComponentController<SliderAPI> {
     pointerValue.set(value);
     this.dispatch('pointer-value-change', { detail: value, trigger });
     if (dragging()) {
-      const dir = this._delegate._orientation === 'vertical' ? 'bottom' : 'left';
+      const dir = this._delegate._orientation === 'vertical' ? 'bottom' : 'left',
+        size = this._delegate._orientation === 'vertical' ? 'height' : 'width';
 
       if (this._trackFill && !this.el?.hasAttribute('data-chapters')) {
-        this._trackFill.style.width = value + '%';
-        // repaint(this._trackFill);
+        this._trackFill.style[size] = value + '%';
       }
 
       if (this._thumb) {
         this._thumb.style[dir] = value + '%';
-        // repaint(this._thumb);
       }
 
       this._updateValue(value, trigger);
