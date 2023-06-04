@@ -8,8 +8,6 @@
   overflow: hidden;
   background-color: var(--video-player-bg, black);
   border-radius: var(--video-player-border-radius, 6px);
-  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
-    rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 :where(media-community-skin[data-video]) {
@@ -178,8 +176,7 @@
   border-radius: var(--media-slider-value-border-radius, 2px);
 }
 
-:where(media-community-skin[data-video] media-time-slider media-slider-value),
-:where(media-community-skin[data-video] media-time) {
+:where(media-community-skin[data-video] media-time-slider media-slider-value) {
   background-color: var(--media-time-bg, unset);
   text-shadow: -1px -1px 0 #333333, 1px -1px 0 #333333, -1px 1px 0 #333333, 1px 1px 0 #333333;
 }

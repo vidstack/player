@@ -35,13 +35,13 @@
     "test:server:watch": "SERVER=true vitest --watch"
   },
   "dependencies": {
-    "maverick.js": "0.36.10",
+    "maverick.js": "0.37.0",
     "media-captions": "0.0.13",
     "media-icons": "0.5.0",
     "type-fest": "^3.8.0"
   },
   "devDependencies": {
-    "@maverick-js/compiler": "0.36.10",
+    "@maverick-js/compiler": "0.37.0",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
     "@types/fscreen": "^1.0.1",

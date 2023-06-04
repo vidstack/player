@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['maverick.js'],
+    exclude: ['maverick.js', 'maverick.js/element'],
   },
   plugins: [
     maverick({

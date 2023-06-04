@@ -1,4 +1,4 @@
-import { peek, signal } from 'maverick.js';
+import { onDispose, peek, signal } from 'maverick.js';
 import {
   Component,
   ComponentInstance,
@@ -8,6 +8,7 @@ import {
 import { animationFrameThrottle, listenEvent, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
+import { scopedRaf } from '../../../utils/dom';
 import { IS_SAFARI } from '../../../utils/support';
 import { useMedia, type MediaContext } from '../api/context';
 import type { MediaSrc } from '../api/types';
@@ -57,9 +58,6 @@ export class Outlet extends Component<OutletAPI> {
   }
 
   protected override onConnect(el: HTMLElement) {
-    this._onResize();
-    this._onMutation();
-
     const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
     resize.observe(el);
 
@@ -70,6 +68,11 @@ export class Outlet extends Component<OutletAPI> {
       // Prevent delay on pointer/click events.
       listenEvent(el, 'touchstart', (e) => e.preventDefault(), { passive: false });
     }
+
+    scopedRaf(() => {
+      this._onResize();
+      this._onMutation();
+    });
 
     return () => {
       resize.disconnect();
@@ -82,9 +85,11 @@ export class Outlet extends Component<OutletAPI> {
   }
 
   protected _onResize() {
-    const player = this._media.player!,
+    const player = this._media.player,
       width = this.el!.offsetWidth,
       height = this.el!.offsetHeight;
+
+    if (!player) return;
 
     player.$store.mediaWidth.set(width);
     player.$store.mediaHeight.set(height);
@@ -122,7 +127,12 @@ export class Outlet extends Component<OutletAPI> {
   }
 
   override render() {
+    let currentProvider;
+    onDispose(() => currentProvider?.destroy?.());
+
     return () => {
+      currentProvider?.destroy();
+
       const loader = this._loader();
       if (!loader) return null;
 
@@ -132,9 +142,12 @@ export class Outlet extends Component<OutletAPI> {
         loader.load(this._media).then((provider) => {
           // The src/loader might've changed by the time we load the provider.
           if (peek(this._loader) !== loader) return;
+
           this._media.delegate._dispatch('provider-change', {
             detail: provider,
           });
+
+          currentProvider = provider;
         });
       });
 

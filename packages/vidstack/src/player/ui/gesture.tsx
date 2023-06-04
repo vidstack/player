@@ -121,12 +121,14 @@ export class Gesture extends Component<GestureAPI> {
 
   /** Validate event occurred in gesture bounds. */
   protected _inBounds(event: Event) {
+    if (!this.el) return false;
+
     if (isPointerEvent(event) || isMouseEvent(event) || isTouchEvent(event)) {
       const touch = isTouchEvent(event) ? event.touches[0] : undefined;
 
       const clientX = touch?.clientX ?? (event as MouseEvent).clientX;
       const clientY = touch?.clientY ?? (event as MouseEvent).clientY;
-      const rect = this.el!.getBoundingClientRect();
+      const rect = this.el.getBoundingClientRect();
 
       const inBounds =
         clientY >= rect.top &&

@@ -8,13 +8,7 @@ import {
   type ElementAttributesRecord,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import {
-  camelToKebabCase,
-  isNull,
-  listenEvent,
-  setAttribute,
-  uppercaseFirstChar,
-} from 'maverick.js/std';
+import { camelToKebabCase, listenEvent, setAttribute, uppercaseFirstChar } from 'maverick.js/std';
 
 import { canFullscreen } from '../../foundation/fullscreen/controller';
 import { Logger } from '../../foundation/logger/controller';
@@ -284,7 +278,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
   }
 
   private _onResize() {
-    if (__SERVER__) return;
+    if (__SERVER__ || !this.el) return;
 
     const width = this.el!.clientWidth,
       height = this.el!.clientHeight,

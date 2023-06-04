@@ -31,6 +31,7 @@ declare global {
 export class CommunitySkin extends Component<CommunitySkinAPI> {
   static el = defineElement<CommunitySkinAPI>({
     tagName: 'media-community-skin',
+    nohydrate: true,
     props: {
       posterAlt: null,
       i18n: null,

@@ -35,6 +35,7 @@ export class Tooltip extends Component<TooltipAPI> {
   protected override onAttach(el: HTMLElement): void {
     if (hasProvidedContext(tooltipContext)) {
       scopedRaf(() => {
+        if (!el.isConnected) return;
         const tooltip = useContext(tooltipContext);
         tooltip._attachTooltip(el);
       });
