@@ -1,8 +1,10 @@
-import { effect } from 'maverick.js';
+import { computed, effect, peek } from 'maverick.js';
 import { ComponentInstance, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
 import { ClassManager } from '../../../../foundation/observers/class-manager';
+import { round } from '../../../../utils/number';
 import { useMedia, type MediaContext } from '../../../core/api/context';
+import type { VideoQuality } from '../../../core/quality/video-quality';
 import { MenuItems, type MenuItemsAPI } from '../menu-items';
 import { Radio } from '../radio/radio';
 import { RadioGroup, type RadioGroupChangeEvent } from '../radio/radio-group';
@@ -32,6 +34,7 @@ export class QualityMenuItems extends MenuItems<QualityMenuItemsAPI> {
     tagName: 'media-quality-menu-items',
     props: {
       autoLabel: 'Auto',
+      hideBitrate: false,
       radioGroupClass: null,
       radioClass: null,
       radioCheckClass: null,
@@ -41,6 +44,13 @@ export class QualityMenuItems extends MenuItems<QualityMenuItemsAPI> {
   static register = [RadioGroup, Radio];
 
   protected _media!: MediaContext;
+
+  protected _sortedQualities = computed(() => {
+    const { qualities } = this._media.$store;
+    return [...qualities()].sort((a, b) =>
+      b.height === a.height ? b.bitrate - a.bitrate : b.height - a.height,
+    );
+  });
 
   constructor(instance: ComponentInstance<QualityMenuItemsAPI>) {
     super(instance);
@@ -76,35 +86,49 @@ export class QualityMenuItems extends MenuItems<QualityMenuItemsAPI> {
   protected _onChange(event: RadioGroupChangeEvent) {
     if (this._isDisabled()) return;
 
-    const radioGroup = event.target;
+    const radioGroup = event.target,
+      value = radioGroup.value;
 
-    if (radioGroup.value === 'auto') {
+    if (value === 'auto') {
       this._media.remote.changeQuality(-1, event);
       return;
     }
 
-    const value = +radioGroup.value,
-      index = this._media.qualities.toArray().findIndex((quality) => quality.height === value);
+    const { qualities } = this._media.$store,
+      index = peek(qualities).findIndex((quality) => this._getQualityId(quality) === value);
 
     if (index >= 0) this._media.remote.changeQuality(index, event);
   }
 
   protected _getValue() {
     const { quality, autoQuality } = this._media.$store;
-    return autoQuality() ? 'auto' : (quality()?.height ?? 'auto') + '';
+
+    if (autoQuality()) return 'auto';
+
+    const currentQuality = quality();
+    return currentQuality ? this._getQualityId(currentQuality) : 'auto';
+  }
+
+  protected _getQualityId(quality: VideoQuality) {
+    return quality.height + '_' + quality.bitrate;
   }
 
   protected _getOptions() {
-    const { autoLabel } = this.$props,
-      { qualities } = this._media.$store;
+    const { autoLabel, hideBitrate } = this.$props;
     return [
       { value: 'auto', content: () => <span>{autoLabel()}</span> },
-      ...qualities()
-        .sort((a, b) => b.height - a.height)
-        .map((quality) => ({
-          value: quality.height + '',
-          content: () => <span>{quality.height + 'p'}</span>,
-        })),
+      ...this._sortedQualities().map((quality) => {
+        const rate = `${round(quality.bitrate / 1000000, 2)} Mbps`;
+        return {
+          value: this._getQualityId(quality),
+          content: () => (
+            <>
+              <span part="label">{quality.height + 'p'}</span>
+              {!hideBitrate() && <span part="info">{rate}</span>}
+            </>
+          ),
+        };
+      }),
     ];
   }
 
@@ -126,6 +150,8 @@ export interface QualityMenuItemsAPI extends MenuItemsAPI {
 export interface QualityMenuItemsProps {
   /** The text to display for the auto quality radio option. */
   autoLabel: string;
+  /** Whether the bitrate should _not_ be displayed next to each quality radio option. */
+  hideBitrate: boolean;
   radioGroupClass: string | null;
   radioClass: string | null;
   radioCheckClass: string | null;

@@ -80,7 +80,7 @@ export class PlaybackRateMenuItems extends MenuItems<PlaybackRateMenuAPI> {
     const { rates, normalLabel } = this.$props;
     return rates().map((rate) => ({
       value: rate + '',
-      content: () => <span>{rate === 1 ? normalLabel() : rate + '×'}</span>,
+      content: () => <span part="label">{rate === 1 ? normalLabel() : rate + '×'}</span>,
     }));
   }
 

@@ -97,7 +97,7 @@ export class AudioMenuItems extends MenuItems<AudioMenuItemsAPI> {
     const { audioTracks } = this._media.$store;
     return audioTracks().map((track) => ({
       value: track.label.toLowerCase(),
-      content: () => <span>{track.label}</span>,
+      content: () => <span part="label">{track.label}</span>,
     }));
   }
 

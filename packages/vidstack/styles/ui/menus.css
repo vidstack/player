@@ -320,6 +320,12 @@
   display: inline !important;
 }
 
+:where(media-menu [part='info']) {
+  color: var(--media-menu-item-info-color, rgb(168, 169, 171));
+  font-size: var(--media-menu-item-info-font-size, 13px);
+  margin-left: auto;
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Radio
