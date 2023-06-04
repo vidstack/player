@@ -58,7 +58,12 @@ export class MenuButton<T extends MenuButtonAPI = MenuButtonAPI> extends Compone
 
   protected override onConnect(el: HTMLElement) {
     const hint = Array.from(el.querySelectorAll('[slot="hint"]')).pop();
-    if (hint) effect(() => void (hint.textContent = this._menu._hint()));
+    if (hint) {
+      effect(() => {
+        const text = this._menu._hint();
+        if (text) hint.textContent = text;
+      });
+    }
   }
 
   protected _watchDisabled() {
