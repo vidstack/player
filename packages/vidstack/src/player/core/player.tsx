@@ -27,7 +27,7 @@ import { mediaPlayerProps, type MediaStateAccessors, type PlayerProps } from './
 import type { MediaFullscreenRequestTarget } from './api/request-events';
 import { MediaStoreFactory, type MediaStore } from './api/store';
 import { MediaKeyboardController } from './keyboard/controller';
-import type { AnyMediaProvider, MediaProviderLoader } from './providers/types';
+import type { AnyMediaProvider } from './providers/types';
 import { VideoQualityList } from './quality/video-quality';
 import { MediaEventsLogger } from './state/media-events-logger';
 import { MediaLoadController } from './state/media-load-controller';
@@ -42,7 +42,7 @@ import { TextRenderers } from './tracks/text/render/text-renderer';
 import { TEXT_TRACK_CROSSORIGIN } from './tracks/text/symbols';
 import { isTrackCaptionKind } from './tracks/text/text-track';
 import { TextTrackList } from './tracks/text/text-tracks';
-import { MediaUserController } from './user';
+import { type MediaUserController } from './user';
 
 declare global {
   interface MaverickElements {
@@ -120,7 +120,6 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     this._media = context;
     provideContext(mediaContext, context);
 
-    this.user = new MediaUserController(instance);
     this.orientation = new ScreenOrientationController(instance);
 
     new FocusVisibleController(instance);
@@ -320,7 +319,9 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
    * Media user settings which currently supports configuring user idling behavior.
    */
   @prop
-  readonly user: MediaUserController;
+  get user(): MediaUserController {
+    return this._requestMgr._user;
+  }
 
   /**
    * Controls the screen orientation of the current browser window and dispatches orientation

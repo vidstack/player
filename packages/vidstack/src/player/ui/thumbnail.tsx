@@ -147,9 +147,9 @@ export class Thumbnail extends Component<ThumbnailAPI> {
   protected _requestResize = animationFrameThrottle(this._resize.bind(this));
 
   protected _resize() {
-    if (!this._img || !this._coords) return;
+    if (!this._img || !this._coords || !this.el) return;
     const { w, h, x, y } = this._coords,
-      { maxWidth, maxHeight, minWidth, minHeight } = getComputedStyle(this.el!),
+      { maxWidth, maxHeight, minWidth, minHeight } = getComputedStyle(this.el),
       minRatio = Math.max(parseInt(minWidth) / w, parseInt(minHeight) / h),
       maxRatio = Math.min(parseInt(maxWidth) / w, parseInt(maxHeight) / h),
       scale = maxRatio < 1 ? maxRatio : minRatio > 1 ? minRatio : 1;
