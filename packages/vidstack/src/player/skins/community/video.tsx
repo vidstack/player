@@ -38,7 +38,7 @@ function MobileUI() {
         </div>
 
         <div part="controls-group">
-          <PlayButton part="big-play-button" tooltip="top center" />
+          <PlayButton tooltip="top center" />
         </div>
 
         <div part="controls-group">

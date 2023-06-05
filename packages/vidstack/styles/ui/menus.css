@@ -364,6 +364,7 @@
 
 :where(media-radio[aria-checked='true'] [part='check'])::after {
   content: '';
+  border-color: var(--media-menu-radio-check-active-color, #f5f5f5);
   background-color: var(--media-menu-radio-check-active-color, #f5f5f5);
   border-radius: 9999px;
   box-sizing: border-box;

@@ -35,7 +35,7 @@ export function loadPlayerSidebar(): SidebarLinks {
   };
 }
 
-const WIP = new Set(['Architecture', 'Accessibility', 'Skins', 'User']);
+const WIP = new Set(['Architecture', 'Accessibility', 'User']);
 
 function links(slugs: string[], filter: RegExp): SidebarLink[] {
   return slugs

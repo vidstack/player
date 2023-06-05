@@ -47,5 +47,5 @@ export function useCommunitySkin() {
 }
 
 export function useCommunitySkinI18n() {
-  return useCommunitySkin().$props.i18n;
+  return useCommunitySkin().$props.translations;
 }

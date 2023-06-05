@@ -60,6 +60,15 @@
   const isCategoryOpen = {
     [get(activeCategory) as string]: true,
   };
+
+  $: {
+    isCategoryOpen[$activeCategory as string] = true;
+    if (env.browser) {
+      requestAnimationFrame(() => {
+        scrollToActiveItem();
+      });
+    }
+  }
 </script>
 
 <aside

@@ -53,7 +53,7 @@ Add the following player HTML boilerplate to get started.
 ## Add Global Types {% slot="title" %}
 
 {% slot name="description" %}
-Add global Vidstack types if you're TypeScript.
+Add global Vidstack types if you're using TypeScript.
 {% /slot %}
 
 ```json {% title="tsconfig.json" copyHighlight=true highlight="3" %}

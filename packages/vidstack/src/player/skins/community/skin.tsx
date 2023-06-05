@@ -33,7 +33,7 @@ export class CommunitySkin extends Component<CommunitySkinAPI> {
     tagName: 'media-community-skin',
     nohydrate: true,
     props: {
-      i18n: null,
+      translations: null,
     },
   });
 
@@ -116,7 +116,7 @@ export interface CommunitySkinProps {
   /**
    * Translation map from english to your desired language for words used throughout the skin.
    */
-  i18n: CommunitySkinTranslations | null;
+  translations: CommunitySkinTranslations | null;
 }
 
 export interface MediaCommunitySkinElement extends HTMLCustomElement<CommunitySkin> {}
