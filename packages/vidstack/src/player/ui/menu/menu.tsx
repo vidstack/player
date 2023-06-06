@@ -132,7 +132,7 @@ export class Menu extends Component<MenuAPI> {
   }
 
   protected _removePopupMenu() {
-    if (!this._menuItems || this.el!.contains(this._menuItems)) return;
+    if (!this._menuItems || this.el?.contains(this._menuItems)) return;
 
     const menu = this._menuItems?.parentElement;
     this.el!.append(this._menuItems);
@@ -144,17 +144,18 @@ export class Menu extends Component<MenuAPI> {
   }
 
   protected _watchBreakpoint() {
+    if (!this.el) return;
+
     const { breakpointX, breakpointY, viewType, orientation, fullscreen } = this._media.$store,
       popup = viewType() === 'audio' ? breakpointX() === 'sm' : breakpointY() === 'sm';
 
     if (!this._menuItems || this._parentMenu) return;
 
-    setAttribute(this.el!, 'data-popup', popup);
-    setAttribute(this.el!, 'data-popup-wide', popup && orientation() === 'landscape');
+    setAttribute(this.el, 'data-popup', popup);
+    setAttribute(this.el, 'data-popup-wide', popup && orientation() === 'landscape');
 
-    const containsItems = this.el!.contains(this._menuItems);
     if (popup && !fullscreen()) {
-      if (containsItems) {
+      if (this.el.contains?.(this._menuItems)) {
         const menu = this.el!.cloneNode();
         menu.appendChild(this._menuItems);
         scoped(() => {
@@ -289,7 +290,6 @@ export class Menu extends Component<MenuAPI> {
 
   protected _changeIdleTracking(trigger?: Event) {
     if (this._parentMenu) return;
-
     if (this._expanded()) this._media.remote.pauseUserIdle(trigger);
     else this._media.remote.resumeUserIdle(trigger);
   }
@@ -322,7 +322,7 @@ export class Menu extends Component<MenuAPI> {
   }
 
   protected _onResize() {
-    if (!this._menuItems) return;
+    if (!this._menuItems || __SERVER__) return;
 
     let style = getComputedStyle(this._menuItems),
       height = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
