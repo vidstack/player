@@ -27,3 +27,9 @@
     <media-community-skin />
   </media-player>
 </div>
+
+<style>
+  media-community-skin {
+    border: 1px solid rgb(255 255 255 / 0.1);
+  }
+</style>

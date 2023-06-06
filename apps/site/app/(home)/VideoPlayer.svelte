@@ -29,5 +29,6 @@
   media-player:not([data-fullscreen]) {
     aspect-ratio: 16 / 9;
     border-radius: 2px;
+    border: 1px solid rgb(255 255 255 / 0.1);
   }
 </style>
