@@ -6,7 +6,7 @@
     },
     "build": {
       "dependsOn": ["^analyze", "^build", "clean"],
-      "outputs": ["dist/**", ".vercel/**", "styles/defaults.css"]
+      "outputs": ["dist/**", ".vercel/**", "styles/defaults.css", "styles/community-skin/**"]
     },
     "clean": {
       "cache": false
