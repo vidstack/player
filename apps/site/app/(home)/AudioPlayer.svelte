@@ -7,7 +7,7 @@
     volume={0.2}
     key-target="document"
     crossorigin=""
-    style="--audio-brand: rgb(251 113 133);"
+    style="--audio-brand: rgb(124 58 237);"
   >
     <media-outlet>
       <track
