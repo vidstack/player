@@ -656,8 +656,8 @@ export interface MediaState {
   /**
    * Vertical breakpoint based on player container height:
    *
-   * - `sm` (small): x < 480px
-   * - `md` (medium): 480px <= x < 980px
+   * - `sm` (small): x < 380px
+   * - `md` (medium): 480px <= x < 600px
    * - `lg` (large): x >= 980px
    */
   breakpointY: 'sm' | 'md' | 'lg';

@@ -89,7 +89,7 @@
                   </a>
                 </li>
                 <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
-                  <a href="https://discord.com/invite/7RGU7wvsu9" target="_blank" rel="noreferrer">
+                  <a href="https://discord.gg/QAjfh2gZE4" target="_blank" rel="noreferrer">
                     Discord
                   </a>
                 </li>

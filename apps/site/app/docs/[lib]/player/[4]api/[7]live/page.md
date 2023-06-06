@@ -7,7 +7,7 @@ description: Introduction to live streams with Vidstack Player.
 
 {% callout type="experimental" %}
 Live stream support is still experimental in that we require further feedback, tuning,
-and to extend configuration options. Feel free to join our [Discord](https://discord.com/invite/7RGU7wvsu9) or open a [discussion on GitHub](https://github.com/vidstack/player/discussions)
+and to extend configuration options. Feel free to join our [Discord](https://discord.gg/QAjfh2gZE4) or open a [discussion on GitHub](https://github.com/vidstack/player/discussions)
 if you have anything to share!
 {% /callout %}
 
