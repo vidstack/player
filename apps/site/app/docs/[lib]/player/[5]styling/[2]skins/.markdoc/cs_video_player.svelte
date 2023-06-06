@@ -66,6 +66,10 @@
     aspect-ratio: 16 / 9;
   }
 
+  media-player :global(media-time-slider media-slider-value) {
+    margin-top: -4px;
+  }
+
   :global(.gutter) {
     position: relative;
     background-color: transparent;
