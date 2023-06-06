@@ -11,9 +11,7 @@
   style="--video-brand: rgb(251 113 133);"
 >
   <media-outlet>
-    <media-poster
-      alt="Girl walks into a campfire with sprite gnomes around her friend on a campfire in danger!"
-    />
+    <media-poster alt="Girl walks into sprite gnomes around her friend on a campfire in danger!" />
     <track src="/media/sprite-fight.vtt" label="English" srclang="en-US" kind="subtitles" default />
     <track
       src="https://media-files.vidstack.io/sprite-fight/chapters.vtt"

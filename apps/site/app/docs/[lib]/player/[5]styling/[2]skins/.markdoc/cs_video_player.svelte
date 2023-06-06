@@ -36,7 +36,7 @@
         >
           <media-outlet>
             <media-poster
-              alt="Girl walks into a campfire with sprite gnomes around her friend on a campfire in danger!"
+              alt="Girl walks into sprite gnomes around her friend on a campfire in danger!"
             />
             <track
               src="/media/sprite-fight.vtt"
