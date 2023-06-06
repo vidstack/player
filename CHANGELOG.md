@@ -1,3 +1,9 @@
+## [0.6.1](https://github.com/vidstack/player/compare/v0.6.0...v0.6.1) (2023-06-06)
+
+### Bug Fixes
+
+- **react:** menu throwing during ssr ([ecc205f](https://github.com/vidstack/player/commit/ecc205f4b820f9d13e5a400eb633d2e2d024e04e))
+
 # [0.6.0](https://github.com/vidstack/player/compare/v0.5.6...v0.6.0) (2023-06-06)
 
 ### Bug Fixes
