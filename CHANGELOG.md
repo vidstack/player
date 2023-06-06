@@ -1,3 +1,20 @@
+# [0.6.0](https://github.com/vidstack/player/compare/v0.5.6...v0.6.0) (2023-06-06)
+
+### Bug Fixes
+
+- drop `.cjs` exports ([f20999c](https://github.com/vidstack/player/commit/f20999c290131ee90183e3cd6392f7e169e7422b))
+- dynamically load captions lib for parsing thumbnails ([065934c](https://github.com/vidstack/player/commit/065934cd1f43b97792cfbc9caaa6eabc4f16981c))
+- ignore numpad seeking when meta key is down ([74d19fb](https://github.com/vidstack/player/commit/74d19fbc9a80fdebbb62283172bcdef44b17f476))
+- only set menu item hint text when provided ([dacaa2d](https://github.com/vidstack/player/commit/dacaa2d9a6f1bce6338b0757c119bd86cd8d9755))
+- pause user idle tracking when interacting with player ([19014dd](https://github.com/vidstack/player/commit/19014dd84bbd33a82fda8a8e00e822c43559c5d0))
+- resolve mem leaks and destroy provider ([c9b351c](https://github.com/vidstack/player/commit/c9b351c2792851e6e30038f4fc36ab5702535261))
+- split icons into a separate import path ([8d1187a](https://github.com/vidstack/player/commit/8d1187ac4872e4916d891b98b368d5999df39490)), closes [#841](https://github.com/vidstack/player/issues/841)
+
+### Features
+
+- community skin ([7de0002](https://github.com/vidstack/player/commit/7de000257cc5b2e9f606e7cbaaaff8124af35e9d)), closes [#73](https://github.com/vidstack/player/issues/73) [#839](https://github.com/vidstack/player/issues/839) [#840](https://github.com/vidstack/player/issues/840)
+- display bitrate in quality menu ([e7d5e46](https://github.com/vidstack/player/commit/e7d5e4622a86aea369498a59a8b8022601938645)), closes [#838](https://github.com/vidstack/player/issues/838)
+
 ## [0.5.6](https://github.com/vidstack/player/compare/v0.5.5...v0.5.6) (2023-05-18)
 
 ### Bug Fixes
