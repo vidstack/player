@@ -37,7 +37,7 @@ export class CommunitySkin extends Component<CommunitySkinAPI> {
     },
   });
 
-  static register = getUIComponents();
+  static register = getUIComponents;
 
   protected _media: MediaContext;
 
