@@ -1,3 +1,9 @@
+## [0.6.4](https://github.com/vidstack/player/compare/v0.6.3...v0.6.4) (2023-06-07)
+
+### Bug Fixes
+
+- do not reset breakpoints and touch input on src change ([bd84729](https://github.com/vidstack/player/commit/bd847296619d95d236776416103828f6679af57a)), closes [#854](https://github.com/vidstack/player/issues/854)
+
 ## [0.6.3](https://github.com/vidstack/player/compare/v0.6.2...v0.6.3) (2023-06-07)
 
 ### Bug Fixes
