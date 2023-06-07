@@ -11,7 +11,7 @@
   align-items: center;
   user-select: none;
   border-radius: var(--media-button-border-radius, 2px);
-  color: var(--media-button-color, #f5f5f5);
+  color: var(--media-button-color, var(--media-controls-color, #f5f5f5));
   width: var(--media-button-size, 40px);
   height: var(--media-button-size, 40px);
   transition: transform 0.2s ease-out;
