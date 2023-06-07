@@ -1,3 +1,9 @@
+## [0.6.3](https://github.com/vidstack/player/compare/v0.6.2...v0.6.3) (2023-06-07)
+
+### Bug Fixes
+
+- set menu height on connect to avoid resize on open transition ([cae76f3](https://github.com/vidstack/player/commit/cae76f3e2aa8db2a3a747335ccbc3e86759870d9))
+
 ## [0.6.2](https://github.com/vidstack/player/compare/v0.6.1...v0.6.2) (2023-06-07)
 
 ### Bug Fixes
