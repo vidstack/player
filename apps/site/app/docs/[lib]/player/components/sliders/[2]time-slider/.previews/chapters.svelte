@@ -1,7 +1,16 @@
+<script>
+  function onCanPlay(e) {
+    setTimeout(() => {
+      e.target.setAttribute('data-bp-x', 'md');
+    }, 1000);
+  }
+</script>
+
 <media-player
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
   thumbnails="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
-  class="w-full max-w-[350px] relative"
+  class="w-full max-w-[380px] relative bg-[unset]"
+  on:can-play={onCanPlay}
 >
   <media-outlet>
     <track

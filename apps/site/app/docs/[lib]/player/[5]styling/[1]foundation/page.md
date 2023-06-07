@@ -11,20 +11,12 @@ library with CSS.
 ## Styling Elements
 
 Vidstack Player enables styling _any child element_ of the player with CSS based on the current
-media state. This is made possible by exposing media state as data attributes and CSS variables on
+media state. This is made possible by exposing media state as data attributes on
 the `<media-player>` element like so:
 
 ```html
-<!-- These attrs/vars are reflected by the player. -->
-<media-player
-  data-paused
-  data-seeking
-  data-waiting
-  data-can-load
-  data-can-play
-  ...
-  style="--media-current-time: 500; --media-duration: 1000; ..."
->
+<!-- These attrs are reflected by the player. -->
+<media-player data-paused data-seeking data-waiting data-can-load data-can-play ...>
   <!-- Style child elements with CSS based on media state above. -->
 </media-player>
 ```
@@ -40,19 +32,11 @@ media-player[data-paused] .foo {
 /* Apply styles to `bar` class when media is _not_ paused. */
 media-player:not([data-paused]) .bar {
 }
-
-/** Scale the `baz` class based on the % of playback progress. */
-media-player .baz {
-  transform-origin: left;
-  transform: scaleX(calc(var(--media-current-time) / var(--media-duration)));
-  will-change: transform;
-}
 ```
 
 {% callout type="info" %}
-See our [media attributes](/docs/player/components/media/player#data-attributes) and
-[media CSS variables](/docs/player/components/media/player#api_cssvars) reference tables for a
-complete list with descriptions.
+See our [media attributes](/docs/player/components/media/player#data-attributes) reference table
+for a complete list with descriptions.
 {% /callout %}
 
 The [`[attr]`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors) selector will
@@ -189,10 +173,6 @@ media-time-slider [part='thumb'] {
 }
 ```
 
-Parts can also be **exposed** to provide you with maximum control:
-
-{% code_snippets name="expose-parts" /%}
-
 #### CSS Variables
 
 [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
@@ -201,8 +181,8 @@ enable easily setting specific key properties of a component:
 ```css
 media-time-slider {
   --media-slider-height: 48px;
-  --media-slider-thumb-size: 14px;
-  --media-slider-track-height: 4px;
+  --media-slider-thumb-size: 15px;
+  --media-slider-track-height: 5px;
   /* ... */
 }
 ```

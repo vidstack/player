@@ -9,7 +9,7 @@ The playback rate menu components handle rendering playback rate options
 as radio buttons and updating the player when a rate is selected. It can be used standalone
 or as a submenu.
 
-{% code_preview name="usage" size="large" copyHighlight=true highlight="html:6-9|react:12-18" /%}
+{% code_preview name="usage" size="large" copyHighlight=true highlight="html:6-9|react:15-21" /%}
 
 ## Custom Button
 

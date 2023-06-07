@@ -1,11 +1,14 @@
-import type { ReadSignal } from 'maverick.js';
+import { effect, onDispose, type ReadSignal } from 'maverick.js';
+import { animationFrameThrottle } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
+import { round } from '../../../../utils/number';
 import type { MediaStore } from '../../../core/api/store';
 import type { SliderStore } from '../slider/api/store';
 
 export class SliderChaptersRenderer {
   protected _chapters: VTTCue[] = [];
+  protected _refs: HTMLElement[] = [];
 
   constructor(
     protected _media: MediaStore,
@@ -27,54 +30,82 @@ export class SliderChaptersRenderer {
     const firstChapter = this._chapters[0];
     this._onChange(firstChapter && firstChapter.startTime === 0 ? firstChapter.text : '');
 
-    return this._chapters.map((cue, i) => {
-      const $width = this._computeWidth.bind(this, cue),
-        $fill = this._computeFill.bind(this, cue),
-        $buffered = this._computeBuffered.bind(this, cue);
-      return (
-        <div
-          part="chapter-container"
-          $cssvar:width={$width()}
-          $cssvar:slider-fill-percent={$fill()}
-          $cssvar:media-buffered-percent={$buffered()}
-        >
-          <div part="chapter">
-            <div part="track" />
-            <div part="track track-fill" />
-            <div part="track track-progress" />
-          </div>
-        </div>
-      );
+    const endTime = this._chapters[this._chapters.length - 1].endTime;
+    for (const chapter of this._chapters) {
+      const el = this._renderChapter(chapter, endTime) as HTMLDivElement;
+      this._refs.push(el);
+    }
+
+    effect(this._watchBufferedPercent.bind(this));
+
+    onDispose(() => {
+      this._refs = [];
     });
+
+    return this._refs;
   }
 
-  protected _computeWidth(cue: VTTCue) {
-    const lastChapter = this._chapters[this._chapters.length - 1];
-    return ((cue.endTime - cue.startTime) / lastChapter.endTime) * 100 + '%';
+  protected _renderChapter(chapter: VTTCue, endTime: number) {
+    const width = round(this._calcWidth(chapter, endTime), 5) + '%',
+      $fill = this._calcFillPercent.bind(this, chapter);
+    return (
+      <div part="chapter-container" $style:width={width}>
+        <div part="chapter">
+          <div part="track" />
+          <div part="track track-fill" $style:width={$fill()} />
+          <div part="track track-progress" />
+        </div>
+      </div>
+    );
   }
 
-  protected _computeFill(cue: VTTCue) {
-    let percent = this._calcChapterPercent(cue, this._slider.fillPercent()),
-      currentPercent = percent;
+  protected _calcFillPercent(chapter: VTTCue) {
+    let fillPercent = this._slider.fillPercent(),
+      pointing = this._slider.pointing(),
+      pointerPercent = pointing ? this._slider.pointerPercent() : fillPercent,
+      percent = this._calcChapterPercent(chapter, fillPercent),
+      result = percent + '%';
 
-    if (this._slider.pointing()) {
-      currentPercent = this._calcChapterPercent(cue, this._slider.pointerPercent());
+    if (pointing) {
+      percent = this._calcChapterPercent(chapter, pointerPercent);
     }
 
-    if (currentPercent > 0 && currentPercent < 100) {
-      this._onChange(cue.text);
+    if (percent > 0 && percent < 100) {
+      this._onChange(chapter.text);
     }
 
-    return percent + '%';
+    return result;
   }
 
-  protected _computeBuffered(cue: VTTCue) {
-    const percent = (this._media.bufferedEnd() / this._media.duration()) * 100;
-    return this._calcChapterPercent(cue, percent) + '%';
+  protected _watchBufferedPercent() {
+    this._updateBufferedPercent(this._calcMediaBufferedPercent());
   }
 
-  protected _percentToTime(percent: number) {
-    return Math.round((percent / 100) * this._media.duration());
+  protected _updateBufferedPercent = animationFrameThrottle((bufferedPercent: number) => {
+    for (let i = 0; i < this._refs.length; i++) {
+      const el = this._refs[i].querySelector('[part~="track-progress"]') as HTMLDivElement,
+        percent = this._calcChapterPercent(this._chapters[i], bufferedPercent);
+      el.style.width = percent + '%';
+    }
+  });
+
+  protected _calcMediaBufferedPercent() {
+    const { bufferedEnd, duration } = this._media;
+    return Math.min(bufferedEnd() / Math.max(duration(), 1), 1) * 100;
+  }
+
+  protected _calcWidth(cue: VTTCue, endTime: number) {
+    return ((cue.endTime - cue.startTime) / endTime) * 100;
+  }
+
+  protected _calcChapterPercent(cue: VTTCue, percent: number) {
+    const lastChapter = this._chapters[this._chapters.length - 1],
+      startPercent = (cue.startTime / lastChapter.endTime) * 100,
+      endPercent = (cue.endTime / lastChapter.endTime) * 100;
+    return Math.max(
+      0,
+      percent >= endPercent ? 100 : ((percent - startPercent) / (endPercent - startPercent)) * 100,
+    );
   }
 
   protected _fillChapterGaps(cues: ReadonlyArray<VTTCue>) {
@@ -95,15 +126,5 @@ export class SliderChaptersRenderer {
 
     chapters.push(cues[cues.length - 1]);
     return chapters;
-  }
-
-  protected _calcChapterPercent(cue: VTTCue, percent: number) {
-    const lastChapter = this._chapters[this._chapters.length - 1],
-      startPercent = (cue.startTime / lastChapter.endTime) * 100,
-      endPercent = (cue.endTime / lastChapter.endTime) * 100;
-    return Math.max(
-      0,
-      percent >= endPercent ? 100 : ((percent - startPercent) / (endPercent - startPercent)) * 100,
-    );
   }
 }

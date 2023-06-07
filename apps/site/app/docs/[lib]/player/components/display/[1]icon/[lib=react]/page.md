@@ -6,9 +6,18 @@ Media Icons is a collection of icons we've designed at Vidstack to help with bui
 video player user interfaces. You can preview the entire collection in our
 [media icons catalog](/media-icons?lib=react).
 
+## Installation
+
+Before you can begin using icons make sure to install the
+[`media-icons`](https://github.com/vidstack/media-icons) package like so:
+
+```bash
+npm i media-icons
+```
+
 ## Usage
 
-All icons can be imported from the `@vidstack/react` package:
+All icons can be imported from the `@vidstack/react/icons` like so:
 
 ```js
 // Refer to our catalog for all icon types.
@@ -17,7 +26,7 @@ import {
   PauseIcon,
   PlayIcon,
   // ...
-} from '@vidstack/react';
+} from '@vidstack/react/icons';
 ```
 
 Once imported, icons can be used like so:

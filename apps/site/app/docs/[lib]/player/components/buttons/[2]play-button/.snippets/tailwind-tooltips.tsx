@@ -1,4 +1,5 @@
-import { MediaPlayButton, MediaTooltip, PauseIcon, PlayIcon } from '@vidstack/react';
+import { MediaPlayButton, MediaTooltip } from '@vidstack/react';
+import { PauseIcon, PlayIcon } from '@vidstack/react/icons';
 
 <MediaPlayButton className="group flex h-12 w-12 items-center justify-center rounded-sm text-white outline-none data-[focus]:ring-4 data-[focus]:ring-blue-400">
   {/* icons */}

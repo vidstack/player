@@ -1,9 +1,5 @@
-import {
-  RadioButtonIcon,
-  RadioButtonSelectedIcon,
-  useMediaRemote,
-  useMediaStore,
-} from '@vidstack/react';
+import { useMediaRemote, useMediaStore } from '@vidstack/react';
+import { RadioButtonIcon, RadioButtonSelectedIcon } from '@vidstack/react/icons';
 import { type PointerEvent } from 'react';
 import { type AudioTrack } from 'vidstack';
 

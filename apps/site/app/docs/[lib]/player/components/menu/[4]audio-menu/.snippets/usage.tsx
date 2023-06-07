@@ -1,4 +1,11 @@
-import { MediaAudioMenuButton, MediaAudioMenuItems, MediaMenu } from '@vidstack/react';
+import {
+  MediaAudioMenuButton,
+  MediaAudioMenuItems,
+  MediaMenu,
+  MediaMenuButton,
+  MediaMenuItems,
+} from '@vidstack/react';
+import { SettingsIcon } from '@vidstack/react/icons';
 
 <MediaMenu>
   <MediaMenuButton aria-label="Settings">

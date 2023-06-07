@@ -19,5 +19,6 @@ export class TooltipController extends ComponentController {
     setAttribute(this.el!, 'aria-describedby', tooltipId);
     setAttribute(tooltipEl, 'id', tooltipId);
     setAttribute(tooltipEl, 'role', 'tooltip');
+    this.el!.removeAttribute('aria-label');
   }
 }

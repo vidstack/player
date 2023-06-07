@@ -16,9 +16,9 @@
   left: 50%;
   bottom: 80%;
   margin-left: unset;
-  margin-bottom: var(--media-tooltip-y-offset, 8px);
+  margin-bottom: var(--media-tooltip-y-offset, 12px);
   opacity: 0;
-  padding: var(--media-tooltip-padding, 2.5px 8px);
+  padding: var(--media-tooltip-padding, 2px 8px);
   pointer-events: none;
   position: absolute;
   transform-origin: 50% 100%;
@@ -37,7 +37,7 @@
   left: 0;
   transform: translateY(12px) scale(0.8);
   transform-origin: 0 100%;
-  margin-left: var(--media-tooltip-x-offset, 8px);
+  margin-left: var(--media-tooltip-x-offset, 0);
 }
 
 /*
@@ -50,7 +50,7 @@
   left: auto;
   right: 0;
   margin-left: unset;
-  margin-right: var(--media-tooltip-x-offset, 8px);
+  margin-right: var(--media-tooltip-x-offset, 0);
   transform: translateY(12px) scale(0.8);
   transform-origin: 100% 100%;
 }
@@ -64,7 +64,7 @@
 :where(media-tooltip[position~='bottom']) {
   top: 80%;
   bottom: unset;
-  margin-top: var(--media-tooltip-y-offset, 8px);
+  margin-top: var(--media-tooltip-y-offset, 12px);
   margin-bottom: unset;
   transform: translate(-50%, -12px) scale(1);
 }
@@ -90,16 +90,18 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
  */
 
-:where([data-media-button][data-hocus] media-tooltip) {
-  opacity: 1;
-  transform: translate(-50%) scale(1);
-  transition: transform 0.2s ease-in 0.1s, opacity 0.2s ease-in 0.1s;
-}
+@media (pointer: fine) {
+  :where(media-player [data-media-button][data-hocus] media-tooltip) {
+    opacity: 1;
+    transform: translate(-50%) scale(1);
+    transition: transform 0.2s ease-in 0.1s, opacity 0.2s ease-in 0.1s;
+  }
 
-:where([data-media-button][data-hocus] media-tooltip[position~='left']) {
-  transform: translate(0) scale(1);
-}
+  :where(media-player [data-media-button][data-hocus] media-tooltip[position~='left']) {
+    transform: translate(0) scale(1);
+  }
 
-:where([data-media-button][data-hocus] media-tooltip[position~='right']) {
-  transform: translate(0) scale(1);
+  :where(media-player [data-media-button][data-hocus] media-tooltip[position~='right']) {
+    transform: translate(0) scale(1);
+  }
 }

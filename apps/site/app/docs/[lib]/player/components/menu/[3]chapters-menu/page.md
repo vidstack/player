@@ -5,7 +5,7 @@ description: This component is used to display chapters inside of a menu.
 
 ## Usage
 
-{% code_preview name="usage" size="large" copyHighlight=true highlight="react:3-" /%}
+{% code_preview name="usage" size="large" copyHighlight=true highlight="react:4-" /%}
 
 ## Chapters Track
 

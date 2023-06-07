@@ -73,7 +73,7 @@ export class CaptionsMenuItems extends MenuItems<CaptionsMenuItemsAPI> {
 
   protected _isDisabled() {
     const { textTracks } = this._media.$store;
-    return textTracks().length === 0;
+    return textTracks().filter(isTrackCaptionKind).length === 0;
   }
 
   protected _onChange(event: RadioGroupChangeEvent) {
@@ -113,12 +113,12 @@ export class CaptionsMenuItems extends MenuItems<CaptionsMenuItemsAPI> {
     const { offLabel } = this.$props,
       { textTracks } = this._media.$store;
     return [
-      { value: 'off', content: () => <span>{offLabel()}</span> },
+      { value: 'off', content: () => <span part="label">{offLabel()}</span> },
       ...textTracks()
         .filter(isTrackCaptionKind)
         .map((track) => ({
           value: track.label.toLowerCase(),
-          content: () => <span>{track.label}</span>,
+          content: () => <span part="label">{track.label}</span>,
         })),
     ];
   }

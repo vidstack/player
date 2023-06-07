@@ -66,8 +66,8 @@ of the variables can be set to adjust the default live indicator styles:
 
 ```css {% copy=true %}
 media-player {
-  --media-live-indicator-width: 48px;
-  --media-live-indicator-height: 48px;
+  --media-live-indicator-width: 40px;
+  --media-live-indicator-height: 40px;
   --media-live-indicator-bg: #8a8a8a;
   --media-live-indicator-border-radius: 2px;
   --media-live-indicator-color: #161616;

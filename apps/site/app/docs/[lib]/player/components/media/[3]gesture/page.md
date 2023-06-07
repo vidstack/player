@@ -34,7 +34,7 @@ export type GestureAction =
   | 'play'
   | 'pause'
   | `seek:${number}`
-  | `toggle:${'paused' | 'muted' | 'fullscreen'}`;
+  | `toggle:${'paused' | 'muted' | 'fullscreen' | 'user-idle'}`;
 ```
 
 ## Contextual Menu

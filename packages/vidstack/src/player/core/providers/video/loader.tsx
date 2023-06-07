@@ -36,12 +36,14 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
   }
 
   render($store: MediaStore) {
+    const $poster = computed(() => ($store.poster() && $store.controls() ? $store.poster() : null));
+
     if (__SERVER__) {
       const src = $store.source().src;
       return (
         <video
           src={isString(src) ? src : null}
-          poster={$store.poster()}
+          poster={$poster()}
           muted={$store.muted()}
           controls={$store.controls()}
           crossorigin={$store.crossorigin()}
@@ -51,11 +53,6 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
         ></video>
       );
     }
-
-    const $poster = computed(() =>
-      // === `true` because it's `null` to start with until we know if the poster can load.
-      $store.poster() && $store.canLoadPoster() === true ? $store.poster() : null,
-    );
 
     return (
       <video

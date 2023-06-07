@@ -1,5 +1,6 @@
 /* hide default UI - only shown if optional UI css files are loaded. */
-:where(
+:where(media-player)
+  :where(
     [data-media-button] > shadow-root,
     [data-media-slider]:not([data-styled]) > shadow-root,
     [data-media-menu-button] > shadow-root
@@ -7,7 +8,7 @@
   display: none;
 }
 
-:where([data-media-slider][data-styled] > shadow-root) {
+:where(media-player) :where([data-media-slider][data-styled] > shadow-root) {
   display: contents;
 }
 
@@ -24,16 +25,27 @@
   position: relative;
   contain: style;
   box-sizing: border-box;
+  user-select: none;
 }
 
 :where(media-player:focus) {
   outline: none;
 }
 
+:where(media-player[data-view-type='video'][data-user-idle]) {
+  pointer-events: auto;
+  cursor: none;
+}
+
 :where(media-outlet) {
   display: block;
   box-sizing: border-box;
   background-color: var(--media-outlet-bg-color, black);
+}
+
+:where(media-player:not([controls]) media-outlet) {
+  pointer-events: auto;
+  touch-action: manipulation;
 }
 
 :where(media-player[data-fullscreen] media-outlet) {
@@ -52,6 +64,11 @@
   display: inline-block;
   width: 100%;
   height: auto;
+  touch-action: manipulation;
+}
+
+:where(media-player:not([controls]) media-outlet video) {
+  pointer-events: none;
 }
 
 :where(media-player[aspect-ratio]:not([data-fullscreen]) media-outlet) {
@@ -78,25 +95,23 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(media-icon, svg[data-media-icon]) {
-  width: 32px;
-  height: 32px;
-}
-
-:where(media-icon svg) {
+:where(media-icon, media-icon svg) {
+  display: block;
   width: 100%;
   height: 100%;
+  vertical-align: middle;
 }
 
 :where(media-time) {
   display: inline-block;
   contain: content;
-  font-size: var(--media-time-font-size, 18px);
+  font-size: var(--media-time-font-size, 14px);
   font-weight: var(--media-time-font-weight, 500);
   font-family: var(--media-font-family, sans-serif);
   color: var(--media-time-color, inherit);
   background-color: var(--media-time-bg);
   border-radius: var(--media-time-border-radius);
+  letter-spacing: var(--media-time-letter-spacing, 0.025em);
 }
 
 /*
@@ -105,34 +120,31 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where([data-media-button]) {
+:where(media-player [data-media-button]) {
   display: inline-block;
   position: relative;
-  contain: layout;
+  contain: layout size style;
   user-select: none;
   cursor: pointer;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-:where([data-media-button]:focus) {
+:where(media-player [data-media-button]:focus) {
   outline: none;
 }
 
-:where([data-media-button][data-focus] [slot]) {
+:where(media-player [data-media-button][data-focus]) :where([slot], [data-media-icon]) {
   box-shadow: var(--media-focus-ring);
 }
 
-:where([data-media-button][data-focus] media-tooltip [slot]) {
+:where(media-player [data-media-button][data-focus] media-tooltip [slot]) {
   box-shadow: unset;
 }
 
 :where(media-live-indicator:not([data-live])) {
   cursor: unset;
-}
-
-:where([data-media-button][aria-hidden='true']) {
-  display: none;
 }
 
 /*
@@ -141,10 +153,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where([data-media-slider]) {
+:where(media-player [data-media-slider]) {
   display: inline-block;
   position: relative;
-  contain: layout;
+  contain: layout size style;
   width: 100%;
   cursor: pointer;
   user-select: none;
@@ -153,26 +165,27 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-:where([data-media-slider][disabled]) {
+:where(media-player [data-media-slider][disabled]) {
   cursor: unset;
 }
 
-:where([data-media-slider]:focus) {
+:where(media-player [data-media-slider]:focus) {
   outline: none;
 }
 
-:where([data-media-slider][data-focus] [part='track']) {
+:where(media-player [data-media-slider][data-focus] [part='track']) {
   box-shadow: var(--media-focus-ring);
 }
 
-:where(media-time-slider) {
-  --media-buffered-percent: calc(
-    min(calc(var(--media-buffered) / max(var(--media-duration), 1)), 1) * 100%
-  );
+:where(media-player[data-bp-x='sm']) :where(media-time-slider [part='chapters']) {
+  display: none !important;
 }
 
-:where(media-time-slider[data-chapters] > :not(shadow-root, [slot])),
-:where(media-time-slider[data-chapters] > shadow-root > [part~='track']) {
+:where(media-player:not([data-bp-x='sm']))
+  :where(
+    media-time-slider[data-chapters] > :not(shadow-root, [slot]),
+    media-time-slider[data-chapters] > shadow-root > [part~='track']
+  ) {
   display: none !important;
 }
 
@@ -210,9 +223,10 @@
   width: var(--thumbnail-width);
   height: var(--thumbnail-height);
   background-color: var(--media-thumbnail-bg, black);
-  contain: content;
+  contain: strict;
   overflow: hidden;
   box-sizing: border-box;
+  border: var(--media-thumbnail-border, 1px solid white);
   min-width: var(--media-thumbnail-min-width, 120px);
   min-height: var(--media-thumbnail-min-height, 80px);
   max-width: var(--media-thumbnail-max-width, 180px);
@@ -222,11 +236,6 @@
 :where(media-thumbnail [part='img']) {
   min-width: unset !important;
   max-width: unset !important;
-}
-
-:where(media-thumbnail[aria-hidden='true']),
-:where(media-slider-thumbnail[aria-hidden='true']) {
-  display: none;
 }
 
 /*
@@ -240,6 +249,7 @@
   box-sizing: border-box;
   contain: content;
   display: inline-block;
+  border: var(--media-thumbnail-border, 1px solid white);
 }
 
 :where(media-slider-video [part='video']) {
@@ -298,9 +308,8 @@
   display: none;
 }
 
-:where(media-player:not([data-started]) media-poster) {
+:where(media-player[data-view-type='video']:not([data-started]) media-poster) {
   opacity: 1;
-  pointer-events: auto;
 }
 
 /*
@@ -356,4 +365,17 @@
 :where(media-radio[data-focus]) {
   outline: none;
   box-shadow: var(--media-focus-ring);
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * ARIA
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(media-player [data-media-button][aria-hidden='true']),
+:where(media-player [data-media-slider][aria-hidden='true']),
+:where(media-thumbnail[aria-hidden='true']),
+:where(media-slider-thumbnail[aria-hidden='true']) {
+  display: none !important;
 }

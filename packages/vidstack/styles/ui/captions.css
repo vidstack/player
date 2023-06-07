@@ -12,7 +12,7 @@
   right: 0;
   bottom: 0;
   z-index: 1;
-  contain: content;
+  contain: strict;
   margin: var(--overlay-padding);
   font-size: var(--cue-font-size);
   font-family: sans-serif;
@@ -21,6 +21,12 @@
   user-select: none;
   word-spacing: normal;
   word-break: break-word;
+}
+
+@media (orientation: portrait) {
+  :where(media-player[data-bp-x='sm'][data-fullscreen] media-captions) {
+    --cue-font-size: 18px;
+  }
 }
 
 :where(media-player[data-view-type='audio'] media-captions) {

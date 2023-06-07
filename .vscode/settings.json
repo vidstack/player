@@ -2,6 +2,6 @@
   "html.customData": ["./packages/vidstack/vscode.html-data.json"],
   "css.customData": [],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["crossorigin", "cssvars", "jassub", "libass"],
+  "cSpell.words": ["crossorigin", "cssvars", "jassub", "libass", "Plyr"],
   "tailwindCSS.experimental.classRegex": ["[cC]lass=['\"](.*)['|\"]"]
 }

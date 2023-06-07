@@ -7,6 +7,8 @@ import {
   type SVGProps,
 } from 'react';
 
+export { type IconType } from 'media-icons';
+
 export interface IconProps
   extends PropsWithoutRef<SVGProps<SVGSVGElement>>,
     RefAttributes<SVGElement | SVGSVGElement> {

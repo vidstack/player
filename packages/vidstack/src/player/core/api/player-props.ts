@@ -24,7 +24,7 @@ export const mediaPlayerProps: PropDeclarations<PlayerProps> = {
   controls: false,
   currentTime: 0,
   crossorigin: null,
-  fullscreenOrientation: undefined,
+  fullscreenOrientation: 'landscape',
   load: 'visible',
   logLevel: 'silent',
   loop: false,

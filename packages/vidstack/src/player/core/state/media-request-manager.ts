@@ -10,6 +10,7 @@ import { ScreenOrientationController } from '../../../foundation/orientation/con
 import { Queue } from '../../../foundation/queue/queue';
 import { coerceToError } from '../../../utils/error';
 import type { MediaContext } from '../api/context';
+import type { MediaFullscreenChangeEvent } from '../api/events';
 import * as RE from '../api/request-events';
 import type { MediaStore } from '../api/store';
 import type { PlayerAPI } from '../player';
@@ -89,6 +90,8 @@ export class MediaRequestManager
         this.listen(name as keyof RE.MediaRequestEvents, handle);
       }
     }
+
+    this.listen('fullscreen-change', this._onFullscreenChange.bind(this));
   }
 
   private _handleRequest(event: Event) {
@@ -174,12 +177,6 @@ export class MediaRequestManager
     if (peek(this._store.pictureInPicture)) {
       this._wasPIPActive = true;
       await this._exitPictureInPicture();
-    }
-
-    const lockType = peek(this.$props.fullscreenOrientation);
-
-    if (this._orientation.supported && !isUndefined(lockType)) {
-      await this._orientation.lock(lockType);
     }
 
     return adapter!.enter();
@@ -304,6 +301,16 @@ export class MediaRequestManager
     }
   }
 
+  private async _onFullscreenChange(event: MediaFullscreenChangeEvent) {
+    if (!event.detail) return;
+    try {
+      const lockType = peek(this.$props.fullscreenOrientation);
+      if (this._orientation.supported && !isUndefined(lockType)) {
+        await this._orientation.lock(lockType);
+      }
+    } catch (e) {}
+  }
+
   private _onFullscreenError(error: unknown) {
     this._stateMgr._handle(
       this.createEvent('fullscreen-error', {
@@ -336,14 +343,6 @@ export class MediaRequestManager
         detail: coerceToError(error),
       }),
     );
-  }
-
-  ['media-show-poster-request']() {
-    this._store.canLoadPoster.set(true);
-  }
-
-  ['media-hide-poster-request']() {
-    this._store.canLoadPoster.set(false);
   }
 
   ['media-live-edge-request'](event: RE.MediaLiveEdgeRequestEvent) {
@@ -432,12 +431,12 @@ export class MediaRequestManager
 
   ['media-resume-user-idle-request'](event: RE.MediaResumeUserIdleRequestEvent) {
     this._request._queue._enqueue('userIdle', event);
-    this._user.idlePaused = false;
+    this._user.pauseIdleTracking(false, event);
   }
 
   ['media-pause-user-idle-request'](event: RE.MediaPauseUserIdleRequestEvent) {
     this._request._queue._enqueue('userIdle', event);
-    this._user.idlePaused = true;
+    this._user.pauseIdleTracking(true, event);
   }
 
   ['media-seek-request'](event: RE.MediaSeekRequestEvent) {

@@ -41,6 +41,12 @@ export default defineConfig({
             (p) => `/docs${lib}/player/getting-started/installation/cdn${p}`,
           ),
           ...sidebarLinks
+            .filter((link) => link.slug.startsWith('/docs/player/api'))
+            .map(
+              (link) =>
+                `/docs${lib}/player/core-concepts/${link.slug.replace('/docs/player/api/', '')}`,
+            ),
+          ...sidebarLinks
             .filter((link) => link.slug.startsWith('/docs/player/components'))
             .map((link) => link.slug.replace('/docs', `/docs${lib}`) + '/api'),
         ]),

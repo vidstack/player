@@ -1,19 +1,25 @@
 <script>
   let menu;
 
-  let hint = '1080p';
+  let hint = '1080p',
+    allow = Symbol();
 
   function onAttached(event) {
     menu = event.target;
-    menu.open(event);
+    requestAnimationFrame(() => {
+      menu.open(event);
+    });
   }
 
   function onPointerUp(event) {
     menu?.close(event);
+    const forward = new PointerEvent('pointerup', event);
+    forward[allow] = true;
+    window.dispatchEvent(forward);
   }
 
   function onWindowPointerUp(event) {
-    event.stopImmediatePropagation();
+    if (!event[allow]) event.stopImmediatePropagation();
   }
 
   function onChange(event) {
@@ -24,19 +30,19 @@
 
 <svelte:window on:pointerup={onWindowPointerUp} />
 
-<div
-  class="w-full h-full flex items-center justify-center"
+<media-player
+  class="w-full h-[400px] flex items-center justify-center"
   on:pointerup|stopPropagation={onPointerUp}
 >
   <media-menu class="mt-32" on:attached={onAttached}>
     <media-menu-button aria-label="Settings">
       <media-icon type="settings" data-rotate />
     </media-menu-button>
-    <media-menu-items>
+    <media-menu-items style="--menu-height: 66px;">
       <media-menu>
         <media-menu-button>
           <media-icon type="arrow-left" slot="close-icon" />
-          <media-icon type="closed-captions" slot="icon" />
+          <media-icon type="settings-menu" slot="icon" />
           <span slot="label">Quality</span>
           <span class="ml-auto hint-text">{hint}</span>
           <media-icon class="ml-0" type="chevron-right" slot="open-icon" />
@@ -51,7 +57,7 @@
       <media-menu />
     </media-menu-items>
   </media-menu>
-</div>
+</media-player>
 
 <style>
   .hint-text {

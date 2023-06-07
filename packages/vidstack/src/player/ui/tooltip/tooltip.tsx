@@ -1,4 +1,4 @@
-import { getScope, hasProvidedContext, scoped, useContext } from 'maverick.js';
+import { hasProvidedContext, useContext } from 'maverick.js';
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
 import { scopedRaf } from '../../../utils/dom';
@@ -35,6 +35,7 @@ export class Tooltip extends Component<TooltipAPI> {
   protected override onAttach(el: HTMLElement): void {
     if (hasProvidedContext(tooltipContext)) {
       scopedRaf(() => {
+        if (!el.isConnected) return;
         const tooltip = useContext(tooltipContext);
         tooltip._attachTooltip(el);
       });

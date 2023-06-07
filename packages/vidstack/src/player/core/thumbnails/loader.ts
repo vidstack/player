@@ -1,7 +1,6 @@
 import { effect } from 'maverick.js';
 import { ComponentController } from 'maverick.js/element';
 import { noop } from 'maverick.js/std';
-import { parseResponse } from 'media-captions';
 
 import { getRequestCredentials } from '../../../utils/network';
 import { useMedia, type MediaContext } from '../api/context';
@@ -26,14 +25,16 @@ export class ThumbnailsLoader extends ComponentController<PlayerAPI> {
     const src = thumbnails();
     if (!src) return;
 
-    parseResponse(
-      fetch(src, {
-        signal: controller.signal,
-        credentials: getRequestCredentials(crossorigin()),
-      }),
-    )
-      .then(({ cues }) => thumbnailCues.set(cues))
-      .catch(noop);
+    import('media-captions').then(({ parseResponse }) => {
+      parseResponse(
+        fetch(src, {
+          signal: controller.signal,
+          credentials: getRequestCredentials(crossorigin()),
+        }),
+      )
+        .then(({ cues }) => thumbnailCues.set(cues))
+        .catch(noop);
+    });
 
     return () => {
       controller.abort();

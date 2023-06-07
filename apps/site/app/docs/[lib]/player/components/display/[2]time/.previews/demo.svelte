@@ -1,11 +1,16 @@
+<script>
+  function onAttach(e) {
+    e.target.muted = true;
+  }
+</script>
+
 <media-player
   src="https://media-files.vidstack.io/360p.mp4"
   class="w-full max-w-md"
   playsinline
   autoplay
-  muted
-  volume={0}
   aspect-ratio="16/9"
+  on:can-play={onAttach}
 >
   <media-outlet />
 

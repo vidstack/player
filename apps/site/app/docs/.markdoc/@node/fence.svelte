@@ -145,7 +145,7 @@
 
     {#if nums}
       <pre
-        class="992:flex absolute top-3.5 left-0 m-0 hidden flex-col text-sm leading-[27px]"
+        class="992:flex absolute top-3.5 left-0 m-0 hidden flex-col text-sm leading-[24px]"
         style="border-radius: 0; padding-top: 0;">
 			  <div
           class="992:block hidden flex-none select-none text-right text-soft"

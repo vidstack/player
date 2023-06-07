@@ -41,7 +41,7 @@ export class Poster extends Component<PosterAPI> {
     this._imgAlt = this._getImgAlt.bind(this);
     this.setAttributes({
       'data-loading': this._imgLoading,
-      'aria-hidden': $ariaBool(this._imgError),
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
     });
   }
 
@@ -52,14 +52,12 @@ export class Poster extends Component<PosterAPI> {
       if (!canLoad()) preconnect(poster());
     });
 
-    this._media.remote.setTarget(el);
-    this._media.remote.hidePoster();
-
     effect(this._onLoadStart.bind(this));
   }
 
-  protected override onDisconnect() {
-    this._media.remote.showPoster();
+  protected _isHidden() {
+    const { poster } = this._media.$store;
+    return this._imgError() || !poster();
   }
 
   protected _getImgSrc() {

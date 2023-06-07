@@ -1,8 +1,11 @@
 import {
   MediaMenu,
+  MediaMenuButton,
+  MediaMenuItems,
   MediaPlaybackRateMenuButton,
   MediaPlaybackRateMenuItems,
 } from '@vidstack/react';
+import { SettingsIcon } from '@vidstack/react/icons';
 
 <MediaMenu>
   <MediaMenuButton aria-label="Settings">

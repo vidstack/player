@@ -6,7 +6,7 @@
   import AudioPlayer from './AudioPlayer.svelte';
 </script>
 
-<section class="flex mx-auto max-w-[1440px] px-6 1460:px-0 w-full">
+<section class="flex flex-col 1200:flex-row mx-auto max-w-[1440px] px-6 1460:px-0 w-full">
   <div class="relative z-20 768:mt-4 flex flex-col w-full 1200:w-auto">
     <div
       class="flex flex-col text-center items-center 1200:text-left 1200:items-start justify-center"
@@ -14,11 +14,11 @@
       <div class="flex">
         <a
           class="flex items-center rounded-full bg-brand/10 text-brand py-1 px-4 text-sm 768:text-base transform transition-transform hover:scale-105"
-          href="https://github.com/vidstack/player/discussions/832"
+          href="https://github.com/vidstack/player/discussions/848"
           target="_blank"
           rel="noreferrer"
         >
-          Release 0.5 • New components!
+          Release 0.6 • Community Skin!
           <svg class="ml-1" width="16" height="16" fill="none" viewBox="0 0 16 16">
             <path
               d="M8.87844 8.04776C8.90448 8.02173 8.90448 7.97952 8.87844 7.95348L5.7197 4.79474C5.58953 4.66457 5.58953 4.45351 5.7197 4.32334L6.52109 3.52195C6.65126 3.39177 6.86232 3.39177 6.99249 3.52195L10.4194 6.94888C10.4246 6.95343 10.4296 6.95816 10.4345 6.96308L11.2359 7.76447C11.3661 7.89465 11.3661 8.1057 11.2359 8.23588L6.99327 12.4785C6.8631 12.6087 6.65204 12.6087 6.52187 12.4785L5.72048 11.6771C5.59031 11.547 5.59031 11.3359 5.72048 11.2057L8.87844 8.04776Z"
@@ -132,7 +132,9 @@
       </div>
     </div>
   </div>
-  <div class="items-end flex-col hidden 1200:flex justify-center 1280:justify-end flex-1 pl-4">
+  <div
+    class="flex-col flex items-center mt-12 1200:mt-0 1200:items-end 1200:justify-center 1200:flex-1 1200:pl-4"
+  >
     <VideoPlayer />
     <AudioPlayer />
   </div>

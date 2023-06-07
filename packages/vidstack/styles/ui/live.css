@@ -10,8 +10,8 @@
 }
 
 :where(media-live-indicator [part='container']) {
-  width: var(--media-live-indicator-width, 48px);
-  height: var(--media-live-indicator-height, 48px);
+  width: var(--media-live-indicator-width, 40px);
+  height: var(--media-live-indicator-height, 40px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,4 +49,10 @@
     media-live-indicator:not([data-live-edge]) [slot='live-edge']
   ) {
   display: none;
+}
+
+@media (pointer: fine) {
+  :where(media-live-indicator[data-hover]) {
+    background-color: unset;
+  }
 }

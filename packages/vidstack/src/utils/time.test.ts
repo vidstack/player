@@ -57,11 +57,6 @@ describe(formatTime.name, function () {
     expect(formatTime(61)).to.equal('1:01');
   });
 
-  it('adds a leading zero to minutes if minutes < 10', function () {
-    expect(formatTime(3600)).to.equal('1:00:00');
-    expect(formatTime(3660)).to.equal('1:01:00');
-  });
-
   it('includes zero minutes if seconds < 60', function () {
     expect(formatTime(59)).to.equal('0:59');
   });
@@ -73,31 +68,31 @@ describe(formatTime.name, function () {
   });
 
   it('formats hours correctly if seconds >= 3600', function () {
-    expect(formatTime(3600)).to.equal('1:00:00');
+    expect(formatTime(3600)).to.equal('1:0:00');
     expect(formatTime(5025)).to.equal('1:23:45');
     expect(formatTime(45296)).to.equal('12:34:56');
   });
 
   it('it should pad hours if `shouldPadHours` is true', function () {
-    expect(formatTime(3600, true)).to.equal('01:00:00');
+    expect(formatTime(3600, true)).to.equal('01:0:00');
   });
 
   it('it should display hours if `shouldAlwaysShowHours` is true', function () {
-    expect(formatTime(3500, false, true)).to.equal('0:58:20');
-    expect(formatTime(3500, true, true)).to.equal('00:58:20');
+    expect(formatTime(3500, false, false, true)).to.equal('0:58:20');
+    expect(formatTime(3500, true, false, true)).to.equal('00:58:20');
   });
 });
 
 describe(formatSpokenTime.name, function () {
   it('it should format spoken time correctly', function () {
-    expect(formatSpokenTime(0)).to.equal('0 seconds');
-    expect(formatSpokenTime(59)).to.equal('59 seconds');
-    expect(formatSpokenTime(60)).to.equal('1 minute');
-    expect(formatSpokenTime(83)).to.equal('1 minute, 23 seconds');
-    expect(formatSpokenTime(754)).to.equal('12 minutes, 34 seconds');
+    expect(formatSpokenTime(0)).to.equal('0 sec');
+    expect(formatSpokenTime(59)).to.equal('59 sec');
+    expect(formatSpokenTime(60)).to.equal('1 min');
+    expect(formatSpokenTime(83)).to.equal('1 min 23 sec');
+    expect(formatSpokenTime(754)).to.equal('12 min 34 sec');
     expect(formatSpokenTime(3600)).to.equal('1 hour');
-    expect(formatSpokenTime(5025)).to.equal('1 hour, 23 minutes, 45 seconds');
-    expect(formatSpokenTime(45296)).to.equal('12 hours, 34 minutes, 56 seconds');
+    expect(formatSpokenTime(5025)).to.equal('1 hour 23 min 45 sec');
+    expect(formatSpokenTime(45296)).to.equal('12 hour 34 min 56 sec');
   });
 });
 

@@ -1,13 +1,15 @@
-import { peek, signal } from 'maverick.js';
+import { onDispose, peek, signal } from 'maverick.js';
 import {
   Component,
   ComponentInstance,
   defineElement,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { setStyle } from 'maverick.js/std';
+import { animationFrameThrottle, listenEvent, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
+import { scopedRaf } from '../../../utils/dom';
+import { IS_SAFARI } from '../../../utils/support';
 import { useMedia, type MediaContext } from '../api/context';
 import type { MediaSrc } from '../api/types';
 import type { MediaProviderLoader } from '../providers/types';
@@ -56,14 +58,21 @@ export class Outlet extends Component<OutletAPI> {
   }
 
   protected override onConnect(el: HTMLElement) {
-    this._onResize();
-    this._onMutation();
-
-    const resize = new ResizeObserver(this._onResize.bind(this));
+    const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
     resize.observe(el);
 
     const mutation = new MutationObserver(this._onMutation.bind(this));
     mutation.observe(el, { attributes: true, childList: true });
+
+    if (IS_SAFARI) {
+      // Prevent delay on pointer/click events.
+      listenEvent(el, 'touchstart', (e) => e.preventDefault(), { passive: false });
+    }
+
+    scopedRaf(() => {
+      this._onResize();
+      this._onMutation();
+    });
 
     return () => {
       resize.disconnect();
@@ -75,19 +84,18 @@ export class Outlet extends Component<OutletAPI> {
     this._media.$store.currentTime.set(0);
   }
 
-  protected _rafId = -1;
   protected _onResize() {
-    if (this._rafId >= 0) return;
-    this._rafId = window.requestAnimationFrame(() => {
-      const player = this._media.player!,
-        width = this.el!.offsetWidth,
-        height = this.el!.offsetHeight;
+    const player = this._media.player,
+      width = this.el!.offsetWidth,
+      height = this.el!.offsetHeight;
 
-      setStyle(player, '--media-width', width + 'px');
-      setStyle(player, '--media-height', height + 'px');
+    if (!player) return;
 
-      this._rafId = -1;
-    });
+    player.$store.mediaWidth.set(width);
+    player.$store.mediaHeight.set(height);
+
+    setStyle(player, '--media-width', width + 'px');
+    setStyle(player, '--media-height', height + 'px');
   }
 
   private _onMutation() {
@@ -119,7 +127,12 @@ export class Outlet extends Component<OutletAPI> {
   }
 
   override render() {
+    let currentProvider;
+    onDispose(() => currentProvider?.destroy?.());
+
     return () => {
+      currentProvider?.destroy();
+
       const loader = this._loader();
       if (!loader) return null;
 
@@ -129,9 +142,12 @@ export class Outlet extends Component<OutletAPI> {
         loader.load(this._media).then((provider) => {
           // The src/loader might've changed by the time we load the provider.
           if (peek(this._loader) !== loader) return;
+
           this._media.delegate._dispatch('provider-change', {
             detail: provider,
           });
+
+          currentProvider = provider;
         });
       });
 

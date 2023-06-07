@@ -6,9 +6,9 @@
   export const styling = writable<StylingPreference>(getStyleFromQuery());
 
   function getStyleFromQuery() {
-    if (!env.browser) return 'defaults';
+    if (!env.browser) return 'community-skin';
     const searchParams = new URLSearchParams(location.search);
-    return (searchParams.get('styling') as StylingPreference) ?? 'defaults';
+    return (searchParams.get('styling') as StylingPreference) ?? 'community-skin';
   }
 </script>
 

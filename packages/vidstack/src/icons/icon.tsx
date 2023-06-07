@@ -1,4 +1,4 @@
-export function Icon({ slot, part, paths }: IconProps) {
+export function Icon({ slot, part, paths, rotate }: IconProps) {
   return (
     <svg
       viewBox="0 0 32 32"
@@ -6,6 +6,7 @@ export function Icon({ slot, part, paths }: IconProps) {
       aria-hidden="true"
       focusable="false"
       data-media-icon="true"
+      data-rotate={rotate}
       slot={slot}
       part={part}
       $prop:innerHTML={paths}
@@ -17,4 +18,5 @@ export interface IconProps {
   slot?: string;
   part?: string;
   paths: string;
+  rotate?: boolean;
 }

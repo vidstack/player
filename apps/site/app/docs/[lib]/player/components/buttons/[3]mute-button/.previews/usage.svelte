@@ -5,7 +5,7 @@
 </script>
 
 <media-player
-  class="w-full max-w-xs relative"
+  class="w-full max-w-xs relative bg-[unset]"
   src="https://media-files.vidstack.io/360p.mp4"
   poster="https://media-files.vidstack.io/poster-2.png"
   playsinline
@@ -17,8 +17,8 @@
   </media-outlet>
 
   <div class="w-full flex items-center">
-    <media-play-button />
-    <media-mute-button />
+    <media-play-button class="min-w-[40px]" />
+    <media-mute-button class="min-w-[40px]" />
     <media-volume-slider />
   </div>
 </media-player>

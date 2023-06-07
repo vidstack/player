@@ -4,10 +4,9 @@ description: This component is used to display a media poster or thumbnail image
 
 ## Usage
 
-The `$tag:media-poster` component loads and displays the current media poster image. When
-this component is present, the `poster` attribute will not be applied to the media provider to
-prevent double loading. Furthermore, this element will respect the loading strategy defined
-on the media provider; therefore, the poster won't load until the media can (lazy).
+The `$tag:media-poster` component loads and displays the current media poster image. This
+element will respect the loading strategy defined on the `$tag:media-player`; therefore, the poster
+won't load until the media can.
 
 We recommend using `$tag:media-poster` over the HTML5 `poster` attribute because the behavior will
 be more consistent browser-to-browser. The native poster will sometimes load and disappear as

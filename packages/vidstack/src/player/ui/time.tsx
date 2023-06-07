@@ -1,5 +1,6 @@
 import { computed, type ReadSignal } from 'maverick.js';
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
+import { isNull } from 'maverick.js/std';
 
 import { formatTime, formatTimeSmpte } from '../../utils/time';
 import { useMedia, type MediaContext } from '../core/api/context';
@@ -31,8 +32,8 @@ export class Time extends Component<TimeAPI> {
     props: {
       type: 'current',
       showHours: false,
-      padHours: false,
-      padMinutes: false,
+      padHours: null,
+      padMinutes: null,
       remainder: false,
       format: '',
     },
@@ -62,7 +63,12 @@ export class Time extends Component<TimeAPI> {
       return formatTimeSmpte(frame, time, frameRate());
     }
 
-    return formatTime(time, padHours(), padMinutes(), showHours());
+    return formatTime(
+      time,
+      padHours(),
+      isNull(padMinutes()) ? time >= 3600 : padMinutes(),
+      showHours(),
+    );
   }
 
   protected _getSeconds(type: TimeProps['type']) {
@@ -103,13 +109,13 @@ export interface TimeProps {
    *
    * @example `1:20:03 -> 01:20:03`
    */
-  padHours: boolean;
+  padHours: boolean | null;
   /**
    * Whether the minutes unit should be padded with zeroes to a length of 2.
    *
    * @example `5:22 -> 05:22`
    */
-  padMinutes: boolean;
+  padMinutes: boolean | null;
   /**
    * Whether to display the remaining time from the current type, until the duration is reached.
    *

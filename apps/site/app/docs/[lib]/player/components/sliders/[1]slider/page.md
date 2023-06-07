@@ -148,17 +148,18 @@ media-player {
   --media-slider-width: 100%;
   --media-slider-height: 48px;
 
-  --media-slider-thumb-size: 14px;
+  --media-slider-thumb-size: 15px;
   --media-slider-thumb-bg: #fff;
+  --media-slider-thumb-border: 1px solid #cacaca;
   --media-slider-thumb-border-radius: 9999px;
   --media-slider-thumb-transition: opacity 0.2s ease-in, box-shadow 0.2s ease;
   --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
   --media-slider-focused-thumb-shadow: 0 0 0 4px hsla(0, 0%, 100%, 0.4);
 
   --media-slider-track-width: 100%;
-  --media-slider-track-height: 4px;
+  --media-slider-track-height: 5px;
   --media-slider-track-border-radius: 2px;
-  --media-slider-track-height: 4px;
+  --media-slider-track-height: 5px;
   --media-slider-track-bg: rgb(255 255 255 / 0.3);
   --media-slider-focused-track-width: 100%;
   --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
@@ -172,6 +173,7 @@ media-player {
   --media-slider-value-bg: black;
   --media-slider-value-color: hsl(0, 0%, 80%);
   --media-slider-value-gap: 8px;
+  --media-slider-value-border-radius: 2px;
 
   --media-slider-preview-bg: unset;
   --media-slider-preview-width: var(--computed-width);
@@ -182,10 +184,11 @@ media-player {
   --media-slider-chapter-title-font-size: 14px;
   --media-slider-chapter-title-color: #f5f5f5;
   --media-slider-chapter-title-bg: unset;
-  --media-slider-chapter-hover-transform: scaleY(1.75);
+  --media-slider-chapter-hover-transform: scaleY(2);
   --media-slider-chapter-hover-transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
 
   --media-thumbnail-bg: black;
+  --media-thumbnail-border: 1px solid white;
   /* Applies when scaling thumbnails up. */
   --media-thumbnail-min-width: 120px;
   --media-thumbnail-min-height: 80px;
@@ -201,11 +204,7 @@ at the device pointer (mouse/thumb).
 
 | Variable                   | Description                                            |
 | -------------------------- | ------------------------------------------------------ |
-| `--slider-fill-value`      | Fill amount (e.g., `30`).                              |
-| `--slider-fill-rate`       | Fill value expressed as a ratio (e.g., `0.3`).         |
 | `--slider-fill-percent`    | Fill rate expressed as a percentage (e.g., `30%`).     |
-| `--slider-pointer-value`   | Fill amount up to the pointer position (e.g., `30`).   |
-| `--slider-pointer-rate`    | Pointer value expressed as a ratio (e.g., `0.3`).      |
 | `--slider-pointer-percent` | Pointer rate expressed as a percentage. (e.g., `30%`). |
 
 The slider will also apply the following CSS variables to the element in the `preview` slot:

@@ -1,3 +1,66 @@
+## [0.6.4](https://github.com/vidstack/player/compare/v0.6.3...v0.6.4) (2023-06-07)
+
+### Bug Fixes
+
+- do not reset breakpoints and touch input on src change ([bd84729](https://github.com/vidstack/player/commit/bd847296619d95d236776416103828f6679af57a)), closes [#854](https://github.com/vidstack/player/issues/854)
+
+## [0.6.3](https://github.com/vidstack/player/compare/v0.6.2...v0.6.3) (2023-06-07)
+
+### Bug Fixes
+
+- set menu height on connect to avoid resize on open transition ([cae76f3](https://github.com/vidstack/player/commit/cae76f3e2aa8db2a3a747335ccbc3e86759870d9))
+
+## [0.6.2](https://github.com/vidstack/player/compare/v0.6.1...v0.6.2) (2023-06-07)
+
+### Bug Fixes
+
+- cdn bundle throwing error ([596b3b3](https://github.com/vidstack/player/commit/596b3b34b0b032065b3e8fdbe459c775177e237f))
+- hide disabled menu items by default ([6fa3325](https://github.com/vidstack/player/commit/6fa3325c34304112dd732b551a73e0a1441ca5af))
+- pad minutes by default when displaying hours unit ([b4a1d0d](https://github.com/vidstack/player/commit/b4a1d0d20004af1a9161d85562088054cce56fa5)), closes [#852](https://github.com/vidstack/player/issues/852)
+- remove icon type from main exports as media icons is optional ([fc3bac9](https://github.com/vidstack/player/commit/fc3bac9c3b8d5ca482f747550050c3df03767800))
+- right click should _not_ trigger gestures ([8bad0cd](https://github.com/vidstack/player/commit/8bad0cd19430fb05864576d5cb0d22baab1c97dc)), closes [#851](https://github.com/vidstack/player/issues/851)
+- time tests match current specification ([#844](https://github.com/vidstack/player/issues/844)) ([521d3a4](https://github.com/vidstack/player/commit/521d3a44d3365aa4206a4b52abef4ae807975308))
+
+### Features
+
+- add `part` attributes to skin menus for easy targeting ([3504f5b](https://github.com/vidstack/player/commit/3504f5bbfcf9f538e5044c7d5141a0940821cbed))
+
+## [0.6.1](https://github.com/vidstack/player/compare/v0.6.0...v0.6.1) (2023-06-06)
+
+### Bug Fixes
+
+- **react:** menu throwing during ssr ([ecc205f](https://github.com/vidstack/player/commit/ecc205f4b820f9d13e5a400eb633d2e2d024e04e))
+
+# [0.6.0](https://github.com/vidstack/player/compare/v0.5.6...v0.6.0) (2023-06-06)
+
+### Bug Fixes
+
+- drop `.cjs` exports ([f20999c](https://github.com/vidstack/player/commit/f20999c290131ee90183e3cd6392f7e169e7422b))
+- dynamically load captions lib for parsing thumbnails ([065934c](https://github.com/vidstack/player/commit/065934cd1f43b97792cfbc9caaa6eabc4f16981c))
+- ignore numpad seeking when meta key is down ([74d19fb](https://github.com/vidstack/player/commit/74d19fbc9a80fdebbb62283172bcdef44b17f476))
+- only set menu item hint text when provided ([dacaa2d](https://github.com/vidstack/player/commit/dacaa2d9a6f1bce6338b0757c119bd86cd8d9755))
+- pause user idle tracking when interacting with player ([19014dd](https://github.com/vidstack/player/commit/19014dd84bbd33a82fda8a8e00e822c43559c5d0))
+- resolve mem leaks and destroy provider ([c9b351c](https://github.com/vidstack/player/commit/c9b351c2792851e6e30038f4fc36ab5702535261))
+- split icons into a separate import path ([8d1187a](https://github.com/vidstack/player/commit/8d1187ac4872e4916d891b98b368d5999df39490)), closes [#841](https://github.com/vidstack/player/issues/841)
+
+### Features
+
+- community skin ([7de0002](https://github.com/vidstack/player/commit/7de000257cc5b2e9f606e7cbaaaff8124af35e9d)), closes [#73](https://github.com/vidstack/player/issues/73) [#839](https://github.com/vidstack/player/issues/839) [#840](https://github.com/vidstack/player/issues/840)
+- display bitrate in quality menu ([e7d5e46](https://github.com/vidstack/player/commit/e7d5e4622a86aea369498a59a8b8022601938645)), closes [#838](https://github.com/vidstack/player/issues/838)
+
+## [0.5.6](https://github.com/vidstack/player/compare/v0.5.5...v0.5.6) (2023-05-18)
+
+### Bug Fixes
+
+- **react:** hmr issue in remix ([02ac082](https://github.com/vidstack/player/commit/02ac0827e8a6a3749e1a6bb2b5c65346d00736bb))
+
+## [0.5.5](https://github.com/vidstack/player/compare/v0.5.4...v0.5.5) (2023-05-18)
+
+### Bug Fixes
+
+- prevent tailwind normalization breaking menu radio check ([83e95d6](https://github.com/vidstack/player/commit/83e95d62846cfe0c82dbd851f25bd68aae0e3f2a))
+- **react:** hmr element register error ([f66d78d](https://github.com/vidstack/player/commit/f66d78dfd0179eb8c09320ea998adec4adb272c8))
+
 ## [0.5.4](https://github.com/vidstack/player/compare/v0.5.3...v0.5.4) (2023-05-16)
 
 ### Bug Fixes

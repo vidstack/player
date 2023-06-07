@@ -2,10 +2,6 @@ if (__DEV__) {
   console.warn('[vidstack] dev mode!');
 }
 
-// Icons
-export * from './icons/types';
-export * from './icons/component';
-
 // Foundation
 export * from './foundation/list/list';
 export * from './foundation/fullscreen/controller';
@@ -111,3 +107,6 @@ export * from './player/ui/live-indicator';
 export * from './player/ui/poster';
 export * from './player/ui/time';
 export * from './player/ui/thumbnail';
+
+// Skins
+export * from './player/skins/community/skin';

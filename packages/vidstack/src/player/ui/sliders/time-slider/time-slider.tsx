@@ -6,14 +6,15 @@ import {
   defineProp,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { listenEvent } from 'maverick.js/std';
-import type { VTTCue } from 'media-captions';
+import { isNull, listenEvent, setAttribute } from 'maverick.js/std';
 
 import { ClassManager } from '../../../../foundation/observers/class-manager';
-import { setAttributeIfEmpty } from '../../../../utils/dom';
+import { scopedRaf, setAttributeIfEmpty } from '../../../../utils/dom';
+import { round } from '../../../../utils/number';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
 import type { TextTrack } from '../../../core/tracks/text/text-track';
 import { onTrackChapterChange } from '../../../core/tracks/text/utils';
+import type { SliderCSSVars } from '../slider/api/cssvars';
 import type {
   SliderDragEndEvent,
   SliderDragStartEvent,
@@ -70,6 +71,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   });
 
   protected override _readonly = true;
+  protected _swipeGesture = true;
 
   protected _dispatchSeeking!: ThrottledSeeking;
   protected _track = signal<TextTrack | null>(null);
@@ -98,14 +100,27 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
       'data-chapters': this._hasChapters.bind(this),
     });
 
+    this.setStyles({
+      '--media-buffered-percent': this._calcBufferedPercent.bind(this),
+    });
+
     effect(this._watchCurrentTime.bind(this));
     effect(this._watchSeekingThrottle.bind(this));
     effect(this._onTrackChange.bind(this));
+
+    scopedRaf(() => {
+      effect(this._watchPreviewing.bind(this));
+    });
+  }
+
+  protected _calcBufferedPercent() {
+    const { bufferedEnd, duration } = this._media.$store;
+    return round(Math.min(bufferedEnd() / Math.max(duration(), 1), 1) * 100, 3) + '%';
   }
 
   protected _hasChapters() {
     const { duration } = this._media.$store;
-    this._classManager?._update();
+    this._classManager?._requestUpdate();
     return this._track()?.cues.length && Number.isFinite(duration()) && duration() > 0;
   }
 
@@ -151,6 +166,11 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
       value.set(newValue);
       this.dispatch('value-change', { detail: newValue });
     }
+  }
+
+  protected _watchPreviewing() {
+    const player = this._media.player;
+    player && this._preview && setAttribute(player, 'data-preview', this.$store.interactive());
   }
 
   protected _seeking(time: number, event: Event) {
@@ -205,11 +225,17 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   // -------------------------------------------------------------------------------------------
 
   override _getStep() {
-    return (this.$props.step() / this._media.$store.duration()) * 100;
+    const value = (this.$props.step() / this._media.$store.duration()) * 100;
+    return Number.isFinite(value) ? value : 1;
   }
 
   override _getKeyStep() {
-    return (this.$props.keyStep() / this._media.$store.duration()) * 100;
+    const value = (this.$props.keyStep() / this._media.$store.duration()) * 100;
+    return Number.isFinite(value) ? value : 1;
+  }
+
+  override _roundValue(value: number) {
+    return round(value, 3);
   }
 
   override _isDisabled() {
@@ -260,15 +286,20 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
 
   protected _formatTime(
     percent: number,
-    padHours: boolean,
-    padMinutes: boolean,
+    padHours: boolean | null,
+    padMinutes: boolean | null,
     showHours: boolean,
   ) {
     const time = this._percentToTime(percent),
       { live, duration } = this._media.$store,
       value = live() ? time - duration() : time;
     return Number.isFinite(time)
-      ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), padHours, padMinutes, showHours)}`
+      ? `${value < 0 ? '-' : ''}${formatTime(
+          Math.abs(value),
+          padHours,
+          isNull(padMinutes) ? Math.abs(value) >= 3600 : padMinutes,
+          showHours,
+        )}`
       : 'LIVE';
   }
 
@@ -285,7 +316,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
 
   protected _onTrackChange() {
     this._track();
-    this._chapterTitleEl = this.el!.querySelector('[part="chapter-title"]');
+    this._chapterTitleEl = this.el?.querySelector('[part="chapter-title"]') ?? null;
     if (!this._chapterTitleEl) return;
     effect(this._onChapterTitleChange.bind(this));
     return () => {
@@ -303,6 +334,14 @@ export interface MediaTimeSliderElement extends HTMLCustomElement<TimeSlider> {}
 
 export interface TimeSliderAPI extends SliderAPI {
   props: TimeSliderProps;
+  cssvars: TimeSliderCSSVars;
+}
+
+export interface TimeSliderCSSVars extends SliderCSSVars {
+  /**
+   * The percentage of media playback that has been buffered.
+   */
+  readonly 'media-buffered-percent': string;
 }
 
 export interface TimeSliderProps extends SliderProps {

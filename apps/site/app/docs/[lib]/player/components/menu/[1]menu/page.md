@@ -13,7 +13,7 @@ The menu will be displayed as a popup menu from the bottom of the screen on mobi
 viewport width), or if a coarse pointer device (e.g., touch) input is detected and orientation
 is landscape.
 
-{% code_preview name="usage" copyHighlight=true highlight="react:3-" /%}
+{% code_preview name="usage" copyHighlight=true highlight="react:4-" /%}
 
 ## Menu Position
 
@@ -139,8 +139,8 @@ media-player {
   --media-menu-font-weight: 500;
   --media-menu-scrollbar-track-bg: rgb(245 245 245 / 0.08);
   --media-menu-scrollbar-thumb-bg: rgb(245 245 245 / 0.1);
-  --media-menu-x-offset: 0;
-  --media-menu-y-offset: unset;
+  --media-menu-x-offset: 4px;
+  --media-menu-y-offset: 4px;
   --media-menu-hint-color: rgba(245, 245, 245, 0.5);
   --media-menu-min-width: 260px;
   --media-menu-max-height: calc(var(--media-height) * 0.7);
@@ -150,16 +150,17 @@ media-player {
 
   --media-menu-divider: 1px solid rgb(245 245 245 /0.15);
 
-  --media-menu-mobile-max-height: 40vh;
-  --media-menu-mobile-landscape-max-height: 70vh;
+  --media-mobile-menu-max-height: 40vh;
+  --media-mobile-menu-landscape-max-height: 70vh;
 
   /* menu items */
   --media-menu-item-color: #f5f5f5;
   --media-menu-item-border-radius: 2px;
   --media-menu-item-padding: 12px;
-  --media-menu-item-mobile-padding: 12px;
   --media-menu-item-hover-bg: rgb(245 245 245 / 0.08);
   --media-menu-item-icon-size: 22px;
+
+  --media-mobile-menu-item-padding: 12px;
 
   /* radios */
   --media-menu-radio-check-size: 10px;

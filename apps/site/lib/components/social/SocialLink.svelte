@@ -13,7 +13,7 @@
   export { _class as class };
 
   const href = {
-    discord: 'https://discord.com/invite/7RGU7wvsu9',
+    discord: 'https://discord.gg/QAjfh2gZE4',
     gitHub: 'https://github.com/vidstack',
     twitter: 'https://twitter.com/vidstackjs?lang=en',
   };

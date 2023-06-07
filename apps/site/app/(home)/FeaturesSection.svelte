@@ -10,7 +10,9 @@
 </script>
 
 <section class="flex flex-col items-center justify-center px-4 768:px-12">
-  <div class="text-center w-full flex flex-col items-center mt-12 mb-16 768:mt-40 768:mb-20">
+  <div
+    class="text-center w-full flex flex-col items-center mt-16 1200:mt-48 mb-16 768:mt-24 768:mb-20"
+  >
     <div class="h-20 w-px bg-gradient-to-b from-brand/0 to-brand" />
     <h2
       class="mt-6 font-bold text-brand dark:text-transparent text-lg dark:bg-gradient-to-r from-brand to-[#FB7185] bg-clip-text"

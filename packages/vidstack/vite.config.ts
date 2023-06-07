@@ -18,12 +18,12 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['maverick.js'],
+    exclude: ['maverick.js', 'maverick.js/element'],
   },
   plugins: [
     maverick({
       include: ['src/**/*.{jsx,tsx}'],
-      hydratable: (id) => !id.includes('time-slider/chapters'),
+      hydratable: (id) => !id.includes('time-slider/chapters') && !id.includes('skins/community'),
       diffArrays: false,
     }),
   ],

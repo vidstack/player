@@ -1,8 +1,8 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { Icon } from './icons/component';
 import { Outlet } from './player/core/outlet/outlet';
 import { Player } from './player/core/player';
+import { CommunitySkin } from './player/skins/community/skin';
 import { BufferingIndicator } from './player/ui/buffering-indicator';
 import { CaptionButton } from './player/ui/buttons/caption-button';
 import { FullscreenButton } from './player/ui/buttons/fullscreen-button';
@@ -39,13 +39,10 @@ import { Thumbnail } from './player/ui/thumbnail';
 import { Time } from './player/ui/time';
 import { Tooltip } from './player/ui/tooltip/tooltip';
 
-export default function registerAllElements(): void {
-  [
-    Player,
-    Outlet,
+export function getUIComponents() {
+  return [
     Poster,
     BufferingIndicator,
-    Icon,
     Tooltip,
     Thumbnail,
     PlayButton,
@@ -55,13 +52,13 @@ export default function registerAllElements(): void {
     CaptionButton,
     SeekButton,
     Slider,
+    TimeSlider,
+    VolumeSlider,
     SliderThumbnail,
     SliderValue,
     SliderVideo,
     Time,
-    TimeSlider,
     ToggleButton,
-    VolumeSlider,
     LiveIndicator,
     Captions,
     Gesture,
@@ -79,5 +76,9 @@ export default function registerAllElements(): void {
     QualityMenuItems,
     PlaybackRateMenuButton,
     PlaybackRateMenuItems,
-  ].map(registerLiteCustomElement);
+  ];
+}
+
+export default function registerAllElements(): void {
+  [Player, Outlet, ...getUIComponents(), CommunitySkin].map(registerLiteCustomElement);
 }

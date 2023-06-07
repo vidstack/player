@@ -63,8 +63,8 @@ export function parseTime(duration: number): ParsedTime {
  */
 export function formatTime(
   duration: number,
-  shouldPadHours = false,
-  shouldPadMinutes = false,
+  shouldPadHours: boolean | null = false,
+  shouldPadMinutes: boolean | null = false,
   shouldAlwaysShowHours = false,
 ): string {
   const { hours, minutes, seconds } = parseTime(duration);

@@ -110,7 +110,7 @@ export class MediaKeyboardController extends ComponentController<PlayerAPI> {
     const sliderFocused = focused?.hasAttribute('data-media-slider'),
       method = this._getMatchingMethod(event);
 
-    if (!method && /[0-9]/.test(event.key) && !sliderFocused) {
+    if (!method && !event.metaKey && /[0-9]/.test(event.key) && !sliderFocused) {
       event.preventDefault();
       event.stopPropagation();
       this._media.remote.seek((this.$store.duration() / 10) * Number(event.key), event);

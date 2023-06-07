@@ -1,4 +1,11 @@
-import { MediaRadio, MediaRadioGroup } from '@vidstack/react';
+import {
+  MediaMenu,
+  MediaMenuButton,
+  MediaMenuItems,
+  MediaRadio,
+  MediaRadioGroup,
+} from '@vidstack/react';
+import { SettingsIcon } from '@vidstack/react/icons';
 
 <MediaMenu>
   <MediaMenuButton aria-label="Settings">

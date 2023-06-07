@@ -47,15 +47,15 @@
 
 .scrollbar {
   scrollbar-width: thin;
-  --scrollbar-track-bg: rgb(var(--color-border) / 0.3);
+  --scrollbar-track-bg: rgb(var(--color-border) / 0.6);
   --scrollbar-thumb-bg: rgb(var(--color-border));
 }
 
 .dark .scrollbar {
-  --scrollbar-track-bg: rgb(var(--color-border) / 0.2);
+  --scrollbar-track-bg: rgb(var(--color-border) / 0.4);
 }
 
-@media screen and (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) {
   .scrollbar {
     scroll-behavior: smooth;
   }
