@@ -138,7 +138,7 @@ export function ChaptersMenu({
 }) {
   const lang = useCommunitySkinI18n();
   return (
-    <media-menu position={position}>
+    <media-menu position={position} part="chapters-menu">
       <media-menu-button>
         <Icon paths={chaptersPaths} />
         <media-tooltip position={tooltip}>{i18n(lang, 'Chapters')}</media-tooltip>
@@ -157,7 +157,7 @@ export function SettingsMenu({
 }) {
   const lang = useCommunitySkinI18n();
   return (
-    <media-menu position={position}>
+    <media-menu position={position} part="settings-menu">
       <media-menu-button>
         <Icon paths={settingsPaths} rotate />
         <media-tooltip position={tooltip}>{i18n(lang, 'Settings')}</media-tooltip>
