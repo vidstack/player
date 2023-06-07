@@ -2,9 +2,6 @@ if (__DEV__) {
   console.warn('[vidstack] dev mode!');
 }
 
-// Icons
-export * from './icons/types';
-
 // Foundation
 export * from './foundation/list/list';
 export * from './foundation/fullscreen/controller';
