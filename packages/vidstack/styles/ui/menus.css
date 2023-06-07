@@ -446,3 +446,7 @@
   border-radius: var(--media-chapters-duration-border-radius, 2px);
   margin-top: var(--media-chapters-duration-gap, 6px);
 }
+
+:where(media-menu [data-media-menu-button][aria-disabled='true']) {
+  display: none;
+}
