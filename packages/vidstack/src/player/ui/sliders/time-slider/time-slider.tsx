@@ -6,8 +6,7 @@ import {
   defineProp,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { listenEvent, setAttribute } from 'maverick.js/std';
-import type { VTTCue } from 'media-captions';
+import { isNull, listenEvent, setAttribute } from 'maverick.js/std';
 
 import { ClassManager } from '../../../../foundation/observers/class-manager';
 import { scopedRaf, setAttributeIfEmpty } from '../../../../utils/dom';
@@ -287,15 +286,20 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
 
   protected _formatTime(
     percent: number,
-    padHours: boolean,
-    padMinutes: boolean,
+    padHours: boolean | null,
+    padMinutes: boolean | null,
     showHours: boolean,
   ) {
     const time = this._percentToTime(percent),
       { live, duration } = this._media.$store,
       value = live() ? time - duration() : time;
     return Number.isFinite(time)
-      ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), padHours, padMinutes, showHours)}`
+      ? `${value < 0 ? '-' : ''}${formatTime(
+          Math.abs(value),
+          padHours,
+          isNull(padMinutes) ? Math.abs(value) >= 3600 : padMinutes,
+          showHours,
+        )}`
       : 'LIVE';
   }
 

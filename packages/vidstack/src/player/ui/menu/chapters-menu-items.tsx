@@ -148,7 +148,7 @@ export class ChaptersMenuItems extends MenuItems<ChaptersMenuItemsAPI> {
           {this._hasThumbnails() && <media-thumbnail part="thumbnail" $prop:time={cue.startTime} />}
           <div part="content">
             <div part="title">{cue.text}</div>
-            <div part="start-time">{formatTime(cue.startTime)}</div>
+            <div part="start-time">{formatTime(cue.startTime, false, cue.startTime >= 3600)}</div>
             <div part="duration">{formatSpokenTime(cue.endTime - cue.startTime)}</div>
           </div>
         </>
