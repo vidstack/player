@@ -123,6 +123,7 @@ export class Menu extends Component<MenuAPI> {
     effect(this._watchExpanded.bind(this));
 
     this._parentMenu?._addSubmenu(el as MediaMenuElement);
+    requestAnimationFrame(() => this._onResize());
   }
 
   protected override onDestroy() {
