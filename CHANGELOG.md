@@ -6,7 +6,7 @@
 - hide disabled menu items by default ([6fa3325](https://github.com/vidstack/player/commit/6fa3325c34304112dd732b551a73e0a1441ca5af))
 - pad minutes by default when displaying hours unit ([b4a1d0d](https://github.com/vidstack/player/commit/b4a1d0d20004af1a9161d85562088054cce56fa5)), closes [#852](https://github.com/vidstack/player/issues/852)
 - remove icon type from main exports as media icons is optional ([fc3bac9](https://github.com/vidstack/player/commit/fc3bac9c3b8d5ca482f747550050c3df03767800))
-- right click should trigger gestures ([8bad0cd](https://github.com/vidstack/player/commit/8bad0cd19430fb05864576d5cb0d22baab1c97dc)), closes [#851](https://github.com/vidstack/player/issues/851)
+- right click should _not_ trigger gestures ([8bad0cd](https://github.com/vidstack/player/commit/8bad0cd19430fb05864576d5cb0d22baab1c97dc)), closes [#851](https://github.com/vidstack/player/issues/851)
 - time tests match current specification ([#844](https://github.com/vidstack/player/issues/844)) ([521d3a4](https://github.com/vidstack/player/commit/521d3a44d3365aa4206a4b52abef4ae807975308))
 
 ### Features
