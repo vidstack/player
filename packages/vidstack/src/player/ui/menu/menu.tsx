@@ -252,7 +252,17 @@ export class Menu extends Component<MenuAPI> {
   }
 
   protected _onChange(trigger?: Event) {
-    this.dispatch(peek(this._expanded) ? 'open' : 'close', { trigger });
+    const expanded = peek(this._expanded);
+    this.dispatch(expanded ? 'open' : 'close', { trigger });
+    if (!this._parentMenu) {
+      if (expanded) {
+        this._media.activeMenu?.close(trigger);
+        this._media.activeMenu = this;
+      } else {
+        for (const el of this._submenus) el.close(trigger);
+        this._media.activeMenu = null;
+      }
+    }
   }
 
   protected _isExpanded() {
