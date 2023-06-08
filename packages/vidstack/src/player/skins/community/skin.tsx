@@ -88,7 +88,8 @@ export class CommunitySkin extends Component<CommunitySkinAPI> {
   override render() {
     if (__SERVER__) return null;
 
-    const $layoutType = computed(this._getLayoutType.bind(this));
+    const $layoutType = computed(this._getLayoutType.bind(this)),
+      $isMobile = computed(this._isMobile.bind(this));
 
     return () => {
       const render = $layoutType().startsWith('video') ? renderVideo : renderAudio;
@@ -103,7 +104,7 @@ export class CommunitySkin extends Component<CommunitySkinAPI> {
       //     ? renderLiveAudio
       //     : renderAudio;
 
-      return render();
+      return render($isMobile());
     };
   }
 }

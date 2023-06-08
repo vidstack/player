@@ -14,9 +14,8 @@ import {
   VolumeSlider,
 } from './shared';
 
-export function renderVideo() {
-  const { $media } = useCommunitySkin();
-  return $media.breakpointX() === 'sm' ? MobileUI() : DesktopUI();
+export function renderVideo(isMobile: boolean) {
+  return isMobile ? MobileUI() : DesktopUI();
 }
 
 function MobileUI() {
