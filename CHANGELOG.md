@@ -1,3 +1,21 @@
+## [0.6.5](https://github.com/vidstack/player/compare/v0.6.4...v0.6.5) (2023-06-08)
+
+### Bug Fixes
+
+- audio controls color not applying to buttons ([7879a38](https://github.com/vidstack/player/commit/7879a38af3fb6990b8f960bc403e2fa61e293771)), closes [#855](https://github.com/vidstack/player/issues/855)
+- avoid re-rendering skin if device type not changed ([2db8d23](https://github.com/vidstack/player/commit/2db8d23e2bb14371b427ec39a201019ac1e5f87c))
+- consitent community skin title across mobile and desktop ([e24a544](https://github.com/vidstack/player/commit/e24a54457dc449cce1e4e2567d95fec33946da08))
+- controls flickering in chrome fullscreen when slider chapters are active ([8a7f45f](https://github.com/vidstack/player/commit/8a7f45ff87d590a0062b44b358da41589f146afd))
+- do not throw if thumbnails img url contains no coords ([6d3e60d](https://github.com/vidstack/player/commit/6d3e60d6d0baeea2af6c8f71e87d3935777639f1))
+- perf improvements to slider chapter rendering ([a4266f9](https://github.com/vidstack/player/commit/a4266f9c775ea01a6640f3b2c5b110d19aee5291))
+- pointer event gesture should not fire if menu open ([dccd29d](https://github.com/vidstack/player/commit/dccd29da2cb35a4c97b9abef533097bf15de16bf))
+- prevent browser title tooltip showing on player ([646955b](https://github.com/vidstack/player/commit/646955b4a5fa4a74d91d7464eb9d57472749405b))
+- two menus should not be active at the same time ([0073752](https://github.com/vidstack/player/commit/00737526973479b4ec83335ef2d50e6821b25e16))
+
+### Features
+
+- allow player breakpoints to be configured via props ([a770e7a](https://github.com/vidstack/player/commit/a770e7a75557f06367e171c6f954cea623b60299))
+
 ## [0.6.4](https://github.com/vidstack/player/compare/v0.6.3...v0.6.4) (2023-06-07)
 
 ### Bug Fixes
