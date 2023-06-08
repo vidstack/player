@@ -176,8 +176,9 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     pointerQuery.onchange = this._onTouchChange.bind(this);
 
     const resize = new ResizeObserver(this._onResize.bind(this));
-    this._onResize();
     resize.observe(el);
+
+    effect(this._onResize.bind(this));
 
     this.dispatch('media-player-connect', {
       detail: this.el as MediaPlayerElement,
@@ -294,8 +295,9 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     const width = this.el!.clientWidth,
       height = this.el!.clientHeight,
-      bpx = width < 600 ? 'sm' : width < 980 ? 'md' : 'lg',
-      bpy = height < 380 ? 'sm' : height < 600 ? 'md' : 'lg';
+      { smallBreakpointX, smallBreakpointY, largeBreakpointX, largeBreakpointY } = this.$props,
+      bpx = width < smallBreakpointX() ? 'sm' : width < largeBreakpointX() ? 'md' : 'lg',
+      bpy = height < smallBreakpointY() ? 'sm' : height < largeBreakpointY() ? 'md' : 'lg';
 
     this.$store.breakpointX.set(bpx);
     this.$store.breakpointY.set(bpy);
