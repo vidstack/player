@@ -16,6 +16,7 @@
   height: var(--height);
   /** Prevent thumb flowing out of slider. */
   margin: 0 calc(var(--thumb-size) / 2);
+  contain: layout style size;
 }
 
 :where(media-player [data-media-slider] > shadow-root) {
@@ -32,8 +33,11 @@
   border-radius: var(--media-slider-track-border-radius, 1px);
   transform: translateY(-50%) translateZ(0);
   background-color: var(--media-slider-track-bg, rgb(255 255 255 / 0.3));
-  backdrop-filter: blur(2px);
   contain: strict;
+}
+
+:where(media-player [data-media-slider] [part='track']) {
+  backdrop-filter: blur(2px);
 }
 
 :where(media-player [data-media-slider][data-focus] [part='track']) {
@@ -62,7 +66,6 @@
   width: var(--media-buffered-percent, 0%);
   will-change: width;
   background-color: var(--media-slider-track-progress-bg, rgb(255 255 255 / 0.5));
-  backdrop-filter: blur(2px);
 }
 
 :where(media-player [data-media-slider] [part='thumb-container']) {
