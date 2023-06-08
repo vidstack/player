@@ -89,6 +89,7 @@ media-community-skin[data-video] {
 
   --video-title-font-size: 16px;
   --video-title-font-weight: 500;
+  --video-fullscreen-title-font-size: 20px;
 
   --video-mobile-button-size: 32px;
   --video-volume-slider-max-width: 72px;

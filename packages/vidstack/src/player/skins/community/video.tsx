@@ -78,15 +78,14 @@ function DesktopUI() {
         <div part="controls-group"></div>
 
         <div part="controls-group">
-          <media-time type="current" pad-minutes />
           <TimeSlider />
-          <media-time type="current" remainder pad-minutes />
         </div>
 
         <div part="controls-group">
           <PlayButton />
           <MuteButton />
           <VolumeSlider />
+          <TimeGroup />
           <MainTitle />
           <CaptionButton />
           <PiPButton />

@@ -255,11 +255,11 @@
 :where(media-time-slider [part='chapter-container']) {
   display: flex;
   align-items: center;
-  width: var(--width);
+  width: 0%;
   height: 100%;
   margin-right: 2px;
   contain: strict;
-  will-change: width;
+  overflow: hidden;
 }
 
 :where(media-time-slider [part='chapter-container']:last-child) {

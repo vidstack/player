@@ -5,7 +5,7 @@ import {
   defineElement,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { ariaBool, setStyle } from 'maverick.js/std';
+import { animationFrameThrottle, ariaBool, setStyle } from 'maverick.js/std';
 
 import { FocusVisibleController } from '../../../../foundation/observers/focus-visible';
 import { setAttributeIfEmpty } from '../../../../utils/dom';
@@ -179,7 +179,7 @@ export class Slider<T extends SliderAPI = SliderAPI> extends Component<T> {
 
   protected _setAttrs() {
     const { disabled } = this.$props,
-      { dragging, fillPercent, interactive, pointerPercent, pointing } = this.$store;
+      { dragging, interactive, pointing } = this.$store;
 
     this.setAttributes({
       disabled,
@@ -195,15 +195,25 @@ export class Slider<T extends SliderAPI = SliderAPI> extends Component<T> {
       'data-media-slider': true,
     });
 
-    this.setCSSVars<SliderCSSVars>({
-      '--slider-fill-percent': () => round(fillPercent(), 3) + '%',
-      '--slider-pointer-percent': () => round(pointerPercent(), 3) + '%',
-    });
+    if (__SERVER__) this._watchCSSVars();
+    else effect(this._watchCSSVars.bind(this));
   }
 
   protected _isStyled() {
     return !!this.$props.trackClass();
   }
+
+  protected _watchCSSVars() {
+    const { fillPercent, pointerPercent } = this.$store;
+    this._updateSliderVars(round(fillPercent(), 3), round(pointerPercent(), 3));
+  }
+
+  protected _updateSliderVars = animationFrameThrottle(
+    (fillPercent: number, pointerPercent: number) => {
+      this.el?.style.setProperty('--slider-fill-percent', fillPercent + '%');
+      this.el?.style.setProperty('--slider-pointer-percent', pointerPercent + '%');
+    },
+  );
 
   // -------------------------------------------------------------------------------------------
   // Preview
@@ -221,19 +231,18 @@ export class Slider<T extends SliderAPI = SliderAPI> extends Component<T> {
 
   protected _watchPreview() {
     if (this._isDisabled() || !this._preview) return;
-    const onResize = this._onPreviewResize.bind(this);
-    window.requestAnimationFrame(onResize);
-    const observer = new ResizeObserver(onResize);
+    window.requestAnimationFrame(this._onPreviewResize);
+    const observer = new ResizeObserver(this._onPreviewResize);
     observer.observe(this._preview);
     return () => observer.disconnect();
   }
 
-  protected _onPreviewResize() {
+  protected _onPreviewResize = animationFrameThrottle(() => {
     if (!this._preview) return;
     const rect = this._preview.getBoundingClientRect();
     setStyle(this._preview, '--computed-width', rect.width + 'px');
     setStyle(this._preview, '--computed-height', rect.height + 'px');
-  }
+  });
 
   // -------------------------------------------------------------------------------------------
   // Events
