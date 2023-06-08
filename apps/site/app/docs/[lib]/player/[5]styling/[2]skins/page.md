@@ -44,6 +44,7 @@ media-community-skin[data-audio] {
   --audio-brand: #f5f5f5;
   --audio-focus-ring: 0 0 0 3px var(--audio-brand);
   --audio-bg: black;
+  --audio-border: 1px solid rgb(255 255 255 / 0.2);
   --audio-border-radius: 6px;
   --audio-font-family: sans-serif;
   --audio-controls-color: #f5f5f5;
@@ -52,7 +53,7 @@ media-community-skin[data-audio] {
   --audio-title-font-weight: 500;
   --audio-title-color: rgb(255 255 255 / 0.64);
 
-  --audio-time-muted-color: rgb(224, 224, 224);
+  --audio-time-divider-color: rgb(224, 224, 224);
 
   --audio-button-size: 40px;
   --audio-play-button-size: 30px;
@@ -86,10 +87,13 @@ media-community-skin[data-video] {
   --video-focus-ring: 0 0 0 3px var(--video-brand);
   --video-font-family: sans-serif;
   --video-controls-color: #f5f5f5;
+  --video-border: 1px solid rgb(255 255 255 / 0.2);
 
+  --video-title-color: #dedede;
   --video-title-font-size: 16px;
   --video-title-font-weight: 500;
-  --video-fullscreen-title-font-size: 20px;
+  --video-title-font-family: sans-serif;
+  --video-fullscreen-title-font-size: 16px;
 
   --video-mobile-button-size: 32px;
   --video-volume-slider-max-width: 72px;
@@ -106,7 +110,7 @@ media-community-skin[data-video] {
   --video-captions-offset: 72px;
   --video-mobile-captions-offset: 48px;
 
-  --video-time-muted-color: rgb(224, 224, 224);
+  --video-time-divider-color: rgb(224, 224, 224);
   --video-fullscreen-time-font-size: 16px;
 
   --video-mobile-play-button-bg: rgb(0 0 0 / 0.6);

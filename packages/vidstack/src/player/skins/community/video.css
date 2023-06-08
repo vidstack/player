@@ -8,6 +8,7 @@
   overflow: hidden;
   background-color: var(--video-bg, black);
   border-radius: var(--video-border-radius, 6px);
+  border: var(--video-border, 1px solid rgb(255 255 255 / 0.2));
 }
 
 :where(media-community-skin[data-video]) {
@@ -35,7 +36,7 @@
   z-index: 1;
   opacity: 0;
   pointer-events: none;
-  background-color: var(--video-scrim-bg, rgb(0 0 0 / 0.3));
+  background-color: var(--video-scrim-bg, rgb(0 0 0 / 0.35));
   transition: var(--video-scrim-out-transition, opacity 0.15s ease-out);
 }
 
@@ -128,20 +129,32 @@
  */
 
 :where(media-community-skin[data-video] [part='main-title']) {
-  flex: 1 1 0%;
-  text-align: center;
-  font-size: var(--video-title-font-size, 16px);
-  font-family: var(--video-font-family, sans-serif);
+  display: inline-block;
+  font-size: var(--video-title-font-size, 14px);
   font-weight: var(--video-title-font-weight, 500);
-  text-overflow: ellipsis;
+  font-family: var(--video-font-family, sans-serif);
+  color: var(--video-title-color, #dedede);
+  flex: 1 1 0%;
+  padding-inline: 8px;
   overflow: hidden;
   white-space: nowrap;
-  margin: 0 32px;
-  margin-bottom: 4px;
+  text-overflow: ellipsis;
+}
+
+:where(media-community-skin[data-video]) [part='main-title']::before {
+  content: '•';
+  display: inline-block;
+  margin-right: 6px;
+  color: var(--video-title-color, #dedede);
+}
+
+:where(media-community-skin[data-video]) [part='main-title']:empty::before {
+  content: '';
+  margin-left: 0;
 }
 
 :where(media-player[data-fullscreen] media-community-skin[data-video] [part='main-title']) {
-  font-size: var(--video-fullscreen-title-font-size, 20px);
+  font-size: var(--video-fullscreen-title-font-size, 16px);
 }
 
 /*
@@ -323,11 +336,7 @@
 :where(media-community-skin[data-video] [part='time-divider']) {
   margin-left: 2px;
   margin-right: 3px;
-  color: var(--video-time-muted-color, rgb(224, 224, 224));
-}
-
-:where(media-community-skin[data-video] [part='time-group'] media-time[type='duration']) {
-  color: var(--video-time-muted-color, rgb(224, 224, 224));
+  color: var(--video-time-divider-color, rgb(224, 224, 224));
 }
 
 :where(media-player[data-fullscreen] media-community-skin[data-video] media-time) {

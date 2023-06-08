@@ -18,6 +18,7 @@
   --media-button-size: 34px;
   display: inline-block;
   width: 100%;
+  border: var(--audio-border, 1px solid rgb(255 255 255 / 0.2));
 }
 
 :where(media-community-skin[data-audio][data-mobile]) {
@@ -94,11 +95,7 @@
 
 :where(media-community-skin[data-audio] [part='time-divider']) {
   margin: 0 2px;
-  color: var(--audio-time-muted-color, rgb(224, 224, 224));
-}
-
-:where(media-community-skin[data-audio] [part='time-group'] media-time[type='duration']) {
-  color: var(--audio-time-muted-color, rgb(224, 224, 224));
+  color: var(--audio-time-divider-color, rgb(224, 224, 224));
 }
 
 :where(media-community-skin[data-audio][data-mobile] media-time) {

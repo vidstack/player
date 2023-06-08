@@ -1,9 +1,8 @@
-import { useCommunitySkin } from './context';
 import {
   CaptionButton,
   ChaptersMenu,
+  ChapterTitleOrMainTitle,
   FullscreenButton,
-  MainTitle,
   MuteButton,
   PiPButton,
   PlayButton,
@@ -42,6 +41,7 @@ function MobileUI() {
 
         <div part="controls-group">
           <TimeGroup />
+          <ChapterTitleOrMainTitle />
           <div part="controls-spacer"></div>
           <FullscreenButton />
         </div>
@@ -85,7 +85,7 @@ function DesktopUI() {
           <MuteButton />
           <VolumeSlider />
           <TimeGroup />
-          <MainTitle />
+          <ChapterTitleOrMainTitle />
           <CaptionButton />
           <PiPButton />
           <FullscreenButton />
