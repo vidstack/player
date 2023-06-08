@@ -213,14 +213,25 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
   }
 
   private _watchTitle() {
-    const { title, live, viewType } = this.$store,
+    const { title } = this.$props,
+      { live, viewType } = this.$store,
       isLive = live(),
       type = uppercaseFirstChar(viewType()),
       typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media';
+
+    const newTitle = title();
+    if (newTitle) {
+      this.el?.setAttribute('data-title', newTitle);
+      this.el?.removeAttribute('title');
+    }
+
+    const currentTitle = this.el?.getAttribute('data-title') || '';
+    this.$store.title.set(currentTitle);
+
     setAttribute(
       this.el!,
       'aria-label',
-      title() ? `${typeText} - ${title()}` : typeText + ' Player',
+      currentTitle ? `${typeText} - ${currentTitle}` : typeText + ' Player',
     );
   }
 
@@ -261,6 +272,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
       $attrs[attrName] = this.$store[prop] as () => string | number;
     }
 
+    delete $attrs.title;
     this.setAttributes($attrs);
   }
 
