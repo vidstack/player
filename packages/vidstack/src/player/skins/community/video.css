@@ -264,7 +264,7 @@
 
 :where(media-community-skin[data-video] media-captions) {
   z-index: 10;
-  transition: var(--video-captions-transition, all 0.15s linear);
+  transition: var(--video-captions-transition, bottom 0.15s linear);
 }
 
 :where(

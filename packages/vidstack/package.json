@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "maverick.js": "0.37.0",
-    "media-captions": "0.0.14",
+    "media-captions": "0.0.15",
     "type-fest": "^3.8.0"
   },
   "devDependencies": {
