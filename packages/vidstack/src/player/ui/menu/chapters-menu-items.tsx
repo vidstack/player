@@ -1,6 +1,6 @@
 import { effect, peek, signal } from 'maverick.js';
 import { ComponentInstance, defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { isNumber, listenEvent } from 'maverick.js/std';
+import { isKeyboardEvent, isNumber, listenEvent } from 'maverick.js/std';
 
 import { ClassManager } from '../../../foundation/observers/class-manager';
 import { formatSpokenTime, formatTime } from '../../../utils/time';
@@ -60,8 +60,21 @@ export class ChaptersMenuItems extends MenuItems<ChaptersMenuItemsAPI> {
 
   protected override onAttach(el) {
     super.onAttach(el);
+
+    this._menu._attachObserver({
+      _onOpen: this._onOpen.bind(this),
+    });
+
     this.setAttributes({
       'data-thumbnails': this._hasThumbnails.bind(this),
+    });
+  }
+
+  protected _onOpen(trigger) {
+    if (isKeyboardEvent(trigger)) return;
+    requestAnimationFrame(() => {
+      const checked = this.el!.querySelector('media-radio[aria-checked="true"]') as HTMLElement;
+      checked.scrollIntoView({ block: 'center' });
     });
   }
 

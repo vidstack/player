@@ -28,7 +28,7 @@ import {
 import { $ariaBool } from '../../../utils/aria';
 import { isElementParent, onPress, setAttributeIfEmpty } from '../../../utils/dom';
 import { useMedia, type MediaContext } from '../../core/api/context';
-import { menuContext, type MenuContext } from './menu-context';
+import { menuContext, type MenuContext, type MenuObserver } from './menu-context';
 import { MenuFocusController } from './menu-focus-controller';
 
 declare global {
@@ -75,6 +75,7 @@ export class Menu extends Component<MenuAPI> {
 
   protected _menuButton: HTMLElement | null = null;
   protected _menuItems: HTMLElement | null = null;
+  protected _menuObserver: MenuObserver | null = null;
 
   protected _focus: MenuFocusController;
 
@@ -99,6 +100,7 @@ export class Menu extends Component<MenuAPI> {
       _disable: this._disable.bind(this),
       _attachMenuButton: this._attachMenuButton.bind(this),
       _attachMenuItems: this._attachMenuItems.bind(this),
+      _attachObserver: this._attachObserver.bind(this),
       _disableMenuButton: this._disableMenuButton.bind(this),
       _addSubmenu: this._addSubmenu.bind(this),
     });
@@ -130,6 +132,7 @@ export class Menu extends Component<MenuAPI> {
     this._removePopupMenu();
     this._menuButton = null;
     this._menuItems = null;
+    this._menuObserver = null;
   }
 
   protected _removePopupMenu() {
@@ -230,6 +233,10 @@ export class Menu extends Component<MenuAPI> {
     this._updateMenuItemsHidden(peek(this._expanded));
   }
 
+  protected _attachObserver(observer: MenuObserver) {
+    this._menuObserver = observer;
+  }
+
   protected _updateMenuItemsHidden(expanded: boolean) {
     if (this._menuItems) setAttribute(this._menuItems, 'aria-hidden', ariaBool(!expanded));
   }
@@ -245,15 +252,19 @@ export class Menu extends Component<MenuAPI> {
 
     this._expanded.set((expanded) => !expanded);
     this._changeIdleTracking();
-
     tick();
-    if (isKeyboardEvent(event)) this._menuItems?.focus();
+
+    if (isKeyboardEvent(event)) {
+      this._menuItems?.focus();
+    }
+
     this._onChange(event);
   }
 
   protected _onChange(trigger?: Event) {
     const expanded = peek(this._expanded);
     this.dispatch(expanded ? 'open' : 'close', { trigger });
+
     if (!this._parentMenu) {
       if (expanded) {
         this._media.activeMenu?.close(trigger);
@@ -263,6 +274,9 @@ export class Menu extends Component<MenuAPI> {
         this._media.activeMenu = null;
       }
     }
+
+    if (expanded) this._menuObserver?._onOpen?.(trigger);
+    else this._menuObserver?._onClose?.(trigger);
   }
 
   protected _isExpanded() {
@@ -364,10 +378,16 @@ export class Menu extends Component<MenuAPI> {
   @method
   open(trigger?: Event) {
     if (peek(this._expanded)) return;
+
     this._expanded.set(true);
     tick();
+
     this._onChange(trigger);
-    if (isKeyboardEvent(trigger)) this._menuItems?.focus();
+
+    if (isKeyboardEvent(trigger)) {
+      this._menuItems?.focus();
+    }
+
     this._changeIdleTracking(trigger);
   }
 
