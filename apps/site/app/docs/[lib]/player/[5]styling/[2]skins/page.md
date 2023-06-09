@@ -111,6 +111,7 @@ media-community-skin[data-video] {
   --video-captions-transition: bottom 0.2s linear;
   --video-captions-offset: 72px;
   --video-mobile-captions-offset: 48px;
+  --video-large-fullscreen-captions-offset: 54px;
 
   --video-time-divider-color: rgb(224, 224, 224);
   --video-fullscreen-time-font-size: 16px;

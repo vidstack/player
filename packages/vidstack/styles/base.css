@@ -23,7 +23,7 @@
   width: 100%;
   display: inline-block;
   position: relative;
-  contain: style;
+  contain: layout size style;
   box-sizing: border-box;
   user-select: none;
 }
