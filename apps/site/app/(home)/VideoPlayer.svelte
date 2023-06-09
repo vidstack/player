@@ -1,6 +1,6 @@
 <media-player
   title="Sprite Fight"
-  class="hero-video overflow-hidden shadow-lg"
+  class="hero-video shadow-lg"
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
   poster="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/animated.webp?start=268&end=278&width=640"
   thumbnails="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"

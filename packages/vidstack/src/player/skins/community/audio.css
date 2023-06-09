@@ -170,6 +170,10 @@
   min-height: unset;
 }
 
+:where(media-community-skin[data-audio] media-play-button svg) {
+  border-radius: var(--audio-play-button-border-radius, 100%);
+}
+
 :where(media-community-skin[data-audio][data-mobile] media-play-button) {
   margin: 0 10px;
 }
