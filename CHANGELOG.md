@@ -1,3 +1,21 @@
+## [0.6.6](https://github.com/vidstack/player/compare/v0.6.5...v0.6.6) (2023-06-09)
+
+### Bug Fixes
+
+- clear cue starting boxes on resize update ([c3aebf3](https://github.com/vidstack/player/commit/c3aebf3358482b56bd0af5af03a41de3d2872c27)), closes [#856](https://github.com/vidstack/player/issues/856)
+- compact chapters menu when no thumbnails are provided ([d97c5ae](https://github.com/vidstack/player/commit/d97c5ae176ea543d82b2f5e225822f2a25171e89))
+- consistent default border colors ([b1a047d](https://github.com/vidstack/player/commit/b1a047d8f6762772668b7125718a6a64067358e2))
+- export `CommunitySkinTranslations` ([aab0ce2](https://github.com/vidstack/player/commit/aab0ce2f44fa63564be6651c6c326a72ba1a053b))
+- hide main title when scrubbing on video mobile ([dbdb47f](https://github.com/vidstack/player/commit/dbdb47f94ddaa94414127af945396868bb966275))
+- improve default captions sizing on large fullscreen ([ec64e55](https://github.com/vidstack/player/commit/ec64e559a258dff9cf2a5083d7f2de10173c859a))
+- improve visibility of community skin audio tooltips and captions ([c5c9d58](https://github.com/vidstack/player/commit/c5c9d580563de9410488b1dd195e9dae24b54f51))
+- prefer debounce and sync captions updates ([2f16e72](https://github.com/vidstack/player/commit/2f16e72e6f3fcfd2906465577a49ff0509b7f0ca)), closes [#856](https://github.com/vidstack/player/issues/856)
+- remove old tracks before adding new ones ([245f72e](https://github.com/vidstack/player/commit/245f72e1dbc84c8b16a8cb311d527c61def1fa0e)), closes [#856](https://github.com/vidstack/player/issues/856)
+
+### Features
+
+- show current quality in settings when auto ([b6c4714](https://github.com/vidstack/player/commit/b6c471431521cf6adcb1b9014fb4a6d2d837601d)), closes [#861](https://github.com/vidstack/player/issues/861)
+
 ## [0.6.5](https://github.com/vidstack/player/compare/v0.6.4...v0.6.5) (2023-06-08)
 
 ### Bug Fixes
