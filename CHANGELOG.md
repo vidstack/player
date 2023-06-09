@@ -1,3 +1,11 @@
+## [0.6.8](https://github.com/vidstack/player/compare/v0.6.7...v0.6.8) (2023-06-09)
+
+### Bug Fixes
+
+- remove default active border in chapters menu ([e71f295](https://github.com/vidstack/player/commit/e71f29517829266f3dee67437863e54a7edb70e9))
+- round focus ring on audio play button ([7aba9d1](https://github.com/vidstack/player/commit/7aba9d1037708b018ef5259f650988cd705eb826))
+- set focus ring on audio skin correctly ([e980631](https://github.com/vidstack/player/commit/e980631f690a8131b4e8de84ae89845ecb5f8b69))
+
 ## [0.6.7](https://github.com/vidstack/player/compare/v0.6.6...v0.6.7) (2023-06-09)
 
 ### Bug Fixes
