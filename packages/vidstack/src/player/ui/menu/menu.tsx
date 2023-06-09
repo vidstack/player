@@ -162,6 +162,14 @@ export class Menu extends Component<MenuAPI> {
       if (this.el.contains?.(this._menuItems)) {
         const menu = this.el!.cloneNode();
         menu.appendChild(this._menuItems);
+
+        requestAnimationFrame(() => {
+          if (!this.el) return;
+          const mediaRing = '--media-focus-ring',
+            mediaRingValue = getComputedStyle(this.el).getPropertyValue(mediaRing);
+          if (mediaRingValue) setStyle(menu as HTMLElement, mediaRing, mediaRingValue);
+        });
+
         scoped(() => {
           document.body.append(menu);
         }, this._media.scope);
