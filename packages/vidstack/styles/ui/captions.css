@@ -12,7 +12,7 @@
   right: 0;
   bottom: 0;
   z-index: 1;
-  contain: strict;
+  contain: content;
   margin: var(--overlay-padding);
   font-size: var(--cue-font-size);
   font-family: sans-serif;

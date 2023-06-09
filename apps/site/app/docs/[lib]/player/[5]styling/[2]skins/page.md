@@ -69,10 +69,12 @@ media-community-skin[data-audio] {
   --audio-menu-max-height: 320px;
 
   --audio-captions-min-height: 28px;
-  --audio-captions-offset: 8px;
+  --audio-captions-offset: 6px;
   --audio-captions-bg: transparent;
-  --audio-cue-bg: black;
   --audio-cue-font-size: 14px;
+  --audio-cue-color: white;
+  --audio-cue-bg: black;
+  --audio-cue-border: 1px solid rgb(255 255 255 / 0.2);
 }
 ```
 
