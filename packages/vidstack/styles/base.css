@@ -177,6 +177,10 @@
   box-shadow: var(--media-focus-ring);
 }
 
+:where(media-player [data-media-slider][data-chapters][data-focus] [part='chapter']) {
+  clip-path: inset(-2px -2px -2px -2px);
+}
+
 :where(media-player[data-bp-x='sm']) :where(media-time-slider [part='chapters']) {
   display: none !important;
 }
