@@ -363,6 +363,7 @@ export class Menu extends Component<MenuAPI> {
    */
   @method
   open(trigger?: Event) {
+    if (peek(this._expanded)) return;
     this._expanded.set(true);
     tick();
     this._onChange(trigger);
@@ -376,6 +377,8 @@ export class Menu extends Component<MenuAPI> {
    */
   @method
   close(trigger?: Event) {
+    if (!peek(this._expanded)) return;
+
     this._expanded.set(false);
     tick();
 
