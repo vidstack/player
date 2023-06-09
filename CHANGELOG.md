@@ -1,3 +1,17 @@
+## [0.6.7](https://github.com/vidstack/player/compare/v0.6.6...v0.6.7) (2023-06-09)
+
+### Bug Fixes
+
+- put back focus state when exiting user idle ([d58e1c8](https://github.com/vidstack/player/commit/d58e1c8c28ad457ac17f8429f573c10a6ac2491a))
+- return focus to settings button on close ([978e2db](https://github.com/vidstack/player/commit/978e2db6b5ca961d5bd625dcb6e816d31d4a1b1b))
+- scroll active chapter menu item into center on open ([5d2ee17](https://github.com/vidstack/player/commit/5d2ee176b3d1d67aea0b5961833928ba827627d6))
+- set focus ring on player ([8fd991a](https://github.com/vidstack/player/commit/8fd991aa3ec37d3c04d17d4aa9ca51204c5e17ff))
+- show focus ring on time slider with chapters ([e3a402c](https://github.com/vidstack/player/commit/e3a402cbcf93fb21e52aecfdea3c426ff6632ca8))
+
+### Features
+
+- new progress indicator in chapters menu ([cf8a2ce](https://github.com/vidstack/player/commit/cf8a2ce896d0a09380a72e07f4bb40d0bcc36abd))
+
 ## [0.6.6](https://github.com/vidstack/player/compare/v0.6.5...v0.6.6) (2023-06-09)
 
 ### Bug Fixes
