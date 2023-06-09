@@ -16,10 +16,10 @@
   --media-menu-x-offset: -4px;
   --media-menu-y-offset: 40px;
   --media-button-size: 34px;
-  --media-slider-value-border: var(--audio-slider-value-border, 1px solid rgb(255 255 255 / 0.2));
+  --media-slider-value-border: var(--audio-slider-value-border, 1px solid rgb(255 255 255 / 0.1));
   display: inline-block;
   width: 100%;
-  border: var(--audio-border, 1px solid rgb(255 255 255 / 0.2));
+  border: var(--audio-border, 1px solid rgb(255 255 255 / 0.1));
 }
 
 :where(media-community-skin[data-audio][data-mobile]) {
@@ -284,7 +284,7 @@
 
 :where(media-community-skin[data-audio] media-captions [part='cue']) {
   color: var(--audio-cue-color, white);
-  border: var(--audio-cue-border, 1px solid rgb(255 255 255 / 0.2));
+  border: var(--audio-cue-border, 1px solid rgb(255 255 255 / 0.1));
   background-color: var(--audio-cue-bg, black);
 }
 

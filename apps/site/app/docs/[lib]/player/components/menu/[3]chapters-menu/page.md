@@ -112,7 +112,7 @@ media-player {
   --media-chapters-start-time-color: rgb(168, 169, 171);
   --media-chapters-start-time-font-size: 12px;
   --media-chapters-start-time-font-weight: 500;
-  --media-chapters-start-time-bg: rgba(156 163 175 / 0.2);
+  --media-chapters-start-time-bg: rgb(156 163 175 / 0.2);
   --media-chapters-start-time-gap: 6px;
 
   /* duration */

@@ -10,7 +10,7 @@
 
 :where(media-player[data-view-type='video']:not([data-fullscreen])) {
   border-radius: var(--video-border-radius, 6px);
-  border: var(--video-border, 1px solid rgb(255 255 255 / 0.2));
+  border: var(--video-border, 1px solid rgb(255 255 255 / 0.1));
 }
 
 :where(media-player[data-view-type='video']:not([data-fullscreen]) media-outlet) {
