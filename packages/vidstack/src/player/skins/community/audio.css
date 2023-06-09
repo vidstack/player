@@ -13,7 +13,6 @@
   --media-font-family: var(--audio-font-family, sans-serif);
   --media-slider-track-fill-bg: var(--brand);
   --media-chapters-progress-bg: var(--brand);
-  --media-chapters-item-active-border-left: 4px solid var(--brand);
   --media-menu-radio-check-active-color: var(--brand);
   --media-controls-color: var(--audio-controls-color, #f5f5f5);
   --media-tooltip-y-offset: 48px;
