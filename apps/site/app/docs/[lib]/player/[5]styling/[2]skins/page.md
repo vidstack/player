@@ -108,7 +108,7 @@ media-community-skin[data-video] {
   --video-controls-in-transition: opacity 0.2s ease-in;
   --video-controls-out-transition: opacity 0.2s ease-out;
 
-  --video-captions-transition: bottom 0.2s linear;
+  --video-captions-transition: all 0.15s linear;
   --video-captions-offset: 72px;
   --video-mobile-captions-offset: 48px;
   --video-large-fullscreen-captions-offset: 54px;
