@@ -36,6 +36,7 @@
   ) {
   width: var(--media-button-icon-size, 80%);
   height: var(--media-button-icon-size, 80%);
+  border-radius: var(--media-button-border-radius, 2px);
 }
 
 :where(media-player [data-media-button] > shadow-root) {

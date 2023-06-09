@@ -28,8 +28,13 @@
   user-select: none;
 }
 
-:where(media-player:focus) {
+media-player:focus,
+media-player:focus-visible {
   outline: none;
+}
+
+:where(media-player[data-focus]) {
+  box-shadow: var(--media-focus-ring);
 }
 
 :where(media-player[data-view-type='video'][data-user-idle]) {

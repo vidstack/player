@@ -42,12 +42,12 @@ Skin. This is in addition to the [Component CSS variables](#component-css-vars) 
 ```css
 media-community-skin[data-audio] {
   --audio-brand: #f5f5f5;
-  --audio-focus-ring: 0 0 0 3px var(--audio-brand);
   --audio-bg: black;
   --audio-border: 1px solid rgb(255 255 255 / 0.1);
   --audio-border-radius: 6px;
   --audio-font-family: sans-serif;
   --audio-controls-color: #f5f5f5;
+  --audio-focus-ring: 0 0 0 3px rgb(78 156 246);
 
   --audio-title-font-size: 14px;
   --audio-title-font-weight: 500;
@@ -86,10 +86,10 @@ Skin. This is in addition to the [Component CSS variables](#component-css-vars) 
 ```css {% copy=true %}
 media-community-skin[data-video] {
   --video-brand: #f5f5f5;
-  --video-focus-ring: 0 0 0 3px var(--video-brand);
   --video-font-family: sans-serif;
   --video-controls-color: #f5f5f5;
   --video-border: 1px solid rgb(255 255 255 / 0.1);
+  --video-focus-ring: 0 0 0 3px rgb(78 156 246);
 
   --video-title-color: #dedede;
   --video-title-font-size: 16px;
