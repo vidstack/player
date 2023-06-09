@@ -1,4 +1,4 @@
-import { onDispose, peek, signal } from 'maverick.js';
+import { onDispose, peek, signal, tick } from 'maverick.js';
 import {
   Component,
   ComponentInstance,
@@ -124,6 +124,7 @@ export class Outlet extends Component<OutletAPI> {
 
     this._domSources.set(sources);
     this._domTracks.set(tracks);
+    tick();
   }
 
   override render() {
