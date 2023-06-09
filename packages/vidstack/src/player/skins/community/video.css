@@ -375,7 +375,8 @@
     [data-media-button],
     [data-media-slider]:not(media-time-slider),
     media-time,
-    [part='time-divider']
+    [part='time-divider'],
+    [part='main-title']
   ) {
   transition: opacity 0.15s ease;
 }
@@ -391,6 +392,7 @@
     [data-media-button],
     [data-media-slider]:not(media-time-slider),
     media-time,
+    [part='main-title'],
     [part='time-divider'],
     media-captions
   ) {
