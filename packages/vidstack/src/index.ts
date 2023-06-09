@@ -109,3 +109,4 @@ export * from './player/ui/thumbnail';
 
 // Skins
 export * from './player/skins/community/skin';
+export { type CommunitySkinTranslations } from './player/skins/community/context';
