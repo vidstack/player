@@ -151,6 +151,7 @@
   bottom: 100%;
   margin-bottom: var(--media-menu-y-offset, 4px);
   padding: var(--media-menu-padding, 10px);
+  border: var(--media-menu-border, 1px solid rgb(255 255 255 / 0.1));
   background-color: var(--media-menu-bg, rgb(10 10 10 / 0.95));
   border-radius: var(--media-menu-border-radius, 8px);
   box-shadow: var(--media-menu-box-shadow, 1px 1px 1px rgb(10 10 10 / 0.5));
@@ -161,6 +162,7 @@
   overflow-y: auto;
   opacity: 0;
   pointer-events: none;
+  box-sizing: border-box;
   transition: height 0.25s linear, opacity 0.15s ease-out, transform 0.3s ease-in;
 }
 
@@ -381,7 +383,7 @@
 
 :where(media-chapters-menu-items) {
   padding: var(--media-chapters-padding, 0);
-  min-width: var(--media-chapters-min-width, var(--media-menu-min-width, 180px));
+  min-width: var(--media-chapters-min-width, var(--media-menu-min-width, 220px));
 }
 
 :where(media-chapters-menu-items[data-thumbnails]) {
@@ -449,4 +451,22 @@
 
 :where(media-menu [data-media-menu-button][aria-disabled='true']) {
   display: none;
+}
+
+:where(media-chapters-menu-items:not([data-thumbnails]) [part='content']) {
+  width: 100%;
+  flex-direction: row;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+:where(media-chapters-menu-items:not([data-thumbnails]) [part='start-time']) {
+  margin-top: 0;
+  margin-left: auto;
+}
+
+:where(media-chapters-menu-items:not([data-thumbnails]) [part='duration']) {
+  margin-top: 4px;
+  flex-basis: 100%;
 }
