@@ -33,7 +33,7 @@ media-player:focus-visible {
   outline: none;
 }
 
-:where(media-player[data-focus]) {
+:where(media-player[data-focus]:not([data-playing])) {
   box-shadow: var(--media-focus-ring);
 }
 

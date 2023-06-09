@@ -1,6 +1,6 @@
 import { effect } from 'maverick.js';
 import { ComponentController } from 'maverick.js/element';
-import { listenEvent } from 'maverick.js/std';
+import { isKeyboardEvent, listenEvent } from 'maverick.js/std';
 
 import type { PlayerAPI } from './player';
 
@@ -8,6 +8,7 @@ export class MediaUserController extends ComponentController<PlayerAPI> {
   private _idleTimer = -2;
   private _delay = 2000;
   private _pausedTracking = false;
+  private _focusedItem: HTMLElement | null = null;
 
   /**
    * Whether the media user is currently idle.
@@ -59,7 +60,6 @@ export class MediaUserController extends ComponentController<PlayerAPI> {
     if (this.$store.paused()) return;
 
     const onStopIdle = this._onStopIdle.bind(this);
-
     for (const eventType of ['pointerup', 'keydown'] as const) {
       listenEvent(this.el!, eventType, onStopIdle);
     }
@@ -85,6 +85,21 @@ export class MediaUserController extends ComponentController<PlayerAPI> {
   private _onStopIdle(event: Event) {
     // @ts-expect-error
     if (event.MEDIA_GESTURE) return;
+
+    // TODO: find a better place for this code.
+    if (isKeyboardEvent(event)) {
+      if (event.key === 'Escape') {
+        this.el?.focus();
+        this._focusedItem = null;
+      } else if (this._focusedItem) {
+        event.preventDefault();
+        requestAnimationFrame(() => {
+          this._focusedItem?.focus();
+          this._focusedItem = null;
+        });
+      }
+    }
+
     this.idle(false, 0, event);
     this.idle(true, this._delay, event);
   }
@@ -103,6 +118,13 @@ export class MediaUserController extends ComponentController<PlayerAPI> {
   private _onIdleChange(idle: boolean, trigger?: Event) {
     if (this.$store.userIdle() === idle) return;
     this.$store.userIdle.set(idle);
+
+    // TODO: find a better place for this code.
+    if (idle && document.activeElement && this.el?.contains(document.activeElement)) {
+      this._focusedItem = document.activeElement as HTMLElement;
+      requestAnimationFrame(() => this.el?.focus());
+    }
+
     this.dispatch('user-idle-change', {
       detail: idle,
       trigger,
