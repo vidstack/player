@@ -1,8 +1,9 @@
 import { effect, peek, signal } from 'maverick.js';
 import { ComponentInstance, defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { isKeyboardEvent, isNumber, listenEvent } from 'maverick.js/std';
+import { isKeyboardEvent, isNumber, listenEvent, setStyle } from 'maverick.js/std';
 
 import { ClassManager } from '../../../foundation/observers/class-manager';
+import { round } from '../../../utils/number';
 import { formatSpokenTime, formatTime } from '../../../utils/time';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import type { TextTrack } from '../../core/tracks/text/text-track';
@@ -118,8 +119,17 @@ export class ChaptersMenuItems extends MenuItems<ChaptersMenuItemsAPI> {
       return;
     }
 
-    const time = currentTime();
-    this._index.set(track.cues.findIndex((cue) => isCueActive(cue, time)));
+    const time = currentTime(),
+      activeCueIndex = track.cues.findIndex((cue) => isCueActive(cue, time));
+
+    this._index.set(activeCueIndex);
+
+    if (activeCueIndex >= 0) {
+      const cue = track.cues[activeCueIndex],
+        radio = this.el!.querySelector(`shadow-root media-radio[aria-checked='true']`),
+        playedPercent = ((time - cue.startTime) / (cue.endTime - cue.startTime)) * 100;
+      radio && setStyle(radio as HTMLElement, '--played-percent', round(playedPercent, 3) + '%');
+    }
   }
 
   protected _watchControllerDisabled() {

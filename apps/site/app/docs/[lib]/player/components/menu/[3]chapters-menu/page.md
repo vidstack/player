@@ -89,7 +89,12 @@ media-player {
 
   /* menu item */
   --media-chapters-item-focus-margin: 4px;
-  --media-chapters-item-active-border-left: 4px solid #f5f5f5;
+  --media-chapters-item-active-border-left: unset;
+
+  /* progress */
+  --media-chapters-progress-height: 3px;
+  --media-chapters-progress-bg: #f5f5f5;
+  --media-chapters-progress-border-radius: 0;
 
   /* thumbnail */
   --media-chapters-thumbnail-gap: 12px;

@@ -336,6 +336,7 @@
 }
 
 :where(media-radio) {
+  position: relative;
   align-items: center;
   border-radius: 2px;
   box-sizing: border-box;
@@ -344,6 +345,7 @@
   font-family: var(--media-font-family, sans-serif);
   font-size: 15px;
   font-weight: 500;
+  contain: content;
   padding: var(--media-menu-item-padding, 12px);
 }
 
@@ -408,7 +410,18 @@
 }
 
 :where(media-chapters-menu-items [part='chapter'][aria-checked='true']) {
-  border-left: var(--media-chapters-item-active-border-left, 4px solid #f5f5f5);
+  border-left: var(--media-chapters-item-active-border-left);
+}
+
+:where(media-chapters-menu-items [part='chapter'][aria-checked='true']):after {
+  content: ' ';
+  width: var(--played-percent);
+  height: var(--media-chapters-progress-height, 3px);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: var(--media-chapters-progress-border-radius, 0);
+  background-color: var(--media-chapters-progress-bg, #f5f5f5);
 }
 
 :where(media-chapters-menu-items [part='thumbnail']) {
