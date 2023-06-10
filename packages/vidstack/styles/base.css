@@ -48,11 +48,6 @@ media-player:focus-visible {
   background-color: var(--media-outlet-bg-color, black);
 }
 
-:where(media-player:not([controls]) media-outlet) {
-  pointer-events: auto;
-  touch-action: manipulation;
-}
-
 :where(media-player[data-fullscreen] media-outlet) {
   height: 100%;
 }
@@ -70,10 +65,6 @@ media-player:focus-visible {
   width: 100%;
   height: auto;
   touch-action: manipulation;
-}
-
-:where(media-player:not([controls]) media-outlet video) {
-  pointer-events: none;
 }
 
 :where(media-player[aspect-ratio]:not([data-fullscreen]) media-outlet) {
