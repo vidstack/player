@@ -23,7 +23,7 @@
   width: 100%;
   display: inline-block;
   position: relative;
-  contain: layout size style;
+  contain: layout style;
   box-sizing: border-box;
   user-select: none;
 }
@@ -128,7 +128,7 @@ media-player:focus-visible {
 :where(media-player [data-media-button]) {
   display: inline-block;
   position: relative;
-  contain: layout size style;
+  contain: layout style;
   user-select: none;
   cursor: pointer;
   -webkit-user-select: none;
@@ -161,7 +161,7 @@ media-player:focus-visible {
 :where(media-player [data-media-slider]) {
   display: inline-block;
   position: relative;
-  contain: layout size style;
+  contain: layout style;
   width: 100%;
   cursor: pointer;
   user-select: none;
