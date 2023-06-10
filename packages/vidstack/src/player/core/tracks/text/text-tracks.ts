@@ -30,6 +30,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
       track = isTrack ? init : new TextTrack(init);
 
     if (this._defaults[init.kind] && init.default) delete init.default;
+
     track.addEventListener('mode-change', this._onTrackModeChangeBind);
     this[LIST_ADD](track, trigger);
     track[TEXT_TRACK_CROSSORIGIN] = this[TEXT_TRACK_CROSSORIGIN];

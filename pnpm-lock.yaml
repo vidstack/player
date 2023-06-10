@@ -147,7 +147,7 @@ importers:
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
       maverick.js: 0.37.0
-      media-captions: 0.0.13
+      media-captions: 0.0.15
       media-icons: 0.7.0
       postcss: ^8.4.0
       rimraf: ^3.0.0
@@ -160,7 +160,7 @@ importers:
       vitest: ^0.30.0
     dependencies:
       maverick.js: 0.37.0
-      media-captions: 0.0.13
+      media-captions: 0.0.15
       type-fest: 3.11.1
     devDependencies:
       '@maverick-js/compiler': 0.37.0
@@ -3980,8 +3980,8 @@ packages:
     resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
     dev: true
 
-  /media-captions/0.0.13:
-    resolution: {integrity: sha512-arrPBL46F/fO6fH+OI4VTxdYP2o5/3kfoivBIBy9WywcXvgeYXYlTFXg/PA9hTyjr4uBHzv1RIHzFkVwOKMD2w==}
+  /media-captions/0.0.15:
+    resolution: {integrity: sha512-cIvpQbwSSgMmavSZ/NszFpT9dBvNBlAXm2k1IsQDsTb2eSpi9UVcrJD0pnM5Uup3AJFmXjBa1XqIFoNbi9NKpg==}
     engines: {node: '>=16'}
     dev: false
 

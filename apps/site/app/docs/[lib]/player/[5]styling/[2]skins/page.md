@@ -42,17 +42,18 @@ Skin. This is in addition to the [Component CSS variables](#component-css-vars) 
 ```css
 media-community-skin[data-audio] {
   --audio-brand: #f5f5f5;
-  --audio-focus-ring: 0 0 0 3px var(--audio-brand);
   --audio-bg: black;
+  --audio-border: 1px solid rgb(255 255 255 / 0.1);
   --audio-border-radius: 6px;
   --audio-font-family: sans-serif;
   --audio-controls-color: #f5f5f5;
+  --audio-focus-ring: 0 0 0 3px rgb(78 156 246);
 
   --audio-title-font-size: 14px;
   --audio-title-font-weight: 500;
   --audio-title-color: rgb(255 255 255 / 0.64);
 
-  --audio-time-muted-color: rgb(224, 224, 224);
+  --audio-time-divider-color: rgb(224, 224, 224);
 
   --audio-button-size: 40px;
   --audio-play-button-size: 30px;
@@ -68,10 +69,12 @@ media-community-skin[data-audio] {
   --audio-menu-max-height: 320px;
 
   --audio-captions-min-height: 28px;
-  --audio-captions-offset: 8px;
+  --audio-captions-offset: 6px;
   --audio-captions-bg: transparent;
-  --audio-cue-bg: black;
   --audio-cue-font-size: 14px;
+  --audio-cue-color: white;
+  --audio-cue-bg: black;
+  --audio-cue-border: 1px solid rgb(255 255 255 / 0.1);
 }
 ```
 
@@ -83,12 +86,16 @@ Skin. This is in addition to the [Component CSS variables](#component-css-vars) 
 ```css {% copy=true %}
 media-community-skin[data-video] {
   --video-brand: #f5f5f5;
-  --video-focus-ring: 0 0 0 3px var(--video-brand);
   --video-font-family: sans-serif;
   --video-controls-color: #f5f5f5;
+  --video-border: 1px solid rgb(255 255 255 / 0.1);
+  --video-focus-ring: 0 0 0 3px rgb(78 156 246);
 
+  --video-title-color: #dedede;
   --video-title-font-size: 16px;
   --video-title-font-weight: 500;
+  --video-title-font-family: sans-serif;
+  --video-fullscreen-title-font-size: 16px;
 
   --video-mobile-button-size: 32px;
   --video-volume-slider-max-width: 72px;
@@ -101,11 +108,12 @@ media-community-skin[data-video] {
   --video-controls-in-transition: opacity 0.2s ease-in;
   --video-controls-out-transition: opacity 0.2s ease-out;
 
-  --video-captions-transition: bottom 0.2s linear;
+  --video-captions-transition: bottom 0.15s linear;
   --video-captions-offset: 72px;
   --video-mobile-captions-offset: 48px;
+  --video-large-fullscreen-captions-offset: 54px;
 
-  --video-time-muted-color: rgb(224, 224, 224);
+  --video-time-divider-color: rgb(224, 224, 224);
   --video-fullscreen-time-font-size: 16px;
 
   --video-mobile-play-button-bg: rgb(0 0 0 / 0.6);

@@ -134,6 +134,7 @@ the variables can be set to adjust the default menu styles:
 media-player {
   --media-menu-bg: rgb(10 10 10 / 0.95);
   --media-menu-padding: 10px;
+  --media-menu-border: 1px solid rgb(255 255 255 / 0.1);
   --media-menu-border-radius: 8px;
   --media-menu-font-size: 15px;
   --media-menu-font-weight: 500;

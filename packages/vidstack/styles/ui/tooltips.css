@@ -6,6 +6,7 @@
 
 :where(media-tooltip) {
   background-color: var(--media-tooltip-bg-color, black);
+  border: var(--media-tooltip-border, 1px solid rgb(255 255 255 / 0.1));
   border-radius: var(--media-tooltip-border-radius, 2px);
   box-sizing: border-box;
   color: var(--media-tooltip-color, hsl(0, 0%, 80%));

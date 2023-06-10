@@ -82,9 +82,12 @@ media-player {
   --media-cue-display-padding: unset;
 
   --media-cue-font-size: calc(var(--overlay-height) / 100 * 5);
+  --media-large-fullscreen-cue-font-size: calc(var(--overlay-height) / 100 * 3);
+
   --media-cue-line-height: calc(var(--media-cue-font-size) * 1.2);
   --media-cue-color: white;
   --media-cue-bg: rgba(0, 0, 0, 0.8);
+  --media-cue-border: unset;
   --media-cue-border-radius: 2px;
   --media-cue-box-shadow: unset;
   --media-cue-backdrop: blur(8px);

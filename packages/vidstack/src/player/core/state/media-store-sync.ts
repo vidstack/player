@@ -84,8 +84,4 @@ export class MediaStoreSync extends ComponentController<PlayerAPI> {
   protected _onThumbnailsChange() {
     this.$store.thumbnails.set(this.$props.thumbnails());
   }
-
-  protected _onTitleChange() {
-    this.$store.title.set(this.$props.title());
-  }
 }

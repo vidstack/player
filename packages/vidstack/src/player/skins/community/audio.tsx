@@ -1,4 +1,3 @@
-import { useCommunitySkin } from './context';
 import {
   ChaptersMenu,
   ChapterTitleOrMainTitle,
@@ -12,9 +11,8 @@ import { SettingsMenu } from './shared';
 import { CaptionButton } from './shared';
 import { TimeSlider } from './shared';
 
-export function renderAudio() {
-  const { $media } = useCommunitySkin();
-  return $media.breakpointX() === 'sm' ? MobileUI() : DesktopUI();
+export function renderAudio(isMobile: boolean) {
+  return isMobile ? MobileUI() : DesktopUI();
 }
 
 function MobileUI() {

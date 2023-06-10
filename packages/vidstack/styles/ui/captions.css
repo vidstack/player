@@ -12,7 +12,7 @@
   right: 0;
   bottom: 0;
   z-index: 1;
-  contain: strict;
+  contain: layout style size;
   margin: var(--overlay-padding);
   font-size: var(--cue-font-size);
   font-family: sans-serif;
@@ -21,6 +21,13 @@
   user-select: none;
   word-spacing: normal;
   word-break: break-word;
+}
+
+:where(media-player[data-fullscreen][data-bp-x='lg'] media-captions) {
+  --cue-font-size: var(
+    --media-large-fullscreen-cue-font-size,
+    calc(var(--overlay-height) / 100 * 3)
+  );
 }
 
 @media (orientation: portrait) {
@@ -70,6 +77,7 @@
 :where(media-captions [part='cue']) {
   display: inline-block;
   contain: content;
+  border: var(--media-cue-border, unset);
   border-radius: var(--media-cue-border-radius, 2px);
   backdrop-filter: var(--media-cue-backdrop, blur(8px));
   padding: var(--cue-padding-y) var(--cue-padding-x);

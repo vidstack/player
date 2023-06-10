@@ -89,7 +89,12 @@ media-player {
 
   /* menu item */
   --media-chapters-item-focus-margin: 4px;
-  --media-chapters-item-active-border-left: 4px solid #f5f5f5;
+  --media-chapters-item-active-border-left: unset;
+
+  /* progress */
+  --media-chapters-progress-height: 3px;
+  --media-chapters-progress-bg: #f5f5f5;
+  --media-chapters-progress-border-radius: 0;
 
   /* thumbnail */
   --media-chapters-thumbnail-gap: 12px;
@@ -112,7 +117,7 @@ media-player {
   --media-chapters-start-time-color: rgb(168, 169, 171);
   --media-chapters-start-time-font-size: 12px;
   --media-chapters-start-time-font-weight: 500;
-  --media-chapters-start-time-bg: rgba(156 163 175 / 0.2);
+  --media-chapters-start-time-bg: rgb(156 163 175 / 0.2);
   --media-chapters-start-time-gap: 6px;
 
   /* duration */

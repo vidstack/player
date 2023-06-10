@@ -37,6 +37,9 @@ export interface MediaContext {
   $iosControls: ReadSignal<boolean>;
   $props: ReadSignalRecord<PlayerProps>;
   $store: MediaStore;
+  activeMenu?: {
+    close(trigger?: Event): void;
+  } | null;
 }
 
 export const mediaContext = createContext<MediaContext>();

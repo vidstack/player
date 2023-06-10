@@ -78,7 +78,12 @@ export class Gesture extends Component<GestureAPI> {
   protected _pressTimerId = -1;
 
   protected _acceptEvent(event: Event) {
-    if (!this._inBounds(event) || (isPointerEvent(event) && event.button !== 0)) return;
+    if (
+      !this._inBounds(event) ||
+      (isPointerEvent(event) && (event.button !== 0 || this._media.activeMenu))
+    ) {
+      return;
+    }
 
     // @ts-expect-error
     event.MEDIA_GESTURE = true;

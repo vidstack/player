@@ -68,9 +68,11 @@ export class QualityMenuItems extends MenuItems<QualityMenuItemsAPI> {
   }
 
   protected _watchHintText() {
-    const { autoLabel } = this.$props;
-    const { autoQuality, quality } = this._media.$store;
-    this._menu._hint.set(!autoQuality() && quality() ? quality()!.height + 'p' : autoLabel());
+    const { autoLabel } = this.$props,
+      { autoQuality, quality } = this._media.$store,
+      qualityText = quality() ? quality()!.height + 'p' : '';
+
+    this._menu._hint.set(!autoQuality() ? qualityText : autoLabel() + ` (${qualityText})`);
   }
 
   protected _watchControllerDisabled() {

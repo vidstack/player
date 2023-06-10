@@ -1,6 +1,6 @@
-<div class="flex justify-center 1200:inline-block relative w-full 1200:w-[120%] 1280:w-[110%] z-10">
+<div class="flex justify-center 1200:inline-block relative w-full 1200:w-[120%] 1280:w-[110%] z-20">
   <media-player
-    class="z-50 top-0 w-full 1200:absolute 1200:-left-[20%] 1200:w-[120%] 1280:-left-[10%] 1280:w-[110%] h-full mb-1 mt-10 1200:mt-8 hero-audio 1200:hover:translate-y-8 data-[playing]:1200:translate-y-8 transition-transform"
+    class="z-50 top-0 w-full 1200:absolute 1200:-left-[20%] 1200:w-[120%] 1280:-left-[10%] 1280:w-[110%] h-full mb-1 mt-10 1200:mt-8 hero-audio 1200:hover:translate-y-8 data-[started]:1200:translate-y-8 transition-transform"
     src="https://media-files.vidstack.io/sprite-fight/audio.mp3"
     title="Sprite Fight"
     view-type="audio"
@@ -27,9 +27,3 @@
     <media-community-skin />
   </media-player>
 </div>
-
-<style>
-  media-community-skin {
-    border: 1px solid rgb(255 255 255 / 0.1);
-  }
-</style>

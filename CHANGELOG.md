@@ -1,3 +1,68 @@
+## [0.6.9](https://github.com/vidstack/player/compare/v0.6.8...v0.6.9) (2023-06-10)
+
+### Bug Fixes
+
+- do not block video contextual menu ([2e97f3c](https://github.com/vidstack/player/commit/2e97f3c480c333a33f16f67b278640b8a93f5918))
+- skin controls size not updating based on player size ([a729e53](https://github.com/vidstack/player/commit/a729e530715617c5495a1da1b93cbebe3821bb1a))
+
+## [0.6.8](https://github.com/vidstack/player/compare/v0.6.7...v0.6.8) (2023-06-09)
+
+### Bug Fixes
+
+- remove default active border in chapters menu ([e71f295](https://github.com/vidstack/player/commit/e71f29517829266f3dee67437863e54a7edb70e9))
+- round focus ring on audio play button ([7aba9d1](https://github.com/vidstack/player/commit/7aba9d1037708b018ef5259f650988cd705eb826))
+- set focus ring on audio skin correctly ([e980631](https://github.com/vidstack/player/commit/e980631f690a8131b4e8de84ae89845ecb5f8b69))
+
+## [0.6.7](https://github.com/vidstack/player/compare/v0.6.6...v0.6.7) (2023-06-09)
+
+### Bug Fixes
+
+- put back focus state when exiting user idle ([d58e1c8](https://github.com/vidstack/player/commit/d58e1c8c28ad457ac17f8429f573c10a6ac2491a))
+- return focus to settings button on close ([978e2db](https://github.com/vidstack/player/commit/978e2db6b5ca961d5bd625dcb6e816d31d4a1b1b))
+- scroll active chapter menu item into center on open ([5d2ee17](https://github.com/vidstack/player/commit/5d2ee176b3d1d67aea0b5961833928ba827627d6))
+- set focus ring on player ([8fd991a](https://github.com/vidstack/player/commit/8fd991aa3ec37d3c04d17d4aa9ca51204c5e17ff))
+- show focus ring on time slider with chapters ([e3a402c](https://github.com/vidstack/player/commit/e3a402cbcf93fb21e52aecfdea3c426ff6632ca8))
+
+### Features
+
+- new progress indicator in chapters menu ([cf8a2ce](https://github.com/vidstack/player/commit/cf8a2ce896d0a09380a72e07f4bb40d0bcc36abd))
+
+## [0.6.6](https://github.com/vidstack/player/compare/v0.6.5...v0.6.6) (2023-06-09)
+
+### Bug Fixes
+
+- clear cue starting boxes on resize update ([c3aebf3](https://github.com/vidstack/player/commit/c3aebf3358482b56bd0af5af03a41de3d2872c27)), closes [#856](https://github.com/vidstack/player/issues/856)
+- compact chapters menu when no thumbnails are provided ([d97c5ae](https://github.com/vidstack/player/commit/d97c5ae176ea543d82b2f5e225822f2a25171e89))
+- consistent default border colors ([b1a047d](https://github.com/vidstack/player/commit/b1a047d8f6762772668b7125718a6a64067358e2))
+- export `CommunitySkinTranslations` ([aab0ce2](https://github.com/vidstack/player/commit/aab0ce2f44fa63564be6651c6c326a72ba1a053b))
+- hide main title when scrubbing on video mobile ([dbdb47f](https://github.com/vidstack/player/commit/dbdb47f94ddaa94414127af945396868bb966275))
+- improve default captions sizing on large fullscreen ([ec64e55](https://github.com/vidstack/player/commit/ec64e559a258dff9cf2a5083d7f2de10173c859a))
+- improve visibility of community skin audio tooltips and captions ([c5c9d58](https://github.com/vidstack/player/commit/c5c9d580563de9410488b1dd195e9dae24b54f51))
+- prefer debounce and sync captions updates ([2f16e72](https://github.com/vidstack/player/commit/2f16e72e6f3fcfd2906465577a49ff0509b7f0ca)), closes [#856](https://github.com/vidstack/player/issues/856)
+- remove old tracks before adding new ones ([245f72e](https://github.com/vidstack/player/commit/245f72e1dbc84c8b16a8cb311d527c61def1fa0e)), closes [#856](https://github.com/vidstack/player/issues/856)
+
+### Features
+
+- show current quality in settings when auto ([b6c4714](https://github.com/vidstack/player/commit/b6c471431521cf6adcb1b9014fb4a6d2d837601d)), closes [#861](https://github.com/vidstack/player/issues/861)
+
+## [0.6.5](https://github.com/vidstack/player/compare/v0.6.4...v0.6.5) (2023-06-08)
+
+### Bug Fixes
+
+- audio controls color not applying to buttons ([7879a38](https://github.com/vidstack/player/commit/7879a38af3fb6990b8f960bc403e2fa61e293771)), closes [#855](https://github.com/vidstack/player/issues/855)
+- avoid re-rendering skin if device type not changed ([2db8d23](https://github.com/vidstack/player/commit/2db8d23e2bb14371b427ec39a201019ac1e5f87c))
+- consitent community skin title across mobile and desktop ([e24a544](https://github.com/vidstack/player/commit/e24a54457dc449cce1e4e2567d95fec33946da08))
+- controls flickering in chrome fullscreen when slider chapters are active ([8a7f45f](https://github.com/vidstack/player/commit/8a7f45ff87d590a0062b44b358da41589f146afd))
+- do not throw if thumbnails img url contains no coords ([6d3e60d](https://github.com/vidstack/player/commit/6d3e60d6d0baeea2af6c8f71e87d3935777639f1))
+- perf improvements to slider chapter rendering ([a4266f9](https://github.com/vidstack/player/commit/a4266f9c775ea01a6640f3b2c5b110d19aee5291))
+- pointer event gesture should not fire if menu open ([dccd29d](https://github.com/vidstack/player/commit/dccd29da2cb35a4c97b9abef533097bf15de16bf))
+- prevent browser title tooltip showing on player ([646955b](https://github.com/vidstack/player/commit/646955b4a5fa4a74d91d7464eb9d57472749405b))
+- two menus should not be active at the same time ([0073752](https://github.com/vidstack/player/commit/00737526973479b4ec83335ef2d50e6821b25e16))
+
+### Features
+
+- allow player breakpoints to be configured via props ([a770e7a](https://github.com/vidstack/player/commit/a770e7a75557f06367e171c6f954cea623b60299))
+
 ## [0.6.4](https://github.com/vidstack/player/compare/v0.6.3...v0.6.4) (2023-06-07)
 
 ### Bug Fixes

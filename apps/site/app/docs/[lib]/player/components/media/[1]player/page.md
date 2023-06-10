@@ -54,3 +54,42 @@ media-player[data-playing] {
 ```
 
 {% component this="../../../[5]styling/.tables/attrs-table.md" /%}
+
+## Breakpoints
+
+The following data attributes are set to help with styling the player at certain sizes:
+
+- `data-bp-x`: Horizontal breakpoint that updates based on the player width.
+- `data-bp-y`: Vertical breakpoint that updates based on the player height.
+
+You can then use CSS to style the player and children based on the current breakpoint:
+
+```css
+/* width <600px */
+media-player[data-bp-x='sm'] {
+}
+
+/* 600px ≤ width < 980 */
+media-player[data-bp-x='md'] {
+}
+
+/* width ≥ 980 */
+media-player[data-bp-x='lg'] {
+}
+
+/* height <380px */
+media-player[data-bp-y='sm'] {
+}
+
+/* 380px ≤ height < 600 */
+media-player[data-bp-y='md'] {
+}
+
+/* height ≥ 600 */
+media-player[data-bp-y='lg'] {
+}
+```
+
+You can customize the default breakpoints like so:
+
+{% code_snippet name="breakpoints" /%}

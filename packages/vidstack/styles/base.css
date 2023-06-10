@@ -23,13 +23,18 @@
   width: 100%;
   display: inline-block;
   position: relative;
-  contain: style;
+  contain: layout style;
   box-sizing: border-box;
   user-select: none;
 }
 
-:where(media-player:focus) {
+media-player:focus,
+media-player:focus-visible {
   outline: none;
+}
+
+:where(media-player[data-focus]:not([data-playing]) media-outlet) {
+  box-shadow: var(--media-focus-ring);
 }
 
 :where(media-player[data-view-type='video'][data-user-idle]) {
@@ -41,11 +46,6 @@
   display: block;
   box-sizing: border-box;
   background-color: var(--media-outlet-bg-color, black);
-}
-
-:where(media-player:not([controls]) media-outlet) {
-  pointer-events: auto;
-  touch-action: manipulation;
 }
 
 :where(media-player[data-fullscreen] media-outlet) {
@@ -65,10 +65,6 @@
   width: 100%;
   height: auto;
   touch-action: manipulation;
-}
-
-:where(media-player:not([controls]) media-outlet video) {
-  pointer-events: none;
 }
 
 :where(media-player[aspect-ratio]:not([data-fullscreen]) media-outlet) {
@@ -106,7 +102,7 @@
   display: inline-block;
   contain: content;
   font-size: var(--media-time-font-size, 14px);
-  font-weight: var(--media-time-font-weight, 500);
+  font-weight: var(--media-time-font-weight, 400);
   font-family: var(--media-font-family, sans-serif);
   color: var(--media-time-color, inherit);
   background-color: var(--media-time-bg);
@@ -123,7 +119,7 @@
 :where(media-player [data-media-button]) {
   display: inline-block;
   position: relative;
-  contain: layout size style;
+  contain: layout style;
   user-select: none;
   cursor: pointer;
   -webkit-user-select: none;
@@ -156,7 +152,7 @@
 :where(media-player [data-media-slider]) {
   display: inline-block;
   position: relative;
-  contain: layout size style;
+  contain: layout style;
   width: 100%;
   cursor: pointer;
   user-select: none;
@@ -175,6 +171,10 @@
 
 :where(media-player [data-media-slider][data-focus] [part='track']) {
   box-shadow: var(--media-focus-ring);
+}
+
+:where(media-player [data-media-slider][data-chapters][data-focus] [part='chapter']) {
+  clip-path: inset(-2px -2px -2px -2px);
 }
 
 :where(media-player[data-bp-x='sm']) :where(media-time-slider [part='chapters']) {

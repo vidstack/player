@@ -125,7 +125,13 @@ export class MenuFocusController {
     const is = (node: Element) => node.hasAttribute('data-media-menu-items');
     for (const el of focusableElements) {
       // Filter out elements that belong to child submenus.
-      if (isElementParent(this._el, el, is)) elements.push(el as HTMLElement);
+      if (
+        el instanceof HTMLElement &&
+        el.offsetParent !== null && // does not have display: none
+        isElementParent(this._el, el, is)
+      ) {
+        elements.push(el);
+      }
     }
 
     return elements;

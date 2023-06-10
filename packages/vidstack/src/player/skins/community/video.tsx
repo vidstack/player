@@ -1,9 +1,8 @@
-import { useCommunitySkin } from './context';
 import {
   CaptionButton,
   ChaptersMenu,
+  ChapterTitleOrMainTitle,
   FullscreenButton,
-  MainTitle,
   MuteButton,
   PiPButton,
   PlayButton,
@@ -14,9 +13,8 @@ import {
   VolumeSlider,
 } from './shared';
 
-export function renderVideo() {
-  const { $media } = useCommunitySkin();
-  return $media.breakpointX() === 'sm' ? MobileUI() : DesktopUI();
+export function renderVideo(isMobile: boolean) {
+  return isMobile ? MobileUI() : DesktopUI();
 }
 
 function MobileUI() {
@@ -43,6 +41,7 @@ function MobileUI() {
 
         <div part="controls-group">
           <TimeGroup />
+          <ChapterTitleOrMainTitle />
           <div part="controls-spacer"></div>
           <FullscreenButton />
         </div>
@@ -78,16 +77,15 @@ function DesktopUI() {
         <div part="controls-group"></div>
 
         <div part="controls-group">
-          <media-time type="current" pad-minutes />
           <TimeSlider />
-          <media-time type="current" remainder pad-minutes />
         </div>
 
         <div part="controls-group">
           <PlayButton />
           <MuteButton />
           <VolumeSlider />
-          <MainTitle />
+          <TimeGroup />
+          <ChapterTitleOrMainTitle />
           <CaptionButton />
           <PiPButton />
           <FullscreenButton />
