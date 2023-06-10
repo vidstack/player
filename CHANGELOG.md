@@ -1,3 +1,10 @@
+## [0.6.9](https://github.com/vidstack/player/compare/v0.6.8...v0.6.9) (2023-06-10)
+
+### Bug Fixes
+
+- do not block video contextual menu ([2e97f3c](https://github.com/vidstack/player/commit/2e97f3c480c333a33f16f67b278640b8a93f5918))
+- skin controls size not updating based on player size ([a729e53](https://github.com/vidstack/player/commit/a729e530715617c5495a1da1b93cbebe3821bb1a))
+
 ## [0.6.8](https://github.com/vidstack/player/compare/v0.6.7...v0.6.8) (2023-06-09)
 
 ### Bug Fixes
