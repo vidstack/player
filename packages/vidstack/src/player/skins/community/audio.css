@@ -32,7 +32,6 @@
   --media-menu-y-offset: 40px;
   --media-button-size: 34px;
   --media-slider-value-border: var(--audio-slider-value-border, 1px solid rgb(255 255 255 / 0.1));
-  border: var(--audio-border, 1px solid rgb(255 255 255 / 0.1));
 }
 
 :where(media-community-skin[data-audio][data-mobile]) {
@@ -45,6 +44,7 @@
   min-height: 80px;
   color: var(--audio-controls-color, #f5f5f5);
   background-color: var(--audio-bg, black);
+  border: var(--audio-border, 1px solid rgb(255 255 255 / 0.1));
   border-radius: var(--audio-border-radius, 6px);
 }
 
