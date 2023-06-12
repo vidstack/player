@@ -76,6 +76,7 @@ export class ChaptersMenuItems extends MenuItems<ChaptersMenuItemsAPI> {
     requestAnimationFrame(() => {
       const checked = this.el!.querySelector('media-radio[aria-checked="true"]') as HTMLElement;
       checked.scrollIntoView({ block: 'center' });
+      peek(() => this._watchCurrentTime());
     });
   }
 
@@ -111,15 +112,15 @@ export class ChaptersMenuItems extends MenuItems<ChaptersMenuItemsAPI> {
   protected _watchCurrentTime() {
     if (!this._menu._expanded()) return;
 
-    const track = this._track(),
-      { currentTime } = this._media.$store;
+    const track = this._track();
 
     if (!track) {
       this._index.set(-1);
       return;
     }
 
-    const time = currentTime(),
+    const { currentTime } = this._media.$store,
+      time = currentTime(),
       activeCueIndex = track.cues.findIndex((cue) => isCueActive(cue, time));
 
     this._index.set(activeCueIndex);
