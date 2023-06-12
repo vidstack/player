@@ -271,6 +271,15 @@
   border-bottom: var(--media-menu-divider, 1px solid rgb(245 245 245 /0.15));
 }
 
+:where(media-menu[data-submenu] > [data-media-menu-button][aria-expanded='true']) {
+  position: sticky;
+  top: calc(-1 * var(--media-menu-padding, 10px));
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background-color: var(--media-menu-top-bar-bg, rgb(10 10 10));
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Menu Item Parts
@@ -411,6 +420,7 @@
 }
 
 :where(media-chapters-menu-items [part='chapter'][aria-checked='true']) {
+  background-color: var(--media-chapters-item-active-bg, rgb(255 255 255 / 0.04));
   border-left: var(--media-chapters-item-active-border-left);
 }
 
@@ -483,13 +493,4 @@
 :where(media-chapters-menu-items:not([data-thumbnails]) [part='duration']) {
   margin-top: 4px;
   flex-basis: 100%;
-}
-
-:where(media-menu[data-submenu] > [data-media-menu-button][aria-expanded='true']) {
-  position: sticky;
-  top: calc(-1 * var(--media-menu-padding, 10px));
-  left: 0;
-  width: 100%;
-  z-index: 10;
-  background-color: var(--media-menu-top-bar-bg, rgb(10 10 10));
 }

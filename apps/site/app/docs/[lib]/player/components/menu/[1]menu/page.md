@@ -154,6 +154,8 @@ media-player {
   --media-mobile-menu-max-height: 40vh;
   --media-mobile-menu-landscape-max-height: 70vh;
 
+  --media-menu-top-bar-bg: rgb(10 10 10);
+
   /* menu items */
   --media-menu-item-color: #f5f5f5;
   --media-menu-item-border-radius: 2px;

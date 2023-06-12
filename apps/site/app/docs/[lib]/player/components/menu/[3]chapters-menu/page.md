@@ -90,6 +90,7 @@ media-player {
   /* menu item */
   --media-chapters-item-focus-margin: 4px;
   --media-chapters-item-active-border-left: unset;
+  --media-chapters-item-active-bg: rgb(255 255 255 / 0.04);
 
   /* progress */
   --media-chapters-progress-height: 3px;
