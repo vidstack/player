@@ -431,7 +431,6 @@ export class MediaStateManager extends ComponentController<PlayerAPI> {
     waiting.set(false);
 
     for (const track of this._media.textTracks) {
-      if (track.mode === 'disabled') continue;
       track[TEXT_TRACK_UPDATE_ACTIVE_CUES](detail.currentTime, event);
     }
   }

@@ -170,6 +170,8 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     if (mode === 'disabled') {
       this._activeCues = [];
       this._activeCuesChanged();
+    } else if (this.readyState === 2) {
+      this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, trigger);
     } else {
       this._load();
     }

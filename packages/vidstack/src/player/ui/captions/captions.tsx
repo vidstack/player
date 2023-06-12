@@ -81,6 +81,7 @@ export class Captions extends Component<CaptionsAPI> {
   protected _onTrackChange() {
     if (this._isHidden()) return;
     const { textTrack } = this._media.$store;
+    this._onCueChange();
     listenEvent(textTrack()!, 'cue-change', this._onCueChange.bind(this));
     effect(this._onUpdateTimedNodes.bind(this));
   }
