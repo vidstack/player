@@ -484,3 +484,12 @@
   margin-top: 4px;
   flex-basis: 100%;
 }
+
+:where(media-menu[data-submenu] > [data-media-menu-button][aria-expanded='true']) {
+  position: sticky;
+  top: calc(-1 * var(--media-menu-padding, 10px));
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background-color: var(--media-menu-top-bar-bg, rgb(10 10 10));
+}

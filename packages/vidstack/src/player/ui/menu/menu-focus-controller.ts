@@ -26,6 +26,11 @@ const VALID_KEYS = /* #__PURE__*/ new Set([
   ' ',
 ]);
 
+export interface MenuFocusControllerDelegate {
+  _getScrollContainer(): HTMLElement | null;
+  _closeMenu(trigger?: Event): void;
+}
+
 export class MenuFocusController {
   protected _index = 0;
   protected _el: HTMLElement | null = null;
@@ -35,7 +40,7 @@ export class MenuFocusController {
     return this._elements;
   }
 
-  constructor(protected _closeMenu: (trigger?: Event) => void) {}
+  constructor(protected _delegate: MenuFocusControllerDelegate) {}
 
   _attach(el: HTMLElement) {
     listenEvent(el, 'focus', this._onFocus.bind(this));
@@ -56,22 +61,38 @@ export class MenuFocusController {
     });
   }
 
+  _update() {
+    this._index = 0;
+    this._elements = this._getFocusableElements();
+  }
+
+  _scroll(index = this._findActiveIndex()) {
+    const element = this._elements[index],
+      container = this._delegate._getScrollContainer();
+    if (element && container) {
+      requestAnimationFrame(() => {
+        container.scrollTop =
+          element.offsetTop - container.offsetHeight / 2 + element.offsetHeight / 2;
+      });
+    }
+  }
+
   protected _focusAt(index: number) {
     this._index = index;
     this._elements[index]?.focus();
-    this._elements[index]?.scrollIntoView({
-      block: 'center',
-    });
+    this._scroll(index);
+  }
+
+  protected _findActiveIndex() {
+    return this._elements.findIndex((el) => el.getAttribute('aria-checked') === 'true');
   }
 
   protected _onFocus() {
-    const index = this._elements.findIndex((el) => el.getAttribute('aria-checked') === 'true');
-    this._focusAt(index >= 0 ? index : 0);
-  }
-
-  protected _update() {
-    this._index = 0;
-    this._elements = this._getFocusableElements();
+    // Timeout to allow size to be updated via transition.
+    setTimeout(() => {
+      const index = this._findActiveIndex();
+      this._focusAt(index >= 0 ? index : 0);
+    }, 100);
   }
 
   protected _onKeyUp(event: KeyboardEvent) {
@@ -86,7 +107,7 @@ export class MenuFocusController {
     event.preventDefault();
     switch (event.key) {
       case 'Escape':
-        this._closeMenu(event);
+        this._delegate._closeMenu(event);
         break;
       case 'Tab':
         this._focusAt(this._nextIndex(event.shiftKey ? -1 : +1));

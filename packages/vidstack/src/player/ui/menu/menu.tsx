@@ -92,7 +92,10 @@ export class Menu extends Component<MenuAPI> {
       this._parentMenu = useContext(menuContext);
     }
 
-    this._focus = new MenuFocusController(this.close.bind(this));
+    this._focus = new MenuFocusController({
+      _getScrollContainer: this._findScrollContainer.bind(this),
+      _closeMenu: this.close.bind(this),
+    });
 
     provideContext(menuContext, {
       _expanded: this._expanded,
@@ -273,18 +276,35 @@ export class Menu extends Component<MenuAPI> {
     const expanded = peek(this._expanded);
     this.dispatch(expanded ? 'open' : 'close', { trigger });
 
-    if (!this._parentMenu) {
-      if (expanded) {
+    if (expanded) {
+      if (!this._parentMenu) {
         this._media.activeMenu?.close(trigger);
         this._media.activeMenu = this;
-      } else {
-        for (const el of this._submenus) el.close(trigger);
+      }
+
+      this._menuObserver?._onOpen?.(trigger);
+    } else {
+      if (!this._parentMenu) {
+        // A little delay so submenu closing doesn't jump menu size when closing.
+        setTimeout(() => {
+          for (const el of this._submenus) el.close(trigger);
+        }, 300);
+
         this._media.activeMenu = null;
       }
+
+      this._menuObserver?._onClose?.(trigger);
     }
 
-    if (expanded) this._menuObserver?._onOpen?.(trigger);
-    else this._menuObserver?._onClose?.(trigger);
+    if (expanded && !isKeyboardEvent(trigger)) {
+      requestAnimationFrame(() => {
+        this._focus._update();
+        // Timeout to allow size to be updated via transition.
+        setTimeout(() => {
+          this._focus._scroll();
+        }, 100);
+      });
+    }
   }
 
   protected _isExpanded() {
@@ -306,9 +326,9 @@ export class Menu extends Component<MenuAPI> {
   }
 
   protected _onWindowPointerUp() {
-    // A little delay so submenu closing so it doesn't jump size when closing.
-    if (this._parentMenu) return setTimeout(this.close.bind(this), 300);
-    this.close();
+    // A little delay so submenu closing doesn't jump menu size when closing.
+    if (this._parentMenu) return setTimeout(this.close.bind(this), 800);
+    else this.close();
   }
 
   protected _onCloseTargetPress(event: Event) {
@@ -319,6 +339,20 @@ export class Menu extends Component<MenuAPI> {
   protected _getCloseTarget() {
     const target = this.el!.querySelector('[slot="close-target"]');
     return isElementParent(this.el!, target) ? target : null;
+  }
+
+  protected _findScrollContainer() {
+    if (!this._parentMenu) {
+      return this._menuItems;
+    } else {
+      let el: HTMLElement | null = this.el;
+
+      while (el && el.tagName !== 'media-menu' && el.hasAttribute('data-submenu')) {
+        el = el.parentNode as HTMLElement;
+      }
+
+      return el;
+    }
   }
 
   protected _changeIdleTracking(trigger?: Event) {

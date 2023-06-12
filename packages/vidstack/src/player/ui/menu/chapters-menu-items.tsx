@@ -1,6 +1,6 @@
 import { effect, peek, signal } from 'maverick.js';
 import { ComponentInstance, defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { isKeyboardEvent, isNumber, listenEvent, setStyle } from 'maverick.js/std';
+import { isNumber, listenEvent, setStyle } from 'maverick.js/std';
 
 import { ClassManager } from '../../../foundation/observers/class-manager';
 import { round } from '../../../utils/number';
@@ -71,13 +71,8 @@ export class ChaptersMenuItems extends MenuItems<ChaptersMenuItemsAPI> {
     });
   }
 
-  protected _onOpen(trigger) {
-    if (isKeyboardEvent(trigger)) return;
-    requestAnimationFrame(() => {
-      const checked = this.el!.querySelector('media-radio[aria-checked="true"]') as HTMLElement;
-      checked.scrollIntoView({ block: 'center' });
-      peek(() => this._watchCurrentTime());
-    });
+  protected _onOpen() {
+    peek(() => this._watchCurrentTime());
   }
 
   protected override onConnect(el: HTMLElement) {
