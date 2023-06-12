@@ -1,3 +1,15 @@
+## [0.6.10](https://github.com/vidstack/player/compare/v0.6.9...v0.6.10) (2023-06-12)
+
+### Bug Fixes
+
+- audio skin border radius not applied ([a2625e7](https://github.com/vidstack/player/commit/a2625e7dfc6fc3a2afc95a8f13a8f6e96d5e1558))
+- contain scrolling in menus ([d034355](https://github.com/vidstack/player/commit/d034355445797386141226b189c9d08e7db1101c))
+- highlight active chapter menu item ([7976e70](https://github.com/vidstack/player/commit/7976e7066c72a94339720bb7844873021e051ae9))
+- move audio border around ui ([3a07e64](https://github.com/vidstack/player/commit/3a07e640638f5bc05c5a97e275eba98d015a8a82))
+- stick submenu buttons to top when open ([6e4bf20](https://github.com/vidstack/player/commit/6e4bf201c29708420690111cde5423e701b0a6bb))
+- update active cues when track is enabled ([3f386f2](https://github.com/vidstack/player/commit/3f386f2b68a0fb18b40759a2c26c1bec8cc2553f))
+- update chapters progress on initial menu open ([91c6435](https://github.com/vidstack/player/commit/91c64351228dd785e9158bfb6cea84d17264af69))
+
 ## [0.6.9](https://github.com/vidstack/player/compare/v0.6.8...v0.6.9) (2023-06-10)
 
 ### Bug Fixes
