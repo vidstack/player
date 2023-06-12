@@ -9,7 +9,7 @@
   <media-outlet>
     <media-poster />
   </media-outlet>
-  <div class="w-full text-center flex items-center px-1">
+  <div class="w-full flex items-center px-1 absolute bottom-0 left-0 bg-black/20">
     <media-play-button class="min-w-[40px]" />
     <media-time-slider />
   </div>

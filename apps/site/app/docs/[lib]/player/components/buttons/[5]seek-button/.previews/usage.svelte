@@ -10,7 +10,7 @@
     <media-poster alt="Agent 327 blowing flames with a hair dryer." />
   </media-outlet>
 
-  <div class="w-full text-center mt-2">
+  <div class="w-full absolute bottom-0 left-0 bg-black/20 p-1 flex items-center justify-center">
     <media-seek-button seconds="-30" />
     <media-play-button />
     <media-seek-button seconds="+30" />

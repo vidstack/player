@@ -9,7 +9,7 @@
   <media-outlet>
     <media-poster alt="Agent 327 blowing flames with a hair dryer." />
   </media-outlet>
-  <div class="absolute bottom-0 left-0 flex w-full px-2 py-2">
+  <div class="absolute bottom-0 left-0 flex w-full p-1 bg-black/20">
     <media-play-button />
     <div class="flex-1" />
     <media-pip-button />
