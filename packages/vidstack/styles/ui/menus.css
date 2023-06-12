@@ -160,6 +160,7 @@
   will-change: width, height;
   max-height: var(--media-menu-max-height, calc(var(--media-height) * 0.7));
   overflow-y: auto;
+  overscroll-behavior: contain;
   opacity: 0;
   pointer-events: none;
   box-sizing: border-box;
