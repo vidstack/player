@@ -6,6 +6,7 @@
 
 :where(media-player[data-view-type='audio']) {
   --media-focus-ring: var(--audio-focus-ring, 0 0 0 3px rgb(78 156 246));
+  border-radius: var(--audio-border-radius, 6px);
 }
 
 :where(media-player[data-view-type='audio'][data-focus] media-outlet) {
