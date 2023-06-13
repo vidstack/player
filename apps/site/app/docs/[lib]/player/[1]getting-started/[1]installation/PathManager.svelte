@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { useRouter } from '@vessel-js/svelte';
+  import { navigation, useRouter } from '@vessel-js/svelte';
   import { onMount } from 'svelte';
 
   import { env } from '$lib/env';
@@ -19,7 +19,7 @@
   });
 
   async function onChange(lib: JSLibType, install: InstallMethodType, provider: MediaProviderType) {
-    if (!mounted) return;
+    if (!mounted || ($navigation && !$navigation.to.pathname.startsWith('/docs'))) return;
 
     const url = new URL('/docs/player/getting-started/installation', location.href);
 
