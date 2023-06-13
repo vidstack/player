@@ -11,6 +11,7 @@
   import { dialogManager, type CloseDialogCallback } from '$lib/actions/dialog-manager';
   import Button from '$lib/components/base/Button.svelte';
   import DocsMetaTags from '$lib/components/docs/DocsMetaTags.svelte';
+  import LibSelect from '$lib/components/docs/LibSelect.svelte';
   import { ariaBool } from '$lib/utils/aria';
   import { hideDocumentScrollbar } from '$lib/utils/scroll';
 
@@ -22,7 +23,6 @@
 
   export let sidebar: Readable<SidebarLinks>;
 
-  let search = true;
   let isSidebarOpen = false;
   let closeSidebar: CloseDialogCallback;
 
@@ -56,6 +56,10 @@
 <div class="docs contents">
   <MainLayout --main-direction="row">
     <DocsMetaTags />
+
+    <div class="ml-1" slot="navbar-left">
+      <LibSelect />
+    </div>
 
     <svelte:fragment slot="search">
       <slot name="search" />
@@ -102,7 +106,6 @@
 
     <svelte:fragment slot="before-main">
       <Sidebar
-        {search}
         class={({ open }) =>
           clsx(
             'bg-body scrollbar scroll-contain-mobile fixed top-0 left-0 z-[9999999] transform self-start',
@@ -114,11 +117,7 @@
           )}
         open={isSidebarOpen}
         on:close={(e) => closeSidebar(e.detail)}
-      >
-        <svelte:fragment slot="search">
-          <slot name="search" />
-        </svelte:fragment>
-      </Sidebar>
+      />
     </svelte:fragment>
 
     <div class="markdown prose dark:prose-invert z-10 max-w-[var(--article-max-width)]">

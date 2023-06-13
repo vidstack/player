@@ -19,7 +19,7 @@ declare global {
 }
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/styling/skins#community-skin}
+ * @docs {@link https://www.vidstack.io/docs/player/core-concepts/skins#community-skin}
  * @example
  * ```html
  * <media-player>

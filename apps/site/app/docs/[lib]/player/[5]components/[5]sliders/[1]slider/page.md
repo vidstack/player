@@ -234,7 +234,7 @@ media-slider [slot='preview'] {
 
 ## Tailwind
 
-The following section is for Tailwind CSS users who have installed our [Tailwind Plugin](/docs/player/styling/tailwind).
+The following section is for Tailwind CSS users who have installed our [Tailwind Plugin](/docs/player/core-concepts/tailwind).
 
 ### Data Attributes {% id="tw-variants" %}
 

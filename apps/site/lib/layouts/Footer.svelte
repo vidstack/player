@@ -43,7 +43,7 @@
                   <a href="/docs/player/core-concepts/architecture">Architecture</a>
                 </li>
                 <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
-                  <a href="/docs/player/styling/foundation">Styling</a>
+                  <a href="/docs/player/core-concepts/styling">Styling</a>
                 </li>
               </ul>
             </section>

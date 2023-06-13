@@ -182,3 +182,12 @@ code *[style*='color: #676E95; font-'] {
 .api-table tbody tr td:first-child > div > code {
   background-color: unset;
 }
+
+#main-sidebar {
+  --scrollbar-thumb-bg: none;
+  --scrollbar-track-bg: none;
+}
+
+#main-sidebar:hover {
+  --scrollbar-thumb-bg: rgb(var(--color-border));
+}

@@ -1,5 +1,5 @@
 ---
-title: Foundation
+title: Styling
 description: Introduction to styling with Vidstack Player.
 ---
 
@@ -194,7 +194,7 @@ what some good next steps are.
 ### Headless
 
 The headless option is best when you want completely unstyled components. This particularly handy
-when working with [Tailwind](docs/player/styling/tailwind) as you can copy/paste examples from
+when working with [Tailwind](docs/player/core-concepts/tailwind) as you can copy/paste examples from
 our docs and adjust as desired. Do note that components will still be fully-accessible and
 perform their expected function (e.g., the play button will toggle media playback) - they'll
 just be unstyled.
@@ -231,4 +231,4 @@ From there you're free to start exploring all of our components by scrolling dow
 sidebar on your left. They're organized into categories by their role (e.g., display, buttons,
 sliders, etc.) and each contains docs on everything you need for using and customizing them. Enjoy!
 
-👉 Using Tailwind? Check out our [plugin](/docs/player/styling/tailwind)!
+👉 Using Tailwind? Check out our [plugin](/docs/player/core-concepts/tailwind)!

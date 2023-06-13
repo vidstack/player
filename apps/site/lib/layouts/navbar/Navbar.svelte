@@ -60,13 +60,11 @@
 
         <slot name="popover-middle" />
 
-        <hr class="border-border my-6 h-2 w-full border-t" />
-
-        <section class="flex flex-col items-start" aria-label="Options">
+        <section class="flex flex-col items-start mt-4" aria-label="Options">
           <div class="flex flex-col space-y-6">
             <slot name="popover-options" />
             <div class="flex items-center">
-              <span class="992:text-base text-lg">Theme</span>
+              <span class=" text-[15px] font-medium">Theme</span>
               <div class="ml-2">
                 <Select
                   title="Color Scheme"
@@ -88,9 +86,19 @@
       </Popover>
     </div>
 
+    {#if search}
+      <div class="flex-1 hidden 1200:inline-block" />
+      <div class="hidden 992:inline-flex items-center 1200:flex-1">
+        <div class="min-w-[320px] 1200:min-w-[380px]">
+          <slot name="search" />
+        </div>
+      </div>
+      <div class="hidden 992:inline-block flex-1" />
+    {/if}
+
     <div class="992:flex 992:items-center hidden">
       <nav>
-        <ul class="mr-6 flex items-center space-x-6">
+        <ul class="mr-6 flex items-center space-x-5">
           {#each $links as navLink (navLink.title)}
             <NavLinkItem {...navLink} />
           {/each}

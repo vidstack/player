@@ -49,6 +49,7 @@ export default defineConfig({
           ...sidebarLinks
             .filter((link) => link.slug.startsWith('/docs/player/components'))
             .map((link) => link.slug.replace('/docs', `/docs${lib}`) + '/api'),
+          ...['foundation', 'skins', 'tailwind'].map((p) => `/docs${lib}/player/styling/${p}`),
         ]),
         matchers: [{ name: 'lib', matcher: ':lib(react)?' }],
       },

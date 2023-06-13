@@ -2,13 +2,9 @@
   import { route } from '@vessel-js/svelte';
   import clsx from 'clsx';
   import { createEventDispatcher, onMount } from 'svelte';
-  import { get } from 'svelte/store';
-  import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-line';
   import CloseIcon from '~icons/ri/close-fill';
 
   import Overlay from '$lib/components/base/Overlay.svelte';
-  import LibSelect from '$lib/components/docs/LibSelect.svelte';
-  import VersionSelect from '$lib/components/docs/VersionSelect.svelte';
   import { env } from '$lib/env';
   import { isLargeScreen } from '$lib/stores/screen';
   import { ariaBool } from '$lib/utils/aria';
@@ -24,7 +20,6 @@
 
   // Only valid on small screen (<992px).
   export let open = false;
-  export let search = false;
   export let style = '';
 
   let _class: string | ((state: { open: boolean }) => string) = '';
@@ -57,18 +52,11 @@
     }
   }
 
-  const isCategoryOpen = {
-    [get(activeCategory) as string]: true,
+  const componentCategories = {
+    'Toggle Button': 'Buttons',
+    Slider: 'Sliders',
+    Menu: 'Menus',
   };
-
-  $: {
-    isCategoryOpen[$activeCategory as string] = true;
-    if (env.browser) {
-      requestAnimationFrame(() => {
-        scrollToActiveItem();
-      });
-    }
-  }
 </script>
 
 <aside
@@ -97,62 +85,27 @@
   </div>
 
   <nav class="992:px-1 992:mt-0 -mt-6">
-    {#if search}
-      <div class="pointer-events-none sticky top-0 z-10 -ml-0.5 min-h-[80px]">
-        <div class="992:h-6 bg-body" />
-        <div class="bg-body pointer-events-auto relative">
-          <div class="992:block hidden">
-            <slot name="search" />
-          </div>
-          <div class="992:h-4 bg-body h-14" />
-          <div class="flex w-full items-center space-x-2">
-            <LibSelect />
-            <VersionSelect />
-          </div>
-        </div>
-        <div class="from-body h-10 bg-gradient-to-b" />
-      </div>
-    {/if}
-
     <slot name="top" />
 
-    <ul class={clsx('text-base z-0', !search && 'mt-8', '992:pb-0 pb-28')}>
+    <ul class="text-base z-0 992:pb-0 pb-28 mt-8">
       {#each Object.keys($links) as category (category)}
         {@const categoryLinks = $links[category]}
-        {@const isOpen = isCategoryOpen[category]}
 
-        <li class={clsx(isOpen && 'mb-4 last:mb-0')}>
-          {#if category === 'Getting Started'}
-            <div class="uppercase font-bold text-soft text-xs mb-3">Introduction</div>
-          {/if}
-          {#if category === 'Media'}
-            <div class="w-full h-px bg-border my-5 mb-7" />
-            <div class="uppercase font-bold text-soft text-xs mb-3">Components</div>
-          {/if}
-          <button
-            class="flex items-center min-w-full -ml-2.5 py-1.5 rounded-md hover:bg-soft/10 focus-visible:m-1"
-            aria-pressed={ariaBool(isOpen)}
-            aria-label={`${!isOpen ? 'Open' : 'Close'} ${category} Category`}
-            on:click={() => {
-              isCategoryOpen[category] = !isCategoryOpen[category];
-            }}
-          >
-            <ArrowDropDownIcon
-              class={clsx('text-inverse transition-transform', !isOpen && '-rotate-90')}
-              width={24}
-              height={24}
-            />
-            <h5 class="font-medium text-[15px]">
-              {category}
-            </h5>
-            <div class="flex-1" />
-          </button>
-          <ul class={clsx('space-y-1.5 overflow-hidden ml-1', !isOpen ? 'hidden' : 'mt-1')}>
+        <li class="my-6 first:mt-0">
+          <div class="text-[15px] font-semibold">{category}</div>
+          <ul class="space-y-1.5 overflow-hidden ml-1.5 mt-0.5">
             {#each categoryLinks as link (link.title + link.slug)}
-              <li class="flex items-center">
+              {#if Object.keys(componentCategories).includes(link.title)}
+                <div>
+                  <div class="font-semibold text-inverse text-sm mt-5 mb-2">
+                    {componentCategories[link.title]}
+                  </div>
+                </div>
+              {/if}
+              <li class="flex items-center mt-2">
                 <a
                   class={clsx(
-                    '992:py-1 -ml-px flex items-center py-2 pl-4 w-full focus-visible:m-1 focus-visible:last:mb-2 text-[15px]',
+                    '992:py-1 flex items-center py-2 w-full focus-visible:m-1 text-sm',
                     isActiveSidebarLink(link, $route.matchedURL.pathname)
                       ? 'text-brand font-medium'
                       : 'hover:border-inverse focus-visible:border-inverse text-soft hover:text-inverse focus-visible:text-inverse border-transparent font-normal',

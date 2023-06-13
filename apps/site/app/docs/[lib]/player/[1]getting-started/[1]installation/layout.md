@@ -46,7 +46,7 @@ depending on the type of installation method (NPM or CDN), library (HTML, React,
 
 ## Customizing Skins
 
-See the [Skins docs](/docs/player/styling/skins) for further skin customization options.
+See the [Skins docs](/docs/player/core-concepts/skins) for further skin customization options.
 
 ## Media Icons
 

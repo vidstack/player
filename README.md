@@ -13,10 +13,10 @@ framework-agnostic. The successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
 
 ## Quickstart
 
-- [Preview our Community Skin](https://www.vidstack.io/docs/player/styling/skins#community-skin)
+- [Preview our Community Skin](https://www.vidstack.io/docs/player/core-concepts/skins#community-skin)
 - [Get Started with Web Components](https://www.vidstack.io/docs/player/getting-started/installation)
 - [Get Started with React](https://www.vidstack.io/docs/react/player/getting-started/installation)
-- [Use our Tailwind Plugin](https://www.vidstack.io/docs/player/styling/tailwind)
+- [Use our Tailwind Plugin](https://www.vidstack.io/docs/player/core-concepts/tailwind)
 - [See our Media Icons collection](https://www.vidstack.io/media-icons)
 
 ## Beta

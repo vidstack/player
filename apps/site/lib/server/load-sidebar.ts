@@ -16,22 +16,16 @@ export function loadPlayerSidebar(): SidebarLinks {
     file.replace(stripRootPathRE, ''),
   );
 
-  const slugs = sortOrderedPageFiles(files).map((path) =>
-    stripRouteOrder(path).replace(include, ''),
-  );
+  const slugs = files
+    .map(stripRouteOrder)
+    .map((path) => stripRouteOrder(path).replace(include, ''));
 
   return {
     'Getting Started': links(slugs, /^\/getting-started/),
     'Core Concepts': links(slugs, /^\/core-concepts/),
     Providers: links(slugs, /^\/providers/),
     API: links(slugs, /^\/api/),
-    Styling: links(slugs, /^\/styling/),
-    Media: links(slugs, /^\/components\/media/),
-    Layout: links(slugs, /^\/components\/layout/),
-    Display: links(slugs, /^\/components\/display/),
-    Buttons: links(slugs, /^\/components\/buttons/),
-    Sliders: links(slugs, /^\/components\/sliders/),
-    Menu: links(slugs, /^\/components\/menu/),
+    Components: links(slugs, /^\/components/),
   };
 }
 
@@ -61,7 +55,9 @@ function stripRouteOrder(filePath: string) {
 function sortOrderedPageFiles(files: string[]): string[] {
   return files
     .map(slash)
-    .sort((fileA, fileB) => calcPageOrderScore(fileA) - calcPageOrderScore(fileB))
+    .sort((fileA, fileB) => {
+      return calcPageOrderScore(fileA) - calcPageOrderScore(fileB);
+    })
     .map(stripRouteOrder);
 }
 
