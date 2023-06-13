@@ -32,7 +32,7 @@
           key-target="document"
           crossorigin=""
           volume={0.2}
-          style="--video-brand: rgb(251 113 133);"
+          style="--video-brand: rgb(124 58 237);"
         >
           <media-outlet>
             <media-poster
