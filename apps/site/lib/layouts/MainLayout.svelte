@@ -25,7 +25,7 @@
     !$route.pathname.startsWith('/docs') && {
       title: 'Documentation',
       slug: addJSLibToPath(`/docs/player`),
-      match: /\/docs\/player/,
+      match: /\/docs(\/react)?\/player/,
     },
     {
       title: 'Icons',
@@ -35,6 +35,7 @@
     {
       title: 'Components',
       slug: addJSLibToPath(`/docs/player/components/media/player`),
+      match: /\/docs(\/react)?\/player\/components/,
     },
     {
       title: 'Releases',
