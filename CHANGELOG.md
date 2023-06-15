@@ -1,3 +1,11 @@
+## [0.6.11](https://github.com/vidstack/player/compare/v0.6.10...v0.6.11) (2023-06-15)
+
+### Bug Fixes
+
+- do not apply `crossorigin` on video if not set by user ([59fed98](https://github.com/vidstack/player/commit/59fed98f5d9b28d962e423733b8e3260f104f770))
+- forward track src to native tracks ([d131492](https://github.com/vidstack/player/commit/d1314924a9093c47e2f6e9b9dbac2e121726d963))
+- optimize `dist` chunks and bundles ([1e454b8](https://github.com/vidstack/player/commit/1e454b8df427d47cb67a1914e4d47c529dbbd911))
+
 ## [0.6.10](https://github.com/vidstack/player/compare/v0.6.9...v0.6.10) (2023-06-12)
 
 ### Bug Fixes
