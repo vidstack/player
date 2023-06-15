@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { rollup as maverick } from '@maverick-js/compiler';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import { transform } from 'esbuild';
+import { transformSync } from 'esbuild';
 import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
 import esbuildPlugin from 'rollup-plugin-esbuild';
@@ -54,6 +54,7 @@ function define({ dev, server, hydrate, minify, target } = {}) {
       icons: 'src/icons.ts',
       ...defineEntries,
     },
+    maxParallelFileOps: shouldMangle ? 1 : 20,
     treeshake: true,
     preserveEntrySignatures: 'strict',
     external: [/maverick/, 'hls.js', 'media-captions', 'media-icons'],
@@ -121,8 +122,8 @@ function define({ dev, server, hydrate, minify, target } = {}) {
       }),
       shouldMangle && {
         name: 'mangle',
-        async transform(code) {
-          const result = await transform(code, {
+        transform(code) {
+          const result = transformSync(code, {
             target: 'esnext',
             minify: false,
             mangleProps: /^_/,
