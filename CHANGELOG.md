@@ -1,3 +1,9 @@
+## [0.6.12](https://github.com/vidstack/player/compare/v0.6.11...v0.6.12) (2023-06-15)
+
+### Bug Fixes
+
+- prevent mangle collisions ([223ac4c](https://github.com/vidstack/player/commit/223ac4c0093915ecb9dc0d073f7c198e3abefeca))
+
 ## [0.6.11](https://github.com/vidstack/player/compare/v0.6.10...v0.6.11) (2023-06-15)
 
 ### Bug Fixes
