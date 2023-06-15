@@ -4,10 +4,10 @@ import { ComponentController, ComponentInstance } from 'maverick.js/element';
 import { appendTriggerEvent, listenEvent } from 'maverick.js/std';
 
 import { LIST_RESET } from '../../../foundation/list/symbols';
+import type { PlayerAPI } from '../../player';
 import type { MediaContext } from '../api/context';
 import * as ME from '../api/events';
 import { softResetMediaStore, type MediaStore } from '../api/store';
-import type { PlayerAPI } from '../player';
 import type {
   VideoQualityAddEvent,
   VideoQualityChangeEvent,

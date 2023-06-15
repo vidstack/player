@@ -1,20 +1,21 @@
-import { AUDIO_PROVIDER, type AudioProvider } from './audio/provider';
-import { HLS_PROVIDER, type HLSProvider } from './hls/provider';
-import { VIDEO_PROVIDER, type VideoProvider } from './video/provider';
+import type { AudioProvider } from './audio/provider';
+import type { HLSProvider } from './hls/provider';
+import { PROVIDER_TYPE } from './symbols';
+import type { VideoProvider } from './video/provider';
 
 /** @see {@link https://www.vidstack.io/docs/player/providers/audio} */
 export function isAudioProvider(provider: unknown): provider is AudioProvider {
-  return !!provider?.[AUDIO_PROVIDER];
+  return provider?.[PROVIDER_TYPE] === 'AUDIO';
 }
 
 /** @see {@link https://www.vidstack.io/docs/player/providers/video} */
 export function isVideoProvider(provider: unknown): provider is VideoProvider {
-  return !!provider?.[VIDEO_PROVIDER];
+  return provider?.[PROVIDER_TYPE] === 'VIDEO';
 }
 
 /** @see {@link https://www.vidstack.io/docs/player/providers/hls} */
 export function isHLSProvider(provider: unknown): provider is HLSProvider {
-  return !!provider?.[HLS_PROVIDER];
+  return provider?.[PROVIDER_TYPE] === 'HLS';
 }
 
 /** @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement} */

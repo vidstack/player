@@ -58,7 +58,6 @@ export class NativeTextRenderer implements TextRenderer {
 
   private _createTrackElement(track: VdsTextTrack): HTMLTrackElement {
     const el = document.createElement('track');
-    el.src = 'https://cdn.jsdelivr.net/npm/vidstack/empty.vtt';
     el.id = track.id;
     el.label = track.label;
     el.kind = track.kind;

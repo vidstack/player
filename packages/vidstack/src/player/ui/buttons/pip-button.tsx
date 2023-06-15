@@ -1,5 +1,6 @@
 import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { pictureInPictureExitPaths, pictureInPicturePaths } from 'media-icons';
+import pictureInPictureExitPaths from 'media-icons/dist/icons/picture-in-picture-exit.js';
+import pictureInPicturePaths from 'media-icons/dist/icons/picture-in-picture.js';
 
 import { Icon } from '../../../icons/icon';
 import { $ariaBool } from '../../../utils/aria';

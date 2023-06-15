@@ -4,8 +4,8 @@ import {
   TEXT_TRACK_NATIVE,
   TEXT_TRACK_NATIVE_HLS,
   TEXT_TRACK_READY_STATE,
-} from '../../tracks/text/symbols';
-import { TextTrack as VdsTextTrack } from '../../tracks/text/text-track';
+} from '../../core/tracks/text/symbols';
+import { TextTrack as VdsTextTrack } from '../../core/tracks/text/text-track';
 import type { MediaSetupContext } from '../types';
 
 /**

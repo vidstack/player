@@ -1,5 +1,5 @@
 import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { odometerPaths } from 'media-icons';
+import odometerPaths from 'media-icons/dist/icons/odometer.js';
 
 import { MenuButton, type MenuButtonAPI } from '../menu-button';
 import type { MenuButtonProps } from '../menu-button';

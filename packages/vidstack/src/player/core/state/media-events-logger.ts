@@ -1,8 +1,8 @@
 import { ComponentController, ComponentInstance } from 'maverick.js/element';
 
+import type { PlayerAPI } from '../../player';
 import { type MediaContext } from '../api/context';
 import type { MediaEvents } from '../api/events';
-import type { PlayerAPI } from '../player';
 
 const MEDIA_EVENTS: (keyof MediaEvents)[] | undefined = __DEV__
   ? [

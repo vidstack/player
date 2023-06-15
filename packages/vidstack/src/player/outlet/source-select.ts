@@ -1,10 +1,10 @@
 import { computed, effect, peek, tick, type ReadSignal, type WriteSignal } from 'maverick.js';
-import { isArray, isString, noop } from 'maverick.js/std';
+import { isArray, isString } from 'maverick.js/std';
 
-import { getRequestCredentials, preconnect } from '../../../utils/network';
-import type { MediaContext } from '../api/context';
-import type { PlayerProps } from '../api/player-props';
-import type { MediaSrc } from '../api/types';
+import { getRequestCredentials, preconnect } from '../../utils/network';
+import type { MediaContext } from '../core/api/context';
+import type { PlayerProps } from '../core/api/player-props';
+import type { MediaSrc } from '../core/api/types';
 import { AudioProviderLoader } from '../providers/audio/loader';
 import { HLSProviderLoader } from '../providers/hls/loader';
 import type { MediaProviderLoader } from '../providers/types';

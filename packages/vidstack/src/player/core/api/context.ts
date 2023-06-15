@@ -8,9 +8,9 @@ import {
 } from 'maverick.js';
 
 import type { Logger } from '../../../foundation/logger/controller';
+import type { MediaPlayerElement } from '../../player';
+import type { MediaProvider } from '../../providers/types';
 import type { MediaKeyShortcuts } from '../keyboard/types';
-import type { MediaPlayerElement } from '../player';
-import type { MediaProvider } from '../providers/types';
 import type { VideoQualityList } from '../quality/video-quality';
 import type { MediaPlayerDelegate } from '../state/media-player-delegate';
 import type { MediaRemoteControl } from '../state/remote-control';

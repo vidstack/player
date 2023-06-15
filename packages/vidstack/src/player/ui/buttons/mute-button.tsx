@@ -1,5 +1,7 @@
 import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { mutePaths, volumeHighPaths, volumeLowPaths } from 'media-icons';
+import mutePaths from 'media-icons/dist/icons/mute.js';
+import volumeHighPaths from 'media-icons/dist/icons/volume-high.js';
+import volumeLowPaths from 'media-icons/dist/icons/volume-low.js';
 
 import { Icon } from '../../../icons/icon';
 import { setARIALabel } from '../../../utils/dom';

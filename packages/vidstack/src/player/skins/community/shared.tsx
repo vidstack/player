@@ -1,6 +1,9 @@
 import { computed, effect, signal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
-import { chaptersPaths, seekBackward10Paths, seekForward10Paths, settingsPaths } from 'media-icons';
+import chaptersPaths from 'media-icons/dist/icons/chapters.js';
+import seekBackward10Paths from 'media-icons/dist/icons/seek-backward-10.js';
+import seekForward10Paths from 'media-icons/dist/icons/seek-forward-10.js';
+import settingsPaths from 'media-icons/dist/icons/settings.js';
 
 import { Icon } from '../../../icons/icon';
 import type { TooltipPosition } from '../../ui/tooltip/tooltip';

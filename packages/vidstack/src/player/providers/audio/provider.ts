@@ -1,7 +1,6 @@
 import { HTMLMediaProvider } from '../html/provider';
+import { PROVIDER_TYPE } from '../symbols';
 import type { MediaProvider, MediaSetupContext } from '../types';
-
-export const AUDIO_PROVIDER = Symbol(__DEV__ ? 'AUDIO_PROVIDER' : 0);
 
 /**
  * The audio provider adapts the `<audio>` element to enable loading audio via the HTML Media
@@ -17,7 +16,7 @@ export const AUDIO_PROVIDER = Symbol(__DEV__ ? 'AUDIO_PROVIDER' : 0);
  * ```
  */
 export class AudioProvider extends HTMLMediaProvider implements MediaProvider {
-  [AUDIO_PROVIDER] = true;
+  [PROVIDER_TYPE] = 'AUDIO';
 
   override get type() {
     return 'audio';

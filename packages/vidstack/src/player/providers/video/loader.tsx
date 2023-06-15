@@ -1,11 +1,11 @@
 import { computed } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
-import { isHLSSrc, VIDEO_EXTENSIONS, VIDEO_TYPES } from '../../../../utils/mime';
-import { canPlayHLSNatively } from '../../../../utils/support';
-import type { MediaContext } from '../../api/context';
-import type { MediaStore } from '../../api/store';
-import type { MediaSrc, MediaType } from '../../api/types';
+import { isHLSSrc, VIDEO_EXTENSIONS, VIDEO_TYPES } from '../../../utils/mime';
+import { canPlayHLSNatively } from '../../../utils/support';
+import type { MediaContext } from '../../core/api/context';
+import type { MediaStore } from '../../core/api/store';
+import type { MediaSrc, MediaType } from '../../core/api/types';
 import type { MediaProviderLoader } from '../types';
 import type { VideoProvider } from './provider';
 

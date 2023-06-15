@@ -1,7 +1,7 @@
 import { effect } from 'maverick.js';
 import { ComponentController } from 'maverick.js/element';
 
-import type { PlayerAPI } from '../player';
+import type { PlayerAPI } from '../../player';
 
 /**
  * Sync player props with internal store and dispatch change events.

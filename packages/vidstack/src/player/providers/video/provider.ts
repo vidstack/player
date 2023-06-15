@@ -4,10 +4,11 @@ import {
   canPlayHLSNatively,
   canUsePictureInPicture,
   canUseVideoPresentation,
-} from '../../../../utils/support';
-import type { MediaContext } from '../../api/context';
-import { ATTACH_VIDEO } from '../../tracks/text/symbols';
+} from '../../../utils/support';
+import type { MediaContext } from '../../core/api/context';
+import { ATTACH_VIDEO } from '../../core/tracks/text/symbols';
 import { HTMLMediaProvider } from '../html/provider';
+import { PROVIDER_TYPE } from '../symbols';
 import type {
   MediaFullscreenAdapter,
   MediaPictureInPictureAdapter,
@@ -21,8 +22,6 @@ import {
   PIPPresentationAdapter,
   VideoPresentation,
 } from './presentation/video-presentation';
-
-export const VIDEO_PROVIDER = Symbol(__DEV__ ? 'VIDEO_PROVIDER' : 0);
 
 /**
  * The video provider adapts the `<video>` element to enable loading videos via the HTML Media
@@ -41,7 +40,7 @@ export const VIDEO_PROVIDER = Symbol(__DEV__ ? 'VIDEO_PROVIDER' : 0);
  * ```
  */
 export class VideoProvider extends HTMLMediaProvider implements MediaProvider {
-  [VIDEO_PROVIDER] = true;
+  [PROVIDER_TYPE] = 'VIDEO';
 
   override get type() {
     return 'video';

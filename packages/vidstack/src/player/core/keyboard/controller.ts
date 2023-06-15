@@ -2,9 +2,9 @@ import { effect, peek, signal } from 'maverick.js';
 import { ComponentController, ComponentInstance } from 'maverick.js/element';
 import { DOMEvent, isKeyboardClick, listenEvent } from 'maverick.js/std';
 
+import type { PlayerAPI } from '../../player';
+import { isHTMLMediaElement } from '../../providers/type-check';
 import type { MediaContext } from '../api/context';
-import type { PlayerAPI } from '../player';
-import { isHTMLMediaElement } from '../providers/type-check';
 import type { MediaKeyShortcuts } from './types';
 
 export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {

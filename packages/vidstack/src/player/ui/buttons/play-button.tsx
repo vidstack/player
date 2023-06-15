@@ -1,5 +1,7 @@
 import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { pausePaths, playPaths, replayPaths } from 'media-icons';
+import pausePaths from 'media-icons/dist/icons/pause.js';
+import playPaths from 'media-icons/dist/icons/play.js';
+import replayPaths from 'media-icons/dist/icons/replay.js';
 
 import { Icon } from '../../../icons/icon';
 import { setARIALabel } from '../../../utils/dom';

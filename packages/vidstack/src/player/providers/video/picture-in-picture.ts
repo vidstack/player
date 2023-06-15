@@ -1,7 +1,7 @@
 import { listenEvent } from 'maverick.js/std';
 
-import { canUsePictureInPicture } from '../../../../utils/support';
-import type { MediaContext } from '../../api/context';
+import { canUsePictureInPicture } from '../../../utils/support';
+import type { MediaContext } from '../../core/api/context';
 import type { MediaPictureInPictureAdapter } from '../types';
 
 declare global {

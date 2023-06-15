@@ -1,7 +1,7 @@
 import { DOMEvent, listenEvent } from 'maverick.js/std';
 
-import { canUseVideoPresentation } from '../../../../../utils/support';
-import type { MediaContext } from '../../../api/context';
+import { canUseVideoPresentation } from '../../../../utils/support';
+import type { MediaContext } from '../../../core/api/context';
 import type { MediaFullscreenAdapter, MediaPictureInPictureAdapter } from '../../types';
 
 declare global {

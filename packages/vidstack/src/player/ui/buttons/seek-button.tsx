@@ -4,7 +4,8 @@ import {
   defineElement,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { seekBackwardPaths, seekForwardPaths } from 'media-icons';
+import seekBackwardPaths from 'media-icons/dist/icons/seek-backward.js';
+import seekForwardPaths from 'media-icons/dist/icons/seek-forward.js';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { Icon } from '../../../icons/icon';

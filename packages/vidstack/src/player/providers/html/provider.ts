@@ -1,7 +1,7 @@
 import { isString, setAttribute } from 'maverick.js/std';
 
-import { isMediaStream } from '../../../../utils/mime';
-import type { MediaSrc } from '../../api/types';
+import { isMediaStream } from '../../../utils/mime';
+import type { MediaSrc } from '../../core/api/types';
 import type { MediaProvider, MediaSetupContext } from '../types';
 import { HTMLMediaEvents } from './html–media-events';
 import { NativeAudioTracks } from './native-audio-tracks';

@@ -1,5 +1,6 @@
 import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { closedCaptionsOnPaths, closedCaptionsPaths } from 'media-icons';
+import closedCaptionsOnPaths from 'media-icons/dist/icons/closed-captions-on.js';
+import closedCaptionsPaths from 'media-icons/dist/icons/closed-captions.js';
 
 import { Icon } from '../../../icons/icon';
 import { $ariaBool } from '../../../utils/aria';

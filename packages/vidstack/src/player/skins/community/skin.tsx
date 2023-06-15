@@ -6,7 +6,7 @@ import {
   type HTMLCustomElement,
 } from 'maverick.js/element';
 
-import { getUIComponents } from '../../../register';
+import { getUIComponents } from '../../../register-ui';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import { renderAudio } from './audio';
 import { communitySkinContext, type CommunitySkinTranslations } from './context';

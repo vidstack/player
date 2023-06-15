@@ -1,7 +1,7 @@
 import { effect, type ReadSignal } from 'maverick.js';
 
-import type { MediaContext } from '../api/context';
-import { TextTrack, type TextTrackInit } from '../tracks/text/text-track';
+import type { MediaContext } from '../core/api/context';
+import { TextTrack, type TextTrackInit } from '../core/tracks/text/text-track';
 
 export class Tracks {
   private _prevTracks: (TextTrack | TextTrackInit)[] = [];

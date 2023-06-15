@@ -1,5 +1,6 @@
 import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { fullscreenExitPaths, fullscreenPaths } from 'media-icons';
+import fullscreenExitPaths from 'media-icons/dist/icons/fullscreen-exit.js';
+import fullscreenPaths from 'media-icons/dist/icons/fullscreen.js';
 
 import { Icon } from '../../../icons/icon';
 import { $ariaBool } from '../../../utils/aria';

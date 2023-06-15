@@ -1,5 +1,6 @@
 import type { ReadSignal } from 'maverick.js';
-import { arrowLeftPaths, chevronRightPaths } from 'media-icons';
+import arrowLeftPaths from 'media-icons/dist/icons/arrow-left.js';
+import chevronRightPaths from 'media-icons/dist/icons/chevron-down.js';
 
 import { Icon } from '../../../icons/icon';
 

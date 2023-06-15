@@ -2,12 +2,12 @@ import type * as HLS from 'hls.js';
 import { effect, peek } from 'maverick.js';
 import { camelToKebabCase, DOMEvent, listenEvent } from 'maverick.js/std';
 
-import { LIST_ADD, LIST_SELECT } from '../../../../foundation/list/symbols';
-import { RAFLoop } from '../../../../foundation/observers/raf-loop';
-import { IS_CHROME } from '../../../../utils/support';
-import { ENABLE_AUTO_QUALITY, SET_AUTO_QUALITY } from '../../quality/symbols';
-import { TEXT_TRACK_ON_MODE_CHANGE, TEXT_TRACK_READY_STATE } from '../../tracks/text/symbols';
-import { TextTrack } from '../../tracks/text/text-track';
+import { LIST_ADD, LIST_SELECT } from '../../../foundation/list/symbols';
+import { RAFLoop } from '../../../foundation/observers/raf-loop';
+import { IS_CHROME } from '../../../utils/support';
+import { ENABLE_AUTO_QUALITY, SET_AUTO_QUALITY } from '../../core/quality/symbols';
+import { TEXT_TRACK_ON_MODE_CHANGE, TEXT_TRACK_READY_STATE } from '../../core/tracks/text/symbols';
+import { TextTrack } from '../../core/tracks/text/text-track';
 import type { MediaSetupContext } from '../types';
 import type { HLSConstructor, HLSInstanceCallback } from './types';
 

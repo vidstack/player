@@ -3,8 +3,8 @@ import { ComponentController } from 'maverick.js/element';
 import { noop } from 'maverick.js/std';
 
 import { getRequestCredentials } from '../../../utils/network';
+import type { PlayerAPI } from '../../player';
 import { useMedia, type MediaContext } from '../api/context';
-import type { PlayerAPI } from '../player';
 
 export class ThumbnailsLoader extends ComponentController<PlayerAPI> {
   protected _media!: MediaContext;

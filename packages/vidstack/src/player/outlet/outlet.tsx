@@ -8,12 +8,12 @@ import {
 import { animationFrameThrottle, listenEvent, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
-import { scopedRaf } from '../../../utils/dom';
-import { IS_SAFARI } from '../../../utils/support';
-import { useMedia, type MediaContext } from '../api/context';
-import type { MediaSrc } from '../api/types';
+import { scopedRaf } from '../../utils/dom';
+import { IS_SAFARI } from '../../utils/support';
+import { useMedia, type MediaContext } from '../core/api/context';
+import type { MediaSrc } from '../core/api/types';
+import type { TextTrackInit } from '../core/tracks/text/text-track';
 import type { MediaProviderLoader } from '../providers/types';
-import type { TextTrackInit } from '../tracks/text/text-track';
 import { SourceSelection } from './source-select';
 import { Tracks } from './tracks';
 
@@ -129,6 +129,7 @@ export class Outlet extends Component<OutletAPI> {
 
   override render() {
     let currentProvider;
+
     onDispose(() => currentProvider?.destroy?.());
 
     return () => {
@@ -139,18 +140,20 @@ export class Outlet extends Component<OutletAPI> {
 
       const el = loader.render(this._media.$store);
 
-      peek(() => {
-        loader.load(this._media).then((provider) => {
-          // The src/loader might've changed by the time we load the provider.
-          if (peek(this._loader) !== loader) return;
+      if (!__SERVER__) {
+        peek(() => {
+          loader!.load(this._media).then((provider) => {
+            // The src/loader might've changed by the time we load the provider.
+            if (peek(this._loader) !== loader) return;
 
-          this._media.delegate._dispatch('provider-change', {
-            detail: provider,
+            this._media.delegate._dispatch('provider-change', {
+              detail: provider,
+            });
+
+            currentProvider = provider;
           });
-
-          currentProvider = provider;
         });
-      });
+      }
 
       return el;
     };

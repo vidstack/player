@@ -1,5 +1,5 @@
 import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { closedCaptionsPaths } from 'media-icons';
+import closedCaptionsPaths from 'media-icons/dist/icons/closed-captions.js';
 
 import { MenuButton, type MenuButtonAPI } from '../menu-button';
 import type { MenuButtonProps } from '../menu-button';

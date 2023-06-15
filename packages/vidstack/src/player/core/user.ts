@@ -2,7 +2,7 @@ import { effect } from 'maverick.js';
 import { ComponentController } from 'maverick.js/element';
 import { isKeyboardEvent, listenEvent } from 'maverick.js/std';
 
-import type { PlayerAPI } from './player';
+import type { PlayerAPI } from '../player';
 
 export class MediaUserController extends ComponentController<PlayerAPI> {
   private _idleTimer = -2;

@@ -16,7 +16,7 @@
     "@vidstack/react": "workspace:*",
     "clsx": "^1.2.0",
     "html-entities": "^2.3.3",
-    "media-icons": "0.7.0",
+    "media-icons": "0.10.0",
     "split.js": "^1.6.5",
     "svelte-class-transition": "^1.0.4",
     "vidstack": "workspace:*"

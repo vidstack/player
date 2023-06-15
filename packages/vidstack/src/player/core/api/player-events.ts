@@ -2,9 +2,9 @@ import type { DOMEvent } from 'maverick.js/std';
 
 import type { LoggerEvents } from '../../../foundation/logger/events';
 import type { ScreenOrientationEvents } from '../../../foundation/orientation/events';
-import type { MediaPlayerElement } from '../player';
-import type { HLSProviderEvents } from '../providers/hls/events';
-import type { VideoPresentationEvents } from '../providers/video/presentation/events';
+import type { MediaPlayerElement } from '../../player';
+import type { HLSProviderEvents } from '../../providers/hls/events';
+import type { VideoPresentationEvents } from '../../providers/video/presentation/events';
 import type { MediaEvents, UserIdleChangeEvent } from './events';
 import type { MediaRequestEvents } from './request-events';
 

@@ -23,6 +23,7 @@ packages/*/dist/
 packages/*/define/
 packages/*/elements/
 packages/*/sandbox/
+packages/*/stats.html
 packages/icons/src/icons/
 packages/react/src/components.ts
 packages/react/src/icons.ts

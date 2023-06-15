@@ -1,8 +1,8 @@
 import { isString } from 'maverick.js/std';
 
-import { AUDIO_EXTENSIONS, AUDIO_TYPES } from '../../../../utils/mime';
-import type { MediaStore } from '../../api/store';
-import type { MediaSrc, MediaType } from '../../api/types';
+import { AUDIO_EXTENSIONS, AUDIO_TYPES } from '../../../utils/mime';
+import type { MediaStore } from '../../core/api/store';
+import type { MediaSrc, MediaType } from '../../core/api/types';
 import type { MediaProviderLoader } from '../types';
 import type { AudioProvider } from './provider';
 

@@ -9,12 +9,12 @@ import {
 import { ScreenOrientationController } from '../../../foundation/orientation/controller';
 import { Queue } from '../../../foundation/queue/queue';
 import { coerceToError } from '../../../utils/error';
+import type { PlayerAPI } from '../../player';
+import type { MediaProvider } from '../../providers/types';
 import type { MediaContext } from '../api/context';
 import type { MediaFullscreenChangeEvent } from '../api/events';
 import * as RE from '../api/request-events';
 import type { MediaStore } from '../api/store';
-import type { PlayerAPI } from '../player';
-import type { MediaProvider } from '../providers/types';
 import { MediaUserController } from '../user';
 import type { MediaStateManager } from './media-state-manager';
 

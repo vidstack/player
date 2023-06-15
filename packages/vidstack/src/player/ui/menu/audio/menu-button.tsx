@@ -1,5 +1,5 @@
 import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
-import { musicPaths } from 'media-icons';
+import musicPaths from 'media-icons/dist/icons/music.js';
 
 import { MenuButton, type MenuButtonAPI } from '../menu-button';
 import type { MenuButtonProps } from '../menu-button';

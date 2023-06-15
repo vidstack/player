@@ -1,7 +1,7 @@
 import { listenEvent } from 'maverick.js/std';
 
-import { LIST_ADD, LIST_REMOVE, LIST_SELECT } from '../../../../foundation/list/symbols';
-import type { AudioTrack, AudioTrackChangeEvent } from '../../tracks/audio-tracks';
+import { LIST_ADD, LIST_REMOVE, LIST_SELECT } from '../../../foundation/list/symbols';
+import type { AudioTrack, AudioTrackChangeEvent } from '../../core/tracks/audio-tracks';
 import type { MediaSetupContext } from '../types';
 import type { HTMLMediaProvider } from './provider';
 

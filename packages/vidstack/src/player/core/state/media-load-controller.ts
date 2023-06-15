@@ -1,6 +1,6 @@
 import { ComponentController, ComponentInstance } from 'maverick.js/element';
 
-import type { PlayerAPI } from '../player';
+import type { PlayerAPI } from '../../player';
 
 export class MediaLoadController extends ComponentController<PlayerAPI> {
   constructor(instance: ComponentInstance<PlayerAPI>, private _callback: () => void) {

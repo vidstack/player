@@ -10,39 +10,43 @@ import {
 } from 'maverick.js/element';
 import { camelToKebabCase, listenEvent, setAttribute, uppercaseFirstChar } from 'maverick.js/std';
 
-import { canFullscreen } from '../../foundation/fullscreen/controller';
-import { Logger } from '../../foundation/logger/controller';
-import { LogPrinter } from '../../foundation/logger/log-printer';
-import { FocusVisibleController } from '../../foundation/observers/focus-visible';
-import { ScreenOrientationController } from '../../foundation/orientation/controller';
-import { RequestQueue } from '../../foundation/queue/request-queue';
-import { setAttributeIfEmpty } from '../../utils/dom';
-import { clampNumber } from '../../utils/number';
-import { IS_IPHONE } from '../../utils/support';
-import { mediaContext, type MediaContext } from './api/context';
-import { MEDIA_ATTRIBUTES } from './api/media-attrs';
-import type { PlayerCSSVars } from './api/player-cssvars';
-import type { FindPlayerEvent, PlayerConnectEvent, PlayerEvents } from './api/player-events';
-import { mediaPlayerProps, type MediaStateAccessors, type PlayerProps } from './api/player-props';
-import type { MediaFullscreenRequestTarget } from './api/request-events';
-import { MediaStoreFactory, type MediaStore } from './api/store';
-import { MediaKeyboardController } from './keyboard/controller';
+import { canFullscreen } from '../foundation/fullscreen/controller';
+import { Logger } from '../foundation/logger/controller';
+import { LogPrinter } from '../foundation/logger/log-printer';
+import { FocusVisibleController } from '../foundation/observers/focus-visible';
+import { ScreenOrientationController } from '../foundation/orientation/controller';
+import { RequestQueue } from '../foundation/queue/request-queue';
+import { setAttributeIfEmpty } from '../utils/dom';
+import { clampNumber } from '../utils/number';
+import { IS_IPHONE } from '../utils/support';
+import { mediaContext, type MediaContext } from './core/api/context';
+import { MEDIA_ATTRIBUTES } from './core/api/media-attrs';
+import type { PlayerCSSVars } from './core/api/player-cssvars';
+import type { FindPlayerEvent, PlayerConnectEvent, PlayerEvents } from './core/api/player-events';
+import {
+  mediaPlayerProps,
+  type MediaStateAccessors,
+  type PlayerProps,
+} from './core/api/player-props';
+import type { MediaFullscreenRequestTarget } from './core/api/request-events';
+import { MediaStoreFactory, type MediaStore } from './core/api/store';
+import { MediaKeyboardController } from './core/keyboard/controller';
+import { VideoQualityList } from './core/quality/video-quality';
+import { MediaEventsLogger } from './core/state/media-events-logger';
+import { MediaLoadController } from './core/state/media-load-controller';
+import { MediaPlayerDelegate } from './core/state/media-player-delegate';
+import { MediaRequestContext, MediaRequestManager } from './core/state/media-request-manager';
+import { MediaStateManager } from './core/state/media-state-manager';
+import { MediaStoreSync } from './core/state/media-store-sync';
+import { MediaRemoteControl } from './core/state/remote-control';
+import { ThumbnailsLoader } from './core/thumbnails/loader';
+import { AudioTrackList } from './core/tracks/audio-tracks';
+import { TextRenderers } from './core/tracks/text/render/text-renderer';
+import { TEXT_TRACK_CROSSORIGIN } from './core/tracks/text/symbols';
+import { isTrackCaptionKind } from './core/tracks/text/text-track';
+import { TextTrackList } from './core/tracks/text/text-tracks';
+import { type MediaUserController } from './core/user';
 import type { AnyMediaProvider } from './providers/types';
-import { VideoQualityList } from './quality/video-quality';
-import { MediaEventsLogger } from './state/media-events-logger';
-import { MediaLoadController } from './state/media-load-controller';
-import { MediaPlayerDelegate } from './state/media-player-delegate';
-import { MediaRequestContext, MediaRequestManager } from './state/media-request-manager';
-import { MediaStateManager } from './state/media-state-manager';
-import { MediaStoreSync } from './state/media-store-sync';
-import { MediaRemoteControl } from './state/remote-control';
-import { ThumbnailsLoader } from './thumbnails/loader';
-import { AudioTrackList } from './tracks/audio-tracks';
-import { TextRenderers } from './tracks/text/render/text-renderer';
-import { TEXT_TRACK_CROSSORIGIN } from './tracks/text/symbols';
-import { isTrackCaptionKind } from './tracks/text/text-track';
-import { TextTrackList } from './tracks/text/text-tracks';
-import { type MediaUserController } from './user';
 
 declare global {
   interface MaverickElements {

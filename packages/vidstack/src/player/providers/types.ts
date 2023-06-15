@@ -1,10 +1,10 @@
 import type { JSX } from 'maverick.js';
 import type { HTMLCustomElement } from 'maverick.js/element';
 
-import type { FullscreenAdapter } from '../../../foundation/fullscreen/controller';
-import type { MediaContext } from '../api/context';
-import type { MediaState, MediaStore } from '../api/store';
-import type { MediaSrc, MediaType } from '../api/types';
+import type { FullscreenAdapter } from '../../foundation/fullscreen/controller';
+import type { MediaContext } from '../core/api/context';
+import type { MediaState, MediaStore } from '../core/api/store';
+import type { MediaSrc, MediaType } from '../core/api/types';
 import type { MediaPlayerElement } from '../player';
 import type { AudioProvider } from './audio/provider';
 import type { HLSProvider } from './hls/provider';

@@ -1,9 +1,9 @@
 import { isString } from 'maverick.js/std';
 
-import { HLS_VIDEO_EXTENSIONS, HLS_VIDEO_TYPES } from '../../../../utils/mime';
-import { preconnect } from '../../../../utils/network';
-import { isHLSSupported } from '../../../../utils/support';
-import type { MediaSrc } from '../../api/types';
+import { HLS_VIDEO_EXTENSIONS, HLS_VIDEO_TYPES } from '../../../utils/mime';
+import { preconnect } from '../../../utils/network';
+import { isHLSSupported } from '../../../utils/support';
+import type { MediaSrc } from '../../core/api/types';
 import type { MediaProviderLoader } from '../types';
 import { VideoProviderLoader } from '../video/loader';
 import type { HLSProvider } from './provider';

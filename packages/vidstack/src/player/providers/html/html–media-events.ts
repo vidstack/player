@@ -1,12 +1,12 @@
 import { effect, onDispose } from 'maverick.js';
 import { DOMEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
 
-import { RAFLoop } from '../../../../foundation/observers/raf-loop';
-import { isHLSSrc } from '../../../../utils/mime';
-import { getNumberOfDecimalPlaces } from '../../../../utils/number';
-import { IS_SAFARI } from '../../../../utils/support';
-import type { MediaCanPlayDetail } from '../../api/events';
-import type { MediaErrorCode } from '../../api/types';
+import { RAFLoop } from '../../../foundation/observers/raf-loop';
+import { isHLSSrc } from '../../../utils/mime';
+import { getNumberOfDecimalPlaces } from '../../../utils/number';
+import { IS_SAFARI } from '../../../utils/support';
+import type { MediaCanPlayDetail } from '../../core/api/events';
+import type { MediaErrorCode } from '../../core/api/types';
 import type { MediaSetupContext } from '../types';
 import type { HTMLMediaProvider } from './provider';
 

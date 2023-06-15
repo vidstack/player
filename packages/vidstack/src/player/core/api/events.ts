@@ -1,7 +1,7 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 import type { ScreenOrientationChangeEvent } from '../../../foundation/orientation/events';
-import type { MediaPlayerElement } from '../player';
+import type { MediaPlayerElement } from '../../player';
 import type {
   VideoQuality,
   VideoQualityAddEvent,
@@ -16,7 +16,7 @@ import type {
 } from '../tracks/audio-tracks';
 import type { TextTrack, TextTrackModeChangeEvent } from '../tracks/text/text-track';
 import type { TextTrackAddEvent, TextTrackRemoveEvent } from '../tracks/text/text-tracks';
-import type { MediaProvider, MediaProviderLoader } from './../providers/types';
+import type { MediaProvider, MediaProviderLoader } from './../../providers/types';
 import type * as RE from './request-events';
 import type {
   MediaErrorDetail,

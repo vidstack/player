@@ -1,16 +1,15 @@
 import { peek, type Dispose } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
-import { preconnect } from '../../../../utils/network';
-import { isHLSSupported } from '../../../../utils/support';
-import type { MediaSrc } from '../../api/types';
+import { preconnect } from '../../../utils/network';
+import { isHLSSupported } from '../../../utils/support';
+import type { MediaSrc } from '../../core/api/types';
+import { PROVIDER_TYPE } from '../symbols';
 import type { MediaProvider, MediaSetupContext } from '../types';
 import { VideoProvider } from '../video/provider';
 import { HLSController } from './hls';
 import { HLSLibLoader } from './lib-loader';
 import type { HLSConstructor, HLSInstanceCallback, HLSLibrary } from './types';
-
-export const HLS_PROVIDER = Symbol(__DEV__ ? 'HLS_PROVIDER' : 0);
 
 const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
 
@@ -33,7 +32,7 @@ const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
  * ```
  */
 export class HLSProvider extends VideoProvider implements MediaProvider {
-  [HLS_PROVIDER] = true;
+  [PROVIDER_TYPE] = 'HLS';
 
   private _ctor: HLSConstructor | null = null;
   private readonly _controller = new HLSController(this.video);

@@ -1,8 +1,8 @@
 import { DOMEvent } from 'maverick.js/std';
 
 import type { Logger } from '../../../foundation/logger/controller';
+import type { MediaPlayerElement } from '../../player';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../api/request-events';
-import type { MediaPlayerElement } from '../player';
 import { isTrackCaptionKind } from '../tracks/text/text-track';
 
 /**

@@ -1,7 +1,7 @@
 import { DOMEvent, isFunction, isString, isUndefined } from 'maverick.js/std';
 
-import { coerceToError } from '../../../../utils/error';
-import { loadScript } from '../../../../utils/network';
+import { coerceToError } from '../../../utils/error';
+import { loadScript } from '../../../utils/network';
 import type { MediaSetupContext } from '../types';
 import type { HLSConstructor, HLSConstructorLoader, HLSLibrary } from './types';
 
