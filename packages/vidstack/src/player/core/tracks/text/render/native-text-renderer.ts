@@ -58,6 +58,7 @@ export class NativeTextRenderer implements TextRenderer {
 
   private _createTrackElement(track: VdsTextTrack): HTMLTrackElement {
     const el = document.createElement('track');
+    track.src && track.type !== 'json' && (el.src = track.src);
     el.id = track.id;
     el.label = track.label;
     el.kind = track.kind;
