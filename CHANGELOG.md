@@ -1,3 +1,11 @@
+## [0.6.13](https://github.com/vidstack/player/compare/v0.6.12...v0.6.13) (2023-06-16)
+
+### Bug Fixes
+
+- captions not showing on ios fullscreen ([2976b01](https://github.com/vidstack/player/commit/2976b01104514e1b1ff035743b8986a135977f17))
+- group providers into single bundle for cdn ([2b86dd5](https://github.com/vidstack/player/commit/2b86dd5c2ab758f0702f29db76f9ec27621ad5e6))
+- prevent native tracks on ios being incorrectly disabled ([856d05c](https://github.com/vidstack/player/commit/856d05c4959896852a8d05833b033ce519ee3339))
+
 ## [0.6.12](https://github.com/vidstack/player/compare/v0.6.11...v0.6.12) (2023-06-15)
 
 ### Bug Fixes
