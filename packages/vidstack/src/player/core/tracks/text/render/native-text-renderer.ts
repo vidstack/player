@@ -31,12 +31,7 @@ export class NativeTextRenderer implements TextRenderer {
   }
 
   changeTrack(track: VdsTextTrack | null): void {
-    const prev = this._track?.[TEXT_TRACK_NATIVE],
-      current = track?.[TEXT_TRACK_NATIVE];
-
-    if (prev && this._track !== track && prev.track.mode === 'showing') {
-      prev.track.mode = 'hidden';
-    }
+    const current = track?.[TEXT_TRACK_NATIVE];
 
     if (current && current.track.mode !== 'showing') {
       current.track.mode = 'showing';
@@ -47,6 +42,7 @@ export class NativeTextRenderer implements TextRenderer {
 
   setDisplay(display: boolean) {
     this._display = display;
+    this._onChange();
   }
 
   detach() {
@@ -68,19 +64,25 @@ export class NativeTextRenderer implements TextRenderer {
 
   private _createTrackElement(track: VdsTextTrack): HTMLTrackElement {
     const el = document.createElement('track'),
-      isDefault = track.default || track.mode === 'showing';
+      isDefault = track.default || track.mode === 'showing',
+      isSupported = track.src && track.type === 'vtt';
+
     el.id = track.id;
-    el.src = 'https://cdn.jsdelivr.net/npm/vidstack@0.6.12/empty.vtt';
+    el.src = isSupported ? track.src! : 'https://cdn.jsdelivr.net/npm/vidstack@0.6.12/empty.vtt';
     el.label = track.label;
     el.kind = track.kind;
     el.default = isDefault;
     track.language && (el.srclang = track.language);
-    if (isDefault) this._copyCues(track, el.track);
+
+    if (isDefault && !isSupported) {
+      this._copyCues(track, el.track);
+    }
+
     return el;
   }
 
   private _copyCues(track: VdsTextTrack, native: Partial<TextTrack>) {
-    if (native.cues?.length) return;
+    if ((track.src && track.type === 'vtt') || native.cues?.length) return;
     for (const cue of track.cues) native.addCue!(cue as any);
   }
 
@@ -90,7 +92,7 @@ export class NativeTextRenderer implements TextRenderer {
       if (!nativeTrack) continue;
 
       if (!this._display) {
-        nativeTrack.mode = 'hidden';
+        nativeTrack.mode = 'disabled';
         continue;
       }
 

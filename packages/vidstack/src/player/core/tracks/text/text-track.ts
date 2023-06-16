@@ -108,6 +108,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     super();
 
     for (const prop of Object.keys(init)) this[prop] = init[prop];
+    if (!this.type) this.type = 'vtt';
 
     if (!__SERVER__ && init.content) {
       import('media-captions').then(({ parseText, VTTCue, VTTRegion }) => {
@@ -252,8 +253,12 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
   private _readyState() {
     this[TEXT_TRACK_READY_STATE] = 2;
-    const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
-    if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
+
+    if (!this.src || this.type !== 'vtt') {
+      const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
+      if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
+    }
+
     const loadEvent = new DOMEvent<void>('load');
     this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, loadEvent);
     this.dispatchEvent(loadEvent);
