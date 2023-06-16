@@ -30,8 +30,9 @@
           thumbnails="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
           aspect-ratio="16/9"
           key-target="document"
-          crossorigin=""
           volume={0.2}
+          playsinline=""
+          crossorigin=""
           style="--video-brand: rgb(124 58 237);"
         >
           <media-outlet>

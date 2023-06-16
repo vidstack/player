@@ -33,8 +33,15 @@ export class NativeTextRenderer implements TextRenderer {
   changeTrack(track: VdsTextTrack | null): void {
     const prev = this._track?.[TEXT_TRACK_NATIVE],
       current = track?.[TEXT_TRACK_NATIVE];
-    if (prev && this._track !== track) prev.track.mode = 'disabled';
-    if (current) current.track.mode = 'showing';
+
+    if (prev && this._track !== track && prev.track.mode === 'showing') {
+      prev.track.mode = 'hidden';
+    }
+
+    if (current && current.track.mode !== 'showing') {
+      current.track.mode = 'showing';
+    }
+
     this._track = track;
   }
 
@@ -53,17 +60,22 @@ export class NativeTextRenderer implements TextRenderer {
   private _attachTrack(track: VdsTextTrack): void {
     if (!this._video) return;
     const el = (track[TEXT_TRACK_NATIVE] ??= this._createTrackElement(track));
-    if (el instanceof HTMLElement) this._video.append(el);
+    if (el instanceof HTMLElement) {
+      this._video.append(el);
+      el.track.mode = el.default ? 'showing' : 'hidden';
+    }
   }
 
   private _createTrackElement(track: VdsTextTrack): HTMLTrackElement {
-    const el = document.createElement('track');
-    track.src && track.type !== 'json' && (el.src = track.src);
+    const el = document.createElement('track'),
+      isDefault = track.default || track.mode === 'showing';
     el.id = track.id;
+    el.src = 'https://cdn.jsdelivr.net/npm/vidstack@0.6.12/empty.vtt';
     el.label = track.label;
     el.kind = track.kind;
-    el.default = track.default;
+    el.default = isDefault;
     track.language && (el.srclang = track.language);
+    if (isDefault) this._copyCues(track, el.track);
     return el;
   }
 
@@ -78,16 +90,13 @@ export class NativeTextRenderer implements TextRenderer {
       if (!nativeTrack) continue;
 
       if (!this._display) {
-        nativeTrack.mode = 'disabled';
+        nativeTrack.mode = 'hidden';
         continue;
       }
 
-      if (nativeTrack.mode === 'showing') {
-        this._copyCues(track, nativeTrack);
-        track.setMode('showing', event);
-      } else if (track.mode === 'showing') {
-        track.setMode('disabled', event);
-      }
+      const isShowing = nativeTrack.mode === 'showing';
+      if (isShowing) this._copyCues(track, nativeTrack);
+      track.setMode(isShowing ? 'showing' : 'disabled', event);
     }
   }
 }
