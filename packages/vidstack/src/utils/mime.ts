@@ -1,5 +1,3 @@
-import { isString, isUndefined } from 'maverick.js/std';
-
 import type { MediaSrc } from '../player/core/api/types';
 
 // https://github.com/cookpete/react-player/blob/master/src/patterns.js#L16
@@ -48,11 +46,13 @@ export const HLS_VIDEO_TYPES = new Set<string>([
 ]);
 
 export function isHLSSrc({ src, type }: MediaSrc): boolean {
-  return (isString(src) && HLS_VIDEO_EXTENSIONS.test(src)) || HLS_VIDEO_TYPES.has(type);
+  return (typeof src === 'string' && HLS_VIDEO_EXTENSIONS.test(src)) || HLS_VIDEO_TYPES.has(type);
 }
 
 export function isMediaStream(src: unknown): src is MediaStream {
-  return !__SERVER__ && !isUndefined(window.MediaStream) && src instanceof window.MediaStream;
+  return (
+    !__SERVER__ && typeof window.MediaStream !== 'undefined' && src instanceof window.MediaStream
+  );
 }
 
 // export function isMediaSource(src: unknown): src is MediaSource {

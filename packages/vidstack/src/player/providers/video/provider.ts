@@ -8,7 +8,6 @@ import {
 import type { MediaContext } from '../../core/api/context';
 import { ATTACH_VIDEO } from '../../core/tracks/text/symbols';
 import { HTMLMediaProvider } from '../html/provider';
-import { PROVIDER_TYPE } from '../symbols';
 import type {
   MediaFullscreenAdapter,
   MediaPictureInPictureAdapter,
@@ -40,7 +39,7 @@ import {
  * ```
  */
 export class VideoProvider extends HTMLMediaProvider implements MediaProvider {
-  [PROVIDER_TYPE] = 'VIDEO';
+  protected $$PROVIDER_TYPE = 'VIDEO';
 
   override get type() {
     return 'video';

@@ -4,7 +4,6 @@ import { isString } from 'maverick.js/std';
 import { preconnect } from '../../../utils/network';
 import { isHLSSupported } from '../../../utils/support';
 import type { MediaSrc } from '../../core/api/types';
-import { PROVIDER_TYPE } from '../symbols';
 import type { MediaProvider, MediaSetupContext } from '../types';
 import { VideoProvider } from '../video/provider';
 import { HLSController } from './hls';
@@ -32,7 +31,7 @@ const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
  * ```
  */
 export class HLSProvider extends VideoProvider implements MediaProvider {
-  [PROVIDER_TYPE] = 'HLS';
+  protected override $$PROVIDER_TYPE = 'HLS';
 
   private _ctor: HLSConstructor | null = null;
   private readonly _controller = new HLSController(this.video);

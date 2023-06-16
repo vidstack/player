@@ -177,9 +177,8 @@ function defineCDN({ dev = false } = {}) {
           return `captions/${filename}`;
         }
 
-        if (id.includes('provider.ts')) {
-          const provider = id.match(/player\/providers\/(.+)?\//)?.[1];
-          return `providers/${provider || 'index'}`;
+        if (id.includes('player/providers')) {
+          return 'providers';
         }
 
         return null;

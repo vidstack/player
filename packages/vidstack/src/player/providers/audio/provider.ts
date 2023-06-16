@@ -1,5 +1,4 @@
 import { HTMLMediaProvider } from '../html/provider';
-import { PROVIDER_TYPE } from '../symbols';
 import type { MediaProvider, MediaSetupContext } from '../types';
 
 /**
@@ -16,7 +15,7 @@ import type { MediaProvider, MediaSetupContext } from '../types';
  * ```
  */
 export class AudioProvider extends HTMLMediaProvider implements MediaProvider {
-  [PROVIDER_TYPE] = 'AUDIO';
+  protected $$PROVIDER_TYPE = 'AUDIO';
 
   override get type() {
     return 'audio';
