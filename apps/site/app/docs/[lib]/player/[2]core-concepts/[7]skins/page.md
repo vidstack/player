@@ -23,6 +23,11 @@ the Community Skin.
 
 {% cs_video_player /%}
 
+### Breakpoints
+
+The player will display either a desktop or mobile optimized UI depending on predefined horizontal and vertical breakpoints.
+To learn how you can customize those breakpoints [read here](/docs/player/components/media/player#breakpoints).
+
 ### Features
 
 Follow any of the links below to configure certain player features:
