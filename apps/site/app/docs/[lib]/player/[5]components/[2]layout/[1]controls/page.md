@@ -14,13 +14,11 @@ The following media data attributes can be useful when building a controls conta
 | `data-autoplay-error` | Show controls when autoplay fails so the user can start playback.           |
 | `data-can-load`       | Show controls skeleton while media is loading.                              |
 | `data-can-play`       | Hide controls while media is not ready for playback.                        |
-| `data-user-idle`      | Hide controls while media is idle (i.e., user is not active).               |
+| `data-controls`       | Hide controls while media is idle (i.e., user is not active).               |
 | `data-started`        | Hide controls after media has started (e.g., hide initial big play button). |
 | `data-can-fullscreen` | Show alternative controls for when media is in fullscreen.                  |
 
 ```css {% copy=true %}
-/* Avoid double controls on iOS when in fullscreen. */
-media-player[data-ios-controls] .media-controls,
 /* Hide controls while media is loading, or user is idle. */
 media-player:not([data-can-play]) .media-controls,
 media-player[data-user-idle] .media-controls {
@@ -50,7 +48,7 @@ The [styling](#styling) example above built with Tailwind:
 
 ## Examples
 
-See the media outlet docs for additional examples:
+See the media provider docs for additional examples:
 
-- [Layouts](/docs/react/player/components/media/outlet#layouts)
-- [External Controls](/docs/react/player/components/media/outlet#slotting)
+- [Layouts](/docs/react/player/components/media/provider#layouts)
+- [External Controls](/docs/react/player/components/media/provider#slotting)

@@ -14,7 +14,7 @@ export function getTagNameFromPath(path: string) {
   return name ? `media-${name.replace(/^media\-/, '')}` : '';
 }
 
-const leaveMediaPrefix = new Set(['media-outlet']);
+const leaveMediaPrefix = new Set(['media-provider']);
 
 export const elementHeading = derived(elementTagName, ($elementTagName) => {
   return `${formatElementHeading(

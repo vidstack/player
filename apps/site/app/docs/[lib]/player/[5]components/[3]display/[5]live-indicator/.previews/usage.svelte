@@ -15,12 +15,12 @@
   crossorigin=""
   on:can-play={onCanPlay}
 >
-  <media-outlet>
+  <media-provider>
     <media-buffering-indicator />
-  </media-outlet>
+  </media-provider>
   <div class="w-full text-center flex items-center px-1 absolute bottom-0 left-0">
     <media-play-button class="min-w-[40px] min-h-[40px]" />
     <media-time-slider class="w-auto flex-1" />
-    <media-live-indicator class="ml-2 mr-2" />
+    <media-live-button class="ml-2 mr-2" />
   </div>
 </media-player>

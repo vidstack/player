@@ -1,4 +1,4 @@
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { useEffect, useState } from 'react';
 
 function Player() {
@@ -15,7 +15,7 @@ function Player() {
 
   return (
     <MediaPlayer src={src} controls>
-      <MediaOutlet />
+      <MediaProvider />
     </MediaPlayer>
   );
 }

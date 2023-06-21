@@ -5,5 +5,5 @@
   controls
   aspect-ratio="16/9"
 >
-  <media-outlet />
+  <media-provider />
 </media-player>

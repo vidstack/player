@@ -18,11 +18,11 @@ section. Here's a few important links to get you started:
   avoid layout shifts, apply loading strategies, load media sources, and set up providers.
 - Provider guides such as this one for [HLS](/docs/player/providers/hls) contain important
   information on how to set them up and use them.
-- The [state management](/docs/player/core-concepts/state-management) section will guide you on
+- The [state management](/docs/player/core-concepts/state) section will guide you on
   reading/subscribing to media state, and updating it.
 - The [events guide](/docs/player/core-concepts/events) will explain how to use events and
   teach foundational concepts such as requests and triggers.
-- The [media outlet](/docs/player/components/layout/outlet) plays an vital role in rendering,
+- The [media provider](/docs/player/components/media/provider) plays an vital role in rendering,
   it's best to understand it before designing your player.
 - The [styling guide](/docs/player/core-concepts/styling) is a complete introduction to
   styling elements and components within the player.
@@ -38,7 +38,7 @@ DOM so you can obtain a reference to it when it's ready:
 
 ## Media Store
 
-👉 See [State Management](/docs/player/core-concepts/state-management) docs for more information.
+👉 See [State Management](/docs/player/core-concepts/state) docs for more information.
 
 {% code_snippet name="media-store" copy=true  /%}
 

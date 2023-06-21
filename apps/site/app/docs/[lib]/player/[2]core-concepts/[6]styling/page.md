@@ -47,14 +47,14 @@ express newer and more powerful conditional selectors like so:
 
 ```css {% title="player.css" copy=true %}
 /* AND conditional style. */
-/* Apply styles when media playback has ended and user is idle. */
-media-player[data-user-idle][data-ended] {
+/* Apply styles when media playback has ended and controls are visible. */
+media-player[data-controls][data-ended] {
 }
 
 /* OR conditional style. */
-/* Apply styles if media is not ready for playback or it's buffering. */
-media-player:not([data-can-play]),
-media-player[data-waiting] {
+/* Apply styles if controls are _not_ visible or media is buffering. */
+media-player:not([data-controls]),
+media-player[data-buffering] {
 }
 ```
 
@@ -92,20 +92,19 @@ To speed up development, we provide default styles out of the box for all compon
 can be imported like so:
 
 ```js {% copy=true %}
-import 'vidstack/styles/defaults.css';
+import 'vidstack/styles/themes/default.css';
 ```
 
 You can also individually import only the styles you need like so:
 
 ```js {% copy=true %}
 import 'vidstack/styles/base.css';
-import 'vidstack/styles/ui/buttons.css';
-import 'vidstack/styles/ui/buffering.css';
-import 'vidstack/styles/ui/captions.css';
-import 'vidstack/styles/ui/tooltips.css';
-import 'vidstack/styles/ui/live.css';
-import 'vidstack/styles/ui/sliders.css';
-import 'vidstack/styles/ui/menus.css';
+import 'vidstack/styles/themes/default/buttons.css';
+import 'vidstack/styles/themes/default/buffering.css';
+import 'vidstack/styles/themes/default/captions.css';
+import 'vidstack/styles/themes/default/tooltips.css';
+import 'vidstack/styles/themes/default/sliders.css';
+import 'vidstack/styles/themes/default/menus.css';
 ```
 
 #### `vidstack/styles/base.css`
@@ -114,9 +113,9 @@ Custom Elements have absolutely no styling by default including display or posit
 This makes them awkward to work with out of the box. Our base styles provide the very basics such
 as `display`, `position`, and `:focus` styles. We strongly recommend you include this file.
 
-#### `vidstack/styles/ui/*`
+#### `vidstack/styles/themes/default/*`
 
-The styles located in the `styles/ui` directory contains default styles for all components
+The styles located in the `styles/themes/default` directory contains default styles for all components
 organized by role (e.g., `buttons.css` or `sliders.css`). This includes: basic color,
 sizing buttons, positioning icons, size/position of track/thumb for sliders, and more.
 Include these files if you don't want to spend time building components from scratch.
@@ -220,11 +219,11 @@ Refer to each component's docs to learn more about styling them headless.
 Now that you've familiarized yourself with how styling elements and components works, you can start
 building! The best place is to start with styling any of the following:
 
-- [`$tag:media-player`](/docs/player/components/layout/player): The player is responsive by default
+- [`$tag:media-player`](/docs/player/components/media/player): The player is responsive by default
   but you might want to set a specific width or aspect ratio to prevent layout shifts.
-- [`$tag:media-outlet`](/docs/player/components/layout/outlet): Generally the outlet can be left
+- [`$tag:media-provider`](/docs/player/components/media/provider): Generally the provider can be left
   as-is, but it is important you understand what role it plays in your design.
-- [Controls](/docs/player/components/layout/outlet) is a great place to start as most media
+- [Controls](/docs/player/components/media/controls) is a great place to start as most media
   components are generally grouped and shown/hidden together.
 
 From there you're free to start exploring all of our components by scrolling down through the

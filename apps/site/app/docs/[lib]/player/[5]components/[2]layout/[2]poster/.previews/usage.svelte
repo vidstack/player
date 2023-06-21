@@ -4,6 +4,6 @@
   aspect-ratio="16/9"
   crossorigin=""
 >
-  <media-outlet />
+  <media-provider />
   <media-poster class="opacity-100" alt="Agent 327 blowing flames with a hair dryer." />
 </media-player>

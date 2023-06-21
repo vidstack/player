@@ -1,5 +1,4 @@
 /// <reference types="vitest" />
-import { vite as maverick } from '@maverick-js/compiler';
 import { defineConfig } from 'vite';
 
 const SERVER = !!process.env.SERVER;
@@ -20,13 +19,7 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['maverick.js', 'maverick.js/element'],
   },
-  plugins: [
-    maverick({
-      include: ['src/**/*.{jsx,tsx}'],
-      hydratable: (id) => !id.includes('time-slider/chapters') && !id.includes('skins/community'),
-      diffArrays: false,
-    }),
-  ],
+  plugins: [],
   // https://vitest.dev/config
   test: {
     include: ['src/**/*.test.ts'],

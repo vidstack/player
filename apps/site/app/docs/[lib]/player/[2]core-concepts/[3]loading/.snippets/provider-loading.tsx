@@ -1,4 +1,4 @@
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import {
   isHLSProvider,
   type MediaProviderChangeEvent,
@@ -24,7 +24,7 @@ function Player() {
 
   return (
     <MediaPlayer onProviderChange={onProviderChange} onProviderSetup={onProviderSetup}>
-      <MediaOutlet />
+      <MediaProvider />
     </MediaPlayer>
   );
 }

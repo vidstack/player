@@ -1,4 +1,4 @@
-import { ComponentController } from 'maverick.js/element';
+import { onDispose, ViewController } from 'maverick.js';
 import { isString, isUndefined } from 'maverick.js/std';
 
 import { getLogColor, saveLogColor } from './colors';
@@ -6,7 +6,7 @@ import { isGroupedLog, type GroupedLog } from './grouped-log';
 import { LogLevelColor, LogLevelValue, type LogLevel } from './log-level';
 import { ms } from './ms';
 
-export class LogPrinter extends ComponentController {
+export class LogPrinter extends ViewController {
   private _level: LogLevel = __DEV__ ? 'warn' : 'silent';
   private _lastLogged: number | undefined;
 
@@ -65,9 +65,9 @@ export class LogPrinter extends ComponentController {
       console.groupEnd();
     });
 
-    return () => {
+    onDispose(() => {
       this._lastLogged = undefined;
-    };
+    });
   }
 
   private _printTimeDiff() {

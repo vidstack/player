@@ -8,12 +8,12 @@ description: Introduction to using Vidstack Player skins.
 Skins are perfect for when you're looking for a beautiful pre-built player design out of the box
 rather than building your own.
 
-## Community Skin
+## Default Skin
 
 ### Installation
 
 Follow the [installation guide](/docs/player/getting-started/installation) to get started with
-the Community Skin.
+the Default Skin.
 
 ### Audio Preview
 
@@ -41,11 +41,11 @@ Follow any of the links below to configure certain player features:
 
 ### Audio CSS Vars
 
-The following is a complete list of CSS variables available for customizing the Community Audio
+The following is a complete list of CSS variables available for customizing the Vidstack Audio
 Skin. This is in addition to the [Component CSS variables](#component-css-vars) listed below.
 
 ```css
-media-community-skin[data-audio] {
+media-default-skin[data-audio] {
   --audio-brand: #f5f5f5;
   --audio-bg: black;
   --audio-border: 1px solid rgb(255 255 255 / 0.1);
@@ -85,11 +85,11 @@ media-community-skin[data-audio] {
 
 ### Video CSS Vars
 
-The following is a complete list of CSS variables available for customizing the Community Video
+The following is a complete list of CSS variables available for customizing the Vidstack Video
 Skin. This is in addition to the [Component CSS variables](#component-css-vars) listed below.
 
 ```css {% copy=true %}
-media-community-skin[data-video] {
+media-default-skin[data-video] {
   --video-brand: #f5f5f5;
   --video-font-family: sans-serif;
   --video-controls-color: #f5f5f5;
@@ -141,14 +141,12 @@ customizing specific components:
 - [Sliders](/docs/player/components/sliders/slider#css-variables)
 - [Time](/docs/player/components/display/time#css-variables)
 - [Captions](/docs/player/components/display/captions#css-variables)
-- [Buffering Indicator](/docs/player/components/display/buffering-indicator#css-variables)
-- [Live Indicator](/docs/player/components/display/live-indicator#css-variables)
 - [Menus](/docs/player/components/menu/menu#css-variables)
 - [Chapters Menu](/docs/player/components/menu/chapters-menu#css-variables)
 
 ### Internationalization
 
-The Community Skin supports dynamically changing the language used throughout the player UI
+The Default Skin supports dynamically changing the language used throughout the player UI
 by setting the `translations` property like so:
 
 {% code_snippet name="i18n" copy=true /%}

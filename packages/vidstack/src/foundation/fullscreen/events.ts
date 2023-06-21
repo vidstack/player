@@ -1,9 +1,5 @@
 import type { DOMEvent } from 'maverick.js/std';
 
-export interface FullscreenAPI {
-  events: FullscreenEvents;
-}
-
 export interface FullscreenEvents {
   'fullscreen-change': FullscreenChangeEvent;
   'fullscreen-error': FullscreenErrorEvent;

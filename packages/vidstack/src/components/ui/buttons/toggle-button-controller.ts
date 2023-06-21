@@ -1,0 +1,74 @@
+import { isWriteSignal, ViewController, type ReadSignal } from 'maverick.js';
+import { ariaBool } from 'maverick.js/std';
+
+import { ARIAKeyShortcuts, type MediaKeyShortcut } from '../../../core';
+import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
+import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
+
+export interface ToggleButtonControllerProps {
+  /**
+   * Whether the button should be disabled (non-interactive).
+   */
+  disabled: boolean;
+}
+
+export interface ToggleButtonDelegate {
+  _isPressed: ReadSignal<boolean>;
+  _keyShortcut?: MediaKeyShortcut;
+  _onPress?(event: Event): void;
+}
+
+export class ToggleButtonController extends ViewController<ToggleButtonControllerProps> {
+  static props: ToggleButtonControllerProps = {
+    disabled: false,
+  };
+
+  constructor(private _delegate: ToggleButtonDelegate) {
+    super();
+    new FocusVisibleController();
+    if (_delegate._keyShortcut) {
+      new ARIAKeyShortcuts(_delegate._keyShortcut);
+    }
+  }
+
+  protected override onSetup(): void {
+    const { disabled } = this.$props;
+    this.setAttributes({
+      'aria-disabled': () => (disabled() ? 'true' : null),
+      'data-pressed': this._delegate._isPressed,
+      'aria-pressed': this._isARIAPressed.bind(this),
+    });
+  }
+
+  protected override onAttach(el: HTMLElement) {
+    setAttributeIfEmpty(el, 'tabindex', '0');
+    setAttributeIfEmpty(el, 'role', 'button');
+    setAttributeIfEmpty(el, 'type', 'button');
+  }
+
+  protected override onConnect(el: HTMLElement) {
+    onPress(el, this._onMaybePress.bind(this));
+  }
+
+  protected _isARIAPressed() {
+    return ariaBool(this._delegate._isPressed());
+  }
+
+  protected _onPressed(event: Event) {
+    if (isWriteSignal(this._delegate._isPressed)) {
+      this._delegate._isPressed.set((p) => !p);
+    }
+  }
+
+  protected _onMaybePress(event: Event) {
+    const disabled = this.$props.disabled() || this.el!.hasAttribute('data-disabled');
+
+    if (disabled) {
+      event.stopImmediatePropagation();
+      return;
+    }
+
+    event.preventDefault();
+    (this._delegate._onPress ?? this._onPressed)(event);
+  }
+}

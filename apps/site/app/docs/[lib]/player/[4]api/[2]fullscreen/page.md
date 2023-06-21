@@ -60,7 +60,7 @@ The following fullscreen properties are available on the media store:
 
 ## Media Remote
 
-The [media remote](/docs/player/core-concepts/state-management#updating) provides methods for
+The [media remote](/docs/player/core-concepts/state#updating) provides methods for
 dispatching `media-enter-fullscreen-request` and `media-exit-fullscreen-request` request
 events like so:
 

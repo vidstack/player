@@ -1,5 +1,4 @@
-import { effect, signal } from 'maverick.js';
-import { ComponentController } from 'maverick.js/element';
+import { effect, signal, ViewController } from 'maverick.js';
 import { listenEvent, setAttribute } from 'maverick.js/std';
 
 let $keyboard = signal(false);
@@ -15,7 +14,7 @@ if (!__SERVER__) {
   });
 }
 
-export class FocusVisibleController extends ComponentController {
+export class FocusVisibleController extends ViewController {
   private _focused = signal(false);
 
   protected override onConnect(el: HTMLElement) {

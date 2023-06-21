@@ -12,7 +12,7 @@
   aspect-ratio="16/9"
   on:can-play={onAttach}
 >
-  <media-outlet />
+  <media-provider />
 
   <div
     class="media-times flex flex-col absolute top-0.5 left-0.5 p-1 text-sm text-white bg-black/50"

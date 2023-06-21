@@ -1,5 +1,5 @@
 <MediaPlayer>
-  <MediaOutlet>
+  <MediaProvider>
     <MediaGesture className="top-0 left-0 h-full w-full" event="pointerup" action="toggle:paused" />
     <MediaGesture
       className="top-0 left-0 h-full w-full"
@@ -16,5 +16,5 @@
       event="dblpointerup"
       action="seek:10"
     />
-  </MediaOutlet>
+  </MediaProvider>
 </MediaPlayer>;

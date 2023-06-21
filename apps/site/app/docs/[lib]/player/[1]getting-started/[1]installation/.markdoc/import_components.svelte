@@ -8,20 +8,20 @@
   import NPM_Headless from '../partials/import/headless.js?highlight';
   import NPM_Defaults from '../partials/import/defaults.js?highlight';
   import NPM_Defaults_Selective from '../partials/import/defaults-selective.js?highlight';
-  import NPM_Community_Skin_Audio from '../partials/import/community-skin-audio.js?highlight';
-  import NPM_Community_Skin_Video from '../partials/import/community-skin-video.js?highlight';
+  import NPM_Vidstack_Skin_Audio from '../partials/import/default-skin-audio.js?highlight';
+  import NPM_Vidstack_Skin_Video from '../partials/import/default-skin-video.js?highlight';
   import React_None from '../partials/import/react/none.js?highlight';
   import React_Headless from '../partials/import/react/headless.js?highlight';
   import React_Defaults from '../partials/import/react/defaults.js?highlight';
   import React_Defaults_Selective from '../partials/import/react/defaults-selective.js?highlight';
-  import React_Community_Skin_Audio from '../partials/import/react/community-skin-audio.js?highlight';
-  import React_Community_Skin_Video from '../partials/import/react/community-skin-video.js?highlight';
+  import React_Vidstack_Skin_Audio from '../partials/import/react/default-skin-audio.js?highlight';
+  import React_Vidstack_Skin_Video from '../partials/import/react/default-skin-video.js?highlight';
   import CDN_None from '../partials/import/cdn/none.html?highlight';
   import CDN_Headless from '../partials/import/cdn/headless.html?highlight';
   import CDN_Defaults from '../partials/import/cdn/defaults.html?highlight';
   import CDN_Defaults_Selective from '../partials/import/cdn/defaults-selective.html?highlight';
-  import CDN_Community_Skin_Audio from '../partials/import/cdn/community-skin-audio.html?highlight';
-  import CDN_Community_Skin_Video from '../partials/import/cdn/community-skin-video.html?highlight';
+  import CDN_Vidstack_Skin_Audio from '../partials/import/cdn/default-skin-audio.html?highlight';
+  import CDN_Vidstack_Skin_Video from '../partials/import/cdn/default-skin-video.html?highlight';
   import CodeFence from '../../../../../.markdoc/@node/fence.svelte';
   import { onMount, tick } from 'svelte';
 
@@ -31,24 +31,24 @@
       headless: NPM_Headless,
       defaults: NPM_Defaults,
       'defaults-selective': NPM_Defaults_Selective,
-      'community-skin-audio': NPM_Community_Skin_Audio,
-      'community-skin-video': NPM_Community_Skin_Video,
+      'default-skin-audio': NPM_Vidstack_Skin_Audio,
+      'default-skin-video': NPM_Vidstack_Skin_Video,
     },
     cdn: {
       none: CDN_None,
       headless: CDN_Headless,
       defaults: CDN_Defaults,
       'defaults-selective': CDN_Defaults_Selective,
-      'community-skin-audio': CDN_Community_Skin_Audio,
-      'community-skin-video': CDN_Community_Skin_Video,
+      'default-skin-audio': CDN_Vidstack_Skin_Audio,
+      'default-skin-video': CDN_Vidstack_Skin_Video,
     },
     react: {
       none: React_None,
       headless: React_Headless,
       defaults: React_Defaults,
       'defaults-selective': React_Defaults_Selective,
-      'community-skin-audio': React_Community_Skin_Audio,
-      'community-skin-video': React_Community_Skin_Video,
+      'default-skin-audio': React_Vidstack_Skin_Audio,
+      'default-skin-video': React_Vidstack_Skin_Video,
     },
   };
 
@@ -57,7 +57,7 @@
       none: '4',
       headless: '4-5',
       defaults: '4-5',
-      'community-skin': '4-6',
+      'default-skin': '4-6',
     },
   };
 

@@ -6,23 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" sizes="32x32" href="/sandbox/favicon-32x32.png" />
     <link rel="stylesheet" href="../styles/base.css" />
-    <link rel="stylesheet" href="../styles/ui/buttons.css" />
-    <link rel="stylesheet" href="../styles/ui/buffering.css" />
-    <link rel="stylesheet" href="../styles/ui/captions.css" />
-    <link rel="stylesheet" href="../styles/ui/tooltips.css" />
-    <link rel="stylesheet" href="../styles/ui/live.css" />
-    <link rel="stylesheet" href="../styles/ui/sliders.css" />
-    <link rel="stylesheet" href="../styles/ui/menus.css" />
-    <link rel="stylesheet" href="../src/player/skins/community/audio.css" />
-    <link rel="stylesheet" href="../src/player/skins/community/video.css" />
+    <link rel="stylesheet" href="../styles/themes/default/buffering.css" />
+    <link rel="stylesheet" href="../styles/themes/default/buttons.css" />
+    <link rel="stylesheet" href="../styles/themes/default/captions.css" />
+    <link rel="stylesheet" href="../styles/themes/default/controls.css" />
+    <link rel="stylesheet" href="../styles/themes/default/gestures.css" />
+    <link rel="stylesheet" href="../styles/themes/default/icons.css" />
+    <link rel="stylesheet" href="../styles/themes/default/menus.css" />
+    <link rel="stylesheet" href="../styles/themes/default/poster.css" />
+    <link rel="stylesheet" href="../styles/themes/default/sliders.css" />
+    <link rel="stylesheet" href="../styles/themes/default/thumbnail.css" />
+    <link rel="stylesheet" href="../styles/themes/default/time.css" />
+    <link rel="stylesheet" href="../styles/themes/default/tooltips.css" />
+    <link rel="stylesheet" href="../styles/skins/default/audio.css" />
+    <link rel="stylesheet" href="../styles/skins/default/video.css" />
 
     <script type="module">
-      import '../src/icons';
+      import '../src/elements/bundles/icons.ts';
+      import '../src/elements/bundles/skins.ts';
 
-      // Imports and registers all custom elements in the library.
-      import { defineCustomElements } from '../src/elements.ts';
-
-      await defineCustomElements();
+      const player = document.querySelector('media-player');
+      window.player = player;
 
       // CODE HERE
     </script>

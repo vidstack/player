@@ -1,10 +1,10 @@
-import { ComponentController, ComponentInstance } from 'maverick.js/element';
+import { ViewController } from 'maverick.js';
 
-export class IntersectionObserverController extends ComponentController {
+export class IntersectionObserverController extends ViewController {
   private _observer: IntersectionObserver | undefined;
 
-  constructor(instance: ComponentInstance, private _init: IntersectionObserverInit) {
-    super(instance);
+  constructor(private _init: IntersectionObserverInit) {
+    super();
   }
 
   protected override onConnect(el: HTMLElement) {

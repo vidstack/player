@@ -4,7 +4,7 @@ description: This component is used to display the current live status of the st
 
 ## Usage
 
-The `$tag:media-live-indicator` component displays the current live status of the stream. This
+The `$tag:media-live-button` component displays the current live status of the stream. This
 includes whether it's live, at the live edge, or not live. In addition, this component is a button
 during live streams and will skip ahead to the live edge when pressed.
 
@@ -24,38 +24,38 @@ Slots are available for providing custom content depending on the current live s
 
 ```css
 /* Apply styles to indicator. */
-media-live-indicator {
+media-live-button {
 }
 
 /* Apply styles when stream is live. */
-media-live-indicator[data-live] {
+media-live-button[data-live] {
 }
 
 /* Apply styles when stream is _not_ live. */
-media-live-indicator:not([data-live]) {
+media-live-button:not([data-live]) {
 }
 
 /* Apply styles when stream is at live edge. */
-media-live-indicator[data-live-edge] {
+media-live-button[data-live-edge] {
 }
 
 /* Style default parts. */
-media-live-indicator [part='container'] {
+media-live-button [part='container'] {
 }
-media-live-indicator [part='text'] {
+media-live-button [part='text'] {
 }
 ```
 
 ### Focus
 
 ```css
-media-live-indicator {
+media-live-button {
   /* box shadow */
   --media-focus-ring: 0 0 0 4px rgb(78 156 246);
 }
 
 /* Apply styles when focused via keyboard. */
-media-live-indicator[data-focus] {
+media-live-button[data-focus] {
 }
 ```
 
@@ -66,18 +66,18 @@ of the variables can be set to adjust the default live indicator styles:
 
 ```css {% copy=true %}
 media-player {
-  --media-live-indicator-width: 40px;
-  --media-live-indicator-height: 40px;
-  --media-live-indicator-bg: #8a8a8a;
-  --media-live-indicator-border-radius: 2px;
-  --media-live-indicator-color: #161616;
-  --media-live-indicator-font-size: 12px;
-  --media-live-indicator-font-weight: 600;
-  --media-live-indicator-letter-spacing: 1.5px;
-  --media-live-indicator-padding: 1px 4px;
+  --media-live-button-width: 40px;
+  --media-live-button-height: 40px;
+  --media-live-button-bg: #8a8a8a;
+  --media-live-button-border-radius: 2px;
+  --media-live-button-color: #161616;
+  --media-live-button-font-size: 12px;
+  --media-live-button-font-weight: 600;
+  --media-live-button-letter-spacing: 1.5px;
+  --media-live-button-padding: 1px 4px;
 
-  --media-live-indicator-edge-bg: #dc2626;
-  --media-live-indicator-edge-color: #f5f5f5;
+  --media-live-button-edge-bg: #dc2626;
+  --media-live-button-edge-color: #f5f5f5;
 }
 ```
 

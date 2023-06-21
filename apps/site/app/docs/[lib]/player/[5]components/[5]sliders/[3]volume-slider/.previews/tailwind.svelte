@@ -9,11 +9,11 @@
     />
     <!-- track fill -->
     <div
-      class="absolute top-1/2 left-0 z-20 h-[var(--track-height)] w-[var(--slider-fill-percent)] -translate-y-1/2 bg-white will-change-[width]"
+      class="absolute top-1/2 left-0 z-20 h-[var(--track-height)] w-[var(--slider-fill)] -translate-y-1/2 bg-white will-change-[width]"
     />
     <!-- thumb container -->
     <div
-      class="absolute top-0 left-[var(--slider-fill-percent)] z-20 h-full w-[var(--thumb-size)] -translate-x-1/2 group-data-[dragging]:left-[var(--slider-pointer-percent)]"
+      class="absolute top-0 left-[var(--slider-fill)] z-20 h-full w-[var(--thumb-size)] -translate-x-1/2 group-data-[dragging]:left-[var(--slider-pointer)]"
     >
       <!-- thumb -->
       <div

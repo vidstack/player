@@ -1,4 +1,4 @@
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 
 function Player({ live = false }) {
   return (
@@ -12,7 +12,7 @@ function LivePlayerLayout() {
   return (
     <>
       <div className="media">
-        <MediaOutlet />
+        <MediaProvider />
         <div className="media-controls">{/* ... */}</div>
       </div>
       <div className="chat">{/* ... */}</div>
@@ -23,7 +23,7 @@ function LivePlayerLayout() {
 function VODPlayerLayout() {
   return (
     <>
-      <MediaOutlet />
+      <MediaProvider />
       <div className="media-controls">{/* ... */}</div>
     </>
   );

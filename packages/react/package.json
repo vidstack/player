@@ -1,11 +1,10 @@
 {
   "name": "@vidstack/react",
   "version": "0.6.13",
-  "description": "Build awesome media experiences on the web.",
+  "description": "UI component library for building high-quality, accessible video and audio players for the web.",
   "license": "MIT",
   "type": "module",
-  "types": "dist/types/index.d.ts",
-  "module": "dist/prod.js",
+  "types": "index.d.ts",
   "sideEffects": false,
   "engines": {
     "node": ">=16"
@@ -15,26 +14,33 @@
     "dist/"
   ],
   "scripts": {
-    "dev": "pnpm clean && rollup -c -w & pnpm run types -w",
-    "build": "node .scripts/prebuild.js && rollup -c",
-    "types": "tsc -p tsconfig.build.json",
-    "clean": "rimraf dist",
+    "dev": "pnpm clean && pnpm prebuild && rollup -c -w",
+    "prebuild": "node .scripts/prebuild.js",
+    "build": "pnpm prebuild && rollup -c",
+    "types": "tsc -p tsconfig.build.json && rollup -c --config-types",
+    "clean": "rimraf dist styles",
     "format": "prettier src --write --loglevel warn"
   },
   "peerDependencies": {
     "@types/react": "^18.0.0",
-    "maverick.js": "0.37.0",
-    "react": "^18.0.0",
-    "vidstack": "workspace:*"
+    "react": "^18.0.0"
+  },
+  "dependencies": {
+    "media-captions": "0.0.18"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
-    "esbuild": "^0.16.0",
+    "esbuild": "^0.16.17",
+    "fs-extra": "^11.0.0",
     "maverick.js": "0.37.0",
     "media-icons": "0.10.0",
     "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "rimraf": "^3.0.0",
     "rollup": "^3.25.1",
+    "rollup-plugin-dts": "^5.3.0",
     "rollup-plugin-esbuild": "^5.0.0",
     "typescript": "^5.0.0",
     "vidstack": "workspace:*"
@@ -52,26 +58,60 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "node": "./dist/server/index.js",
-      "deno": "./dist/server/index.js",
-      "development": "./dist/dev/index.js",
-      "default": "./dist/prod/index.js"
+      "types": "./index.d.ts",
+      "node": "./dist/server/vidstack.js",
+      "deno": "./dist/server/vidstack.js",
+      "development": "./dist/dev/vidstack.js",
+      "default": "./dist/prod/vidstack.js"
     },
     "./icons": {
-      "types": "./dist/types/icons.d.ts",
-      "node": "./dist/server/icons.js",
-      "deno": "./dist/server/icons.js",
-      "development": "./dist/dev/icons.js",
-      "default": "./dist/prod/icons.js"
+      "types": "./icons.d.ts",
+      "default": "./dist/prod/vidstack-icons.js"
+    },
+    "./skins/default": {
+      "types": "./skins/default.d.ts",
+      "node": "./dist/server/vidstack-default-skin.js",
+      "deno": "./dist/server/vidstack-default-skin.js",
+      "development": "./dist/dev/vidstack-default-skin.js",
+      "default": "./dist/prod/vidstack-default-skin.js"
+    },
+    "./dist/types/*": "./dist/types/*",
+    "./styles/*": "./styles/*",
+    "./package.json": "./package.json",
+    "./tailwind.cjs": {
+      "types": "./tailwind.d.cts",
+      "default": "./tailwind.cjs"
     }
   },
   "publishConfig": {
     "access": "public"
   },
   "keywords": [
-    "vidstack",
+    "accessible",
+    "audio",
+    "customizable",
+    "dailymotion",
+    "elements",
+    "extensible",
+    "file",
+    "framework-agnostic",
+    "hls",
+    "html5",
+    "jwplayer",
+    "media",
+    "plyr",
     "player",
-    "react"
+    "react",
+    "spec-compliant",
+    "universal",
+    "vds",
+    "video",
+    "videojs",
+    "vidstack",
+    "vime",
+    "vimeo",
+    "web-component",
+    "universal",
+    "youtube"
   ]
 }

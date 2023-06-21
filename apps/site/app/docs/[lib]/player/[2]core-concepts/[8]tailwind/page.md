@@ -104,7 +104,7 @@ styling purposes:
 ```html
 <media-play-button data-paused />
 <media-mute-button data-volume="high" />
-<media-live-indicator data-live-edge />
+<media-live-button data-live-edge />
 ```
 
 [Tailwind supports data attributes](https://tailwindcss.com/docs/hover-focus-and-other-states#data-attributes)

@@ -10,7 +10,7 @@ type is audio.
 
 {% code_preview name="usage" copyHighlight=true highlight="3" size="large" /%}
 
-The captions component also be placed inside the `$tag:media-outlet` if the controls are outside
+The captions component also be placed inside the `$tag:media-provider` if the controls are outside
 of the video container:
 
 {% code_snippet name="external-controls" highlight="3" /%}
@@ -99,7 +99,7 @@ media-player {
 ## Avoiding Controls
 
 ```css
-media-player:not([data-user-idle]) media-captions {
+media-player[data-controls] media-captions {
   /* Adjust 80px according to the height of your controls. */
   bottom: 80px;
   transition: bottom 0.3s;

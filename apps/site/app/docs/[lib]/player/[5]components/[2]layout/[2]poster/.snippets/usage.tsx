@@ -1,9 +1,9 @@
-import { MediaOutlet, MediaPlayer, MediaPoster } from '@vidstack/react';
+import { MediaPlayer, MediaPoster, MediaProvider } from '@vidstack/react';
 
 function Player() {
   return (
     <MediaPlayer poster="https://media-files.vidstack.io/poster.png">
-      <MediaOutlet />
+      <MediaProvider />
       <MediaPoster alt="Agent 327 blowing flames with a hair dryer." />
     </MediaPlayer>
   );

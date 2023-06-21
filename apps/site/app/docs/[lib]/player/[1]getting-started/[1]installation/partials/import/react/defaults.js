@@ -1,3 +1,3 @@
-import 'vidstack/styles/defaults.css';
+import 'vidstack/styles/themes/default.css';
 
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaProvider, MediaPlayer } from '@vidstack/react';

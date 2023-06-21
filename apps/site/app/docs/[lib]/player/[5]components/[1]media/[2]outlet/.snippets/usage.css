@@ -8,11 +8,8 @@
   z-index: 1;
 }
 
-/* Avoid double controls on iOS when in fullscreen. */
-media-player[data-ios-controls] .media-ui,
-/* Hide UI while media is loading, or user is idle. */
-media-player:not([data-can-play]) .media-ui,
-media-player[data-user-idle] .media-ui {
+/* Hide UI while media is not ready and controls are not visible. */
+media-player:not([data-controls]) .media-ui {
   opacity: 0;
   pointer-events: none;
 }

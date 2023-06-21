@@ -16,7 +16,7 @@
   thumbnails="https://media-files.vidstack.io/thumbnails.vtt"
   on:media-player-connect={onConnect}
 >
-  <media-outlet />
+  <media-provider />
   <div class="flex items-center justify-center mt-1">
     <media-thumbnail {time} />
   </div>

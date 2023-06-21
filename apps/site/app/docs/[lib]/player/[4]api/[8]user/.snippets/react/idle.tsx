@@ -6,8 +6,8 @@ function Player() {
   const player = useRef<MediaPlayerElement>(null);
 
   useEffect(() => {
-    return player.current!.subscribe(({ userIdle }) => {
-      if (userIdle) {
+    return player.current!.subscribe(({ controlsVisible }) => {
+      if (controlsVisible) {
         // ...
       }
     });

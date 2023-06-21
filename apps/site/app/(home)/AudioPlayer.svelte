@@ -9,7 +9,7 @@
     crossorigin=""
     style="--audio-brand: rgb(124 58 237);"
   >
-    <media-outlet>
+    <media-provider>
       <track
         src="/media/sprite-fight.vtt"
         label="English"
@@ -23,7 +23,7 @@
         kind="chapters"
         default
       />
-    </media-outlet>
-    <media-community-skin />
+    </media-provider>
+    <media-default-skin />
   </media-player>
 </div>

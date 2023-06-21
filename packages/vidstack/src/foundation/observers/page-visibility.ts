@@ -1,5 +1,4 @@
-import { signal } from 'maverick.js';
-import { ComponentController } from 'maverick.js/element';
+import { signal, ViewController } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import { IS_SAFARI } from '../../utils/support';
@@ -15,7 +14,7 @@ declare global {
   }
 }
 
-export class PageVisibilityController extends ComponentController {
+export class PageVisibilityController extends ViewController {
   private _state = signal<PageState>(determinePageState());
 
   private _visibility = signal<DocumentVisibility>(
@@ -62,7 +61,7 @@ export class PageVisibilityController extends ComponentController {
    *
    * @see https://developers.google.com/web/updates/2018/07/page-lifecycle-api#states
    */
-  $state(): PageState {
+  $pageState(): PageState {
     return this._state();
   }
 

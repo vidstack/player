@@ -16,8 +16,7 @@ loading.
 
 ```css {% copy=true %}
 /* Show buffering indicator while media is not ready, or buffering. */
-media-player:not([data-can-play]) .media-buffering-indicator,
-media-player[data-waiting] .media-buffering-indicator {
+media-player[data-buffering] .media-buffering-indicator {
   opacity: 1;
 }
 ```

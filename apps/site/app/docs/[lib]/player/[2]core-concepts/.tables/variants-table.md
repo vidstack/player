@@ -3,7 +3,6 @@
 | `autoplay-error` | Autoplay has failed to start.                             |
 | `autoplay`       | Autoplay has successfully started.                        |
 | `buffering`      | Media is not ready for playback or waiting for more data. |
-| `can-control`    | Media is ready for playback and user is not idle.         |
 | `can-fullscreen` | Media fullscreen is available.                            |
 | `can-load`       | Media can begin loading.                                  |
 | `can-pip`        | Picture-in-Picture is available.                          |
@@ -23,5 +22,5 @@
 | `playsinline`    | Media should play inline by default (iOS Safari).         |
 | `seeking`        | Media or user is seeking to new playback position.        |
 | `started`        | Media playback has started.                               |
-| `user-idle`      | User is not active during playback.                       |
+| `controls`       | Whether controls are visible.                             |
 | `waiting`        | Media is waiting for more data (i.e., buffering).         |

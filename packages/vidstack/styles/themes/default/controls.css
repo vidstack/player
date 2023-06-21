@@ -1,0 +1,54 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Controls
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-controls),
+:where(.vds-controls-group) {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Audio Controls
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where([data-view-type='audio'] .vds-controls) {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Video Controls
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where([data-view-type='video'] .vds-controls) {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  padding: var(--media-controls-padding, 0px);
+  transition: var(--media-controls-out-transition, opacity 0.2s ease-out);
+}
+
+:where([data-view-type='video'] .vds-controls[data-showing]) {
+  opacity: 1;
+  visibility: visible;
+  transition: var(--media-controls-in-transition, opacity 0.2s ease-in);
+}
+
+:where(.vds-controls-spacer) {
+  flex: 1 1 0%;
+}

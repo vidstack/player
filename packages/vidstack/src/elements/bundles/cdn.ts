@@ -1,0 +1,2 @@
+import './main';
+import './icons';

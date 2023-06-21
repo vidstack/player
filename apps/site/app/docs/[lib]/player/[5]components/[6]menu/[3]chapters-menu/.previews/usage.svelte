@@ -31,9 +31,9 @@
   on:pointerup|stopPropagation={onPointerUp}
   on:media-player-connect={onPlayerConnect}
 >
-  <media-outlet class="w-full h-full bg-none absolute top-0 left-0 opacity-0">
+  <media-provider class="w-full h-full bg-none absolute top-0 left-0 opacity-0">
     <track src="https://media-files.vidstack.io/chapters.vtt" kind="chapters" default />
-  </media-outlet>
+  </media-provider>
   <media-menu class="mb-2" position="top right" on:attached={onAttached}>
     <media-menu-button aria-label="Chapters">
       <media-icon type="chapters" />

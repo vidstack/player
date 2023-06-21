@@ -1,0 +1,338 @@
+import throttle from 'just-throttle';
+import {
+  Component,
+  computed,
+  createContext,
+  effect,
+  peek,
+  prop,
+  provideContext,
+  signal,
+  useContext,
+} from 'maverick.js';
+import { isNull, setAttribute } from 'maverick.js/std';
+
+import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
+import type { TextTrack } from '../../../../core/tracks/text/text-track';
+import { observeActiveTextTrack } from '../../../../core/tracks/text/utils';
+import { setAttributeIfEmpty } from '../../../../utils/dom';
+import { round } from '../../../../utils/number';
+import { formatSpokenTime, formatTime } from '../../../../utils/time';
+import type { SliderCSSVars } from '../slider/api/cssvars';
+import type {
+  SliderDragEndEvent,
+  SliderDragStartEvent,
+  SliderDragValueChangeEvent,
+  SliderEvents,
+  SliderValueChangeEvent,
+} from '../slider/api/events';
+import { sliderState, type SliderState } from '../slider/api/state';
+import { sliderValueFormatContext } from '../slider/format';
+import { sliderContext } from '../slider/slider-context';
+import { SliderController, type SliderControllerProps } from '../slider/slider-controller';
+import { SliderChaptersRenderer } from './chapters';
+
+/**
+ * A slider control that lets the user specify their desired time level.
+ *
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/time-slider}
+ */
+export class TimeSlider extends Component<
+  TimeSliderProps,
+  SliderState,
+  SliderEvents,
+  TimeSliderCSSVars
+> {
+  static props: TimeSliderProps = {
+    ...SliderController.props,
+    pauseWhileDragging: false,
+    seekingRequestThrottle: 100,
+  };
+
+  static state = sliderState;
+
+  private _media!: MediaContext;
+  private _dispatchSeeking!: ThrottledSeeking;
+  private _track = signal<TextTrack | null>(null);
+
+  constructor() {
+    super();
+    new SliderController({
+      _swipeGesture: true,
+      _getStep: this._getStep.bind(this),
+      _getKeyStep: this._getKeyStep.bind(this),
+      _isDisabled: this._isDisabled.bind(this),
+      _roundValue: this._roundValue,
+      _getARIAValueNow: this._getARIAValueNow.bind(this),
+      _getARIAValueText: this._getARIAValueText.bind(this),
+      _onDragStart: this._onDragStart.bind(this),
+      _onDragValueChange: this._onDragValueChange.bind(this),
+      _onDragEnd: this._onDragEnd.bind(this),
+      _onValueChange: this._onValueChange.bind(this),
+    });
+  }
+
+  protected override onSetup(): void {
+    this._media = useMediaContext();
+
+    provideContext(timeSliderContext, {
+      chapters: this.chapters,
+    });
+
+    provideContext(sliderValueFormatContext, {
+      value: this._formatValue.bind(this),
+      time: this._formatTime.bind(this),
+    });
+
+    this.setAttributes({
+      'data-chapters': this._hasChapters.bind(this),
+    });
+
+    this.setStyles({
+      '--slider-progress': this._calcBufferedPercent.bind(this),
+    });
+
+    effect(this._watchCurrentTime.bind(this));
+    effect(this._watchSeekingThrottle.bind(this));
+  }
+
+  protected override onAttach(el: HTMLElement) {
+    el.setAttribute('data-media-time-slider', '');
+    setAttributeIfEmpty(el, 'aria-label', 'Media time');
+
+    effect(this._onTrackChange.bind(this));
+  }
+
+  protected override onConnect(el: HTMLElement) {
+    effect(this._watchPreviewing.bind(this));
+    observeActiveTextTrack(this._media.textTracks, 'chapters', this._track.set);
+  }
+
+  private _calcBufferedPercent() {
+    const { bufferedEnd, duration } = this._media.$state;
+    return round(Math.min(bufferedEnd() / Math.max(duration(), 1), 1) * 100, 3) + '%';
+  }
+
+  private _hasChapters() {
+    const { duration } = this._media.$state;
+    return this._track()?.cues.length && Number.isFinite(duration()) && duration() > 0;
+  }
+
+  private _watchSeekingThrottle() {
+    this._dispatchSeeking = throttle(
+      this._seeking.bind(this),
+      this.$props.seekingRequestThrottle(),
+    );
+  }
+
+  private _watchCurrentTime() {
+    const { currentTime } = this._media.$state,
+      { value, dragging } = this.$state,
+      newValue = this._timeToPercent(currentTime());
+    if (!peek(dragging)) {
+      value.set(newValue);
+      this.dispatch('value-change', { detail: newValue });
+    }
+  }
+
+  private _watchPreviewing() {
+    const player = this._media.player.el,
+      { _preview } = useContext(sliderContext);
+    player && _preview() && setAttribute(player, 'data-preview', this.$state.interactive());
+  }
+
+  private _seeking(time: number, event: Event) {
+    this._media.remote.seeking(time, event);
+  }
+
+  private _seek(time: number, percent: number, event: Event) {
+    this._dispatchSeeking.cancel();
+
+    const { live } = this._media.$state;
+    if (live() && percent >= 99) {
+      this._media.remote.seekToLiveEdge(event);
+      return;
+    }
+
+    this._media.remote.seek(time, event);
+  }
+
+  private _playingBeforeDragStart = false;
+  private _onDragStart(event: SliderDragStartEvent) {
+    const { pauseWhileDragging } = this.$props;
+    if (pauseWhileDragging()) {
+      const { paused } = this._media.$state;
+      this._playingBeforeDragStart = !paused();
+      this._media.remote.pause(event);
+    }
+  }
+
+  private _onDragValueChange(event: SliderDragValueChangeEvent) {
+    this._dispatchSeeking(this._percentToTime(event.detail), event);
+  }
+
+  private _onDragEnd(event: SliderValueChangeEvent | SliderDragEndEvent) {
+    const percent = event.detail;
+    this._seek(this._percentToTime(percent), percent, event);
+
+    const { pauseWhileDragging } = this.$props;
+    if (pauseWhileDragging() && this._playingBeforeDragStart) {
+      this._media.remote.play(event);
+      this._playingBeforeDragStart = false;
+    }
+  }
+
+  private _onValueChange(event: SliderValueChangeEvent) {
+    const { dragging } = this.$state;
+    if (dragging() || !event.trigger) return;
+    this._onDragEnd(event);
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Props
+  // -------------------------------------------------------------------------------------------
+
+  private _getStep() {
+    const value = (this.$props.step() / this._media.$state.duration()) * 100;
+    return Number.isFinite(value) ? value : 1;
+  }
+
+  private _getKeyStep() {
+    const value = (this.$props.keyStep() / this._media.$state.duration()) * 100;
+    return Number.isFinite(value) ? value : 1;
+  }
+
+  private _roundValue(value: number) {
+    return round(value, 3);
+  }
+
+  private _isDisabled() {
+    const { canSeek } = this._media.$state;
+    return this.$props.disabled() || !canSeek();
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // ARIA
+  // -------------------------------------------------------------------------------------------
+
+  private _getARIAValueNow() {
+    const { value } = this.$state;
+    return Math.round(value());
+  }
+
+  private _getARIAValueText(): string {
+    const time = this._percentToTime(this.$state.value()),
+      { duration } = this._media.$state;
+    return Number.isFinite(time)
+      ? `${formatSpokenTime(time)} out of ${formatSpokenTime(duration())}`
+      : 'live';
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Format
+  // -------------------------------------------------------------------------------------------
+
+  private _percentToTime(percent: number) {
+    const { duration } = this._media.$state;
+    return Math.round((percent / 100) * duration());
+  }
+
+  private _timeToPercent(time: number) {
+    const { liveEdge, duration } = this._media.$state,
+      rate = Math.max(0, Math.min(1, liveEdge() ? 1 : Math.min(time, duration()) / duration()));
+    return Number.isNaN(rate) ? 0 : Number.isFinite(rate) ? rate * 100 : 100;
+  }
+
+  private _formatValue(percent: number) {
+    const time = this._percentToTime(percent),
+      { live, duration } = this._media.$state;
+    return Number.isFinite(time) ? (live() ? time - duration() : time).toFixed(0) : 'LIVE';
+  }
+
+  private _formatTime(
+    percent: number,
+    padHours: boolean | null,
+    padMinutes: boolean | null,
+    showHours: boolean,
+  ) {
+    const time = this._percentToTime(percent),
+      { live, duration } = this._media.$state,
+      value = live() ? time - duration() : time;
+    return Number.isFinite(time)
+      ? `${value < 0 ? '-' : ''}${formatTime(
+          Math.abs(value),
+          padHours,
+          isNull(padMinutes) ? Math.abs(value) >= 3600 : padMinutes,
+          showHours,
+        )}`
+      : 'LIVE';
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Chapters
+  // -------------------------------------------------------------------------------------------
+
+  private _chapterTitleEl: HTMLElement | null = null;
+
+  /** @internal */
+  @prop
+  chapters = new SliderChaptersRenderer();
+
+  private _hideChapters = computed(() => {
+    const { breakpointX } = this._media.$state;
+    return breakpointX() === 'sm';
+  });
+
+  private _onTrackChange() {
+    if (this._hideChapters()) return;
+
+    this.chapters.setTrack(this._track());
+
+    this._chapterTitleEl = this.el?.querySelector('[data-part="chapter-title"]') || null;
+    if (this._chapterTitleEl) effect(this._onChapterTitleChange.bind(this));
+
+    return () => {
+      this.chapters.setTrack(null);
+      if (this._chapterTitleEl) {
+        this._chapterTitleEl.textContent = '';
+        this._chapterTitleEl = null;
+      }
+    };
+  }
+
+  private _onChapterTitleChange() {
+    const cue = this.chapters.activePointerCue || this.chapters.activeCue;
+    this._chapterTitleEl!.textContent = cue?.text || '';
+  }
+}
+
+export interface TimeSliderCSSVars extends SliderCSSVars {
+  /**
+   * The percentage of media playback that has been buffered.
+   */
+  readonly 'slider-progress': string;
+}
+
+export interface TimeSliderProps extends SliderControllerProps {
+  /**
+   * Whether it should request playback to pause while the user is dragging the
+   * thumb. If the media was playing before the dragging starts, the state will be restored by
+   * dispatching a user play request once the dragging ends.
+   */
+  pauseWhileDragging: boolean;
+  /**
+   * The amount of milliseconds to throttle media seeking request events being dispatched.
+   */
+  seekingRequestThrottle: number;
+}
+
+interface ThrottledSeeking {
+  (time: number, event: Event): void;
+  cancel(): void;
+}
+
+export interface TimeSliderContext {
+  chapters: SliderChaptersRenderer;
+}
+
+export const timeSliderContext = createContext<TimeSliderContext>();

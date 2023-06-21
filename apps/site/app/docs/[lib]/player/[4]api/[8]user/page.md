@@ -27,10 +27,3 @@ User seeking can be tracked by waiting for the `$event:media-seeking-request` an
 `$event:media-seek-request` events to fire, and then checking whether their origin is trusted:
 
 {% code_snippet name="seeking" /%}
-
-## Idle
-
-The user idle state indicates whether the user has been inactive for a set period of time (default
-is 2s). It can be tracked by subscribing to the `userIdle` property on the media store like so:
-
-{% code_snippet name="idle" /%}

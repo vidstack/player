@@ -12,7 +12,7 @@
   aspect-ratio="16/9"
   on:can-play={onCanPlay}
 >
-  <media-outlet>
+  <media-provider>
     <media-poster alt="Agent 327 blowing flames with a hair dryer." />
     <media-gesture
       class="top-0 left-0 h-full w-full z-0"
@@ -27,5 +27,5 @@
     <media-gesture class="top-0 left-0 z-10 h-full w-1/5" event="dblpointerup" action="seek:-10" />
     <media-gesture class="top-0 right-0 z-10 h-full w-1/5" event="dblpointerup" action="seek:10" />
     <media-gesture class="top-0 left-0 h-full w-full z-0" event="mouseleave" action="pause" />
-  </media-outlet>
+  </media-provider>
 </media-player>

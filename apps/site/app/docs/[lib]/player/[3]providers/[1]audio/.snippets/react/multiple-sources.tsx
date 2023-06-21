@@ -1,4 +1,4 @@
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 
 function Player() {
   return (
@@ -9,7 +9,7 @@ function Player() {
       ]}
       controls
     >
-      <MediaOutlet />
+      <MediaProvider />
     </MediaPlayer>
   );
 }
