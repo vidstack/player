@@ -13,11 +13,11 @@ You can import all components from the path `@vidstack/react`. Component names m
 the element tag name except they're in PascalCase:
 
 - `media-player` -> `MediaPlayer`
-- `media-outlet` -> `MediaOutlet`
+- `media-provider` -> `MediaProvider`
 - `media-play-button` -> `MediaPlayButton`
 
 ```js
-import { MediaOutlet, MediaPlayButton, MediaPlayer } from '@vidstack/react';
+import { MediaPlayButton, MediaPlayer, MediaProvider } from '@vidstack/react';
 ```
 
 Keep in mind that you're implicitly registering the underlying custom element by importing a
@@ -29,7 +29,7 @@ All components forward the underlying custom element reference, so you can use t
 `useRef` hook to get a hold of it.
 
 ```tsx
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { useEffect, useRef } from 'React';
 import { type MediaPlayerElement } from 'vidstack';
 
@@ -42,7 +42,7 @@ function Player() {
 
   return (
     <MediaPlayer load="custom" ref={player}>
-      <MediaOutlet></MediaOutlet>
+      <MediaProvider></MediaProvider>
     </MediaPlayer>
   );
 }
@@ -74,7 +74,7 @@ All custom events are forwarded to a callback whose name mirrors the original ev
 PascalCase:
 
 ```tsx
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { type MediaPlayingEvent } from 'vidstack';
 
 function Player() {
@@ -84,7 +84,7 @@ function Player() {
 
   return (
     <MediaPlayer onPlaying={onPlaying}>
-      <MediaOutlet />
+      <MediaProvider />
     </MediaPlayer>
   );
 }
@@ -96,7 +96,7 @@ All element types are classes named using _PascalCase_ and _suffixed_ with the w
 (e.g., `MediaPlayerElement`).
 
 ```ts {% copy=true %}
-import { type MediaOutlet, type MediaPlayerElement } from 'vidstack';
+import { type MediaPlayerElement, type MediaProvider } from 'vidstack';
 
 let player: MediaPlayerElement;
 ```

@@ -6,9 +6,9 @@
   playsinline
   aspect-ratio="16/9"
 >
-  <media-outlet>
+  <media-provider>
     <media-poster alt="Agent 327 blowing flames with a hair dryer." />
-  </media-outlet>
+  </media-provider>
 
   <div class="w-full flex items-center px-1 absolute bottom-0 left-0 bg-black/20">
     <media-play-button class="min-w-[40px]" />

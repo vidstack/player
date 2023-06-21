@@ -95,7 +95,7 @@ the player like so:
 
 {% code_snippet name="seek-edge" highlight="react:9" /%}
 
-👉 The [MediaRemoteControl](/docs/react/player/core-concepts/state-management#updating) also provides a
+👉 The [MediaRemoteControl](/docs/react/player/core-concepts/state#updating) also provides a
 `seekToLiveEdge` method!
 
 ## Media Store

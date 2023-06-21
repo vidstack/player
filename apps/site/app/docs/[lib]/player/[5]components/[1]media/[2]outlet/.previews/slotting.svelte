@@ -3,9 +3,9 @@
   poster="https://media-files.vidstack.io/poster.png"
   aspect-ratio="16/9"
 >
-  <media-outlet>
+  <media-provider>
     <media-poster />
-  </media-outlet>
+  </media-provider>
 
   <div class="w-full h-8 relative bg-white flex items-center justify-center text-black">
     controls

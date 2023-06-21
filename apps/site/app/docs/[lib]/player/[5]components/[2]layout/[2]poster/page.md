@@ -43,6 +43,6 @@ media-poster[data-loading] {
 }
 
 /* Do something if poster image fails to load. */
-media-poster[aria-hidden='true'] {
+media-poster[data-hidden] {
 }
 ```

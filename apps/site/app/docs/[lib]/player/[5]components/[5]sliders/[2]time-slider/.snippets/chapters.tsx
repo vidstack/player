@@ -1,7 +1,7 @@
 <MediaPlayer>
-  <MediaOutlet>
+  <MediaProvider>
     <track src="/chapters.vtt" srclang="en-US" kind="chapters" default />
-  </MediaOutlet>
+  </MediaProvider>
   {/* ... */}
   <MediaTimeSlider />
 </MediaPlayer>;

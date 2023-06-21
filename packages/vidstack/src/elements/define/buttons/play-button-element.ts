@@ -1,0 +1,23 @@
+import { Host } from 'maverick.js/element';
+
+import { PlayButton } from '../../../components';
+
+/**
+ * @example
+ * ```html
+ * <media-play-button>
+ *   <media-icon type="play" data-state="play"></media-icon>
+ *   <media-icon type="pause" data-state="pause"></media-icon>
+ *   <media-icon type="replay" data-state="replay"></media-icon>
+ * </media-play-button>
+ * ```
+ */
+export class MediaPlayButtonElement extends Host(HTMLElement, PlayButton) {
+  static tagName = 'media-play-button';
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'media-play-button': MediaPlayButtonElement;
+  }
+}

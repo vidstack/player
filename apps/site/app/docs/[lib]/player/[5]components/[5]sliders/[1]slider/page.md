@@ -99,10 +99,6 @@ media-slider [part~='track-fill'] {
 media-slider [part~='track-progress'] {
 }
 
-/* Apply styles to thumb container. */
-media-slider [part='thumb-container'] {
-}
-
 /* Apply styles to slider thumb. */
 media-slider [part='thumb'] {
 }
@@ -202,10 +198,10 @@ The CSS variables listed in the table below can be used to style your own slider
 variables represent the current value, and the `pointer` variables represent the current value
 at the device pointer (mouse/thumb).
 
-| Variable                   | Description                                            |
-| -------------------------- | ------------------------------------------------------ |
-| `--slider-fill-percent`    | Fill rate expressed as a percentage (e.g., `30%`).     |
-| `--slider-pointer-percent` | Pointer rate expressed as a percentage. (e.g., `30%`). |
+| Variable           | Description                                            |
+| ------------------ | ------------------------------------------------------ |
+| `--slider-fill`    | Fill rate expressed as a percentage (e.g., `30%`).     |
+| `--slider-pointer` | Pointer rate expressed as a percentage. (e.g., `30%`). |
 
 The slider will also apply the following CSS variables to the element in the `preview` slot:
 
@@ -250,7 +246,7 @@ You can take advantage of [arbitrary values](https://tailwindcss.com/docs/adding
 if you're using Tailwind CSS v3+ and use the [CSS variables listed above](#css-variables).
 
 ```html
-<div class="left-[var(--slider-fill-percent)]" />
+<div class="left-[var(--slider-fill)]" />
 ```
 
 ### Example

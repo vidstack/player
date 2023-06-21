@@ -1,4 +1,4 @@
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { type MediaSourceChangeEvent, type MediaSourcesChangeEvent } from 'vidstack';
 
 function Player() {
@@ -12,7 +12,7 @@ function Player() {
 
   return (
     <MediaPlayer onSourcesChange={onSourcesChange} onSourceChange={onSourceChange}>
-      <MediaOutlet />
+      <MediaProvider />
     </MediaPlayer>
   );
 }

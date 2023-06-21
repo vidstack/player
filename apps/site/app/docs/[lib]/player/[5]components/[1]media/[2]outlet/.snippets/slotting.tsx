@@ -1,12 +1,12 @@
-import { MediaOutlet, MediaPlayer, MediaPoster } from '@vidstack/react';
+import { MediaPlayer, MediaPoster, MediaProvider } from '@vidstack/react';
 
 function Player() {
   return (
     <MediaPlayer aspectRatio={16 / 9}>
-      <MediaOutlet>
+      <MediaProvider>
         {/* Poster will only cover provider region. */}
         <MediaPoster />
-      </MediaOutlet>
+      </MediaProvider>
       {/* Controls can be positioned with CSS outside of provider. */}
       <div className="media-controls">{/* ... */}</div>
     </MediaPlayer>

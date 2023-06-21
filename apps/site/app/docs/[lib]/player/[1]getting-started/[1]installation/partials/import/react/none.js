@@ -1,1 +1,1 @@
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaProvider, MediaPlayer } from '@vidstack/react';

@@ -135,10 +135,6 @@ media-player[data-live-edge] media-time-slider [part~='track-fill'] {
 media-time-slider [part~='track-progress'] {
 }
 
-/* Apply styles to thumb container. */
-media-time-slider [part='thumb-container'] {
-}
-
 /* Apply styles to slider thumb. */
 media-time-slider [part='thumb'] {
 }
@@ -168,17 +164,14 @@ media-time-slider[data-focus] [part='track'] {
 media-time-slider[data-chapters] {
 }
 
-media-time-slider [part='chapter-container'] {
+media-time-slider [part='chapter'] {
   margin-right: 2px;
 }
 
 /* Apply styles to chapter when container is hovered. */
-media-time-slider [part='chapter-container']:hover [part='chapter'] {
+media-time-slider [part='chapter']:hover {
   transform: scaleY(1.75);
   transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
-}
-
-media-time-slider [part='chapter'] {
 }
 
 media-time-slider [part='chapter-title'] {

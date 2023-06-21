@@ -1,14 +1,13 @@
-import { peek, signal } from 'maverick.js';
-import { ComponentController } from 'maverick.js/element';
-import { isNumber, listenEvent } from 'maverick.js/std';
+import { onDispose, peek, signal, ViewController } from 'maverick.js';
+import { listenEvent } from 'maverick.js/std';
 
 import { canOrientScreen } from '../../utils/support';
-import type { ScreenOrientationAPI } from './events';
+import type { ScreenOrientationEvents } from './events';
 import type { ScreenOrientationLockType, ScreenOrientationType } from './types';
 
 const CAN_USE_SCREEN_ORIENTATION_API = canOrientScreen();
 
-export class ScreenOrientationController extends ComponentController<ScreenOrientationAPI> {
+export class ScreenOrientationController extends ViewController<{}, {}, ScreenOrientationEvents> {
   private _type = signal(getScreenOrientation());
   private _locked = signal(false);
   private _currentLock: ScreenOrientationLockType | undefined;
@@ -66,11 +65,13 @@ export class ScreenOrientationController extends ComponentController<ScreenOrien
     } else {
       const query = window.matchMedia('(orientation: landscape)');
       query.onchange = this._onOrientationChange.bind(this);
-      return () => (query.onchange = null);
+      onDispose(() => (query.onchange = null));
     }
+
+    onDispose(this._onDisconnect.bind(this));
   }
 
-  protected override async onDisconnect() {
+  protected async _onDisconnect() {
     if (CAN_USE_SCREEN_ORIENTATION_API && this._locked()) await this.unlock();
   }
 

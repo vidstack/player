@@ -2,7 +2,7 @@
   src="https://media-files.vidstack.io/audio.mp3"
   class="w-full max-w-md relative mt-20"
 >
-  <media-outlet />
+  <media-provider />
   <media-time-slider>
     <media-slider-video
       class="border border-white"

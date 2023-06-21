@@ -1,0 +1,40 @@
+import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+import * as React from 'react';
+
+import { PIPButtonInstance } from '../../primitives/instances';
+import { Primitive } from '../../primitives/nodes';
+
+/* -------------------------------------------------------------------------------------------------
+ * PIPButton
+ * -----------------------------------------------------------------------------------------------*/
+
+const PIPButtonBridge = createReactComponent(PIPButtonInstance);
+
+export interface PIPButtonProps extends ReactElementProps<PIPButtonInstance, HTMLButtonElement> {
+  asChild?: boolean;
+  children?: React.ReactNode;
+  ref?: React.Ref<HTMLButtonElement>;
+}
+
+/**
+ * A button for toggling the picture-in-picture (PIP) mode of the player.
+ *
+ * @docs {@link https://www.vidstack.io/docs/react/player/components/buttons/pip-button}
+ * @see {@link https://www.vidstack.io/docs/react/player/core-concepts/picture-in-picture}
+ */
+const PIPButton = React.forwardRef<HTMLButtonElement, PIPButtonProps>(
+  ({ children, ...props }, forwardRef) => {
+    return (
+      <PIPButtonBridge {...(props as Omit<PIPButtonProps, 'ref'>)}>
+        {(props) => (
+          <Primitive.button type="button" {...props} ref={composeRefs(props.ref, forwardRef)}>
+            {children}
+          </Primitive.button>
+        )}
+      </PIPButtonBridge>
+    );
+  },
+);
+
+PIPButton.displayName = 'PIPButton';
+export { PIPButton };

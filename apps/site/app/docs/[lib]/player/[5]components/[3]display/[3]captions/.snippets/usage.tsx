@@ -1,4 +1,4 @@
 <MediaPlayer>
-  <MediaOutlet />
+  <MediaProvider />
   <MediaCaptions />
 </MediaPlayer>;

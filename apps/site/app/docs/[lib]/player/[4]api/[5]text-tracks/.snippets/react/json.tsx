@@ -1,5 +1,5 @@
 <MediaPlayer>
-  <MediaOutlet>
+  <MediaProvider>
     <track
       src="/media/subs/english.json"
       kind="subtitles"
@@ -8,5 +8,5 @@
       default
       data-type="json"
     />
-  </MediaOutlet>
+  </MediaProvider>
 </MediaPlayer>;

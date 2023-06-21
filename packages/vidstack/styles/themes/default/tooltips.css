@@ -1,0 +1,85 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Tooltips
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-tooltip) {
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+:where(.vds-tooltip-content) {
+  box-sizing: border-box;
+  color: var(--media-tooltip-color, hsl(0, 0%, 80%));
+  display: block;
+  font-family: var(--media-font-family, sans-serif);
+  font-size: var(--media-tooltip-font-size, 13px);
+  font-weight: var(--media-tooltip-font-weight, 500);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+  will-change: transform, opacity;
+  background-color: var(--media-tooltip-bg-color, black);
+  border: var(--media-tooltip-border, 1px solid rgb(255 255 255 / 0.1));
+  border-radius: var(--media-tooltip-border-radius, 2px);
+  padding: var(--media-tooltip-padding, 2px 8px);
+}
+
+:where(.vds-menu .vds-menu-button[role='button'][data-pressed] .vds-tooltip-content) {
+  opacity: 0;
+  display: none;
+}
+
+:where(.vds-tooltip-content [data-state]) {
+  display: none;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Tooltip Animation
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-tooltip-content) {
+  --enter-transform: translateY(0px) scale(1);
+  --exit-transform: translateY(12px) scale(0.8);
+}
+
+:where(.vds-tooltip-content:not([data-showing])) {
+  animation: vds-tooltip-exit 0.2s ease-out;
+}
+
+:where(.vds-tooltip-content[data-showing]) {
+  animation: vds-tooltip-enter 0.2s ease-in;
+  animation-fill-mode: forwards;
+}
+
+/* Bottom */
+:where(.vds-tooltip-content[data-placement~='bottom']) {
+  --enter-transform: translateY(0) scale(1);
+  --exit-transform: translateY(-12px) scale(0.8);
+}
+
+@keyframes vds-tooltip-enter {
+  from {
+    opacity: 0;
+    transform: var(--exit-transform);
+  }
+  to {
+    opacity: 1;
+    transform: var(--enter-transform);
+  }
+}
+
+@keyframes vds-tooltip-exit {
+  from {
+    opacity: 1;
+    transform: var(--enter-transform);
+  }
+  to {
+    opacity: 0;
+    transform: var(--exit-transform);
+  }
+}

@@ -11,7 +11,7 @@ In this section, we'll go through the basics of working with the custom elements
 
 We provide a variety of components out of the box that help enhance the player.
 
-Some are concerned with layout such as `<media-player>` and `<media-outlet>`, some provide visual
+Some are concerned with layout such as `<media-player>` and `<media-provider>`, some provide visual
 controls such as `<media-play-button>` or `<media-time-slider>`, and others manage player instances.
 
 We recommend either searching (`cmd + k`) for what you're looking for or browsing the sidebar.
@@ -39,7 +39,7 @@ has loaded and run.
 ```html
 <!-- Browser will upgrade custom elements once they're defined. -->
 <media-player>
-  <media-outlet></media-outlet>
+  <media-provider></media-provider>
   <media-poster></media-poster>
 </media-player>
 ```
@@ -90,7 +90,7 @@ alive like so:
 <!-- Keep this element and all children alive until manually destroyed. -->
 <media-player keep-alive>
   <!-- This will be kept alive as well. -->
-  <media-outlet></media-outlet>
+  <media-provider></media-provider>
   <!-- ... -->
 </media-player>
 ```

@@ -1,5 +1,5 @@
 <MediaPlayer>
-  <MediaOutlet>
+  <MediaProvider>
     <track
       src="/media/subs/english.vtt"
       kind="subtitles"
@@ -8,5 +8,5 @@
       default
       data-type="vtt"
     />
-  </MediaOutlet>
+  </MediaProvider>
 </MediaPlayer>;

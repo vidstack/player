@@ -27,5 +27,5 @@
 | `data-seeking`        | Media or user is seeking to new playback position.        |
 | `data-started`        | Media playback has started.                               |
 | `data-touch`          | Touch input device is being used to interact with player. |
-| `data-user-idle`      | User is not active during playback.                       |
+| `data-controls`       | Whether controls are visible.                             |
 | `data-waiting`        | Media is waiting for more data (i.e., buffering).         |

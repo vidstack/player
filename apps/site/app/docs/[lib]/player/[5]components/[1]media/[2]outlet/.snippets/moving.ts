@@ -1,15 +1,15 @@
 const player = document.querySelector('media-player'),
-  outlet = document.querySelector('media-outlet'),
+  provider = document.querySelector('media-provider'),
   floatContainer = document.querySelector('.media-float-container'),
   floatButton = document.querySelector('.media-float-button');
 
-outlet.onAttach(() => {
+provider.onAttach(() => {
   let floating = false;
   floatButton.addEventListener('pointerup', () => {
     if (!floating) {
-      floatContainer.append(outlet);
+      floatContainer.append(provider);
     } else {
-      player.prepend(outlet);
+      player.prepend(provider);
     }
     floating = !floating;
   });

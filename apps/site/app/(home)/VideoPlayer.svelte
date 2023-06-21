@@ -11,7 +11,7 @@
   crossorigin=""
   style="--video-brand: rgb(124 58 237);"
 >
-  <media-outlet>
+  <media-provider>
     <media-poster alt="Girl walks into sprite gnomes around her friend on a campfire in danger!" />
     <track src="/media/sprite-fight.vtt" label="English" srclang="en-US" kind="subtitles" default />
     <track
@@ -20,8 +20,8 @@
       kind="chapters"
       default
     />
-  </media-outlet>
-  <media-community-skin />
+  </media-provider>
+  <media-default-skin />
 </media-player>
 
 <style>

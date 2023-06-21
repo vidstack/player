@@ -27,12 +27,12 @@
   crossorigin=""
   bind:this={player}
 >
-  <media-outlet>
+  <media-provider>
     <media-poster class="group-data-[started]:opacity-0" />
-    <media-captions class="bottom-8 group-data-[user-idle]:bottom-0 transition-[bottom]" />
-  </media-outlet>
+    <media-captions class="bottom-0 group-data-[controls]:bottom-8 transition-[bottom]" />
+  </media-provider>
   <div
-    class="w-full text-center flex px-1 items-center absolute bottom-1 left-0 z-10 group-data-[user-idle]:opacity-0 transition-opacity"
+    class="w-full text-center flex px-1 items-center absolute bottom-1 left-0 z-10 opacity-0 group-data-[controls]:opacity-1 transition-opacity"
   >
     <media-play-button class="min-w-[40px]" />
     <media-time-slider />

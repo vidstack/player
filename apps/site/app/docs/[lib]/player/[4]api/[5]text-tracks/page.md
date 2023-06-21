@@ -116,7 +116,7 @@ player.textTracks.addEventListener('mode-change', (event) => {
 
 ### Add Tracks
 
-Text tracks can be added to and dynamically updated on the `$tag:media-outlet` like so:
+Text tracks can be added to and dynamically updated on the `$tag:media-provider` like so:
 
 {% code_snippet name="add-track" /%}
 

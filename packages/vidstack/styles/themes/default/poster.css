@@ -1,0 +1,42 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Poster
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-poster) {
+  display: block;
+  contain: content;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  object-fit: cover;
+  box-sizing: border-box;
+  transition: opacity 0.2s ease-out;
+}
+
+:where(.vds-poster img) {
+  object-fit: inherit;
+  object-position: inherit;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  box-sizing: border-box;
+}
+
+.vds-poster :where(img) {
+  width: 100%;
+  height: 100%;
+}
+
+:where(.vds-poster[data-hidden]) {
+  display: none;
+}
+
+:where([data-view-type='video']:not([data-started]) .vds-poster) {
+  opacity: 1;
+}

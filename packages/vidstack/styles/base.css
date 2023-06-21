@@ -1,24 +1,10 @@
-/* hide default UI - only shown if optional UI css files are loaded. */
-:where(media-player)
-  :where(
-    [data-media-button] > shadow-root,
-    [data-media-slider]:not([data-styled]) > shadow-root,
-    [data-media-menu-button] > shadow-root
-  ) {
-  display: none;
-}
-
-:where(media-player) :where([data-media-slider][data-styled] > shadow-root) {
-  display: contents;
-}
-
 /*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Media
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Player
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(media-player) {
+:where([data-media-player]) {
   --media-focus-ring: 0 0 0 3px rgb(78 156 246);
   width: 100%;
   display: inline-block;
@@ -28,46 +14,53 @@
   user-select: none;
 }
 
-media-player:focus,
-media-player:focus-visible {
+[data-media-player]:focus,
+[data-media-player]:focus-visible {
   outline: none;
 }
 
-:where(media-player[data-focus]:not([data-playing]) media-outlet) {
-  box-shadow: var(--media-focus-ring);
-}
-
-:where(media-player[data-view-type='video'][data-user-idle]) {
+:where([data-media-player][data-view-type='video']:not([data-controls])) {
   pointer-events: auto;
   cursor: none;
 }
 
-:where(media-outlet) {
-  display: block;
-  box-sizing: border-box;
-  background-color: var(--media-outlet-bg-color, black);
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Provider
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where([data-media-player][data-focus]:not([data-playing]) [data-media-provider]) {
+  box-shadow: var(--media-focus-ring);
 }
 
-:where(media-player[data-fullscreen] media-outlet) {
+:where([data-media-player] [data-media-provider]) {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  background-color: var(--media-provider-bg-color, black);
+}
+
+:where([data-media-player][data-fullscreen] [data-media-provider]) {
   height: 100%;
 }
 
-:where(media-player[data-view-type='audio'] media-outlet) {
+:where([data-media-player][data-view-type='audio'] [data-media-provider]) {
   background-color: unset;
 }
 
-:where(media-outlet audio) {
+:where([data-media-player] [data-media-provider] audio) {
   width: 100%;
 }
 
-:where(media-outlet video) {
+:where([data-media-player] [data-media-provider] video) {
   display: inline-block;
   width: 100%;
   height: auto;
   touch-action: manipulation;
 }
 
-:where(media-player[aspect-ratio]:not([data-fullscreen]) media-outlet) {
+:where([data-view-type='video'][data-aspect-ratio]:not([data-fullscreen]) [data-media-provider]) {
   position: relative;
   width: 100%;
   height: 0;
@@ -77,7 +70,8 @@ media-player:focus-visible {
   );
 }
 
-:where(media-player[aspect-ratio] media-outlet > shadow-root > *) {
+:where([data-media-player][data-aspect-ratio])
+  :where([data-media-provider] video, [data-media-provider] iframe) {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -85,297 +79,6 @@ media-player:focus-visible {
   height: 100% !important;
 }
 
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Display
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-icon, media-icon svg) {
-  display: block;
-  width: 100%;
-  height: 100%;
-  vertical-align: middle;
-}
-
-:where(media-time) {
-  display: inline-block;
-  contain: content;
-  font-size: var(--media-time-font-size, 14px);
-  font-weight: var(--media-time-font-weight, 400);
-  font-family: var(--media-font-family, sans-serif);
-  color: var(--media-time-color, inherit);
-  background-color: var(--media-time-bg);
-  border-radius: var(--media-time-border-radius);
-  letter-spacing: var(--media-time-letter-spacing, 0.025em);
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Buttons
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-player [data-media-button]) {
-  display: inline-block;
-  position: relative;
-  contain: layout style;
-  user-select: none;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-:where(media-player [data-media-button]:focus) {
+.vds-icon:focus {
   outline: none;
-}
-
-:where(media-player [data-media-button][data-focus]) :where([slot], [data-media-icon]) {
-  box-shadow: var(--media-focus-ring);
-}
-
-:where(media-player [data-media-button][data-focus] media-tooltip [slot]) {
-  box-shadow: unset;
-}
-
-:where(media-live-indicator:not([data-live])) {
-  cursor: unset;
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Sliders
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-player [data-media-slider]) {
-  display: inline-block;
-  position: relative;
-  contain: layout style;
-  width: 100%;
-  cursor: pointer;
-  user-select: none;
-  touch-action: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-:where(media-player [data-media-slider][disabled]) {
-  cursor: unset;
-}
-
-:where(media-player [data-media-slider]:focus) {
-  outline: none;
-}
-
-:where(media-player [data-media-slider][data-focus] [part='track']) {
-  box-shadow: var(--media-focus-ring);
-}
-
-:where(media-player [data-media-slider][data-chapters][data-focus] [part='chapter']) {
-  clip-path: inset(-2px -2px -2px -2px);
-}
-
-:where(media-player[data-bp-x='sm']) :where(media-time-slider [part='chapters']) {
-  display: none !important;
-}
-
-:where(media-player:not([data-bp-x='sm']))
-  :where(
-    media-time-slider[data-chapters] > :not(shadow-root, [slot]),
-    media-time-slider[data-chapters] > shadow-root > [part~='track']
-  ) {
-  display: none !important;
-}
-
-:where(media-volume-slider [part~='track-progress']) {
-  display: none !important;
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Slider Value Text
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-slider-value) {
-  display: inline-block;
-  contain: content;
-  font-size: 14px;
-  font-family: var(--media-font-family, sans-serif);
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Slider Thumbnail
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-slider-thumbnail) {
-  display: block;
-  contain: content;
-  box-sizing: border-box;
-}
-
-:where(media-thumbnail) {
-  display: block;
-  width: var(--thumbnail-width);
-  height: var(--thumbnail-height);
-  background-color: var(--media-thumbnail-bg, black);
-  contain: strict;
-  overflow: hidden;
-  box-sizing: border-box;
-  border: var(--media-thumbnail-border, 1px solid white);
-  min-width: var(--media-thumbnail-min-width, 120px);
-  min-height: var(--media-thumbnail-min-height, 80px);
-  max-width: var(--media-thumbnail-max-width, 180px);
-  max-height: var(--media-thumbnail-max-height, 160px);
-}
-
-:where(media-thumbnail [part='img']) {
-  min-width: unset !important;
-  max-width: unset !important;
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Slider Video
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-slider-video) {
-  background-color: black;
-  box-sizing: border-box;
-  contain: content;
-  display: inline-block;
-  border: var(--media-thumbnail-border, 1px solid white);
-}
-
-:where(media-slider-video [part='video']) {
-  display: block;
-  height: auto;
-  width: 156px;
-}
-
-/* Temporarily hide video while loading. */
-:where(media-slider-video[data-loading]) {
-  opacity: 0;
-}
-
-/* Hide video if it fails to load. */
-:where(
-    media-slider-video[aria-hidden='true'],
-    media-slider-video[aria-hidden='true'] [part='video']
-  ) {
-  display: none;
-  width: 0px;
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Poster
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-poster) {
-  display: block;
-  contain: content;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  object-fit: cover;
-  box-sizing: border-box;
-  transition: opacity 0.2s ease-out;
-}
-
-:where(media-poster [part='img']) {
-  width: 100%;
-  height: 100%;
-  object-fit: inherit;
-  object-position: inherit;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
-  box-sizing: border-box;
-}
-
-:where(media-poster[aria-hidden='true']) {
-  display: none;
-}
-
-:where(media-player[data-view-type='video']:not([data-started]) media-poster) {
-  opacity: 1;
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Captions
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-captions[aria-hidden='true']) {
-  opacity: 0;
-  visibility: hidden;
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Gestures
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-gesture) {
-  position: absolute;
-  display: block;
-  contain: content;
-  z-index: 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none !important;
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Menus
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-menu > [data-media-menu-items]:focus) {
-  outline: none;
-}
-
-:where(media-menu) :where([role='menuitem']:focus, [role='menuitemradio']:focus) {
-  outline: none;
-}
-
-:where(media-menu)
-  :where(
-    [role='menuitem']:focus-visible,
-    [role='menuitem'][data-focus],
-    [role='menuitemradio']:focus-visible,
-    [role='menuitemradio'][data-focus]
-  ),
-:where(media-menu > [data-media-menu-button][role='button'][data-focus] [data-media-icon]),
-:where(media-menu > [data-media-menu-button][role='button'][data-focus] svg),
-:where(media-radio[data-focus]) {
-  outline: none;
-  box-shadow: var(--media-focus-ring);
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * ARIA
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-:where(media-player [data-media-button][aria-hidden='true']),
-:where(media-player [data-media-slider][aria-hidden='true']),
-:where(media-thumbnail[aria-hidden='true']),
-:where(media-slider-thumbnail[aria-hidden='true']) {
-  display: none !important;
 }

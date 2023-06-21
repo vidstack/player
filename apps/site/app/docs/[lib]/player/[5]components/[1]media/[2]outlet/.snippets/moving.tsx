@@ -1,18 +1,18 @@
-import { MediaOutlet, MediaPlayer } from '@vidstack/react';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { useRef } from 'react';
 import { type MediaOutletElement, type MediaPlayerElement } from 'vidstack';
 
 function Player() {
   const player = useRef<MediaPlayerElement>(null),
-    outlet = useRef<MediaOutletElement>(null),
+    provider = useRef<MediaOutletElement>(null),
     floatContainer = useRef<HTMLDivElement>(null),
     floating = useRef<boolean>();
 
   function onToggleMiniplayer() {
     if (!floating.current) {
-      floatContainer.current!.append(outlet.current!);
+      floatContainer.current!.append(provider.current!);
     } else {
-      player.current!.prepend(outlet.current!);
+      player.current!.prepend(provider.current!);
     }
 
     floating.current = !floating.current;
@@ -26,7 +26,7 @@ function Player() {
         aspectRatio={16 / 9}
         ref={player}
       >
-        <MediaOutlet ref={outlet} />
+        <MediaProvider ref={provider} />
         <div className="media-controls-container">
           <div className="media-controls">
             <MediaPlayButton />

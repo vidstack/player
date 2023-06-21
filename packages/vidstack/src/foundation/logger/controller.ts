@@ -1,15 +1,20 @@
-import { ComponentController } from 'maverick.js/element';
+import { onDispose, ViewController } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 
 import type { LogEventDetail } from './events';
 import { GroupedLog } from './grouped-log';
 import type { LogLevel } from './log-level';
 
-export class LoggerController extends ComponentController {
+export class LoggerController extends ViewController {
   private _logger = new Logger();
+
   protected override onConnect(el: HTMLElement) {
     this._logger.setTarget(el);
-    return () => this._logger.setTarget(null);
+    onDispose(this._onDisconnect.bind(this));
+  }
+
+  protected _onDisconnect() {
+    this._logger.setTarget(null);
   }
 }
 

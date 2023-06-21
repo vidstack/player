@@ -3,7 +3,7 @@
   class="w-full max-w-xs relative"
   volume={0.5}
 >
-  <media-outlet />
+  <media-provider />
   <media-volume-slider>
     <media-slider-value type="pointer" format="percent" slot="preview" />
   </media-volume-slider>

@@ -4,20 +4,20 @@
   let ready = false,
     floating = false,
     player,
-    outlet,
+    provider,
     float;
 
   onMount(async () => {
-    await customElements.whenDefined('media-outlet');
+    await customElements.whenDefined('media-provider');
     player.onAttach(() => void (player.muted = true));
-    outlet.onAttach(() => void (ready = true));
+    provider.onAttach(() => void (ready = true));
   });
 
   function onPop() {
     if (!floating) {
-      float.appendChild(outlet);
+      float.appendChild(provider);
     } else {
-      player.appendChild(outlet);
+      player.appendChild(provider);
     }
 
     floating = !floating;
@@ -31,7 +31,7 @@
   aspect-ratio="16/9"
   bind:this={player}
 >
-  <media-outlet class="z-0" bind:this={outlet} />
+  <media-provider class="z-0" bind:this={provider} />
   {#if ready}
     <div class="prefers-light-scheme absolute bottom-0 left-0 w-full z-10 px-1 py-0.5">
       <div class="bg-black/50 rounded-sm w-full flex">

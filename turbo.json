@@ -2,18 +2,18 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "analyze": {
-      "outputs": ["elements.json", "vscode.html-data.json"]
+      "outputs": ["analyze.json", "vscode.html-data.json"]
     },
     "build": {
       "dependsOn": ["^analyze", "^build", "clean"],
-      "outputs": ["dist/**", ".vercel/**", "styles/defaults.css", "styles/community-skin/**"]
+      "outputs": ["cdn/**", "dist/**", "lib/**", ".vercel/**", "styles/themes/default.css"]
     },
     "clean": {
       "cache": false
     },
     "types": {
       "dependsOn": ["^types", "clean"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/types/**", "*.d.ts"]
     },
     "format": {
       "inputs": ["src/**"]

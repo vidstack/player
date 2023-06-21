@@ -1,6 +1,6 @@
 <MediaPlayer>
-  <MediaOutlet>
+  <MediaProvider>
     <MediaCaptions />
-  </MediaOutlet>
+  </MediaProvider>
   {/* External controls here. */}
 </MediaPlayer>;

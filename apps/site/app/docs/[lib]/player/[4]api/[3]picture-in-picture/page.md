@@ -47,7 +47,7 @@ The following picture-in-picture properties are available on the media store:
 
 ## Media Remote
 
-The [media remote](/docs/player/core-concepts/state-management#updating) provides methods for
+The [media remote](/docs/player/core-concepts/state#updating) provides methods for
 dispatching `media-enter-pip-request` and `media-exit-pip-request` request events like so:
 
 {% code_snippet name="remote" highlight="html:3,10|react:6,12" /%}

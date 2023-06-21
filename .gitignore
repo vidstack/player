@@ -19,17 +19,30 @@ turbo-graph*
 /apps/*/build/
 /apps/*/.vercel_build_output/
 
+packages/*/lib/
 packages/*/dist/
-packages/*/define/
+packages/*/cdn/
 packages/*/elements/
+packages/*/types/
 packages/*/sandbox/
 packages/*/stats.html
-packages/icons/src/icons/
-packages/react/src/components.ts
-packages/react/src/icons.ts
-packages/vidstack/styles/defaults.css
-packages/vidstack/styles/*-skin/**
 
+packages/vidstack/index.d.ts
+packages/vidstack/lib.d.ts
+packages/vidstack/elements.d.ts
+packages/vidstack/icons.d.ts
+
+packages/*/styles/themes/default.css
+
+packages/react/src/icons.ts
+packages/react/index.d.ts
+packages/react/icons.d.ts
+packages/react/styles/
+packages/react/skins/
+packages/react/tailwind*
+
+
+analyze.json
 elements.json
 vscode.html-data.json
 

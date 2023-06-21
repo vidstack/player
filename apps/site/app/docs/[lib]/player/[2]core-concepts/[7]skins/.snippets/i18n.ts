@@ -1,6 +1,6 @@
-import { type CommunitySkinTranslations } from 'vidstack';
+import { type DefaultSkinTranslations } from 'vidstack';
 
-const SPANISH: CommunitySkinTranslations = {
+const SPANISH: DefaultSkinTranslations = {
   Audio: 'Audio',
   Auto: 'Automático',
   Captions: 'Subtítulos',
@@ -25,6 +25,6 @@ const SPANISH: CommunitySkinTranslations = {
   'Exit PiP': 'Salir de PiP',
 };
 
-const skin = document.querySelector('media-community-skin');
+const skin = document.querySelector('media-default-skin');
 
 skin.translations = SPANISH;

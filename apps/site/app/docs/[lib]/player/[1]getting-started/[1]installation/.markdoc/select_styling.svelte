@@ -1,14 +1,14 @@
 <script context="module" lang="ts">
   import { writable } from 'svelte/store';
 
-  export type StylingPreference = 'none' | 'defaults' | 'headless' | 'community-skin' | 'plyr-skin';
+  export type StylingPreference = 'none' | 'defaults' | 'headless' | 'default-skin' | 'plyr-skin';
 
   export const styling = writable<StylingPreference>(getStyleFromQuery());
 
   function getStyleFromQuery() {
-    if (!env.browser) return 'community-skin';
+    if (!env.browser) return 'default-skin';
     const searchParams = new URLSearchParams(location.search);
-    return (searchParams.get('styling') as StylingPreference) ?? 'community-skin';
+    return (searchParams.get('styling') as StylingPreference) ?? 'default-skin';
   }
 </script>
 
@@ -19,7 +19,7 @@
   import { env } from '$lib/env';
   import { kebabToTitleCase } from '$lib/utils/string';
 
-  import CommunitySkin from '../partials/styling/community-skin.md';
+  import DefaultSkin from '../partials/styling/default-skin.md';
   import Defaults from '../partials/styling/defaults.md';
   import Headless from '../partials/styling/headless.md';
   import None from '../partials/styling/none.md';
@@ -27,7 +27,7 @@
 
   const router = useRouter();
 
-  let options = ['None', 'Headless', 'Defaults', 'Community Skin', 'Plyr Skin'];
+  let options = ['None', 'Headless', 'Defaults', 'Default Skin', 'Plyr Skin'];
 
   $: value = kebabToTitleCase($styling);
   function onChange() {
@@ -41,7 +41,7 @@
     none: None,
     headless: Headless,
     defaults: Defaults,
-    'community-skin': CommunitySkin,
+    'default-skin': DefaultSkin,
     'plyr-skin': PlyrSkin,
   };
 </script>

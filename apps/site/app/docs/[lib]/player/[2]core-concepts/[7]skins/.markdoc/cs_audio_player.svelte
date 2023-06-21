@@ -25,14 +25,14 @@
         <media-player
           src="https://media-files.vidstack.io/sprite-fight/audio.mp3"
           title="Sprite Fight"
-          class="w-full not-prose"
+          class="vds-player w-full not-prose"
           view-type="audio"
           volume={0.2}
           key-target="document"
           crossorigin=""
           style="--audio-brand: rgb(124 58 237);"
         >
-          <media-outlet>
+          <media-provider class="vds-provider">
             <track
               src="/media/sprite-fight.vtt"
               label="English"
@@ -46,8 +46,8 @@
               kind="chapters"
               default
             />
-          </media-outlet>
-          <media-community-skin />
+          </media-provider>
+          <media-default-skin />
         </media-player>
       </div>
     </div>

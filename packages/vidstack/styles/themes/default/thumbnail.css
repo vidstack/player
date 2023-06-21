@@ -1,0 +1,30 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Thumbnail
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-thumbnail) {
+  display: block;
+  width: var(--thumbnail-width);
+  height: var(--thumbnail-height);
+  background-color: var(--media-thumbnail-bg, black);
+  contain: strict;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: var(--media-thumbnail-border, 1px solid white);
+  min-width: var(--media-thumbnail-min-width, 120px);
+  min-height: var(--media-thumbnail-min-height, 80px);
+  max-width: var(--media-thumbnail-max-width, 180px);
+  max-height: var(--media-thumbnail-max-height, 160px);
+}
+
+:where(.vds-thumbnail img) {
+  min-width: unset !important;
+  max-width: unset !important;
+  will-change: width, height, transform;
+}
+
+:where(.vds-thumbnail[aria-hidden='true']) {
+  display: none !important;
+}

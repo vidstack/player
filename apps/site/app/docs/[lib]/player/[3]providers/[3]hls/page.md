@@ -87,7 +87,7 @@ import {
 } from 'vidstack';
 ```
 
-You can find a complete list of HLS events in the [`<media-player>` API reference](/docs/player/components/layout/player/api#events--hls-lib-load-start).
+You can find a complete list of HLS events in the [`<media-player>` API reference](/docs/player/components/media/player/api#events--hls-lib-load-start).
 
 ## Video Element
 

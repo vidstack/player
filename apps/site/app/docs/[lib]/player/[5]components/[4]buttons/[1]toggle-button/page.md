@@ -81,8 +81,6 @@ media-player {
   --media-tooltip-padding: 2px 8px;
   --media-tooltip-border: 1px solid rgb(255 255 255 / 0.1);
   --media-tooltip-border-radius: 2px;
-  --media-tooltip-x-offset: 0;
-  --media-tooltip-y-offset: 12px;
 }
 ```
 

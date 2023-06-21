@@ -35,7 +35,7 @@
           crossorigin=""
           style="--video-brand: rgb(124 58 237);"
         >
-          <media-outlet>
+          <media-provider>
             <media-poster
               alt="Girl walks into sprite gnomes around her friend on a campfire in danger!"
             />
@@ -52,8 +52,8 @@
               kind="chapters"
               default
             />
-          </media-outlet>
-          <media-community-skin />
+          </media-provider>
+          <media-default-skin />
         </media-player>
       </div>
     </div>

@@ -1,13 +1,13 @@
 import fscreen from 'fscreen';
-import { ComponentController } from 'maverick.js/element';
+import { onDispose, ViewController } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
-import type { FullscreenAPI } from './events';
+import type { FullscreenEvents } from './events';
 
 const CAN_FULLSCREEN = fscreen.fullscreenEnabled;
 
 export class FullscreenController
-  extends ComponentController<FullscreenAPI>
+  extends ViewController<{}, {}, FullscreenEvents>
   implements FullscreenAdapter
 {
   /**
@@ -28,11 +28,14 @@ export class FullscreenController
   }
 
   protected override onConnect() {
+    // @ts-expect-error
     listenEvent(fscreen as any, 'fullscreenchange', this._onFullscreenChange.bind(this) as any);
+    // @ts-expect-error
     listenEvent(fscreen as any, 'fullscreenerror', this._onFullscreenError.bind(this) as any);
+    onDispose(this._onDisconnect.bind(this));
   }
 
-  protected override async onDisconnect() {
+  protected async _onDisconnect() {
     if (CAN_FULLSCREEN) await this.exit();
   }
 

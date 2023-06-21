@@ -6,10 +6,10 @@
   let player,
     ready = false,
     canPlay = true,
-    userIdle = false;
+    controls = false;
 
   $: if (ready) player.$store.canPlay = canPlay;
-  $: if (ready) player.$store.userIdle = userIdle;
+  $: if (ready) player.$store.controlsVisibility = controls;
 
   onMount(async () => {
     await customElements.whenDefined('media-player');
@@ -19,7 +19,7 @@
 
 <div class="contents">
   <media-player class="w-full max-w-xs bg-black" aspect-ratio="16/9" bind:this={player}>
-    <media-outlet />
+    <media-provider />
     <div class="media-controls-container">
       <div class="media-controls-group">Controls Top</div>
       <div class="media-controls-group">Controls Middle</div>
@@ -34,8 +34,8 @@
     </label>
 
     <label>
-      User Idle
-      <input type="checkbox" bind:checked={userIdle} />
+      Controls Visible
+      <input type="checkbox" bind:checked={controls} />
     </label>
   </div>
 </div>

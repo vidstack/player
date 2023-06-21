@@ -54,7 +54,7 @@ media-menu {
 
 ## Close Target
 
-Any element with the `slot="close-target"` attribute inside the menu on press will close the menu:
+Any element with the `part="close-target"` attribute inside the menu on press will close the menu:
 
 {% code_snippet name="close-target" highlight="html:4|react:4-6" /%}
 
@@ -140,8 +140,6 @@ media-player {
   --media-menu-font-weight: 500;
   --media-menu-scrollbar-track-bg: rgb(245 245 245 / 0.08);
   --media-menu-scrollbar-thumb-bg: rgb(245 245 245 / 0.1);
-  --media-menu-x-offset: 4px;
-  --media-menu-y-offset: 4px;
   --media-menu-hint-color: rgba(245, 245, 245, 0.5);
   --media-menu-min-width: 260px;
   --media-menu-max-height: calc(var(--media-height) * 0.7);

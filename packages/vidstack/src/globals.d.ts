@@ -1,4 +1,3 @@
-/// <reference types="maverick.js" />
 /// <reference path="../dom.d.ts" />
 
 declare global {

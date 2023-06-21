@@ -17,7 +17,7 @@
 
 <div class="contents">
   <media-player class="w-full max-w-xs bg-black" aspect-ratio="16/9" bind:this={player}>
-    <media-outlet />
+    <media-provider />
     <media-buffering-indicator />
   </media-player>
 

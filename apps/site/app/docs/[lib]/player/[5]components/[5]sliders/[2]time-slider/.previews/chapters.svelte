@@ -12,14 +12,14 @@
   class="w-full max-w-[380px] relative bg-[unset]"
   on:can-play={onCanPlay}
 >
-  <media-outlet>
+  <media-provider>
     <track
       src="https://media-files.vidstack.io/sprite-fight/chapters.vtt"
       srclang="en-US"
       kind="chapters"
       default
     />
-  </media-outlet>
+  </media-provider>
   <div class="w-full text-center flex">
     <media-time-slider>
       <div slot="preview">

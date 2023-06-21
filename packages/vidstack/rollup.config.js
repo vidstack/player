@@ -1,36 +1,99 @@
 import fs from 'node:fs';
-import path from 'node:path';
 
-import { rollup as maverick } from '@maverick-js/compiler';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import * as eslexer from 'es-module-lexer';
 import { transformSync } from 'esbuild';
-import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
+import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
-import { visualizer } from 'rollup-plugin-visualizer';
 
-const defineEntries = resolveDefineEntries();
+const MODE_TYPES = process.argv.includes('--config-types');
+const MODE_LIB = process.argv.includes('--config-lib');
+const MAIN_EXTERNAL = ['hls.js', 'media-captions', 'media-icons'];
 
-buildCSS();
+const LIB_EXTERNAL = [...MAIN_EXTERNAL, /maverick/];
 
-export default defineConfig([
-  // server
-  define({ dev: true, server: true }),
-  // dev
-  define({ dev: true, hydrate: true }),
-  // prod
-  define({ hydrate: true }),
-  // cdn dev
-  defineCDN({ dev: true }),
-  // cdn prod
-  defineCDN(),
-]);
+if (!MODE_TYPES) {
+  buildDefaultTheme();
+}
+
+// Used by other packages (e.g., `@vidstack/react`) to build without duplicate deps.
+const LIB = [
+  define({ lib: true, server: true }),
+  define({ lib: true, dev: true }),
+  define({ lib: true }),
+];
+
+export default defineConfig(
+  MODE_TYPES
+    ? [defineTypes(), defineTypes({ lib: true })]
+    : MODE_LIB
+    ? LIB
+    : [
+        ...LIB,
+        // server
+        define({ server: true }),
+        define({ dev: true }),
+        define(),
+        // cdn
+        defineCDN({ dev: true }),
+        defineCDN(),
+        defineCDN({ skins: true }),
+      ],
+);
+
+/**
+ * @param {{ lib?: boolean }} [config]
+ * @returns {import('rollup').RollupOptions}
+ * */
+function defineTypes({ lib } = {}) {
+  /** @type {Record<string, string>} */
+  let input = {
+    [lib ? 'lib' : 'index']: 'src/index.ts',
+  };
+
+  if (!lib) {
+    input = {
+      ...input,
+      elements: 'src/elements/index.ts',
+      icons: 'src/elements/bundles/icons.ts',
+    };
+  }
+
+  for (const key of Object.keys(input)) {
+    input[key] = input[key].replace(/^src/, 'types').replace(/\.ts$/, '.d.ts');
+  }
+
+  return {
+    input,
+    output: {
+      dir: '.',
+      chunkFileNames: 'dist/types/vidstack-[hash].ts',
+      manualChunks(id) {
+        if (lib) return null;
+        if (id.includes('maverick') || id.includes('lit-html') || id.includes('@floating-ui')) {
+          return 'framework.d';
+        }
+      },
+    },
+    external: lib ? LIB_EXTERNAL : MAIN_EXTERNAL,
+    plugins: [
+      dts({ respectExternal: true }),
+      {
+        name: 'cleanup',
+        closeBundle() {
+          if (lib) fs.rmSync('types', { recursive: true });
+        },
+      },
+    ],
+  };
+}
 
 /**
  * @typedef {{
  * dev?: boolean;
  * server?: boolean;
- * hydrate?: boolean;
+ * lib?: boolean;
  * minify?: boolean;
  * target?: string | null;
  * }} BundleOptions
@@ -40,86 +103,93 @@ export default defineConfig([
  * @param {BundleOptions}
  * @returns {import('rollup').RollupOptions}
  */
-function define({ dev, server, hydrate, minify, target } = {}) {
-  const alias = server ? 'server' : dev ? 'dev' : 'prod',
-    shouldMangle = !dev && !server;
+function define({ dev, server, lib, minify, target } = {}) {
+  /** @type {Record<string, string>} */
+  let input = {
+      vidstack: 'src/index.ts',
+    },
+    alias = server ? 'server' : dev ? 'dev' : 'prod',
+    shouldMangle = !lib && !dev && !server,
+    /** @type {Record<string, string | false>} */
+    mangleCache = {};
 
-  /** @type {Record<string, string | false>} */
-  let mangleCache = {};
+  if (!server) {
+    input = {
+      ...input,
+      [`providers/vidstack-html`]: 'src/providers/html/provider.ts',
+      [`providers/vidstack-audio`]: 'src/providers/audio/provider.ts',
+      [`providers/vidstack-video`]: 'src/providers/video/provider.ts',
+      [`providers/vidstack-hls`]: 'src/providers/hls/provider.ts',
+    };
+  }
+
+  if (!lib) {
+    input = {
+      ...input,
+      'vidstack-elements': 'src/elements/index.ts',
+      'define/vidstack-icons': 'src/elements/bundles/icons.ts',
+      'define/vidstack': 'src/elements/bundles/main.ts',
+      'define/default-skins': 'src/elements/bundles/skins.ts',
+      'define/default-skin': 'src/elements/bundles/ui.ts',
+    };
+
+    if (!server) {
+      input['define/default-skin'] = 'src/elements/define/skins/default-skin-element.ts';
+    }
+  }
 
   return {
-    input: {
-      index: 'src/index.ts',
-      elements: 'src/elements.ts',
-      icons: 'src/icons.ts',
-      ...defineEntries,
-    },
+    input,
     maxParallelFileOps: shouldMangle ? 1 : 20,
     treeshake: true,
     preserveEntrySignatures: 'strict',
-    external: [/maverick/, 'hls.js', 'media-captions', 'media-icons'],
+    external: lib ? LIB_EXTERNAL : MAIN_EXTERNAL,
     output: {
       format: 'esm',
-      dir: `dist/${alias}`,
-      chunkFileNames: '[name].js',
-      manualChunks(id, meta) {
-        const filename = path.basename(id, path.extname(id));
-
-        if (id.includes('src/icons')) {
-          return `icons/${filename}`;
-        }
-
-        if (
-          id.includes('player/core') ||
-          id.includes('player/foundation') ||
-          id.includes('player/outlet')
-        ) {
-          return 'media-core';
-        }
-
-        if (id.includes('player/skins/community')) {
-          return 'media-community-skin';
-        }
-
-        if (id.includes('player/ui')) {
-          return 'media-ui';
-        }
-
-        if (id.includes('player')) {
-          return path.relative(
-            path.resolve(process.cwd(), 'src/player'),
-            id.replace(path.extname(id), ''),
-          );
-        }
-
+      dir: `${lib ? `lib` : `dist`}/${alias}`,
+      chunkFileNames: 'chunks/vidstack-[hash].js',
+      manualChunks(id) {
+        if (lib) return null;
+        if (id.includes('maverick') || id.includes('@floating-ui')) return 'framework';
+        if (id.includes('lit-html')) return 'framework-skin';
         return null;
       },
     },
     plugins: [
       nodeResolve({
-        exportConditions: dev
+        exportConditions: server
+          ? ['node', 'default', 'development']
+          : dev
           ? ['development', 'production', 'default']
           : ['production', 'default'],
-      }),
-      maverick({
-        include: 'src/**/*.tsx',
-        generate: server ? 'ssr' : 'dom',
-        hydratable: hydrate
-          ? (id) => !id.includes('time-slider/chapters') && !id.includes('skins/community')
-          : false,
-        diffArrays: false,
       }),
       esbuildPlugin({
         tsconfig: 'tsconfig.build.json',
         target: target ?? (server ? 'node18' : 'esnext'),
         platform: server ? 'node' : 'browser',
         minify: minify,
+        legalComments: 'none',
         define: {
           __DEV__: dev ? 'true' : 'false',
           __SERVER__: server ? 'true' : 'false',
           __TEST__: 'false',
         },
       }),
+      server && {
+        name: 'server-bundle',
+        async transform(code, id) {
+          if (id.includes('src/elements/bundles')) return '';
+
+          if (id.includes('src/elements/index.ts')) {
+            await eslexer.init;
+            const [_, exports] = eslexer.parse(code),
+              define = 'export function defineCustomElement() {};\n';
+            return exports
+              .map((s) => (s.n === 'defineCustomElement' ? define : `export class ${s.n} {};`))
+              .join('\n');
+          }
+        },
+      },
       shouldMangle && {
         name: 'mangle',
         transform(code) {
@@ -139,83 +209,54 @@ function define({ dev, server, hydrate, minify, target } = {}) {
           return result.code;
         },
       },
-      // visualizer(),
     ],
   };
 }
 
 /** @returns {import('rollup').RollupOptions} */
-function defineCDN({ dev = false } = {}) {
-  const alias = dev ? 'dev' : 'prod';
-
+function defineCDN({ dev = false, skins = false } = {}) {
+  const input = dev || skins ? 'src/elements/bundles/cdn-skins.ts' : 'src/elements/bundles/cdn.ts',
+    output = dev ? `vidstack.dev` : `vidstack`;
   return {
     ...define({
       dev,
       server: false,
-      hydrate: false,
       minify: !dev,
       target: 'es2020',
     }),
     input: {
-      [alias]: 'src/cdn.ts',
+      [output]: input,
+      [`providers/vidstack-html`]: 'src/providers/html/provider.ts',
+      [`providers/vidstack-audio`]: 'src/providers/audio/provider.ts',
+      [`providers/vidstack-video`]: 'src/providers/video/provider.ts',
+      [`providers/vidstack-hls`]: 'src/providers/hls/provider.ts',
     },
     output: {
       format: 'esm',
-      dir: 'dist/cdn',
-      chunkFileNames: `${alias}/[name].js`,
+      dir: dev || !skins ? 'cdn' : 'cdn/skins',
+      chunkFileNames: `chunks/vidstack-[hash].js`,
       paths: {
         'media-icons': 'https://cdn.jsdelivr.net/npm/media-icons/dist/lazy.js',
+        'media-captions': 'https://cdn.jsdelivr.net/npm/media-captions/dist/prod.js',
       },
-      manualChunks(id, meta) {
-        const filename = path.basename(id, path.extname(id));
-
-        if (id.includes('maverick')) {
-          return 'maverick';
-        }
-
-        if (id.includes('media-captions')) {
-          return `captions/${filename}`;
-        }
-
-        if (id.includes('player/providers')) {
-          return 'providers';
-        }
-
+      manualChunks(id) {
+        if (dev) return output; // no chunks in dev
+        if (id.includes('maverick') || id.includes('@floating-ui')) return 'frameworks';
         return null;
       },
     },
-    external: ['media-icons'],
+    external: ['media-icons', 'media-captions'],
   };
 }
 
-function resolveDefineEntries() {
-  const entries = globbySync('src/define/*.ts').reduce((entries, file) => {
-    const entry = file.replace('src/', '').replace(/\.ts$/, '');
-    entries[entry] = file;
-    return entries;
-  }, {});
-
-  if (!fs.existsSync('define')) fs.mkdirSync('define');
-  for (const entry of Object.keys(entries)) {
-    fs.writeFileSync(entry + '.js', '// editor file - real file exists in `dist` dir');
-  }
-
-  return entries;
-}
-
-function buildCSS() {
+function buildDefaultTheme() {
   // CSS merge.
-  let defaultStyles = fs.readFileSync('styles/base.css', 'utf-8'),
-    communityAudioSkin = fs.readFileSync('src/player/skins/community/audio.css', 'utf-8'),
-    communityVideoSkin = fs.readFileSync('src/player/skins/community/video.css', 'utf-8');
+  let defaultStyles = fs.readFileSync('styles/base.css', 'utf-8');
 
-  for (const file of fs.readdirSync('styles/ui', 'utf-8')) {
-    defaultStyles += '\n' + fs.readFileSync(`styles/ui/${file}`, 'utf-8');
+  const themeDir = 'styles/themes/default';
+  for (const file of fs.readdirSync(themeDir, 'utf-8')) {
+    defaultStyles += '\n' + fs.readFileSync(`${themeDir}/${file}`, 'utf-8');
   }
 
-  fs.writeFileSync('styles/defaults.css', defaultStyles);
-
-  if (!fs.existsSync('styles/community-skin')) fs.mkdirSync('styles/community-skin');
-  fs.writeFileSync('styles/community-skin/audio.css', communityAudioSkin);
-  fs.writeFileSync('styles/community-skin/video.css', communityVideoSkin);
+  fs.writeFileSync('styles/themes/default.css', defaultStyles);
 }

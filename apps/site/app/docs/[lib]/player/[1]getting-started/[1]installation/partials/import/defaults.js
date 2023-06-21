@@ -1,4 +1,4 @@
-import 'vidstack/styles/defaults.css';
+import 'vidstack/styles/themes/default.css';
 
 import { defineCustomElements } from 'vidstack/elements';
 
