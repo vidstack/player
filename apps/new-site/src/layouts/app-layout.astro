@@ -1,0 +1,51 @@
+---
+import '../styles/fonts.css';
+import '../styles/app.css';
+import '../styles/tailwind.css';
+import '../styles/docs.css';
+import 'vidstack/styles/player/themes/default.css';
+import 'vidstack/styles/player/skins/default/audio.css';
+import 'vidstack/styles/player/skins/default/video.css';
+import '../polyfills/focus-visible';
+import 'vidstack/player/skins';
+import MetaTags from './parts/meta-tags.astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <MetaTags {title} {description} />
+
+    <script>
+      const key = 'vidstack::color-scheme',
+        scheme = localStorage[key],
+        prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches,
+        element = document.documentElement;
+      if (scheme === 'dark' || (scheme !== 'light' && prefersDark)) {
+        element.classList.add('dark');
+        element.classList.remove('light');
+      } else {
+        element.classList.remove('dark');
+        element.classList.add('light');
+      }
+    </script>
+  </head>
+  <body class="bg-body text-inverse min-w-screen min-h-screen">
+    <slot />
+  </body>
+</html>

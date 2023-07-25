@@ -11,6 +11,7 @@ vite.config.ts.timestamp-*
 .vercel
 .turbo
 turbo-graph*
+.astro/
 
 /scratchpad/
 /sandbox/
@@ -32,13 +33,13 @@ packages/vidstack/lib.d.ts
 packages/vidstack/elements.d.ts
 packages/vidstack/icons.d.ts
 
-packages/*/styles/themes/default.css
+packages/*/styles/*/themes/default.css
 
 packages/react/src/icons.ts
 packages/react/index.d.ts
 packages/react/icons.d.ts
 packages/react/styles/
-packages/react/skins/
+packages/react/player/
 packages/react/tailwind*
 
 

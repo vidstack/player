@@ -1,12 +1,13 @@
 import {
   walkComponentDocs,
+  type AttrsMeta,
   type ComponentMeta,
   type EventMeta,
   type MethodMeta,
   type PropMeta,
-} from '@maverick-js/compiler/analyze';
+} from '@maverick-js/cli/analyze';
 import MarkdownIt from 'markdown-it';
-import elements from 'vidstack/elements.json';
+import meta from 'vidstack/analyze.json';
 
 import { getTagNameFromPath } from '$lib/stores/element';
 
@@ -16,9 +17,11 @@ const parser = new MarkdownIt({ html: true }),
 export async function loadComponentAPI(pathname: string): Promise<ComponentApi> {
   let tagName = getTagNameFromPath(pathname);
 
-  const component = elements.components.find((component) => component.tag.name === tagName)!;
+  const element = meta.elements.find((el) => el.tag.name === tagName)!,
+    component =
+      element.component && meta.components.find((c) => c.name === element.component!.name);
 
-  if (!component) return {};
+  if (!element || !component) return {};
 
   if (!parsed.has(tagName)) {
     walkComponentDocs(component, (docs) => {
@@ -28,27 +31,25 @@ export async function loadComponentAPI(pathname: string): Promise<ComponentApi> 
     parsed.add(tagName);
   }
 
-  const props = extractProps(component);
+  const props = extractProps(component, element.attrs),
+    propsWithAttr =
+      element.attrs && props
+        ? props.filter((prop) => element.attrs![prop.name].attr).map((prop) => prop.name)
+        : [];
 
   return {
     props,
     events: extractEvents(component),
-    slots: extractSlots(component),
-    cssVars: extractCssVars(component),
-    cssParts: extractCssParts(component),
-    instanceProps: extractInstanceProps(
-      component,
-      new Set(props ? props.filter((prop) => prop.attr).map((prop) => prop.name) : []),
-    ),
+    instanceProps: extractInstanceProps(component, new Set(propsWithAttr)),
     instanceMethods: extractInstanceMethods(component),
   };
 }
 
-function extractProps(component: ComponentMeta) {
+function extractProps(component: ComponentMeta, attrs?: AttrsMeta) {
   return component.props
     ?.filter((prop) => !prop.internal)
     .map((prop) => ({
-      attr: prop.attribute,
+      attr: attrs?.[prop.name].attr,
       name: prop.name,
       docs: prop.docs,
       default: prop.default,
@@ -68,29 +69,6 @@ function extractEvents(component: ComponentMeta) {
       detail: event.detail,
       link: findLink(event),
     }));
-}
-
-function extractSlots(component: ComponentMeta) {
-  return component.slots?.map((slot) => ({
-    name: slot.name || 'DEFAULT',
-    docs: slot.docs,
-  }));
-}
-
-function extractCssVars(component: ComponentMeta) {
-  return component.cssvars?.map((prop) => ({
-    name: prop.name,
-    docs: prop.docs,
-    type: prop.type,
-    readonly: prop.readonly,
-  }));
-}
-
-function extractCssParts(component: ComponentMeta) {
-  return component.cssparts?.map((part) => ({
-    name: part.name,
-    docs: part.docs,
-  }));
 }
 
 function extractInstanceProps(component: ComponentMeta, filter: Set<string>) {
@@ -129,7 +107,7 @@ function findLink(prop: PropMeta | MethodMeta | EventMeta) {
 export type ComponentApi = {
   props?: {
     name: string;
-    attr?: string;
+    attr?: string | false;
     docs?: string;
     readonly?: boolean;
     type?: string;
@@ -141,20 +119,6 @@ export type ComponentApi = {
     type?: string;
     link?: string;
     detail?: string;
-  }[];
-  slots?: {
-    name: string;
-    docs?: string;
-  }[];
-  cssVars?: {
-    name: string;
-    docs?: string;
-    type?: string;
-    readonly?: boolean;
-  }[];
-  cssParts?: {
-    name: string;
-    docs?: string;
   }[];
   instanceProps?: {
     name: string;

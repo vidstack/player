@@ -1,19 +1,16 @@
 <script lang="ts">
   import 'nprogress/nprogress.css';
-
   import { navigation, route } from '@vessel-js/svelte';
   import clsx from 'clsx';
   import NProgress from 'nprogress';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-
   import Button from '$lib/components/base/Button.svelte';
   import SocialLink from '$lib/components/social/SocialLink.svelte';
   import { env } from '$lib/env';
   import { addJSLibToPath } from '$lib/stores/js-lib';
   import { isLargeScreen } from '$lib/stores/screen';
   import { scrollDirection, scrollTop } from '$lib/stores/scroll';
-
   import { setNavbarContext, type NavLinks } from './navbar/context';
   import Navbar from './navbar/Navbar.svelte';
 
@@ -39,7 +36,7 @@
     },
     {
       title: 'Releases',
-      slug: 'https://github.com/vidstack/player/discussions?discussions_q=is%3Aopen+release',
+      slug: 'https://github.com/vidstack/vidstack/discussions?discussions_q=is%3Aopen+release',
     },
   ].filter(Boolean) as NavLinks;
 
@@ -231,7 +228,9 @@
     right: 0px;
     width: 100px;
     height: 100%;
-    box-shadow: 0 0 10px rgb(var(--color-brand)), 0 0 5px rgb(var(--color-brand));
+    box-shadow:
+      0 0 10px rgb(var(--color-brand)),
+      0 0 5px rgb(var(--color-brand));
     opacity: 1;
 
     -webkit-transform: rotate(3deg) translate(0px, -4px);

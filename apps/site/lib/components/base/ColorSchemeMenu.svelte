@@ -1,4 +1,5 @@
 <script lang="ts">
+  import clsx from 'clsx';
   import { colorScheme, isDarkColorScheme } from '$lib/stores/color-scheme';
   import { isKeyboardClick } from '$lib/utils/keyboard';
 
@@ -8,7 +9,10 @@
 </script>
 
 <button
-  class="min-w-[40px] min-h-[40px] flex items-center justify-center p-2 transform-gpu rounded-md border-0 transition-transform hover:scale-[1.1]"
+  class={clsx(
+    'min-w-[40px] min-h-[40px] flex items-center justify-center p-2 transform-gpu rounded-md border-0',
+    'transition-transform hover:scale-[1.1]  hover:bg-elevate hover:text-brand',
+  )}
   on:pointerup={onPointerUp}
   on:keydown={(e) => {
     if (isKeyboardClick(e)) onPointerUp();

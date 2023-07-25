@@ -24,7 +24,14 @@
     "useDefineForClassFields": false,
     "verbatimModuleSyntax": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.cjs", "**/*.mjs"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.cjs",
+    "**/*.mjs",
+    "**/*.astro"
+  ],
   "exclude": [
     "node_modules",
     "dist",

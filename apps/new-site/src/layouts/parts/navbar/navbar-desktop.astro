@@ -1,0 +1,38 @@
+---
+import clsx from 'clsx';
+import ColorSchemeMenu from '../color-scheme-menu.svelte';
+import Logo from '../logo.astro';
+import SocialLink from '../social-link.astro';
+import NavItems from './menus/nav-items.astro';
+import type { NavItem } from './navigation';
+
+export interface Props {
+  items: NavItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div
+  class={clsx(
+    'hidden min-[825px]:flex px-4 1440:px-0',
+    'mx-auto h-[var(--navbar-height)] w-full max-w-[var(--navbar-max-width)]',
+    'flex-col items-center justify-center z-40',
+  )}
+>
+  <div class="flex w-full items-center">
+    <a class="mr-12" href="/" aria-label="Go Home">
+      <Logo />
+    </a>
+
+    <NavItems {items} />
+
+    <div class="flex-1"></div>
+
+    <div class="flex items-center">
+      <SocialLink class="mr-1" type="twitter" />
+      <SocialLink class="mr-1" type="gitHub" />
+      <ColorSchemeMenu client:load />
+    </div>
+  </div>
+</div>

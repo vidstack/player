@@ -1,7 +1,7 @@
 {
   "name": "vidstack",
   "version": "0.6.13",
-  "description": "UI component library for building high-quality, accessible video and audio players for the web.",
+  "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
   "types": "index.d.ts",
@@ -15,7 +15,7 @@
   "files": [
     "*.d.ts",
     "dist/",
-    "define/",
+    "player/",
     "cdn/",
     "styles/",
     "tailwind.*",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.4.4",
-    "@maverick-js/compiler": "0.37.0",
+    "@maverick-js/cli": "0.38.0",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -59,7 +59,7 @@
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
-    "maverick.js": "0.37.0",
+    "maverick.js": "0.38.0",
     "media-icons": "0.10.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
@@ -75,8 +75,8 @@
     "vitest": "^0.30.0"
   },
   "contributors": [
-    "Dave Furfero <furf@furf.com>",
     "Rahim Alwer <rahim.alwer@gmail.com>",
+    "Dave Furfero <furf@furf.com>",
     "Sam Potts <sam@potts.es>"
   ],
   "repository": {
@@ -113,17 +113,17 @@
       "development": "./dist/dev/define/vidstack-icons.js",
       "default": "./dist/prod/define/vidstack-icons.js"
     },
-    "./define": {
-      "types": "./define/index.d.ts",
-      "node": "./dist/server/define/vidstack.js",
-      "development": "./dist/dev/define/vidstack.js",
-      "default": "./dist/prod/define/vidstack.js"
+    "./player": {
+      "types": "./player/index.d.ts",
+      "node": "./dist/server/define/vidstack-player.js",
+      "development": "./dist/dev/define/vidstack-player.s",
+      "default": "./dist/prod/define/vidstack-player.js"
     },
-    "./define/skins": {
-      "types": "./define/skins.d.ts",
-      "node": "./dist/server/define/default-skins.js",
-      "development": "./dist/dev/define/default-skins.js",
-      "default": "./dist/prod/define/default-skins.js"
+    "./player/skins": {
+      "types": "./player/skins.d.ts",
+      "node": "./dist/server/define/vidstack-player-skins.js",
+      "development": "./dist/dev/define/vidstack-player-skins.js",
+      "default": "./dist/prod/define/vidstack-player-skins.js"
     },
     "./dist/types/*": "./dist/types/*",
     "./styles/*": "./styles/*",
@@ -143,6 +143,7 @@
   },
   "keywords": [
     "accessible",
+    "analytics",
     "audio",
     "customizable",
     "dailymotion",
@@ -150,6 +151,7 @@
     "extensible",
     "file",
     "framework-agnostic",
+    "headless",
     "hls",
     "html5",
     "jwplayer",
@@ -157,7 +159,9 @@
     "plyr",
     "player",
     "spec-compliant",
+    "tailwind",
     "universal",
+    "uploader",
     "vds",
     "video",
     "videojs",

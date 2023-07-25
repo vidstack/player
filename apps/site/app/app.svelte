@@ -4,17 +4,13 @@
   import '$lib/styles/tailwind.css';
   import '$lib/styles/docs.css';
   import '$lib/polyfills/focus-visible';
-
-  import 'vidstack/define/skins';
-
-  import 'vidstack/styles/themes/default.css';
-  import 'vidstack/styles/skins/default/audio.css';
-  import 'vidstack/styles/skins/default/video.css';
-
-  import { useRouter } from '@vessel-js/svelte';
-  import { RouteAnnouncer, RouterOutlet } from '@vessel-js/svelte';
-  import { onMount } from 'svelte';
+  import 'vidstack/player/skins';
+  import 'vidstack/styles/player/themes/default.css';
+  import 'vidstack/styles/player/skins/default/audio.css';
+  import 'vidstack/styles/player/skins/default/video.css';
   import { createComplexScrollDelegate } from '@vessel-js/app';
+  import { RouteAnnouncer, RouterOutlet, useRouter } from '@vessel-js/svelte';
+  import { onMount } from 'svelte';
 
   const router = useRouter();
 

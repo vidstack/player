@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import * as eslexer from 'es-module-lexer';
 import { transformSync } from 'esbuild';
@@ -128,13 +127,13 @@ function define({ dev, server, lib, minify, target } = {}) {
       ...input,
       'vidstack-elements': 'src/elements/index.ts',
       'define/vidstack-icons': 'src/elements/bundles/icons.ts',
-      'define/vidstack': 'src/elements/bundles/main.ts',
-      'define/default-skins': 'src/elements/bundles/skins.ts',
-      'define/default-skin': 'src/elements/bundles/ui.ts',
+      'define/vidstack-player': 'src/elements/bundles/player.ts',
+      'define/vidstack-player-skins': 'src/elements/bundles/player-skins.ts',
+      'define/vidstack-player-ui': 'src/elements/bundles/player-ui.ts',
     };
 
     if (!server) {
-      input['define/default-skin'] = 'src/elements/define/skins/default-skin-element.ts';
+      input['define/vidstack-player-skin'] = 'src/elements/define/skins/default-skin-element.ts';
     }
   }
 
@@ -215,7 +214,10 @@ function define({ dev, server, lib, minify, target } = {}) {
 
 /** @returns {import('rollup').RollupOptions} */
 function defineCDN({ dev = false, skins = false } = {}) {
-  const input = dev || skins ? 'src/elements/bundles/cdn-skins.ts' : 'src/elements/bundles/cdn.ts',
+  const input =
+      dev || skins
+        ? 'src/elements/bundles/player-cdn-skins.ts'
+        : 'src/elements/bundles/player-cdn.ts',
     output = dev ? `vidstack.dev` : `vidstack`;
   return {
     ...define({
@@ -251,12 +253,12 @@ function defineCDN({ dev = false, skins = false } = {}) {
 
 function buildDefaultTheme() {
   // CSS merge.
-  let defaultStyles = fs.readFileSync('styles/base.css', 'utf-8');
+  let defaultStyles = fs.readFileSync('styles/player.css', 'utf-8');
 
-  const themeDir = 'styles/themes/default';
+  const themeDir = 'styles/player/themes/default';
   for (const file of fs.readdirSync(themeDir, 'utf-8')) {
     defaultStyles += '\n' + fs.readFileSync(`${themeDir}/${file}`, 'utf-8');
   }
 
-  fs.writeFileSync('styles/themes/default.css', defaultStyles);
+  fs.writeFileSync('styles/player/themes/default.css', defaultStyles);
 }

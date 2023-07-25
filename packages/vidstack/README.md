@@ -4,15 +4,8 @@
 [![discord-badge]][discord]
 [![jsdelivr-badge]][jsdelivr]
 
-Design a modern media player only using HTML and CSS. The successor to [Plyr][plyr] `3.x` and
-[Vime][vime] `5.x`.
-
-## Beta
-
-We're currently in Beta, some features may not be complete or missing. Join the
-[Discussions][discussions], or [Discord][discord] server to get involved. You can also see
-our [Player Roadmap](https://github.com/orgs/vidstack/projects/1/views/1?groupedBy%5BcolumnId%5D=Milestone)
-for what's planned ahead.
+Vidstack is a platform for frontend developers to build high-quality, accessible video/audio
+experiences on the web.
 
 ## 📖 Docs
 

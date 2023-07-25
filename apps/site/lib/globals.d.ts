@@ -2,7 +2,7 @@
 /// <reference types="vidstack/globals" />
 /// <reference types="@vessel-js/app/globals" />
 /// <reference types="@vessel-js/svelte/globals" />
-/// <reference types="unplugin-icons/types/svelte" />
+/// <reference types="unplugin-icons/types/astro" />
 
 declare module '*?highlight' {
   export interface CodeHighlight {

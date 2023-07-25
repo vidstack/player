@@ -1,0 +1,14 @@
+---
+import NavbarDesktop from '../navbar/navbar-desktop.astro';
+import NavbarMobile from '../navbar/navbar-mobile.astro';
+import type { NavItem } from './navigation';
+
+export interface Props {
+  items: NavItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<NavbarDesktop {items} />
+<NavbarMobile {items} />

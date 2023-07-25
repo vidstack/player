@@ -92,31 +92,31 @@ To speed up development, we provide default styles out of the box for all compon
 can be imported like so:
 
 ```js {% copy=true %}
-import 'vidstack/styles/themes/default.css';
+import 'vidstack/styles/player/themes/default.css';
 ```
 
 You can also individually import only the styles you need like so:
 
 ```js {% copy=true %}
-import 'vidstack/styles/base.css';
-import 'vidstack/styles/themes/default/buttons.css';
-import 'vidstack/styles/themes/default/buffering.css';
-import 'vidstack/styles/themes/default/captions.css';
-import 'vidstack/styles/themes/default/tooltips.css';
-import 'vidstack/styles/themes/default/sliders.css';
-import 'vidstack/styles/themes/default/menus.css';
+import 'vidstack/styles/player.css';
+import 'vidstack/styles/player/themes/default/buttons.css';
+import 'vidstack/styles/player/themes/default/buffering.css';
+import 'vidstack/styles/player/themes/default/captions.css';
+import 'vidstack/styles/player/themes/default/tooltips.css';
+import 'vidstack/styles/player/themes/default/sliders.css';
+import 'vidstack/styles/player/themes/default/menus.css';
 ```
 
-#### `vidstack/styles/base.css`
+#### `vidstack/styles/player.css`
 
 Custom Elements have absolutely no styling by default including display or position properties.
 This makes them awkward to work with out of the box. Our base styles provide the very basics such
 as `display`, `position`, and `:focus` styles. We strongly recommend you include this file.
 
-#### `vidstack/styles/themes/default/*`
+#### `vidstack/styles/player/themes/default/*`
 
-The styles located in the `styles/themes/default` directory contains default styles for all components
-organized by role (e.g., `buttons.css` or `sliders.css`). This includes: basic color,
+The styles located in the `styles/player/themes/default` directory contains default styles for all
+player components organized by role (e.g., `buttons.css` or `sliders.css`). This includes: basic color,
 sizing buttons, positioning icons, size/position of track/thumb for sliders, and more.
 Include these files if you don't want to spend time building components from scratch.
 
@@ -205,7 +205,7 @@ great option even when using Tailwind.
 If you decide to go headless, we recommend only importing the base styles like so:
 
 ```js {% copy=true %}
-import 'vidstack/styles/base.css';
+import 'vidstack/styles/player.css';
 ```
 
 Here's a crude example on how it might look styling a play button from scratch:

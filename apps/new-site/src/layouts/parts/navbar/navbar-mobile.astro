@@ -1,0 +1,28 @@
+---
+import clsx from 'clsx';
+import Logo from '../logo.astro';
+import SocialLink from '../social-link.astro';
+import NavMobilePopover from './menus/nav-mobile-popover.svelte';
+---
+
+<div
+  class={clsx(
+    'min-[825px]:hidden px-4 py-4',
+    'mx-auto h-[var(--navbar-height)] w-full max-w-[var(--navbar-max-width)]',
+    'flex-col items-center justify-center z-40',
+  )}
+>
+  <div class="flex w-full items-center">
+    <a class="mr-12" href="/" aria-label="Go Home">
+      <Logo />
+    </a>
+
+    <div class="flex-1"></div>
+
+    <div class="flex items-center">
+      <SocialLink class="mr-1" type="twitter" />
+      <SocialLink class="mr-1" type="gitHub" />
+      <NavMobilePopover client:load />
+    </div>
+  </div>
+</div>

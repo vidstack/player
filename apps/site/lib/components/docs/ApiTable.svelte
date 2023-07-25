@@ -1,7 +1,6 @@
 <script lang="ts">
   import { useRouter } from '@vessel-js/svelte';
   import InfoIcon from '~icons/ri/information-line';
-  import QuestionIcon from '~icons/ri/question-fill';
 
   import type { ComponentApi } from '$lib/server/component-api';
   import { jsLib } from '$lib/stores/js-lib';
@@ -14,18 +13,8 @@
 
   const router = useRouter();
 
-  const categories = Object.keys(api); // ['props', 'events', 'slots', ...]
-
-  const readonlyRE = /props|instanceProps|cssVars/;
-  const descRE = /slots|cssParts/;
-  const noTypes = new Set(['slots', 'cssParts']);
-
-  const categoryLinks = {
-    slots:
-      'https://developers.google.com/web/fundamentals/web-components/shadowdom#composition_slot',
-    cssVars: 'https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties',
-    cssParts: 'https://developer.mozilla.org/en-US/docs/Web/CSS/::part',
-  };
+  const categories = Object.keys(api); // ['props', 'events', ...]
+  const readonlyRE = /props|instanceProps/;
 
   function isMDNLink(link: string) {
     return /(mdn|mozilla)/.test(link);
@@ -43,26 +32,13 @@
 {#each categories as category (category)}
   {@const id = `api_${category.toLowerCase()}`}
   {@const categoryTitle = camelToTitleCase(category).replace('Css', 'CSS')}
-  {@const hasTypes = !noTypes.has(category)}
   {@const hasReadonly = readonlyRE.test(category)}
-  {@const hasDescription = descRE.test(category)}
   <div class="mt-12 mb-6 flex flex-col justify-center">
     <div class="flex items-center">
       <h3 {id} class="m-0">
         <a class="header-anchor" href={`#${id}`} aria-hidden="true">#</a>
         {categoryTitle}
       </h3>
-      {#if categoryLinks[category]}
-        <a
-          class="flex h-full transform items-center border-0 px-2.5 transition-transform ease-in hover:scale-110"
-          href={categoryLinks[category]}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span class="sr-only">Learn more about {category}</span>
-          <QuestionIcon width="24" height="24" />
-        </a>
-      {/if}
     </div>
   </div>
   <div class="relative api-table my-[2em] overflow-visible">
@@ -70,12 +46,7 @@
       <thead>
         <tr>
           <th>Name</th>
-          {#if hasDescription}
-            <th>Description</th>
-          {/if}
-          {#if hasTypes}
-            <th>Type</th>
-          {/if}
+          <th>Type</th>
         </tr>
       </thead>
       <tbody>
@@ -90,7 +61,7 @@
             category === 'props' && $jsLib !== 'react' && prop.attr && !prop.readonly}
           {@const hasDetail = category === 'events' && prop.detail}
           {@const info = [
-            [hasTypes && 'Type', prop.type],
+            ['Type', prop.type],
             [hasAttr && 'Attribute', prop.attr],
             [category === 'props' && 'Default', prop.default],
             [hasDetail && 'Detail', prop.detail],
@@ -98,7 +69,7 @@
           <tr class="even:bg-elevate">
             <td>
               <div class="flex items-center">
-                {#if (prop.docs || hasAttr || hasDetail) && !hasDescription}
+                {#if prop.docs || hasAttr || hasDetail}
                   <Popover lockScrollbar={false} side="right">
                     <svelte:fragment slot="button">
                       <div class="sr-only">{`${name} info`}</div>
@@ -155,18 +126,12 @@
               </div>
             </td>
 
-            {#if hasDescription}
-              <td class="w-full whitespace-normal">{@html prop.docs}</td>
-            {/if}
-
-            {#if hasTypes}
-              <td>
-                {#if hasReadonly && prop.readonly}
-                  <code>readonly</code>
-                {/if}
-                <code>{prop.type}</code>
-              </td>
-            {/if}
+            <td>
+              {#if hasReadonly && prop.readonly}
+                <code>readonly</code>
+              {/if}
+              <code>{prop.type}</code>
+            </td>
           </tr>
         {/each}
       </tbody>

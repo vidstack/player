@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { transformSync } from 'esbuild';
 import { defineConfig } from 'rollup';
@@ -30,7 +29,7 @@ function defineTypes() {
     input: {
       index: 'types/index.d.ts',
       icons: 'types/icons.d.ts',
-      'skins/default': 'types/components/skins/default/default-skin.d.ts',
+      'player/default-skin': 'types/components/skins/default/default-skin.d.ts',
     },
     output: {
       dir: '.',
@@ -72,7 +71,7 @@ function define({ dev, server } = {}) {
 
   let input = {
     vidstack: 'src/index.ts',
-    'vidstack-default-skin': 'src/components/skins/default/default-skin.tsx',
+    'vidstack-player-skin': 'src/components/skins/default/default-skin.tsx',
   };
 
   if (!dev && !server) {

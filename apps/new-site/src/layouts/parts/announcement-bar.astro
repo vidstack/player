@@ -1,0 +1,27 @@
+---
+import ArrowRightIcon from '~astro-icons/lucide/arrow-right';
+import MegaphoneIcon from '~astro-icons/lucide/megaphone';
+
+interface Props {
+  href: string;
+}
+
+const { href } = Astro.props;
+---
+
+<div class="border-border border-y-[1px] w-full py-2.5 text-sm flex items-center justify-center">
+  <MegaphoneIcon class="mr-1.5 mb-0.5" width={20} height={20} />
+
+  <span class="mr-1">
+    <slot />
+  </span>
+
+  <a class="flex items-center text-brand group font-medium" {href}>
+    Learn more
+    <ArrowRightIcon
+      class="-translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-px transition-all"
+      width={14}
+      height={14}
+    />
+  </a>
+</div>

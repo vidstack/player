@@ -1,3 +1,3 @@
-import 'vidstack/styles/themes/default.css';
+import 'vidstack/styles/player/themes/default.css';
 
 import { MediaProvider, MediaPlayer } from '@vidstack/react';
