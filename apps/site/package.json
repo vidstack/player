@@ -24,7 +24,7 @@
   "devDependencies": {
     "@algolia/client-search": "^4.14.0",
     "@iconify-json/ri": "^1.1.0",
-    "@maverick-js/compiler": "0.37.0",
+    "@maverick-js/cli": "0.38.0",
     "@sveltejs/vite-plugin-svelte": "^2.0.0",
     "@tailwindcss/typography": "^0.5.0",
     "@types/markdown-it": "^12.2.0",
@@ -39,7 +39,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "shiki": "0.10.1",
-    "svelte": "^3.58.0",
+    "svelte": "^4.0.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.0.0",
     "unplugin-icons": "^0.16.0",

@@ -1,6 +1,5 @@
 <script lang="ts">
   import clsx from 'clsx';
-
   import { uppercaseFirstLetter } from '$lib/utils/string';
 
   export let width = 28;
@@ -77,5 +76,4 @@
   >
     {title}
   </span>
-  <slot />
 </a>

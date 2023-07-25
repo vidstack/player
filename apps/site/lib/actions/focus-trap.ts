@@ -1,6 +1,5 @@
 import { listen, tick } from 'svelte/internal';
-
-import { createDisposalBin } from '$lib/utils/events';
+import { createDisposalBin } from '../utils/events';
 
 export const FOCUSABLE_DIALOG_ELEMENTS = [
   'a[href]',

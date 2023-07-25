@@ -1,2 +1,0 @@
-import './skins';
-import './icons';

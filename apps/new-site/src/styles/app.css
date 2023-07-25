@@ -1,0 +1,69 @@
+:root,
+.prefers-light-scheme,
+.dark .bg-inverse {
+  --color-brand: 79 70 229;
+  --color-secondary: 216 35 117;
+  --color-focus: 79 70 229;
+  --color-soft: 68 78 94;
+  --color-body: 255 255 255;
+  --color-elevate: 230 230 230;
+  --color-inverse: 5 11 23;
+  --color-border: 219 219 219;
+}
+
+:root {
+  font-size: 16px;
+  scroll-padding-top: 6rem;
+
+  --font-family-sans: Inter VF, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --font-family-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation, Mono,
+    Fira Code VF, monospace;
+
+  --navbar-height: 4rem;
+  --navbar-max-width: 1440px;
+  --navbar-border-bottom: 1px solid rgb(var(--color-border));
+  --breadcrumbs-height: 0px;
+
+  --main-padding-x: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  :root {
+    --main-padding-x: 4rem;
+  }
+}
+
+:root.dark,
+.prefers-dark-scheme,
+.light .bg-inverse {
+  color-scheme: dark;
+  --color-brand: 165 180 252;
+  --color-secondary: 244 114 182;
+  --color-soft: 150 155 166;
+  --color-inverse: 245 245 245;
+  --color-border: 44 44 44;
+  --color-elevate: 27 38 58;
+  --color-body: 3 7 18;
+  --color-focus: 129 140 248;
+}
+
+.js-focus-visible :focus:not([data-focus-visible-added]):not([data-focus]) {
+  @apply outline-none;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bg-inverse {
+  color: white;
+  background-color: rgb(5 11 23) !important;
+}
+
+.dark .bg-inverse {
+  color: black;
+  background-color: rgb(245 245 245) !important;
+}

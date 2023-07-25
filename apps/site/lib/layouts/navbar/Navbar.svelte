@@ -1,14 +1,12 @@
 <script lang="ts">
+  import MenuIcon from '~icons/ri/menu-5-line';
   import clsx from 'clsx';
   import { createEventDispatcher } from 'svelte';
-  import MenuIcon from '~icons/ri/menu-5-line';
-
   import ColorSchemeMenu from '$lib/components/base/ColorSchemeMenu.svelte';
   import Popover from '$lib/components/base/Popover.svelte';
   import Select from '$lib/components/base/Select.svelte';
   import { colorScheme } from '$lib/stores/color-scheme';
   import { uppercaseFirstLetter } from '$lib/utils/string';
-
   import { getNavbarContext } from './context';
   import NavLinkItem from './NavLink.svelte';
 

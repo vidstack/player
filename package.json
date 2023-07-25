@@ -23,7 +23,7 @@
     "validate": "turbo run build format test"
   },
   "devDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^3.7.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
     "@types/node": "^16.0.0",
     "chokidar": "^3.5.0",
     "conventional-changelog-cli": "^2.2.2",
@@ -35,11 +35,14 @@
     "kleur": "^4.1.5",
     "lint-staged": "^13.0.0",
     "minimist": "^1.2.5",
-    "prettier": "^2.8.0",
-    "prettier-plugin-tailwindcss": "^0.2.0",
+    "prettier": "^3.0.0",
+    "prettier-plugin-astro": "^0.11.0",
+    "prettier-plugin-svelte": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.4.1",
     "rimraf": "^3.0.0",
     "semver": "^7.3.0",
     "simple-git-hooks": "^2.8.0",
+    "svelte": "^4.0.0",
     "turbo": "^1.9.0",
     "typescript": "^5.0.0"
   },
@@ -47,7 +50,7 @@
     "pre-commit": "npx --no-install lint-staged"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx,md,json}": "prettier --write"
+    "*": "prettier --write"
   },
   "engines": {
     "node": ">=16",

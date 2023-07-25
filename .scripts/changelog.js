@@ -8,5 +8,5 @@ const content = fs.readFileSync(changeLogPath, 'utf-8');
 
 fs.writeFileSync(
   changeLogPath,
-  content.replace(/github.com\/mihar-22\/(vidstack|player)/g, 'github.com/vidstack/player'),
+  content.replace(/github.com\/mihar-22\/(vidstack|player)/g, 'github.com/vidstack/vidstack'),
 );

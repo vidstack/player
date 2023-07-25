@@ -1,7 +1,7 @@
 {
   "name": "@vidstack/react",
   "version": "0.6.13",
-  "description": "UI component library for building high-quality, accessible video and audio players for the web.",
+  "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
   "types": "index.d.ts",
@@ -34,7 +34,7 @@
     "@types/react": "^18.0.0",
     "esbuild": "^0.16.17",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.37.0",
+    "maverick.js": "0.38.0",
     "media-icons": "0.10.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -68,12 +68,12 @@
       "types": "./icons.d.ts",
       "default": "./dist/prod/vidstack-icons.js"
     },
-    "./skins/default": {
-      "types": "./skins/default.d.ts",
-      "node": "./dist/server/vidstack-default-skin.js",
-      "deno": "./dist/server/vidstack-default-skin.js",
-      "development": "./dist/dev/vidstack-default-skin.js",
-      "default": "./dist/prod/vidstack-default-skin.js"
+    "./player/default-skin": {
+      "types": "./player/default-skin.d.ts",
+      "node": "./dist/server/vidstack-player-skin.js",
+      "deno": "./dist/server/vidstack-player-skin.js",
+      "development": "./dist/dev/vidstack-player-skin.js",
+      "default": "./dist/prod/vidstack-player-skin.js"
     },
     "./dist/types/*": "./dist/types/*",
     "./styles/*": "./styles/*",
@@ -88,6 +88,7 @@
   },
   "keywords": [
     "accessible",
+    "analytics",
     "audio",
     "customizable",
     "dailymotion",
@@ -95,6 +96,7 @@
     "extensible",
     "file",
     "framework-agnostic",
+    "headless",
     "hls",
     "html5",
     "jwplayer",
@@ -104,6 +106,7 @@
     "react",
     "spec-compliant",
     "universal",
+    "uploader",
     "vds",
     "video",
     "videojs",
@@ -111,6 +114,7 @@
     "vime",
     "vimeo",
     "web-component",
+    "tailwind",
     "universal",
     "youtube"
   ]

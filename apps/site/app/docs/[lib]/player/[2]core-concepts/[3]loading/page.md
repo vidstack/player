@@ -99,7 +99,7 @@ The source selection process is as follows:
 ## Provider Loading
 
 Providers are auto-selected during the source selection process and dynamically
-loaded via a [`MediaProviderLoader`](https://github.com/vidstack/player/blob/main/packages/vidstack/src/player/media/providers/types.ts#L14). The loader is responsible for determining whether the underlying provider can play a given
+loaded via a [`MediaProviderLoader`](https://github.com/vidstack/vidstack/blob/main/packages/vidstack/src/player/media/providers/types.ts#L14). The loader is responsible for determining whether the underlying provider can play a given
 source, dynamically loading the provider when needed, and rendering content inside the `<media-provider>`.
 Rendered output includes `<audio>`, `<video>`, and `<iframe>` elements.
 

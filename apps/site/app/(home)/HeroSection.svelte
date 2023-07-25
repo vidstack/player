@@ -1,9 +1,8 @@
 <script>
-  import { addJSLibToPath, jsLib } from '$lib/stores/js-lib';
-
   import Button from '$lib/components/base/Button.svelte';
-  import VideoPlayer from './VideoPlayer.svelte';
+  import { addJSLibToPath, jsLib } from '$lib/stores/js-lib';
   import AudioPlayer from './AudioPlayer.svelte';
+  import VideoPlayer from './VideoPlayer.svelte';
 </script>
 
 <section class="flex flex-col 1200:flex-row mx-auto max-w-[1440px] px-6 1460:px-0 w-full">
@@ -14,7 +13,7 @@
       <div class="flex">
         <a
           class="flex items-center rounded-full bg-brand/10 text-brand py-1 px-4 text-sm 768:text-base transform transition-transform hover:scale-105"
-          href="https://github.com/vidstack/player/discussions/848"
+          href="https://github.com/vidstack/vidstack/discussions/848"
           target="_blank"
           rel="noreferrer"
         >

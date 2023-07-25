@@ -5,11 +5,24 @@ module.exports = {
   printWidth: 100,
   tabWidth: 2,
   plugins: [
-    // `prettier-plugin-tailwindcss` also includes `prettier-plugin-svelte`
-    // @see https://github.com/sveltejs/prettier-plugin-svelte#usage-with-tailwind-prettier-plugin
-    require('prettier-plugin-tailwindcss'),
-    require('@ianvs/prettier-plugin-sort-imports'),
+    require.resolve('prettier-plugin-svelte'),
+    require.resolve('./node_modules/prettier-plugin-astro'),
+    require.resolve('prettier-plugin-tailwindcss'),
+    require.resolve('@ianvs/prettier-plugin-sort-imports'),
   ],
+  // Astro
+  astroAllowShorthand: false,
+  overrides: [
+    {
+      files: '*.astro',
+      options: { parser: 'astro' },
+    },
+    {
+      files: '*.svelte',
+      options: { parser: 'svelte' },
+    },
+  ],
+  // Sort Imports
   importOrder: ['.css$', '^node:', '<THIRD_PARTY_MODULES>', '^[$]', '^[../]', '^[./]'],
   importOrderParserPlugins: ['jsx', 'typescript', 'decorators'],
   importOrderSeparation: true,

@@ -1,0 +1,119 @@
+---
+import DefaultLayout from '../layouts/default-layout.astro';
+import AnnouncementBar from '../layouts/parts/announcement-bar.astro';
+import type { NavItem } from '../layouts/parts/navbar/navigation';
+
+const title = 'Vidstack: Video platform for frontend developers';
+const description =
+  'Build robust and accessible video/audio experiences that convert in hours, not weeks.';
+const navItems: NavItem[] = [
+  {
+    title: 'Features',
+    grid: true,
+    items: [
+      {
+        title: 'CMS',
+        description: 'Manage video and audio assets including posters, captions, and more.',
+        badge: 'Soon',
+        icon: 'folders',
+      },
+      {
+        title: 'Hosting',
+        description: 'Upload, store, load, and play media assets from the cloud.',
+        badge: 'Soon',
+        icon: 'database',
+      },
+      {
+        title: 'Streaming',
+        description: 'Prepare video and audio assets for an optimized playback experience.',
+        badge: 'Soon',
+        icon: 'play-square',
+      },
+      {
+        title: 'Secure Playback',
+        description: 'Secure playback so only specified domains can access content.',
+        badge: 'Soon',
+        icon: 'file-lock',
+      },
+      {
+        title: 'Custom Domains',
+        description: 'Download assets and stream files from your own domain.',
+        badge: 'Planned',
+        icon: 'home',
+      },
+      {
+        title: 'Analytics',
+        description: 'Collect real-time performance and user behavior data.',
+        badge: 'Planned',
+        icon: 'area-chart',
+      },
+    ],
+  },
+  {
+    title: 'Components',
+    items: [
+      {
+        title: 'Vidstack Player',
+        badge: 'Beta',
+        description: 'UI library for building robust and accessible video/audio players.',
+        href: '/player',
+        featured: true,
+        items: [
+          {
+            title: 'Features',
+            description: 'See what makes Vidstack Player special and start building today.',
+            href: '/player#features',
+            icon: 'sparkle',
+          },
+          {
+            title: 'UI Components',
+            description: 'Browse the complete collection of player UI components.',
+            href: '/player/components',
+            icon: 'boxes',
+          },
+          {
+            title: 'Skins',
+            description: 'Check out our fully customizable and production-ready player UIs.',
+            href: '/player#skins',
+            icon: 'wallpaper',
+          },
+          {
+            title: 'Media Icons',
+            description: 'A collection of handcrafted icons for building your player.',
+            href: '/media-icons',
+            icon: 'file-box',
+          },
+        ],
+      },
+      {
+        title: 'Vidstack Uploader',
+        description:
+          'Headless uploader component to send files directly up to storage or your desired streaming provider.',
+        badge: 'Planned',
+      },
+      {
+        title: 'Vidstack Analytics',
+        description:
+          'Collect video/audio performance and user-behavior data with a single drop-in component.',
+        badge: 'Planned',
+      },
+    ],
+  },
+  { title: 'Documentation', href: '/docs' },
+  { title: 'Icons', href: '/media-icons' },
+  {
+    title: 'Releases',
+    href: 'https://github.com/vidstack/vidstack/discussions/categories/releases',
+  },
+];
+---
+
+<DefaultLayout {title} {description} {navItems}>
+  <AnnouncementBar href="#" slot="top">
+    <span class="font-semibold">Player Update:</span> 1.0 is coming!
+  </AnnouncementBar>
+
+  <!-- hero -->
+
+  <!-- content -->
+</DefaultLayout>
