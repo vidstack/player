@@ -1,6 +1,5 @@
 <script lang="ts">
   import clsx from 'clsx';
-
   import { isNull } from '$lib/utils/unit';
 
   export let title: string;
@@ -10,7 +9,7 @@
 
 <li class="992:mt-0 mt-4 first:mt-0">
   <a
-    class="hover:font-medium font-base text-[15px] hover:underline hover:text-brand font-medium"
+    class="hover:font-medium font-base text-[15px] hover:underline hover:text-brand"
     href={slug}
     target={isNull(match) ? '_blank' : null}
     data-prefetch

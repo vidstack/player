@@ -1,6 +1,5 @@
 import { effect, peek, ViewController, type Dispose, type ReadSignal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
-
 import { hasAnimation } from '../../../utils/dom';
 
 export interface PopperDelegate {
@@ -45,14 +44,17 @@ export class Popper extends ViewController {
     this._stopAnimationEndListener?.();
     this._stopAnimationEndListener = null;
 
-    this._showTimerId = window.setTimeout(() => {
-      this._showTimerId = -1;
+    this._showTimerId = window.setTimeout(
+      () => {
+        this._showTimerId = -1;
 
-      const content = this._delegate._content();
-      if (content) content.style.removeProperty('display');
+        const content = this._delegate._content();
+        if (content) content.style.removeProperty('display');
 
-      peek(() => this._delegate._onChange(true, trigger));
-    }, this._delegate._showDelay?.() ?? 0);
+        peek(() => this._delegate._onChange(true, trigger));
+      },
+      this._delegate._showDelay?.() ?? 0,
+    );
   }
 
   hide(trigger?: Event) {

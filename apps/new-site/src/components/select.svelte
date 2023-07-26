@@ -1,29 +1,29 @@
 <script lang="ts">
-  import { createSelect } from '@melt-ui/svelte';
-  import type { FloatingConfig } from '@melt-ui/svelte/internal/actions';
-  import Check from '~icons/lucide/check';
-  import ChevronDown from '~icons/lucide/chevron-down';
-  import clsx from 'clsx';
+  // import { createSelect } from '@melt-ui/svelte';
+  // import type { FloatingConfig } from '@melt-ui/svelte/internal/actions';
+  // import Check from '~icons/lucide/check';
+  // import ChevronDown from '~icons/lucide/chevron-down';
+  // import clsx from 'clsx';
 
-  function toValue(label: string) {
-    return label.toString().replace(' ', '-');
-  }
+  // function toValue(label: string) {
+  //   return label.toString().replace(' ', '-');
+  // }
 
-  export let title: string;
-  export let options: string[] = [];
-  export let disabled = false;
-  export let arrowSize: number | undefined = undefined;
-  export let positioning: FloatingConfig | undefined = undefined;
+  // export let title: string;
+  // export let options: string[] = [];
+  // export let disabled = false;
+  // export let arrowSize: number | undefined = undefined;
+  // export let positioning: FloatingConfig | undefined = undefined;
 
-  const { trigger, menu, option, isSelected } = createSelect({
-    disabled,
-    positioning,
-    arrowSize,
-    loop: true,
-  });
+  // const { trigger, menu, option, isSelected } = createSelect({
+  //   disabled,
+  //   positioning,
+  //   arrowSize,
+  //   loop: true,
+  // });
 </script>
 
-<button
+<!-- <button
   class={clsx(
     'relative flex min-w-[85px] items-center border dark:border-0 pl-2.5 pr-1',
     'bg-elevate transform-gpu transition-transform hover:scale-[1.025] rounded-md py-1',
@@ -60,4 +60,4 @@
       {label}
     </div>
   {/each}
-</div>
+</div> -->

@@ -1,9 +1,10 @@
 ---
 import clsx from 'clsx';
+import { NAV_DESKTOP_MIN_WIDTH_QUERY } from '../../../stores/media-query';
 import ColorSchemeMenu from '../color-scheme-menu.svelte';
 import Logo from '../logo.astro';
 import SocialLink from '../social-link.astro';
-import NavItems from './menus/nav-items.astro';
+import NavDesktopItems from './menus/desktop/nav-desktop-items.astro';
 import type { NavItem } from './navigation';
 
 export interface Props {
@@ -15,7 +16,7 @@ const { items } = Astro.props;
 
 <div
   class={clsx(
-    'hidden min-[825px]:flex px-4 1440:px-0',
+    'hidden nav-lg:flex px-4 1440:px-0',
     'mx-auto h-[var(--navbar-height)] w-full max-w-[var(--navbar-max-width)]',
     'flex-col items-center justify-center z-40',
   )}
@@ -25,14 +26,14 @@ const { items } = Astro.props;
       <Logo />
     </a>
 
-    <NavItems {items} />
+    <NavDesktopItems {items} />
 
     <div class="flex-1"></div>
 
     <div class="flex items-center">
       <SocialLink class="mr-1" type="twitter" />
       <SocialLink class="mr-1" type="gitHub" />
-      <ColorSchemeMenu client:load />
+      <ColorSchemeMenu client:media={NAV_DESKTOP_MIN_WIDTH_QUERY} />
     </div>
   </div>
 </div>

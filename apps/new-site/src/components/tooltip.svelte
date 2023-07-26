@@ -1,38 +1,31 @@
 <script lang="ts">
-  import { createTooltip } from '@melt-ui/svelte';
-  import type { FloatingConfig } from '@melt-ui/svelte/internal/actions';
-  import { fade } from 'svelte/transition';
+  import { offset } from '@floating-ui/dom';
+  import clsx from 'clsx';
+  import { createAriaTooltip, type AriaTooltipOptions } from '../aria/tooltip';
 
-  export let position: FloatingConfig = {};
+  export let options: AriaTooltipOptions = {
+    placement: 'bottom',
+  };
 
-  const {
-    trigger: tooltipTrigger,
-    content: tooltipContent,
-    open: isTooltipOpen,
-  } = createTooltip({
-    positioning: position,
-    openDelay: 300,
-    closeDelay: 0,
-    arrowSize: 8,
+  const { tooltipTrigger, tooltipContent, isTooltipOpen } = createAriaTooltip({
+    ...options,
+    middleware: [offset(8), ...(options.middleware || [])],
   });
 </script>
 
-<svelte:element
-  this={'href' in $$restProps ? 'a' : 'button'}
-  {...$$restProps}
-  {...$tooltipTrigger}
-  use:tooltipTrigger
->
+<svelte:element this={'href' in $$restProps ? 'a' : 'button'} {...$$restProps} use:tooltipTrigger>
   <slot name="trigger" />
 </svelte:element>
 
-{#if $isTooltipOpen}
-  <div
-    transition:fade={{ duration: 100 }}
-    class="z-10 rounded-sm border border-border bg-body text-xs font-medium px-1.5 py-1"
-    {...$tooltipContent}
-    use:tooltipContent
-  >
-    <slot name="content" />
-  </div>
-{/if}
+<div
+  class={clsx(
+    'z-10 rounded-sm border border-border bg-body text-xs font-medium px-1.5 py-1',
+    $isTooltipOpen
+      ? 'animate-in fade-in slide-in-from-top-4'
+      : 'animate-out fade-out slide-out-to-top-2',
+  )}
+  style="display: none;"
+  use:tooltipContent
+>
+  <slot name="content" />
+</div>

@@ -22,6 +22,7 @@ module.exports = {
       1280: '1280px',
       1440: '1440px',
       1460: '1460px',
+      'nav-lg': '825px',
     },
     extend: {
       colors: {
@@ -69,6 +70,7 @@ function customVariants({ addVariant }) {
   );
 
   addVariant('hocus', ['&:hover', '&:focus-visible']);
+  addVariant('group-hocus', ['.group:hover &', '.group:focus-visible &']);
 }
 
 function typography(theme) {

@@ -1,33 +1,7 @@
----
-import type { NavItem } from '../navigation';
-import NavLink from './nav-link.svelte';
-import NavMenu from './nav-menu.svelte';
-
-export interface Props {
-  items: NavItem[];
-}
-
-const { items } = Astro.props;
----
-
-<nav>
-  <ul class="flex items-center space-x-2">
-    {
-      items.map((item) => {
-        if ('href' in item) {
-          return (
-            <li>
-              <NavLink {item} />
-            </li>
-          );
-        }
-
-        return (
-          <li>
-            <NavMenu {...item} client:visible />
-          </li>
-        );
-      })
-    }
+<nav class="w-full">
+  <ul
+    class="flex flex-col w-full space-y-2 px-4 py-2 nav-lg:p-0 nav-lg:flex-row nav-lg:items-center nav-lg:space-x-2 nav-lg:space-y-0"
+  >
+    <slot />
   </ul>
 </nav>

@@ -22,6 +22,7 @@
   --font-family-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation, Mono,
     Fira Code VF, monospace;
 
+  --announcement-bar-height: 44px;
   --navbar-height: 4rem;
   --navbar-max-width: 1440px;
   --navbar-border-bottom: 1px solid rgb(var(--color-border));
@@ -66,4 +67,8 @@
 .dark .bg-inverse {
   color: black;
   background-color: rgb(245 245 245) !important;
+}
+
+.main-top-offset {
+  top: calc(var(--announcement-bar-height) + var(--navbar-height));
 }

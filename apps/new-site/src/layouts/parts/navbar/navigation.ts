@@ -26,7 +26,7 @@ export interface NavMenuItem {
   href?: string;
 }
 
-export interface NavSubmenu extends NavMenuItem {
+export interface NavSubmenu extends Omit<NavMenuItem, 'href'> {
   featured?: boolean;
   items: NavMenuItem[];
 }
