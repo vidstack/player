@@ -21,6 +21,10 @@
   height: 100%;
 }
 
+.arrow {
+  @apply border-r-body absolute border-b-8 border-r-8 border-t-8 border-b-transparent border-t-transparent;
+}
+
 /*
  * -----------------------------------------------------
  * SCROLLBAR

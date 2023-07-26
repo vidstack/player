@@ -1,28 +1,17 @@
 <script lang="ts">
-  import { createDropdownMenu } from '@melt-ui/svelte';
   import ChevronDownIcon from '~icons/lucide/chevron-down';
   import clsx from 'clsx';
+  import { createAriaMenu } from '../../../../aria/menu';
   import type { NavMenuItems } from '../navigation';
-  import NavMenuItem from './nav-menu-item.svelte';
-  import NavSubmenu from './nav-submenu.svelte';
 
   export let title: string;
   export let items: NavMenuItems;
   export let grid = false;
-  export let placement: string | undefined = undefined;
+  export let noPositioning = false;
 
-  const {
-    menu,
-    open: isMenuOpen,
-    trigger: menuTrigger,
-    item: menuItem,
-    createSubMenu,
-  } = createDropdownMenu({
-    positioning: {
-      placement: (placement as any) ?? 'bottom-start',
-    },
-    loop: true,
-    preventScroll: false,
+  const { menu, menuTrigger, isMenuOpen } = createAriaMenu({
+    placement: 'bottom-start',
+    noPositioning,
   });
 </script>
 
@@ -30,32 +19,36 @@
 <button
   {...$$restProps}
   class={clsx(
-    'group relative flex transform-gpu items-center rounded-md border-0 p-2 min-w-[40px] min-h-[40px]',
-    'transition-transform hover:scale-105',
+    'group relative flex transform-gpu items-center rounded-md border-0 p-2',
+    'min-w-[40px] min-h-[40px] w-full nav-lg:w-auto text-base',
     $$restProps.class,
   )}
-  {...$menuTrigger}
   use:menuTrigger
 >
   {title}
   <ChevronDownIcon
-    class={clsx('ml-[3px] transition-transform', $isMenuOpen && 'rotate-180')}
-    width={16}
-    height={16}
+    class={clsx(
+      'nav-lg:ml-[3px] ml-auto transition-transform w-5 h-5 nav-lg:w-4 nav-lg:h-4 group-hocus:animate-pulse',
+      $isMenuOpen && 'rotate-180',
+    )}
   />
 </button>
 
 <!-- Menu -->
 <div
-  class={clsx('border-border border bg-body outline-none', grid && 'grid grid-cols-2')}
-  {...$menu}
+  class={clsx(
+    'nav-lg:border-border nav-lg:border bg-body outline-none transition',
+    grid ? 'nav-lg:grid nav-lg:grid-cols-2 nav-lg:p-2' : 'px-2 nav-lg:px-0',
+    $isMenuOpen
+      ? 'animate-in slide-out-to-bottom-4 fade-in duration-300 nav-lg:translate-y-1'
+      : 'animate-out fade-out slide-out-to-top-2',
+  )}
   use:menu
+  style="display: none"
 >
   {#each items as item}
-    {#if 'items' in item}
-      <NavSubmenu {item} {createSubMenu} />
-    {:else}
-      <NavMenuItem {item} {...$menuItem} action={menuItem} />
-    {/if}
+    <slot {item} />
   {/each}
+
+  <slot name="menu-bottom" />
 </div>

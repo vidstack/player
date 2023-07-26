@@ -11,35 +11,32 @@
 </script>
 
 <script lang="ts">
-  import { createDropdownMenu, createTooltip } from '@melt-ui/svelte';
+  import { offset } from '@floating-ui/dom';
   import clsx from 'clsx';
-  import { fade } from 'svelte/transition';
+  import { createAriaMenu } from '../../aria/menu';
+  import { createAriaRadioGroup } from '../../aria/radio-group';
+  import { createAriaTooltip } from '../../aria/tooltip';
   import { colorScheme, colorSchemes, isDarkColorScheme } from '../../stores/color-scheme';
   import { IS_BROWSER } from '../../utils/env';
   import { uppercaseFirstLetter } from '../../utils/string';
 
-  const {
-    trigger: tooltipTrigger,
-    content: tooltipContent,
-    open: isTooltipOpen,
-  } = createTooltip({
-    positioning: { placement: 'bottom' },
-    openDelay: 300,
-    closeDelay: 0,
-    arrowSize: 8,
+  const { tooltipTrigger, tooltipContent, isTooltipOpen } = createAriaTooltip({
+    placement: 'bottom',
+    middleware: [offset(8)],
   });
 
-  const {
-    menu,
-    open: isMenuOpen,
-    trigger: menuTrigger,
-    createMenuRadioGroup,
-  } = createDropdownMenu({ loop: true, preventScroll: false });
-
-  const { radioGroup, radioItem } = createMenuRadioGroup({
-    value: $colorScheme,
+  const { menuTrigger, menu, isMenuOpen } = createAriaMenu({
+    placement: 'bottom',
+    middleware: [offset(8)],
+    hover: true,
   });
 
+  const { radioGroup, radio, radioValue } = createAriaRadioGroup({
+    menu: true,
+    defaultValue: $colorScheme,
+  });
+
+  $: $colorScheme = $radioValue;
   $: MenuTriggerIcon = IS_BROWSER ? ($isDarkColorScheme ? Icons.dark : Icons.light) : null;
 </script>
 
@@ -51,34 +48,32 @@
     'transition-transform hover:scale-105 hover:bg-elevate',
     $$restProps.class,
   )}
-  {...$menuTrigger}
   use:menuTrigger
-  {...$tooltipTrigger}
   use:tooltipTrigger
   aria-label="Color Scheme"
 >
-  <svelte:component this={MenuTriggerIcon} width={24} height={24} />
+  <svelte:component this={MenuTriggerIcon} class="w-6 h-6" />
 </button>
 
 <!-- Menu -->
 <div
-  class="p-2 border-border border rounded-sm bg-body hocus:ring-0 outline-none"
-  {...$menu}
+  class={clsx(
+    'p-2 border-border border rounded-sm bg-body hocus:ring-0 outline-none',
+    $isMenuOpen
+      ? 'animate-in slide-in-from-top-2 fade-in'
+      : 'animate-out fade-out slide-out-to-top-2',
+  )}
+  style="display: none;"
   use:menu
 >
-  <div class="flex flex-col" {...$radioGroup} use:radioGroup aria-label="Color Schemes">
+  <div class="flex flex-col" use:radioGroup={'Color Scheme'}>
     {#each colorSchemes as scheme}
       <button
         class={clsx(
           'flex items-center px-4 py-2 rounded-sm text-sm hocus:bg-elevate outline-none',
           $colorScheme === scheme && 'text-brand',
         )}
-        {...$radioItem({ value: scheme })}
-        use:radioItem={{
-          onSelect() {
-            $colorScheme = scheme;
-          },
-        }}
+        use:radio={scheme}
       >
         <svelte:component this={Icons[scheme]} class="mr-2" width={16} height={16} />
         {uppercaseFirstLetter(scheme)}
@@ -87,13 +82,16 @@
   </div>
 </div>
 
-{#if $isTooltipOpen && !$isMenuOpen}
-  <div
-    transition:fade={{ duration: 100 }}
-    class="z-10 rounded-sm border border-border bg-body text-xs font-medium px-1.5 py-1"
-    {...$tooltipContent}
-    use:tooltipContent
-  >
-    Theme
-  </div>
-{/if}
+<div
+  class={clsx(
+    'z-10 rounded-sm border border-border bg-body text-xs font-medium px-1.5 py-1',
+    $isTooltipOpen
+      ? 'animate-in fade-in slide-in-from-top-4'
+      : 'animate-out fade-out slide-out-to-top-2',
+    $isMenuOpen && 'hidden',
+  )}
+  style="display: none;"
+  use:tooltipContent
+>
+  Theme
+</div>

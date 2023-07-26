@@ -1,6 +1,7 @@
 ---
 import ArrowRightIcon from '~astro-icons/lucide/arrow-right';
 import MegaphoneIcon from '~astro-icons/lucide/megaphone';
+import clsx from 'clsx';
 
 interface Props {
   href: string;
@@ -9,8 +10,13 @@ interface Props {
 const { href } = Astro.props;
 ---
 
-<div class="border-border border-y-[1px] w-full py-2.5 text-sm flex items-center justify-center">
-  <MegaphoneIcon class="mr-1.5 mb-0.5" width={20} height={20} />
+<div
+  class={clsx(
+    'border-border border-y-[1px] w-full h-[var(--announcement-bar-height)]',
+    'text-sm flex items-center justify-center',
+  )}
+>
+  <MegaphoneIcon class="mr-1.5 mb-0.5 w-5 h-5" />
 
   <span class="mr-1">
     <slot />
@@ -19,9 +25,7 @@ const { href } = Astro.props;
   <a class="flex items-center text-brand group font-medium" {href}>
     Learn more
     <ArrowRightIcon
-      class="-translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-px transition-all"
-      width={14}
-      height={14}
+      class="-translate-x-2 opacity-0 group-hocus:opacity-100 group-hocus:translate-x-px transition-all w-3.5 h-3.5"
     />
   </a>
 </div>

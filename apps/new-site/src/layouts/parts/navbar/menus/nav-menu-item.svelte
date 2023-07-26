@@ -1,71 +1,61 @@
 <script lang="ts">
+  import ArrowRightIcon from '~icons/lucide/arrow-right';
   import clsx from 'clsx';
   import type { Action } from 'svelte/action';
-  import { isDarkColorScheme } from '../../../../stores/color-scheme';
   import { navIcons } from '../nav-icons';
   import type { NavMenuItem } from '../navigation';
+  import NavMenuItemBadge from './nav-menu-item-badge.svelte';
 
   export let item: NavMenuItem;
-  export let invert = false;
+  export let invertColors = false;
   export let action: Action = () => void 0;
 
-  $: darkTheme = ($isDarkColorScheme && !invert) || (!$isDarkColorScheme && invert);
+  let _as: 'a' | 'button' | 'div';
+  export { _as as as };
 </script>
 
 <svelte:element
-  this={item.href ? 'a' : 'div'}
-  href={item.href}
+  this={_as}
   {...$$restProps}
-  class={clsx('flex flex-col px-6 py-5 focus-visible:ring-0', $$restProps.class)}
-  use:action
+  class={clsx(
+    'w-full nav-lg:w-auto flex flex-col px-2 py-4 nav-lg:px-4 nav-lg:py-5 focus-visible:ring-0 ',
+    $$restProps.class,
+  )}
+  href={_as === 'a' ? item.href : null}
+  role="menuitem"
+  tabindex="0"
   aria-label={item.title}
+  use:action
 >
-  <div class="flex items-center">
-    <span class="font-medium text-base flex items-center">
+  <div class="flex items-center w-full">
+    <h1 class="text-[15px] nav-lg:text-base flex items-center">
       {#if item.icon && navIcons[item.icon]}
-        <svelte:component this={navIcons[item.icon]} class="mr-1.5" width={18} height={18} />
+        <svelte:component
+          this={navIcons[item.icon]}
+          class="mr-1.5 w-4 h-4 nav-lg:w-[19px] nav-lg:h-[19px]"
+        />
       {/if}
 
       {item.title}
-    </span>
+    </h1>
 
     {#if item.badge}
-      <div
-        class={clsx(
-          'px-1 rounded-sm text-xs py-px border ml-2',
-          item.badge === '1.0'
-            ? clsx(
-                'bg-blue-400/20',
-                darkTheme ? 'text-blue-400 border-blue-400' : 'text-blue-600 border-blue-600',
-              )
-            : item.badge === 'Beta'
-            ? clsx(
-                'bg-green-400/20',
-                darkTheme ? 'text-green-400 border-green-400' : 'text-green-600 border-green-600',
-              )
-            : item.badge === 'Planned'
-            ? clsx(
-                'bg-orange-400/20',
-                darkTheme
-                  ? 'text-orange-400 border-orange-400'
-                  : 'text-orange-600 border-orange-600',
-              )
-            : clsx(
-                'bg-indigo-400/20',
-                darkTheme
-                  ? 'text-indigo-400 border-indigo-400'
-                  : 'text-indigo-600 border-indigo-600',
-              ),
-        )}
-      >
-        {item.badge}
-      </div>
+      <NavMenuItemBadge title={item.badge} {invertColors} />
     {/if}
   </div>
 
   {#if item.description}
-    <p class="text-sm mt-2 text-soft max-w-[260px]">
+    <p class="text-[13px] nav-lg:text-sm mt-2 text-soft nav-lg:max-w-[260px] text-start">
       {item.description}
     </p>
+  {/if}
+
+  {#if item.href && _as !== 'a'}
+    <a class="text-brand text-[13px] nav-lg:text-sm mt-2 group flex items-center" href={item.href}>
+      Learn More
+      <ArrowRightIcon
+        class="-translate-x-2 opacity-0 group-hocus:opacity-100 group-hocus:translate-x-px transition-all w-3.5 h-3.5"
+      />
+    </a>
   {/if}
 </svelte:element>

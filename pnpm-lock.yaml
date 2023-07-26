@@ -58,9 +58,9 @@ importers:
       '@astrojs/tailwind': ^4.0.0
       '@docsearch/css': ^3.3.0
       '@docsearch/js': ^3.3.0
+      '@floating-ui/dom': ^1.4.4
       '@iconify-json/lucide': ^1.1.112
       '@maverick-js/cli': 0.38.0
-      '@melt-ui/svelte': ^0.26.0
       '@tailwindcss/typography': ^0.5.0
       '@types/markdown-it': ^12.2.0
       astro: ^2.9.0
@@ -80,6 +80,7 @@ importers:
     dependencies:
       '@docsearch/css': 3.4.0
       '@docsearch/js': 3.4.0_bk2hhnn4p4lennc3bzm23tet4y
+      '@floating-ui/dom': 1.4.4
       astro: 2.9.0
       clsx: 1.2.1
       html-entities: 2.3.3
@@ -93,7 +94,6 @@ importers:
       '@astrojs/tailwind': 4.0.0_4gjc5l2wew6exwe6xtzazkqbi4
       '@iconify-json/lucide': 1.1.112
       '@maverick-js/cli': 0.38.0
-      '@melt-ui/svelte': 0.26.0_svelte@4.1.1
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.3
       '@types/markdown-it': 12.2.3
       markdown-it: 13.0.1
@@ -1210,13 +1210,11 @@ packages:
 
   /@floating-ui/core/1.3.1:
     resolution: {integrity: sha512-Bu+AMaXNjrpjh41znzHqaz3r2Nr8hHuHZT6V2LBKMhyMl0FgKA62PNYbqnfgmzOhoWZj70Zecisbo4H1rotP5g==}
-    dev: true
 
   /@floating-ui/dom/1.4.4:
     resolution: {integrity: sha512-21hhDEPOiWkGp0Ys4Wi6Neriah7HweToKra626CIK712B5m9qkdz54OP9gVldUg+URnBTpv/j/bi/skmGdstXQ==}
     dependencies:
       '@floating-ui/core': 1.3.1
-    dev: true
 
   /@hutson/parse-repository-url/3.0.2:
     resolution: {integrity: sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==}
@@ -1339,18 +1337,6 @@ packages:
     dependencies:
       globby: 13.1.4
       yargs: 17.7.2
-    dev: true
-
-  /@melt-ui/svelte/0.26.0_svelte@4.1.1:
-    resolution: {integrity: sha512-0sAdL16mwcCou68YqldyD/xj7DBm56RLeCxRApBromvPZqNM6cHbCjMqLWPSrsIIgSjKz5A8roDr9UwCIxgISQ==}
-    peerDependencies:
-      svelte: '>=3 <5'
-    dependencies:
-      '@floating-ui/core': 1.3.1
-      '@floating-ui/dom': 1.4.4
-      focus-trap: 7.5.2
-      nanoid: 4.0.2
-      svelte: 4.1.1
     dev: true
 
   /@nodelib/fs.scandir/2.1.5:
@@ -3498,12 +3484,6 @@ packages:
       micromatch: 4.0.5
       pkg-dir: 4.2.0
 
-  /focus-trap/7.5.2:
-    resolution: {integrity: sha512-p6vGNNWLDGwJCiEjkSK6oERj/hEyI9ITsSwIUICBoKLlWiTWXJRfQibCwcoi50rTZdbi87qDtUlMCmQwsGSgPw==}
-    dependencies:
-      tabbable: 6.2.0
-    dev: true
-
   /form-data/4.0.0:
     resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}
     engines: {node: '>= 6'}
@@ -5147,12 +5127,6 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /nanoid/4.0.2:
-    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
-    engines: {node: ^14 || ^16 || >=18}
-    hasBin: true
-    dev: true
-
   /negotiator/0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
     engines: {node: '>= 0.6'}
@@ -6598,10 +6572,6 @@ packages:
     dependencies:
       '@pkgr/utils': 2.4.2
       tslib: 2.6.0
-
-  /tabbable/6.2.0:
-    resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
-    dev: true
 
   /tailwindcss-animate/1.0.6_tailwindcss@3.3.3:
     resolution: {integrity: sha512-4WigSGMvbl3gCCact62ZvOngA+PRqhAn7si3TQ3/ZuPuQZcIEtVap+ENSXbzWhpojKB8CpvnIsrwBu8/RnHtuw==}

@@ -1,6 +1,5 @@
 import { Component, provideContext, signal } from 'maverick.js';
 import { listenEvent, setAttribute } from 'maverick.js/std';
-
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { Popper } from '../popper/popper';

@@ -1,0 +1,33 @@
+---
+import { NAV_MOBILE_MAX_WIDTH_QUERY } from '../../../../../stores/media-query';
+import type { NavItem } from '../../navigation';
+import NavItems from '../nav-items.astro';
+import NavLink from '../nav-link.svelte';
+import NavMobileMenu from './nav-mobile-menu.svelte';
+
+export interface Props {
+  items: NavItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<NavItems>
+  {
+    items.map((item) => {
+      if ('href' in item) {
+        return (
+          <li>
+            <NavLink {item} />
+          </li>
+        );
+      }
+
+      return (
+        <li>
+          <NavMobileMenu {...item} client:media={NAV_MOBILE_MAX_WIDTH_QUERY} />
+        </li>
+      );
+    })
+  }
+</NavItems>

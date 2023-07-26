@@ -12,6 +12,7 @@
   "dependencies": {
     "@docsearch/css": "^3.3.0",
     "@docsearch/js": "^3.3.0",
+    "@floating-ui/dom": "^1.4.4",
     "astro": "^2.9.0",
     "clsx": "^1.2.0",
     "html-entities": "^2.3.3",
@@ -26,7 +27,6 @@
     "@astrojs/tailwind": "^4.0.0",
     "@iconify-json/lucide": "^1.1.112",
     "@maverick-js/cli": "0.38.0",
-    "@melt-ui/svelte": "^0.26.0",
     "@tailwindcss/typography": "^0.5.0",
     "@types/markdown-it": "^12.2.0",
     "markdown-it": "^13.0.1",
