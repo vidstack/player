@@ -8,18 +8,16 @@
   export let title: string;
   export let items: NavMenuItems;
   export let grid = false;
+
+  const menuItemClassList = clsx(grid ? 'nav-lg:p-5' : 'nav-lg:p-4 1200:p-5');
 </script>
 
 <NavMenu {title} {items} {grid}>
   <svelte:fragment let:item>
     {#if 'items' in item}
-      <NavDesktopSubmenu {item} />
+      <NavDesktopSubmenu class={menuItemClassList} {item} />
     {:else}
-      <NavMenuItem
-        class={clsx(!grid && 'first:pt-8 last:pb-6')}
-        {item}
-        as={item.href ? 'a' : 'div'}
-      />
+      <NavMenuItem class={menuItemClassList} {item} as={item.href ? 'a' : 'div'} />
     {/if}
   </svelte:fragment>
 </NavMenu>

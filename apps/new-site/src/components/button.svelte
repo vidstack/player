@@ -1,4 +1,6 @@
 <script lang="ts">
+  import ArrowLeftIcon from '~icons/lucide/arrow-left';
+  import ArrowRightIcon from '~icons/lucide/arrow-right';
   import clsx from 'clsx';
   import { createEventDispatcher } from 'svelte';
   import { isKeyboardClick } from '../utils/keyboard';
@@ -7,56 +9,67 @@
   const dispatch = createEventDispatcher();
 
   export let primary = false;
-  export let type: 'flat' | 'raised' = 'flat';
-  export let arrow: 'left' | 'right' | undefined = undefined;
-  export let as: 'button' | 'a' = 'button';
+  export let gradient: string | undefined = undefined;
+  export let arrow: boolean | 'left' | 'right' | undefined = undefined;
 
-  let __class = '';
-  export { __class as class };
-
-  $: isButton = as === 'button' && isUndefined($$restProps['href']);
+  $: isButton = isUndefined($$restProps['href']);
 
   $: buttonClass = clsx(
-    'group transform-gpu text-[15px] font-medium transition-transform hover:scale-105',
-    type === 'raised' && 'flex items-center justify-center',
-    (isButton || type === 'raised') && 'rounded-md px-3 py-1.5',
-    type === 'raised'
-      ? primary
-        ? 'bg-inverse text-body hover:bg-inverse/90'
-        : 'bg-body border-2 border-inverse text-inverse'
-      : 'text-soft hover:text-inverse',
-    __class,
+    'flex items-center rounded-md font-medium group px-5 py-2.5 text-sm bg-body',
+    '768:px-8 768:py-3 768:text-base',
+    primary && 'bg-inverse',
+    gradient && 'bg-clip-padding border-2 border-transparent',
+    !gradient && 'border-2 border-border',
+    $$restProps.class,
   );
 
-  $: contentClass = clsx(
-    'inline-block transform transition-transform duration-100 group-hover:translate-x-0',
-    arrow === 'left' && '-translate-x-3',
-    arrow === 'right' && 'translate-x-2',
-  );
+  $: hasRightArrow = arrow === true || arrow === 'right';
 
   $: arrowClass = clsx(
-    arrow &&
-      'opacity-0 transition-opacity duration-100 group-hover:visible group-hover:opacity-100',
-    !arrow ? 'hidden' : 'inline-block',
+    'w-0 h-4 group-hocus:w-4 transition-[width]',
+    hasRightArrow ? 'group-hocus:ml-0.5' : 'group-hocus:mr-0.5',
   );
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<svelte:element
-  this={as}
-  class={buttonClass}
-  {...$$restProps}
-  on:pointerup={() => dispatch('press')}
-  on:keydown={(e) => isKeyboardClick(e) && dispatch('press')}
->
-  {#if arrow === 'left'}
-    <span class={arrowClass} aria-hidden="true">&lt;-</span>
+<div class="relative" style={gradient}>
+  {#if gradient}
+    <span
+      class={clsx(
+        'text-gradient rounded-md z-[-2] absolute w-full h-full inset-0',
+        'before:w-full before:h-full before:absolute before:bg-clip-padding',
+        'before:blur-[36px] before:z-[-1] before:inset-0 before:border-[12px] before:border-transparent',
+      )}
+    ></span>
   {/if}
 
-  <span class={contentClass}><slot /></span>
+  <svelte:element
+    this={isButton ? 'button' : 'a'}
+    {...$$restProps}
+    class={buttonClass}
+    on:pointerup={() => dispatch('press')}
+    on:keydown={(e) => isKeyboardClick(e) && dispatch('press')}
+  >
+    {#if arrow === 'left'}
+      <ArrowLeftIcon class={arrowClass} />
+    {/if}
 
-  {#if arrow === 'right'}
-    <!-- svelte-ignore a11y-missing-attribute -->
-    <span class={arrowClass} aria-hidden="true">-&gt;</span>
-  {/if}
-</svelte:element>
+    <slot />
+
+    {#if hasRightArrow}
+      <ArrowRightIcon class={arrowClass} />
+    {/if}
+  </svelte:element>
+</div>
+
+<style>
+  .text-gradient {
+    --bg-image: linear-gradient(165deg, var(--from-color), var(--to-color));
+    background-image: var(--bg-image);
+  }
+
+  .text-gradient:before {
+    content: ' ';
+    background-image: var(--bg-image);
+  }
+</style>

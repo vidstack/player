@@ -11,7 +11,7 @@
 
   const { menu, menuTrigger, isMenuOpen } = createAriaMenu({
     placement: 'bottom-start',
-    noPositioning,
+    noPositioning: noPositioning,
   });
 </script>
 
@@ -37,8 +37,8 @@
 <!-- Menu -->
 <div
   class={clsx(
-    'nav-lg:border-border nav-lg:border bg-body outline-none transition',
-    grid ? 'nav-lg:grid nav-lg:grid-cols-2 nav-lg:p-2' : 'px-2 nav-lg:px-0',
+    'nav-lg:border-border nav-lg:border bg-body outline-none transition rounded-sm',
+    grid ? 'nav-lg:grid nav-lg:grid-cols-2 nav-lg:p-2 1200:gap-x-1' : 'px-2 nav-lg:px-0',
     $isMenuOpen
       ? 'animate-in slide-out-to-bottom-4 fade-in duration-300 nav-lg:translate-y-1'
       : 'animate-out fade-out slide-out-to-top-2',

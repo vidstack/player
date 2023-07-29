@@ -1,4 +1,5 @@
 import type { SvelteComponent } from 'svelte';
+import type { BadgeTitle } from '../../../components/badge.svelte';
 import type { navIcons } from './nav-icons';
 
 export type NavItem = NavLink | NavMenu;
@@ -21,9 +22,9 @@ export type NavMenuItems = (NavMenuItem | NavSubmenu)[];
 export interface NavMenuItem {
   title: string;
   description: string;
-  badge?: '1.0' | 'Beta' | 'Planned' | 'Soon';
-  icon?: keyof typeof navIcons;
   href?: string;
+  badge?: BadgeTitle;
+  icon?: keyof typeof navIcons;
 }
 
 export interface NavSubmenu extends Omit<NavMenuItem, 'href'> {

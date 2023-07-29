@@ -1,29 +1,27 @@
 ---
 import clsx from 'clsx';
 import { NAV_MOBILE_MAX_WIDTH_QUERY } from '../../../stores/media-query';
-import ColorSchemeSwitch from '../color-scheme-switch.svelte';
 import Logo from '../logo.astro';
 import SocialLink from '../social-link.astro';
-import NavMobileItems from './menus/mobile/nav-mobile-items.astro';
 import NavMobilePopover from './menus/mobile/nav-mobile-popover.svelte';
-import type { NavItem } from './navigation';
 
-export interface Props {
-  items: NavItem[];
+interface Props {
+  announcementBar?: boolean;
 }
 
-const { items } = Astro.props;
+const { announcementBar = false } = Astro.props;
 ---
 
 <div
   class={clsx(
-    'nav-lg:hidden px-4 py-4',
-    'mx-auto h-[var(--navbar-height)] w-full max-w-[var(--navbar-max-width)]',
-    'flex-col items-center justify-center z-40',
+    'nav-lg:hidden px-4 py-4 fixed left-0 blur-bg',
+    'mx-auto h-[var(--navbar-height)] w-full',
+    'flex-col items-center justify-center z-40 transition-[top] duration-300',
+    announcementBar ? 'top-[var(--announcement-bar-height)] scrolled:top-0' : 'top-0',
   )}
 >
   <div class="flex w-full items-center">
-    <a class="mr-12" href="/" aria-label="Go Home">
+    <a class="mr-12 rounded-md" href="/" aria-label="Go Home">
       <Logo />
     </a>
 
@@ -32,12 +30,7 @@ const { items } = Astro.props;
     <div class="flex items-center">
       <SocialLink class="mr-1" type="twitter" />
       <SocialLink class="mr-1" type="gitHub" />
-      <NavMobilePopover client:media={NAV_MOBILE_MAX_WIDTH_QUERY}>
-        <NavMobileItems {items} />
-        <div class="mt-2 px-4 flex items-start">
-          <ColorSchemeSwitch client:media={NAV_MOBILE_MAX_WIDTH_QUERY} />
-        </div>
-      </NavMobilePopover>
+      <NavMobilePopover {announcementBar} client:media={NAV_MOBILE_MAX_WIDTH_QUERY} />
     </div>
   </div>
 </div>

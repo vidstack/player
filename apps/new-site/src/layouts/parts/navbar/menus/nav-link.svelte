@@ -6,7 +6,11 @@
 </script>
 
 <!-- Link -->
-<a class="flex items-center text-base hover:underline p-2" href={item.href} {...$$restProps}>
+<a
+  class="flex items-center text-base hover:underline p-2 rounded-md"
+  href={item.href}
+  {...$$restProps}
+>
   {item.title}
   {#if !item.href.startsWith('/')}
     <ExternalLinkIcon class="ml-1" width={14} height={14} />

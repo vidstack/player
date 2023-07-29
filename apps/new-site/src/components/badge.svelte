@@ -1,12 +1,15 @@
+<script lang="ts" context="module">
+  export type BadgeTitle = '1.0' | 'Beta' | 'Planned' | 'Soon';
+</script>
+
 <script lang="ts">
   import clsx from 'clsx';
-  import { isDarkColorScheme } from '../../../../stores/color-scheme';
-  import type { NavMenuItem } from '../navigation';
+  import { isDarkColorScheme } from '../stores/color-scheme';
 
-  export let title: NavMenuItem['badge'];
-  export let invertColors = false;
+  export let title: BadgeTitle;
+  export let invertTheme = false;
 
-  function getBadgeColor(title: NavMenuItem['badge'], darkTheme: boolean) {
+  function getBadgeColor(title: BadgeTitle, darkTheme: boolean) {
     switch (title) {
       case '1.0':
         return clsx(
@@ -31,12 +34,12 @@
     }
   }
 
-  $: darkTheme = ($isDarkColorScheme && !invertColors) || (!$isDarkColorScheme && invertColors);
+  $: darkTheme = ($isDarkColorScheme && !invertTheme) || (!$isDarkColorScheme && invertTheme);
 </script>
 
 <div
   class={clsx(
-    'px-1 rounded-sm text-[10px] nav-lg:text-xs nav-lg:py-px border ml-2',
+    'px-1 rounded-sm text-[10px] nav-lg:text-xs nav-lg:py-px border ml-2 font-medium',
     getBadgeColor(title, darkTheme),
   )}
 >

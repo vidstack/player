@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ArrowRightIcon from '~icons/lucide/arrow-right';
   import clsx from 'clsx';
   import { navIcons } from '../../nav-icons';
   import type { NavSubmenu } from '../../navigation';
@@ -28,7 +29,12 @@
           </h2>
           <p class="mt-2 text-xs text-soft">{menuItem.description}</p>
           {#if menuItem.href}
-            <a class="text-brand text-xs mt-2" href={menuItem.href}>Learn More</a>
+            <a class="flex items-center text-brand text-xs mt-2.5 group" href={menuItem.href}>
+              Learn More
+              <ArrowRightIcon
+                class="-translate-x-2 ml-0.5 opacity-0 group-hocus:opacity-100 group-hocus:translate-x-px transition-all w-3 h-3"
+              />
+            </a>
           {/if}
         </li>
       {/each}

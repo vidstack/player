@@ -4,29 +4,29 @@ import { NAV_DESKTOP_MIN_WIDTH_QUERY } from '../../../stores/media-query';
 import ColorSchemeMenu from '../color-scheme-menu.svelte';
 import Logo from '../logo.astro';
 import SocialLink from '../social-link.astro';
-import NavDesktopItems from './menus/desktop/nav-desktop-items.astro';
-import type { NavItem } from './navigation';
+import NavDesktopItems from './menus/desktop/nav-desktop-items.svelte';
 
-export interface Props {
-  items: NavItem[];
+interface Props {
+  announcementBar?: boolean;
 }
 
-const { items } = Astro.props;
+const { announcementBar = false } = Astro.props;
 ---
 
 <div
   class={clsx(
-    'hidden nav-lg:flex px-4 1440:px-0',
-    'mx-auto h-[var(--navbar-height)] w-full max-w-[var(--navbar-max-width)]',
-    'flex-col items-center justify-center z-40',
+    'hidden nav-lg:flex px-4 1440:px-0 fixed left-0 blur-bg',
+    'mx-auto h-[var(--navbar-height)] w-full',
+    'flex-col items-center justify-center z-40 transition-[top] duration-300',
+    announcementBar ? 'top-[var(--announcement-bar-height)] scrolled:top-0' : 'top-0',
   )}
 >
-  <div class="flex w-full items-center">
-    <a class="mr-12" href="/" aria-label="Go Home">
+  <div class="flex w-full items-center max-auto max-w-[var(--navbar-max-width)]">
+    <a class="mr-12 rounded-md" href="/" aria-label="Go Home">
       <Logo />
     </a>
 
-    <NavDesktopItems {items} />
+    <NavDesktopItems client:media={NAV_DESKTOP_MIN_WIDTH_QUERY} />
 
     <div class="flex-1"></div>
 

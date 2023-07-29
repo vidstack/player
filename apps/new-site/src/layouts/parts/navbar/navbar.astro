@@ -1,14 +1,13 @@
 ---
 import NavbarDesktop from '../navbar/navbar-desktop.astro';
 import NavbarMobile from '../navbar/navbar-mobile.astro';
-import type { NavItem } from './navigation';
 
-export interface Props {
-  items: NavItem[];
+interface Props {
+  announcementBar?: boolean;
 }
 
-const { items } = Astro.props;
+const { announcementBar = false } = Astro.props;
 ---
 
-<NavbarDesktop {items} />
-<NavbarMobile {items} />
+<NavbarDesktop {announcementBar} />
+<NavbarMobile {announcementBar} />

@@ -11,7 +11,9 @@ import { createPopper, PopperOptions } from './popper';
 
 export interface AriaMenuOptions extends PopperOptions {
   type?: 'menu' | 'dialog';
+  portal?: boolean;
   preventScroll?: boolean;
+  defaultOpen?: boolean;
   hover?: boolean;
   submenu?: boolean;
   selectors?: {
@@ -45,7 +47,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
           return _arrowEl;
         },
       },
-      { showDelay: 0, ...options },
+      { showDelay: 0, noPositioning: options.portal, ...options },
     ),
     _focusTrap = createFocusTrap({
       selectors: options.selectors?.focus,
@@ -66,8 +68,10 @@ export function createAriaMenu(options: AriaMenuOptions) {
       if (_menuEl) {
         _menuEl.style.pointerEvents = '';
         _menuEl.dispatchEvent(new Event('aria-open'));
-        if (isKeyboardEvent(event)) _menuEl.focus();
-        _openDisposal.add(_focusTrap(_menuEl));
+        if (isKeyboardEvent(event)) {
+          _menuEl.focus();
+          _openDisposal.add(_focusTrap(_menuEl));
+        }
       }
 
       activeMenu.set(_menuEl);
@@ -212,7 +216,13 @@ export function createAriaMenu(options: AriaMenuOptions) {
       const disposal = new DisposalBin();
 
       _menuEl = menuEl;
-      if (!options.noPositioning) menuEl.style.position = 'absolute';
+
+      if (options.portal) {
+        document.body.append(menuEl);
+      } else if (!options.noPositioning) {
+        menuEl.style.position = 'absolute';
+      }
+
       menuEl.style.pointerEvents = 'none';
       menuEl.style.display = 'none';
       menuEl.setAttribute('id', _menuId);

@@ -85,6 +85,7 @@ export function createAriaTooltip(options: AriaTooltipOptions) {
 
       _contentEl = contentEl;
       contentEl.style.display = 'none';
+      contentEl.style.pointerEvents = 'none';
       contentEl.setAttribute('id', _id);
       contentEl.setAttribute('role', 'tooltip');
       if (!options.noPositioning) contentEl.style.position = 'absolute';

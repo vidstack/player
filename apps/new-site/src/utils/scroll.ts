@@ -4,8 +4,8 @@ import { isWindow } from './unit';
 export function hideDocumentScrollbar(hidden: boolean) {
   if (!IS_BROWSER) return;
   window.requestAnimationFrame(() => {
-    document.documentElement.classList[hidden ? 'add' : 'remove']('overflow-hidden');
-    document.documentElement.classList[!hidden ? 'add' : 'remove']('overflow-x-hidden');
+    document.body.classList[hidden ? 'add' : 'remove']('overflow-hidden');
+    document.body.classList[!hidden ? 'add' : 'remove']('overflow-x-hidden');
   });
 }
 
