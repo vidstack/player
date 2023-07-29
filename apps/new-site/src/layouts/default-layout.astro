@@ -2,21 +2,22 @@
 import AppLayout from './app-layout.astro';
 import Footer from './parts/footer.astro';
 import Navbar from './parts/navbar/navbar.astro';
-import type { NavItem } from './parts/navbar/navigation';
 
 interface Props {
   title: string;
   description: string;
-  navItems?: NavItem[];
+  announcementBar?: boolean;
 }
 
-const { title, description, navItems = [] } = Astro.props;
+const { title, description, announcementBar = false } = Astro.props;
 ---
 
 <AppLayout {title} {description}>
   <slot name="top" />
-  <Navbar items={navItems} />
-  <slot />
+  <Navbar {announcementBar} />
+  <main style="padding-top: var(--navbar-height);">
+    <slot />
+  </main>
   <Footer />
   <slot name="bottom" />
 </AppLayout>

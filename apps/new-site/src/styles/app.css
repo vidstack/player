@@ -28,13 +28,8 @@
   --navbar-border-bottom: 1px solid rgb(var(--color-border));
   --breadcrumbs-height: 0px;
 
-  --main-padding-x: 1rem;
-}
-
-@media screen and (min-width: 992px) {
-  :root {
-    --main-padding-x: 4rem;
-  }
+  --top-bar-height: calc(var(--announcement-bar-height) + var(--navbar-height));
+  --content-height: calc(100vh - var(--navbar-height));
 }
 
 :root.dark,
@@ -67,8 +62,4 @@
 .dark .bg-inverse {
   color: black;
   background-color: rgb(245 245 245) !important;
-}
-
-.main-top-offset {
-  top: calc(var(--announcement-bar-height) + var(--navbar-height));
 }

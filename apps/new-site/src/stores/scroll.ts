@@ -1,5 +1,4 @@
 import { readable } from 'svelte/store';
-
 import { IS_BROWSER } from '../utils/env';
 import { throttleAndDebounce } from '../utils/timing';
 
@@ -7,7 +6,7 @@ export const scrollTop = readable(0, (set) => {
   if (!IS_BROWSER) return;
 
   const onScroll = throttleAndDebounce(() => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollTop = document.documentElement.scrollTop;
     set(scrollTop);
   }, 50);
 

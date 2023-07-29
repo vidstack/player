@@ -18,10 +18,11 @@
 <!-- Submenu Trigger -->
 <NavMenuItem
   {item}
-  class={clsx('cursor-pointer', $isMenuOpen && 'bg-inverse')}
+  {...$$restProps}
+  class={clsx('cursor-pointer', $isMenuOpen && 'bg-inverse', $$restProps.class)}
   action={menuTrigger}
   as="button"
-  invertColors={$isMenuOpen}
+  invertTheme={$isMenuOpen}
 />
 
 <!-- Submenu -->

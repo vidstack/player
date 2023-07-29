@@ -12,8 +12,8 @@ const { href } = Astro.props;
 
 <div
   class={clsx(
-    'border-border border-y-[1px] w-full h-[var(--announcement-bar-height)]',
-    'text-sm flex items-center justify-center',
+    'border-border border-y-[1px] w-full h-[var(--announcement-bar-height)] z-40',
+    'text-sm flex items-center justify-center scrolled:opacity-0 transition-opacity duration-300 scrolled:invisible',
   )}
 >
   <MegaphoneIcon class="mr-1.5 mb-0.5 w-5 h-5" />
@@ -22,7 +22,7 @@ const { href } = Astro.props;
     <slot />
   </span>
 
-  <a class="flex items-center text-brand group font-medium" {href}>
+  <a class="flex items-center text-brand group font-medium p-0.5 rounded-md" {href}>
     Learn more
     <ArrowRightIcon
       class="-translate-x-2 opacity-0 group-hocus:opacity-100 group-hocus:translate-x-px transition-all w-3.5 h-3.5"

@@ -6,8 +6,6 @@ import '../styles/docs.css';
 import 'vidstack/styles/player/themes/default.css';
 import 'vidstack/styles/player/skins/default/audio.css';
 import 'vidstack/styles/player/skins/default/video.css';
-import '../polyfills/focus-visible';
-import 'vidstack/player/skins';
 import MetaTags from './parts/meta-tags.astro';
 
 interface Props {
@@ -23,13 +21,16 @@ const { title, description } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/manifest.json" />
 
     <MetaTags {title} {description} />
+
+    <script src="../scripts/scroll-top.ts"></script>
+    <script src="../scripts/focus-visible.js"></script>
+    <script src="vidstack/player/skins"></script>
 
     <script>
       const key = 'vidstack::color-scheme',
@@ -45,7 +46,7 @@ const { title, description } = Astro.props;
       }
     </script>
   </head>
-  <body class="bg-body text-inverse min-w-screen min-h-screen">
+  <body class="bg-body text-inverse min-w-screen min-h-screen overflow-x-hidden">
     <slot />
   </body>
 </html>

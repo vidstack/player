@@ -1,11 +1,17 @@
 <script lang="ts">
   import clsx from 'clsx';
   import { createAriaMenu } from '../../../../../aria/menu';
-  import AnimatedMenuIcon from '../animated-menu-icon.svelte';
+  import AnimatedMenuIcon from '../../../../../icons/animated-menu-icon.svelte';
+  import { scrollTop } from '../../../../../stores/scroll';
+  import ColorSchemeSwitch from '../../../color-scheme-switch.svelte';
+  import NavMobileItems from './nav-mobile-items.svelte';
+
+  export let announcementBar = false;
 
   const { menu, menuTrigger, isMenuOpen } = createAriaMenu({
     placement: 'bottom-start',
-    noPositioning: true,
+    portal: true,
+    preventScroll: true,
   });
 </script>
 
@@ -23,14 +29,18 @@
 
 <div
   class={clsx(
-    'fixed overflow-y-scroll main-top-offset left-0 right-0 h-[calc(100%-var(--navbar-height))] scrollbar',
-    'bg-body z-50',
-    $isMenuOpen
-      ? 'slide-in-from-top-2 animate-in fade-in'
-      : 'animate-out slide-out-to-top-2 fade-out',
+    'fixed overflow-y-scroll left-0 w-screen scrollbar transition-[top,height] duration-300',
+    'bg-body z-50 top-[var(--top)] pt-4 pb-8',
+    $isMenuOpen ? 'animate-in fade-in h-[calc(100vh-var(--top))]' : 'animate-out fade-out h-0',
   )}
   use:menu
   style="display: none;"
+  style:--top={$scrollTop === 0 && announcementBar
+    ? 'var(--top-bar-height)'
+    : 'var(--navbar-height)'}
 >
-  <slot />
+  <NavMobileItems />
+  <div class="mt-2 px-4 flex items-start">
+    <ColorSchemeSwitch />
+  </div>
 </div>
