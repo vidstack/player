@@ -24,11 +24,12 @@
 
   --announcement-bar-height: 44px;
   --navbar-height: 4rem;
-  --navbar-max-width: 1440px;
   --navbar-border-bottom: 1px solid rgb(var(--color-border));
   --breadcrumbs-height: 0px;
 
   --top-bar-height: calc(var(--announcement-bar-height) + var(--navbar-height));
+
+  --content-max-width: 1440px;
   --content-height: calc(100vh - var(--navbar-height));
 }
 

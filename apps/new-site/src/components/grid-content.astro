@@ -1,0 +1,71 @@
+---
+import ArrowRightIcon from '~astro-icons/lucide/arrow-right';
+import clsx from 'clsx';
+import Badge, { BadgeColor } from './badge.svelte';
+import FadeInWhenVisible from './fade-in-when-visible.astro';
+import type { StageTitle } from './stage-badge.svelte';
+import StageBadge from './stage-badge.svelte';
+
+export interface GridContentItem {
+  title: string;
+  badge?: string | { title: string; color: BadgeColor };
+  stage?: StageTitle;
+  description: string;
+  href?: string;
+}
+
+interface Props {
+  label: string;
+  align?: 'start' | 'center';
+  content: GridContentItem[];
+}
+
+const { label, align = 'center', content } = Astro.props;
+---
+
+<FadeInWhenVisible delay={300}>
+  <div class="w-full 576:mx-auto 576:max-w-5xl mt-16 576:mt-24">
+    <ul
+      class={clsx(
+        align === 'start' ? 'grid' : 'inline-grid 576:justify-items-center',
+        'w-full gap-12 px-4 grid-cols-1 text-left',
+        '576:grid-cols-2 576:gap-16 576:w-auto',
+        '768:grid-cols-3',
+      )}
+      aria-label={label}
+    >
+      {
+        content.map(({ title, badge, stage, href, description }) => {
+          const isExternal = !!href?.startsWith('http');
+          return (
+            <li class="flex flex-col space-y-2 text-inverse w-full">
+              <div class="flex flex-row items-center justify-start">
+                <span class="font-medium text-inverse">{title}</span>
+                {stage && <StageBadge stage={stage} client:visible />}
+                {badge && (
+                  <Badge color={typeof badge === 'string' ? undefined : badge.color}>
+                    {typeof badge === 'string' ? badge : badge.title}
+                  </Badge>
+                )}
+              </div>
+
+              <p class="text-soft text-sm w-full">{description}</p>
+
+              {href && (
+                <a
+                  class="flex items-center text-brand group p-0.5 rounded-md text-sm"
+                  {href}
+                  target={isExternal ? '_blank' : null}
+                  rel={isExternal ? 'noreferrer' : null}
+                >
+                  Learn more
+                  <ArrowRightIcon class="-translate-x-2 opacity-0 group-hocus:opacity-100 group-hocus:translate-x-px transition-all w-3.5 h-3.5" />
+                </a>
+              )}
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</FadeInWhenVisible>

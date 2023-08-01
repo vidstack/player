@@ -5,12 +5,16 @@ import { throttleAndDebounce } from '../utils/timing';
 export const scrollTop = readable(0, (set) => {
   if (!IS_BROWSER) return;
 
-  const onScroll = throttleAndDebounce(() => {
+  function onChange() {
     const scrollTop = document.documentElement.scrollTop;
     set(scrollTop);
-  }, 50);
+  }
 
+  onChange();
+
+  const onScroll = throttleAndDebounce(onChange, 50);
   window.addEventListener('scroll', onScroll, false);
+
   return () => {
     window.removeEventListener('scroll', onScroll);
   };

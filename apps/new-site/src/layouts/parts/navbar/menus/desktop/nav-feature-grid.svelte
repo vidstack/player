@@ -16,13 +16,7 @@
     >
       <div class="flex items-center font-medium">
         {#if item.icon && navIcons[item.icon]}
-          <div
-            class={clsx(
-              'rounded-full bg-brand/20 flex items-center justify-center w-6 h-6 mr-2 border border-brand',
-            )}
-          >
-            <svelte:component this={navIcons[item.icon]} class="w-3 h-3 text-brand" />
-          </div>
+          <svelte:component this={navIcons[item.icon]} class="mr-1.5" />
         {/if}
 
         <span class="text-[15px]">{item.title}</span>

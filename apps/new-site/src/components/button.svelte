@@ -9,15 +9,15 @@
   const dispatch = createEventDispatcher();
 
   export let primary = false;
-  export let gradient: string | undefined = undefined;
+  export let gradient: string | boolean | undefined = undefined;
   export let arrow: boolean | 'left' | 'right' | undefined = undefined;
 
   $: isButton = isUndefined($$restProps['href']);
 
   $: buttonClass = clsx(
-    'flex items-center rounded-md font-medium group px-5 py-2.5 text-sm bg-body',
-    '768:px-8 768:py-3 768:text-base',
-    primary && 'bg-inverse',
+    'flex items-center rounded-md font-medium group px-5 py-2.5 text-sm',
+    '768:px-6 768:text-base',
+    primary ? 'bg-inverse' : 'bg-body',
     gradient && 'bg-clip-padding border-2 border-transparent',
     !gradient && 'border-2 border-border',
     $$restProps.class,
@@ -31,18 +31,18 @@
   );
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="relative" style={gradient}>
+<div class="relative" style={clsx(typeof gradient === 'string' && gradient)}>
   {#if gradient}
     <span
       class={clsx(
         'text-gradient rounded-md z-[-2] absolute w-full h-full inset-0',
         'before:w-full before:h-full before:absolute before:bg-clip-padding',
-        'before:blur-[36px] before:z-[-1] before:inset-0 before:border-[12px] before:border-transparent',
+        'before:blur-[36px] before:z-[-1] before:inset-0 before:border-[13px] before:border-transparent',
       )}
     ></span>
   {/if}
 
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <svelte:element
     this={isButton ? 'button' : 'a'}
     {...$$restProps}

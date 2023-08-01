@@ -2,7 +2,7 @@
   import ArrowRightIcon from '~icons/lucide/arrow-right';
   import clsx from 'clsx';
   import type { Action } from 'svelte/action';
-  import Badge from '../../../../components/badge.svelte';
+  import StageBadge from '../../../../components/stage-badge.svelte';
   import { navIcons } from '../nav-icons';
   import type { NavMenuItem } from '../navigation';
 
@@ -30,17 +30,14 @@
   <div class="flex items-center w-full">
     <h1 class="text-sm nav-lg:text-[15px] font-medium nav-lg:text-base flex items-center">
       {#if item.icon && navIcons[item.icon]}
-        <svelte:component
-          this={navIcons[item.icon]}
-          class="mr-1.5 w-4 h-4 nav-lg:w-[18px] nav-lg:h-[18px]"
-        />
+        <svelte:component this={navIcons[item.icon]} class="mr-1.5" />
       {/if}
 
       {item.title}
     </h1>
 
-    {#if item.badge}
-      <Badge title={item.badge} {invertTheme} />
+    {#if item.stage}
+      <StageBadge stage={item.stage} {invertTheme} />
     {/if}
   </div>
 
