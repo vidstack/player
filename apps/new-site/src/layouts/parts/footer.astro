@@ -1,0 +1,88 @@
+---
+import VidstackLogo from '../../icons/brand/vidstack-logo.svelte';
+import VidstackSymbol from '../../icons/brand/vidstack-symbol.svelte';
+import FooterLinks from './footer-links.astro';
+---
+
+<div class="mt-12"></div>
+
+<div class="w-full flex mb-8 768:mb-16 pr-4 768:pr-6 992:pr-10">
+  <div class="flex-1"></div>
+  <div class="rounded-full w-20 h-6 border-border border-2"></div>
+  <div class="rounded-full w-6 h-6 border-border border-2 ml-3"></div>
+</div>
+
+<footer class="w-full px-4 768:px-6 pt-10 pb-6 text-base border-t border-border">
+  <div class="mx-auto w-full max-w-[var(--content-max-width)]">
+    <div class="flex flex-col">
+      <div class="768:flex-row 768:space-y-0 768:space-x-16 flex flex-col space-y-10">
+        <div class="768:flex-col 768:items-start flex flex-row items-center">
+          <div
+            class="text-inverse svg-responsive 992:inline-block hidden h-[26px] w-[128px] overflow-hidden"
+          >
+            <VidstackLogo />
+          </div>
+          <div class="svg-responsive 992:hidden -ml-2 mt-0.5 h-9 w-9 overflow-hidden">
+            <VidstackSymbol />
+          </div>
+          <div class="ml-2 text-soft 768:ml-0 768:mt-4">
+            From the creators of
+            <a
+              class="font-medium text-inverse hocus:underline"
+              href="https://vimejs.com"
+              target="_blank"
+            >
+              Vime
+            </a>
+             &
+            <a
+              class="font-medium text-inverse hocus:underline"
+              href="https://plyr.io"
+              target="_blank"
+            >
+              Plyr</a
+            >.
+          </div>
+        </div>
+
+        <div class="768:inline-block 768:flex-1 pointer-events-none hidden"></div>
+
+        <div
+          class="grid grid-cols-1 gap-y-16 420:grid-cols-3 gap-x-14 576:gap-x-16 576:px-4 420:mx-auto"
+        >
+          <FooterLinks
+            title="Player"
+            links={[
+              { title: 'HTML', href: '/docs/player' },
+              { title: 'React', href: '/docs/react/player' },
+              { title: 'Tailwind', href: '/docs/react/player/core-concepts/tailwind' },
+            ]}
+          />
+
+          <FooterLinks
+            title="Socials"
+            links={[
+              { title: 'Twitter', href: 'https://twitter.com/vidstackjs?lang=en' },
+              { title: 'Discord', href: 'https://discord.gg/QAjfh2gZE4' },
+              { title: 'GitHub', href: 'https://github.com/vidstack' },
+            ]}
+          />
+
+          <FooterLinks
+            title="Resources"
+            links={[
+              { title: 'Docs', href: '/docs' },
+              { title: 'Icons', href: '/media-icons' },
+              { title: 'Captions', href: 'https://github.com/vidstack/media-captions' },
+              { title: 'Media Files', href: 'https://github.com/vidstack/media-files' },
+            ]}
+          />
+        </div>
+      </div>
+
+      <div class="flex items-center text-soft w-full text-xs py-2.5 mt-12 768:mt-0">
+        © {new Date().getFullYear()} Vidstack
+      </div>
+    </div>
+  </div>
+</footer>

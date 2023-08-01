@@ -15,13 +15,13 @@ const { announcementBar = false } = Astro.props;
 
 <div
   class={clsx(
-    'hidden nav-lg:flex px-4 1440:px-0 fixed left-0 blur-bg',
+    'hidden nav-lg:flex px-4 768:px-6 fixed left-0 blur-bg',
     'mx-auto h-[var(--navbar-height)] w-full',
     'flex-col items-center justify-center z-40 transition-[top] duration-300',
     announcementBar ? 'top-[var(--announcement-bar-height)] scrolled:top-0' : 'top-0',
   )}
 >
-  <div class="flex w-full items-center max-auto max-w-[var(--navbar-max-width)]">
+  <div class="flex w-full items-center mx-auto max-w-[var(--content-max-width)]">
     <a class="mr-12 rounded-md" href="/" aria-label="Go Home">
       <Logo />
     </a>

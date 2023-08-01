@@ -1,5 +1,6 @@
 ---
 import AppLayout from './app-layout.astro';
+import AnnouncementBar from './parts/announcement-bar.astro';
 import Footer from './parts/footer.astro';
 import Navbar from './parts/navbar/navbar.astro';
 
@@ -13,11 +14,23 @@ const { title, description, announcementBar = false } = Astro.props;
 ---
 
 <AppLayout {title} {description}>
+  {
+    announcementBar && (
+      <AnnouncementBar href="#">
+        <span class="font-semibold">Player Update:</span> 1.0 is coming!
+      </AnnouncementBar>
+    )
+  }
+
   <slot name="top" />
+
   <Navbar {announcementBar} />
+
   <main style="padding-top: var(--navbar-height);">
     <slot />
   </main>
+
   <Footer />
+
   <slot name="bottom" />
 </AppLayout>

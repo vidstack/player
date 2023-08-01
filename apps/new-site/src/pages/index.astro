@@ -1,66 +1,86 @@
 ---
-import clsx from 'clsx';
+import BookOpenIcon from '~astro-icons/lucide/book-open';
+import HeartHandshakeIcon from '~astro-icons/lucide/heart-handshake';
+import LayoutDashboardIcon from '~astro-icons/lucide/layout-dashboard';
 import Button from '../components/button.svelte';
+import FeatureSection from '../components/feature-section.astro';
+import GridContent, { type GridContentItem } from '../components/grid-content.astro';
+import HeroSection from '../components/hero-section.astro';
+import JoinWaitlist from '../components/join-waitlist.svelte';
+import Style from '../components/style.svelte';
 import TextGradient from '../components/text-gradient.svelte';
-import ReactLogo from '../icons/frameworks/react.svg';
-import TailwindLogo from '../icons/frameworks/tailwind.svg';
 import NextIcon from '../icons/next-icon.svelte';
 import ReactIcon from '../icons/react-icon.svelte';
 import TailwindIcon from '../icons/tailwind-icon.svelte';
 import DefaultLayout from '../layouts/default-layout.astro';
-import AnnouncementBar from '../layouts/parts/announcement-bar.astro';
+import SocialLink from '../layouts/parts/social-link.astro';
 
 const title = 'Vidstack: Video platform for frontend developers';
-
-const description =
-  'Build robust and accessible video/audio experiences that convert in hours, not weeks.';
+const description = 'Build robust and accessible video/audio experiences in minutes, not weeks.';
+const openSourceProjects: GridContentItem[] = [
+  {
+    title: 'Player',
+    stage: 'Beta',
+    href: '/player',
+    description: 'UI component library for building video and audio players for the web.',
+  },
+  {
+    title: 'Captions',
+    stage: 'Beta',
+    href: 'https://github.com/vidstack/media-captions',
+    description: 'Modern media captions parser and renderer. Supports VTT, SRT, and SSA.',
+  },
+  {
+    title: 'Icons',
+    stage: 'Beta',
+    href: '/media-icons',
+    description: 'Beautifully hand-crafted collection of media icons designed for players.',
+  },
+  {
+    title: 'Uploader',
+    stage: 'Planned',
+    description: 'UI component library for building your own media uploader.',
+  },
+  {
+    title: 'Analytics',
+    stage: 'Planned',
+    description: 'Drop-in component for collecting media performance and user-behavior data.',
+  },
+  {
+    title: 'Search',
+    stage: 'Planned',
+    description: 'UI components for building beautiful video/audio search experiences.',
+  },
+];
 ---
 
 <DefaultLayout {title} {description} announcementBar>
-  <AnnouncementBar href="#" slot="top">
-    <span class="font-semibold">Player Update:</span> 1.0 is coming!
-  </AnnouncementBar>
+  <Style
+    style="--from-color: oklch(0.61 0.19 44.84); --to-color: oklch(0.6 0.2 354.46);"
+    darkStyle="--from-color: oklch(0.7 0.19 47.31); --to-color: oklch(0.66 0.21 353.93);"
+    client:load
+  >
+    <HeroSection>
+      <Fragment slot="title">
+        Video Platform.
+        <br />
+        <span class="inline-block mt-1">
+          For
+          <TextGradient>Next.js.</TextGradient>
+        </span>
+      </Fragment>
 
-  <!-- hero -->
-  <section class="w-full flex flex-col items-center justify-center mt-12 576:mt-20 px-4">
-    <h1
-      class={clsx(
-        'text-[48px] leading-[1.25] max-w-[375px] text-center font-bold',
-        '576:text-[64px] 576:leading-[1.15] 576:max-w-[480px]',
-        '768:text-[72px] 768:max-w-[580px]',
-        '992:text-[86px] 992:max-w-[680px] 992:leading-[1.15]',
-      )}
-    >
-      Video Platform for
-      <TextGradient client:load>Next.js</TextGradient>
-    </h1>
+      <p slot="description">
+        Everything you need to quickly build & ship robust video/audio experiences - starting with
+        React and Next.js.
+      </p>
 
-    <p
-      class={clsx(
-        'text-soft mt-8 text-center text-xl max-w-[375px] leading-relaxed',
-        '576:max-w-[472px] 576:text-xl',
-        '768:max-w-[680px] 768:text-2xl 768:leading-[1.5]',
-      )}
-    >
-      Everything you need to quickly build & ship robust video/audio experiences - starting with
-      React and Next.js.
-    </p>
+      <Fragment slot="cta">
+        <JoinWaitlist primary client:load />
+        <Button arrow href="/player" gradient>Try Player</Button>
+      </Fragment>
 
-    <div class="flex items-center mt-10 space-x-4 768:mt-12">
-      <Button primary arrow>Join Waitlist</Button>
-      <Button
-        arrow
-        href="/player"
-        gradient="--from-color: oklch(0.61 0.19 44.84); --to-color: oklch(0.6 0.2 354.46);"
-      >
-        Try Player
-      </Button>
-    </div>
-
-    <div class="flex flex-col mt-20 items-center justify-center">
-      <h2 class="uppercase text-soft text-[13px] font-medium">works seamlessly with</h2>
-
-      <div class="flex items-center mt-6 space-x-6 font-bold text-[40px]">
+      <Fragment slot="frameworks">
         <a
           class="hocus:scale-105 transition rounded-md text-soft hocus:text-[#00D8FF]"
           href="https://react.dev"
@@ -87,11 +107,91 @@ const description =
         >
           <NextIcon class="w-10 h-10" />
         </a>
+      </Fragment>
+    </HeroSection>
+  </Style>
+
+  <Style style="--from-color: oklch(49.07% 0.272 300.45); --to-color: oklch(64.53% 0.292 2.47);">
+    <FeatureSection title="Dashboard." subtitle="Built for video." align="start">
+      <LayoutDashboardIcon width="100%" height="100%" slot="icon" />
+
+      <p slot="description">
+        Move faster with everything in one place and a few clicks away. Create projects for each
+        site, manage video/audio assets, streams, collections, thumbnails, captions, and more.
+      </p>
+
+      <JoinWaitlist gradient slot="cta" client:load />
+
+      <div slot="content"></div>
+    </FeatureSection>
+  </Style>
+
+  <Style
+    style="--from-color: oklch(0.56 0.19 272.49); --to-color: oklch(0.81 0.15 217.11);"
+    darkStyle="--from-color: oklch(0.56 0.19 272.49); --to-color: oklch(0.63 0.13 217.76);"
+    client:load
+  >
+    <FeatureSection title="React." subtitle="Built for you." align="center">
+      <ReactIcon width="100%" height="100%" slot="icon" />
+
+      <p slot="description">
+        Build a production-ready player in minutes using our free and open-source UI library. Use
+        the tools you know and love to build beautiful media experiences.
+      </p>
+
+      <Button arrow href="/player" gradient slot="cta">Try Player</Button>
+
+      <div slot="content"></div>
+    </FeatureSection>
+  </Style>
+
+  <Style style="--from-color: oklch(0.7 0.19 47.31); --to-color: oklch(0.66 0.21 353.93);">
+    <FeatureSection title="Next.js." subtitle="Built to be seamless." align="start">
+      <NextIcon width="100%" height="100%" slot="icon" />
+
+      <p slot="description">
+        We're building Vidstack for a seamless start-to-finish workflow. No setup headaches, no
+        state management, and no backend APIs. Flexible hooks and components are waiting for you.
+      </p>
+
+      <JoinWaitlist slot="cta" gradient client:load />
+
+      <div slot="content"></div>
+    </FeatureSection>
+  </Style>
+
+  <Style style="--from-color: oklch(0.66 0.23 153.66); --to-color: oklch(0.66 0.15 203.58);">
+    <FeatureSection title="Open Source." subtitle="Built transparently." align="center">
+      <BookOpenIcon width="100%" height="100%" slot="icon" />
+
+      <p slot="description">
+        Our entire journey is rooted in open-source and you can find all of our work on GitHub. If
+        you like what we're doing, remember to follow and give us a star!
+      </p>
+
+      <Button arrow href="https://github.com/vidstack" gradient target="_blank" slot="cta">
+        Follow on GitHub
+      </Button>
+
+      <GridContent label="Open-Source Projects" content={openSourceProjects} slot="content" />
+    </FeatureSection>
+  </Style>
+
+  <Style style="--from-color: oklch(0.5 0.22 28.07); --to-color: oklch(0.54 0.25 348.98);">
+    <FeatureSection title="Community." subtitle="Built for us." align="center">
+      <HeartHandshakeIcon width="100%" height="100%" slot="icon" />
+
+      <p slot="description">
+        We're a community of frontend devs working with video & audio. Join in on the discussions,
+        share your designs and knowledge, ask for help, and connect with others building awesome
+        experiences.
+      </p>
+
+      <div class="flex items-center" slot="cta">
+        <SocialLink class="mr-4 768:mr-8" type="twitter" iconSize={40} />
+        <SocialLink class="mr-4 768:mr-8" type="discord" iconSize={40} />
+        <SocialLink type="gitHub" iconSize={40} />
       </div>
-    </div>
-  </section>
-
-  <!-- content -->
-
-  <div class="h-[900px]"></div>
+    </FeatureSection>
+  </Style>
 </DefaultLayout>

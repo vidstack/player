@@ -1,0 +1,62 @@
+---
+import clsx from 'clsx';
+import FadeInWhenVisible from './fade-in-when-visible.astro';
+import TextGradient from './text-gradient.svelte';
+
+interface Props {
+  title: string;
+  subtitle: string;
+  align?: 'start' | 'center';
+}
+
+const { title, subtitle, align = 'center' } = Astro.props;
+---
+
+<FadeInWhenVisible>
+  <section
+    class={clsx(
+      'flex items-center flex-col text-center',
+      'px-4 768:px-6',
+      'py-32 992:py-40',
+      'max-w-[var(--content-max-width)] mx-auto',
+      align === 'start' && '992:text-start 992:items-start',
+    )}
+  >
+    <div
+      class={clsx(
+        'w-full flex justify-center text-inverse',
+        align === 'start' && '992:justify-start',
+      )}
+    >
+      <div class="w-10 h-10 text-inverse">
+        <slot name="icon" />
+      </div>
+    </div>
+
+    <h1
+      class="font-semibold mt-4 text-3xl 576:text-4xl mx-auto 576:max-w-none 992:mx-0 leading-tight"
+    >
+      <TextGradient>
+        {title}
+      </TextGradient>
+      <br />
+      <span class="inline-block mt-1.5">
+        {subtitle}
+      </span>
+    </h1>
+
+    {
+      Astro.slots.has('description') && (
+        <div class="text-soft mt-6 max-w-md mx-auto 992:mx-0 992:max-w-lg 1200:max-w-xl 1200:text-lg">
+          <slot name="description" />
+        </div>
+      )
+    }
+
+    <div class={clsx('mt-8 flex justify-center w-full', align === 'start' && '992:justify-start')}>
+      <slot name="cta" />
+    </div>
+
+    <slot name="content" />
+  </section>
+</FadeInWhenVisible>

@@ -26,7 +26,7 @@
 </script>
 
 <div
-  class="mx-auto flex h-[var(--navbar-height)] w-full max-w-[var(--navbar-max-width)] flex-col items-center justify-center p-[var(--navbar-padding)] z-40"
+  class="mx-auto flex h-[var(--navbar-height)] w-full max-w-[var(--content-max-width)] flex-col items-center justify-center p-[var(--navbar-padding)] z-40"
 >
   <div class={clsx('flex w-full items-center')}>
     <slot name="left" />

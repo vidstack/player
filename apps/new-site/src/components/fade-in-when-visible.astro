@@ -1,0 +1,20 @@
+---
+import Visible from '../actions/visible.svelte';
+
+interface Props {
+  duration?: number;
+  delay?: number;
+}
+
+const { duration = 500, delay = 0 } = Astro.props;
+---
+
+<Visible
+  class="opacity-0 data-[visible]:opacity-100 transition-opacity ease-in"
+  threshold={0.5}
+  once
+  style={`transition-duration: ${duration}ms; transition-delay: ${delay}ms;`}
+  client:load
+>
+  <slot />
+</Visible>

@@ -1,0 +1,41 @@
+---
+import clsx from 'clsx';
+import FadeInWhenVisible from './fade-in-when-visible.astro';
+---
+
+<FadeInWhenVisible>
+  <section class="w-full flex flex-col items-center justify-center mt-12 576:mt-24 px-4">
+    <h1
+      class={clsx(
+        'text-[48px] leading-[1.25] max-w-[375px] text-center font-bold',
+        '576:text-[60px] 576:leading-[1.15] 576:max-w-[480px]',
+        '768:text-[72px] 768:max-w-[580px]',
+        '992:text-[86px] 992:max-w-[680px] 992:leading-[1.15]',
+      )}
+    >
+      <slot name="title" />
+    </h1>
+
+    <div
+      class={clsx(
+        'text-soft mt-8 text-center text-lg 420:text-xl max-w-[375px] leading-relaxed',
+        '576:max-w-[472px] 576:text-xl',
+        '768:max-w-[680px] 768:text-2xl 768:leading-[1.5]',
+      )}
+    >
+      <slot name="description" />
+    </div>
+
+    <div class="flex items-center mt-10 space-x-4 768:mt-12">
+      <slot name="cta" />
+    </div>
+
+    <div class="flex flex-col mt-16 768:mt-20 items-center justify-center">
+      <h2 class="uppercase text-soft text-[13px] font-medium">works seamlessly with</h2>
+
+      <div class="flex items-center mt-6 space-x-6 font-bold text-[40px]">
+        <slot name="frameworks" />
+      </div>
+    </div>
+  </section>
+</FadeInWhenVisible>

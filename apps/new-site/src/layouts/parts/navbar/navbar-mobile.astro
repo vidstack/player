@@ -14,7 +14,7 @@ const { announcementBar = false } = Astro.props;
 
 <div
   class={clsx(
-    'nav-lg:hidden px-4 py-4 fixed left-0 blur-bg',
+    'nav-lg:hidden px-4 768:px-6 py-4 fixed left-0 blur-bg',
     'mx-auto h-[var(--navbar-height)] w-full',
     'flex-col items-center justify-center z-40 transition-[top] duration-300',
     announcementBar ? 'top-[var(--announcement-bar-height)] scrolled:top-0' : 'top-0',

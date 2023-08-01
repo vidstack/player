@@ -1,5 +1,5 @@
 import type { SvelteComponent } from 'svelte';
-import type { BadgeTitle } from '../../../components/badge.svelte';
+import type { StageTitle } from '../../../components/stage-badge.svelte';
 import type { navIcons } from './nav-icons';
 
 export type NavItem = NavLink | NavMenu;
@@ -23,7 +23,7 @@ export interface NavMenuItem {
   title: string;
   description: string;
   href?: string;
-  badge?: BadgeTitle;
+  stage?: StageTitle;
   icon?: keyof typeof navIcons;
 }
 
