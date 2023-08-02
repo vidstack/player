@@ -46,6 +46,11 @@ module.exports = {
         indeterminate: 'indeterminate 1.2s linear infinite',
       },
       keyframes: {
+        shimmer: {
+          '100%': {
+            transform: 'translateX(100%)',
+          },
+        },
         indeterminate: {
           '0%': { transform: 'translateX(0) scaleX(0)' },
           '40%': { transform: 'translateX(0) scaleX(0.4)' },
@@ -56,6 +61,7 @@ module.exports = {
     },
   },
   plugins: [
+    require('@tailwindcss/container-queries'),
     require('tailwindcss-animate'),
     require('@tailwindcss/typography'),
     require('vidstack/tailwind.cjs'),
@@ -68,7 +74,6 @@ function customVariants({ addVariant }) {
     'supports-backdrop-blur',
     '@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))',
   );
-
   addVariant('hocus', ['&:hover', '&:focus-visible']);
   addVariant('scrolled', ['body[data-scrolled] &']);
   addVariant('group-hocus', ['.group:hover &', '.group:focus-visible &']);

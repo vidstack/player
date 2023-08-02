@@ -28,8 +28,8 @@
 <!-- Submenu -->
 <div
   class={clsx(
-    'min-w-[300px] 1200:min-w-[600px] pl-8 pr-4 1200:pl-10 1200:pr-4 border border-border',
-    'rounded-r-md bg-body h-full outline-none',
+    'min-w-[300px] 1200:min-w-[600px] pl-8 pr-4 1200:pl-10 1200:pr-4 border border-border shadow-md',
+    'rounded-r-md bg-elevate h-full outline-none',
     'flex 1200:items-center 1200:justify-center overflow-y-scroll 1200:overflow-visible scrollbar',
     $isMenuOpen
       ? 'slide-in-from-left-4 fade-in animate-in duration-300'

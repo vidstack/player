@@ -17,15 +17,13 @@ import FooterLinks from './footer-links.astro';
     <div class="flex flex-col">
       <div class="768:flex-row 768:space-y-0 768:space-x-16 flex flex-col space-y-10">
         <div class="768:flex-col 768:items-start flex flex-row items-center">
-          <div
-            class="text-inverse svg-responsive 992:inline-block hidden h-[26px] w-[128px] overflow-hidden"
-          >
-            <VidstackLogo />
-          </div>
-          <div class="svg-responsive 992:hidden -ml-2 mt-0.5 h-9 w-9 overflow-hidden">
+          <div class="768:hidden">
             <VidstackSymbol />
           </div>
-          <div class="ml-2 text-soft 768:ml-0 768:mt-4">
+          <div class="hidden 768:inline-block dark:768:-ml-1">
+            <VidstackLogo />
+          </div>
+          <div class="ml-2 text-soft 768:ml-0 768:mt-2.5">
             From the creators of
             <a
               class="font-medium text-inverse hocus:underline"
@@ -72,9 +70,9 @@ import FooterLinks from './footer-links.astro';
             title="Resources"
             links={[
               { title: 'Docs', href: '/docs' },
+              { title: 'Media', href: 'https://github.com/vidstack/media-files' },
               { title: 'Icons', href: '/media-icons' },
               { title: 'Captions', href: 'https://github.com/vidstack/media-captions' },
-              { title: 'Media Files', href: 'https://github.com/vidstack/media-files' },
             ]}
           />
         </div>

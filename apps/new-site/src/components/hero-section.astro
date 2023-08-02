@@ -30,12 +30,14 @@ import FadeInWhenVisible from './fade-in-when-visible.astro';
       <slot name="cta" />
     </div>
 
-    <div class="flex flex-col mt-16 768:mt-20 items-center justify-center">
-      <h2 class="uppercase text-soft text-[13px] font-medium">works seamlessly with</h2>
+    <FadeInWhenVisible delay={300}>
+      <div class="flex flex-col mt-16 768:mt-20 items-center justify-center">
+        <h2 class="uppercase text-soft text-[13px] font-medium">works seamlessly with</h2>
 
-      <div class="flex items-center mt-6 space-x-6 font-bold text-[40px]">
-        <slot name="frameworks" />
+        <div class="flex items-center mt-6 space-x-6 font-bold text-[40px]">
+          <slot name="frameworks" />
+        </div>
       </div>
-    </div>
+    </FadeInWhenVisible>
   </section>
 </FadeInWhenVisible>

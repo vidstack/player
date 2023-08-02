@@ -15,48 +15,60 @@ const { title, subtitle, align = 'center' } = Astro.props;
 <FadeInWhenVisible>
   <section
     class={clsx(
-      'flex items-center flex-col text-center',
+      'flex w-full flex-col',
       'px-4 768:px-6',
       'py-32 992:py-40',
       'max-w-[var(--content-max-width)] mx-auto',
-      align === 'start' && '992:text-start 992:items-start',
+      align === 'start' ? '992:flex-row 992:items-center 992:justify-start' : 'justify-center',
     )}
   >
     <div
       class={clsx(
-        'w-full flex justify-center text-inverse',
-        align === 'start' && '992:justify-start',
+        'flex items-center flex-col text-center mb-16 576:mb-24 shrink-0',
+        align === 'start' && '992:text-start 992:items-start',
+        Astro.slots.has('content') && align === 'start' && '992:mr-10 992:mb-0',
       )}
     >
-      <div class="w-10 h-10 text-inverse">
-        <slot name="icon" />
+      <div
+        class={clsx(
+          'w-full flex justify-center text-inverse',
+          align === 'start' && '992:justify-start',
+        )}
+      >
+        <div class="w-10 h-10 text-inverse">
+          <slot name="icon" />
+        </div>
+      </div>
+
+      <h1
+        class="font-semibold mt-4 text-3xl 576:text-4xl mx-auto 576:max-w-none 992:mx-0 leading-tight"
+      >
+        <TextGradient>
+          {title}
+        </TextGradient>
+        <br />
+        <span class="inline-block mt-1.5">
+          {subtitle}
+        </span>
+      </h1>
+
+      {
+        Astro.slots.has('description') && (
+          <div class="text-soft mt-6 max-w-md mx-auto 992:mx-0 992:max-w-lg 1200:max-w-xl 1200:text-lg">
+            <slot name="description" />
+          </div>
+        )
+      }
+
+      <div
+        class={clsx('mt-8 flex justify-center w-full', align === 'start' && '992:justify-start')}
+      >
+        <slot name="cta" />
       </div>
     </div>
 
-    <h1
-      class="font-semibold mt-4 text-3xl 576:text-4xl mx-auto 576:max-w-none 992:mx-0 leading-tight"
-    >
-      <TextGradient>
-        {title}
-      </TextGradient>
-      <br />
-      <span class="inline-block mt-1.5">
-        {subtitle}
-      </span>
-    </h1>
-
-    {
-      Astro.slots.has('description') && (
-        <div class="text-soft mt-6 max-w-md mx-auto 992:mx-0 992:max-w-lg 1200:max-w-xl 1200:text-lg">
-          <slot name="description" />
-        </div>
-      )
-    }
-
-    <div class={clsx('mt-8 flex justify-center w-full', align === 'start' && '992:justify-start')}>
-      <slot name="cta" />
-    </div>
-
-    <slot name="content" />
+    <FadeInWhenVisible delay={300}>
+      <slot name="content" />
+    </FadeInWhenVisible>
   </section>
 </FadeInWhenVisible>

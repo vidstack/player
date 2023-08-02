@@ -7,6 +7,7 @@ import FeatureSection from '../components/feature-section.astro';
 import GridContent, { type GridContentItem } from '../components/grid-content.astro';
 import HeroSection from '../components/hero-section.astro';
 import JoinWaitlist from '../components/join-waitlist.svelte';
+import MockDashboard from '../components/mocks/mock-dashboard.astro';
 import Style from '../components/style.svelte';
 import TextGradient from '../components/text-gradient.svelte';
 import NextIcon from '../icons/next-icon.svelte';
@@ -122,7 +123,7 @@ const openSourceProjects: GridContentItem[] = [
 
       <JoinWaitlist gradient slot="cta" client:load />
 
-      <div slot="content"></div>
+      <MockDashboard slot="content" />
     </FeatureSection>
   </Style>
 
@@ -141,7 +142,7 @@ const openSourceProjects: GridContentItem[] = [
 
       <Button arrow href="/player" gradient slot="cta">Try Player</Button>
 
-      <div slot="content"></div>
+      <div slot="content">....</div>
     </FeatureSection>
   </Style>
 
@@ -156,7 +157,7 @@ const openSourceProjects: GridContentItem[] = [
 
       <JoinWaitlist slot="cta" gradient client:load />
 
-      <div slot="content"></div>
+      <div slot="content">....</div>
     </FeatureSection>
   </Style>
 

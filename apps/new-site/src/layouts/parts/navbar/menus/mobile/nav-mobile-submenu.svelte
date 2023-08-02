@@ -21,7 +21,7 @@
     >
       {#each item.items as menuItem}
         <li class="flex flex-col">
-          <h2 class="text-sm flex items-center">
+          <h2 class="text-[13px] flex items-center">
             {#if menuItem.icon && navIcons[menuItem.icon]}
               <svelte:component this={navIcons[menuItem.icon]} class="mr-1.5 w-4 h-4" />
             {/if}
