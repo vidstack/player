@@ -1,7 +1,7 @@
 ---
 import clsx from 'clsx';
+import VidstackSymbol from '../../../icons/brand/vidstack-symbol.svelte';
 import { NAV_MOBILE_MAX_WIDTH_QUERY } from '../../../stores/media-query';
-import Logo from '../logo.astro';
 import SocialLink from '../social-link.astro';
 import NavMobilePopover from './menus/mobile/nav-mobile-popover.svelte';
 
@@ -22,7 +22,7 @@ const { announcementBar = false } = Astro.props;
 >
   <div class="flex w-full items-center">
     <a class="mr-12 rounded-md" href="/" aria-label="Go Home">
-      <Logo />
+      <VidstackSymbol class="h-[32px] hover:scale-110 transition-transform" />
     </a>
 
     <div class="flex-1"></div>

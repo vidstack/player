@@ -61,6 +61,7 @@ importers:
       '@floating-ui/dom': ^1.4.4
       '@iconify-json/lucide': ^1.1.112
       '@maverick-js/cli': 0.38.0
+      '@tailwindcss/container-queries': ^0.1.1
       '@tailwindcss/typography': ^0.5.0
       '@types/markdown-it': ^12.2.0
       astro: ^2.9.0
@@ -94,6 +95,7 @@ importers:
       '@astrojs/tailwind': 4.0.0_4gjc5l2wew6exwe6xtzazkqbi4
       '@iconify-json/lucide': 1.1.112
       '@maverick-js/cli': 0.38.0
+      '@tailwindcss/container-queries': 0.1.1_tailwindcss@3.3.3
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.3
       '@types/markdown-it': 12.2.3
       markdown-it: 13.0.1
@@ -1515,6 +1517,14 @@ packages:
       vitefu: 0.2.4_vite@4.3.9
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@tailwindcss/container-queries/0.1.1_tailwindcss@3.3.3:
+    resolution: {integrity: sha512-p18dswChx6WnTSaJCSGx6lTmrGzNNvm2FtXmiO6AuA1V4U5REyoqwmT6kgAsIMdjo07QdAfYXHJ4hnMtfHzWgA==}
+    peerDependencies:
+      tailwindcss: '>=3.2.0'
+    dependencies:
+      tailwindcss: 3.3.3
     dev: true
 
   /@tailwindcss/typography/0.5.9_tailwindcss@3.3.2:

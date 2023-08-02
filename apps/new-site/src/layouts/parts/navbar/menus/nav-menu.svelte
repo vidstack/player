@@ -37,7 +37,7 @@
 <!-- Menu -->
 <div
   class={clsx(
-    'nav-lg:border-border nav-lg:border bg-body outline-none transition rounded-sm',
+    'nav-lg:border-border nav-lg:border bg-body nav-lg:bg-elevate outline-none transition rounded-md nav-lg:shadow-md',
     grid ? 'nav-lg:grid nav-lg:grid-cols-2 nav-lg:p-2 1200:gap-x-1' : 'px-2 nav-lg:px-0',
     $isMenuOpen
       ? 'animate-in slide-out-to-bottom-4 fade-in duration-300 nav-lg:translate-y-1'

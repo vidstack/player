@@ -5,8 +5,8 @@
   --color-secondary: 216 35 117;
   --color-focus: 79 70 229;
   --color-soft: 68 78 94;
-  --color-body: 255 255 255;
-  --color-elevate: 230 230 230;
+  --color-body: 240 240 240;
+  --color-elevate: 255 255 255;
   --color-inverse: 5 11 23;
   --color-border: 219 219 219;
 }
@@ -42,8 +42,8 @@
   --color-soft: 150 155 166;
   --color-inverse: 245 245 245;
   --color-border: 44 44 44;
-  --color-elevate: 27 38 58;
-  --color-body: 3 7 18;
+  --color-elevate: 14 14 14;
+  --color-body: 5 5 5;
   --color-focus: 129 140 248;
 }
 

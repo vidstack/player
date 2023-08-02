@@ -1,8 +1,8 @@
 ---
 import clsx from 'clsx';
+import VidstackSymbol from '../../../icons/brand/vidstack-symbol.svelte';
 import { NAV_DESKTOP_MIN_WIDTH_QUERY } from '../../../stores/media-query';
 import ColorSchemeMenu from '../color-scheme-menu.svelte';
-import Logo from '../logo.astro';
 import SocialLink from '../social-link.astro';
 import NavDesktopItems from './menus/desktop/nav-desktop-items.svelte';
 
@@ -23,7 +23,7 @@ const { announcementBar = false } = Astro.props;
 >
   <div class="flex w-full items-center mx-auto max-w-[var(--content-max-width)]">
     <a class="mr-12 rounded-md" href="/" aria-label="Go Home">
-      <Logo />
+      <VidstackSymbol class="h-8 hover:scale-110 transition-transform" />
     </a>
 
     <NavDesktopItems client:media={NAV_DESKTOP_MIN_WIDTH_QUERY} />

@@ -21,12 +21,12 @@
   import { uppercaseFirstLetter } from '../../utils/string';
 
   const { tooltipTrigger, tooltipContent, isTooltipOpen } = createAriaTooltip({
-    placement: 'bottom',
+    placement: 'bottom-end',
     middleware: [offset(8)],
   });
 
   const { menuTrigger, menu, isMenuOpen } = createAriaMenu({
-    placement: 'bottom',
+    placement: 'bottom-end',
     middleware: [offset(8)],
     hover: true,
   });
@@ -45,7 +45,7 @@
   {...$$restProps}
   class={clsx(
     'group relative flex transform-gpu items-center rounded-md border-0 p-2 min-w-[40px] min-h-[40px]',
-    'transition-transform hover:scale-105 hover:bg-elevate',
+    'hocus:bg-brand/10 transition-colors',
     $$restProps.class,
   )}
   use:menuTrigger
@@ -58,7 +58,7 @@
 <!-- Menu -->
 <div
   class={clsx(
-    'p-2 border-border border rounded-sm bg-body hocus:ring-0 outline-none',
+    'p-2 border-border border rounded-md bg-elevate hocus:ring-0 outline-none shadow-sm',
     $isMenuOpen
       ? 'animate-in slide-in-from-top-2 fade-in'
       : 'animate-out fade-out slide-out-to-top-2',
@@ -70,7 +70,7 @@
     {#each colorSchemes as scheme}
       <button
         class={clsx(
-          'flex items-center px-4 py-2 rounded-sm text-sm hocus:bg-elevate outline-none',
+          'flex items-center px-4 py-2 rounded-sm text-sm outline-none hocus:bg-brand/10',
           $colorScheme === scheme && 'text-brand',
         )}
         use:radio={scheme}
@@ -84,7 +84,7 @@
 
 <div
   class={clsx(
-    'z-10 rounded-sm border border-border bg-body text-xs font-medium px-1.5 py-1',
+    'z-10 rounded-md border border-border bg-elevate text-xs font-medium px-1.5 py-1 shadow-sm',
     $isTooltipOpen
       ? 'animate-in fade-in slide-in-from-top-4'
       : 'animate-out fade-out slide-out-to-top-2',

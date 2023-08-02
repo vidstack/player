@@ -19,7 +19,7 @@
   type="button"
   class={clsx(
     'group relative flex transform-gpu items-center rounded-md border-0 px-1 py-0.5',
-    'transition-transform hover:scale-105 hover:bg-elevate',
+    'transition-transform hover:scale-105 hocus:bg-brand/10',
   )}
   aria-label="Open Site Menu"
   use:menuTrigger
