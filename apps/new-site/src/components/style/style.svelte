@@ -1,6 +1,6 @@
 <script lang="ts">
   import clsx from 'clsx';
-  import { isDarkColorScheme } from '../stores/color-scheme';
+  import { isDarkColorScheme } from '../../stores/color-scheme';
 
   let _class: string | undefined = undefined;
   export { _class as class };

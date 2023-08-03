@@ -1,0 +1,44 @@
+---
+import type { LazyCodeSnippet } from ':code_snippets';
+import CodeSnippet from '../../code-snippet/code-snippet.astro';
+import SplitPane from '../../split-pane.svelte';
+import MockWindowBar from '../mock-window-bar.astro';
+
+export interface MockCodeFile {
+  name: string;
+  snippet: LazyCodeSnippet;
+}
+
+interface Props {
+  files: MockCodeFile[];
+}
+
+const { files } = Astro.props;
+---
+
+<section
+  class="w-full border border-border flex flex-col flex-1 max-w-[1200px] mx-auto h-[500px] rounded-md shadow-md 1200:shadow-lg bg-elevate"
+  aria-label="Mock Code Editor"
+>
+  <MockWindowBar />
+
+  <div class="w-full flex-1 flex flex-row relative @container">
+    <!-- Sidebar -->
+    <aside class="flex-1 max-w-[140px] border-r border-border">
+      <!-- ... -->
+    </aside>
+
+    <SplitPane class="flex-1 h-full" client:visible>
+      <!-- Editor -->
+      <div class="h-full w-1/2 p-3">
+        <CodeSnippet id="home/player" flat numbered />
+        <!-- ... -->
+      </div>
+
+      <!-- Preview -->
+      <div class="h-full p-2 w-1/2">
+        <slot name="preview" />
+      </div>
+    </SplitPane>
+  </div>
+</section>

@@ -1,7 +1,7 @@
 ---
 import PlayIcon from '~astro-icons/lucide/play';
 import clsx from 'clsx';
-import ReactIcon from '../../icons/react-icon.svelte';
+import ReactIcon from '../../../icons/react-icon.svelte';
 
 interface Props {
   index: number;
@@ -15,14 +15,16 @@ const { index, duration } = Astro.props;
   class="relative w-full rounded-sm aspect-video overflow-hidden border border-border bg-inverse/10"
 >
   <img
-    class="w-full -translate-y-1/3 group-data-[ready]:opacity-100 opacity-0 transition-opacity duration-300"
+    class="w-full -translate-y-1/3 group-data-[ready]:opacity-100 opacity-0 transition-opacity duration-300 ease-in"
     src={`https://api.dicebear.com/6.x/thumbs/svg?seed=${index * 15}&size=175&scale=60`}
     decoding="async"
     loading="lazy"
     aria-hidden="true"
   />
 
-  <div class="group-data-[ready]:opacity-100 opacity-0 transition-opacity duration-300 z-10">
+  <div
+    class="group-data-[ready]:opacity-100 opacity-0 transition-opacity duration-300 z-10 ease-in"
+  >
     <div
       class={clsx(
         'bg-black/30 p-2 rounded-full flex items-center justify-center',

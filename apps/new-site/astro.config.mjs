@@ -3,9 +3,8 @@ import svelte from '@astrojs/svelte';
 import tailwind from '@astrojs/tailwind';
 import { defineConfig } from 'astro/config';
 import icons from 'unplugin-icons/vite';
-
-// import highlight from './plugins/highlight.js';
-// import snippets from './plugins/snippets.js';
+import codeHighlight from './plugins/code-highlight.js';
+import codeSnippets from './plugins/code-snippets.js';
 
 export default defineConfig({
   site: 'https://vidstack.io',
@@ -15,7 +14,7 @@ export default defineConfig({
         '~astro-icons': '~icons',
       },
     },
-    plugins: [icons({ compiler: 'svelte' })],
+    plugins: [codeHighlight(), codeSnippets(), icons({ compiler: 'svelte' })],
   },
   integrations: [tailwind(), svelte(), sitemap()],
 });

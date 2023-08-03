@@ -7,3 +7,7 @@ export function hasAnimation(el: HTMLElement): boolean {
   const styles = getComputedStyle(el);
   return styles.animationName !== 'none';
 }
+
+export function isAstroSlot(el: unknown): el is HTMLElement {
+  return el instanceof HTMLElement && el.localName === 'astro-slot';
+}

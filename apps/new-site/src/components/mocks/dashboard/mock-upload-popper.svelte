@@ -4,10 +4,10 @@
   import clsx from 'clsx';
   import { onDestroy, tick } from 'svelte';
   import { get } from 'svelte/store';
-  import { visible } from '../../actions/visible';
-  import { ariaBool } from '../../utils/aria';
-  import { IS_BROWSER } from '../../utils/env';
-  import { isKeyboardClick } from '../../utils/keyboard';
+  import { visible } from '../../../actions/visible';
+  import { ariaBool } from '../../../utils/aria';
+  import { IS_BROWSER } from '../../../utils/env';
+  import { isKeyboardClick } from '../../../utils/keyboard';
   import { mockEncodeProgress, mockVideoTitles, type MockEncodeProgress } from './mock-encode';
 
   let expanded = false,
@@ -26,7 +26,7 @@
       if (intervalId === -1) {
         intervalId = window.setInterval(onIntervalTick, 100);
       }
-    }, 500);
+    }, 1500);
   }
 
   function startEncodingTimer(index: number) {
@@ -38,6 +38,8 @@
   }
 
   function onIntervalTick() {
+    if (Math.random() <= 0.1) return;
+
     const progress = get(mockEncodeProgress);
 
     for (let i = 0; i < videoCount; i++) {
@@ -82,7 +84,15 @@
   $: isUploadComplete = uploadProgressPercent === 100;
 </script>
 
-<div class="flex flex-col absolute bottom-4 right-2 rounded-sm min-w-[240px] shadow-md z-20">
+<div
+  class={clsx(
+    'flex flex-col absolute bottom-4 right-2 rounded-sm min-w-[240px] shadow-md z-20',
+    'opacity-0 data-[visible]:opacity-100 transition-opacity ease-in duration-400 delay-1000',
+  )}
+  use:visible={{
+    once: true,
+  }}
+>
   <button
     id="mock-uploader"
     class={clsx(
@@ -136,7 +146,7 @@
     class={clsx(
       'transition-[height,opacity] bg-elevate/90 backdrop-blur-md border-t-0',
       'duration-300 rounded-b-sm overflow-hidden',
-      expanded ? 'h-[190px] px-3 py-4 border border-border opacity-100' : 'h-0 opacity-0',
+      expanded ? 'h-[190px] px-3 py-4 border border-border ease-in' : 'h-0 ease-out',
     )}
     aria-describedby="mock-uploader"
     aria-hidden={!ariaBool(expanded)}

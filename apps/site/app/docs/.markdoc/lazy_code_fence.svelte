@@ -1,10 +1,8 @@
 <script lang="ts">
   import clsx from 'clsx';
-
   import { intersectionObserver } from '$lib/actions/intersection-observer';
   import IndeterminateLoading from '$lib/components/base/IndeterminateLoading.svelte';
   import { ariaBool } from '$lib/utils/aria';
-
   import CodeFence from './@node/fence.svelte';
 
   export let title: string | null = null;

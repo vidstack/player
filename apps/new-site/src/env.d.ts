@@ -12,59 +12,38 @@ declare module '~astro-icons/*' {
 }
 
 declare module '*?highlight' {
-  export interface CodeHighlight {
-    lang: string;
-    code: string;
-    highlightedCode: string;
-  }
-
-  const highlight: CodeHighlight;
+  import type { CodeSnippet } from ':code_snippets';
+  const highlight: CodeSnippet;
   export default highlight;
 }
 
-declare module '*?highlight-lazy' {
-  export interface LazyCodeHighlight {
+declare module ':code_snippets' {
+  export interface LazyCodeSnippet {
+    id: string;
+    width: number;
     lines: number;
-    scrollX: number;
-    loader: () => Promise<{
-      default: {
-        lang: string;
-        code: string;
-        highlightedCode: string;
-      };
-    }>;
+    highlights?: string;
+    framework?: 'html' | 'react';
+    loader: () => Promise<CodeSnippetModule>;
   }
 
-  const highlight: LazyCodeHighlight;
-  export default highlight;
-}
+  export interface CodeSnippetModule {
+    default: CodeSnippet;
+  }
 
-declare module ':virtual/code_snippets' {
   export interface CodeSnippet {
-    name: string;
-    lines: number;
-    scrollX: number;
-    path: string;
-    loader: () => Promise<{
-      default: {
-        lang: string;
-        code: string;
-        highlightedCode: string;
-      };
-    }>;
+    source: string;
+    code: {
+      lang: string;
+      light: () => Promise<CodeHighlightModule>;
+      dark: () => Promise<CodeHighlightModule>;
+    };
   }
 
-  const snippets: CodeSnippet[];
+  export interface CodeHighlightModule {
+    default: string;
+  }
+
+  const snippets: LazyCodeSnippet[];
   export default snippets;
-}
-
-declare module ':virtual/code_previews' {
-  export interface CodePreview {
-    name: string;
-    path: string;
-    loader: () => Promise<{ default: typeof import('svelte').SvelteComponent }>;
-  }
-
-  const previews: CodePreview[];
-  export default previews;
 }
