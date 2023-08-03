@@ -46,11 +46,14 @@ module.exports = {
         indeterminate: 'indeterminate 1.2s linear infinite',
       },
       keyframes: {
-        shimmer: {
-          '100%': {
-            transform: 'translateX(100%)',
-          },
+        levitate: {
+          '0%': { transform: 'translateY(0)' },
+          '30%': { transform: 'translateY(-10px)' },
+          '50%': { transform: 'translateY(4px)' },
+          '70%': { transform: 'translateY(-15px)' },
+          '100%': { transform: 'translateY(0)' },
         },
+        shimmer: { '100%': { transform: 'translateX(100%)' } },
         indeterminate: {
           '0%': { transform: 'translateX(0) scaleX(0)' },
           '40%': { transform: 'translateX(0) scaleX(0.4)' },
@@ -182,10 +185,9 @@ function typography(theme) {
         'code::after': { content: '' },
         'code::before': { content: '' },
         pre: {
-          backgroundColor: 'var(--code-fence-bg)',
           boxShadow: 'none',
           display: 'flex',
-          lineHeight: '24px',
+          lineHeight: '1.375rem',
         },
         'p + pre': {
           marginTop: `${-4 / 14}em`,

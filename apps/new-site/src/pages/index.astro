@@ -3,12 +3,13 @@ import BookOpenIcon from '~astro-icons/lucide/book-open';
 import HeartHandshakeIcon from '~astro-icons/lucide/heart-handshake';
 import LayoutDashboardIcon from '~astro-icons/lucide/layout-dashboard';
 import Button from '../components/button.svelte';
-import FeatureSection from '../components/feature-section.astro';
-import GridContent, { type GridContentItem } from '../components/grid-content.astro';
-import HeroSection from '../components/hero-section.astro';
 import JoinWaitlist from '../components/join-waitlist.svelte';
-import MockDashboard from '../components/mocks/mock-dashboard.astro';
-import Style from '../components/style.svelte';
+import MockCodeEditor from '../components/mocks/code-editor/mock-code-editor.astro';
+import MockDashboard from '../components/mocks/dashboard/mock-dashboard.astro';
+import FeatureSection from '../components/sections/feature-section.astro';
+import GridContent, { type GridContentItem } from '../components/sections/grid-content.astro';
+import HeroSection from '../components/sections/hero-section.astro';
+import Style from '../components/style/style.svelte';
 import TextGradient from '../components/text-gradient.svelte';
 import NextIcon from '../icons/next-icon.svelte';
 import ReactIcon from '../icons/react-icon.svelte';
@@ -142,7 +143,10 @@ const openSourceProjects: GridContentItem[] = [
 
       <Button arrow href="/player" gradient slot="cta">Try Player</Button>
 
-      <div slot="content">....</div>
+      <!-- content: { filename:'', code: '' } -->
+      <MockCodeEditor slot="content">
+        <div slot="preview">...</div>
+      </MockCodeEditor>
     </FeatureSection>
   </Style>
 

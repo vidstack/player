@@ -21,44 +21,9 @@ body {
   border: 1px solid rgb(var(--color-border) / 0.5);
 }
 
-code *[style*='color: #676E95; font-'] {
-  color: #838996 !important;
-}
-
-.dark code *[style*='color: #676E95; font-'] {
-  color: #89909d !important;
-}
-
-.code-preview,
-.code-snippets,
-.code-fence {
-  --code-fence-bg: rgb(var(--color-elevate));
-  --code-preview-bg: var(--code-fence-bg);
-  --code-copied-bg-color: rgb(var(--color-brand) / 0.8);
-  --terminal-line-pointer: rgb(var(--color-brand));
-  --code-highlight-border: rgb(var(--color-brand));
-  --code-highlight-color: rgb(var(--color-brand) / 0.08);
-}
-
-.dark .code-preview,
-.dark .code-snippets,
-.dark .code-fence {
-  --code-fence-bg: rgb(var(--color-elevate));
-}
-
-.code-snippets pre > code,
-.code-preview pre > code,
-.code-fence pre > code {
-  background-color: unset !important;
-}
-
-@media screen and (min-width: 768px) {
-}
-
 @media screen and (min-width: 992px) {
   .docs {
     --breadcrumbs-height: 0px;
-
     --sidebar-min-width: 15rem;
     --sidebar-max-width: 17rem;
     --sidebar-padding: 0 0.5rem 2rem 1.5rem;
@@ -98,30 +63,16 @@ code *[style*='color: #676E95; font-'] {
   margin-top: 2.5rem;
 }
 
-.docs .code-fence .code pre {
-  margin: 0;
-}
-
-.docs .code-fence.lang-bash pre span {
-  color: #fafafa !important;
-}
-
-.docs .code-fence.lang-bash pre .line:not(:empty)::before {
-  content: '> ';
-  font-weight: bold;
-  color: var(--terminal-line-pointer);
-}
-
 .docs .step .description > code {
   color: rgb(var(--color-inverse));
 }
 
-.docs .step .code-fence {
+.docs .step .code-block {
   margin: 0;
   padding: 0;
 }
 
-.docs .code-fence + .code-fence {
+.docs .code-block + .code-block {
   margin-top: 0.5rem;
 }
 

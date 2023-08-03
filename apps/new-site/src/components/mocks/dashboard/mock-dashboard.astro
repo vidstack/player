@@ -1,15 +1,15 @@
 ---
-import MockBrowserBar from './mock-browser-bar.astro';
+import MockWindowBar from '../mock-window-bar.astro';
 import MockDashboardSidebar from './mock-dashboard-sidebar.astro';
 import MockDashboardToolbar from './mock-dashboard-toolbar.astro';
 import MockDashboardVideos from './mock-dashboard-videos.astro';
 ---
 
 <section
-  class="w-full border border-border flex flex-col flex-1 h-[500px] rounded-md shadow-md bg-elevate"
+  class="w-full border border-border flex flex-col flex-1 h-[500px] rounded-md shadow-md 1200:shadow-lg bg-elevate"
   aria-label="Mock Vidstack Dashboard"
 >
-  <MockBrowserBar />
+  <MockWindowBar url="vidstack.io" />
 
   <div class="w-full flex-1 flex flex-row relative @container">
     <MockDashboardSidebar />
@@ -20,3 +20,11 @@ import MockDashboardVideos from './mock-dashboard-videos.astro';
     </div>
   </div>
 </section>
+
+<style>
+  /* @media screen and (min-width: 1200px) {
+    section {
+      transform: perspective(150px) rotateZ(1deg) rotateY(-1deg);
+    }
+  } */
+</style>

@@ -1,0 +1,41 @@
+---
+import { isHighlightLine, resolveHighlightedLines } from './highlight';
+
+interface Props {
+  lines: number;
+  highlights?: string;
+}
+
+const { lines, highlights } = Astro.props;
+
+let lineSkips = 0;
+
+const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
+  highlightedLines = resolveHighlightedLines(lines, highlights);
+---
+
+{
+  highlightedLines.length > 0 && (
+    <div
+      class="pointer-events-none absolute inset-0 h-full w-full leading-[var(--leading)]"
+      aria-hidden="true"
+    >
+      {lineNumbers.map((lineNumber) => {
+        if (isHighlightLine(highlightedLines, lineNumber)) {
+          const skips = lineSkips;
+          lineSkips = 0;
+          return (
+            <div
+              class="w-full border-l-[5px] h-[var(--leading)] font-mono text-transparent bg-brand/10 border-brand/20"
+              style={skips > 0 ? `margin-top: calc(var(--leading) * ${skips});` : null}
+            >
+              &nbsp;
+            </div>
+          );
+        }
+
+        lineSkips++;
+      })}
+    </div>
+  )
+}

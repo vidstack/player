@@ -1,0 +1,35 @@
+---
+import { get } from 'svelte/store';
+import { codeSnippets } from '../../stores/code-snippets';
+import CodeBlock from './code-block.astro';
+import CodeSnippetLoader from './code-snippet-loader.svelte';
+
+interface Props {
+  id: string;
+  title?: string;
+  copy?: boolean;
+  flat?: boolean;
+  numbered?: boolean;
+  highlights?: string;
+}
+
+const { id, title, copy, flat, numbered, highlights: propHighlights } = Astro.props;
+
+const snippet = get(codeSnippets).find((snippet) => snippet.id === id),
+  showTopBar = title || copy,
+  highlights = propHighlights ?? snippet?.highlights;
+---
+
+{
+  snippet && (
+    <CodeBlock {id} {flat} {numbered} {highlights} lines={snippet.lines}>
+      {showTopBar && (
+        <div class="sticky top-0 left-0 z-10 flex items-center py-1 pt-2" slot="top">
+          {title && <span class="ml-3.5 font-mono text-sm text-soft">{title}</span>}
+        </div>
+      )}
+
+      <CodeSnippetLoader {id} client:visible />
+    </CodeBlock>
+  )
+}

@@ -4,7 +4,6 @@ import { vesselSvelte } from '@vessel-js/svelte/node';
 import { transform as esbuildTransform } from 'esbuild';
 import icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
-
 import { loadPlayerSidebar } from './lib/server/load-sidebar';
 import highlight from './plugins/highlight.js';
 import snippets from './plugins/snippets.js';
