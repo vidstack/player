@@ -16,6 +16,7 @@ export interface AriaMenuOptions extends PopperOptions {
   defaultOpen?: boolean;
   hover?: boolean;
   submenu?: boolean;
+  noOutSideClick?: boolean;
   selectors?: {
     focus?: string[];
     close?: string[];
@@ -187,7 +188,8 @@ export function createAriaMenu(options: AriaMenuOptions) {
 
       disposal.add(
         onPress(triggerEl, onChange),
-        listenEvent(document.body, 'pointerup', (e) => onChange(e, false)),
+        !options.noOutSideClick &&
+          listenEvent(document.body, 'pointerup', (e) => onChange(e, false)),
         options.hover && listenEvent(triggerEl, 'pointerenter', (e) => onChange(e, true)),
         listenEvent(triggerEl, 'keydown', (e) => {
           if (!options.submenu && e.key === 'ArrowDown') {
@@ -262,6 +264,8 @@ export function createAriaMenu(options: AriaMenuOptions) {
         if (parent) {
           disposal.add(listenEvent(parent, 'aria-close' as any, (e) => onChange(e, false)));
         }
+
+        if (options.defaultOpen) onChange(undefined, true);
       });
 
       return {

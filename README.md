@@ -4,13 +4,13 @@
 [![discord-badge]][discord]
 [![jsdelivr-badge]][jsdelivr]
 
-Vidstack is a platform for frontend developers to build high-quality, accessible video/audio
+Vidstack is a platform for frontend developers to build high-quality and accessible video/audio
 experiences on the web.
 
 ## Player
 
 Build and ship a production-ready player in minutes. Robust, customizable, and accessible. Available
-as Web Components and React Components.The successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
+as Web Components and React Components. The successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
 
 <img src="./assets/video-player.png" alt="Preview of Vidstack Video Player" />
 

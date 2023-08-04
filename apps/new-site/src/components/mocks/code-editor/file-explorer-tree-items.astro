@@ -1,0 +1,122 @@
+---
+import clsx from 'clsx';
+import NextIcon from '../../../icons/next-icon.svelte';
+import NodeIcon from '../../../icons/node-icon.svelte';
+import ReactIcon from '../../../icons/react-icon.svelte';
+import TailwindIcon from '../../../icons/tailwind-icon.svelte';
+import TypescriptIcon from '../../../icons/typescript-icon.svelte';
+import FolderOpenIcon from '../../../icons/vscode-folder-open.svelte';
+import FolderIcon from '../../../icons/vscode-folder.svelte';
+import { ariaBool } from '../../../utils/aria';
+import { getCodeSnippetId, type CodeFileType, type TreeItem } from './code-editor';
+
+interface Props {
+  id: number;
+  depth: number;
+  items: TreeItem[];
+}
+
+const Icons: Record<CodeFileType, any> = {
+  dts: TypescriptIcon,
+  next: NextIcon,
+  pkg: NodeIcon,
+  ts: TypescriptIcon,
+  tsx: ReactIcon,
+  tailwind: TailwindIcon,
+};
+
+function getIconSelectedColor(type: CodeFileType): string {
+  switch (type) {
+    case 'dts':
+    case 'ts':
+      return 'text-[#3178c6] dark:text-[#419bff]';
+    case 'next':
+      return 'text-inverse';
+    case 'pkg':
+      return 'text-[#4a7814] dark:text-[#83cd29]';
+    case 'tsx':
+      return 'text-[#2aa7be] dark:text-[#00D8FF]';
+    case 'tailwind':
+      return 'text-[#06B6D4]';
+  }
+}
+
+const { id, depth, items } = Astro.props;
+---
+
+{
+  items.map((item) => {
+    if ('children' in item) {
+      return (
+        <ul
+          class={clsx(
+            'folder group flex-col space-y-0.5 mt-0.5 text-sm',
+            depth > 0 ? 'hidden' : 'flex select-none',
+          )}
+          role="treeitem"
+          aria-expanded={ariaBool(item.expanded)}
+          tabindex="-1"
+          style={`margin-left: ${depth * 0.3755}rem;`}
+        >
+          <div
+            class={clsx(
+              'rounded-sm flex items-center group-focus-visible:bg-inverse/10',
+              'hover:bg-inverse/10 text-soft py-1 pl-2 pr-2 cursor-pointer',
+            )}
+            data-folder
+          >
+            <FolderIcon class="folder-icon w-4 h-4 mr-1.5 hidden" />
+            <FolderOpenIcon class="folder-open-icon w-4 h-4 mr-1.5 hidden" />
+            {item.name}
+          </div>
+          <Astro.self {id} depth={depth + 1} items={item.children} />
+        </ul>
+      );
+    } else {
+      const Icon = item.type && Icons[item.type];
+      return (
+        <li
+          class={clsx(
+            'rounded-sm group text-sm items-center mt-0.5 py-1 text-soft',
+            'aria-selected:text-inverse cursor-pointer hocus:bg-inverse/10',
+            'aria-selected:font-medium select-none',
+            depth > 0 ? 'hidden' : 'flex',
+          )}
+          role="treeitem"
+          tabindex="-1"
+          aria-selected={ariaBool(item.selected)}
+          data-popup={getCodeSnippetId(id, item.index)}
+          style={`margin-left: ${depth * 0.375}rem;`}
+        >
+          {Icon && (
+            <Icon
+              class={clsx(
+                'w-4 h-4 ml-2 mr-1.5',
+                (item.type && getIconSelectedColor(item.type)) || 'text-inverse',
+              )}
+            />
+          )}
+          {item.name}
+        </li>
+      );
+    }
+  })
+}
+
+<style>
+  .folder[aria-expanded='true'] > * {
+    display: flex;
+  }
+
+  .folder[aria-expanded='true'] > *:first-child {
+    color: rgb(var(--color-inverse));
+  }
+
+  .folder[aria-expanded='false'] > * > .folder-icon {
+    display: inline-block;
+  }
+
+  .folder[aria-expanded='true'] > * > .folder-open-icon {
+    display: inline-block;
+  }
+</style>

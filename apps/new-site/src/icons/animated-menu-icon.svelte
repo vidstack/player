@@ -1,14 +1,15 @@
 <script lang="ts">
   import clsx from 'clsx';
 
+  export let size = 26;
   export let open: boolean;
 </script>
 
 <svg
   class={clsx(open && 'open')}
   fill="none"
-  width="26"
-  height="26"
+  width={size}
+  height={size}
   viewBox="0 0 24 24"
   stroke="currentColor"
 >

@@ -1,42 +1,74 @@
 ---
-import type { LazyCodeSnippet } from ':code_snippets';
 import CodeSnippet from '../../code-snippet/code-snippet.astro';
 import SplitPane from '../../split-pane.svelte';
 import MockWindowBar from '../mock-window-bar.astro';
-
-export interface MockCodeFile {
-  name: string;
-  snippet: LazyCodeSnippet;
-}
+import {
+  buildTreeItems,
+  findActiveFile,
+  genCodeEditorId,
+  getCodeSnippetId,
+  type CodeFile,
+} from './code-editor';
+import EditorExplorerMenu from './editor-explorer-menu.svelte';
+import FileExplorerTreeItems from './file-explorer-tree-items.astro';
+import FileExplorerTree from './file-explorer-tree.svelte';
 
 interface Props {
-  files: MockCodeFile[];
+  files: CodeFile[];
+  openFile: string;
+  nextTemplate?: boolean;
 }
 
-const { files } = Astro.props;
+const { files, openFile, nextTemplate = false } = Astro.props;
+
+const id = genCodeEditorId(),
+  editorId = `mock-code-editor-${id}`,
+  defaultFile = findActiveFile(files, openFile);
+
+if (nextTemplate) {
+  files.push(
+    { path: 'next.config.ts', snippet: `templates/next.config` },
+    { path: 'package.json', snippet: `templates/package` },
+    { path: 'tailwind.config.cjs', snippet: `templates/tailwind.config` },
+  );
+}
 ---
 
 <section
-  class="w-full border border-border flex flex-col flex-1 max-w-[1200px] mx-auto h-[500px] rounded-md shadow-md 1200:shadow-lg bg-elevate"
+  id={editorId}
+  class="w-full border border-border flex flex-col flex-1 max-w-[1200px] mx-auto h-[500px] rounded-md shadow-md 1200:shadow-lg bg-elevate @container overflow-hidden"
   aria-label="Mock Code Editor"
+  style="--code-block-max-h: 448px;"
 >
   <MockWindowBar />
 
-  <div class="w-full flex-1 flex flex-row relative @container">
-    <!-- Sidebar -->
-    <aside class="flex-1 max-w-[140px] border-r border-border">
-      <!-- ... -->
-    </aside>
+  <div class="w-full flex-1 flex flex-row relative">
+    <EditorExplorerMenu client:visible>
+      <aside>
+        <FileExplorerTree client:visible>
+          <FileExplorerTreeItems {id} items={buildTreeItems(files, defaultFile)} depth={0} />
+        </FileExplorerTree>
+      </aside>
+    </EditorExplorerMenu>
 
-    <SplitPane class="flex-1 h-full" client:visible>
+    <SplitPane class="flex-1 flex w-full flex-col @4xl:flex-row" client:visible>
       <!-- Editor -->
-      <div class="h-full w-1/2 p-3">
-        <CodeSnippet id="home/player" flat numbered />
-        <!-- ... -->
+      <div class="h-1/2 @4xl:w-1/2 @4xl:h-full pl-3 pr-1 py-2.5 overflow-hidden">
+        {
+          files.map((file, i) => (
+            <CodeSnippet
+              id={file.snippet}
+              domId={getCodeSnippetId(id, i)}
+              flat
+              numbered
+              style={file !== defaultFile ? 'display: none;' : null}
+            />
+          ))
+        }
       </div>
 
       <!-- Preview -->
-      <div class="h-full p-2 w-1/2">
+      <div class="p-2 h-1/2 @4xl:w-1/2 @4xl:h-full overflow-hidden">
         <slot name="preview" />
       </div>
     </SplitPane>

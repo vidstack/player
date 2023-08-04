@@ -73,8 +73,7 @@ const openSourceProjects: GridContentItem[] = [
       </Fragment>
 
       <p slot="description">
-        Everything you need to quickly build & ship robust video/audio experiences - starting with
-        React and Next.js.
+        The easiest way to manage, build, and ship video/audio experiences with React & Next.js.
       </p>
 
       <Fragment slot="cta">
@@ -143,8 +142,18 @@ const openSourceProjects: GridContentItem[] = [
 
       <Button arrow href="/player" gradient slot="cta">Try Player</Button>
 
-      <!-- content: { filename:'', code: '' } -->
-      <MockCodeEditor slot="content">
+      <MockCodeEditor
+        files={[
+          { path: 'app/page.tsx', snippet: 'home/page' },
+          { path: 'app/player/player.tsx', snippet: 'home/player' },
+          { path: 'app/player/buttons.tsx', snippet: 'home/player-buttons' },
+          { path: 'app/player/sliders.tsx', snippet: 'home/player-sliders' },
+          { path: 'app/player/menus.tsx', snippet: 'home/player-menus' },
+        ]}
+        openFile="app/player/player.tsx"
+        nextTemplate
+        slot="content"
+      >
         <div slot="preview">...</div>
       </MockCodeEditor>
     </FeatureSection>

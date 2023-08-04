@@ -86,7 +86,7 @@
 
 <div
   class={clsx(
-    'flex flex-col absolute bottom-4 right-2 rounded-sm min-w-[240px] shadow-md z-20',
+    'flex flex-col fixed bottom-6 right-5 rounded-sm min-w-[240px] shadow-md z-20',
     'opacity-0 data-[visible]:opacity-100 transition-opacity ease-in duration-400 delay-1000',
   )}
   use:visible={{

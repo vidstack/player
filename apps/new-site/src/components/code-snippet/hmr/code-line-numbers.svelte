@@ -14,6 +14,4 @@
   }
 </script>
 
-<pre {...$$restProps}>
-  {@html lineNumbers.join('\n')}
-</pre>
+<pre {...$$restProps}>{@html lineNumbers.join('\n')}</pre>
