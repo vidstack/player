@@ -62,7 +62,7 @@ export const mainNavItems: NavItem[] = [
             title: 'Documentation',
             description: 'Get started installing and using Vidstack Player.',
             icon: 'book-open',
-            href: '/docs/player',
+            href: '/docs/react/player',
           },
           {
             title: 'UI Components',

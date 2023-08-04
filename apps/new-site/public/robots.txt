@@ -17,6 +17,6 @@ User-agent: *
 Disallow: /docs/svelte/*
 
 User-agent: *
-Allow: /
+Disallow: /
 
 Sitemap: https://www.vidstack.io/sitemap.xml

@@ -13,3 +13,5 @@ export function isWindow(value: unknown): value is Window {
 export function isFunction(value: any): value is Function {
   return typeof value === 'function';
 }
+
+export function noop(...args: any[]) {}

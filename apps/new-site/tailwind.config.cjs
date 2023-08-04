@@ -77,6 +77,8 @@ function customVariants({ addVariant }) {
     'supports-backdrop-blur',
     '@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))',
   );
+  addVariant('child', '& > *');
+  addVariant('first-child', '& > *:first-child');
   addVariant('hocus', ['&:hover', '&:focus-visible']);
   addVariant('scrolled', ['body[data-scrolled] &']);
   addVariant('group-hocus', ['.group:hover &', '.group:focus-visible &']);

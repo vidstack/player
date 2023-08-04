@@ -4,6 +4,7 @@
   import { get } from 'svelte/store';
   import { codeSnippets } from '../../stores/code-snippets';
   import { isDarkColorScheme } from '../../stores/color-scheme';
+  import IndeterminateLoadingSpinner from '../style/indeterminate-loading-spinner.svelte';
 
   export let id: string;
 
@@ -44,13 +45,13 @@
   }
 </script>
 
+<!-- Don't mess with content inside pre tag - line breaks will show up and mess up layout. -->
 <pre class={clsx('scrollbar', _class)}>
-  {#if loader && !code}
+{#if loader && !code}
+    <IndeterminateLoadingSpinner />
     <code
       class="inline-block"
       style={`width: ${loader.width * 9.48}px; height: ${loader.lines * 22}px;`}
     />
-  {/if}
-
-  {@html code}
+  {/if}{@html code}
 </pre>

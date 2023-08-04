@@ -21,6 +21,8 @@ export default () => {
    * @param {'light'  | 'dark'} colorScheme
    */
   function highlight(code, lang, colorScheme) {
+    if (lang === 'cjs' || lang === 'mjs') lang = 'js';
+
     const theme = `github-${colorScheme}`,
       tokens = shiki.codeToThemedTokens(code, lang, theme);
     return renderToHtml(tokens, {

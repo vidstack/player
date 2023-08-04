@@ -79,6 +79,14 @@
   background-color: var(--scrollbar-thumb-bg) !important;
 }
 
+.scrollbar-square::-webkit-scrollbar-track {
+  @apply !rounded-none;
+}
+
+.scrollbar-square::-webkit-scrollbar-thumb {
+  @apply !rounded-none;
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Blur
