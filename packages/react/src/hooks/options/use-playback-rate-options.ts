@@ -1,5 +1,5 @@
-import { useReactContext, useSignal } from 'maverick.js/react';
 import * as React from 'react';
+import { useReactContext, useSignal } from 'maverick.js/react';
 import { mediaContext } from 'vidstack/lib';
 
 const DEFAULT_RATES = [0.25, 0.5, 0.75, { label: 'Normal', rate: 1 }, 1.25, 1.5, 1.75, 2];

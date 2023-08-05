@@ -1,12 +1,11 @@
+import * as React from 'react';
 import {
   createReactComponent,
   useSignal,
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import * as React from 'react';
 import { mediaState } from 'vidstack/lib';
-
 import { MediaProviderInstance } from './primitives/instances';
 
 /* -------------------------------------------------------------------------------------------------

@@ -6,7 +6,6 @@
 
   export let title: string;
   export let items: NavMenuItems;
-  export let grid = false;
 </script>
 
 <NavMenu {title} {items} noPositioning>

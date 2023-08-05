@@ -35,7 +35,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
     _menuEl: HTMLElement | null = null,
     _arrowEl: HTMLElement | null = null,
     _openDisposal = new DisposalBin(),
-    _isMenuOpen = writable(false),
+    _isMenuOpen = writable<boolean>(!!options.defaultOpen),
     _popper = createPopper(
       {
         get triggerEl() {
@@ -100,7 +100,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
     event?.stopPropagation();
 
     const open = !isUndefined(force) ? force : !get(_isMenuOpen);
-    if (get(_isMenuOpen) === open) return;
+    if (_menuEl?.getAttribute('aria-hidden') == String(!open)) return;
 
     _triggerEl?.setAttribute('aria-expanded', ariaBool(open));
     _menuEl?.setAttribute('aria-hidden', ariaBool(!open));
@@ -247,11 +247,12 @@ export function createAriaMenu(options: AriaMenuOptions) {
         listenEvent(menuEl, 'click', (e) => e.stopPropagation()),
         listenEvent(menuEl, 'pointerup', (e) => e.stopPropagation()),
         // Close when another menu is opened
-        activeMenu.subscribe((el) => {
-          if (el && el !== menuEl && !menuEl.contains(el)) {
-            onChange(undefined, false);
-          }
-        }),
+        !options.noOutSideClick &&
+          activeMenu.subscribe((el) => {
+            if (el && el !== menuEl && !menuEl.contains(el)) {
+              onChange(undefined, false);
+            }
+          }),
       );
 
       requestAnimationFrame(() => {

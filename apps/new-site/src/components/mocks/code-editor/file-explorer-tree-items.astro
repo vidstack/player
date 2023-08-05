@@ -1,4 +1,6 @@
 ---
+import FileImageIcon from '~astro-icons/lucide/file-image';
+import VideoFileIcon from '~astro-icons/lucide/file-video-2';
 import clsx from 'clsx';
 import NextIcon from '../../../icons/next-icon.svelte';
 import NodeIcon from '../../../icons/node-icon.svelte';
@@ -8,24 +10,27 @@ import TypescriptIcon from '../../../icons/typescript-icon.svelte';
 import FolderOpenIcon from '../../../icons/vscode-folder-open.svelte';
 import FolderIcon from '../../../icons/vscode-folder.svelte';
 import { ariaBool } from '../../../utils/aria';
-import { getCodeSnippetId, type CodeFileType, type TreeItem } from './code-editor';
+import { getFileId, type EditorFileType, type EditorTreeItem } from './code-editor';
 
 interface Props {
   id: number;
   depth: number;
-  items: TreeItem[];
+  items: EditorTreeItem[];
 }
 
-const Icons: Record<CodeFileType, any> = {
+const Icons: Record<EditorFileType, any> = {
   dts: TypescriptIcon,
   next: NextIcon,
   pkg: NodeIcon,
   ts: TypescriptIcon,
   tsx: ReactIcon,
   tailwind: TailwindIcon,
+  png: FileImageIcon,
+  webp: FileImageIcon,
+  mp4: VideoFileIcon,
 };
 
-function getIconSelectedColor(type: CodeFileType): string {
+function getIconSelectedColor(type: EditorFileType): string | undefined {
   switch (type) {
     case 'dts':
     case 'ts':
@@ -38,6 +43,11 @@ function getIconSelectedColor(type: CodeFileType): string {
       return 'text-[#2aa7be] dark:text-[#00D8FF]';
     case 'tailwind':
       return 'text-[#06B6D4]';
+    case 'png':
+    case 'webp':
+      return 'text-teal-600 dark:text-teal-500';
+    case 'mp4':
+      return 'text-indigo-600 dark:text-indigo-400';
   }
 }
 
@@ -60,8 +70,8 @@ const { id, depth, items } = Astro.props;
         >
           <div
             class={clsx(
-              'rounded-sm flex items-center group-focus-visible:bg-inverse/10',
-              'hover:bg-inverse/10 text-soft py-1 pl-2 pr-2 cursor-pointer',
+              'rounded-sm flex items-center group-focus-visible:bg-brand/10',
+              'hover:bg-brand/10 text-soft py-1 pl-2 pr-2 cursor-pointer',
             )}
             data-folder
           >
@@ -78,14 +88,14 @@ const { id, depth, items } = Astro.props;
         <li
           class={clsx(
             'rounded-sm group text-sm items-center mt-0.5 py-1 text-soft',
-            'aria-selected:text-inverse cursor-pointer hocus:bg-inverse/10',
+            'aria-selected:text-inverse cursor-pointer hocus:bg-brand/10',
             'aria-selected:font-medium select-none',
             depth > 0 ? 'hidden' : 'flex',
           )}
           role="treeitem"
           tabindex="-1"
           aria-selected={ariaBool(item.selected)}
-          data-popup={getCodeSnippetId(id, item.index)}
+          data-popup={getFileId(id, item.index)}
           style={`margin-left: ${depth * 0.375}rem;`}
         >
           {Icon && (

@@ -6,14 +6,14 @@ const mediaAttributes = [
   'buffering',
   'duration',
   'captions',
-  'can-fullscreen',
+  'can-fs',
   'can-pip',
   'can-load',
   'can-play',
   'can-seek',
   'ended',
   'error',
-  'fullscreen',
+  'fs',
   'controls',
   'loop',
   'live',
@@ -30,9 +30,8 @@ const mediaAttributes = [
 
 module.exports = createPlugin.withOptions(function (options) {
   const prefixOpt = options?.prefix ?? options?.mediaPrefix;
-  const prefix = prefixOpt ? `${prefixOpt}-` : '';
-
-  return function ({ addBase, addVariant }) {
+  const prefix = prefixOpt ? `${prefixOpt}-` : 'media-';
+  return function ({ addVariant }) {
     mediaAttributes.forEach((name) => {
       addVariant(`${prefix}${name}`, `[data-${name}] &`);
       addVariant(`not-${prefix}${name}`, `[data-media-player]:not([data-${name}]) &`);

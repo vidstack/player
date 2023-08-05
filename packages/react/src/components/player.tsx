@@ -1,6 +1,5 @@
-import { createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import * as React from 'react';
-
+import { createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import { MediaPlayerInstance } from './primitives/instances';
 import { Primitive } from './primitives/nodes';
 

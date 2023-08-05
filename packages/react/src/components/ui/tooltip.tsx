@@ -1,11 +1,10 @@
+import * as React from 'react';
 import {
   composeRefs,
   createReactComponent,
   type ReactElementProps,
   type ReactProps,
 } from 'maverick.js/react';
-import * as React from 'react';
-
 import {
   TooltipContentInstance,
   TooltipInstance,

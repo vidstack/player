@@ -3,7 +3,6 @@
  * -----------------------------------------------------------------------------------------------*/
 
 import * as React from 'react';
-
 import { Captions } from '../../ui/captions';
 import * as Controls from '../../ui/controls';
 import { Time } from '../../ui/time';

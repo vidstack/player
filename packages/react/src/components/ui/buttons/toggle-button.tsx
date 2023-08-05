@@ -1,6 +1,5 @@
-import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import * as React from 'react';
-
+import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import { ToggleButtonInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 

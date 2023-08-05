@@ -2,9 +2,8 @@
  * RadioGroup
  * -----------------------------------------------------------------------------------------------*/
 
-import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import React from 'react';
-
+import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import { RadioGroupInstance, RadioInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
 

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { effect } from 'maverick.js';
 import {
   composeRefs,
@@ -8,9 +9,7 @@ import {
   type ReactElementProps,
 } from 'maverick.js/react';
 import { VTTCue } from 'media-captions';
-import * as React from 'react';
 import { mediaState, timeSliderContext } from 'vidstack/lib';
-
 import {
   SliderThumbnailInstance,
   SliderVideoInstance,

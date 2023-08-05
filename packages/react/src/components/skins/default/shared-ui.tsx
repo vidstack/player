@@ -1,4 +1,4 @@
-import { useReactContext, useSignal } from 'maverick.js/react';
+import * as React from 'react';
 import arrowLeftPaths from 'media-icons/dist/icons/arrow-left.js';
 import chaptersIconPaths from 'media-icons/dist/icons/chapters.js';
 import arrowRightPaths from 'media-icons/dist/icons/chevron-right.js';
@@ -20,7 +20,7 @@ import qualityIconPaths from 'media-icons/dist/icons/settings-menu.js';
 import settingsIconPaths from 'media-icons/dist/icons/settings.js';
 import volumeHighIconPaths from 'media-icons/dist/icons/volume-high.js';
 import volumeLowIconPaths from 'media-icons/dist/icons/volume-low.js';
-import * as React from 'react';
+import { useReactContext, useSignal } from 'maverick.js/react';
 import {
   defaultSkinContext,
   isTrackCaptionKind,
@@ -28,7 +28,6 @@ import {
   type MenuPlacement,
   type TooltipPlacement,
 } from 'vidstack/lib';
-
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { useChapterOptions } from '../../../hooks/options/use-chapter-options';

@@ -8,7 +8,9 @@
 </script>
 
 <!-- Feature Grid -->
-<div class={clsx('grid grid-cols-1 gap-y-8 1200:grid-cols-2 1200:gap-x-6 1200:gap-y-10')}>
+<div
+  class={clsx('grid grid-cols-1 gap-y-8 1200:-mt-2 1200:grid-cols-2 1200:gap-x-6 1200:gap-y-10')}
+>
   {#each items as item}
     <a
       class="flex flex-col items-start first:pt-5 last:pb-8 1200:first:pt-0 1200:last:pb-0 group rounded-md p-1"

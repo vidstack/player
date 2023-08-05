@@ -24,7 +24,7 @@ const { title, subtitle, align = 'center' } = Astro.props;
   >
     <div
       class={clsx(
-        'flex items-center flex-col text-center mb-16 576:mb-24 shrink-0',
+        'flex items-center flex-col text-center mb-16 576:mb-[85px] shrink-0',
         align === 'start' && '992:text-start 992:items-start',
         Astro.slots.has('content') && align === 'start' && '992:mr-10 992:mb-0',
       )}

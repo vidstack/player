@@ -1,11 +1,10 @@
+import * as React from 'react';
 import {
   composeRefs,
   createReactComponent,
   useSignal,
   type ReactElementProps,
 } from 'maverick.js/react';
-import * as React from 'react';
-
 import { SliderInstance, SliderPreviewInstance } from '../../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import { SliderValueBridge, type SliderValueProps } from './slider-value';
