@@ -1,6 +1,5 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-
 import fs from 'fs-extra';
 import { kebabToCamelCase, kebabToPascalCase } from 'maverick.js/std';
 

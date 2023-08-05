@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
-import * as React from 'react';
 import type { TextTrack } from 'vidstack/lib';
 
 export function useActiveTextCues(track: TextTrack | null): VTTCue[] {

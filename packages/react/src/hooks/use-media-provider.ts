@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { effect } from 'maverick.js';
 import { useReactContext } from 'maverick.js/react';
-import * as React from 'react';
 import { mediaContext, type MediaProviderAdapter } from 'vidstack/lib';
 
 /**

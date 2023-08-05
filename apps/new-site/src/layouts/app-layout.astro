@@ -3,10 +3,8 @@ import '../styles/fonts.css';
 import '../styles/app.css';
 import '../styles/tailwind.css';
 import '../styles/docs.css';
-import 'vidstack/styles/player/themes/default.css';
-import 'vidstack/styles/player/skins/default/audio.css';
-import 'vidstack/styles/player/skins/default/video.css';
 import MetaTags from './parts/meta-tags.astro';
+import VidstackLib from './vidstack-lib.svelte';
 
 interface Props {
   title: string;
@@ -27,10 +25,10 @@ const { title, description } = Astro.props;
     <link rel="manifest" href="/manifest.json" />
 
     <MetaTags {title} {description} />
+    <VidstackLib client:idle />
 
     <script src="../scripts/scroll-top.ts"></script>
     <script src="../scripts/focus-visible.js"></script>
-    <script src="vidstack/player/skins"></script>
 
     <script>
       const key = 'vidstack::color-scheme',

@@ -1,11 +1,10 @@
+import * as React from 'react';
 import {
   composeRefs,
   createReactComponent,
   useSignal,
   type ReactElementProps,
 } from 'maverick.js/react';
-import * as React from 'react';
-
 import { VolumeSliderInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 import { type ValueProps } from './slider';

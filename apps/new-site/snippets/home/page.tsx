@@ -1,5 +1,6 @@
-import { MyPlayer } from './player';
+import React from 'react';
+import { Player } from './player';
 
-export default function Home() {
-  return <MyPlayer />;
+export default function HomePage() {
+  return <Player />;
 }

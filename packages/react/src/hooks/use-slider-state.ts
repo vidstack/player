@@ -1,7 +1,6 @@
-import { useSignal, useSignalRecord, useStateContext } from 'maverick.js/react';
 import type { RefObject } from 'react';
+import { useSignal, useSignalRecord, useStateContext } from 'maverick.js/react';
 import { sliderState, type SliderState } from 'vidstack/lib';
-
 import type { SliderInstance } from '../components/primitives/instances';
 
 /**

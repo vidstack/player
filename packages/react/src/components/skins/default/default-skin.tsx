@@ -1,6 +1,5 @@
-import { createReactComponent, useSignal, type ReactElementProps } from 'maverick.js/react';
 import * as React from 'react';
-
+import { createReactComponent, useSignal, type ReactElementProps } from 'maverick.js/react';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { DefaultSkinInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';

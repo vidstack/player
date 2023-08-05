@@ -1,5 +1,5 @@
-import { useReactContext } from 'maverick.js/react';
 import * as React from 'react';
+import { useReactContext } from 'maverick.js/react';
 import { mediaContext, MediaRemoteControl } from 'vidstack/lib';
 
 /**

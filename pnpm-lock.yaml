@@ -64,6 +64,8 @@ importers:
       '@tailwindcss/container-queries': ^0.1.1
       '@tailwindcss/typography': ^0.5.0
       '@types/markdown-it': ^12.2.0
+      '@types/react': ^18.0.0
+      '@vidstack/react': workspace:^0.6.13
       astro: ^2.9.0
       clsx: ^1.2.0
       html-entities: ^2.3.3
@@ -71,6 +73,7 @@ importers:
       markdown-it: ^13.0.1
       media-icons: 0.10.0
       nprogress: ^0.2.0
+      react: ^18.0.0
       shiki: ^0.14.3
       split.js: ^1.6.5
       svelte: ^4.0.0
@@ -83,7 +86,7 @@ importers:
       vite: ^4.3.9
     dependencies:
       '@docsearch/css': 3.4.0
-      '@docsearch/js': 3.4.0_bk2hhnn4p4lennc3bzm23tet4y
+      '@docsearch/js': 3.4.0_yu2iuzwcrjblis64gemys7emq4
       '@floating-ui/dom': 1.4.4
       astro: 2.9.0
       clsx: 1.2.1
@@ -102,8 +105,11 @@ importers:
       '@tailwindcss/container-queries': 0.1.1_tailwindcss@3.3.3
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.3
       '@types/markdown-it': 12.2.3
+      '@types/react': 18.2.8
+      '@vidstack/react': link:../../packages/react
       lru-cache: 10.0.0
       markdown-it: 13.0.1
+      react: 18.2.0
       shiki: 0.14.3
       svelte: 4.1.1
       svelte2tsx: 0.6.19_h66hkgwbfftbiswtnbnv2cfkzy
@@ -758,10 +764,10 @@ packages:
     resolution: {integrity: sha512-Hg8Xfma+rFwRi6Y/pfei4FJoQ1hdVURmmNs/XPoMTCPAImU+d5yxj+M+qdLtNjWRpfWziU4dQcqY94xgFBn2dg==}
     dev: false
 
-  /@docsearch/js/3.4.0_bk2hhnn4p4lennc3bzm23tet4y:
+  /@docsearch/js/3.4.0_yu2iuzwcrjblis64gemys7emq4:
     resolution: {integrity: sha512-uOtOHZJv+5PQmL68+srVzlGhLejnEBJgZl1bR87Zh/uK5RUI7p6el1R8hGTl2F8K2tCloNRxTMtXyYUNbMV+qw==}
     dependencies:
-      '@docsearch/react': 3.4.0_bk2hhnn4p4lennc3bzm23tet4y
+      '@docsearch/react': 3.4.0_yu2iuzwcrjblis64gemys7emq4
       preact: 10.15.1
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -782,7 +788,7 @@ packages:
       - react-dom
     dev: false
 
-  /@docsearch/react/3.4.0_bk2hhnn4p4lennc3bzm23tet4y:
+  /@docsearch/react/3.4.0_yu2iuzwcrjblis64gemys7emq4:
     resolution: {integrity: sha512-ufrp5879XYGojgS30ZAp8H4qIMbahRHB9M85VDBP36Xgz5QjYM54i1URKj5e219F7gqTtOivfztFTij6itc0MQ==}
     peerDependencies:
       '@types/react': '>= 16.8.0 < 19.0.0'
@@ -799,7 +805,9 @@ packages:
       '@algolia/autocomplete-core': 1.8.2
       '@algolia/autocomplete-preset-algolia': 1.8.2_5sihrk4l62wqmlignhhpsa53yq
       '@docsearch/css': 3.4.0
+      '@types/react': 18.2.8
       algoliasearch: 4.17.1
+      react: 18.2.0
     transitivePeerDependencies:
       - '@algolia/client-search'
     dev: false

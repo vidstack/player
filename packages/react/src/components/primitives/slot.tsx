@@ -2,8 +2,8 @@
  * Credit: https://github.com/radix-ui/primitives/blob/main/packages/react/slot/src/Slot.tsx
  * -----------------------------------------------------------------------------------------------*/
 
-import { composeRefs } from 'maverick.js/react';
 import * as React from 'react';
+import { composeRefs } from 'maverick.js/react';
 
 /* -------------------------------------------------------------------------------------------------
  * Slot

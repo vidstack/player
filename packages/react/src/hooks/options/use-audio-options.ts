@@ -1,5 +1,5 @@
-import { useReactContext, useSignal } from 'maverick.js/react';
 import * as React from 'react';
+import { useReactContext, useSignal } from 'maverick.js/react';
 import { mediaContext, type AudioTrack } from 'vidstack/lib';
 
 export function useAudioOptions(): AudioOptions {

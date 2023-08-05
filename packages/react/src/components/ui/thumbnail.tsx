@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   composeRefs,
   createReactComponent,
@@ -5,9 +6,7 @@ import {
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import * as React from 'react';
 import { mediaState } from 'vidstack/lib';
-
 import { ThumbnailInstance } from '../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../primitives/nodes';
 

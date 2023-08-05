@@ -51,6 +51,7 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
   )}
   style={clsx(`--leading: 1.375rem;`, style)}
   data-numbers={!!numbered}
+  data-numbers-large={!!numbered && lines >= 100}
   data-hl={!!highlights}
 >
   <slot name="top" />
@@ -95,6 +96,10 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
     tab-size: 2;
     -o-tab-size: 2;
     -moz-tab-size: 2;
-    padding-left: 2em;
+    padding-left: 2.5em;
+  }
+
+  .code-block[data-numbers-large] :global(pre:not([data-numbers])) {
+    padding-left: 3em;
   }
 </style>

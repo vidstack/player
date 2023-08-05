@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { computed, effect, provideContext } from 'maverick.js';
 import {
   composeRefs,
@@ -7,10 +8,8 @@ import {
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { mediaState, menuPortalContext } from 'vidstack/lib';
-
 import {
   MenuButtonInstance,
   MenuInstance,

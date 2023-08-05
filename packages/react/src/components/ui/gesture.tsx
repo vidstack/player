@@ -1,6 +1,5 @@
-import { createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import * as React from 'react';
-
+import { createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import { GestureInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
 

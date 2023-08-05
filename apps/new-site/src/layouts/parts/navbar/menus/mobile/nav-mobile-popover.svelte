@@ -19,7 +19,7 @@
   type="button"
   class={clsx(
     'group relative flex transform-gpu items-center rounded-md border-0 px-1 py-0.5',
-    'transition-transform hover:scale-105 hocus:bg-brand/10',
+    'transition-transform hover:scale-105 hocus:bg-brand/10 nav-lg:hidden',
   )}
   aria-label="Open Site Menu"
   use:menuTrigger
@@ -30,7 +30,7 @@
 <div
   class={clsx(
     'fixed overflow-y-scroll left-0 w-screen scrollbar transition-[top,height] duration-300',
-    'bg-body z-50 top-[var(--top)] pt-4 pb-8',
+    'bg-body z-50 top-[var(--top)] pt-4 pb-8 nav-lg:hidden',
     $isMenuOpen ? 'animate-in fade-in h-[calc(100vh-var(--top))]' : 'animate-out fade-out h-0',
   )}
   use:menu

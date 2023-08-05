@@ -1,5 +1,5 @@
-import { useReactContext, useSignal } from 'maverick.js/react';
 import * as React from 'react';
+import { useReactContext, useSignal } from 'maverick.js/react';
 import { isTrackCaptionKind, mediaContext, type TextTrack } from 'vidstack/lib';
 
 export function useCaptionOptions(): CaptionOptions {

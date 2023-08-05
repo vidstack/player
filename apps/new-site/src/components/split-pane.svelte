@@ -1,9 +1,23 @@
+<script lang="ts" context="module">
+  export interface SplitPaneContext {
+    root: HTMLElement;
+    orientation: string;
+    instance: Split.Instance;
+  }
+</script>
+
 <script lang="ts">
   import clsx from 'clsx';
   import Split from 'split.js';
-  import { onMount } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   import { resize } from '../actions/resize';
-  import { animationFrameThrottle, isAstroSlot } from '../utils/dom';
+  import { animationFrameThrottle } from '../utils/dom';
+
+  const dispatch = createEventDispatcher<{
+    init: SplitPaneContext;
+    'drag-start': number[];
+    'drag-end': number[];
+  }>();
 
   export let sizes: [number, number] = [50, 50];
   export let minSize: [number, number] = [0, 0];
@@ -20,19 +34,27 @@
     return () => instance.destroy();
   });
 
+  function getPanes() {
+    return Array.from(root.querySelectorAll('[data-pane]')) as HTMLElement[];
+  }
+
   function buildInstance() {
     instance?.destroy();
 
-    const children = isAstroSlot(root.firstChild) ? root.firstChild.children : root.children,
-      elements = Array.from(children) as HTMLElement[],
-      panes = elements.filter((el) => !el.classList.contains('gutter'));
-
-    instance = Split(panes, {
+    instance = Split(getPanes(), {
       sizes,
       direction: orientation,
       minSize,
       expandToMin: true,
+      onDragStart() {
+        dispatch('drag-start', sizes);
+      },
+      onDragEnd(sizes) {
+        dispatch('drag-end', sizes);
+      },
     });
+
+    dispatch('init', { root, instance, orientation });
   }
 
   const onResize = animationFrameThrottle(() => {
@@ -44,15 +66,18 @@
   });
 </script>
 
-<div
-  {...$$restProps}
-  class={clsx('split-pane overflow-hidden', $$restProps.class)}
-  use:resize={{
-    onResize,
-  }}
-  bind:this={root}
->
-  <slot />
+<div class="flex flex-col w-full h-full relative overflow-hidden">
+  <slot name="top" />
+  <div
+    {...$$restProps}
+    class={clsx('split-pane relative overflow-hidden', $$restProps.class)}
+    use:resize={{
+      onResize,
+    }}
+    bind:this={root}
+  >
+    <slot />
+  </div>
 </div>
 
 <style>

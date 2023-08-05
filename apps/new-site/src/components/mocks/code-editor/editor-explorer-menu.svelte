@@ -1,20 +1,29 @@
 <script lang="ts">
+  import AnimatedPanelIcon from '../../../icons/animated-panel-icon.svelte';
   import clsx from 'clsx';
   import { createAriaMenu } from '../../../aria/menu';
-  import AnimatedPanelIcon from '../../../icons/animated-panel-icon.svelte';
+  import { IS_BROWSER } from '../../../utils/env';
 
+  const OPEN_PREF_KEY = 'vidstack::editor-explorer-open';
+
+  const userPrefersOpen =
+    IS_BROWSER && localStorage[OPEN_PREF_KEY] && localStorage[OPEN_PREF_KEY] === 'true';
   const { menu, menuTrigger, isMenuOpen } = createAriaMenu({
-    defaultOpen: true,
+    defaultOpen: userPrefersOpen ?? true,
     noPositioning: true,
     noOutSideClick: true,
   });
+
+  $: if (IS_BROWSER) {
+    localStorage[OPEN_PREF_KEY] = $isMenuOpen;
+  }
 </script>
 
 <button
   type="button"
   class={clsx(
-    'group flex transform-gpu items-center rounded-md border-0 px-2 py-1 text-soft',
-    'hocus:text-inverse fixed top-8 left-0 z-[60] transition-transform duration-300',
+    'group flex transform-gpu items-center rounded-sm border-0 px-2 py-1 text-soft',
+    'hocus:text-inverse hocus:bg-brand/10 fixed top-8 left-0 z-[60] transition-transform duration-300',
     $isMenuOpen ? 'translate-x-[144px]' : 'translate-x-[2px]',
   )}
   aria-label="File Explorer"
@@ -37,8 +46,8 @@
 
 <div
   class={clsx(
-    'sticky overflow-y-auto top-0 left-0 w-full scrollbar duration-300 border-r border-border flex-1',
-    'bg-body z-50 pt-9 px-1 min-w-[180px] max-w-[180px] transition-all',
+    'overflow-y-auto scrollbar duration-300 border-r border-border flex-1',
+    'bg-elevate z-50 pt-9 px-1 min-w-[180px] max-w-[180px]',
     $isMenuOpen
       ? 'animate-in slide-in-from-left-full fade-in'
       : 'animate-out slide-out-to-left-full fade-out',

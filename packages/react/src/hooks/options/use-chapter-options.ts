@@ -1,9 +1,8 @@
+import * as React from 'react';
 import { effect, type StopEffect } from 'maverick.js';
 import { useReactContext } from 'maverick.js/react';
 import type { VTTCue } from 'media-captions';
-import * as React from 'react';
 import { formatSpokenTime, formatTime, mediaContext } from 'vidstack/lib';
-
 import { useActiveTextCues } from '../use-active-text-cues';
 import { useActiveTextTrack } from '../use-active-text-track';
 
