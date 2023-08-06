@@ -1,7 +1,6 @@
 ---
 import clsx from 'clsx';
 import CodeSnippet from '../../code-snippet/code-snippet.astro';
-import SplitCodePane from '../../split-code-pane.svelte';
 import MockWindowBar from '../mock-window-bar.astro';
 import {
   buildTreeItems,
@@ -12,7 +11,8 @@ import {
   isImageFile,
   type EditorFile,
 } from './code-editor';
-import EditorExplorerMenu from './editor-explorer-menu.svelte';
+import CodeEditorPanes from './code-editor-panes.svelte';
+import FileExplorerSidebar from './file-explorer-sidebar.svelte';
 import FileExplorerTreeItems from './file-explorer-tree-items.astro';
 import FileExplorerTree from './file-explorer-tree.svelte';
 
@@ -39,28 +39,26 @@ if (nextTemplate) {
 
 <section
   id={editorId}
-  class="w-full border border-border flex flex-col flex-1 max-w-[1280px] mx-auto h-[600px] rounded-md shadow-md 1200:shadow-lg bg-elevate @container overflow-hidden"
+  class={clsx(
+    'w-full border border-border flex flex-col flex-1 max-w-[1280px] mx-auto h-[600px] 1200:h-[680px]',
+    'rounded-md shadow-md 1200:shadow-lg bg-elevate @container overflow-hidden',
+  )}
   aria-label="Mock Code Editor"
-  style="--code-block-max-h: 553px;"
+  style="--code-block-max-h: 522px;"
 >
   <MockWindowBar />
 
   <div class="w-full flex-1 flex flex-row relative">
-    <EditorExplorerMenu client:visible>
+    <FileExplorerSidebar client:visible>
       <aside>
         <FileExplorerTree client:visible>
           <FileExplorerTreeItems {id} items={buildTreeItems(files, defaultFile)} depth={0} />
         </FileExplorerTree>
       </aside>
-    </EditorExplorerMenu>
+    </FileExplorerSidebar>
 
-    <SplitCodePane class="flex-1 flex w-full flex-col @4xl:flex-row" client:visible>
-      <!-- Editor -->
-      <div
-        class="h-1/2 @4xl:w-1/2 @4xl:h-full pl-3 pr-1 py-2.5 overflow-hidden"
-        style="display: none;"
-        data-pane
-      >
+    <CodeEditorPanes client:visible>
+      <Fragment slot="editor">
         {
           files.map((file, i) =>
             isCodeFile(file) ? (
@@ -99,16 +97,9 @@ if (nextTemplate) {
             ),
           )
         }
-      </div>
+      </Fragment>
 
-      <!-- Preview -->
-      <div
-        class="flex items-center justify-center p-2 h-1/2 @4xl:w-1/2 @4xl:h-full overflow-hidden"
-        style="display: none;"
-        data-pane
-      >
-        <slot name="preview" />
-      </div>
-    </SplitCodePane>
+      <slot name="preview" slot="preview" />
+    </CodeEditorPanes>
   </div>
 </section>

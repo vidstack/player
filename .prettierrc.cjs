@@ -24,12 +24,12 @@ module.exports = {
   ],
   // Sort Imports
   importOrder: [
+    '^clsx$',
     '^react$',
     '^next',
     '~.*icons',
     '.css$',
     '^node:',
-    'clsx',
     '<THIRD_PARTY_MODULES>',
     '.webp?$',
     '.mp4?$',

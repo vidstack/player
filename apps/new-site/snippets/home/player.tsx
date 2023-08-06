@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Captions, Controls, Gesture, MediaPlayer, MediaProvider } from '@vidstack/react';
+import { Captions, Controls, Gesture, MediaPlayer, MediaProvider, Time } from '@vidstack/react';
 import poster from './poster.webp';
 import video from './video.mp4';
 import * as Buttons from './buttons';
@@ -31,7 +31,6 @@ export function Player() {
       <Controls.Root className="absolute inset-0 flex flex-col w-full h-full z-10 opacity-0 transition-opacity media-controls:opacity-100">
         <Controls.Group className="w-full flex items-center px-2 py-1">
           <div className="flex-1" />
-          <Menus.Chapters />
           <Menus.Settings />
         </Controls.Group>
 
@@ -45,6 +44,8 @@ export function Player() {
           <Buttons.Play />
           <Buttons.Mute />
           <Sliders.Volume />
+          <TimeProgress />
+          <div className="flex-1" />
           <Buttons.Caption />
           <Buttons.PIP />
           <Buttons.Fullscreen />
@@ -65,5 +66,15 @@ export function Player() {
         action="seek:10"
       />
     </MediaPlayer>
+  );
+}
+
+function TimeProgress() {
+  return (
+    <div className="flex items-center text-sm text-white">
+      <Time type="current" />
+      <div className="mx-px">/</div>
+      <Time type="duration" />
+    </div>
   );
 }

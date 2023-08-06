@@ -63,6 +63,10 @@ export function createAriaMenu(options: AriaMenuOptions) {
         _openDisposal.add(_popper.watchPosition());
       }
 
+      if (!options.noOutSideClick) {
+        _openDisposal.add(listenEvent(document.body, 'pointerup', (e) => onChange(e, false)));
+      }
+
       closeOnSelect();
       closeSubmenuOnPointerLeave();
 
@@ -188,8 +192,6 @@ export function createAriaMenu(options: AriaMenuOptions) {
 
       disposal.add(
         onPress(triggerEl, onChange),
-        !options.noOutSideClick &&
-          listenEvent(document.body, 'pointerup', (e) => onChange(e, false)),
         options.hover && listenEvent(triggerEl, 'pointerenter', (e) => onChange(e, true)),
         listenEvent(triggerEl, 'keydown', (e) => {
           if (!options.submenu && e.key === 'ArrowDown') {
