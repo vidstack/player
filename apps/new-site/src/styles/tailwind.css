@@ -74,6 +74,10 @@
   background-color: var(--scrollbar-track-bg) !important;
 }
 
+.scrollbar::-webkit-scrollbar-corner {
+  background-color: var(--scrollbar-track-bg) !important;
+}
+
 .scrollbar::-webkit-scrollbar-thumb {
   @apply !rounded;
   background-color: var(--scrollbar-thumb-bg) !important;

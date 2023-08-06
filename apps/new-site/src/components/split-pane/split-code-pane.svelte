@@ -1,54 +1,59 @@
+<script lang="ts" context="module">
+  export type CodePane = 'code' | 'split' | 'preview';
+</script>
+
 <script lang="ts">
+  import clsx from 'clsx';
   import AppWindowIcon from '~icons/lucide/app-window';
   import CodeIcon from '~icons/lucide/code-2';
   import SplitHorizontalIcon from '~icons/lucide/split-square-horizontal';
   import SplitVerticalIcon from '~icons/lucide/split-square-vertical';
-  import clsx from 'clsx';
   import { writable } from 'svelte/store';
-  import { IS_BROWSER } from '../utils/env';
-  import SplitPane, { type SplitPaneContext } from './split-pane.svelte';
-  import Switch from './switch.svelte';
+  import { IS_BROWSER } from '../../utils/env';
+  import Switch from '../switch.svelte';
+  import SplitPaneGutter from './split-pane-gutter.svelte';
+  import SplitPane, { type SplitPaneOrientation } from './split-pane.svelte';
 
   const PANE_TYPE_PREF_KEY = 'vidstack::code-pane-type-pref',
     PANE_SPLIT_PREF_KEY = 'vidstack::code-pane-split-pref',
     SEEN_PANE_SWITCH_KEY = 'vidstack::code-pane-switch-seen';
 
-  let root: HTMLElement,
-    orientation: string = 'horizontal',
-    instance: Split.Instance,
-    defaultValue = (IS_BROWSER && localStorage[PANE_TYPE_PREF_KEY]) || 'split',
-    openPane = writable<'code' | 'split' | 'preview'>(defaultValue),
+  let orientation: string = 'horizontal',
+    defaultPaneType = (IS_BROWSER && localStorage[PANE_TYPE_PREF_KEY]) || 'split',
+    sizes: number[] = [50, 50],
+    openPane = writable<CodePane>(defaultPaneType),
     userHasNotSeenPaneSwitch = !IS_BROWSER || localStorage[SEEN_PANE_SWITCH_KEY];
 
-  function onSelect(value: string) {
-    const panes = root.querySelectorAll<HTMLElement>('[data-pane]');
+  if (defaultPaneType === 'code') {
+    sizes = [100, 0];
+  } else if (defaultPaneType === 'preview') {
+    sizes = [0, 100];
+  } else if (IS_BROWSER && localStorage[PANE_SPLIT_PREF_KEY]) {
+    sizes = JSON.parse(localStorage[PANE_SPLIT_PREF_KEY]);
+  }
 
+  function onSelect(value: string) {
     switch (value) {
       case 'code':
-        instance.setSizes([100, 0]);
-        panes[0].style.display = '';
-        panes[1].style.display = 'none';
+        sizes = [100, 0];
         break;
       case 'preview':
-        instance.setSizes([0, 100]);
-        panes[0].style.display = 'none';
-        panes[1].style.display = '';
+        sizes = [0, 100];
         break;
       case 'split':
-        let prefSplit = localStorage[PANE_SPLIT_PREF_KEY];
-        instance.setSizes((prefSplit && JSON.parse(prefSplit)) || [50, 50]);
-        for (const pane of panes) pane.style.display = '';
+        sizes = [50, 50];
+        storePaneSplitPreference([50, 50]);
         break;
     }
 
     localStorage[PANE_TYPE_PREF_KEY] = value;
 
-    if (value !== defaultValue) {
+    if (value !== defaultPaneType) {
       userHasNotSeenPaneSwitch = true;
       localStorage[SEEN_PANE_SWITCH_KEY] = true;
     }
 
-    openPane.set(value as any);
+    openPane.set(value as CodePane);
   }
 
   $: splitOptions = [
@@ -60,15 +65,12 @@
     { value: 'preview', Icon: AppWindowIcon },
   ];
 
-  function onInit({ detail }: CustomEvent<SplitPaneContext>) {
-    root = detail.root;
-    orientation = detail.orientation;
-    instance = detail.instance;
-    onSelect(defaultValue);
-  }
-
   function storePaneSplitPreference(sizes: number[]) {
     localStorage[PANE_SPLIT_PREF_KEY] = JSON.stringify(sizes);
+  }
+
+  function onOrientationChange({ detail }: CustomEvent<SplitPaneOrientation>) {
+    orientation = detail;
   }
 
   function onDragStart({ detail }: CustomEvent<number[]>) {
@@ -79,23 +81,23 @@
 
   function onDragEnd({ detail }: CustomEvent<number[]>) {
     storePaneSplitPreference(detail);
+    if (detail[0] === 0) openPane.set('preview');
+    else if (detail[0] === 100) openPane.set('code');
   }
 </script>
 
-<SplitPane
-  id="code-split-pane"
-  {...$$restProps}
-  on:init={onInit}
-  on:drag-start={onDragStart}
-  on:drag-end={onDragEnd}
+<div
+  class="flex flex-col w-full h-full relative overflow-hidden"
+  style={clsx(orientation === 'vertical' && '--code-block-gutters: 10px;')}
 >
-  <div class="flex items-center w-full sticky top-0 left-0 border-b border-border" slot="top">
+  <!-- Top Bar -->
+  <div class="flex items-center w-full sticky top-0 left-0 border-b border-border">
     <div class="flex-1"></div>
 
     <div class="relative">
       <Switch
         label="Editor Pane Setting"
-        {defaultValue}
+        defaultValue={defaultPaneType}
         value={openPane}
         options={splitOptions}
         square
@@ -117,5 +119,15 @@
     </div>
   </div>
 
-  <slot />
-</SplitPane>
+  <SplitPane
+    {...$$restProps}
+    {sizes}
+    on:drag-start={onDragStart}
+    on:drag-end={onDragEnd}
+    on:orientation-change={onOrientationChange}
+  >
+    <slot name="left" />
+    <SplitPaneGutter />
+    <slot name="right" />
+  </SplitPane>
+</div>

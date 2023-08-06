@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { CodeSnippet, LazyCodeSnippet } from ':code_snippets';
   import clsx from 'clsx';
+  import type { CodeSnippet, LazyCodeSnippet } from ':code_snippets';
   import { get } from 'svelte/store';
   import { codeSnippets } from '../../stores/code-snippets';
   import { isDarkColorScheme } from '../../stores/color-scheme';
@@ -46,11 +46,10 @@
 </script>
 
 <!-- Don't mess with content inside pre tag - line breaks will show up and mess up layout. -->
-<pre class={clsx('scrollbar', _class)}>
+<pre class={clsx('relative w-full min-h-full', _class)}>
 {#if loader && !code}
     <IndeterminateLoadingSpinner />
     <code
-      class="inline-block"
       style={`width: ${loader.width * 9.48}px; height: ${loader.lines * 22}px;`}
     />
   {/if}{@html code}
