@@ -1,9 +1,11 @@
 import { Component, computed, createContext, effect, onDispose, provideContext } from 'maverick.js';
 import { setStyle } from 'maverick.js/std';
-
 import type { MediaContext } from '../../../core';
 import { useMediaContext } from '../../../core/api/media-context';
 import { requestScopedAnimationFrame } from '../../../utils/dom';
+
+// media query and special @
+// <media-menu-portal when="(@min-width: 500px)" />
 
 /**
  * Portals menu items into the document body when the player is at the small vertical breakpoint.

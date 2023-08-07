@@ -3,27 +3,30 @@ import {
   computed,
   effect,
   getScope,
+  method,
   onDispose,
   peek,
+  prop,
   provideContext,
+  scoped,
   signal,
 } from 'maverick.js';
-import { method, prop } from 'maverick.js';
 import type { ElementAttributesRecord } from 'maverick.js/element';
 import {
   animationFrameThrottle,
   camelToKebabCase,
   listenEvent,
   setAttribute,
+  setStyle,
   uppercaseFirstChar,
 } from 'maverick.js/std';
-
 import {
   AudioTrackList,
   isTrackCaptionKind,
   MediaControls,
   MediaRemoteControl,
   mediaState,
+  PlayerQueryList,
   TextRenderers,
   TextTrackList,
   VideoQualityList,
@@ -176,8 +179,8 @@ export class MediaPlayer
     if (IS_IPHONE) setAttribute(el, 'data-iphone', '');
 
     const pointerQuery = window.matchMedia('(pointer: coarse)');
-    this._onTouchChange(pointerQuery);
-    pointerQuery.onchange = this._onTouchChange.bind(this);
+    this._onPointerChange(pointerQuery);
+    pointerQuery.onchange = this._onPointerChange.bind(this);
 
     const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
     resize.observe(el);
@@ -319,24 +322,21 @@ export class MediaPlayer
   private _onResize() {
     if (__SERVER__ || !this.el) return;
 
-    const width = this.el!.clientWidth,
-      height = this.el!.clientHeight,
-      { smallBreakpointX, smallBreakpointY, largeBreakpointX, largeBreakpointY } = this.$props,
-      bpx = width < smallBreakpointX() ? 'sm' : width < largeBreakpointX() ? 'md' : 'lg',
-      bpy = height < smallBreakpointY() ? 'sm' : height < largeBreakpointY() ? 'md' : 'lg';
+    const width = this.el.clientWidth,
+      height = this.el.clientHeight;
 
-    this.$state.breakpointX.set(bpx);
-    this.$state.breakpointY.set(bpy);
+    this.$state.width.set(width);
+    this.$state.height.set(height);
 
-    setAttribute(this.el!, 'data-bp-x', bpx);
-    setAttribute(this.el!, 'data-bp-y', bpy);
+    setStyle(this.el, '--player-width', width + 'px');
+    setStyle(this.el, '--player-height', height + 'px');
   }
 
-  private _onTouchChange(queryList: MediaQueryList | MediaQueryListEvent) {
+  private _onPointerChange(queryList: MediaQueryList | MediaQueryListEvent) {
     if (__SERVER__) return;
-    const isTouch = queryList.matches;
-    setAttribute(this.el!, 'data-touch', isTouch);
-    this.$state.touchPointer.set(isTouch);
+    const pointer = queryList.matches ? 'coarse' : 'fine';
+    setAttribute(this.el!, 'data-pointer', pointer);
+    this.$state.pointer.set(pointer);
     this._onResize();
   }
 
@@ -592,6 +592,34 @@ export class MediaPlayer
   @method
   startLoading(): void {
     this._media.delegate._dispatch('can-load');
+  }
+
+  /**
+   * Returns a `PlayerQueryList` object which stores information on a player/media query applied
+   * to this player instance and document. Supports both immediate and event-driven matching
+   * against the state of the player and document.
+   *
+   * A player query supports the same syntax as media queries and allows media state properties
+   * to be used inside queries like so:
+   *
+   * ```ts
+   * const queryList = player.matchQuery("(width < 680) and (streamType: 'on-demand')");
+   *
+   * if (queryList.matches) {
+   *  // ...
+   * }
+   *
+   * // Listen for match changes.
+   * queryList.addEventListener("change", () => {
+   *   // ...
+   * });
+   * ```
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList}
+   */
+  @method
+  matchQuery(query: string) {
+    return scoped(() => new PlayerQueryList(this.$state, query), this.scope)!;
   }
 
   override destroy() {

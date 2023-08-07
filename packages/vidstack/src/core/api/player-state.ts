@@ -1,6 +1,5 @@
 import { State, tick, type Store } from 'maverick.js';
 import type { VTTCue } from 'media-captions';
-
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
@@ -90,12 +89,12 @@ export const mediaState = new State<MediaState>({
   },
 
   // ~~ responsive design ~~
-  touchPointer: false,
+  pointer: 'fine',
   orientation: 'landscape',
+  width: 0,
+  height: 0,
   mediaWidth: 0,
   mediaHeight: 0,
-  breakpointX: 'sm',
-  breakpointY: 'sm',
 
   // ~~ user props ~~
   userBehindLiveEdge: false,
@@ -140,13 +139,12 @@ export const mediaState = new State<MediaState>({
 
 const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'autoplay',
-  'breakpointX',
-  'breakpointY',
   'canFullscreen',
   'canLoad',
   'canPictureInPicture',
   'controls',
   'fullscreen',
+  'height',
   'logLevel',
   'loop',
   'mediaHeight',
@@ -155,6 +153,7 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'orientation',
   'pictureInPicture',
   'playsinline',
+  'pointer',
   'poster',
   'preload',
   'providedStreamType',
@@ -166,8 +165,8 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'thumbnailCues',
   'thumbnails',
   'title',
-  'touchPointer',
   'volume',
+  'width',
 ]);
 
 /**
@@ -638,15 +637,23 @@ export interface MediaState {
   // !!! Responsive Design !!!
 
   /**
-   * Whether the user is using a touch pointer.
+   * The user's pointing device type.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer}
    */
-  touchPointer: boolean;
+  pointer: 'fine' | 'coarse';
   /**
    * The current screen orientation.
    */
   orientation: 'portrait' | 'landscape';
+  /**
+   * The width of the media player container in pixels.
+   */
+  width: number;
+  /**
+   * The height of the media player container in pixels.
+   */
+  height: number;
   /**
    * The width of the media provider in pixels.
    */
@@ -655,22 +662,6 @@ export interface MediaState {
    * The height of the media in provider pixels.
    */
   mediaHeight: number;
-  /**
-   * Horizontal breakpoint based on player container width:
-   *
-   * - `sm` (small): x < 600px
-   * - `md` (medium): 600px <= x < 980px
-   * - `lg` (large): x >= 980px
-   */
-  breakpointX: 'sm' | 'md' | 'lg';
-  /**
-   * Vertical breakpoint based on player container height:
-   *
-   * - `sm` (small): x < 380px
-   * - `md` (medium): 480px <= x < 600px
-   * - `lg` (large): x >= 980px
-   */
-  breakpointY: 'sm' | 'md' | 'lg';
 
   // !!! INTERNALS !!!
 

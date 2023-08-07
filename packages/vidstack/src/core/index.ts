@@ -16,6 +16,7 @@ export * from './tracks/text/text-track';
 export * from './tracks/text/text-tracks';
 export * from './tracks/audio-tracks';
 export * from './tracks/text/utils';
+export * from './query-list';
 export * from './quality/video-quality';
 
 // Keyboard

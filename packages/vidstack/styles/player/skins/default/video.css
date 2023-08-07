@@ -171,7 +171,11 @@
 
 :where(.vds-skin[data-video] .vds-time-slider .vds-slider-value) {
   background-color: var(--video-time-bg, unset);
-  text-shadow: -1px -1px 0 #333333, 1px -1px 0 #333333, -1px 1px 0 #333333, 1px 1px 0 #333333;
+  text-shadow:
+    -1px -1px 0 #333333,
+    1px -1px 0 #333333,
+    -1px 1px 0 #333333,
+    1px 1px 0 #333333;
 }
 
 :where(.vds-skin[data-video][data-mobile] .vds-time) {
@@ -238,8 +242,10 @@
   transition: var(--video-captions-transition, bottom 0.15s linear);
 }
 
-:where([data-fullscreen][data-bp-x='lg'] .vds-skin[data-video] .vds-captions) {
-  bottom: var(--video-large-fullscreen-captions-offset, 54px);
+@container (width >= 980px) {
+  :where([data-fullscreen] .vds-skin[data-video] .vds-captions) {
+    bottom: var(--video-large-fullscreen-captions-offset, 54px);
+  }
 }
 
 :where([data-media-player][data-controls] .vds-skin[data-video] .vds-captions) {
@@ -259,7 +265,11 @@
 :where(.vds-skin[data-video] .vds-time-slider .vds-slider-chapter-title) {
   width: 100%;
   text-align: center;
-  text-shadow: -1px -1px 0 #212121, 1px -1px 0 #212121, -1px 1px 0 #212121, 1px 1px 0 #212121;
+  text-shadow:
+    -1px -1px 0 #212121,
+    1px -1px 0 #212121,
+    -1px 1px 0 #212121,
+    1px 1px 0 #212121;
 }
 
 /*
@@ -288,16 +298,16 @@
   z-index: 1;
 }
 
-:where([data-touch] .vds-skin[data-video] .vds-gesture[action='toggle:paused']) {
-  display: none;
+@media (pointer: coarse) {
+  :where(.vds-skin[data-video] .vds-gesture[action='toggle:paused']) {
+    display: none;
+  }
 }
 
-:where(
-    [data-media-player]:not([data-touch])
-      .vds-skin[data-video]
-      .vds-gesture[action='toggle:controls']
-  ) {
-  display: none;
+@media not (pointer: coarse) {
+  :where([data-media-player] .vds-skin[data-video] .vds-gesture[action='toggle:controls']) {
+    display: none;
+  }
 }
 
 /*
@@ -377,10 +387,12 @@
   transition: transform 0.1s linear;
 }
 
-:where([data-preview][data-touch] .vds-skin[data-video][data-mobile] .vds-time-slider) {
-  --track-height: var(--video-slider-track-height, 12px);
-  transform: translateY(-6px);
-  transition: transform 0.1s linear;
+@media (pointer: coarse) {
+  :where([data-preview] .vds-skin[data-video][data-mobile] .vds-time-slider) {
+    --track-height: var(--video-slider-track-height, 12px);
+    transform: translateY(-6px);
+    transition: transform 0.1s linear;
+  }
 }
 
 :where(.vds-skin[data-video][data-mobile] .vds-play-button) {

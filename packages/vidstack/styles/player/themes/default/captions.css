@@ -29,15 +29,17 @@
   word-break: break-word;
 }
 
-:where([data-fullscreen][data-bp-x='lg'] .vds-captions) {
-  --cue-font-size: var(
-    --media-large-fullscreen-cue-font-size,
-    calc(var(--overlay-height) / 100 * 3)
-  );
+@container (width >= 980px) {
+  :where([data-fullscreen] .vds-captions) {
+    --cue-font-size: var(
+      --media-large-fullscreen-cue-font-size,
+      calc(var(--overlay-height) / 100 * 3)
+    );
+  }
 }
 
-@media (orientation: portrait) {
-  :where([data-bp-x='sm'][data-fullscreen] .vds-captions) {
+@container (width < 600px) and (orientation: portrait) {
+  :where([data-fullscreen] .vds-captions) {
     --cue-font-size: 18px;
   }
 }

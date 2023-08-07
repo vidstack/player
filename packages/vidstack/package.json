@@ -59,7 +59,7 @@
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
-    "maverick.js": "0.38.0",
+    "maverick.js": "0.38.1",
     "media-icons": "0.10.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",

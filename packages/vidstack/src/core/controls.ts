@@ -1,6 +1,5 @@
 import { effect } from 'maverick.js';
 import { isKeyboardEvent, listenEvent } from 'maverick.js/std';
-
 import { MediaPlayerController } from './api/player-controller';
 
 export class MediaControls extends MediaPlayerController {
@@ -81,7 +80,7 @@ export class MediaControls extends MediaPlayerController {
     }
 
     effect(() => {
-      if (!this.$state.touchPointer()) {
+      if (!this.$state.pointer()) {
         listenEvent(this.el!, 'pointermove', onStopIdle);
       }
     });
