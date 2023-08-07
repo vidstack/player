@@ -172,7 +172,7 @@
 }
 
 :where([data-view-type='video'] .vds-menu-items:not([data-submenu])) {
-  max-height: var(--media-menu-max-height, calc(var(--media-height) * 0.7));
+  max-height: var(--media-menu-max-height, calc(var(--player-height) * 0.7));
 }
 
 :where(.vds-menu-items[data-resizing]) {
@@ -192,7 +192,7 @@
 }
 
 /* Mobile Popup */
-:where(body > .vds-menu-items) {
+:where(.vds-menu-items[data-portal]) {
   --enter-transform: translateY(-24px);
 }
 
@@ -239,7 +239,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(body > .vds-menu-items) {
+:where(.vds-menu-items[data-portal]) {
   position: fixed;
   left: 16px;
   right: 16px;
@@ -249,13 +249,13 @@
   z-index: 9999999;
 }
 
-:where(body > .vds-menu-items) {
+:where(.vds-menu-items[data-portal]) {
   max-width: 480px;
   margin: 0 auto;
 }
 
 @media (orientation: landscape) and (pointer: coarse) {
-  :where(body > .vds-menu-items) {
+  :where(.vds-menu-items[data-portal]) {
     max-height: var(--media-mobile-menu-landscape-max-height, min(70vh, 400px));
   }
 }
@@ -315,7 +315,7 @@
   background-color: var(--media-menu-item-hover-bg, rgb(245 245 245 / 0.08));
 }
 
-:where(body > .vds-menu-items) :where([role='menuitem'], [role='menuitemradio']) {
+:where(.vds-menu-items[data-portal]) :where([role='menuitem'], [role='menuitemradio']) {
   padding: var(--media-mobile-menu-item-padding, 12px);
 }
 

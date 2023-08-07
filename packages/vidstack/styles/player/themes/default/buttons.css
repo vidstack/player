@@ -32,9 +32,11 @@
   height: var(--media-fullscreen-button-size, 42px);
 }
 
-:where([data-bp-x='sm'][data-fullscreen] .vds-button) {
-  width: var(--media-mobile-fullscreen-button-size, 42px);
-  height: var(--media-mobile-fullscreen-button-size, 42px);
+@container (width < 600px) {
+  :where([data-fullscreen] .vds-button) {
+    width: var(--media-mobile-fullscreen-button-size, 42px);
+    height: var(--media-mobile-fullscreen-button-size, 42px);
+  }
 }
 
 :where(.vds-button > svg, .vds-button > .vds-icon) {

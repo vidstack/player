@@ -1,7 +1,6 @@
 import { Component, method, onDispose, peek, signal, State, tick } from 'maverick.js';
 import { animationFrameThrottle, listenEvent, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
-
 import type { MediaSrc, TextTrackInit } from '../../core';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import type { MediaProviderLoader } from '../../providers';
