@@ -1,28 +1,42 @@
 import {
+  Component,
   computed,
   createScope,
   effect,
+  method,
   onDispose,
   peek,
+  prop,
   scoped,
   signal,
-  ViewController,
+  useState,
+  type ReadSignalRecord,
   type Scope,
 } from 'maverick.js';
 import { animationFrameThrottle } from 'maverick.js/std';
 import { VTTCue } from 'media-captions';
-
-import { useMediaContext } from '../../../../core/api/media-context';
-import type { MediaStore } from '../../../../core/api/player-state';
+import { observeActiveTextTrack } from '../../../../core';
+import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { round } from '../../../../utils/number';
 import type { SliderState } from '../slider/api/state';
-import type { TimeSliderProps } from './time-slider';
+import { TimeSlider } from './time-slider';
 
-export class SliderChaptersRenderer extends ViewController<TimeSliderProps, SliderState> {
-  private _media!: MediaStore;
+/**
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-chapters}
+ */
+export class SliderChapters extends Component<SliderChaptersProps> {
+  static props: SliderChaptersProps = {
+    disabled: false,
+  };
 
-  private _track: TextTrack | null = null;
+  private _media!: MediaContext;
+  private _sliderState!: ReadSignalRecord<SliderState>;
+  private _updateScope?: Scope;
+
+  private _titleEl: HTMLElement | null = null;
+  private _chapter: TextTrack | null = null;
+  private _currentTrack = signal<TextTrack | null>(null);
   private _refs: HTMLElement[] = [];
 
   private _cues: VTTCue[] = [];
@@ -32,8 +46,31 @@ export class SliderChaptersRenderer extends ViewController<TimeSliderProps, Slid
   private _activePointerIndex = signal(-1);
   private _bufferedIndex = 0;
 
+  @prop
+  get cues() {
+    return this._$cues();
+  }
+
+  @prop
+  get activeCue(): VTTCue | null {
+    return this._cues[this._activeIndex()] || null;
+  }
+
+  @prop
+  get activePointerCue(): VTTCue | null {
+    return this._cues[this._activePointerIndex()] || null;
+  }
+
   protected override onSetup(): void {
-    this._media = useMediaContext().$state;
+    this._media = useMediaContext();
+    this._sliderState = useState(TimeSlider.state);
+  }
+
+  protected override onAttach(el: HTMLElement): void {
+    const onChapterChange = this._onChapterChange.bind(this);
+    observeActiveTextTrack(this._media.textTracks, 'chapters', onChapterChange);
+
+    effect(this._onTrackChange.bind(this));
   }
 
   protected override onConnect(): void {
@@ -41,27 +78,8 @@ export class SliderChaptersRenderer extends ViewController<TimeSliderProps, Slid
     onDispose(this._reset.bind(this));
   }
 
-  get cues() {
-    return this._$cues();
-  }
-
-  get activeCue(): VTTCue | null {
-    return this._cues[this._activeIndex()] || null;
-  }
-
-  get activePointerCue(): VTTCue | null {
-    return this._cues[this._activePointerIndex()] || null;
-  }
-
-  setTrack(track: TextTrack | null) {
-    if (this._track === track) return;
-    this._track = track;
-    this._reset();
-    this._build();
-  }
-
-  private _updateScope?: Scope;
-  addRefs(refs: HTMLElement[]) {
+  @method
+  setRefs(refs: HTMLElement[]) {
     this._refs = refs;
     this._updateScope?.dispose();
     if (this._refs.length === 1) {
@@ -74,10 +92,18 @@ export class SliderChaptersRenderer extends ViewController<TimeSliderProps, Slid
     }
   }
 
-  private _build() {
-    if (!this._track?.cues.length || this._cues.length) return;
+  private _setTrack(track: TextTrack | null) {
+    this._currentTrack.set(track);
+    this._reset();
+    this._build();
+  }
 
-    const chapters = this._fillGaps(this._track.cues);
+  private _build() {
+    const track = this._currentTrack();
+
+    if (!track?.cues.length || this._cues.length) return;
+
+    const chapters = this._fillGaps(track.cues);
     this._cues = chapters;
     this._$cues.set(chapters);
 
@@ -118,7 +144,7 @@ export class SliderChaptersRenderer extends ViewController<TimeSliderProps, Slid
   }
 
   private _watchFillPercent() {
-    let { fillPercent, value } = this.$state,
+    let { fillPercent, value } = this._sliderState,
       prevActiveIndex = peek(this._activeIndex),
       currentChapter = this._cues[prevActiveIndex],
       currentActiveIndex = this._findActiveChapterIndex(
@@ -139,7 +165,7 @@ export class SliderChaptersRenderer extends ViewController<TimeSliderProps, Slid
   }
 
   private _watchPointerPercent() {
-    let { pointing, pointerPercent } = this.$state;
+    let { pointing, pointerPercent } = this._sliderState;
 
     if (!pointing()) {
       this._activePointerIndex.set(-1);
@@ -187,7 +213,7 @@ export class SliderChaptersRenderer extends ViewController<TimeSliderProps, Slid
 
   private _bufferedPercent = computed(this._calcMediaBufferedPercent.bind(this));
   private _calcMediaBufferedPercent() {
-    const { bufferedEnd, duration } = this._media;
+    const { bufferedEnd, duration } = this._media.$state;
     return round(Math.min(bufferedEnd() / Math.max(duration(), 1), 1), 3) * 100;
   }
 
@@ -225,4 +251,47 @@ export class SliderChaptersRenderer extends ViewController<TimeSliderProps, Slid
     chapters.push(cues[cues.length - 1]);
     return chapters;
   }
+
+  private _onChapterChange(track: TextTrack | null) {
+    this._chapter = track;
+    this._onTrackChange();
+  }
+
+  private _onTrackChange() {
+    const { disabled } = this.$props;
+    if (disabled()) return;
+
+    this._setTrack(this._chapter);
+
+    this._titleEl = this._findParentSlider()?.querySelector('[data-part="chapter-title"]') || null;
+    if (this._titleEl) effect(this._onChapterTitleChange.bind(this));
+
+    return () => {
+      this._setTrack(null);
+      if (this._titleEl) {
+        this._titleEl.textContent = '';
+        this._titleEl = null;
+      }
+    };
+  }
+
+  private _onChapterTitleChange() {
+    const cue = this.activePointerCue || this.activeCue;
+    this._titleEl!.textContent = cue?.text || '';
+  }
+
+  private _findParentSlider() {
+    let node = this.el;
+    while (node && node.getAttribute('role') !== 'slider') {
+      node = node.parentElement;
+    }
+    return node;
+  }
+}
+
+export interface SliderChaptersProps {
+  /**
+   * Whether chapters should be disabled.
+   */
+  disabled: boolean;
 }

@@ -334,7 +334,7 @@
   will-change: width;
 }
 
-@media (pointer: fine) {
+@media (hover: hover) and (pointer: fine) {
   :where(.vds-time-slider:hover .vds-slider-chapters) {
     contain: strict;
   }

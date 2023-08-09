@@ -1,7 +1,6 @@
 import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
-
 import { Thumbnail } from '../../components';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { cloneTemplateContent, createTemplate } from '../../utils/dom';
@@ -14,9 +13,12 @@ const imgTemplate = /* #__PURE__*/ createTemplate(
  * @docs {@link https://www.vidstack.io/docs/player/components/display/thumbnail}
  * @example
  * ```html
- * <media-player thumbnails="https://media-files.vidstack.io/thumbnails.vtt">
+ * <media-player>
  *   <!-- ... -->
- *   <media-thumbnail time="10"></media-thumbnail>
+ *   <media-thumbnail
+ *     src="https://media-files.vidstack.io/thumbnails.vtt"
+ *     time="10"
+ *   ></media-thumbnail>
  * </media-player>
  * ```
  */

@@ -1,17 +1,6 @@
 import throttle from 'just-throttle';
-import {
-  Component,
-  computed,
-  createContext,
-  effect,
-  peek,
-  prop,
-  provideContext,
-  signal,
-  useContext,
-} from 'maverick.js';
+import { Component, effect, peek, provideContext, signal, useContext } from 'maverick.js';
 import { isNull, setAttribute } from 'maverick.js/std';
-
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { observeActiveTextTrack } from '../../../../core/tracks/text/utils';
@@ -30,7 +19,6 @@ import { sliderState, type SliderState } from '../slider/api/state';
 import { sliderValueFormatContext } from '../slider/format';
 import { sliderContext } from '../slider/slider-context';
 import { SliderController, type SliderControllerProps } from '../slider/slider-controller';
-import { SliderChaptersRenderer } from './chapters';
 
 /**
  * A slider control that lets the user specify their desired time level.
@@ -53,7 +41,7 @@ export class TimeSlider extends Component<
 
   private _media!: MediaContext;
   private _dispatchSeeking!: ThrottledSeeking;
-  private _track = signal<TextTrack | null>(null);
+  private _chapter = signal<TextTrack | null>(null);
 
   constructor() {
     super();
@@ -75,10 +63,6 @@ export class TimeSlider extends Component<
   protected override onSetup(): void {
     this._media = useMediaContext();
 
-    provideContext(timeSliderContext, {
-      chapters: this.chapters,
-    });
-
     provideContext(sliderValueFormatContext, {
       value: this._formatValue.bind(this),
       time: this._formatTime.bind(this),
@@ -99,13 +83,11 @@ export class TimeSlider extends Component<
   protected override onAttach(el: HTMLElement) {
     el.setAttribute('data-media-time-slider', '');
     setAttributeIfEmpty(el, 'aria-label', 'Media time');
-
-    effect(this._onTrackChange.bind(this));
   }
 
   protected override onConnect(el: HTMLElement) {
     effect(this._watchPreviewing.bind(this));
-    observeActiveTextTrack(this._media.textTracks, 'chapters', this._track.set);
+    observeActiveTextTrack(this._media.textTracks, 'chapters', this._chapter.set);
   }
 
   private _calcBufferedPercent() {
@@ -115,7 +97,7 @@ export class TimeSlider extends Component<
 
   private _hasChapters() {
     const { duration } = this._media.$state;
-    return this._track()?.cues.length && Number.isFinite(duration()) && duration() > 0;
+    return this._chapter()?.cues.length && Number.isFinite(duration()) && duration() > 0;
   }
 
   private _watchSeekingThrottle() {
@@ -267,43 +249,6 @@ export class TimeSlider extends Component<
         )}`
       : 'LIVE';
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Chapters
-  // -------------------------------------------------------------------------------------------
-
-  private _chapterTitleEl: HTMLElement | null = null;
-
-  /** @internal */
-  @prop
-  chapters = new SliderChaptersRenderer();
-
-  private _hideChapters = computed(() => {
-    const { breakpointX } = this._media.$state;
-    return breakpointX() === 'sm';
-  });
-
-  private _onTrackChange() {
-    if (this._hideChapters()) return;
-
-    this.chapters.setTrack(this._track());
-
-    this._chapterTitleEl = this.el?.querySelector('[data-part="chapter-title"]') || null;
-    if (this._chapterTitleEl) effect(this._onChapterTitleChange.bind(this));
-
-    return () => {
-      this.chapters.setTrack(null);
-      if (this._chapterTitleEl) {
-        this._chapterTitleEl.textContent = '';
-        this._chapterTitleEl = null;
-      }
-    };
-  }
-
-  private _onChapterTitleChange() {
-    const cue = this.chapters.activePointerCue || this.chapters.activeCue;
-    this._chapterTitleEl!.textContent = cue?.text || '';
-  }
 }
 
 export interface TimeSliderCSSVars extends SliderCSSVars {
@@ -330,9 +275,3 @@ interface ThrottledSeeking {
   (time: number, event: Event): void;
   cancel(): void;
 }
-
-export interface TimeSliderContext {
-  chapters: SliderChaptersRenderer;
-}
-
-export const timeSliderContext = createContext<TimeSliderContext>();

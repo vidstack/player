@@ -32,7 +32,7 @@
 @container (width >= 980px) {
   :where([data-fullscreen] .vds-captions) {
     --cue-font-size: var(
-      --media-large-fullscreen-cue-font-size,
+      --media-lg-fullscreen-cue-font-size,
       calc(var(--overlay-height) / 100 * 3)
     );
   }

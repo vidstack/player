@@ -1,5 +1,4 @@
 import { html } from 'lit-html';
-
 import {
   CaptionButton,
   ChaptersMenu,
@@ -14,72 +13,60 @@ import {
   VolumeSlider,
 } from './shared-ui';
 
-export function renderVideo(isMobile: boolean) {
-  return isMobile ? MobileUI() : DesktopUI();
-}
-
-function MobileUI() {
+export function SmallVideoUI() {
   return html`
-    <div class="vds-media-ui">
-      ${Gestures()}${BufferingIndicator()}
-      <media-captions class="vds-captions"></media-captions>
+    ${Gestures()}${BufferingIndicator()}
+    <media-captions class="vds-captions"></media-captions>
 
-      <div class="vds-scrim"></div>
+    <div class="vds-scrim"></div>
 
-      <media-controls class="vds-controls">
-        <media-controls-group class="vds-controls-group">
-          <div class="vds-controls-spacer"></div>
-          ${CaptionButton({ tooltip: 'bottom' })}
-          ${ChaptersMenu({ tooltip: 'bottom', placement: 'bottom end' })}
-          ${SettingsMenu({ tooltip: 'bottom', placement: 'bottom end' })}
-          ${MuteButton({ tooltip: 'bottom end' })}
-        </media-controls-group>
+    <media-controls class="vds-controls">
+      <media-controls-group class="vds-controls-group">
+        <div class="vds-controls-spacer"></div>
+        ${CaptionButton({ tooltip: 'bottom' })}${Menus()}${MuteButton({ tooltip: 'bottom end' })}
+      </media-controls-group>
 
-        <div class="vds-controls-group">${PlayButton({ tooltip: 'top' })}</div>
+      <div class="vds-controls-group">${PlayButton({ tooltip: 'top' })}</div>
 
-        <media-controls-group class="vds-controls-group">
-          ${TimeGroup()}${ChapterTitle()}
-          <div class="vds-controls-spacer"></div>
-          ${FullscreenButton({ tooltip: 'top end' })}
-        </media-controls-group>
+      <media-controls-group class="vds-controls-group">
+        ${TimeGroup()}${ChapterTitle()}
+        <div class="vds-controls-spacer"></div>
+        ${FullscreenButton({ tooltip: 'top end' })}
+      </media-controls-group>
 
-        <media-controls-group class="vds-controls-group">${TimeSlider()}</media-controls-group>
-      </media-controls>
+      <media-controls-group class="vds-controls-group">${TimeSlider()}</media-controls-group>
+    </media-controls>
 
-      <div class="vds-start-duration">
-        <media-time class="vds-time" type="duration"></media-time>
-      </div>
+    <div class="vds-start-duration">
+      <media-time class="vds-time" type="duration"></media-time>
     </div>
   `;
 }
 
-function DesktopUI() {
+export function LargeVideoUI() {
   return html`
-    <div class="vds-media-ui">
-      ${Gestures()}${BufferingIndicator()}
-      <media-captions class="vds-captions"></media-captions>
+    ${Gestures()}${BufferingIndicator()}
+    <media-captions class="vds-captions"></media-captions>
 
-      <div class="vds-scrim"></div>
+    <div class="vds-scrim"></div>
 
-      <media-controls class="vds-controls">
-        <media-controls-group class="vds-controls-group">
-          <div class="vds-controls-spacer"></div>
-          ${ChaptersMenu({ tooltip: 'bottom end', placement: 'bottom end' })}
-          ${SettingsMenu({ tooltip: 'bottom end', placement: 'bottom end' })}
-        </media-controls-group>
-
+    <media-controls class="vds-controls">
+      <media-controls-group class="vds-controls-group">
         <div class="vds-controls-spacer"></div>
+        ${Menus()}
+      </media-controls-group>
 
-        <media-controls-group class="vds-controls-group">${TimeSlider()}</media-controls-group>
+      <div class="vds-controls-spacer"></div>
 
-        <media-controls-group class="vds-controls-group">
-          ${PlayButton({ tooltip: 'top start' })}
-          ${MuteButton({ tooltip: 'top' })}${VolumeSlider()}${TimeGroup()}
-          ${ChapterTitle()}${CaptionButton({ tooltip: 'top' })}${PiPButton()}
-          ${FullscreenButton({ tooltip: 'top end' })}
-        </media-controls-group>
-      </media-controls>
-    </div>
+      <media-controls-group class="vds-controls-group">${TimeSlider()}</media-controls-group>
+
+      <media-controls-group class="vds-controls-group">
+        ${PlayButton({ tooltip: 'top start' })}
+        ${MuteButton({ tooltip: 'top' })}${VolumeSlider()}${TimeGroup()}
+        ${ChapterTitle()}${CaptionButton({ tooltip: 'top' })}${PiPButton()}
+        ${FullscreenButton({ tooltip: 'top end' })}
+      </media-controls-group>
+    </media-controls>
   `;
 }
 
@@ -98,6 +85,15 @@ function BufferingIndicator() {
         ></circle>
       </svg>
     </div>
+  `;
+}
+
+function Menus() {
+  const tooltip = 'bottom end',
+    placement = 'bottom end',
+    portal = '.vds-video-ui';
+  return html`
+    ${ChaptersMenu({ tooltip, placement, portal })}${SettingsMenu({ tooltip, placement, portal })}
   `;
 }
 

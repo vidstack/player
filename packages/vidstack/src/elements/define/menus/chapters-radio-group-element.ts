@@ -1,5 +1,5 @@
+import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
-
 import { ChaptersRadioGroup, type ChaptersRadioOption } from '../../../components';
 import { renderMenuItemsTemplate } from './_template';
 
@@ -11,7 +11,7 @@ import { renderMenuItemsTemplate } from './_template';
  *   <media-menu-button aria-label="Chapters">
  *     <media-icon type="chapters"></media-icon>
  *   </media-menu-button>
- *   <media-chapters-radio-group>
+ *   <media-chapters-radio-group thumbnails="...">
  *     <template>
  *       <media-radio>
  *         <media-thumbnail></media-thumbnail>
@@ -34,9 +34,17 @@ export class MediaChaptersRadioGroupElement extends Host(HTMLElement, ChaptersRa
         startEl = el.querySelector('[data-part="start-time"]'),
         durationEl = el.querySelector('[data-part="duration"]');
 
-      if (thumbnailEl) thumbnailEl.setAttribute('time', cue.startTime + '');
       if (startEl) startEl.textContent = startTime;
+
       if (durationEl) durationEl.textContent = duration;
+
+      if (thumbnailEl) {
+        thumbnailEl.setAttribute('time', cue.startTime + '');
+        effect(() => {
+          const { thumbnails } = this.$props;
+          thumbnailEl.setAttribute('src', thumbnails());
+        });
+      }
     });
   }
 }

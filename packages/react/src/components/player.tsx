@@ -31,6 +31,7 @@ const MediaPlayerBridge = createReactComponent(MediaPlayerInstance, {
 });
 
 export interface MediaPlayerProps extends ReactElementProps<MediaPlayerInstance> {
+  aspectRatio?: string;
   asChild?: boolean;
   children: React.ReactNode;
   ref?: React.Ref<MediaPlayerInstance>;
@@ -51,9 +52,16 @@ export interface MediaPlayerProps extends ReactElementProps<MediaPlayerInstance>
  * ```
  */
 const MediaPlayer = React.forwardRef<MediaPlayerInstance, MediaPlayerProps>(
-  ({ children, ...props }, forwardRef) => {
+  ({ aspectRatio = '16 / 9', children, ...props }, forwardRef) => {
     return (
-      <MediaPlayerBridge {...props} ref={forwardRef}>
+      <MediaPlayerBridge
+        {...props}
+        ref={forwardRef}
+        style={{
+          aspectRatio,
+          ...props.style,
+        }}
+      >
         {(props) => <Primitive.div {...props}>{children}</Primitive.div>}
       </MediaPlayerBridge>
     );

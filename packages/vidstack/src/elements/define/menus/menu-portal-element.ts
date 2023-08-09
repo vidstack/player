@@ -1,6 +1,5 @@
-import { Host } from 'maverick.js/element';
-
-import { MenuPortal } from '../../../components';
+import { Host, type Attributes } from 'maverick.js/element';
+import { MenuPortal, type MenuPortalProps } from '../../../components';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu#portal}
@@ -16,6 +15,15 @@ import { MenuPortal } from '../../../components';
  */
 export class MediaMenuPortalElement extends Host(HTMLElement, MenuPortal) {
   static tagName = 'media-menu-portal';
+
+  static override attrs: Attributes<MenuPortalProps> = {
+    disabled: {
+      converter(value) {
+        if (value === 'fullscreen') return value;
+        return value !== null;
+      },
+    },
+  };
 }
 
 declare global {

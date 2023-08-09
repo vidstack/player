@@ -1,15 +1,16 @@
 import { effect, useState, type StateContext } from 'maverick.js';
-
 import { Slider } from '../../../components';
 import { MediaThumbnailElement } from '../thumbnail-element';
 
 /**
  * @example
  * ```html
- * <media-player thumbnails="https://media-files.vidstack.io/thumbnails.vtt">
+ * <media-player >
  *   <media-time-slider>
  *     <media-slider-preview>
- *       <media-slider-thumbnail></media-slider-thumbnail>
+ *       <media-slider-thumbnail
+ *         src="https://media-files.vidstack.io/thumbnails.vtt"
+ *       ></media-slider-thumbnail>
  *     </media-slider-preview>
  *   </media-time-slider>
  * </media-player>

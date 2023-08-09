@@ -1,6 +1,5 @@
 import { isWriteSignal, ViewController, type ReadSignal } from 'maverick.js';
 import { ariaBool } from 'maverick.js/std';
-
 import { ARIAKeyShortcuts, type MediaKeyShortcut } from '../../../core';
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
@@ -43,7 +42,6 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
   protected override onAttach(el: HTMLElement) {
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'button');
-    setAttributeIfEmpty(el, 'type', 'button');
   }
 
   protected override onConnect(el: HTMLElement) {

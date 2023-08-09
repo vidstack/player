@@ -10,7 +10,6 @@ import {
 } from 'maverick.js';
 import { DOMEvent, isNumber, setStyle } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
-
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { isCueActive, observeActiveTextTrack } from '../../../../core/tracks/text/utils';
@@ -30,6 +29,10 @@ export class ChaptersRadioGroup extends Component<
   {},
   ChaptersRadioGroupEvents
 > {
+  static props: ChapterRadioGroupProps = {
+    thumbnails: '',
+  };
+
   private _media!: MediaContext;
   private _menu?: MenuContext;
   private _controller: RadioGroupController;
@@ -61,8 +64,9 @@ export class ChaptersRadioGroup extends Component<
       this._menu = useContext(menuContext);
     }
 
+    const { thumbnails } = this.$props;
     this.setAttributes({
-      'data-thumbnails': this.hasThumbnails.bind(this),
+      'data-thumbnails': () => !!thumbnails(),
     });
   }
 
@@ -83,12 +87,6 @@ export class ChaptersRadioGroup extends Component<
       startTime: formatTime(cue.startTime, false, cue.startTime >= 3600),
       duration: formatSpokenTime(cue.endTime - cue.startTime),
     }));
-  }
-
-  @method
-  hasThumbnails() {
-    const { thumbnailCues } = this._media.$state;
-    return thumbnailCues().length > 0;
   }
 
   private _onOpen() {
@@ -152,7 +150,13 @@ export class ChaptersRadioGroup extends Component<
   }
 }
 
-export interface ChapterRadioGroupProps {}
+export interface ChapterRadioGroupProps {
+  /**
+   * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
+   * file resource.
+   */
+  thumbnails: string;
+}
 
 export interface ChaptersRadioGroupEvents {
   change: ChaptersRadioGroupChangeEvent;

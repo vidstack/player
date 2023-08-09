@@ -1,10 +1,12 @@
 export { defineCustomElement } from 'maverick.js/element';
 
 export { MediaCaptionsElement } from './define/captions-element';
-export { MediaDefaultSkinElement } from './define/skins/default-skin-element';
+export { MediaAudioUIElement } from './define/skins/default/audio-ui-element';
+export { MediaVideoUIElement } from './define/skins/default/video-ui-element';
 export { MediaGestureElement } from './define/gesture-element';
 export { MediaProviderElement } from './define/provider-element';
 export { MediaPlayerElement } from './define/player-element';
+export { MediaUIElement } from './define/ui-element';
 export { MediaPosterElement } from './define/poster-element';
 export { MediaThumbnailElement } from './define/thumbnail-element';
 export { MediaTimeElement } from './define/time-element';
@@ -40,3 +42,4 @@ export { MediaSliderValueElement } from './define/sliders/slider-value-element';
 export { MediaSliderVideoElement } from './define/sliders/slider-video-element';
 export { MediaTimeSliderElement } from './define/sliders/time-slider-element';
 export { MediaVolumeSliderElement } from './define/sliders/volume-slider-element';
+export { MediaSliderChaptersElement } from './define/sliders/slider-chapters-element';

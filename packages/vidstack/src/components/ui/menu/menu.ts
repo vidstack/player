@@ -1,6 +1,8 @@
 import {
+  Component,
   effect,
   hasProvidedContext,
+  method,
   onDispose,
   peek,
   prop,
@@ -9,7 +11,6 @@ import {
   tick,
   useContext,
 } from 'maverick.js';
-import { Component, method } from 'maverick.js';
 import {
   ariaBool,
   DOMEvent,
@@ -18,7 +19,6 @@ import {
   setAttribute,
   setStyle,
 } from 'maverick.js/std';
-
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { $ariaBool } from '../../../utils/aria';
 import { isElementParent, onPress, setAttributeIfEmpty } from '../../../utils/dom';
@@ -187,12 +187,16 @@ export class Menu extends Component<{}, {}, MenuEvents> {
     setAttribute(el, 'data-submenu', this.isSubmenu);
 
     this._content.set(el);
-    onDispose(() => {
-      this._content.set(null);
-    });
+    onDispose(() => this._content.set(null));
+
+    if (!this.isSubmenu) {
+      listenEvent(el, 'click', (e) => e.stopPropagation());
+      listenEvent(el, 'pointerup', (e) => e.stopPropagation());
+    }
 
     this._focus._attachMenu(el);
     this._updateMenuItemsHidden(false);
+    requestAnimationFrame(this._onResize.bind(this));
   }
 
   private _attachObserver(observer: MenuObserver) {

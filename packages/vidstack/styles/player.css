@@ -34,13 +34,14 @@
   box-shadow: var(--media-focus-ring);
 }
 
-:where([data-media-player] [data-media-provider]) {
+:where([data-media-provider]) {
   position: relative;
-  display: block;
+  display: inline-block;
+  width: 100%;
   box-sizing: border-box;
-  background-color: var(--media-provider-bg-color, black);
 }
 
+:where([data-media-player]:not([data-view-type='audio']) [data-media-provider]),
 :where([data-media-player][data-fullscreen] [data-media-provider]) {
   height: 100%;
 }
@@ -49,34 +50,15 @@
   background-color: unset;
 }
 
-:where([data-media-player] [data-media-provider] audio) {
+:where([data-media-provider] audio) {
   width: 100%;
 }
 
-:where([data-media-player] [data-media-provider] video) {
+:where([data-media-provider] video) {
   display: inline-block;
   width: 100%;
   height: auto;
   touch-action: manipulation;
-}
-
-:where([data-view-type='video'][data-aspect-ratio]:not([data-fullscreen]) [data-media-provider]) {
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-bottom: min(
-    max(var(--media-min-height, 150px), calc(100% / var(--media-aspect-ratio))),
-    var(--media-max-height, 100vh)
-  );
-}
-
-:where([data-media-player][data-aspect-ratio])
-  :where([data-media-provider] video, [data-media-provider] iframe) {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
 }
 
 .vds-icon:focus {

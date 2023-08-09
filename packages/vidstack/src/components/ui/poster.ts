@@ -1,10 +1,13 @@
 import { Component, effect, State } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
-
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { preconnect } from '../../utils/network';
 
 export interface PosterProps {
+  /**
+   * The URL of the poster image resource.
+   */
+  src: string | undefined;
   /**
    * ♿ **ARIA:** Provides alternative information for a poster image if a user for some reason
    * cannot view it.
@@ -27,7 +30,10 @@ export interface PosterState {
  * @docs {@link https://www.vidstack.io/docs/player/components/media/poster}
  */
 export class Poster extends Component<PosterProps, PosterState> {
-  static props: PosterProps = { alt: undefined };
+  static props: PosterProps = {
+    src: undefined,
+    alt: undefined,
+  };
 
   static state = new State<PosterState>({
     img: null,
@@ -69,8 +75,9 @@ export class Poster extends Component<PosterProps, PosterState> {
   }
 
   private _isHidden() {
-    const { poster } = this._media.$state;
-    return this.$state.error() || !poster();
+    const { src } = this.$props,
+      { poster } = this._media.$state;
+    return this.$state.error() || !(src() || poster());
   }
 
   private _watchImg() {
@@ -81,9 +88,14 @@ export class Poster extends Component<PosterProps, PosterState> {
   }
 
   private _watchImgSrc() {
-    const { src } = this.$state,
+    const { src: _src } = this.$props,
+      { src } = this.$state,
       { canLoad, poster } = this._media.$state;
-    src.set(canLoad() && poster().length ? poster() : null);
+
+    // Either src set on this poster component, or defined on the player.
+    const _poster = _src() || poster();
+
+    src.set(canLoad() && _poster.length ? _poster : null);
   }
 
   private _watchImgAlt() {

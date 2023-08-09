@@ -2,8 +2,6 @@
 | --------------------- | --------------------------------------------------------- |
 | `data-autoplay-error` | Autoplay has failed to start.                             |
 | `data-autoplay`       | Autoplay has successfully started.                        |
-| `data-bp-x`           | Horizontal breakpoint based on player width (sm, md, lg). |
-| `data-bp-y`           | Vertical breakpoint based on player height (sm, md, lg).  |
 | `data-can-fullscreen` | Media fullscreen is available.                            |
 | `data-can-load`       | Media can begin loading.                                  |
 | `data-can-pip`        | Picture-in-Picture is available.                          |

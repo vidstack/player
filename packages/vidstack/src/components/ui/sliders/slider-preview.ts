@@ -1,5 +1,4 @@
 import { Component, effect, onDispose, useContext, useState } from 'maverick.js';
-
 import { Slider } from './slider/slider';
 import { sliderContext, type SliderContext } from './slider/slider-context';
 
@@ -9,7 +8,7 @@ import { sliderContext, type SliderContext } from './slider/slider-context';
 export class SliderPreview extends Component<SliderPreviewProps> {
   static props: SliderPreviewProps = {
     offset: 0,
-    overflow: false,
+    noClamp: false,
   };
 
   private _slider!: SliderContext;
@@ -51,7 +50,7 @@ export class SliderPreview extends Component<SliderPreviewProps> {
 
     const el = this.el!,
       orientation = _orientation(),
-      { overflow, offset } = this.$props;
+      { offset, noClamp } = this.$props;
 
     const { width, height } = el.getBoundingClientRect(),
       styles: Record<string, string | null> = {
@@ -67,7 +66,7 @@ export class SliderPreview extends Component<SliderPreviewProps> {
 
     if (orientation === 'horizontal') {
       const widthHalf = width / 2;
-      if (overflow()) {
+      if (noClamp()) {
         styles.left = `calc(var(--slider-pointer) - ${widthHalf}px)`;
       } else {
         const leftClamp = `max(0px, calc(var(--slider-pointer) - ${widthHalf}px))`,
@@ -76,7 +75,7 @@ export class SliderPreview extends Component<SliderPreviewProps> {
       }
     } else {
       const heightHalf = height / 2;
-      if (overflow()) {
+      if (noClamp()) {
         styles.bottom = `calc(var(--slider-pointer) - ${heightHalf}px)`;
       } else {
         const topClamp = `max(${heightHalf}px, calc(var(--slider-pointer) - ${heightHalf}px))`,
@@ -91,13 +90,13 @@ export class SliderPreview extends Component<SliderPreviewProps> {
 
 export interface SliderPreviewProps {
   /**
-   * By default, the preview will be clamped to the left and right of the slider track. If this
-   * is set to `true`, the preview will flow outside of the container when at the edges.
-   */
-  overflow: boolean;
-  /**
    * The distance in pixels between the preview and the slider. You can also set
    * the CSS variable `--media-slider-preview-offset` to adjust this offset.
    */
   offset: number;
+  /**
+   * By default, the preview will be clamped to the left and right of the slider track. If this
+   * is set to `true`, the preview will flow outside of the container when at the edges.
+   */
+  noClamp: boolean;
 }

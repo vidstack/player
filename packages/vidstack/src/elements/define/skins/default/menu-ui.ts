@@ -3,7 +3,6 @@ import { computed, type ReadSignal } from 'maverick.js';
 import { isFunction, isString } from 'maverick.js/std';
 import arrowLeftPaths from 'media-icons/dist/icons/arrow-left.js';
 import arrowRightPaths from 'media-icons/dist/icons/chevron-right.js';
-
 import type { RadioOption } from '../../../../components';
 import { Icon } from '../../../icon';
 import { $signal } from '../../../lit/directives/signal';

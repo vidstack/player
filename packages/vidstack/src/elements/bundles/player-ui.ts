@@ -24,6 +24,7 @@ import { MediaRadioElement } from '../define/menus/radio-element';
 import { MediaRadioGroupElement } from '../define/menus/radio-group-element';
 import { MediaSpeedRadioGroupElement } from '../define/menus/speed-radio-group-element';
 import { MediaPosterElement } from '../define/poster-element';
+import { MediaSliderChaptersElement } from '../define/sliders/slider-chapters-element';
 import { MediaSliderElement } from '../define/sliders/slider-element';
 import { MediaSliderPreviewElement } from '../define/sliders/slider-preview-element';
 import { MediaSliderThumbnailElement } from '../define/sliders/slider-thumbnail-element';
@@ -36,8 +37,10 @@ import { MediaTimeElement } from '../define/time-element';
 import { MediaTooltipContentElement } from '../define/tooltips/tooltip-content-element';
 import { MediaTooltipElement } from '../define/tooltips/tooltip-element';
 import { MediaTooltipTriggerElement } from '../define/tooltips/tooltip-trigger-element';
+import { MediaUIElement } from '../define/ui-element';
 
 export function defineMediaUI() {
+  defineCustomElement(MediaUIElement);
   defineCustomElement(MediaControlsElement);
   defineCustomElement(MediaControlsGroupElement);
   defineCustomElement(MediaPosterElement);
@@ -53,6 +56,7 @@ export function defineMediaUI() {
   defineCustomElement(MediaSliderElement);
   defineCustomElement(MediaVolumeSliderElement);
   defineCustomElement(MediaTimeSliderElement);
+  defineCustomElement(MediaSliderChaptersElement);
   defineCustomElement(MediaSliderPreviewElement);
   defineCustomElement(MediaSliderValueElement);
   defineCustomElement(MediaSliderThumbnailElement);

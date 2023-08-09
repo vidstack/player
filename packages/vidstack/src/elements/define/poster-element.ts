@@ -1,7 +1,6 @@
 import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
-
 import { Poster } from '../../components';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 
@@ -9,8 +8,8 @@ import { useMediaContext, type MediaContext } from '../../core/api/media-context
  * @docs {@link https://www.vidstack.io/docs/player/components/media/poster}
  * @example
  * ```html
- * <media-player poster="...">
- *   <media-poster alt="Large alien ship hovering over New York."></media-poster>
+ * <media-player>
+ *   <media-poster src="..." alt="Large alien ship hovering over New York."></media-poster>
  * </media-player>
  * ```
  */

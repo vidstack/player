@@ -33,7 +33,6 @@ import {
   type FindMediaPlayerEvent,
   type MediaFullscreenRequestTarget,
   type MediaPlayerConnectEvent,
-  type MediaPlayerCSSVars,
   type MediaPlayerEvents,
   type MediaPlayerProps,
   type MediaPlayerState,
@@ -50,7 +49,6 @@ import { MediaPlayerDelegate } from '../core/state/media-player-delegate';
 import { MediaRequestContext, MediaRequestManager } from '../core/state/media-request-manager';
 import { MediaStateManager } from '../core/state/media-state-manager';
 import { MediaStateSync } from '../core/state/media-state-sync';
-import { ThumbnailsLoader } from '../core/thumbnails/loader';
 import { TextTrackSymbol } from '../core/tracks/text/symbols';
 import { canFullscreen } from '../foundation/fullscreen/controller';
 import { Logger } from '../foundation/logger/controller';
@@ -79,7 +77,7 @@ declare global {
  * @docs {@link https://www.vidstack.io/docs/player/components/media/player}
  */
 export class MediaPlayer
-  extends Component<MediaPlayerProps, MediaPlayerState, MediaPlayerEvents, MediaPlayerCSSVars>
+  extends Component<MediaPlayerProps, MediaPlayerState, MediaPlayerEvents>
   implements MediaStateAccessors
 {
   static props: MediaPlayerProps = mediaPlayerProps;
@@ -122,7 +120,7 @@ export class MediaPlayer
     context.remote.setPlayer(this);
     context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList();
-    context.textTracks[TextTrackSymbol._crossorigin] = this.$props.crossorigin;
+    context.textTracks[TextTrackSymbol._crossorigin] = this.$state.crossorigin;
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
 
@@ -133,7 +131,6 @@ export class MediaPlayer
 
     new FocusVisibleController();
     new MediaKeyboardController(context);
-    new ThumbnailsLoader(context);
     if (__DEV__) new MediaEventsLogger(context);
 
     const request = new MediaRequestContext();
@@ -150,7 +147,6 @@ export class MediaPlayer
 
   protected override onSetup(): void {
     this._setupMediaAttributes();
-    this._setupMediaVars();
 
     effect(this._watchCanPlay.bind(this));
     effect(this._watchMuted.bind(this));
@@ -270,9 +266,6 @@ export class MediaPlayer
     }
 
     const $attrs: ElementAttributesRecord = {
-      'data-aspect-ratio': function (this: MediaPlayer) {
-        return this.$props.aspectRatio();
-      },
       'data-captions': function (this: MediaPlayer) {
         const track = this.$state.textTrack();
         return !!track && isTrackCaptionKind(track);
@@ -304,15 +297,6 @@ export class MediaPlayer
     delete $attrs.title;
     MediaPlayer[MEDIA_ATTRIBUTES] = $attrs;
     this.setAttributes($attrs);
-  }
-
-  private _setupMediaVars() {
-    this.setCSSVars({
-      '--media-aspect-ratio': () => {
-        const ratio = this.$props.aspectRatio();
-        return ratio ? +ratio.toFixed(4) : null;
-      },
-    });
   }
 
   private _onFindPlayer(event: FindMediaPlayerEvent) {
@@ -595,15 +579,15 @@ export class MediaPlayer
   }
 
   /**
-   * Returns a `PlayerQueryList` object which stores information on a player/media query applied
-   * to this player instance and document. Supports both immediate and event-driven matching
-   * against the state of the player and document.
+   * Returns a new `PlayerQueryList` object that can then be used to determine if the
+   * player and document matches the query string, as well as to monitor any changes to detect
+   * when it matches (or stops matching) that query.
    *
    * A player query supports the same syntax as media queries and allows media state properties
-   * to be used inside queries like so:
+   * to be used like so:
    *
    * ```ts
-   * const queryList = player.matchQuery("(width < 680) and (streamType: 'on-demand')");
+   * const queryList = player.matchQuery("(width < 680) and (streamType: on-demand)");
    *
    * if (queryList.matches) {
    *  // ...
@@ -619,7 +603,7 @@ export class MediaPlayer
    */
   @method
   matchQuery(query: string) {
-    return scoped(() => new PlayerQueryList(this.$state, query), this.scope)!;
+    return scoped(() => PlayerQueryList.create(query), this.scope)!;
   }
 
   override destroy() {

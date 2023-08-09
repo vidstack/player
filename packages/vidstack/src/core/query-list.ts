@@ -1,82 +1,112 @@
-import { computed, effect, onDispose, signal, type ReadSignal } from 'maverick.js';
-import { EventsTarget, isString, runAll } from 'maverick.js/std';
+import { computed, effect, root, signal, type Dispose, type ReadSignal } from 'maverick.js';
+import {
+  camelToKebabCase,
+  EventsTarget,
+  isString,
+  kebabToCamelCase,
+  listenEvent,
+  unwrap,
+} from 'maverick.js/std';
 import { useMediaContext } from './api/media-context';
 import { mediaState, type MediaState, type MediaStore } from './api/player-state';
 
-const equalsRE = /:\s+/g,
+const equalsRE = /:\s+'?"?(.*?)'?"?\)/g,
   notRE = /\s+not\s+/g,
   andRE = /\s+and\s+/g,
   orRE = /\s+or\s+/g,
   pxRE = /(\d)px/g;
 
-export function createPlayerQueryList(query: string) {
-  const media = useMediaContext();
-  return new PlayerQueryList(media.$state, query);
-}
-
 export class PlayerQueryList extends EventsTarget<PlayerQueryListEvents> {
-  private _matches: ReadSignal<boolean> = signal(false);
+  static create = (query: string | ReadSignal<string>) => {
+    const media = useMediaContext();
+    return new PlayerQueryList(media.$state, query);
+  };
+
+  private _query: string | ReadSignal<string>;
   private _mediaStore: MediaStore;
-  private _mediaQueryList: MediaQueryList | null = null;
-  private _disposal: (() => void)[] = [];
+  private _evaluation = signal('true');
+  private _mediaProps = new Set<keyof MediaState>();
+  private _mediaMatches = signal(true);
+  private _dispose!: Dispose;
 
-  get matches(): boolean {
-    return this._matches() && (this._mediaQueryList?.matches ?? true);
+  get query(): string {
+    return unwrap(this._query);
   }
 
-  constructor(
-    store: MediaStore,
-    readonly query: string,
-  ) {
-    super();
-    this._mediaStore = store;
-    this._init();
-    onDispose(this.destroy.bind(this));
-  }
+  readonly $matches = computed<boolean>(() => {
+    let currentEval = this._evaluation();
+    if (currentEval === 'never') return false;
 
-  private _init() {
-    const queryList = this.query.trim().split(/\s*,\s*/g),
-      onChange = this._onChange.bind(this);
-
-    const mediaQueries = queryList.filter((q) => q.startsWith('@media')).join(',');
-    if (mediaQueries.length) {
-      this._mediaQueryList = window.matchMedia(mediaQueries);
-      this._mediaQueryList.addEventListener('change', onChange);
-      this._disposal.push(() => this._mediaQueryList!.removeEventListener('change', onChange));
+    for (const prop of this._mediaProps) {
+      const value = this._mediaStore[prop](),
+        replaceValue = isString(value) ? `'${value}'` : value + '';
+      currentEval = currentEval.replace(camelToKebabCase(prop), replaceValue);
     }
 
-    const playerQueries = queryList.filter((q) => !q.startsWith('@media'));
-    if (playerQueries.length) {
-      const evaluation = this._buildQueryEval(playerQueries);
+    return eval(`!!(${currentEval})`) && this._mediaMatches();
+  });
 
-      const props = new Set<keyof MediaState>(),
+  get matches(): boolean {
+    return this.$matches();
+  }
+
+  constructor(store: MediaStore, query: string | ReadSignal<string>) {
+    super();
+
+    this._query = query;
+    this._mediaStore = store;
+
+    root((dispose) => {
+      effect(this._watchQuery.bind(this));
+      effect(this._watchMatches.bind(this));
+      this._dispose = dispose;
+    });
+  }
+
+  private _watchQuery() {
+    const query = this.query;
+    if (query === '') return;
+
+    if (query === 'never') {
+      this._evaluation.set(query);
+      return;
+    }
+
+    const queryList = query.trim().split(/\s*,\s*/g),
+      mediaQueries = queryList.filter((q) => q.startsWith('@media')).join(','),
+      playerQueries = queryList.filter((q) => !q.startsWith('@media'));
+
+    if (mediaQueries.length) {
+      const mediaQuery = window.matchMedia(mediaQueries),
+        onChange = () => void this._mediaMatches.set(mediaQuery.matches);
+      onChange();
+      listenEvent(mediaQuery, 'change', onChange);
+    }
+
+    if (playerQueries.length) {
+      const evaluation = this._buildQueryEval(playerQueries),
         validProps = Object.keys(mediaState.record);
-      for (const query of evaluation.matchAll(/\(([a-zA-Z]+)\s/g)) {
-        if (validProps.includes(query[1])) {
-          props.add(query[1] as keyof MediaState);
+
+      for (const query of evaluation.matchAll(/\(([-a-zA-Z]+)\s/g)) {
+        const prop = kebabToCamelCase(query[1]);
+        if (validProps.includes(prop)) {
+          this._mediaProps.add(prop as keyof MediaState);
         }
       }
 
-      if (props.size) {
-        this._matches = computed(() => {
-          let currentEval = evaluation;
-
-          for (const prop of props) {
-            const value = this._mediaStore[prop]();
-            currentEval = currentEval.replace(prop, isString(value) ? `'${value}'` : value + '');
-          }
-
-          return eval(`!!(${currentEval})`);
-        });
-
-        this._disposal.push(
-          effect(() => {
-            this._matches();
-            onChange();
-          }),
-        );
-      }
+      this._evaluation.set(evaluation);
     }
+
+    return () => {
+      this._mediaProps.clear();
+      this._evaluation.set('true');
+      this._mediaMatches.set(true);
+    };
+  }
+
+  private _watchMatches() {
+    this.$matches();
+    this.dispatchEvent(new Event('change'));
   }
 
   private _buildQueryEval(queryList: string[]) {
@@ -85,7 +115,7 @@ export class PlayerQueryList extends EventsTarget<PlayerQueryListEvents> {
         (query) =>
           '(' +
           query
-            .replace(equalsRE, ' == ')
+            .replace(equalsRE, ' == "$1")')
             .replace(notRE, '!')
             .replace(andRE, ' && ')
             .replace(orRE, ' || ')
@@ -96,14 +126,8 @@ export class PlayerQueryList extends EventsTarget<PlayerQueryListEvents> {
       .join(' || ');
   }
 
-  private _onChange() {
-    this.dispatchEvent(new Event('change'));
-  }
-
   destroy() {
-    runAll(this._disposal, void 0);
-    this._matches = signal(false);
-    this._mediaQueryList = null;
+    this._dispose();
   }
 }
 

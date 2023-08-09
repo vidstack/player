@@ -34,7 +34,7 @@
     "@types/react": "^18.0.0",
     "esbuild": "^0.16.17",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.38.1",
+    "maverick.js": "0.38.2",
     "media-icons": "0.10.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

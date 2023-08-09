@@ -1,6 +1,5 @@
 import { useState, type StateContext } from 'maverick.js';
-
-import { Thumbnail } from '../thumbnail';
+import { Thumbnail } from '../thumbnails/thumbnail';
 import { sliderState } from './slider/api/state';
 import { Slider } from './slider/slider';
 

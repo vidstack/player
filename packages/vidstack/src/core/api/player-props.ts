@@ -8,7 +8,6 @@ import type { MediaLoadingStrategy, MediaResource } from './types';
 
 export const mediaPlayerProps: MediaPlayerProps = {
   autoplay: false,
-  aspectRatio: null,
   controls: false,
   currentTime: 0,
   crossorigin: null,
@@ -34,7 +33,6 @@ export const mediaPlayerProps: MediaPlayerProps = {
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
   title: '',
-  thumbnails: null,
   textTracks: [],
 };
 
@@ -55,7 +53,6 @@ export interface MediaPlayerProps
     MediaState,
     | 'autoplay'
     | 'controls'
-    | 'crossorigin'
     | 'currentTime'
     | 'loop'
     | 'muted'
@@ -65,7 +62,6 @@ export interface MediaPlayerProps
     | 'preload'
     | 'playbackRate'
     | 'title'
-    | 'thumbnails'
     | 'viewType'
     | 'volume'
     // live
@@ -73,6 +69,13 @@ export interface MediaPlayerProps
     | 'liveEdgeTolerance'
     | 'minLiveDVRWindow'
   > {
+  /**
+   * Defines how the media element handles cross-origin requests, thereby enabling the
+   * configuration of the CORS requests for the element's fetched data.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
+   */
+  crossorigin: string | true | null;
   /**
    * The URL and optionally type of the current media resource/s to be considered for playback.
    *
@@ -124,10 +127,6 @@ export interface MediaPlayerProps
    * @see {@link https://vidstack.io/docs/player/core-concepts/text-tracks}
    */
   textTracks: (TextTrack | TextTrackInit)[];
-  /**
-   * The aspect ratio of the player media given as 'width/height' (e.g., 16/9).
-   */
-  aspectRatio: number | null;
   /**
    * Whether keyboard support is disabled for the media player globally. This property won't disable
    * standard ARIA keyboard controls for individual components when focused.

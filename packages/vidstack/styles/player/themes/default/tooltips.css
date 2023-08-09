@@ -4,9 +4,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(.vds-tooltip) {
-  z-index: 10;
-  box-sizing: border-box;
+:where(.vds-tooltip, media-tooltip) {
+  display: contents;
 }
 
 :where(.vds-tooltip-content) {

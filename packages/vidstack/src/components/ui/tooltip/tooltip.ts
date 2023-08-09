@@ -43,6 +43,10 @@ export class Tooltip extends Component<TooltipProps> {
     });
   }
 
+  protected override onAttach(el: HTMLElement): void {
+    el.style.display = 'contents';
+  }
+
   protected override onSetup(): void {
     provideContext(tooltipContext, {
       _trigger: this._trigger,
