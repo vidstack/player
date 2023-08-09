@@ -1,14 +1,14 @@
 import { Component, effect, peek, State } from 'maverick.js';
 import { animationFrameThrottle, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
-
-import { useMediaContext, type MediaContext } from '../../core/api/media-context';
-import { findActiveCue } from '../../core/tracks/text/utils';
-import { $ariaBool } from '../../utils/aria';
+import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import { findActiveCue } from '../../../core/tracks/text/utils';
+import { $ariaBool } from '../../../utils/aria';
+import { ThumbnailsLoader } from './thumbnail-loader';
 
 export interface ThumbnailState {
-  img: HTMLImageElement | null | undefined;
   src: string;
+  img: HTMLImageElement | null | undefined;
   coords: ThumbnailCoords | null;
   activeCue: VTTCue | null;
   loaded: boolean;
@@ -20,21 +20,28 @@ export interface ThumbnailState {
  * @docs {@link https://www.vidstack.io/docs/player/components/display/thumbnail}
  */
 export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
-  static props: ThumbnailProps = { time: 0 };
+  static props: ThumbnailProps = {
+    src: '',
+    time: 0,
+  };
 
   static state = new State<ThumbnailState>({
-    img: null,
     src: '',
+    img: null,
     coords: null,
     activeCue: null,
     loaded: false,
   });
 
   protected _media!: MediaContext;
+  protected _thumbnails!: ThumbnailsLoader;
+
   private _styleResets: (() => void)[] = [];
 
   protected override onSetup(): void {
     this._media = useMediaContext();
+    this._thumbnails = ThumbnailsLoader.create(this.$props.src);
+
     this.setAttributes({
       'data-loading': this._isLoading.bind(this),
       'aria-hidden': $ariaBool(this._isHidden.bind(this)),
@@ -57,7 +64,6 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   private _onLoadStart() {
     const { src, loaded } = this.$state;
     src();
-    this._media.$state.thumbnails();
     loaded.set(false);
   }
 
@@ -73,8 +79,9 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   }
 
   private _isHidden() {
-    const { duration, thumbnailCues } = this._media.$state;
-    return !Number.isFinite(duration()) || thumbnailCues().length === 0;
+    const { duration } = this._media.$state,
+      cues = this._thumbnails.$cues();
+    return !Number.isFinite(duration()) || cues.length === 0;
   }
 
   protected _getTime() {
@@ -84,24 +91,25 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   private _onFindActiveCue() {
     const time = this._getTime(),
       { activeCue } = this.$state,
-      { duration, thumbnailCues } = this._media.$state,
-      _cues = thumbnailCues();
+      { duration } = this._media.$state,
+      cues = this._thumbnails.$cues();
 
-    if (!_cues || !Number.isFinite(duration())) {
+    if (!cues || !Number.isFinite(duration())) {
       activeCue.set(null);
       return;
     }
 
-    activeCue.set(findActiveCue(time, _cues));
+    activeCue.set(findActiveCue(time, cues));
   }
 
   private _onResolveThumbnail() {
-    const { src, coords, activeCue } = this.$state,
+    const { src } = this.$props,
+      { coords, activeCue } = this.$state,
       cue = activeCue(),
-      thumbnails = peek(this._media.$state.thumbnails);
+      baseURL = peek(src);
 
-    if (!thumbnails || !cue) {
-      src.set('');
+    if (!baseURL || !cue) {
+      this.$state.src.set('');
       this._resetStyles();
       return;
     }
@@ -114,7 +122,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
       return;
     }
 
-    src.set(this._resolveThumbnailSrc(thumbnails, _src));
+    this.$state.src.set(this._resolveThumbnailSrc(baseURL, _src));
     this._requestResize();
   }
 
@@ -172,6 +180,11 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
 }
 
 export interface ThumbnailProps {
+  /**
+   * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
+   * file resource.
+   */
+  src: string;
   /**
    * Finds, loads, and displays the first active thumbnail cue that's start/end times are in range.
    */

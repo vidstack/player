@@ -1,5 +1,4 @@
 import { html } from 'lit-html';
-import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { computed, signal, type ReadSignal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 import chaptersIconPaths from 'media-icons/dist/icons/chapters.js';
@@ -21,7 +20,6 @@ import qualityIconPaths from 'media-icons/dist/icons/settings-menu.js';
 import settingsIconPaths from 'media-icons/dist/icons/settings.js';
 import volumeHighIconPaths from 'media-icons/dist/icons/volume-high.js';
 import volumeLowIconPaths from 'media-icons/dist/icons/volume-low.js';
-
 import {
   i18n,
   useDefaultSkinContext,
@@ -160,7 +158,7 @@ export function VolumeSlider() {
     <media-volume-slider class="vds-volume-slider vds-slider">
       <div class="vds-slider-track"></div>
       <div class="vds-slider-track-fill vds-slider-track"></div>
-      <media-slider-preview class="vds-slider-preview" overflow>
+      <media-slider-preview class="vds-slider-preview" no-clamp>
         <media-slider-value
           class="vds-slider-value"
           type="pointer"
@@ -207,9 +205,11 @@ export function ChapterTitle() {
 }
 
 export function TimeSlider() {
+  const { smQueryList, thumbnails } = useDefaultSkinContext();
+
   return html`
     <media-time-slider class="vds-time-slider vds-slider">
-      <div class="vds-slider-chapters">
+      <media-slider-chapters class="vds-slider-chapters" ?disabled=${$signal(smQueryList.$matches)}>
         <template>
           <div class="vds-slider-chapter">
             <div class="vds-slider-track"></div>
@@ -217,10 +217,13 @@ export function TimeSlider() {
             <div class="vds-slider-progress vds-slider-track"></div>
           </div>
         </template>
-      </div>
+      </media-slider-chapters>
       <div class="vds-slider-thumb"></div>
       <media-slider-preview class="vds-slider-preview">
-        <media-slider-thumbnail class="vds-slider-thumbnail vds-thumbnail"></media-slider-thumbnail>
+        <media-slider-thumbnail
+          class="vds-slider-thumbnail vds-thumbnail"
+          src=${$signal(thumbnails)}
+        ></media-slider-thumbnail>
         <div class="vds-slider-chapter-title" data-part="chapter-title"></div>
         <media-slider-value
           class="vds-slider-value"
@@ -245,11 +248,14 @@ export function TimeGroup() {
 export function ChaptersMenu({
   placement,
   tooltip,
+  portal,
 }: {
   placement?: MenuPlacement;
+  portal: string;
   tooltip: TooltipPlacement;
 }) {
-  const { translations } = useDefaultSkinContext();
+  const { translations, smQueryList, thumbnails } = useDefaultSkinContext(),
+    $placement = computed(() => (smQueryList.matches ? null : placement));
   return html`
     <!-- Chapters Menu -->
     <media-menu class="vds-chapters-menu vds-menu">
@@ -263,12 +269,15 @@ export function ChaptersMenu({
           ${$i18n(translations, 'Chapters')}
         </media-tooltip-content>
       </media-tooltip>
-      <media-menu-portal>
+      <media-menu-portal container=${portal} disabled="fullscreen">
         <media-menu-items
           class="vds-chapters-menu-items vds-menu-items"
-          placement=${ifDefined(placement)}
+          placement=${$signal($placement)}
         >
-          <media-chapters-radio-group class="vds-chapters-radio-group vds-radio-group">
+          <media-chapters-radio-group
+            class="vds-chapters-radio-group vds-radio-group"
+            thumbnails=${$signal(thumbnails)}
+          >
             <template>
               <media-radio class="vds-chapter-radio vds-radio">
                 <media-thumbnail class="vds-thumbnail"></media-thumbnail>
@@ -289,11 +298,14 @@ export function ChaptersMenu({
 export function SettingsMenu({
   placement,
   tooltip,
+  portal,
 }: {
   placement?: MenuPlacement;
+  portal: string;
   tooltip: TooltipPlacement;
 }) {
-  const { translations } = useDefaultSkinContext();
+  const { translations, smQueryList } = useDefaultSkinContext(),
+    $placement = computed(() => (smQueryList.matches ? null : placement));
   return html`
     <media-menu class="vds-settings-menu vds-menu">
       <media-tooltip class="vds-tooltip">
@@ -306,10 +318,10 @@ export function SettingsMenu({
           ${$i18n(translations, 'Settings')}
         </media-tooltip-content>
       </media-tooltip>
-      <media-menu-portal>
+      <media-menu-portal container=${portal} disabled="fullscreen">
         <media-menu-items
           class="vds-settings-menu-items vds-menu-items"
-          placement=${ifDefined(placement)}
+          placement=${$signal($placement)}
         >
           ${AudioMenu()}${SpeedMenu()}${QualityMenu()}${CaptionsMenu()}
         </media-menu-items>

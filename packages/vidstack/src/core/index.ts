@@ -7,7 +7,6 @@ export * from './time-ranges';
 export { type MediaContext, mediaContext } from './api/media-context';
 export type { MediaPlayerProps, MediaStateAccessors } from './api/player-props';
 export type { MediaPlayerEvents } from './api/player-events';
-export type { MediaPlayerCSSVars } from './api/player-cssvars';
 export { MediaRemoteControl } from './state/remote-control';
 export { MediaControls } from './controls';
 export * from './tracks/text/render/text-renderer';

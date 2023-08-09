@@ -1,5 +1,4 @@
 import { effect } from 'maverick.js';
-
 import { MediaPlayerController } from '../api/player-controller';
 
 /**
@@ -18,7 +17,6 @@ export class MediaStateSync extends MediaPlayerController {
     effect(this._onLiveToleranceChange.bind(this));
     effect(this._onLiveChange.bind(this));
     effect(this._onLiveEdgeChange.bind(this));
-    effect(this._onThumbnailsChange.bind(this));
   }
 
   private _onLogLevelChange() {
@@ -50,7 +48,8 @@ export class MediaStateSync extends MediaPlayerController {
   }
 
   private _onCrossOriginChange() {
-    this.$state.crossorigin.set(this.$props.crossorigin());
+    const crossorigin = this.$props.crossorigin();
+    this.$state.crossorigin.set(crossorigin === true ? '' : crossorigin);
   }
 
   private _onPlaysinlineChange() {
@@ -70,9 +69,5 @@ export class MediaStateSync extends MediaPlayerController {
 
   private _onLiveEdgeChange() {
     this.dispatch('live-edge-change', { detail: this.$state.liveEdge() });
-  }
-
-  protected _onThumbnailsChange() {
-    this.$state.thumbnails.set(this.$props.thumbnails());
   }
 }

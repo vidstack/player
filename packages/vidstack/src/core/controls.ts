@@ -80,7 +80,7 @@ export class MediaControls extends MediaPlayerController {
     }
 
     effect(() => {
-      if (!this.$state.pointer()) {
+      if (this.$state.pointer() === 'fine') {
         listenEvent(this.el!, 'pointermove', onStopIdle);
       }
     });

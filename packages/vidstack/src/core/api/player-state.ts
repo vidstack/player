@@ -1,5 +1,4 @@
 import { State, tick, type Store } from 'maverick.js';
-import type { VTTCue } from 'media-captions';
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
@@ -57,8 +56,6 @@ export const mediaState = new State<MediaState>({
   title: '',
   textTracks: [],
   textTrack: null,
-  thumbnails: null,
-  thumbnailCues: [],
   volume: 1,
   waiting: false,
   get viewType() {
@@ -162,8 +159,6 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'sources',
   'textTrack',
   'textTracks',
-  'thumbnailCues',
-  'thumbnails',
   'title',
   'volume',
   'width',
@@ -604,15 +599,6 @@ export interface MediaState {
    * The current captions/subtitles text track that is showing.
    */
   textTrack: TextTrack | null;
-  /**
-   * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
-   * file resource.
-   */
-  thumbnails: string | null;
-  /**
-   * List of VTT cues that were parsed from the `thumbnails` WebVTT file.
-   */
-  thumbnailCues: VTTCue[];
   /**
    * The type of player view that should be used (i.e., audio or video). By default this is set
    * to `video`.

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useReactContext, useSignal } from 'maverick.js/react';
 import arrowLeftPaths from 'media-icons/dist/icons/arrow-left.js';
 import chaptersIconPaths from 'media-icons/dist/icons/chapters.js';
 import arrowRightPaths from 'media-icons/dist/icons/chevron-right.js';
@@ -20,7 +21,6 @@ import qualityIconPaths from 'media-icons/dist/icons/settings-menu.js';
 import settingsIconPaths from 'media-icons/dist/icons/settings.js';
 import volumeHighIconPaths from 'media-icons/dist/icons/volume-high.js';
 import volumeLowIconPaths from 'media-icons/dist/icons/volume-low.js';
-import { useReactContext, useSignal } from 'maverick.js/react';
 import {
   defaultSkinContext,
   isTrackCaptionKind,
@@ -216,7 +216,7 @@ function VdsVolumeSlider() {
       <VolumeSlider.Track className="vds-slider-track" />
       <VolumeSlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
       <VolumeSlider.Thumb className="vds-slider-thumb" />
-      <VolumeSlider.Preview className="vds-slider-preview" overflow>
+      <VolumeSlider.Preview className="vds-slider-preview" noClamp>
         <VolumeSlider.Value className="vds-slider-value" />
       </VolumeSlider.Preview>
     </VolumeSlider.Root>
@@ -324,7 +324,7 @@ function VdsChaptersMenu({ tooltip, placement }: VdsMenuProps) {
           {chaptersText}
         </Tooltip.Content>
       </Tooltip.Root>
-      <Menu.Portal>
+      <Menu.Portal disabled="fullscreen">
         <Menu.Content className="vds-chapters-menu-items vds-menu-items" placement={placement}>
           <Menu.RadioGroup
             className="vds-chapters-radio-group vds-radio-group"
@@ -379,7 +379,7 @@ function VdsSettingsMenu({ tooltip, placement }: VdsMenuProps) {
           {settingsText}
         </Tooltip.Content>
       </Tooltip.Root>
-      <Menu.Portal>
+      <Menu.Portal disabled="fullscreen">
         <Menu.Content className="vds-settings-menu-items vds-menu-items" placement={placement}>
           <VdsAudioSubmenu />
           <VdsSpeedSubmenu />

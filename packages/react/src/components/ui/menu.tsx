@@ -1,15 +1,7 @@
 import * as React from 'react';
-import { computed, effect, provideContext } from 'maverick.js';
-import {
-  composeRefs,
-  createReactComponent,
-  useReactScope,
-  useSignal,
-  useStateContext,
-  type ReactElementProps,
-} from 'maverick.js/react';
+import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import { createPortal } from 'react-dom';
-import { mediaState, menuPortalContext } from 'vidstack/lib';
+import { useMediaState } from '../../hooks/use-media-state';
 import {
   MenuButtonInstance,
   MenuInstance,
@@ -40,7 +32,11 @@ export interface RootProps extends ReactElementProps<MenuInstance> {
 const Root = React.forwardRef<MenuInstance, RootProps>(({ children, ...props }, forwardRef) => {
   return (
     <MenuBridge {...props} ref={forwardRef}>
-      {(props) => <Primitive.div {...props}>{children}</Primitive.div>}
+      {(props) => (
+        <Primitive.div {...props} style={{ display: 'contents', ...props.style }}>
+          {children}
+        </Primitive.div>
+      )}
     </MenuBridge>
   );
 });
@@ -88,58 +84,25 @@ Button.displayName = 'MenuButton';
  * -----------------------------------------------------------------------------------------------*/
 
 export interface PortalProps {
+  /**
+   * Whether the portal should be disabled. The value 'fullscreen' will remove the portal
+   * and place the element in it's original DOM position during fullscreen.
+   *
+   * @defaultValue false
+   */
+  disabled?: boolean | 'fullscreen';
   children?: React.ReactNode;
 }
 
 /**
- * Portals menu items into the document body when the player is at small breakpoints.
- *
- * - Horizontal breakpoint is used for audio
- * - Vertical breakpoint is used for video
+ * Portals menu items into the document body.
  *
  * @docs {@link https://www.vidstack.io/docs/react/player/components/menu#portal}
  */
-function Portal({ children }: PortalProps) {
-  const media = useStateContext(mediaState),
-    $shouldPortal = React.useMemo(
-      () =>
-        computed(() => {
-          const { viewType, breakpointX, breakpointY, fullscreen } = media;
-          return (
-            (viewType() === 'audio' ? breakpointX() === 'sm' : breakpointY() === 'sm') &&
-            !fullscreen()
-          );
-        }),
-      [],
-    );
-
-  const scope = useReactScope()!,
-    setup = React.useRef(false),
-    portalCallback = React.useRef<((didPortal: boolean) => void) | null>();
-
-  if (!setup.current) {
-    provideContext(
-      menuPortalContext,
-      {
-        _attach(_, callback) {
-          portalCallback.current = callback;
-          callback?.($shouldPortal());
-        },
-      },
-      scope,
-    );
-
-    setup.current = true;
-  }
-
-  React.useEffect(() => {
-    return effect(() => {
-      portalCallback.current?.($shouldPortal());
-    });
-  }, [$shouldPortal]);
-
-  const $$shouldPortal = useSignal($shouldPortal);
-  return __SERVER__ || !$$shouldPortal ? children : createPortal(children, document.body);
+function Portal({ disabled = false, children }: PortalProps) {
+  const fullscreen = useMediaState('fullscreen'),
+    shouldPortal = disabled === 'fullscreen' ? !fullscreen : !disabled;
+  return __SERVER__ || !shouldPortal ? children : createPortal(children, document.body);
 }
 
 Portal.displayName = 'MenuPortal';

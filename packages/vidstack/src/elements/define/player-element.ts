@@ -1,6 +1,5 @@
 import { Host } from 'maverick.js/element';
 import type { Attributes } from 'maverick.js/element';
-
 import { MediaPlayer } from '../../components';
 import type { MediaPlayerProps } from '../../core/api/player-props';
 
@@ -19,14 +18,6 @@ export class MediaPlayerElement extends Host(HTMLElement, MediaPlayer) {
 
   static override attrs: Attributes<MediaPlayerProps> = {
     preferNativeHLS: 'prefer-native-hls',
-    aspectRatio: {
-      converter(value) {
-        if (!value) return null;
-        if (!value.includes('/')) return +value;
-        const [width, height] = value.split('/').map(Number);
-        return +(width / height).toFixed(4);
-      },
-    },
     textTracks: false,
   };
 }

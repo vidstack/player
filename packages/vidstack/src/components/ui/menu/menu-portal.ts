@@ -1,23 +1,22 @@
-import { Component, computed, createContext, effect, onDispose, provideContext } from 'maverick.js';
-import { setStyle } from 'maverick.js/std';
+import { Component, createContext, effect, provideContext } from 'maverick.js';
+import { isString, setAttribute } from 'maverick.js/std';
 import type { MediaContext } from '../../../core';
 import { useMediaContext } from '../../../core/api/media-context';
 import { requestScopedAnimationFrame } from '../../../utils/dom';
 
-// media query and special @
-// <media-menu-portal when="(@min-width: 500px)" />
-
 /**
- * Portals menu items into the document body when the player is at the small vertical breakpoint.
+ * Portals menu items into the document body.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu#portal}
  */
 export class MenuPortal extends Component<MenuPortalProps> {
-  private _media!: MediaContext;
+  static props: MenuPortalProps = {
+    disabled: false,
+    container: null,
+  };
 
   private _target: HTMLElement | null = null;
-  private _callback?: MenuPortalCallback;
-  private _portal = false;
+  private _media!: MediaContext;
 
   protected override onSetup(): void {
     this._media = useMediaContext();
@@ -26,76 +25,90 @@ export class MenuPortal extends Component<MenuPortalProps> {
     });
   }
 
+  protected override onAttach(el: HTMLElement): void {
+    el.style.display = 'contents';
+  }
+
   protected override onDestroy(): void {
-    this._putBack();
+    this._target?.remove();
     this._target = null;
-    this._callback = undefined;
   }
 
-  private _attachElement(el: HTMLElement | null, callback?: MenuPortalCallback) {
+  private _attachElement(el: HTMLElement | null) {
+    this._portal(false);
     this._target = el;
-    this._callback = callback;
-    if (this._target) {
-      callback?.(this._portal);
-      onDispose(
-        requestScopedAnimationFrame(() => {
-          requestScopedAnimationFrame(() => effect(this._watchBreakpoint.bind(this)));
-        }),
-      );
-    }
+    requestScopedAnimationFrame(() => {
+      effect(this._watchDisabled.bind(this));
+    });
   }
 
-  private _watchBreakpoint() {
+  private _watchDisabled() {
+    const { fullscreen } = this._media.$state,
+      { disabled } = this.$props,
+      _disabled = disabled();
+
+    this._portal(_disabled === 'fullscreen' ? !fullscreen() : !_disabled);
+  }
+
+  private _portal(shouldPortal: boolean) {
     if (!this._target) return;
 
-    const shouldPortal = this._shouldPortal();
+    const selector = this.$props.container();
 
-    if (shouldPortal === this._portal) return;
+    let container = isString(selector)
+      ? document.querySelector<HTMLElement>(`body > ${selector}`)
+      : document.body;
 
-    this._portal = shouldPortal;
-    this._callback?.(shouldPortal);
+    if (!container && selector) {
+      container = document.createElement('div');
+      container.style.display = 'contents';
+      if (selector.startsWith('.')) container.classList.add(selector.slice(1));
+      document.body.append(container);
+    }
 
-    const isBodyChild = this._target.parentElement === document.body;
+    const isPortalled = this._target.parentElement === container;
+    setAttribute(this._target, 'data-portal', shouldPortal);
 
     if (shouldPortal) {
-      if (!isBodyChild) {
-        requestAnimationFrame(() => {
-          if (!this._target) return;
-          const mediaRing = '--media-focus-ring',
-            mediaRingValue = getComputedStyle(this.el!).getPropertyValue(mediaRing);
-          if (mediaRingValue) setStyle(this._target, mediaRing, mediaRingValue);
-        });
-
+      if (!isPortalled) {
         this._target.remove();
-        document.body.append(this._target);
+        container!.append(this._target);
       }
-    } else if (isBodyChild) {
-      this._putBack();
+    } else if (isPortalled && this._target.parentElement === container) {
+      this._target.remove();
+      this.el?.append(this._target);
     }
   }
-
-  private _putBack() {
-    if (!this.el || !this._target || this._target.parentElement !== document.body) return;
-    this._target.remove();
-    this.el.append(this._target);
-  }
-
-  private _shouldPortal = computed(() => {
-    const { breakpointX, breakpointY, viewType, fullscreen } = this._media.$state;
-    return (
-      (viewType() === 'audio' ? breakpointX() === 'sm' : breakpointY() === 'sm') && !fullscreen()
-    );
-  });
 }
 
-export interface MenuPortalProps {}
+export interface MenuPortalProps {
+  /**
+   * Specifies the selector query for the container element that the menu should be portalled
+   * inside. Must be an immediate child of body. If the element doesn't exist it will be
+   * created to match the selector.
+   *
+   * For example, given the container name `.video-ui` the portal will be:
+   *
+   * ```html
+   * <body>
+   *   <div class="video-ui">
+   *     <div role="menu">
+   *       <!-- ... -->
+   *     </div>
+   *   </div>
+   * </body>
+   * ```
+   */
+  container: string | null;
+  /**
+   * Whether the portal should be disabled. The value 'fullscreen' will remove the portal
+   * and place the element in it's original DOM position during fullscreen.
+   */
+  disabled: boolean | 'fullscreen';
+}
 
 export interface MenuPortalContext {
-  _attach(element: HTMLElement | null, callback?: MenuPortalCallback): void;
-}
-
-export interface MenuPortalCallback {
-  (didPortal: boolean): void;
+  _attach(element: HTMLElement | null): void;
 }
 
 export const menuPortalContext = createContext<MenuPortalContext | null>();

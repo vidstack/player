@@ -1,5 +1,4 @@
 import { Component } from 'maverick.js';
-
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { isTrackCaptionKind } from '../../../core/tracks/text/text-track';
 import { $ariaBool } from '../../../utils/aria';
@@ -40,7 +39,7 @@ export class CaptionButton extends Component<CaptionButtonProps> {
 
     new Slots(() => {
       const isOn = this._isPressed();
-      return { on: !isOn, off: isOn };
+      return { on: isOn, off: !isOn };
     }).attach(this);
   }
 

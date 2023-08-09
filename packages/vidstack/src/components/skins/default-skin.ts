@@ -1,75 +1,89 @@
 import {
   Component,
-  computed,
   createContext,
-  method,
+  prop,
   provideContext,
   useContext,
   type ReadSignal,
 } from 'maverick.js';
-
-import { useMediaContext, type MediaContext } from '../../core/api/media-context';
+import { PlayerQueryList } from '../../core';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/core-concepts/skins#default-skin}
  */
 export class DefaultSkin extends Component<DefaultSkinProps> {
-  static props = {
+  static props: DefaultSkinProps = {
+    when: '',
+    smWhen: '',
+    thumbnails: '',
     translations: null,
   };
 
-  protected _media!: MediaContext;
+  private _whenQueryList!: PlayerQueryList;
+  private _whenSmQueryList!: PlayerQueryList;
+
+  @prop
+  get isMatch() {
+    return this._whenQueryList.matches;
+  }
+
+  @prop
+  get isSmallMatch() {
+    return this._whenSmQueryList.matches;
+  }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    const { when, smWhen, thumbnails, translations } = this.$props;
+
+    this._whenQueryList = PlayerQueryList.create(when);
+    this._whenSmQueryList = PlayerQueryList.create(smWhen);
 
     this.setAttributes({
-      'data-audio': this.isAudio.bind(this),
-      'data-video': this.isVideo.bind(this),
-      'data-mobile': this.isMobile.bind(this),
+      'data-match': this._whenQueryList.$matches,
+      'data-sm': this._whenSmQueryList.$matches,
     });
 
     provideContext(defaultSkinContext, {
-      translations: this.$props.translations,
+      smQueryList: this._whenSmQueryList,
+      thumbnails,
+      translations,
     });
-  }
-
-  @method
-  getLayoutType() {
-    const { viewType, streamType } = this._media.$state;
-    return viewType() === 'audio'
-      ? streamType().includes('live')
-        ? 'audio:live'
-        : 'audio'
-      : streamType().endsWith('live')
-      ? 'video:live'
-      : 'video';
-  }
-
-  @method
-  isAudio() {
-    const { viewType } = this._media.$state;
-    return viewType() === 'audio';
-  }
-
-  @method
-  isVideo() {
-    const { viewType } = this._media.$state;
-    return viewType() !== 'audio';
-  }
-
-  private $isMobile = computed(() => {
-    const { breakpointX } = this._media.$state;
-    return breakpointX() === 'sm';
-  });
-
-  @method
-  isMobile() {
-    return this.$isMobile();
   }
 }
 
+export class DefaultAudioUI extends DefaultSkin {
+  static override props: DefaultSkinProps = {
+    ...super.props,
+    when: '(view-type: audio)',
+    smWhen: '(width < 576)',
+  };
+}
+
+export class DefaultVideoUI extends DefaultSkin {
+  static override props: DefaultSkinProps = {
+    ...super.props,
+    when: '(view-type: video)',
+    smWhen: '(width < 576) or (height < 380)',
+  };
+}
+
 export interface DefaultSkinProps {
+  /**
+   * A player query string that determines when the UI should be displayed. The special string
+   * 'never' will indicate that the UI should never be displayed.
+   */
+  when: string;
+  /**
+   * A player query string that determines when the small (e.g., mobile) UI should be displayed. The
+   * special string 'never' will indicate that the small device optimized UI should never be
+   * displayed.
+   */
+  smWhen: string;
+  /**
+   * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
+   * file resource.
+   */
+  thumbnails: string;
   /**
    * Translation map from english to your desired language for words used throughout the skin.
    */
@@ -77,6 +91,8 @@ export interface DefaultSkinProps {
 }
 
 export interface DefaultSkinContext {
+  smQueryList: PlayerQueryList;
+  thumbnails: ReadSignal<string>;
   translations: ReadSignal<DefaultSkinTranslations | null>;
 }
 

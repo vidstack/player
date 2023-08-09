@@ -34,8 +34,8 @@
 
 @container (width < 600px) {
   :where([data-fullscreen] .vds-button) {
-    width: var(--media-mobile-fullscreen-button-size, 42px);
-    height: var(--media-mobile-fullscreen-button-size, 42px);
+    width: var(--media-sm-fullscreen-button-size, 42px);
+    height: var(--media-sm-fullscreen-button-size, 42px);
   }
 }
 
@@ -57,7 +57,7 @@
   display: none !important;
 }
 
-@media (pointer: fine) {
+@media (hover: hover) and (pointer: fine) {
   .vds-button:hover {
     background-color: var(--media-button-hover-bg, rgb(255 255 255 / 0.2));
   }

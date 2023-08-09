@@ -51,7 +51,7 @@ it('should evaluate and', () => {
 
 it('should evaluate or', () => {
   const state = mediaState.create(),
-    queryList = new PlayerQueryList(state, '(width > 400) or (orientation: "portrait")');
+    queryList = new PlayerQueryList(state, '(width > 400) or (orientation: portrait)');
 
   expect(queryList.matches).toBeFalsy();
 
@@ -67,7 +67,7 @@ it('should evaluate or', () => {
 
 it('should evaluate list', () => {
   const state = mediaState.create(),
-    queryList = new PlayerQueryList(state, '(width >= 300),(streamType: "on-demand")');
+    queryList = new PlayerQueryList(state, '(width >= 300),(stream-type: "on-demand")');
 
   expect(queryList.matches).toBeFalsy();
 

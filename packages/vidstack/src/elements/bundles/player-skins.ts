@@ -1,10 +1,12 @@
 import { defineCustomElement } from 'maverick.js/element';
-import { MediaProviderElement } from '..';
 import { MediaPlayerElement } from '../define/player-element';
-import { MediaDefaultSkinElement } from '../define/skins/default-skin-element';
+import { MediaProviderElement } from '../define/provider-element';
+import { MediaAudioUIElement } from '../define/skins/default/audio-ui-element';
+import { MediaVideoUIElement } from '../define/skins/default/video-ui-element';
 import { defineMediaUI } from './player-ui';
 
 defineCustomElement(MediaPlayerElement);
 defineCustomElement(MediaProviderElement);
-defineCustomElement(MediaDefaultSkinElement);
+defineCustomElement(MediaAudioUIElement);
+defineCustomElement(MediaVideoUIElement);
 defineMediaUI();

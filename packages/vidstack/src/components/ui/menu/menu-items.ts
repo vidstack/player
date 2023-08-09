@@ -1,13 +1,11 @@
 import {
+  Component,
   effect,
   hasProvidedContext,
   onDispose,
   provideContext,
-  signal,
   useContext,
 } from 'maverick.js';
-import { Component } from 'maverick.js';
-
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { autoPlacement } from '../../../utils/dom';
 import { menuContext, type MenuContext } from './menu-context';
@@ -27,8 +25,6 @@ export class MenuItems extends Component<MenuItemsProps> {
 
   protected _menu!: MenuContext;
 
-  private _portal = signal(false);
-
   constructor() {
     super();
 
@@ -43,14 +39,13 @@ export class MenuItems extends Component<MenuItemsProps> {
   protected override onAttach(el: HTMLElement) {
     this._menu = useContext(menuContext);
     this._menu._attachMenuItems(this);
-
     if (hasProvidedContext(menuPortalContext)) {
       const portal = useContext(menuPortalContext);
       if (portal) {
-        portal._attach(el, this._portal.set);
-        onDispose(() => portal._attach(null));
         // Remove portal so submenus don't attach.
         provideContext(menuPortalContext, null);
+        portal._attach(el);
+        onDispose(() => portal._attach(null));
       }
     }
   }
@@ -60,15 +55,11 @@ export class MenuItems extends Component<MenuItemsProps> {
   }
 
   private _watchPlacement() {
+    if (!this.el) return;
+
     const placement = this.$props.placement();
 
-    if (placement && this.el) {
-      if (this._portal()) {
-        this.el.removeAttribute('style');
-        this.el.style.display = 'none';
-        return;
-      }
-
+    if (placement) {
       Object.assign(this.el.style, {
         position: 'absolute',
         top: 0,
@@ -82,6 +73,9 @@ export class MenuItems extends Component<MenuItemsProps> {
         xOffset: alignOffset(),
         yOffset: mainOffset(),
       });
+    } else {
+      this.el.removeAttribute('style');
+      this.el.style.display = 'none';
     }
   }
 

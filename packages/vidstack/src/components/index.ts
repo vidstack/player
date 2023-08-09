@@ -31,6 +31,7 @@ export * from './ui/sliders/slider-value';
 export * from './ui/sliders/slider-preview';
 export * from './ui/sliders/volume-slider';
 export * from './ui/sliders/time-slider/time-slider';
+export * from './ui/sliders/time-slider/slider-chapters';
 export { sliderContext, type SliderContext } from './ui/sliders/slider/slider-context';
 
 // Menu
@@ -54,12 +55,14 @@ export * from './ui/gesture';
 export * from './ui/captions/captions';
 export * from './ui/poster';
 export * from './ui/time';
-export * from './ui/thumbnail';
+export * from './ui/thumbnails/thumbnail';
 export type { IconProps } from './icons/types';
 
 // Skins
 export {
   DefaultSkin,
+  DefaultAudioUI,
+  DefaultVideoUI,
   type DefaultSkinProps,
   type DefaultSkinTranslations,
   type DefaultSkinContext,
