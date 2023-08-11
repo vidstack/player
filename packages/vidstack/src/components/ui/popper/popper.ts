@@ -17,7 +17,13 @@ export interface PopperDelegate {
 export class Popper extends ViewController {
   constructor(private _delegate: PopperDelegate) {
     super();
+
     effect(this._watchTrigger.bind(this));
+  }
+
+  protected override onDestroy(): void {
+    this._stopAnimationEndListener?.();
+    this._stopAnimationEndListener = null;
   }
 
   private _watchTrigger() {
@@ -75,6 +81,7 @@ export class Popper extends ViewController {
         };
 
         if (isAnimated) {
+          this._stopAnimationEndListener?.();
           const stop = listenEvent(content, 'animationend', onHide, { once: true });
           this._stopAnimationEndListener = stop;
         } else {

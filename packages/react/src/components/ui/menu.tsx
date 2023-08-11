@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
 import { createPortal } from 'react-dom';
+import { IS_SERVER } from '../../env';
 import { useMediaState } from '../../hooks/use-media-state';
 import {
   MenuButtonInstance,
   MenuInstance,
   MenuItemInstance,
   MenuItemsInstance,
+  MenuPortalInstance,
 } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
 
@@ -32,8 +34,11 @@ export interface RootProps extends ReactElementProps<MenuInstance> {
 const Root = React.forwardRef<MenuInstance, RootProps>(({ children, ...props }, forwardRef) => {
   return (
     <MenuBridge {...props} ref={forwardRef}>
-      {(props) => (
-        <Primitive.div {...props} style={{ display: 'contents', ...props.style }}>
+      {(props, instance) => (
+        <Primitive.div
+          {...props}
+          style={{ display: !instance.isSubmenu ? 'contents' : undefined, ...props.style }}
+        >
           {children}
         </Primitive.div>
       )}
@@ -83,15 +88,10 @@ Button.displayName = 'MenuButton';
  * Portal
  * -----------------------------------------------------------------------------------------------*/
 
-export interface PortalProps {
-  /**
-   * Whether the portal should be disabled. The value 'fullscreen' will remove the portal
-   * and place the element in it's original DOM position during fullscreen.
-   *
-   * @defaultValue false
-   */
-  disabled?: boolean | 'fullscreen';
+export interface PortalProps extends Omit<ReactElementProps<MenuPortalInstance>, 'container'> {
+  asChild?: boolean;
   children?: React.ReactNode;
+  ref?: React.Ref<HTMLElement>;
 }
 
 /**
@@ -99,11 +99,24 @@ export interface PortalProps {
  *
  * @docs {@link https://www.vidstack.io/docs/react/player/components/menu#portal}
  */
-function Portal({ disabled = false, children }: PortalProps) {
-  const fullscreen = useMediaState('fullscreen'),
-    shouldPortal = disabled === 'fullscreen' ? !fullscreen : !disabled;
-  return __SERVER__ || !shouldPortal ? children : createPortal(children, document.body);
-}
+const Portal = React.forwardRef<HTMLElement, PortalProps>(
+  ({ disabled = false, children, ...props }, forwardRef) => {
+    let fullscreen = useMediaState('fullscreen'),
+      shouldPortal = disabled === 'fullscreen' ? !fullscreen : !disabled;
+    return IS_SERVER || !shouldPortal
+      ? children
+      : createPortal(
+          <Primitive.div
+            {...props}
+            style={{ display: 'contents', ...props.style }}
+            ref={forwardRef as any}
+          >
+            {children}
+          </Primitive.div>,
+          document.body,
+        );
+  },
+);
 
 Portal.displayName = 'MenuPortal';
 

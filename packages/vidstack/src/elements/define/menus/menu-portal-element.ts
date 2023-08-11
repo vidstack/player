@@ -1,4 +1,5 @@
 import { Host, type Attributes } from 'maverick.js/element';
+import { isString } from 'maverick.js/std';
 import { MenuPortal, type MenuPortalProps } from '../../../components';
 
 /**
@@ -19,7 +20,7 @@ export class MediaMenuPortalElement extends Host(HTMLElement, MenuPortal) {
   static override attrs: Attributes<MenuPortalProps> = {
     disabled: {
       converter(value) {
-        if (value === 'fullscreen') return value;
+        if (isString(value)) return value as 'fullscreen';
         return value !== null;
       },
     },

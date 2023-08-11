@@ -40,7 +40,7 @@ function $i18n(
   return $signal(computed(() => i18n(translations, key)));
 }
 
-export function PlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
+export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultSkinContext(),
     PlayIcon = Icon({ paths: playIconPaths, state: 'play' }),
     PauseIcon = Icon({ paths: pauseIconPaths, state: 'pause' }),
@@ -60,7 +60,7 @@ export function PlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
   `;
 }
 
-export function MuteButton({ tooltip }: { tooltip: TooltipPlacement }) {
+export function DefaultMuteButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultSkinContext(),
     MuteIcon = Icon({ paths: muteIconPaths, state: 'volume-mute' }),
     VolumeLowIcon = Icon({ paths: volumeLowIconPaths, state: 'volume-low' }),
@@ -80,7 +80,7 @@ export function MuteButton({ tooltip }: { tooltip: TooltipPlacement }) {
   `;
 }
 
-export function CaptionButton({ tooltip }: { tooltip: TooltipPlacement }) {
+export function DefaultCaptionButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultSkinContext(),
     OnIcon = Icon({ paths: ccOnIconPaths, state: 'on' }),
     OffIcon = Icon({ paths: ccIconPaths, state: 'off' });
@@ -92,14 +92,14 @@ export function CaptionButton({ tooltip }: { tooltip: TooltipPlacement }) {
         </media-caption-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
-        <span data-state="on">${$i18n(translations, 'Closed-Captions On')}</span>
-        <span data-state="off">${$i18n(translations, 'Closed-Captions Off')}</span>
+        <span data-state="off">${$i18n(translations, 'Closed-Captions On')}</span>
+        <span data-state="on">${$i18n(translations, 'Closed-Captions Off')}</span>
       </media-tooltip-content>
     </media-tooltip>
   `;
 }
 
-export function PiPButton() {
+export function DefaultPIPButton() {
   const { translations } = useDefaultSkinContext(),
     EnterIcon = Icon({ paths: enterPIPIconPaths, state: 'enter' }),
     ExitIcon = Icon({ paths: exitPIPIconPaths, state: 'exit' });
@@ -118,7 +118,7 @@ export function PiPButton() {
   `;
 }
 
-export function FullscreenButton({ tooltip }: { tooltip: TooltipPlacement }) {
+export function DefaultFullscreenButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultSkinContext(),
     EnterIcon = Icon({ paths: enterFullscreenIconPaths, state: 'enter' }),
     ExitIcon = Icon({ paths: exitFullscreenIconPaths, state: 'exit' });
@@ -137,7 +137,13 @@ export function FullscreenButton({ tooltip }: { tooltip: TooltipPlacement }) {
   `;
 }
 
-export function SeekButton({ seconds, tooltip }: { seconds: number; tooltip: TooltipPlacement }) {
+export function DefaultSeekButton({
+  seconds,
+  tooltip,
+}: {
+  seconds: number;
+  tooltip: TooltipPlacement;
+}) {
   const { translations } = useDefaultSkinContext();
   return html`
     <media-tooltip class="vds-seek-tooltip vds-tooltip">
@@ -153,7 +159,7 @@ export function SeekButton({ seconds, tooltip }: { seconds: number; tooltip: Too
   `;
 }
 
-export function VolumeSlider() {
+export function DefaultVolumeSlider() {
   return html`
     <media-volume-slider class="vds-volume-slider vds-slider">
       <div class="vds-slider-track"></div>
@@ -170,14 +176,14 @@ export function VolumeSlider() {
   `;
 }
 
-export function MainTitle() {
+export function DefaultMainTitle() {
   const {
     $state: { title },
   } = useMediaContext();
   return html`<span class="vds-media-title">${$signal(title)}</span>`;
 }
 
-export function ChapterTitle() {
+export function DefaultChapterTitle() {
   const {
     textTracks,
     $state: { title, started },
@@ -204,9 +210,8 @@ export function ChapterTitle() {
   return html`<span class="vds-media-title">${$signal(mainTitle)}</span>`;
 }
 
-export function TimeSlider() {
+export function DefaultTimeSlider() {
   const { smQueryList, thumbnails } = useDefaultSkinContext();
-
   return html`
     <media-time-slider class="vds-time-slider vds-slider">
       <media-slider-chapters class="vds-slider-chapters" ?disabled=${$signal(smQueryList.$matches)}>
@@ -235,7 +240,7 @@ export function TimeSlider() {
   `;
 }
 
-export function TimeGroup() {
+export function DefaultTimeGroup() {
   return html`
     <div class="vds-time-group">
       <media-time class="vds-time" type="current"></media-time>
@@ -245,13 +250,13 @@ export function TimeGroup() {
   `;
 }
 
-export function ChaptersMenu({
+export function DefaultChaptersMenu({
   placement,
   tooltip,
-  portal,
+  container,
 }: {
   placement?: MenuPlacement;
-  portal: string;
+  container: string;
   tooltip: TooltipPlacement;
 }) {
   const { translations, smQueryList, thumbnails } = useDefaultSkinContext(),
@@ -269,7 +274,7 @@ export function ChaptersMenu({
           ${$i18n(translations, 'Chapters')}
         </media-tooltip-content>
       </media-tooltip>
-      <media-menu-portal container=${portal} disabled="fullscreen">
+      <media-menu-portal container=${container} disabled="fullscreen">
         <media-menu-items
           class="vds-chapters-menu-items vds-menu-items"
           placement=${$signal($placement)}
@@ -295,14 +300,14 @@ export function ChaptersMenu({
   `;
 }
 
-export function SettingsMenu({
+export function DefaultSettingsMenu({
   placement,
   tooltip,
-  portal,
+  container,
 }: {
-  placement?: MenuPlacement;
-  portal: string;
   tooltip: TooltipPlacement;
+  placement?: MenuPlacement;
+  container?: string;
 }) {
   const { translations, smQueryList } = useDefaultSkinContext(),
     $placement = computed(() => (smQueryList.matches ? null : placement));
@@ -318,19 +323,19 @@ export function SettingsMenu({
           ${$i18n(translations, 'Settings')}
         </media-tooltip-content>
       </media-tooltip>
-      <media-menu-portal container=${portal} disabled="fullscreen">
+      <media-menu-portal container=${container} disabled="fullscreen">
         <media-menu-items
           class="vds-settings-menu-items vds-menu-items"
           placement=${$signal($placement)}
         >
-          ${AudioMenu()}${SpeedMenu()}${QualityMenu()}${CaptionsMenu()}
+          ${DefaultAudioSubmenu()}${DefaultSpeedSubmenu()}${DefaultQualitySubmenu()}${DefaultCaptionsSubmenu()}
         </media-menu-items>
       </media-menu-portal>
     </media-menu>
   `;
 }
 
-function AudioMenu() {
+function DefaultAudioSubmenu() {
   const { translations } = useDefaultSkinContext();
   return html`
     <!-- Audio Menu -->
@@ -356,7 +361,7 @@ function AudioMenu() {
   `;
 }
 
-function SpeedMenu() {
+function DefaultSpeedSubmenu() {
   const { translations } = useDefaultSkinContext();
   return html`
     <!-- Speed Menu -->
@@ -382,7 +387,7 @@ function SpeedMenu() {
   `;
 }
 
-function QualityMenu() {
+function DefaultQualitySubmenu() {
   const { translations } = useDefaultSkinContext();
   return html`
     <!-- Quality Menu -->
@@ -409,7 +414,7 @@ function QualityMenu() {
   `;
 }
 
-function CaptionsMenu() {
+function DefaultCaptionsSubmenu() {
   const { translations } = useDefaultSkinContext();
   return html`
     <!-- Captions Menu -->
@@ -433,4 +438,17 @@ function CaptionsMenu() {
       </media-menu-items>
     </media-menu>
   `;
+}
+
+export function createMenuContainer(className: string) {
+  let container = document.querySelector<HTMLElement>(`body > .${className}`);
+
+  if (!container) {
+    container = document.createElement('div');
+    container.style.display = 'contents';
+    container.classList.add(className);
+    document.body.append(container);
+  }
+
+  return container;
 }

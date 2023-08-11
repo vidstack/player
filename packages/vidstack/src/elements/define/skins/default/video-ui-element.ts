@@ -1,10 +1,11 @@
 import { html } from 'lit-html';
-import { computed } from 'maverick.js';
+import { computed, onDispose } from 'maverick.js';
 import { Host } from 'maverick.js/element';
-import { DefaultVideoUI } from '../../../../components';
+import { DefaultVideoUI } from '../../../../components/skins/default-skin';
 import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
-import { LargeVideoUI, SmallVideoUI } from './video-ui';
+import { createMenuContainer } from './shared-ui';
+import { DefaultVideoLayout, DefaultVideoSmallLayout } from './video-ui';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/core-concepts/skins#default-skin}
@@ -24,8 +25,17 @@ export class MediaVideoUIElement extends Host(LitElement, DefaultVideoUI) implem
     this.classList.add('vds-video-ui');
   }
 
+  protected onSetup() {
+    const menuContainer = createMenuContainer('vds-video-ui');
+    onDispose(() => menuContainer.remove());
+  }
+
   private _render() {
-    return this.isMatch ? (this.isSmallMatch ? SmallVideoUI() : LargeVideoUI()) : null;
+    return this.isMatch
+      ? this.isSmallLayout
+        ? DefaultVideoSmallLayout()
+        : DefaultVideoLayout()
+      : null;
   }
 
   render() {

@@ -3,3 +3,5 @@ globals.d.ts
 **/partials/markup
 **/partials/import
 **/dist
+.gitignore
+.prettierignore

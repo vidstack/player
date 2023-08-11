@@ -99,7 +99,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
       return;
     }
 
-    activeCue.set(findActiveCue(time, cues));
+    activeCue.set(findActiveCue(cues, time));
   }
 
   private _onResolveThumbnail() {

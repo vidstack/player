@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useReactContext, useSignal } from 'maverick.js/react';
-import { mediaContext, type VideoQuality } from 'vidstack/lib';
+import { mediaContext, type VideoQuality } from 'vidstack/local';
 
 export function useVideoQualityOptions({
   sort = 'descending',
@@ -9,8 +9,9 @@ export function useVideoQualityOptions({
     { qualities, quality, autoQuality } = media.$state,
     $qualities = useSignal(qualities);
 
-  useSignal(autoQuality);
+  // Trigger updates.
   useSignal(quality);
+  useSignal(autoQuality);
 
   return React.useMemo(() => {
     const options = [...$qualities]

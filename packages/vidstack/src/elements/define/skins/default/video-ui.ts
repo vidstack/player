@@ -1,21 +1,21 @@
 import { html } from 'lit-html';
 import {
-  CaptionButton,
-  ChaptersMenu,
-  ChapterTitle,
-  FullscreenButton,
-  MuteButton,
-  PiPButton,
-  PlayButton,
-  SettingsMenu,
-  TimeGroup,
-  TimeSlider,
-  VolumeSlider,
+  DefaultCaptionButton,
+  DefaultChaptersMenu,
+  DefaultChapterTitle,
+  DefaultFullscreenButton,
+  DefaultMuteButton,
+  DefaultPIPButton,
+  DefaultPlayButton,
+  DefaultSettingsMenu,
+  DefaultTimeGroup,
+  DefaultTimeSlider,
+  DefaultVolumeSlider,
 } from './shared-ui';
 
-export function SmallVideoUI() {
+export function DefaultVideoLayout() {
   return html`
-    ${Gestures()}${BufferingIndicator()}
+    ${DefaultVideoGestures()}${DefaultBufferingIndicator()}
     <media-captions class="vds-captions"></media-captions>
 
     <div class="vds-scrim"></div>
@@ -23,18 +23,46 @@ export function SmallVideoUI() {
     <media-controls class="vds-controls">
       <media-controls-group class="vds-controls-group">
         <div class="vds-controls-spacer"></div>
-        ${CaptionButton({ tooltip: 'bottom' })}${Menus()}${MuteButton({ tooltip: 'bottom end' })}
+        ${DefaultVideoMenus()}
       </media-controls-group>
 
-      <div class="vds-controls-group">${PlayButton({ tooltip: 'top' })}</div>
+      <div class="vds-controls-spacer"></div>
+
+      <media-controls-group class="vds-controls-group">${DefaultTimeSlider()}</media-controls-group>
 
       <media-controls-group class="vds-controls-group">
-        ${TimeGroup()}${ChapterTitle()}
+        ${DefaultPlayButton({ tooltip: 'top start' })}
+        ${DefaultMuteButton({ tooltip: 'top' })}${DefaultVolumeSlider()}${DefaultTimeGroup()}
+        ${DefaultChapterTitle()}${DefaultCaptionButton({ tooltip: 'top' })}${DefaultPIPButton()}
+        ${DefaultFullscreenButton({ tooltip: 'top end' })}
+      </media-controls-group>
+    </media-controls>
+  `;
+}
+
+export function DefaultVideoSmallLayout() {
+  return html`
+    ${DefaultVideoGestures()}${DefaultBufferingIndicator()}
+    <media-captions class="vds-captions"></media-captions>
+
+    <div class="vds-scrim"></div>
+
+    <media-controls class="vds-controls">
+      <media-controls-group class="vds-controls-group">
         <div class="vds-controls-spacer"></div>
-        ${FullscreenButton({ tooltip: 'top end' })}
+        ${DefaultCaptionButton({ tooltip: 'bottom' })}
+        ${DefaultVideoMenus()}${DefaultMuteButton({ tooltip: 'bottom end' })}
       </media-controls-group>
 
-      <media-controls-group class="vds-controls-group">${TimeSlider()}</media-controls-group>
+      <div class="vds-controls-group">${DefaultPlayButton({ tooltip: 'top' })}</div>
+
+      <media-controls-group class="vds-controls-group">
+        ${DefaultTimeGroup()}${DefaultChapterTitle()}
+        <div class="vds-controls-spacer"></div>
+        ${DefaultFullscreenButton({ tooltip: 'top end' })}
+      </media-controls-group>
+
+      <media-controls-group class="vds-controls-group">${DefaultTimeSlider()}</media-controls-group>
     </media-controls>
 
     <div class="vds-start-duration">
@@ -43,34 +71,7 @@ export function SmallVideoUI() {
   `;
 }
 
-export function LargeVideoUI() {
-  return html`
-    ${Gestures()}${BufferingIndicator()}
-    <media-captions class="vds-captions"></media-captions>
-
-    <div class="vds-scrim"></div>
-
-    <media-controls class="vds-controls">
-      <media-controls-group class="vds-controls-group">
-        <div class="vds-controls-spacer"></div>
-        ${Menus()}
-      </media-controls-group>
-
-      <div class="vds-controls-spacer"></div>
-
-      <media-controls-group class="vds-controls-group">${TimeSlider()}</media-controls-group>
-
-      <media-controls-group class="vds-controls-group">
-        ${PlayButton({ tooltip: 'top start' })}
-        ${MuteButton({ tooltip: 'top' })}${VolumeSlider()}${TimeGroup()}
-        ${ChapterTitle()}${CaptionButton({ tooltip: 'top' })}${PiPButton()}
-        ${FullscreenButton({ tooltip: 'top end' })}
-      </media-controls-group>
-    </media-controls>
-  `;
-}
-
-function BufferingIndicator() {
+function DefaultBufferingIndicator() {
   return html`
     <div class="vds-buffering-indicator">
       <svg class="vds-buffering-icon" fill="none" viewBox="0 0 120 120" aria-hidden="true">
@@ -88,16 +89,17 @@ function BufferingIndicator() {
   `;
 }
 
-function Menus() {
+function DefaultVideoMenus() {
   const tooltip = 'bottom end',
     placement = 'bottom end',
-    portal = '.vds-video-ui';
+    container = 'body > .vds-video-ui';
   return html`
-    ${ChaptersMenu({ tooltip, placement, portal })}${SettingsMenu({ tooltip, placement, portal })}
+    ${DefaultChaptersMenu({ tooltip, placement, container })}
+    ${DefaultSettingsMenu({ tooltip, placement, container })}
   `;
 }
 
-function Gestures() {
+function DefaultVideoGestures() {
   return html`
     <div class="vds-gestures">
       <media-gesture class="vds-gesture" event="pointerup" action="toggle:paused"></media-gesture>

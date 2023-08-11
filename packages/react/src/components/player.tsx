@@ -52,7 +52,7 @@ export interface MediaPlayerProps extends ReactElementProps<MediaPlayerInstance>
  * ```
  */
 const MediaPlayer = React.forwardRef<MediaPlayerInstance, MediaPlayerProps>(
-  ({ aspectRatio = '16 / 9', children, ...props }, forwardRef) => {
+  ({ aspectRatio, children, ...props }, forwardRef) => {
     return (
       <MediaPlayerBridge
         {...props}

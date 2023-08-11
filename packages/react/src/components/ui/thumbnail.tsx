@@ -6,7 +6,7 @@ import {
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import { mediaState } from 'vidstack/lib';
+import { mediaState } from 'vidstack/local';
 import { ThumbnailInstance } from '../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../primitives/nodes';
 

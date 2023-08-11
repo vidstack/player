@@ -7,33 +7,34 @@ import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
 
 const MODE_TYPES = process.argv.includes('--config-types');
-const MODE_LIB = process.argv.includes('--config-lib');
+const MODE_LOCAL = process.argv.includes('--config-local');
 const MAIN_EXTERNAL = ['hls.js', 'media-captions', 'media-icons'];
 
-const LIB_EXTERNAL = [...MAIN_EXTERNAL, /maverick/];
+const LOCAL_EXTERNAL = [...MAIN_EXTERNAL, /maverick/];
 
 if (!MODE_TYPES) {
   buildDefaultTheme();
 }
 
 // Used by other packages (e.g., `@vidstack/react`) to build without duplicate deps.
-const LIB = [
-  define({ lib: true, server: true }),
-  define({ lib: true, dev: true }),
-  define({ lib: true }),
-];
+const LOCAL = [define({ type: 'local-prod' }), define({ type: 'local-dev' })];
+
+/** @type {import('rollup').WarningHandlerWithDefault} */
+function onWarn(warning, defaultHandler) {
+  if (warning.code === 'EMPTY_BUNDLE') return;
+  defaultHandler(warning);
+}
 
 export default defineConfig(
   MODE_TYPES
-    ? [defineTypes(), defineTypes({ lib: true })]
-    : MODE_LIB
-    ? LIB
+    ? [defineTypes({ local: true }), defineTypes({ local: false })]
+    : MODE_LOCAL
+    ? LOCAL
     : [
-        ...LIB,
-        // server
-        define({ server: true }),
-        define({ dev: true }),
-        define(),
+        ...LOCAL,
+        define({ type: 'server' }),
+        define({ type: 'dev' }),
+        define({ type: 'prod' }),
         // cdn
         defineCDN({ dev: true }),
         defineCDN(),
@@ -42,16 +43,16 @@ export default defineConfig(
 );
 
 /**
- * @param {{ lib?: boolean }} [config]
+ * @param {{ local: boolean }} config
  * @returns {import('rollup').RollupOptions}
  * */
-function defineTypes({ lib } = {}) {
+function defineTypes({ local }) {
   /** @type {Record<string, string>} */
   let input = {
-    [lib ? 'lib' : 'index']: 'src/index.ts',
+    [local ? 'local' : 'index']: 'src/index.ts',
   };
 
-  if (!lib) {
+  if (!local) {
     input = {
       ...input,
       elements: 'src/elements/index.ts',
@@ -69,19 +70,19 @@ function defineTypes({ lib } = {}) {
       dir: '.',
       chunkFileNames: 'dist/types/vidstack-[hash].ts',
       manualChunks(id) {
-        if (lib) return null;
+        if (local) return null;
         if (id.includes('maverick') || id.includes('lit-html') || id.includes('@floating-ui')) {
           return 'framework.d';
         }
       },
     },
-    external: lib ? LIB_EXTERNAL : MAIN_EXTERNAL,
+    external: local ? LOCAL_EXTERNAL : MAIN_EXTERNAL,
     plugins: [
       dts({ respectExternal: true }),
       {
         name: 'cleanup',
         closeBundle() {
-          if (lib) fs.rmSync('types', { recursive: true });
+          if (!local) fs.rmSync('types', { recursive: true });
         },
       },
     ],
@@ -90,11 +91,9 @@ function defineTypes({ lib } = {}) {
 
 /**
  * @typedef {{
- * dev?: boolean;
- * server?: boolean;
- * lib?: boolean;
- * minify?: boolean;
- * target?: string | null;
+ *   target?: string | null;
+ *   type: 'dev' | 'prod' | 'server' | 'local-dev' | 'local-prod';
+ *   minify?: boolean;
  * }} BundleOptions
  */
 
@@ -102,17 +101,19 @@ function defineTypes({ lib } = {}) {
  * @param {BundleOptions}
  * @returns {import('rollup').RollupOptions}
  */
-function define({ dev, server, lib, minify, target } = {}) {
+function define({ target, type, minify }) {
   /** @type {Record<string, string>} */
   let input = {
       vidstack: 'src/index.ts',
     },
-    alias = server ? 'server' : dev ? 'dev' : 'prod',
-    shouldMangle = !lib && !dev && !server,
+    isProd = type === 'prod' || type === 'local-prod',
+    isLocal = type.startsWith('local'),
+    isServer = type === 'server',
+    shouldMangle = type === 'prod',
     /** @type {Record<string, string | false>} */
     mangleCache = {};
 
-  if (!server) {
+  if (!isServer) {
     input = {
       ...input,
       [`providers/vidstack-html`]: 'src/providers/html/provider.ts',
@@ -122,7 +123,7 @@ function define({ dev, server, lib, minify, target } = {}) {
     };
   }
 
-  if (!lib) {
+  if (!isLocal) {
     input = {
       ...input,
       'vidstack-elements': 'src/elements/index.ts',
@@ -132,8 +133,9 @@ function define({ dev, server, lib, minify, target } = {}) {
       'define/vidstack-player-ui': 'src/elements/bundles/player-ui.ts',
     };
 
-    if (!server) {
-      input['define/vidstack-player-skin'] = 'src/elements/define/skins/default-skin-element.ts';
+    if (type !== 'server') {
+      input['define/vidstack-audio-ui'] = 'src/elements/define/skins/default/audio-ui-element.ts';
+      input['define/vidstack-video-ui'] = 'src/elements/define/skins/default/video-ui-element.ts';
     }
   }
 
@@ -142,13 +144,14 @@ function define({ dev, server, lib, minify, target } = {}) {
     maxParallelFileOps: shouldMangle ? 1 : 20,
     treeshake: true,
     preserveEntrySignatures: 'strict',
-    external: lib ? LIB_EXTERNAL : MAIN_EXTERNAL,
+    external: isLocal ? LOCAL_EXTERNAL : MAIN_EXTERNAL,
+    onwarn: onWarn,
     output: {
       format: 'esm',
-      dir: `${lib ? `lib` : `dist`}/${alias}`,
+      dir: `${isLocal ? `local` : `dist`}/${type.replace('local-', '')}`,
       chunkFileNames: 'chunks/vidstack-[hash].js',
       manualChunks(id) {
-        if (lib) return null;
+        if (isLocal) return null;
         if (id.includes('maverick') || id.includes('@floating-ui')) return 'framework';
         if (id.includes('lit-html')) return 'framework-skin';
         return null;
@@ -156,25 +159,37 @@ function define({ dev, server, lib, minify, target } = {}) {
     },
     plugins: [
       nodeResolve({
-        exportConditions: server
+        exportConditions: isServer
           ? ['node', 'default', 'development']
-          : dev
-          ? ['development', 'production', 'default']
-          : ['production', 'default'],
+          : isProd
+          ? ['production', 'default']
+          : ['development', 'production', 'default'],
       }),
       esbuildPlugin({
         tsconfig: 'tsconfig.build.json',
-        target: target ?? (server ? 'node18' : 'esnext'),
-        platform: server ? 'node' : 'browser',
+        target: target ?? (isServer ? 'node18' : 'esnext'),
+        platform: isServer ? 'node' : 'browser',
         minify: minify,
         legalComments: 'none',
+        banner: 'import { IS_SERVER } from "@virtual/env";',
         define: {
-          __DEV__: dev ? 'true' : 'false',
-          __SERVER__: server ? 'true' : 'false',
+          __DEV__: !isProd && !isServer ? 'true' : 'false',
+          __SERVER__: isLocal ? 'IS_SERVER' : isServer ? 'true' : 'false',
           __TEST__: 'false',
         },
       }),
-      server && {
+      {
+        name: 'env',
+        resolveId(id) {
+          if (id === '@virtual/env') return id;
+        },
+        load(id) {
+          if (id === '@virtual/env') {
+            return `export const IS_SERVER = typeof document === 'undefined';`;
+          }
+        },
+      },
+      isServer && {
         name: 'server-bundle',
         async transform(code, id) {
           if (id.includes('src/elements/bundles')) return '';
@@ -221,8 +236,7 @@ function defineCDN({ dev = false, skins = false } = {}) {
     output = dev ? `vidstack.dev` : `vidstack`;
   return {
     ...define({
-      dev,
-      server: false,
+      type: dev ? 'dev' : 'prod',
       minify: !dev,
       target: 'es2020',
     }),

@@ -20,7 +20,7 @@ turbo-graph*
 /apps/*/build/
 /apps/*/.vercel_build_output/
 
-packages/*/lib/
+packages/*/local/
 packages/*/dist/
 packages/*/cdn/
 packages/*/elements/
@@ -29,7 +29,7 @@ packages/*/sandbox/
 packages/*/stats.html
 
 packages/vidstack/index.d.ts
-packages/vidstack/lib.d.ts
+packages/vidstack/local.d.ts
 packages/vidstack/elements.d.ts
 packages/vidstack/icons.d.ts
 

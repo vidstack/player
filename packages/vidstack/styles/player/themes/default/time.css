@@ -15,3 +15,7 @@
   border-radius: var(--media-time-border-radius);
   letter-spacing: var(--media-time-letter-spacing, 0.025em);
 }
+
+.vds-time {
+  border: var(--media-time-border);
+}

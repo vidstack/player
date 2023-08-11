@@ -26,6 +26,7 @@ export {
   SliderValue as SliderValueInstance,
   SliderVideo as SliderVideoInstance,
   SliderPreview as SliderPreviewInstance,
+  SliderChapters as SliderChaptersInstance,
   // Menus
   Menu as MenuInstance,
   MenuButton as MenuButtonInstance,
@@ -42,4 +43,4 @@ export {
   Time as TimeInstance,
   // Skins
   DefaultSkin as DefaultSkinInstance,
-} from 'vidstack/lib';
+} from 'vidstack/local';

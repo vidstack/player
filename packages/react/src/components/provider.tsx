@@ -5,7 +5,7 @@ import {
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import { mediaState } from 'vidstack/lib';
+import { mediaState } from 'vidstack/local';
 import { MediaProviderInstance } from './primitives/instances';
 
 /* -------------------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
     ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {
         ...props,
         controls: $controls,
-        crossOrigin: $crossorigin,
+        crossOrigin: typeof $crossorigin === 'boolean' ? '' : $crossorigin,
         poster: $mediaType === 'video' && $controls && $poster ? $poster : null,
         preload: 'none',
         'aria-hidden': 'true',

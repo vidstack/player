@@ -9,16 +9,7 @@ const MODE_TYPES = process.argv.includes('--config-types');
 const EXTERNAL = ['react', 'react-dom', 'media-icons', 'media-captions', 'hls.js', /@radix-ui/];
 
 export default defineConfig(
-  MODE_TYPES
-    ? [defineTypes()]
-    : [
-        // server
-        define({ server: true }),
-        // dev
-        define({ dev: true }),
-        // prod
-        define(),
-      ],
+  MODE_TYPES ? [defineTypes()] : [define({ dev: true }), define({ dev: false })],
 );
 
 /**
@@ -29,7 +20,7 @@ function defineTypes() {
     input: {
       index: 'types/index.d.ts',
       icons: 'types/icons.d.ts',
-      'player/default-skin': 'types/components/skins/default/default-skin.d.ts',
+      'player/default-ui': 'types/components/skins/default/index.d.ts',
     },
     output: {
       dir: '.',
@@ -55,7 +46,6 @@ function defineTypes() {
 /**
  * @typedef {{
  * dev?: boolean;
- * server?: boolean;
  * }} BundleOptions
  */
 
@@ -63,18 +53,19 @@ function defineTypes() {
  * @param {BundleOptions}
  * @returns {import('rollup').RollupOptions}
  */
-function define({ dev, server } = {}) {
-  let alias = server ? 'server' : dev ? 'dev' : 'prod',
-    shouldMangle = !dev && !server,
+function define({ dev }) {
+  let alias = dev ? 'dev' : 'prod',
     /** @type {Record<string, string | false>} */
     mangleCache = {};
 
   let input = {
     vidstack: 'src/index.ts',
-    'vidstack-player-skin': 'src/components/skins/default/default-skin.tsx',
+    'player/vidstack-default-ui': 'src/components/skins/default/index.ts',
+    'player/vidstack-default-components': 'src/components/skins/default/ui.ts',
+    'player/vidstack-default-icons': 'src/components/skins/default/icons.tsx',
   };
 
-  if (!dev && !server) {
+  if (!dev) {
     input['vidstack-icons'] = 'src/icons.ts';
   }
 
@@ -82,7 +73,7 @@ function define({ dev, server } = {}) {
     input,
     treeshake: true,
     preserveEntrySignatures: 'allow-extension',
-    maxParallelFileOps: shouldMangle ? 1 : 20,
+    maxParallelFileOps: !dev ? 1 : 20,
     external: EXTERNAL,
     output: {
       format: 'esm',
@@ -94,22 +85,19 @@ function define({ dev, server } = {}) {
     },
     plugins: [
       nodeResolve({
-        exportConditions: server
-          ? ['node', 'default', 'development']
-          : dev
+        exportConditions: dev
           ? ['development', 'production', 'default']
           : ['production', 'default'],
       }),
       esbuildPlugin({
         tsconfig: 'tsconfig.build.json',
-        target: server ? 'node18' : 'esnext',
-        platform: server ? 'node' : 'browser',
+        target: 'esnext',
+        platform: 'browser',
         define: {
           __DEV__: dev ? 'true' : 'false',
-          __SERVER__: server ? 'true' : 'false',
         },
       }),
-      shouldMangle && {
+      !dev && {
         name: 'mangle',
         transform(code) {
           const result = transformSync(code, {
@@ -127,6 +115,30 @@ function define({ dev, server } = {}) {
           };
 
           return result.code;
+        },
+      },
+      {
+        name: 'rsc-directives',
+        resolveId(id) {
+          if (id.startsWith('maverick.js')) {
+            return this.resolve('maverick.js/rsc', '', { skipSelf: true });
+          }
+        },
+        generateBundle(_, bundle) {
+          const serverChunks = new Set(['player/vidstack-default-icons.js']),
+            neutralChunks = new Set(['vidstack-icons.js']);
+
+          for (const fileName of Object.keys(bundle)) {
+            const chunk = bundle[fileName];
+
+            if (chunk.type !== 'chunk') continue;
+
+            if (serverChunks.has(chunk.fileName)) {
+              chunk.code = `"use server"\n\n` + chunk.code;
+            } else if (!neutralChunks.has(fileName)) {
+              chunk.code = `"use client"\n\n` + chunk.code;
+            }
+          }
         },
       },
     ],

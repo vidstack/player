@@ -35,7 +35,11 @@ let idCount = 0;
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  */
-export class Menu extends Component<{}, {}, MenuEvents> {
+export class Menu extends Component<MenuProps, {}, MenuEvents> {
+  static props: MenuProps = {
+    showDelay: 0,
+  };
+
   private _media!: MediaContext;
 
   private _menuId!: string;
@@ -66,9 +70,11 @@ export class Menu extends Component<{}, {}, MenuEvents> {
   constructor() {
     super();
 
+    const { showDelay } = this.$props;
     this._popper = new Popper({
       _trigger: this._trigger,
       _content: this._content,
+      _showDelay: showDelay,
       _listen: (trigger, show, hide) => {
         onPress(trigger, (event) => {
           if (this._expanded()) hide(event);
@@ -129,7 +135,9 @@ export class Menu extends Component<{}, {}, MenuEvents> {
   protected override onConnect(el: HTMLElement) {
     effect(this._watchExpanded.bind(this));
     if (this.isSubmenu) this._parentMenu?._addSubmenu(this);
-    requestAnimationFrame(() => this._onResize());
+    requestAnimationFrame(() => {
+      this._onResize();
+    });
   }
 
   protected override onDestroy() {
@@ -163,6 +171,11 @@ export class Menu extends Component<{}, {}, MenuEvents> {
     setAttribute(el, 'id', this._menuButtonId);
     setAttribute(el, 'aria-haspopup', 'menu');
     setAttribute(el, 'aria-expanded', 'false');
+    setAttribute(el, 'data-submenu', this.isSubmenu);
+
+    if (!this.isSubmenu) {
+      this._stopClickPropagation(el);
+    }
 
     function watchAttrs() {
       setAttribute(el, 'aria-disabled', isARIADisabled());
@@ -190,8 +203,7 @@ export class Menu extends Component<{}, {}, MenuEvents> {
     onDispose(() => this._content.set(null));
 
     if (!this.isSubmenu) {
-      listenEvent(el, 'click', (e) => e.stopPropagation());
-      listenEvent(el, 'pointerup', (e) => e.stopPropagation());
+      this._stopClickPropagation(el);
     }
 
     this._focus._attachMenu(el);
@@ -201,6 +213,11 @@ export class Menu extends Component<{}, {}, MenuEvents> {
 
   private _attachObserver(observer: MenuObserver) {
     this._menuObserver = observer;
+  }
+
+  private _stopClickPropagation(el: HTMLElement) {
+    listenEvent(el, 'click', (e) => e.stopPropagation());
+    listenEvent(el, 'pointerup', (e) => e.stopPropagation());
   }
 
   private _updateMenuItemsHidden(expanded: boolean) {
@@ -400,6 +417,13 @@ export class Menu extends Component<{}, {}, MenuEvents> {
     this._popper.hide(trigger);
     tick();
   }
+}
+
+export interface MenuProps {
+  /**
+   * The amount of time in milliseconds to wait before showing the menu.
+   */
+  showDelay: number;
 }
 
 export interface MenuEvents {

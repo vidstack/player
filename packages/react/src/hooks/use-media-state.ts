@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 import { useSignal, useSignalRecord, useStateContext } from 'maverick.js/react';
-import { mediaState, type MediaState } from 'vidstack/lib';
+import { mediaState, type MediaState } from 'vidstack/local';
 import type { MediaPlayerInstance } from '../components/primitives/instances';
 
 /**
