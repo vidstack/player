@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Captions, Controls, Gesture, MediaPlayer, MediaProvider, Time } from '@vidstack/react';
+import { Caption, Controls, Gesture, MediaPlayer, MediaProvider, Time } from '@vidstack/react';
 import poster from './poster.webp';
 import video from './video.mp4';
 import * as Buttons from './buttons';
@@ -11,7 +11,7 @@ import * as Sliders from './sliders';
 
 export function Player() {
   return (
-    <MediaPlayer title="..." src={video} thumbnails="..." aspectRatio={16 / 9}>
+    <MediaPlayer title="..." src={video} aspectRatio="16/9">
       <MediaProvider />
 
       <Image
@@ -21,12 +21,9 @@ export function Player() {
         placeholder="blur"
       />
 
-      <Captions.Root className="absolute flex flex-col inset-0 w-full h-full z-30">
-        <div className="flex-1" />
-        <Captions.Cue.Root className="w-full text-center">
-          <Captions.Cue.Text className="px-2 py-1 bg-black/60 backdrop-blur-sm text-white text-lg lg:text-xl" />
-        </Captions.Cue.Root>
-      </Captions.Root>
+      <Caption.Root className="absolute flex flex-col inset-0 w-full h-full z-30 items-end justify-center">
+        <Caption.Text className="px-2 py-1 bg-black/60 backdrop-blur-sm text-white text-lg lg:text-xl" />
+      </Caption.Root>
 
       <Controls.Root className="absolute inset-0 flex flex-col w-full h-full z-10 opacity-0 transition-opacity media-controls:opacity-100">
         <Controls.Group className="w-full flex items-center px-2 py-1">

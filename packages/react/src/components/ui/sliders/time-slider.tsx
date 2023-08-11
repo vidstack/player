@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { effect } from 'maverick.js';
+import { effect, signal, type WriteSignal } from 'maverick.js';
 import {
   composeRefs,
   createReactComponent,
-  useReactContext,
   useSignal,
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
 import { VTTCue } from 'media-captions';
-import { mediaState, timeSliderContext } from 'vidstack/lib';
+import { mediaState } from 'vidstack/local';
 import {
+  SliderChaptersInstance,
   SliderThumbnailInstance,
   SliderVideoInstance,
   TimeSliderInstance,
@@ -19,6 +19,20 @@ import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import * as ThumbnailBase from '../thumbnail';
 import { type ValueProps } from './slider';
 import { SliderValueBridge } from './slider-value';
+
+/* -------------------------------------------------------------------------------------------------
+ * TimeSliderContext
+ * -----------------------------------------------------------------------------------------------*/
+
+const TimeSliderContext = React.createContext<TimeSliderContext>({
+  $chapters: signal<SliderChaptersInstance | null>(null),
+});
+
+interface TimeSliderContext {
+  $chapters: WriteSignal<SliderChaptersInstance | null>;
+}
+
+TimeSliderContext.displayName = 'TimeSliderContext';
 
 /* -------------------------------------------------------------------------------------------------
  * TimeSlider
@@ -39,10 +53,13 @@ export interface RootProps extends ReactElementProps<TimeSliderInstance> {
  */
 const Root = React.forwardRef<TimeSliderInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
+    const $chapters = React.useMemo(() => signal<SliderChaptersInstance | null>(null), []);
     return (
-      <TimeSliderBridge {...props} ref={forwardRef}>
-        {(props) => <Primitive.div {...props}>{children}</Primitive.div>}
-      </TimeSliderBridge>
+      <TimeSliderContext.Provider value={{ $chapters }}>
+        <TimeSliderBridge {...props} ref={forwardRef}>
+          {(props) => <Primitive.div {...props}>{children}</Primitive.div>}
+        </TimeSliderBridge>
+      </TimeSliderContext.Provider>
     );
   },
 );
@@ -53,44 +70,66 @@ Root.displayName = 'TimeSlider';
  * SliderChapters
  * -----------------------------------------------------------------------------------------------*/
 
-export interface ChaptersProps extends Omit<PrimitivePropsWithRef<'div'>, 'children'> {
+const SliderChaptersBridge = createReactComponent(SliderChaptersInstance);
+
+export interface ChaptersProps extends Omit<ReactElementProps<SliderChaptersInstance>, 'children'> {
   children: (cues: VTTCue[], forwardRef: React.RefCallback<HTMLElement>) => React.ReactNode;
 }
 
 /**
- * @docs {@link https://www.vidstack.io/docs/react/player/components/time-slider#chapters}
+ * @docs {@link https://www.vidstack.io/docs/react/player/components/slider-chapters}
  */
 const Chapters = React.forwardRef<HTMLDivElement, ChaptersProps>(
   ({ children, ...props }, forwardRef) => {
-    const { chapters } = useReactContext(timeSliderContext)!,
-      $cues = useSignal(() => chapters.cues, chapters),
-      refs = React.useRef<HTMLElement[]>([]),
-      emptyCue = React.useRef<VTTCue>();
-
-    if (!emptyCue.current) {
-      emptyCue.current = new VTTCue(0, 0, '');
-    }
-
-    React.useEffect(() => {
-      chapters.addRefs(refs.current);
-    }, [$cues]);
-
     return (
-      <Primitive.div {...props} ref={forwardRef}>
-        {children($cues.length ? $cues : [emptyCue.current], (el) => {
-          if (!el) {
-            refs.current.length = 0;
-            return;
-          }
-
-          refs.current.push(el);
-        })}
-      </Primitive.div>
+      <SliderChaptersBridge {...props}>
+        {(props, instance) => (
+          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+            <ChapterTracks instance={instance}>{children}</ChapterTracks>
+          </Primitive.div>
+        )}
+      </SliderChaptersBridge>
     );
   },
 );
 
 Chapters.displayName = 'SliderChapters';
+
+interface ChapterTracksProps {
+  instance: SliderChaptersInstance;
+  children: ChaptersProps['children'];
+}
+
+function ChapterTracks({ instance, children }: ChapterTracksProps) {
+  const $cues = useSignal(() => instance.cues, instance),
+    refs = React.useRef<HTMLElement[]>([]),
+    emptyCue = React.useRef<VTTCue>(),
+    { $chapters } = React.useContext(TimeSliderContext);
+
+  if (!emptyCue.current) {
+    emptyCue.current = new VTTCue(0, 0, '');
+  }
+
+  React.useEffect(() => {
+    $chapters.set(instance);
+    return () => void $chapters.set(null);
+  }, [instance]);
+
+  React.useEffect(() => {
+    instance.setRefs(refs.current);
+  }, [$cues]);
+
+  return children($cues.length ? $cues : [emptyCue.current], (el) => {
+    if (!el) {
+      refs.current.length = 0;
+      return;
+    }
+
+    refs.current.push(el);
+  });
+}
+
+ChapterTracks.displayName = 'SliderChapterTracks';
 
 /* -------------------------------------------------------------------------------------------------
  * SliderChapterTitle
@@ -100,12 +139,13 @@ export interface ChapterTitleProps extends PrimitivePropsWithRef<'div'> {}
 
 const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
   ({ children, ...props }, forwardRef) => {
-    const { chapters } = useReactContext(timeSliderContext)!,
+    const { $chapters } = React.useContext(TimeSliderContext)!,
       [title, setTitle] = React.useState<string>();
 
     React.useEffect(() => {
       return effect(() => {
-        const cue = chapters.activePointerCue || chapters.activeCue;
+        const chapters = $chapters(),
+          cue = chapters?.activePointerCue || chapters?.activeCue;
         setTitle(cue?.text || '');
       });
     }, []);

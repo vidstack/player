@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useReactContext } from 'maverick.js/react';
-import { mediaContext, MediaRemoteControl } from 'vidstack/lib';
+import { mediaContext, MediaRemoteControl } from 'vidstack/local';
 
 /**
  * A media remote provides a simple facade for dispatching media requests to the nearest media

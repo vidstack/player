@@ -3,49 +3,103 @@ import { Captions } from '../../ui/captions';
 import * as Controls from '../../ui/controls';
 import { Gesture } from '../../ui/gesture';
 import { Time } from '../../ui/time';
+import { DefaultUIContext } from './context';
 import {
-  VdsCaptionButton,
-  VdsChaptersMenu,
-  VdsChapterTitle,
-  VdsFullscreenButton,
-  VdsMuteButton,
-  VdsPIPButton,
-  VdsPlayButton,
-  VdsSettingsMenu,
-  VdsTimeGroup,
-  VdsTimeSlider,
-  VdsVolumeSlider,
+  createDefaultMediaUI,
+  DefaultCaptionButton,
+  DefaultChaptersMenu,
+  DefaultChapterTitle,
+  DefaultFullscreenButton,
+  DefaultMuteButton,
+  DefaultPIPButton,
+  DefaultPlayButton,
+  DefaultSettingsMenu,
+  DefaultTimeGroup,
+  DefaultTimeSlider,
+  DefaultVolumeSlider,
+  type DefaultMediaUIProps,
 } from './shared-ui';
 
+export interface DefaultVideoUIProps extends DefaultMediaUIProps {}
+
+const DefaultVideoUI = createDefaultMediaUI({
+  type: 'video',
+  smLayoutWhen: '(width < 576) or (height < 380)',
+  SmallLayout: DefaultVideoSmallLayout,
+  LargeLayout: DefaultVideoLayout,
+});
+
+DefaultVideoUI.displayName = 'DefaultVideoUI';
+export { DefaultVideoUI };
+
 /* -------------------------------------------------------------------------------------------------
- * VideoMobileLayout
+ * DefaultVideoLayout
  * -----------------------------------------------------------------------------------------------*/
 
-function VideoMobileLayout() {
+function DefaultVideoLayout() {
   return (
     <>
-      <VdsVideoGestures />
-      <VdsBufferingIndicator />
+      <DefaultVideoGestures />
+      <DefaultBufferingIndicator />
       <Captions className="vds-captions" />
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
           <div className="vds-controls-spacer" />
-          <VdsCaptionButton tooltip="bottom" />
-          <VdsChaptersMenu tooltip="bottom" placement="bottom end" />
-          <VdsSettingsMenu tooltip="bottom" placement="bottom end" />
-          <VdsMuteButton tooltip="bottom end" />
+          <DefaultVideoMenus />
+        </Controls.Group>
+
+        <div className="vds-controls-spacer" />
+
+        <Controls.Group className="vds-controls-group">
+          <DefaultTimeSlider />
+        </Controls.Group>
+
+        <Controls.Group className="vds-controls-group">
+          <DefaultPlayButton tooltip="top start" />
+          <DefaultMuteButton tooltip="top" />
+          <DefaultVolumeSlider />
+          <DefaultTimeGroup />
+          <DefaultChapterTitle />
+          <DefaultCaptionButton tooltip="top" />
+          <DefaultPIPButton tooltip="top" />
+          <DefaultFullscreenButton tooltip="top end" />
+        </Controls.Group>
+      </Controls.Root>
+    </>
+  );
+}
+
+DefaultVideoLayout.displayName = 'DefaultVideoLayout';
+export { DefaultVideoLayout };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultSmallVideoLayout
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultVideoSmallLayout() {
+  return (
+    <>
+      <DefaultVideoGestures />
+      <DefaultBufferingIndicator />
+      <Captions className="vds-captions" />
+      <Controls.Root className="vds-controls">
+        <Controls.Group className="vds-controls-group">
+          <div className="vds-controls-spacer" />
+          <DefaultCaptionButton tooltip="bottom" />
+          <DefaultVideoMenus />
+          <DefaultMuteButton tooltip="bottom end" />
         </Controls.Group>
         <div className="vds-controls-group">
-          <VdsPlayButton tooltip="top" />
+          <DefaultPlayButton tooltip="top" />
         </div>
         <Controls.Group className="vds-controls-group">
-          <VdsTimeGroup />
-          <VdsChapterTitle />
+          <DefaultTimeGroup />
+          <DefaultChapterTitle />
           <div className="vds-controls-spacer" />
-          <VdsFullscreenButton tooltip="top end" />
+          <DefaultFullscreenButton tooltip="top end" />
         </Controls.Group>
         <Controls.Group className="vds-controls-group">
-          <VdsTimeSlider />
+          <DefaultTimeSlider />
         </Controls.Group>
       </Controls.Root>
       <div className="vds-start-duration">
@@ -55,51 +109,14 @@ function VideoMobileLayout() {
   );
 }
 
-VideoMobileLayout.displayName = 'VideoMobileLayout';
-export { VideoMobileLayout };
+DefaultVideoSmallLayout.displayName = 'DefaultVideoSmallLayout';
+export { DefaultVideoSmallLayout };
 
 /* -------------------------------------------------------------------------------------------------
- * VideoDesktopLayout
+ * DefaultVideoGestures
  * -----------------------------------------------------------------------------------------------*/
 
-function VideoDesktopLayout() {
-  return (
-    <>
-      <VdsVideoGestures />
-      <VdsBufferingIndicator />
-      <Captions className="vds-captions" />
-      <Controls.Root className="vds-controls">
-        <Controls.Group className="vds-controls-group">
-          <div className="vds-controls-spacer" />
-          <VdsChaptersMenu tooltip="bottom end" placement="bottom end" />
-          <VdsSettingsMenu tooltip="bottom end" placement="bottom end" />
-        </Controls.Group>
-
-        <div className="vds-controls-spacer" />
-
-        <Controls.Group className="vds-controls-group">
-          <VdsTimeSlider />
-        </Controls.Group>
-
-        <Controls.Group className="vds-controls-group">
-          <VdsPlayButton tooltip="top start" />
-          <VdsMuteButton tooltip="top" />
-          <VdsVolumeSlider />
-          <VdsTimeGroup />
-          <VdsChapterTitle />
-          <VdsCaptionButton tooltip="top" />
-          <VdsPIPButton tooltip="top" />
-          <VdsFullscreenButton tooltip="top end" />
-        </Controls.Group>
-      </Controls.Root>
-    </>
-  );
-}
-
-VideoDesktopLayout.displayName = 'VideoDesktopLayout';
-export { VideoDesktopLayout };
-
-function VdsVideoGestures() {
+function DefaultVideoGestures() {
   return (
     <div className="vds-gestures">
       <Gesture className="vds-gesture" event="pointerup" action="toggle:paused" />
@@ -111,9 +128,14 @@ function VdsVideoGestures() {
   );
 }
 
-VdsVideoGestures.displayName = 'VdsVideoGestures';
+DefaultVideoGestures.displayName = 'DefaultVideoGestures';
+export { DefaultVideoGestures };
 
-function VdsBufferingIndicator() {
+/* -------------------------------------------------------------------------------------------------
+ * DefaultBufferingIndicator
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultBufferingIndicator() {
   return (
     <div className="vds-buffering-indicator">
       <svg className="vds-buffering-icon" fill="none" viewBox="0 0 120 120" aria-hidden="true">
@@ -137,4 +159,22 @@ function VdsBufferingIndicator() {
   );
 }
 
-VdsBufferingIndicator.displayName = 'VdsBufferingIndicator';
+DefaultBufferingIndicator.displayName = 'DefaultBufferingIndicator';
+export { DefaultBufferingIndicator };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultVideoMenus
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultVideoMenus() {
+  const { isSmallLayout } = React.useContext(DefaultUIContext),
+    placement = !isSmallLayout ? 'bottom end' : null;
+  return (
+    <>
+      <DefaultChaptersMenu tooltip="bottom" placement={placement} portalClass="vds-video-ui" />
+      <DefaultSettingsMenu tooltip="bottom" placement={placement} portalClass="vds-video-ui" />
+    </>
+  );
+}
+
+DefaultVideoMenus.displayName = 'DefaultVideoMenus';

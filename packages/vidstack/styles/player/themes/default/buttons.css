@@ -27,6 +27,10 @@
   touch-action: manipulation;
 }
 
+.vds-button {
+  border: var(--media-button-border);
+}
+
 :where([data-fullscreen] .vds-button) {
   width: var(--media-fullscreen-button-size, 42px);
   height: var(--media-fullscreen-button-size, 42px);

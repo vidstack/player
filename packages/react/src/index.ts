@@ -1,10 +1,4 @@
-declare module 'react' {
-  interface DOMAttributes<T> {
-    part?: string | undefined;
-  }
-}
-
-export * from 'vidstack/lib';
+export * from 'vidstack/local';
 export * from './components/primitives/instances';
 
 // Core
@@ -52,6 +46,8 @@ export type {
 export type { RootProps as VolumeSliderProps } from './components/ui/sliders/volume-slider';
 export type {
   RootProps as TimeSliderProps,
+  ChaptersProps as SliderChapterProps,
+  ChapterTitleProps as SliderChapterTitleProps,
   ThumbnailProps as SliderThumbnailProps,
   ThumbnailImgProps as SliderThumbnailImgProps,
   VideoProps as SliderVideoProps,
@@ -79,7 +75,12 @@ export type {
 
 // Display
 export { type GestureProps, Gesture } from './components/ui/gesture';
-export { type CaptionsProps, Captions } from './components/ui/captions';
+export { Captions, type CaptionsProps } from './components/ui/captions';
+export * as Caption from './components/ui/caption';
+export type {
+  RootProps as CaptionProps,
+  TextProps as CaptionTextProps,
+} from './components/ui/caption';
 export { type PosterProps, Poster } from './components/ui/poster';
 export { type TimeProps, Time } from './components/ui/time';
 export * as Thumbnail from './components/ui/thumbnail';
@@ -90,9 +91,11 @@ export type {
 
 // Hooks
 export * from './hooks/use-media-player';
+export * from './hooks/use-player-query';
 export * from './hooks/use-media-provider';
 export * from './hooks/use-media-remote';
 export * from './hooks/use-media-state';
+export * from './hooks/use-thumbnails';
 export * from './hooks/use-slider-state';
 export * from './hooks/use-active-text-cues';
 export * from './hooks/use-active-text-track';

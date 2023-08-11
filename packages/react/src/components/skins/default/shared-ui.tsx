@@ -1,33 +1,10 @@
 import * as React from 'react';
-import { useReactContext, useSignal } from 'maverick.js/react';
-import arrowLeftPaths from 'media-icons/dist/icons/arrow-left.js';
-import chaptersIconPaths from 'media-icons/dist/icons/chapters.js';
-import arrowRightPaths from 'media-icons/dist/icons/chevron-right.js';
-import ccOnIconPaths from 'media-icons/dist/icons/closed-captions-on.js';
-import ccIconPaths from 'media-icons/dist/icons/closed-captions.js';
-import exitFullscreenIconPaths from 'media-icons/dist/icons/fullscreen-exit.js';
-import enterFullscreenIconPaths from 'media-icons/dist/icons/fullscreen.js';
-import musicIconPaths from 'media-icons/dist/icons/music.js';
-import muteIconPaths from 'media-icons/dist/icons/mute.js';
-import odometerIconPaths from 'media-icons/dist/icons/odometer.js';
-import pauseIconPaths from 'media-icons/dist/icons/pause.js';
-import exitPIPIconPaths from 'media-icons/dist/icons/picture-in-picture-exit.js';
-import enterPIPIconPaths from 'media-icons/dist/icons/picture-in-picture.js';
-import playIconPaths from 'media-icons/dist/icons/play.js';
-import replayIconPaths from 'media-icons/dist/icons/replay.js';
-import seekBackward10IconPaths from 'media-icons/dist/icons/seek-backward-10.js';
-import seekForward10IconPaths from 'media-icons/dist/icons/seek-forward-10.js';
-import qualityIconPaths from 'media-icons/dist/icons/settings-menu.js';
-import settingsIconPaths from 'media-icons/dist/icons/settings.js';
-import volumeHighIconPaths from 'media-icons/dist/icons/volume-high.js';
-import volumeLowIconPaths from 'media-icons/dist/icons/volume-low.js';
+import { isString } from 'maverick.js/std';
 import {
-  defaultSkinContext,
   isTrackCaptionKind,
   type DefaultSkinTranslations,
-  type MenuPlacement,
   type TooltipPlacement,
-} from 'vidstack/lib';
+} from 'vidstack/local';
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { useChapterOptions } from '../../../hooks/options/use-chapter-options';
@@ -37,7 +14,8 @@ import { useActiveTextCues } from '../../../hooks/use-active-text-cues';
 import { useActiveTextTrack } from '../../../hooks/use-active-text-track';
 import { useMediaRemote } from '../../../hooks/use-media-remote';
 import { useMediaState } from '../../../hooks/use-media-state';
-import { Icon } from '../../../icon';
+import { usePlayerQuery } from '../../../hooks/use-player-query';
+import type { PrimitivePropsWithRef } from '../../primitives/nodes';
 import { CaptionButton } from '../../ui/buttons/caption-button';
 import { FullscreenButton } from '../../ui/buttons/fullscreen-button';
 import { MuteButton } from '../../ui/buttons/mute-button';
@@ -50,167 +28,265 @@ import * as VolumeSlider from '../../ui/sliders/volume-slider';
 import * as Thumbnail from '../../ui/thumbnail';
 import { Time } from '../../ui/time';
 import * as Tooltip from '../../ui/tooltip';
+import { DefaultUIContext, useI18N } from './context';
+import type { DefaultIcon, DefaultIcons } from './icons';
 
 /* -------------------------------------------------------------------------------------------------
- * PlayButton
+ * Types
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsPlayButton({ tooltip }: VdsButtonProps) {
-  const playText = useI18N('Play'),
+interface DefaultMediaButtonProps {
+  tooltip: Tooltip.ContentProps['placement'];
+}
+
+interface DefaultMediaMenuProps {
+  tooltip: Tooltip.ContentProps['placement'];
+  placement: Menu.ContentProps['placement'];
+  portalClass?: string;
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultMediaUI
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface DefaultMediaUIProps extends PrimitivePropsWithRef<'div'> {
+  icons: DefaultIcons;
+  thumbnails?: string;
+  translations?: DefaultSkinTranslations | null;
+  showTooltipDelay?: number;
+  showMenuDelay?: number;
+  smallLayoutWhen?: string | boolean;
+  children?: React.ReactNode;
+}
+
+export interface CreateDefaultMediaUI {
+  type: 'audio' | 'video';
+  smLayoutWhen: string;
+  SmallLayout: React.FC;
+  LargeLayout: React.FC;
+}
+
+export const createDefaultMediaUI = ({
+  type,
+  smLayoutWhen,
+  SmallLayout,
+  LargeLayout,
+}: CreateDefaultMediaUI) =>
+  React.forwardRef<HTMLDivElement, DefaultMediaUIProps>(
+    (
+      {
+        className,
+        icons,
+        thumbnails,
+        translations,
+        showMenuDelay,
+        showTooltipDelay,
+        smallLayoutWhen = smLayoutWhen,
+        children,
+        ...props
+      },
+      forwardRef,
+    ) => {
+      const $canLoad = useMediaState('canLoad'),
+        $viewType = useMediaState('viewType'),
+        isMatch = $viewType === type,
+        isForcedLayout = typeof smallLayoutWhen === 'boolean',
+        isSmallLayoutMatch = usePlayerQuery(isString(smallLayoutWhen) ? smallLayoutWhen : ''),
+        isSmallLayout = isForcedLayout ? smallLayoutWhen : isSmallLayoutMatch;
+
+      return (
+        <div
+          {...props}
+          className={`vds-${type}-ui` + (className ? ` ${className}` : '')}
+          data-match={isMatch ? '' : null}
+          data-layout={isSmallLayout ? 'sm' : null}
+          ref={forwardRef}
+        >
+          {($canLoad || isForcedLayout) && isMatch ? (
+            <DefaultUIContext.Provider
+              value={{
+                thumbnails,
+                translations,
+                isSmallLayout,
+                showMenuDelay,
+                showTooltipDelay,
+                Icons: icons,
+              }}
+            >
+              {isSmallLayout ? <SmallLayout /> : <LargeLayout />}
+              {children}
+            </DefaultUIContext.Provider>
+          ) : null}
+        </div>
+      );
+    },
+  );
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultTooltip
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface DefaultTooltipProps {
+  content: string;
+  placement?: TooltipPlacement;
+  children: React.ReactNode;
+}
+
+function DefaultTooltip({ content, placement, children }: DefaultTooltipProps) {
+  const { showTooltipDelay } = React.useContext(DefaultUIContext);
+  return (
+    <Tooltip.Root showDelay={showTooltipDelay}>
+      <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
+      <Tooltip.Content className="vds-tooltip-content" placement={placement}>
+        {content}
+      </Tooltip.Content>
+    </Tooltip.Root>
+  );
+}
+
+DefaultTooltip.displayName = 'DefaultTooltip';
+export { DefaultTooltip };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultPlayButton
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultPlayButton({ tooltip }: DefaultMediaButtonProps) {
+  const { Icons } = React.useContext(DefaultUIContext),
+    playText = useI18N('Play'),
     pauseText = useI18N('Pause'),
     paused = useMediaState('paused');
   return (
-    <Tooltip.Root>
-      <Tooltip.Trigger asChild>
-        <PlayButton className="vds-play-button vds-button">
-          <Icon paths={playIconPaths} data-state="play" />
-          <Icon paths={pauseIconPaths} data-state="pause" />
-          <Icon paths={replayIconPaths} data-state="replay" />
-        </PlayButton>
-      </Tooltip.Trigger>
-      <Tooltip.Content className="vds-tooltip-content" placement={tooltip}>
-        {paused ? playText : pauseText}
-      </Tooltip.Content>
-    </Tooltip.Root>
+    <DefaultTooltip content={paused ? playText : pauseText} placement={tooltip}>
+      <PlayButton className="vds-play-button vds-button">
+        <Icons.PlayButton.Play data-state="play" />
+        <Icons.PlayButton.Pause data-state="pause" />
+        <Icons.PlayButton.Replay data-state="replay" />
+      </PlayButton>
+    </DefaultTooltip>
   );
 }
 
-VdsPlayButton.displayName = 'VdsPlayButton';
-export { VdsPlayButton };
+DefaultPlayButton.displayName = 'DefaultPlayButton';
+export { DefaultPlayButton };
 
 /* -------------------------------------------------------------------------------------------------
- * MuteButton
+ * DefaultMuteButton
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsMuteButton({ tooltip }: VdsButtonProps) {
-  const muteText = useI18N('Mute'),
+function DefaultMuteButton({ tooltip }: DefaultMediaButtonProps) {
+  const { Icons } = React.useContext(DefaultUIContext),
+    muteText = useI18N('Mute'),
     unmuteText = useI18N('Unmute'),
     muted = useMediaState('muted');
   return (
-    <Tooltip.Root>
-      <Tooltip.Trigger asChild>
-        <MuteButton className="vds-mute-button vds-button">
-          <Icon paths={muteIconPaths} data-state="volume-mute" />
-          <Icon paths={volumeLowIconPaths} data-state="volume-low" />
-          <Icon paths={volumeHighIconPaths} data-state="volume-high" />
-        </MuteButton>
-      </Tooltip.Trigger>
-      <Tooltip.Content className="vds-tooltip-content" placement={tooltip}>
-        {muted ? unmuteText : muteText}
-      </Tooltip.Content>
-    </Tooltip.Root>
+    <DefaultTooltip content={muted ? unmuteText : muteText} placement={tooltip}>
+      <MuteButton className="vds-mute-button vds-button">
+        <Icons.MuteButton.Mute data-state="volume-mute" />
+        <Icons.MuteButton.VolumeLow data-state="volume-low" />
+        <Icons.MuteButton.VolumeHigh data-state="volume-high" />
+      </MuteButton>
+    </DefaultTooltip>
   );
 }
 
-VdsMuteButton.displayName = 'VdsMuteButton';
-export { VdsMuteButton };
+DefaultMuteButton.displayName = 'DefaultMuteButton';
+export { DefaultMuteButton };
 
 /* -------------------------------------------------------------------------------------------------
- * CaptionButton
+ * DefaultCaptionButton
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsCaptionButton({ tooltip }: VdsButtonProps) {
-  const onText = useI18N('Closed-Captions On'),
+function DefaultCaptionButton({ tooltip }: DefaultMediaButtonProps) {
+  const { Icons } = React.useContext(DefaultUIContext),
+    onText = useI18N('Closed-Captions On'),
     offText = useI18N('Closed-Captions Off'),
     track = useMediaState('textTrack');
   return (
-    <Tooltip.Root>
-      <Tooltip.Trigger asChild>
-        <CaptionButton className="vds-caption-button vds-button">
-          <Icon paths={ccIconPaths} data-state="on" />
-          <Icon paths={ccOnIconPaths} data-state="off" />
-        </CaptionButton>
-      </Tooltip.Trigger>
-      <Tooltip.Content className="vds-tooltip-content" placement={tooltip}>
-        {track && isTrackCaptionKind(track) ? offText : onText}
-      </Tooltip.Content>
-    </Tooltip.Root>
+    <DefaultTooltip
+      content={track && isTrackCaptionKind(track) ? onText : offText}
+      placement={tooltip}
+    >
+      <CaptionButton className="vds-caption-button vds-button">
+        <Icons.CaptionButton.On data-state="on" />
+        <Icons.CaptionButton.Off data-state="off" />
+      </CaptionButton>
+    </DefaultTooltip>
   );
 }
 
-export { VdsCaptionButton };
+DefaultCaptionButton.displayName = 'DefaultCaptionButton';
+export { DefaultCaptionButton };
 
 /* -------------------------------------------------------------------------------------------------
- * PIPButton
+ * DefaultPIPButton
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsPIPButton({ tooltip }: VdsButtonProps) {
-  const enterText = useI18N('Enter PiP'),
+function DefaultPIPButton({ tooltip }: DefaultMediaButtonProps) {
+  const { Icons } = React.useContext(DefaultUIContext),
+    enterText = useI18N('Enter PiP'),
     exitText = useI18N('Exit PiP'),
     pip = useMediaState('pictureInPicture');
   return (
-    <Tooltip.Root>
-      <Tooltip.Trigger asChild>
-        <PIPButton className="vds-pip-button vds-button">
-          <Icon paths={enterPIPIconPaths} data-state="enter" />
-          <Icon paths={exitPIPIconPaths} data-state="exit" />
-        </PIPButton>
-      </Tooltip.Trigger>
-      <Tooltip.Content className="vds-tooltip-content" placement={tooltip}>
-        {pip ? exitText : enterText}
-      </Tooltip.Content>
-    </Tooltip.Root>
+    <DefaultTooltip content={pip ? exitText : enterText} placement={tooltip}>
+      <PIPButton className="vds-pip-button vds-button">
+        <Icons.PIPButton.Enter data-state="enter" />
+        <Icons.PIPButton.Exit data-state="exit" />
+      </PIPButton>
+    </DefaultTooltip>
   );
 }
 
-VdsPIPButton.displayName = 'VdsPIPButton';
-export { VdsPIPButton };
+DefaultPIPButton.displayName = 'DefaultPIPButton';
+export { DefaultPIPButton };
 
 /* -------------------------------------------------------------------------------------------------
- * FullscreenButton
+ * DefaultFullscreenButton
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsFullscreenButton({ tooltip }: VdsButtonProps) {
-  const enterText = useI18N('Enter Fullscreen'),
+function DefaultFullscreenButton({ tooltip }: DefaultMediaButtonProps) {
+  const { Icons } = React.useContext(DefaultUIContext),
+    enterText = useI18N('Enter Fullscreen'),
     exitText = useI18N('Exit Fullscreen'),
     fullscreen = useMediaState('fullscreen');
   return (
-    <Tooltip.Root>
-      <Tooltip.Trigger asChild>
-        <FullscreenButton className="vds-fullscreen-button vds-button">
-          <Icon paths={enterFullscreenIconPaths} data-state="enter" />
-          <Icon paths={exitFullscreenIconPaths} data-state="exit" />
-        </FullscreenButton>
-      </Tooltip.Trigger>
-      <Tooltip.Content className="vds-tooltip-content" placement={tooltip}>
-        {fullscreen ? exitText : enterText}
-      </Tooltip.Content>
-    </Tooltip.Root>
+    <DefaultTooltip content={fullscreen ? exitText : enterText} placement={tooltip}>
+      <FullscreenButton className="vds-fullscreen-button vds-button">
+        <Icons.FullscreenButton.Enter data-state="enter" />
+        <Icons.FullscreenButton.Exit data-state="exit" />
+      </FullscreenButton>
+    </DefaultTooltip>
   );
 }
 
-VdsFullscreenButton.displayName = 'VdsFullscreenButton';
-export { VdsFullscreenButton };
+DefaultFullscreenButton.displayName = 'DefaultFullscreenButton';
+export { DefaultFullscreenButton };
 
 /* -------------------------------------------------------------------------------------------------
- * SeekButton
+ * DefaultSeekButton
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsSeekButton({ seconds, tooltip }: VdsButtonProps & { seconds: number }) {
-  const seekForwardText = useI18N('Seek Forward'),
+function DefaultSeekButton({ seconds, tooltip }: DefaultMediaButtonProps & { seconds: number }) {
+  const { Icons } = React.useContext(DefaultUIContext),
+    seekForwardText = useI18N('Seek Forward'),
     seekBackwardText = useI18N('Seek Backward');
   return (
-    <Tooltip.Root>
-      <Tooltip.Trigger asChild>
-        <SeekButton className="vds-seek-button vds-button" seconds={seconds}>
-          <Icon paths={seconds >= 0 ? seekForward10IconPaths : seekBackward10IconPaths} />
-        </SeekButton>
-      </Tooltip.Trigger>
-      <Tooltip.Content className="vds-tooltip-content" placement={tooltip}>
-        {seconds >= 0 ? seekForwardText : seekBackwardText}
-      </Tooltip.Content>
-    </Tooltip.Root>
+    <DefaultTooltip content={seconds >= 0 ? seekForwardText : seekBackwardText} placement={tooltip}>
+      <SeekButton className="vds-seek-button vds-button" seconds={seconds}>
+        {seconds >= 0 ? <Icons.SeekButton.Forward /> : <Icons.SeekButton.Backward />}
+      </SeekButton>
+    </DefaultTooltip>
   );
 }
 
-VdsSeekButton.displayName = 'VdsSeekButton';
-export { VdsSeekButton };
+DefaultSeekButton.displayName = 'DefaultSeekButton';
+export { DefaultSeekButton };
 
 /* -------------------------------------------------------------------------------------------------
- * VolumeSlider
+ * DefaultVolumeSlider
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsVolumeSlider() {
+function DefaultVolumeSlider() {
   return (
     <VolumeSlider.Root className="vds-volume-slider vds-slider">
       <VolumeSlider.Track className="vds-slider-track" />
@@ -223,17 +299,18 @@ function VdsVolumeSlider() {
   );
 }
 
-VdsVolumeSlider.displayName = 'VdsVolumeSlider';
-export { VdsVolumeSlider };
+DefaultVolumeSlider.displayName = 'DefaultVolumeSlider';
+export { DefaultVolumeSlider };
 
 /* -------------------------------------------------------------------------------------------------
- * TimeSlider
+ * DefaultTimeSlider
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsTimeSlider() {
+function DefaultTimeSlider() {
+  const { thumbnails, isSmallLayout } = React.useContext(DefaultUIContext);
   return (
     <TimeSlider.Root className="vds-time-slider vds-slider">
-      <TimeSlider.Chapters className="vds-slider-chapters">
+      <TimeSlider.Chapters className="vds-slider-chapters" disabled={isSmallLayout}>
         {(cues, forwardRef) =>
           cues.map((cue) => (
             <div className="vds-slider-chapter" key={cue.startTime} ref={forwardRef}>
@@ -246,7 +323,7 @@ function VdsTimeSlider() {
       </TimeSlider.Chapters>
       <TimeSlider.Thumb className="vds-slider-thumb" />
       <TimeSlider.Preview className="vds-slider-preview">
-        <TimeSlider.Thumbnail.Root className="vds-slider-thumbnail vds-thumbnail">
+        <TimeSlider.Thumbnail.Root src={thumbnails} className="vds-slider-thumbnail vds-thumbnail">
           <TimeSlider.Thumbnail.Img />
         </TimeSlider.Thumbnail.Root>
         <TimeSlider.ChapterTitle className="vds-slider-chapter-title" />
@@ -256,26 +333,26 @@ function VdsTimeSlider() {
   );
 }
 
-VdsTimeSlider.displayName = 'VdsTimeSlider';
-export { VdsTimeSlider };
+DefaultTimeSlider.displayName = 'DefaultTimeSlider';
+export { DefaultTimeSlider };
 
 /* -------------------------------------------------------------------------------------------------
  * MainTitle
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsMainTitle() {
+function DefaultMainTitle() {
   const $title = useMediaState('title');
   return <span className="vds-media-title">{$title}</span>;
 }
 
-VdsMainTitle.displayName = 'VdsMainTitle';
-export { VdsMainTitle };
+DefaultMainTitle.displayName = 'DefaultMainTitle';
+export { DefaultMainTitle };
 
 /* -------------------------------------------------------------------------------------------------
- * ChapterTitle
+ * DefaultChapterTitle
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsChapterTitle() {
+function DefaultChapterTitle() {
   const $started = useMediaState('started'),
     $title = useMediaState('title'),
     track = useActiveTextTrack('chapters'),
@@ -283,14 +360,14 @@ function VdsChapterTitle() {
   return <span className="vds-media-title">{$started ? cues[0]?.text || $title : $title}</span>;
 }
 
-VdsChapterTitle.displayName = 'VdsChapterTitle';
-export { VdsChapterTitle };
+DefaultChapterTitle.displayName = 'DefaultChapterTitle';
+export { DefaultChapterTitle };
 
 /* -------------------------------------------------------------------------------------------------
- * TimeGroup
+ * DefaultTimeGroup
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsTimeGroup() {
+function DefaultTimeGroup() {
   return (
     <div className="vds-time-group">
       <Time className="vds-time" type="current" />
@@ -300,36 +377,36 @@ function VdsTimeGroup() {
   );
 }
 
-VdsTimeGroup.displayName = 'VdsTimeGroup';
-export { VdsTimeGroup };
+DefaultTimeGroup.displayName = 'DefaultTimeGroup';
+export { DefaultTimeGroup };
 
 /* -------------------------------------------------------------------------------------------------
- * ChaptersMenu
+ * DefaultChaptersMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsChaptersMenu({ tooltip, placement }: VdsMenuProps) {
-  const chaptersText = useI18N('Chapters'),
+function DefaultChaptersMenu({
+  tooltip,
+  placement,
+  portalClass: containerClass,
+}: DefaultMediaMenuProps) {
+  const { showMenuDelay, Icons } = React.useContext(DefaultUIContext),
+    chaptersText = useI18N('Chapters'),
     options = useChapterOptions(),
-    thumbnailCues = useMediaState('thumbnailCues'),
-    disabled = !options.length;
+    disabled = !options.length,
+    { thumbnails } = React.useContext(DefaultUIContext);
   return (
-    <Menu.Root className="vds-chapters-menu vds-menu">
-      <Tooltip.Root>
-        <Tooltip.Trigger asChild>
-          <Menu.Button className="vds-menu-button vds-button" disabled={disabled}>
-            <Icon paths={chaptersIconPaths} />
-          </Menu.Button>
-        </Tooltip.Trigger>
-        <Tooltip.Content className="vds-tooltip-content" placement={tooltip}>
-          {chaptersText}
-        </Tooltip.Content>
-      </Tooltip.Root>
-      <Menu.Portal disabled="fullscreen">
+    <Menu.Root className="vds-chapters-menu vds-menu" showDelay={showMenuDelay}>
+      <DefaultTooltip content={chaptersText} placement={tooltip}>
+        <Menu.Button className="vds-menu-button vds-button" disabled={disabled}>
+          <Icons.Menu.Chapters />
+        </Menu.Button>
+      </DefaultTooltip>
+      <Menu.Portal className={containerClass} disabled="fullscreen">
         <Menu.Content className="vds-chapters-menu-items vds-menu-items" placement={placement}>
           <Menu.RadioGroup
             className="vds-chapters-radio-group vds-radio-group"
             value={options.selectedValue}
-            data-thumbnails={thumbnailCues.length}
+            data-thumbnails={!!thumbnails}
           >
             {options.map(
               ({ cue, label, value, startTimeText, durationText, select, setProgressVar }) => (
@@ -340,7 +417,7 @@ function VdsChaptersMenu({ tooltip, placement }: VdsMenuProps) {
                   onSelect={select}
                   ref={setProgressVar}
                 >
-                  <Thumbnail.Root className="vds-thumbnail" time={cue.startTime}>
+                  <Thumbnail.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
                     <Thumbnail.Img />
                   </Thumbnail.Root>
                   <div className="vds-chapter-radio-content">
@@ -358,83 +435,82 @@ function VdsChaptersMenu({ tooltip, placement }: VdsMenuProps) {
   );
 }
 
-VdsChaptersMenu.displayName = 'VdsChaptersMenu';
-export { VdsChaptersMenu };
+DefaultChaptersMenu.displayName = 'DefaultChaptersMenu';
+export { DefaultChaptersMenu };
 
 /* -------------------------------------------------------------------------------------------------
- * SettingsMenu
+ * DefaultSettingsMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsSettingsMenu({ tooltip, placement }: VdsMenuProps) {
-  const settingsText = useI18N('Settings');
+function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
+  const { showMenuDelay, Icons } = React.useContext(DefaultUIContext),
+    settingsText = useI18N('Settings');
   return (
-    <Menu.Root className="vds-settings-menu vds-menu">
-      <Tooltip.Root>
-        <Tooltip.Trigger asChild>
-          <Menu.Button className="vds-menu-button vds-button">
-            <Icon className="vds-rotate-icon" paths={settingsIconPaths} />
-          </Menu.Button>
-        </Tooltip.Trigger>
-        <Tooltip.Content className="vds-tooltip-content" placement={tooltip}>
-          {settingsText}
-        </Tooltip.Content>
-      </Tooltip.Root>
-      <Menu.Portal disabled="fullscreen">
+    <Menu.Root className="vds-settings-menu vds-menu" showDelay={showMenuDelay}>
+      <DefaultTooltip content={settingsText} placement={tooltip}>
+        <Menu.Button className="vds-menu-button vds-button">
+          <Icons.Menu.Settings className="vds-rotate-icon" />
+        </Menu.Button>
+      </DefaultTooltip>
+      <Menu.Portal className={portalClass} disabled="fullscreen">
         <Menu.Content className="vds-settings-menu-items vds-menu-items" placement={placement}>
-          <VdsAudioSubmenu />
-          <VdsSpeedSubmenu />
-          <VdsQualitySubmenu />
-          <VdsCaptionSubmenu />
+          <DefaultAudioSubmenu />
+          <DefaultSpeedSubmenu />
+          <DefaultQualitySubmenu />
+          <DefaultCaptionSubmenu />
         </Menu.Content>
       </Menu.Portal>
     </Menu.Root>
   );
 }
 
-VdsSettingsMenu.displayName = 'VdsSettingsMenu';
-export { VdsSettingsMenu };
+DefaultSettingsMenu.displayName = 'DefaultSettingsMenu';
+export { DefaultSettingsMenu };
 
 /* -------------------------------------------------------------------------------------------------
- * SubmenuButton
+ * DefaultSubmenuButton
  * -----------------------------------------------------------------------------------------------*/
 
-interface SubmenuButtonProps {
+export interface DefaultSubmenuButtonProps {
   label: string;
   hint: string;
-  icon: string;
   disabled: boolean;
+  Icon: DefaultIcon;
 }
 
-function VdsSubmenuButton({ label, hint, icon, disabled }: SubmenuButtonProps) {
+function DefaultSubmenuButton({ label, hint, Icon, disabled }: DefaultSubmenuButtonProps) {
+  const { Icons } = React.useContext(DefaultUIContext);
   return (
     <Menu.Button className="vds-menu-button" disabled={disabled}>
-      <Icon className="vds-menu-button-close-icon" paths={arrowLeftPaths} />
-      <Icon className="vds-menu-button-icon" paths={icon} />
+      <Icons.Menu.ArrowLeft className="vds-menu-button-close-icon" />
+      <Icon className="vds-menu-button-icon" />
       <span className="vds-menu-button-label">{label}</span>
       <span className="vds-menu-button-hint">{hint}</span>
-      <Icon className="vds-menu-button-open-icon" paths={arrowRightPaths} />
+      <Icons.Menu.ArrowRight className="vds-menu-button-open-icon" />
     </Menu.Button>
   );
 }
 
-VdsSubmenuButton.displayName = 'VdsSubmenuButton';
+DefaultSubmenuButton.displayName = 'DefaultSubmenuButton';
+export { DefaultSubmenuButton };
 
 /* -------------------------------------------------------------------------------------------------
- * AudioSubmenu
+ * DefaultAudioSubmenu
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsAudioSubmenu() {
-  const label = useI18N('Audio'),
+function DefaultAudioSubmenu() {
+  const { Icons } = React.useContext(DefaultUIContext),
+    label = useI18N('Audio'),
     defaultText = useI18N('Default'),
     track = useMediaState('audioTrack'),
     options = useAudioOptions();
   return (
     <Menu.Root className="vds-audio-menu vds-menu">
-      <VdsSubmenuButton
+      <DefaultSubmenuButton
         label={label}
         hint={track?.label ?? defaultText}
-        icon={musicIconPaths}
         disabled={!options.length}
+        Icon={Icons.Menu.Audio}
       />
       <Menu.Content className="vds-menu-items">
         <Menu.RadioGroup
@@ -458,24 +534,25 @@ function VdsAudioSubmenu() {
   );
 }
 
-VdsAudioSubmenu.displayName = 'VdsAudioSubmenu';
+DefaultAudioSubmenu.displayName = 'DefaultAudioSubmenu';
 
 /* -------------------------------------------------------------------------------------------------
- * SpeedSubmenu
+ * DefaultSpeedSubmenu
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsSpeedSubmenu() {
-  const label = useI18N('Speed'),
+function DefaultSpeedSubmenu() {
+  const { Icons } = React.useContext(DefaultUIContext),
+    label = useI18N('Speed'),
     normalText = useI18N('Normal'),
     options = usePlaybackRateOptions(),
     hint = options.selectedValue === '1' ? normalText : options.selectedValue + 'x';
   return (
     <Menu.Root className="vds-speed-menu vds-menu">
-      <VdsSubmenuButton
+      <DefaultSubmenuButton
         label={label}
         hint={hint}
-        icon={odometerIconPaths}
         disabled={!options.length}
+        Icon={Icons.Menu.Speed}
       />
       <Menu.Content className="vds-menu-items">
         <Menu.RadioGroup
@@ -499,32 +576,33 @@ function VdsSpeedSubmenu() {
   );
 }
 
-VdsSpeedSubmenu.displayName = 'VdsSpeedSubmenu';
+DefaultSpeedSubmenu.displayName = 'DefaultSpeedSubmenu';
 
 /* -------------------------------------------------------------------------------------------------
- * QualitySubmenu
+ * DefaultQualitySubmenu
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsQualitySubmenu() {
-  const label = useI18N('Quality'),
+function DefaultQualitySubmenu() {
+  const { Icons } = React.useContext(DefaultUIContext),
+    label = useI18N('Quality'),
     autoText = useI18N('Auto'),
-    options = useVideoQualityOptions({ sort: 'descending' }),
     autoQuality = useMediaState('autoQuality'),
+    options = useVideoQualityOptions({ sort: 'descending' }),
     remote = useMediaRemote(),
     currentQualityText = options.selectedQuality?.height + 'p' ?? '',
     hint = !autoQuality ? currentQualityText : `${autoText} (${currentQualityText})`;
   return (
     <Menu.Root className="vds-quality-menu vds-menu">
-      <VdsSubmenuButton
+      <DefaultSubmenuButton
         label={label}
         hint={hint}
-        icon={qualityIconPaths}
         disabled={!options.length}
+        Icon={Icons.Menu.Quality}
       />
       <Menu.Content className="vds-menu-items">
         <Menu.RadioGroup
           className="vds-quality-radio-group vds-radio-group"
-          value={options.selectedValue}
+          value={autoQuality ? 'auto' : options.selectedValue}
         >
           <Menu.Radio
             className="vds-quality-radio vds-radio"
@@ -552,14 +630,15 @@ function VdsQualitySubmenu() {
   );
 }
 
-VdsQualitySubmenu.displayName = 'VdsQualitySubmenu';
+DefaultQualitySubmenu.displayName = 'DefaultQualitySubmenu';
 
 /* -------------------------------------------------------------------------------------------------
- * CaptionSubmenu
+ * DefaultCaptionSubmenu
  * -----------------------------------------------------------------------------------------------*/
 
-function VdsCaptionSubmenu() {
-  const label = useI18N('Captions'),
+function DefaultCaptionSubmenu() {
+  const { Icons } = React.useContext(DefaultUIContext),
+    label = useI18N('Captions'),
     offText = useI18N('Off'),
     track = useMediaState('textTrack'),
     options = useCaptionOptions(),
@@ -567,7 +646,12 @@ function VdsCaptionSubmenu() {
     hint = track && isTrackCaptionKind(track) && track.mode === 'showing' ? track.label : offText;
   return (
     <Menu.Root className="vds-captions-menu vds-menu">
-      <VdsSubmenuButton label={label} hint={hint} icon={ccIconPaths} disabled={!options.length} />
+      <DefaultSubmenuButton
+        label={label}
+        hint={hint}
+        disabled={!options.length}
+        Icon={Icons.Menu.Captions}
+      />
       <Menu.Content className="vds-menu-items">
         <Menu.RadioGroup
           className="vds-captions-radio-group vds-radio-group"
@@ -598,27 +682,4 @@ function VdsCaptionSubmenu() {
   );
 }
 
-VdsCaptionSubmenu.displayName = 'VdsCaptionSubmenu';
-
-/* -------------------------------------------------------------------------------------------------
- * I18N
- * -----------------------------------------------------------------------------------------------*/
-
-function useI18N(key: keyof DefaultSkinTranslations): string {
-  const { translations } = useReactContext(defaultSkinContext)!,
-    $translations = useSignal(translations);
-  return $translations?.[key] ?? key;
-}
-
-/* -------------------------------------------------------------------------------------------------
- * Types
- * -----------------------------------------------------------------------------------------------*/
-
-interface VdsButtonProps {
-  tooltip: TooltipPlacement;
-}
-
-interface VdsMenuProps {
-  placement: MenuPlacement;
-  tooltip: TooltipPlacement;
-}
+DefaultCaptionSubmenu.displayName = 'DefaultCaptionSubmenu';

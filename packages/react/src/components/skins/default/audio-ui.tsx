@@ -1,39 +1,84 @@
-/* -------------------------------------------------------------------------------------------------
- * AudioMobileLayout
- * -----------------------------------------------------------------------------------------------*/
-
 import * as React from 'react';
 import { Captions } from '../../ui/captions';
 import * as Controls from '../../ui/controls';
 import { Time } from '../../ui/time';
+import { DefaultUIContext } from './context';
 import {
-  VdsCaptionButton,
-  VdsChaptersMenu,
-  VdsChapterTitle,
-  VdsMuteButton,
-  VdsPlayButton,
-  VdsSeekButton,
-  VdsSettingsMenu,
-  VdsTimeGroup,
-  VdsTimeSlider,
-  VdsVolumeSlider,
+  createDefaultMediaUI,
+  DefaultCaptionButton,
+  DefaultChaptersMenu,
+  DefaultChapterTitle,
+  DefaultMuteButton,
+  DefaultPlayButton,
+  DefaultSeekButton,
+  DefaultSettingsMenu,
+  DefaultTimeGroup,
+  DefaultTimeSlider,
+  DefaultVolumeSlider,
+  type DefaultMediaUIProps,
 } from './shared-ui';
 
-function AudioMobileLayout() {
+export interface DefaultAudioUIProps extends DefaultMediaUIProps {}
+
+const DefaultAudioUI = createDefaultMediaUI({
+  type: 'audio',
+  smLayoutWhen: '(width < 576)',
+  SmallLayout: DefaultAudioSmallLayout,
+  LargeLayout: DefaultAudioLayout,
+});
+
+DefaultAudioUI.displayName = 'DefaultAudioUI';
+export { DefaultAudioUI };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultAudioLayout
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultAudioLayout() {
   return (
     <>
       <Captions className="vds-captions" />
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
-          <VdsMuteButton tooltip="top start" />
-          <VdsChapterTitle />
-          <VdsCaptionButton tooltip="top center" />
-          <VdsChaptersMenu tooltip="top center" placement="top" />
-          <VdsSettingsMenu tooltip="top end" placement="top end" />
+          <DefaultTimeSlider />
+        </Controls.Group>
+        <Controls.Group className="vds-controls-group">
+          <DefaultSeekButton seconds={-10} tooltip="top start" />
+          <DefaultPlayButton tooltip="top center" />
+          <DefaultSeekButton seconds={10} tooltip="top center" />
+          <DefaultTimeGroup />
+          <DefaultChapterTitle />
+          <DefaultMuteButton tooltip="top center" />
+          <DefaultVolumeSlider />
+          <DefaultCaptionButton tooltip="top center" />
+          <DefaultAudioMenus />
+        </Controls.Group>
+      </Controls.Root>
+    </>
+  );
+}
+
+DefaultAudioLayout.displayName = 'DefaultAudioLayout';
+export { DefaultAudioLayout };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultAudioSmallLayout
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultAudioSmallLayout() {
+  return (
+    <>
+      <Captions className="vds-captions" />
+      <Controls.Root className="vds-controls">
+        <Controls.Group className="vds-controls-group">
+          <DefaultMuteButton tooltip="top start" />
+          <DefaultChapterTitle />
+          <DefaultCaptionButton tooltip="top center" />
+          <DefaultAudioMenus />
         </Controls.Group>
 
         <Controls.Group className="vds-controls-group">
-          <VdsTimeSlider />
+          <DefaultTimeSlider />
         </Controls.Group>
 
         <Controls.Group className="vds-controls-group">
@@ -44,9 +89,9 @@ function AudioMobileLayout() {
 
         <Controls.Group className="vds-controls-group">
           <div className="vds-controls-spacer" />
-          <VdsSeekButton seconds={-10} tooltip="top center" />
-          <VdsPlayButton tooltip="top center" />
-          <VdsSeekButton seconds={10} tooltip="top center" />
+          <DefaultSeekButton seconds={-10} tooltip="top center" />
+          <DefaultPlayButton tooltip="top center" />
+          <DefaultSeekButton seconds={10} tooltip="top center" />
           <div className="vds-controls-spacer" />
         </Controls.Group>
       </Controls.Root>
@@ -54,37 +99,22 @@ function AudioMobileLayout() {
   );
 }
 
-AudioMobileLayout.displayName = 'AudioMobileLayout';
-export { AudioMobileLayout };
+DefaultAudioSmallLayout.displayName = 'DefaultAudioSmallLayout';
+export { DefaultAudioSmallLayout };
 
 /* -------------------------------------------------------------------------------------------------
- * AudioDesktopLayout
+ * DefaultAudioMenus
  * -----------------------------------------------------------------------------------------------*/
 
-function AudioDesktopLayout() {
+function DefaultAudioMenus() {
+  const { isSmallLayout } = React.useContext(DefaultUIContext),
+    placement = !isSmallLayout ? 'top end' : null;
   return (
     <>
-      <Captions className="vds-captions" />
-      <Controls.Root className="vds-controls">
-        <Controls.Group className="vds-controls-group">
-          <VdsTimeSlider />
-        </Controls.Group>
-        <Controls.Group className="vds-controls-group">
-          <VdsSeekButton seconds={-10} tooltip="top start" />
-          <VdsPlayButton tooltip="top center" />
-          <VdsSeekButton seconds={10} tooltip="top center" />
-          <VdsTimeGroup />
-          <VdsChapterTitle />
-          <VdsMuteButton tooltip="top center" />
-          <VdsVolumeSlider />
-          <VdsCaptionButton tooltip="top center" />
-          <VdsChaptersMenu tooltip="top center" placement="top end" />
-          <VdsSettingsMenu tooltip="top end" placement="top end" />
-        </Controls.Group>
-      </Controls.Root>
+      <DefaultChaptersMenu tooltip="top" placement={placement} portalClass="vds-audio-ui" />
+      <DefaultSettingsMenu tooltip="top end" placement={placement} portalClass="vds-audio-ui" />
     </>
   );
 }
 
-AudioDesktopLayout.displayName = 'AudioDesktopLayout';
-export { AudioDesktopLayout };
+DefaultAudioMenus.displayName = 'DefaultAudioMenus';

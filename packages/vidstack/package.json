@@ -22,14 +22,14 @@
     "empty.vtt",
     "vscode.html-data.json",
     "!analyze.json.d.ts",
-    "!lib.d.ts"
+    "!local.d.ts"
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.ts\"",
     "build": "rollup -c",
-    "build:lib": "rollup -c -w --config-lib",
+    "build:local": "rollup -c -w --config-local",
     "types": "tsc -p tsconfig.build.json && rollup -c --config-types",
-    "clean": "rimraf dist cdn lib",
+    "clean": "rimraf dist cdn local",
     "format": "prettier src --write --loglevel warn",
     "sandbox": "node ../../.scripts/sandbox.js",
     "sandbox:build": "vite build sandbox",
@@ -59,7 +59,7 @@
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
-    "maverick.js": "0.38.2",
+    "maverick.js": "0.38.3",
     "media-icons": "0.10.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
@@ -95,11 +95,11 @@
       "development": "./dist/dev/vidstack.js",
       "default": "./dist/prod/vidstack.js"
     },
-    "./lib": {
-      "types": "./lib.d.ts",
-      "node": "./lib/server/vidstack.js",
-      "development": "./lib/dev/vidstack.js",
-      "default": "./lib/prod/vidstack.js"
+    "./local": {
+      "types": "./local.d.ts",
+      "node": "./local/server/vidstack.js",
+      "development": "./local/dev/vidstack.js",
+      "default": "./local/prod/vidstack.js"
     },
     "./elements": {
       "types": "./elements.d.ts",

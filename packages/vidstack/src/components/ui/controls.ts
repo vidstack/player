@@ -1,6 +1,5 @@
 import { Component, effect } from 'maverick.js';
 import { DOMEvent, setStyle } from 'maverick.js/std';
-
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { setAttributeIfEmpty } from '../../utils/dom';
 

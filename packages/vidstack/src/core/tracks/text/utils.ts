@@ -4,7 +4,7 @@ import type { VTTCue } from 'media-captions';
 import type { TextTrack } from './text-track';
 import type { TextTrackList } from './text-tracks';
 
-export function findActiveCue(time: number, cues: readonly VTTCue[]): VTTCue | null {
+export function findActiveCue(cues: readonly VTTCue[], time: number): VTTCue | null {
   for (let i = 0, len = cues.length; i < len; i++) {
     if (isCueActive(cues[i], time)) return cues[i];
   }

@@ -1,10 +1,11 @@
 import { html } from 'lit-html';
-import { computed } from 'maverick.js';
+import { computed, onDispose } from 'maverick.js';
 import { Host } from 'maverick.js/element';
-import { DefaultAudioUI } from '../../../../components';
+import { DefaultAudioUI } from '../../../../components/skins/default-skin';
 import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
-import { LargeAudioUI, SmallAudioUI } from './audio-ui';
+import { DefaultAudioLayout, DefaultAudioSmallLayout } from './audio-ui';
+import { createMenuContainer } from './shared-ui';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/core-concepts/skins#default-skin}
@@ -24,8 +25,17 @@ export class MediaAudioUIElement extends Host(LitElement, DefaultAudioUI) implem
     this.classList.add('vds-audio-ui');
   }
 
+  protected onSetup() {
+    const menuContainer = createMenuContainer('vds-audio-ui');
+    onDispose(() => menuContainer.remove());
+  }
+
   private _render() {
-    return this.isMatch ? (this.isSmallMatch ? SmallAudioUI() : LargeAudioUI()) : null;
+    return this.isMatch
+      ? this.isSmallLayout
+        ? DefaultAudioSmallLayout()
+        : DefaultAudioLayout()
+      : null;
   }
 
   render() {

@@ -10,6 +10,8 @@ import {
 import { useMediaContext } from './api/media-context';
 import { mediaState, type MediaState, type MediaStore } from './api/player-state';
 
+const globalEval = eval;
+
 const equalsRE = /:\s+'?"?(.*?)'?"?\)/g,
   notRE = /\s+not\s+/g,
   andRE = /\s+and\s+/g,
@@ -43,7 +45,7 @@ export class PlayerQueryList extends EventsTarget<PlayerQueryListEvents> {
       currentEval = currentEval.replace(camelToKebabCase(prop), replaceValue);
     }
 
-    return eval(`!!(${currentEval})`) && this._mediaMatches();
+    return globalEval(`!!(${currentEval})`) && this._mediaMatches();
   });
 
   get matches(): boolean {

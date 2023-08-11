@@ -9,7 +9,7 @@ import { Slot } from './slot';
  * Primitive
  * -----------------------------------------------------------------------------------------------*/
 
-const NODES = ['button', 'div', 'img', 'video', 'audio'] as const;
+const NODES = ['button', 'div', 'span', 'img', 'video', 'audio'] as const;
 
 export const Primitive = NODES.reduce((primitives, node) => {
   const Node = React.forwardRef((props: PrimitivePropsWithRef<typeof node>, forwardedRef: any) => {

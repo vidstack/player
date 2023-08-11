@@ -47,6 +47,7 @@
 }
 
 :where([data-media-player][data-view-type='audio'] [data-media-provider]) {
+  display: contents;
   background-color: unset;
 }
 

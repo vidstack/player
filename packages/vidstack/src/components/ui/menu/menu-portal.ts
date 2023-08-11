@@ -1,5 +1,5 @@
 import { Component, createContext, effect, provideContext } from 'maverick.js';
-import { isString, setAttribute } from 'maverick.js/std';
+import { setAttribute } from 'maverick.js/std';
 import type { MediaContext } from '../../../core';
 import { useMediaContext } from '../../../core/api/media-context';
 import { requestScopedAnimationFrame } from '../../../utils/dom';
@@ -46,25 +46,14 @@ export class MenuPortal extends Component<MenuPortalProps> {
     const { fullscreen } = this._media.$state,
       { disabled } = this.$props,
       _disabled = disabled();
-
     this._portal(_disabled === 'fullscreen' ? !fullscreen() : !_disabled);
   }
 
   private _portal(shouldPortal: boolean) {
     if (!this._target) return;
 
-    const selector = this.$props.container();
-
-    let container = isString(selector)
-      ? document.querySelector<HTMLElement>(`body > ${selector}`)
-      : document.body;
-
-    if (!container && selector) {
-      container = document.createElement('div');
-      container.style.display = 'contents';
-      if (selector.startsWith('.')) container.classList.add(selector.slice(1));
-      document.body.append(container);
-    }
+    let container = this._getContainer(this.$props.container());
+    if (!container) return;
 
     const isPortalled = this._target.parentElement === container;
     setAttribute(this._target, 'data-portal', shouldPortal);
@@ -79,30 +68,22 @@ export class MenuPortal extends Component<MenuPortalProps> {
       this.el?.append(this._target);
     }
   }
+
+  private _getContainer(selector: MenuPortalProps['container']) {
+    if (selector instanceof HTMLElement) return selector;
+    return selector ? document.querySelector<HTMLElement>(selector) : document.body;
+  }
 }
 
 export interface MenuPortalProps {
   /**
-   * Specifies the selector query for the container element that the menu should be portalled
-   * inside. Must be an immediate child of body. If the element doesn't exist it will be
-   * created to match the selector.
-   *
-   * For example, given the container name `.video-ui` the portal will be:
-   *
-   * ```html
-   * <body>
-   *   <div class="video-ui">
-   *     <div role="menu">
-   *       <!-- ... -->
-   *     </div>
-   *   </div>
-   * </body>
-   * ```
+   * Specifies a DOM element or query selector for the container that the menu should be portalled
+   * inside.
    */
-  container: string | null;
+  container: HTMLElement | string | null;
   /**
-   * Whether the portal should be disabled. The value 'fullscreen' will remove the portal
-   * and place the element in it's original DOM position during fullscreen.
+   * Whether the portal should be disabled. The value can be the string "fullscreen" to disable
+   * portals while media is fullscreen. This is to ensure the menu remains visible.
    */
   disabled: boolean | 'fullscreen';
 }

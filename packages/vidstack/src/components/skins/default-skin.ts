@@ -14,7 +14,7 @@ import { PlayerQueryList } from '../../core';
 export class DefaultSkin extends Component<DefaultSkinProps> {
   static props: DefaultSkinProps = {
     when: '',
-    smWhen: '',
+    smallLayoutWhen: '',
     thumbnails: '',
     translations: null,
   };
@@ -28,19 +28,19 @@ export class DefaultSkin extends Component<DefaultSkinProps> {
   }
 
   @prop
-  get isSmallMatch() {
+  get isSmallLayout() {
     return this._whenSmQueryList.matches;
   }
 
   protected override onSetup(): void {
-    const { when, smWhen, thumbnails, translations } = this.$props;
+    const { when, smallLayoutWhen, thumbnails, translations } = this.$props;
 
     this._whenQueryList = PlayerQueryList.create(when);
-    this._whenSmQueryList = PlayerQueryList.create(smWhen);
+    this._whenSmQueryList = PlayerQueryList.create(smallLayoutWhen);
 
     this.setAttributes({
       'data-match': this._whenQueryList.$matches,
-      'data-sm': this._whenSmQueryList.$matches,
+      'data-layout': () => (this._whenSmQueryList.matches ? 'sm' : null),
     });
 
     provideContext(defaultSkinContext, {
@@ -55,7 +55,7 @@ export class DefaultAudioUI extends DefaultSkin {
   static override props: DefaultSkinProps = {
     ...super.props,
     when: '(view-type: audio)',
-    smWhen: '(width < 576)',
+    smallLayoutWhen: '(width < 576)',
   };
 }
 
@@ -63,7 +63,7 @@ export class DefaultVideoUI extends DefaultSkin {
   static override props: DefaultSkinProps = {
     ...super.props,
     when: '(view-type: video)',
-    smWhen: '(width < 576) or (height < 380)',
+    smallLayoutWhen: '(width < 576) or (height < 380)',
   };
 }
 
@@ -78,7 +78,7 @@ export interface DefaultSkinProps {
    * special string 'never' will indicate that the small device optimized UI should never be
    * displayed.
    */
-  smWhen: string;
+  smallLayoutWhen: string;
   /**
    * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
    * file resource.
@@ -123,9 +123,9 @@ export interface DefaultSkinTranslations {
 
 export function i18n(
   translations: ReadSignal<DefaultSkinTranslations | null>,
-  key: keyof DefaultSkinTranslations,
+  word: keyof DefaultSkinTranslations,
 ) {
-  return translations()?.[key] ?? key;
+  return translations()?.[word] ?? word;
 }
 
 export const defaultSkinContext = createContext<DefaultSkinContext>();

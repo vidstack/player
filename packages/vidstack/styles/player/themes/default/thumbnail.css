@@ -12,11 +12,14 @@
   contain: strict;
   overflow: hidden;
   box-sizing: border-box;
-  border: var(--media-thumbnail-border, 1px solid white);
   min-width: var(--media-thumbnail-min-width, 120px);
   min-height: var(--media-thumbnail-min-height, 80px);
   max-width: var(--media-thumbnail-max-width, 180px);
   max-height: var(--media-thumbnail-max-height, 160px);
+}
+
+.vds-thumbnail {
+  border: var(--media-thumbnail-border, 1px solid white);
 }
 
 :where(.vds-thumbnail img) {
