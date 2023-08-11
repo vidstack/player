@@ -169,6 +169,10 @@ export class SliderChaptersRenderer {
     const chapters: VTTCue[] = [];
 
     // Fill any time gaps where chapters are missing.
+    if (cues[0].startTime !== 0) {
+      chapters.push(new window.VTTCue(0, cues[0].startTime, ''));
+    }
+
     for (let i = 0; i < cues.length - 1; i++) {
       const currentCue = cues[i],
         nextCue = cues[i + 1];
@@ -182,6 +186,12 @@ export class SliderChaptersRenderer {
     }
 
     chapters.push(cues[cues.length - 1]);
+
+    const mediaEndTime = this._media.duration();
+    if (cues[cues.length - 1].endTime !== mediaEndTime) {
+      chapters.push(new window.VTTCue(cues[cues.length - 1].endTime, mediaEndTime, ''));
+    }
+
     return chapters;
   }
 }
