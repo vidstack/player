@@ -123,7 +123,7 @@ importers:
       '@types/react': ^18.0.0
       esbuild: ^0.16.17
       fs-extra: ^11.0.0
-      maverick.js: 0.38.3
+      maverick.js: 0.38.4
       media-captions: 0.0.18
       media-icons: 0.10.0
       react: ^18.0.0
@@ -142,7 +142,7 @@ importers:
       '@types/react': 18.2.8
       esbuild: 0.16.17
       fs-extra: 11.1.1
-      maverick.js: 0.38.3
+      maverick.js: 0.38.4
       media-icons: 0.10.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -172,7 +172,7 @@ importers:
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
       lit-html: ^2.7.4
-      maverick.js: 0.38.3
+      maverick.js: 0.38.4
       media-captions: 0.0.18
       media-icons: 0.10.0
       postcss: ^8.4.0
@@ -207,7 +207,7 @@ importers:
       just-debounce-it: 3.2.0
       just-throttle: 4.2.0
       lit-html: 2.7.4
-      maverick.js: 0.38.3
+      maverick.js: 0.38.4
       media-icons: 0.10.0
       postcss: 8.4.24
       rimraf: 3.0.2
@@ -6146,10 +6146,10 @@ packages:
         integrity: sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==,
       }
 
-  /maverick.js/0.38.3:
+  /maverick.js/0.38.4:
     resolution:
       {
-        integrity: sha512-YvGWFCNbrVWZOeIHsqmNGfatx8572EyJavnpbOXkKgfF1qkcZX2ouVBWExIEsT7cc0L2LoMDmp0bzBrXRtW5Mg==,
+        integrity: sha512-eo13WswSkmSKK8F7syMiv8zMP8YhNmU2DtbpmgKooZs0rAlsy03zD72G1LqD+UCKoF76FvUVcIY9x8XopHKhYg==,
       }
     engines: { node: '>=16' }
     dev: true

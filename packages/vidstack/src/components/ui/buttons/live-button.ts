@@ -1,5 +1,4 @@
 import { Component } from 'maverick.js';
-
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { $ariaBool, ariaBool } from '../../../utils/aria';

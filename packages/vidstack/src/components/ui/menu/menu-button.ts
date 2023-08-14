@@ -1,10 +1,7 @@
-import { effect, useContext } from 'maverick.js';
-import { Component } from 'maverick.js';
+import { Component, effect, useContext } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
-
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { onPress } from '../../../utils/dom';
-import { Slots } from '../utils/slots';
 import { menuContext, type MenuContext } from './menu-context';
 
 /**
@@ -20,26 +17,21 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
 
   private _menu!: MenuContext;
 
+  get expanded() {
+    return this._menu?._expanded() ?? false;
+  }
+
   constructor() {
     super();
     new FocusVisibleController();
   }
 
   protected override onSetup(): void {
-    const { _expanded } = useContext(menuContext);
-    new Slots(() => {
-      const isExpanded = _expanded();
-      return {
-        open: !isExpanded,
-        close: isExpanded,
-      };
-    }).attach(this);
+    this._menu = useContext(menuContext);
   }
 
   protected override onAttach(el: HTMLElement) {
-    this._menu = useContext(menuContext);
     this._menu._attachMenuButton(this);
-
     effect(this._watchDisabled.bind(this));
   }
 

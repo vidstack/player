@@ -1,17 +1,21 @@
 export { defineCustomElement } from 'maverick.js/element';
 
 export { MediaCaptionsElement } from './define/captions-element';
-export { MediaAudioUIElement } from './define/skins/default/audio-ui-element';
-export { MediaVideoUIElement } from './define/skins/default/video-ui-element';
 export { MediaGestureElement } from './define/gesture-element';
 export { MediaProviderElement } from './define/provider-element';
 export { MediaPlayerElement } from './define/player-element';
-export { MediaUIElement } from './define/ui-element';
 export { MediaPosterElement } from './define/poster-element';
 export { MediaThumbnailElement } from './define/thumbnail-element';
 export { MediaTimeElement } from './define/time-element';
 export { MediaControlsElement } from './define/controls-element';
 export { MediaControlsGroupElement } from './define/controls-group-element';
+
+// Layouts
+export { MediaLayoutElement } from './define/layouts/layout-element';
+
+// Default Layout
+export { MediaAudioLayoutElement } from './define/layouts/default/audio-layout-element';
+export { MediaVideoLayoutElement } from './define/layouts/default/video-layout-element';
 
 // Buttons
 export { MediaPlayButtonElement } from './define/buttons/play-button-element';

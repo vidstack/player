@@ -60,6 +60,7 @@ export class Tooltip extends Component<TooltipProps> {
 
   private _attachTrigger(el: HTMLElement) {
     this._trigger.set(el);
+    el.removeAttribute('aria-label');
     setAttribute(el, 'data-describedby', this._id);
   }
 

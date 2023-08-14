@@ -20,7 +20,7 @@ function defineTypes() {
     input: {
       index: 'types/index.d.ts',
       icons: 'types/icons.d.ts',
-      'player/default-ui': 'types/components/skins/default/index.d.ts',
+      'player/layouts/default': 'types/components/layouts/default/index.d.ts',
     },
     output: {
       dir: '.',
@@ -60,9 +60,9 @@ function define({ dev }) {
 
   let input = {
     vidstack: 'src/index.ts',
-    'player/vidstack-default-ui': 'src/components/skins/default/index.ts',
-    'player/vidstack-default-components': 'src/components/skins/default/ui.ts',
-    'player/vidstack-default-icons': 'src/components/skins/default/icons.tsx',
+    'player/vidstack-default-layout': 'src/components/layouts/default/index.ts',
+    'player/vidstack-default-components': 'src/components/layouts/default/ui.ts',
+    'player/vidstack-default-icons': 'src/components/layouts/default/icons.tsx',
   };
 
   if (!dev) {

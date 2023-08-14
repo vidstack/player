@@ -1,10 +1,8 @@
 import { Component } from 'maverick.js';
-
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaFullscreenRequestTarget } from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
-import { Slots } from '../utils/slots';
 import {
   ToggleButtonController,
   type ToggleButtonControllerProps,
@@ -50,11 +48,6 @@ export class FullscreenButton extends Component<FullscreenButtonProps> {
       'data-fullscreen': fullscreen,
       'aria-hidden': $ariaBool(this._isHidden.bind(this)),
     });
-
-    new Slots(() => {
-      const isFullscreen = fullscreen();
-      return { enter: !isFullscreen, exit: isFullscreen };
-    }).attach(this);
   }
 
   protected override onAttach(el: HTMLElement): void {

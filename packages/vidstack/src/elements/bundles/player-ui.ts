@@ -11,6 +11,7 @@ import { MediaCaptionsElement } from '../define/captions-element';
 import { MediaControlsElement } from '../define/controls-element';
 import { MediaControlsGroupElement } from '../define/controls-group-element';
 import { MediaGestureElement } from '../define/gesture-element';
+import { MediaLayoutElement } from '../define/layouts/layout-element';
 import { MediaAudioRadioGroupElement } from '../define/menus/audio-radio-group-element';
 import { MediaCaptionsRadioGroupElement } from '../define/menus/captions-radio-group-element';
 import { MediaChaptersRadioGroupElement } from '../define/menus/chapters-radio-group-element';
@@ -37,51 +38,48 @@ import { MediaTimeElement } from '../define/time-element';
 import { MediaTooltipContentElement } from '../define/tooltips/tooltip-content-element';
 import { MediaTooltipElement } from '../define/tooltips/tooltip-element';
 import { MediaTooltipTriggerElement } from '../define/tooltips/tooltip-trigger-element';
-import { MediaUIElement } from '../define/ui-element';
 
-export function defineMediaUI() {
-  defineCustomElement(MediaUIElement);
-  defineCustomElement(MediaControlsElement);
-  defineCustomElement(MediaControlsGroupElement);
-  defineCustomElement(MediaPosterElement);
-  // Buttons
-  defineCustomElement(MediaCaptionButtonElement);
-  defineCustomElement(MediaFullscreenButtonElement);
-  defineCustomElement(MediaMuteButtonElement);
-  defineCustomElement(MediaPIPButtonElement);
-  defineCustomElement(MediaPlayButtonElement);
-  defineCustomElement(MediaSeekButtonElement);
-  defineCustomElement(MediaToggleButtonElement);
-  // Sliders
-  defineCustomElement(MediaSliderElement);
-  defineCustomElement(MediaVolumeSliderElement);
-  defineCustomElement(MediaTimeSliderElement);
-  defineCustomElement(MediaSliderChaptersElement);
-  defineCustomElement(MediaSliderPreviewElement);
-  defineCustomElement(MediaSliderValueElement);
-  defineCustomElement(MediaSliderThumbnailElement);
-  defineCustomElement(MediaSliderVideoElement);
-  // Menus
-  defineCustomElement(MediaMenuElement);
-  defineCustomElement(MediaMenuButtonElement);
-  defineCustomElement(MediaMenuPortalElement);
-  defineCustomElement(MediaMenuItemsElement);
-  defineCustomElement(MediaMenuItemElement);
-  defineCustomElement(MediaAudioRadioGroupElement);
-  defineCustomElement(MediaCaptionsRadioGroupElement);
-  defineCustomElement(MediaSpeedRadioGroupElement);
-  defineCustomElement(MediaQualityRadioGroupElement);
-  defineCustomElement(MediaChaptersRadioGroupElement);
-  defineCustomElement(MediaRadioGroupElement);
-  defineCustomElement(MediaRadioElement);
-  // Tooltips
-  defineCustomElement(MediaTooltipElement);
-  defineCustomElement(MediaTooltipTriggerElement);
-  defineCustomElement(MediaTooltipContentElement);
-  // Display
-  defineCustomElement(MediaGestureElement);
-  defineCustomElement(MediaThumbnailElement);
-  defineCustomElement(MediaCaptionsElement);
-  defineCustomElement(MediaLiveButtonElement);
-  defineCustomElement(MediaTimeElement);
-}
+defineCustomElement(MediaLayoutElement);
+defineCustomElement(MediaControlsElement);
+defineCustomElement(MediaControlsGroupElement);
+defineCustomElement(MediaPosterElement);
+// Buttons
+defineCustomElement(MediaCaptionButtonElement);
+defineCustomElement(MediaFullscreenButtonElement);
+defineCustomElement(MediaMuteButtonElement);
+defineCustomElement(MediaPIPButtonElement);
+defineCustomElement(MediaPlayButtonElement);
+defineCustomElement(MediaSeekButtonElement);
+defineCustomElement(MediaToggleButtonElement);
+// Sliders
+defineCustomElement(MediaSliderElement);
+defineCustomElement(MediaVolumeSliderElement);
+defineCustomElement(MediaTimeSliderElement);
+defineCustomElement(MediaSliderChaptersElement);
+defineCustomElement(MediaSliderPreviewElement);
+defineCustomElement(MediaSliderValueElement);
+defineCustomElement(MediaSliderThumbnailElement);
+defineCustomElement(MediaSliderVideoElement);
+// Menus
+defineCustomElement(MediaMenuElement);
+defineCustomElement(MediaMenuButtonElement);
+defineCustomElement(MediaMenuPortalElement);
+defineCustomElement(MediaMenuItemsElement);
+defineCustomElement(MediaMenuItemElement);
+defineCustomElement(MediaAudioRadioGroupElement);
+defineCustomElement(MediaCaptionsRadioGroupElement);
+defineCustomElement(MediaSpeedRadioGroupElement);
+defineCustomElement(MediaQualityRadioGroupElement);
+defineCustomElement(MediaChaptersRadioGroupElement);
+defineCustomElement(MediaRadioGroupElement);
+defineCustomElement(MediaRadioElement);
+// Tooltips
+defineCustomElement(MediaTooltipElement);
+defineCustomElement(MediaTooltipTriggerElement);
+defineCustomElement(MediaTooltipContentElement);
+// Display
+defineCustomElement(MediaGestureElement);
+defineCustomElement(MediaThumbnailElement);
+defineCustomElement(MediaCaptionsElement);
+defineCustomElement(MediaLiveButtonElement);
+defineCustomElement(MediaTimeElement);

@@ -1,8 +1,6 @@
 import { Component } from 'maverick.js';
-
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { setARIALabel } from '../../../utils/dom';
-import { Slots } from '../utils/slots';
 import {
   ToggleButtonController,
   type ToggleButtonControllerProps,
@@ -36,17 +34,6 @@ export class MuteButton extends Component<MuteButtonProps> {
       'data-muted': this._isPressed.bind(this),
       'data-volume': this._getVolumeText.bind(this),
     });
-
-    new Slots(() => {
-      const volume = this._getVolumeText();
-      return {
-        mute: volume !== 'muted',
-        unmute: volume === 'muted',
-        'volume-mute': volume === 'muted',
-        'volume-low': volume === 'low',
-        'volume-high': volume === 'high',
-      };
-    }).attach(this);
   }
 
   protected override onAttach(el: HTMLElement): void {

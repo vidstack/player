@@ -11,8 +11,8 @@ import { requestScopedAnimationFrame } from '../../../utils/dom';
  */
 export class MenuPortal extends Component<MenuPortalProps> {
   static props: MenuPortalProps = {
-    disabled: false,
     container: null,
+    disabled: false,
   };
 
   private _target: HTMLElement | null = null;
@@ -37,8 +37,12 @@ export class MenuPortal extends Component<MenuPortalProps> {
   private _attachElement(el: HTMLElement | null) {
     this._portal(false);
     this._target = el;
+    // Wait two animations frames: first is for connected callback, second is to allow icon
+    // slots to be replaced.
     requestScopedAnimationFrame(() => {
-      effect(this._watchDisabled.bind(this));
+      requestScopedAnimationFrame(() => {
+        effect(this._watchDisabled.bind(this));
+      });
     });
   }
 
