@@ -26,6 +26,7 @@ import * as MenuBase from '../../ui/menu';
 import * as TimeSliderBase from '../../ui/sliders/time-slider';
 import * as VolumeSliderBase from '../../ui/sliders/volume-slider';
 import * as ThumbnailBase from '../../ui/thumbnail';
+import { Time } from '../../ui/time';
 import * as TooltipBase from '../../ui/tooltip';
 import { DefaultLayoutContext, useDefaultLayoutLang } from './context';
 import type { DefaultLayoutIcon, DefaultLayoutIcons } from './icons';
@@ -79,7 +80,7 @@ export const createDefaultMediaLayout = ({
         thumbnails,
         translations,
         showMenuDelay,
-        showTooltipDelay,
+        showTooltipDelay = type === 'video' ? 500 : 700,
         smallLayoutWhen = smLayoutWhen,
         children,
         ...props
@@ -96,9 +97,9 @@ export const createDefaultMediaLayout = ({
       return (
         <div
           {...props}
-          className={`vds-${type}-ui` + (className ? ` ${className}` : '')}
+          className={`vds-${type}-layout` + (className ? ` ${className}` : '')}
           data-match={isMatch ? '' : null}
-          data-layout={isSmallLayout ? 'sm' : null}
+          data-size={isSmallLayout ? 'sm' : null}
           ref={forwardRef}
         >
           {($canLoad || isForcedLayout) && isMatch ? (
@@ -160,11 +161,11 @@ function DefaultPlayButton({ tooltip }: DefaultMediaButtonProps) {
     <DefaultTooltip content={paused ? playText : pauseText} placement={tooltip}>
       <PlayButton className="vds-play-button vds-button">
         {ended ? (
-          <Icons.PlayButton.Replay />
+          <Icons.PlayButton.Replay className="vds-icon" />
         ) : paused ? (
-          <Icons.PlayButton.Play />
+          <Icons.PlayButton.Play className="vds-icon" />
         ) : (
-          <Icons.PlayButton.Pause />
+          <Icons.PlayButton.Pause className="vds-icon" />
         )}
       </PlayButton>
     </DefaultTooltip>
@@ -188,11 +189,11 @@ function DefaultMuteButton({ tooltip }: DefaultMediaButtonProps) {
     <DefaultTooltip content={muted ? unmuteText : muteText} placement={tooltip}>
       <MuteButton className="vds-mute-button vds-button">
         {muted || volume == 0 ? (
-          <Icons.MuteButton.Mute />
+          <Icons.MuteButton.Mute className="vds-icon" />
         ) : volume < 0.5 ? (
-          <Icons.MuteButton.VolumeLow />
+          <Icons.MuteButton.VolumeLow className="vds-icon" />
         ) : (
-          <Icons.MuteButton.VolumeHigh />
+          <Icons.MuteButton.VolumeHigh className="vds-icon" />
         )}
       </MuteButton>
     </DefaultTooltip>
@@ -215,7 +216,11 @@ function DefaultCaptionButton({ tooltip }: DefaultMediaButtonProps) {
   return (
     <DefaultTooltip content={isOn ? onText : offText} placement={tooltip}>
       <CaptionButton className="vds-caption-button vds-button">
-        {isOn ? <Icons.CaptionButton.On /> : <Icons.CaptionButton.Off />}
+        {isOn ? (
+          <Icons.CaptionButton.On className="vds-icon" />
+        ) : (
+          <Icons.CaptionButton.Off className="vds-icon" />
+        )}
       </CaptionButton>
     </DefaultTooltip>
   );
@@ -236,7 +241,11 @@ function DefaultPIPButton({ tooltip }: DefaultMediaButtonProps) {
   return (
     <DefaultTooltip content={pip ? exitText : enterText} placement={tooltip}>
       <PIPButton className="vds-pip-button vds-button">
-        {pip ? <Icons.PIPButton.Exit /> : <Icons.PIPButton.Enter />}
+        {pip ? (
+          <Icons.PIPButton.Exit className="vds-icon" />
+        ) : (
+          <Icons.PIPButton.Enter className="vds-icon" />
+        )}
       </PIPButton>
     </DefaultTooltip>
   );
@@ -257,7 +266,11 @@ function DefaultFullscreenButton({ tooltip }: DefaultMediaButtonProps) {
   return (
     <DefaultTooltip content={fullscreen ? exitText : enterText} placement={tooltip}>
       <FullscreenButton className="vds-fullscreen-button vds-button">
-        {fullscreen ? <Icons.FullscreenButton.Exit /> : <Icons.FullscreenButton.Enter />}
+        {fullscreen ? (
+          <Icons.FullscreenButton.Exit className="vds-icon" />
+        ) : (
+          <Icons.FullscreenButton.Enter className="vds-icon" />
+        )}
       </FullscreenButton>
     </DefaultTooltip>
   );
@@ -277,7 +290,11 @@ function DefaultSeekButton({ seconds, tooltip }: DefaultMediaButtonProps & { sec
   return (
     <DefaultTooltip content={seconds >= 0 ? seekForwardText : seekBackwardText} placement={tooltip}>
       <SeekButton className="vds-seek-button vds-button" seconds={seconds}>
-        {seconds >= 0 ? <Icons.SeekButton.Forward /> : <Icons.SeekButton.Backward />}
+        {seconds >= 0 ? (
+          <Icons.SeekButton.Forward className="vds-icon" />
+        ) : (
+          <Icons.SeekButton.Backward className="vds-icon" />
+        )}
       </SeekButton>
     </DefaultTooltip>
   );
@@ -391,11 +408,7 @@ export { DefaultTimeGroup };
  * DefaultChaptersMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultChaptersMenu({
-  tooltip,
-  placement,
-  portalClass: containerClass,
-}: DefaultMediaMenuProps) {
+function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
   const { showMenuDelay, Icons } = React.useContext(DefaultLayoutContext),
     chaptersText = useDefaultLayoutLang('Chapters'),
     options = useChapterOptions(),
@@ -405,10 +418,10 @@ function DefaultChaptersMenu({
     <MenuBase.Root className="vds-chapters-menu vds-menu" showDelay={showMenuDelay}>
       <DefaultTooltip content={chaptersText} placement={tooltip}>
         <MenuBase.Button className="vds-menu-button vds-button" disabled={disabled}>
-          <Icons.Menu.Chapters />
+          <Icons.Menu.Chapters className="vds-icon" />
         </MenuBase.Button>
       </DefaultTooltip>
-      <MenuBase.Portal className={containerClass} disabled="fullscreen">
+      <MenuBase.Portal className={portalClass} disabled="fullscreen">
         <MenuBase.Content className="vds-chapters-menu-items vds-menu-items" placement={placement}>
           <MenuBase.RadioGroup
             className="vds-chapters-radio-group vds-radio-group"
@@ -460,7 +473,7 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMe
     <MenuBase.Root className="vds-settings-menu vds-menu" showDelay={showMenuDelay}>
       <DefaultTooltip content={settingsText} placement={tooltip}>
         <MenuBase.Button className="vds-menu-button vds-button">
-          <Icons.Menu.Settings className="vds-rotate-icon" />
+          <Icons.Menu.Settings className="vds-icon vds-rotate-icon" />
         </MenuBase.Button>
       </DefaultTooltip>
       <MenuBase.Portal className={portalClass} disabled="fullscreen">
@@ -493,11 +506,11 @@ function DefaultSubmenuButton({ label, hint, Icon, disabled }: DefaultSubmenuBut
   const { Icons } = React.useContext(DefaultLayoutContext);
   return (
     <MenuBase.Button className="vds-menu-button" disabled={disabled}>
-      <Icons.Menu.ArrowLeft className="vds-menu-button-close-icon" />
+      <Icons.Menu.ArrowLeft className="vds-menu-button-close-icon vds-icon" />
       <Icon className="vds-menu-button-icon" />
       <span className="vds-menu-button-label">{label}</span>
       <span className="vds-menu-button-hint">{hint}</span>
-      <Icons.Menu.ArrowRight className="vds-menu-button-open-icon" />
+      <Icons.Menu.ArrowRight className="vds-menu-button-open-icon vds-icon" />
     </MenuBase.Button>
   );
 }

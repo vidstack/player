@@ -1,8 +1,7 @@
 import { html } from 'lit-html';
-import { computed, effect, onDispose } from 'maverick.js';
+import { computed, onDispose } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { DefaultVideoLayout } from '../../../../components/layouts/default-layout';
-import { useMediaContext } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { DefaultLayoutIconsLoader } from './icons-loader';
@@ -32,13 +31,6 @@ export class MediaVideoLayoutElement
 
   protected onSetup() {
     this.menuContainer = createMenuContainer('vds-video-layout');
-
-    const media = useMediaContext();
-    effect(() => {
-      const { height } = media.$state;
-      this.menuContainer!.style.setProperty('--player-height', height() + 'px');
-    });
-
     onDispose(() => this.menuContainer!.remove());
   }
 

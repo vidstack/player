@@ -115,8 +115,8 @@ function DefaultAudioMenus() {
     placement = !isSmallLayout ? 'top end' : null;
   return (
     <>
-      <DefaultChaptersMenu tooltip="top" placement={placement} portalClass="vds-audio-ui" />
-      <DefaultSettingsMenu tooltip="top end" placement={placement} portalClass="vds-audio-ui" />
+      <DefaultChaptersMenu tooltip="top" placement={placement} portalClass="vds-audio-layout" />
+      <DefaultSettingsMenu tooltip="top end" placement={placement} portalClass="vds-audio-layout" />
     </>
   );
 }

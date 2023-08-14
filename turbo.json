@@ -6,7 +6,7 @@
     },
     "build": {
       "dependsOn": ["^analyze", "^build", "clean"],
-      "outputs": ["cdn/**", "dist/**", "lib/**", ".vercel/**", "styles/player/themes/default.css"]
+      "outputs": ["cdn/**", "dist/**", "local/**", ".vercel/**", "styles/player/themes/default.css"]
     },
     "clean": {
       "cache": false

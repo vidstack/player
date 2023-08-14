@@ -237,7 +237,7 @@
 }
 
 :where(.vds-audio-layout[data-size='sm'] .vds-time-slider .vds-slider-preview) {
-  --media-slider-preview-offset: 44px;
+  --media-slider-preview-offset: 48px;
 }
 
 :where(.vds-audio-layout .vds-volume-slider .vds-slider-preview) {
@@ -306,10 +306,8 @@
   position: absolute;
   width: 100%;
   top: unset;
-  bottom: 100%;
+  bottom: calc(100% + var(--audio-captions-offset, 2px));
   text-align: center;
-  min-height: var(--audio-captions-min-height, 28px);
-  margin-bottom: var(--audio-captions-offset, 6px);
   background-color: var(--audio-captions-bg, transparent);
 }
 
