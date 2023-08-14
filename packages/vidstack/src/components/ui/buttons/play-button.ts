@@ -1,8 +1,6 @@
 import { Component } from 'maverick.js';
-
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { setARIALabel } from '../../../utils/dom';
-import { Slots } from '../utils/slots';
 import {
   ToggleButtonController,
   type ToggleButtonControllerProps,
@@ -38,16 +36,6 @@ export class PlayButton extends Component<PlayButtonProps> {
       'data-paused': paused,
       'data-ended': ended,
     });
-
-    new Slots(() => {
-      const isPaused = paused(),
-        hasEnded = ended();
-      return {
-        play: isPaused && !hasEnded,
-        pause: !isPaused,
-        replay: hasEnded,
-      };
-    }).attach(this);
   }
 
   protected override onAttach(el: HTMLElement): void {

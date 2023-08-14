@@ -1,7 +1,4 @@
-import { Component, peek, signal } from 'maverick.js';
-import { prop } from 'maverick.js';
-
-import { Slots } from '../utils/slots';
+import { Component, prop, signal } from 'maverick.js';
 import { ToggleButtonController } from './toggle-button-controller';
 
 export interface ToggleButtonProps {
@@ -35,7 +32,7 @@ export class ToggleButton<
    */
   @prop
   get pressed() {
-    return peek(this._pressed);
+    return this._pressed();
   }
 
   constructor() {
@@ -43,12 +40,5 @@ export class ToggleButton<
     new ToggleButtonController({
       _isPressed: this._pressed,
     });
-  }
-
-  protected override onSetup(): void {
-    new Slots(() => {
-      const isOn = this._pressed();
-      return { on: !isOn, off: isOn };
-    }).attach(this);
   }
 }

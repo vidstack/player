@@ -17,7 +17,6 @@
     "dist/",
     "player/",
     "cdn/",
-    "styles/",
     "tailwind.*",
     "empty.vtt",
     "vscode.html-data.json",
@@ -59,7 +58,7 @@
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
-    "maverick.js": "0.38.3",
+    "maverick.js": "0.38.4",
     "media-icons": "0.10.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
@@ -87,7 +86,7 @@
   "bugs": {
     "url": "https://github.com/vidstack/vidstack/issues"
   },
-  "jsdelivr": "./cdn/skins/default.js",
+  "jsdelivr": "./cdn/with-layouts/vidstack.js",
   "exports": {
     ".": {
       "types": "./index.d.ts",
@@ -119,14 +118,20 @@
       "development": "./dist/dev/define/vidstack-player.s",
       "default": "./dist/prod/define/vidstack-player.js"
     },
-    "./player/skins": {
-      "types": "./player/skins.d.ts",
-      "node": "./dist/server/define/vidstack-player-skins.js",
-      "development": "./dist/dev/define/vidstack-player-skins.js",
-      "default": "./dist/prod/define/vidstack-player-skins.js"
+    "./player/ui": {
+      "types": "./player/ui.d.ts",
+      "node": "./dist/server/define/vidstack-player-ui.js",
+      "development": "./dist/dev/define/vidstack-player-ui.js",
+      "default": "./dist/prod/define/vidstack-player-ui.js"
+    },
+    "./player/layouts": {
+      "types": "./player/layouts.d.ts",
+      "node": "./dist/server/define/vidstack-player-layouts.js",
+      "development": "./dist/dev/define/vidstack-player-layouts.js",
+      "default": "./dist/prod/define/vidstack-player-layouts.js"
     },
     "./dist/types/*": "./dist/types/*",
-    "./styles/*": "./styles/*",
+    "./player/styles/*": "./player/styles/*",
     "./package.json": "./package.json",
     "./tailwind.cjs": {
       "types": "./tailwind.d.cts",

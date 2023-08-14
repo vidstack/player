@@ -8,8 +8,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url)),
   vidstackDir = path.resolve(rootDir, 'node_modules/vidstack');
 
 async function copyStyles() {
-  const stylesDir = path.resolve(vidstackDir, 'styles');
-  await fs.copy(stylesDir, path.resolve(rootDir, 'styles'));
+  const stylesDir = path.resolve(vidstackDir, 'player/styles');
+  await fs.copy(stylesDir, path.resolve(rootDir, 'player/styles'));
 }
 
 async function copyTailwind() {

@@ -11,7 +11,9 @@
   },
   "files": [
     "*.d.ts",
-    "dist/"
+    "dist/",
+    "player/",
+    "tailwind.*"
   ],
   "scripts": {
     "dev": "pnpm clean && pnpm prebuild && rollup -c -w",
@@ -34,7 +36,7 @@
     "@types/react": "^18.0.0",
     "esbuild": "^0.16.17",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.38.3",
+    "maverick.js": "0.38.4",
     "media-icons": "0.10.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -66,10 +68,10 @@
       "types": "./icons.d.ts",
       "default": "./dist/prod/vidstack-icons.js"
     },
-    "./player/default-ui": {
-      "types": "./player/default-ui.d.ts",
-      "development": "./dist/dev/player/vidstack-default-ui.js",
-      "default": "./dist/prod/player/vidstack-default-ui.js"
+    "./player/layouts/default": {
+      "types": "./player/layouts/default.d.ts",
+      "development": "./dist/dev/player/vidstack-default-layout.js",
+      "default": "./dist/prod/player/vidstack-default-layout.js"
     },
     "./dist/types/*": "./dist/types/*",
     "./styles/*": "./styles/*",

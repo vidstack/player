@@ -59,15 +59,15 @@ export * from './ui/thumbnails/thumbnail';
 export * from './ui/thumbnails/thumbnail-loader';
 export type { IconProps } from './icons/types';
 
-// Skins
+// Layouts
 export {
-  DefaultSkin,
-  DefaultAudioUI,
-  DefaultVideoUI,
-  type DefaultSkinProps,
-  type DefaultSkinTranslations,
-  type DefaultSkinContext,
-  defaultSkinContext,
-  i18n,
-  useDefaultSkinContext,
-} from './skins/default-skin';
+  DefaultLayout,
+  DefaultAudioLayout,
+  DefaultVideoLayout,
+  type DefaultLayoutProps,
+  type DefaultLayoutTranslations,
+  type DefaultLayoutContext,
+  defaultLayoutContext,
+  useDefaultLayoutLang,
+  useDefaultLayoutContext,
+} from './layouts/default-layout';

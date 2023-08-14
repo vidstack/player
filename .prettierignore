@@ -4,4 +4,5 @@ globals.d.ts
 **/partials/import
 **/dist
 .gitignore
+.gitkeep
 .prettierignore

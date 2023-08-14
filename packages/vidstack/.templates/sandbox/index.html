@@ -5,25 +5,27 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" sizes="32x32" href="/sandbox/favicon-32x32.png" />
-    <link rel="stylesheet" href="../styles/player.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/buffering.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/buttons.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/captions.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/controls.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/gestures.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/icons.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/menus.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/poster.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/sliders.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/thumbnail.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/time.css" />
-    <link rel="stylesheet" href="../styles/player/themes/default/tooltips.css" />
-    <link rel="stylesheet" href="../styles/player/skins/default/audio.css" />
-    <link rel="stylesheet" href="../styles/player/skins/default/video.css" />
+    <link rel="stylesheet" href="../player/styles/base.css" />
+    <link rel="stylesheet" href="../player/styles/default/buffering.css" />
+    <link rel="stylesheet" href="../player/styles/default/buttons.css" />
+    <link rel="stylesheet" href="../player/styles/default/captions.css" />
+    <link rel="stylesheet" href="../player/styles/default/controls.css" />
+    <link rel="stylesheet" href="../player/styles/default/gestures.css" />
+    <link rel="stylesheet" href="../player/styles/default/icons.css" />
+    <link rel="stylesheet" href="../player/styles/default/menus.css" />
+    <link rel="stylesheet" href="../player/styles/default/poster.css" />
+    <link rel="stylesheet" href="../player/styles/default/sliders.css" />
+    <link rel="stylesheet" href="../player/styles/default/thumbnail.css" />
+    <link rel="stylesheet" href="../player/styles/default/time.css" />
+    <link rel="stylesheet" href="../player/styles/default/tooltips.css" />
+    <link rel="stylesheet" href="../player/styles/default/layouts/audio.css" />
+    <link rel="stylesheet" href="../player/styles/default/layouts/video.css" />
 
     <script type="module">
+      import '../src/elements/bundles/player.ts';
+      import '../src/elements/bundles/player-layouts.ts';
+      import '../src/elements/bundles/player-ui.ts';
       import '../src/elements/bundles/icons.ts';
-      import '../src/elements/bundles/player-skins.ts';
 
       const player = document.querySelector('media-player');
       window.player = player;

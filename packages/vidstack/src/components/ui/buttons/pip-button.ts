@@ -1,9 +1,7 @@
 import { Component } from 'maverick.js';
-
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
-import { Slots } from '../utils/slots';
 import {
   ToggleButtonController,
   type ToggleButtonControllerProps,
@@ -39,11 +37,6 @@ export class PIPButton extends Component<PIPButtonProps> {
       'aria-hidden': $ariaBool(this._isHidden.bind(this)),
       'data-pip': pictureInPicture,
     });
-
-    new Slots(() => {
-      const isPIP = pictureInPicture();
-      return { enter: !isPIP, exit: isPIP };
-    }).attach(this);
   }
 
   protected override onAttach(el: HTMLElement): void {

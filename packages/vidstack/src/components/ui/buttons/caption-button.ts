@@ -3,7 +3,6 @@ import { useMediaContext, type MediaContext } from '../../../core/api/media-cont
 import { isTrackCaptionKind } from '../../../core/tracks/text/text-track';
 import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
-import { Slots } from '../utils/slots';
 import {
   ToggleButtonController,
   type ToggleButtonControllerProps,
@@ -36,11 +35,6 @@ export class CaptionButton extends Component<CaptionButtonProps> {
     this.setAttributes({
       'aria-hidden': $ariaBool(this._isHidden.bind(this)),
     });
-
-    new Slots(() => {
-      const isOn = this._isPressed();
-      return { on: isOn, off: !isOn };
-    }).attach(this);
   }
 
   protected override onAttach(el: HTMLElement): void {

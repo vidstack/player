@@ -21,7 +21,6 @@ const LOCAL = [define({ type: 'local-prod' }), define({ type: 'local-dev' })];
 
 /** @type {import('rollup').WarningHandlerWithDefault} */
 function onWarn(warning, defaultHandler) {
-  if (warning.code === 'EMPTY_BUNDLE') return;
   defaultHandler(warning);
 }
 
@@ -38,7 +37,7 @@ export default defineConfig(
         // cdn
         defineCDN({ dev: true }),
         defineCDN(),
-        defineCDN({ skins: true }),
+        defineCDN({ layouts: true }),
       ],
 );
 
@@ -129,13 +128,15 @@ function define({ target, type, minify }) {
       'vidstack-elements': 'src/elements/index.ts',
       'define/vidstack-icons': 'src/elements/bundles/icons.ts',
       'define/vidstack-player': 'src/elements/bundles/player.ts',
-      'define/vidstack-player-skins': 'src/elements/bundles/player-skins.ts',
       'define/vidstack-player-ui': 'src/elements/bundles/player-ui.ts',
+      'define/vidstack-player-layouts': 'src/elements/bundles/player-layouts.ts',
     };
 
     if (type !== 'server') {
-      input['define/vidstack-audio-ui'] = 'src/elements/define/skins/default/audio-ui-element.ts';
-      input['define/vidstack-video-ui'] = 'src/elements/define/skins/default/video-ui-element.ts';
+      input['define/vidstack-audio-layout'] =
+        'src/elements/define/layouts/default/audio-layout-element.ts';
+      input['define/vidstack-video-layout'] =
+        'src/elements/define/layouts/default/video-layout-element.ts';
     }
   }
 
@@ -153,7 +154,7 @@ function define({ target, type, minify }) {
       manualChunks(id) {
         if (isLocal) return null;
         if (id.includes('maverick') || id.includes('@floating-ui')) return 'framework';
-        if (id.includes('lit-html')) return 'framework-skin';
+        if (id.includes('lit-html')) return 'framework-layouts';
         return null;
       },
     },
@@ -171,14 +172,14 @@ function define({ target, type, minify }) {
         platform: isServer ? 'node' : 'browser',
         minify: minify,
         legalComments: 'none',
-        banner: 'import { IS_SERVER } from "@virtual/env";',
+        banner: isLocal ? 'import { IS_SERVER } from "@virtual/env";' : '',
         define: {
           __DEV__: !isProd && !isServer ? 'true' : 'false',
           __SERVER__: isLocal ? 'IS_SERVER' : isServer ? 'true' : 'false',
           __TEST__: 'false',
         },
       }),
-      {
+      isLocal && {
         name: 'env',
         resolveId(id) {
           if (id === '@virtual/env') return id;
@@ -228,11 +229,11 @@ function define({ target, type, minify }) {
 }
 
 /** @returns {import('rollup').RollupOptions} */
-function defineCDN({ dev = false, skins = false } = {}) {
+function defineCDN({ dev = false, layouts = false } = {}) {
   const input =
-      dev || skins
-        ? 'src/elements/bundles/player-cdn-skins.ts'
-        : 'src/elements/bundles/player-cdn.ts',
+      dev || layouts
+        ? 'src/elements/bundles/cdn/player-with-layouts.ts'
+        : 'src/elements/bundles/cdn/player.ts',
     output = dev ? `vidstack.dev` : `vidstack`;
   return {
     ...define({
@@ -249,7 +250,7 @@ function defineCDN({ dev = false, skins = false } = {}) {
     },
     output: {
       format: 'esm',
-      dir: dev || !skins ? 'cdn' : 'cdn/skins',
+      dir: dev || !layouts ? 'cdn' : 'cdn/with-layouts',
       chunkFileNames: `chunks/vidstack-[hash].js`,
       paths: {
         'media-icons': 'https://cdn.jsdelivr.net/npm/media-icons/dist/lazy.js',
@@ -267,12 +268,13 @@ function defineCDN({ dev = false, skins = false } = {}) {
 
 function buildDefaultTheme() {
   // CSS merge.
-  let defaultStyles = fs.readFileSync('styles/player.css', 'utf-8');
+  let defaultStyles = fs.readFileSync('player/styles/base.css', 'utf-8');
 
-  const themeDir = 'styles/player/themes/default';
+  const themeDir = 'player/styles/default';
   for (const file of fs.readdirSync(themeDir, 'utf-8')) {
+    if (file === 'theme.css' || file === 'layouts') continue;
     defaultStyles += '\n' + fs.readFileSync(`${themeDir}/${file}`, 'utf-8');
   }
 
-  fs.writeFileSync('styles/player/themes/default.css', defaultStyles);
+  fs.writeFileSync('player/styles/default/theme.css', defaultStyles);
 }

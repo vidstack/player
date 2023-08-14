@@ -1,0 +1,71 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Player
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where([data-media-player]) {
+  --media-focus-ring: 0 0 0 3px rgb(78 156 246);
+  width: 100%;
+  display: inline-block;
+  position: relative;
+  contain: layout style;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+[data-media-player]:focus,
+[data-media-player]:focus-visible {
+  outline: none;
+}
+
+:where([data-media-player][data-view-type='video']:not([data-controls])) {
+  pointer-events: auto;
+  cursor: none;
+}
+
+[data-media-player] slot {
+  display: contents;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Provider
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where([data-media-player][data-focus]:not([data-playing]) [data-media-provider]) {
+  box-shadow: var(--media-focus-ring);
+}
+
+:where([data-media-provider]) {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+:where([data-media-player]:not([data-view-type='audio']) [data-media-provider]),
+:where([data-media-player][data-fullscreen] [data-media-provider]) {
+  height: 100%;
+}
+
+:where([data-media-player][data-view-type='audio'] [data-media-provider]) {
+  display: contents;
+  background-color: unset;
+}
+
+:where([data-media-provider] audio) {
+  width: 100%;
+}
+
+:where([data-media-provider] video) {
+  display: inline-block;
+  width: 100%;
+  height: auto;
+  touch-action: manipulation;
+}
+
+.vds-icon:focus {
+  outline: none;
+}

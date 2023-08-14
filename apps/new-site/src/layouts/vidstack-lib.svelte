@@ -1,6 +1,10 @@
 <script lang="ts">
-  import 'vidstack/styles/player/themes/default.css';
-  import 'vidstack/styles/player/skins/default/audio.css';
-  import 'vidstack/styles/player/skins/default/video.css';
-  import 'vidstack/player/skins';
+  // Styles
+  import 'vidstack/player/styles/default/theme.css';
+  import 'vidstack/player/styles/default/layouts/audio.css';
+  import 'vidstack/player/styles/default/layouts/video.css';
+  // Elements
+  import 'vidstack/player';
+  import 'vidstack/player/layouts';
+  import 'vidstack/player/ui';
 </script>

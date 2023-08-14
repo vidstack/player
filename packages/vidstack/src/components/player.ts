@@ -402,13 +402,13 @@ export class MediaPlayer
   }
 
   set paused(paused) {
-    if (paused) {
-      this._canPlayQueue._enqueue('paused', () => this._requestMgr._pause());
-    } else this._canPlayQueue._enqueue('paused', () => this._requestMgr._play());
+    this.$$._props.paused.set(paused);
   }
 
   private _watchPaused() {
-    this.paused = this.$props.paused();
+    if (this.$props.paused()) {
+      this._canPlayQueue._enqueue('paused', () => this._requestMgr._pause());
+    } else this._canPlayQueue._enqueue('paused', () => this._requestMgr._play());
   }
 
   @prop
@@ -417,11 +417,12 @@ export class MediaPlayer
   }
 
   set muted(muted) {
-    this._canPlayQueue._enqueue('muted', () => (this._provider!.muted = muted));
+    this.$$._props.muted.set(muted);
   }
 
   private _watchMuted() {
-    this.muted = this.$props.muted();
+    const muted = this.$props.muted();
+    this._canPlayQueue._enqueue('muted', () => (this._provider!.muted = muted));
   }
 
   @prop
@@ -430,6 +431,11 @@ export class MediaPlayer
   }
 
   set currentTime(time) {
+    this.$$._props.currentTime.set(time);
+  }
+
+  private _watchCurrentTime() {
+    const time = this.$props.currentTime();
     this._canPlayQueue._enqueue('currentTime', () => {
       const adapter = this._provider;
       if (time !== adapter!.currentTime) {
@@ -445,21 +451,18 @@ export class MediaPlayer
     });
   }
 
-  private _watchCurrentTime() {
-    this.currentTime = this.$props.currentTime();
-  }
-
   @prop
   get volume() {
     return this._provider?.volume ?? 1;
   }
 
   set volume(volume) {
-    this._canPlayQueue._enqueue('volume', () => (this._provider!.volume = volume));
+    this.$$._props.volume.set(volume);
   }
 
   private _watchVolume() {
-    this.volume = clampNumber(0, this.$props.volume(), 1);
+    const volume = clampNumber(0, this.$props.volume(), 1);
+    this._canPlayQueue._enqueue('volume', () => (this._provider!.volume = volume));
   }
 
   @prop
@@ -468,11 +471,12 @@ export class MediaPlayer
   }
 
   set playsinline(inline) {
-    this._canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
+    this.$$._props.playsinline.set(inline);
   }
 
   private _watchPlaysinline() {
-    this.playsinline = this.$props.playsinline();
+    const inline = this.$props.playsinline();
+    this._canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
   }
 
   @prop
@@ -481,11 +485,12 @@ export class MediaPlayer
   }
 
   set playbackRate(rate) {
-    this._canPlayQueue._enqueue('rate', () => (this._provider!.playbackRate = rate));
+    this.$$._props.playbackRate.set(rate);
   }
 
   private _watchPlaybackRate() {
-    this.playbackRate = this.$props.playbackRate();
+    const rate = this.$props.playbackRate();
+    this._canPlayQueue._enqueue('rate', () => (this._provider!.playbackRate = rate));
   }
 
   /**
