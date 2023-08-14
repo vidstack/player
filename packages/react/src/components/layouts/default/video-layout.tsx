@@ -175,8 +175,8 @@ function DefaultVideoMenus() {
     placement = !isSmallLayout ? 'bottom end' : null;
   return (
     <>
-      <DefaultChaptersMenu tooltip="bottom" placement={placement} portalClass="vds-video-ui" />
-      <DefaultSettingsMenu tooltip="bottom" placement={placement} portalClass="vds-video-ui" />
+      <DefaultChaptersMenu tooltip="bottom" placement={placement} portalClass="vds-video-layout" />
+      <DefaultSettingsMenu tooltip="bottom" placement={placement} portalClass="vds-video-layout" />
     </>
   );
 }

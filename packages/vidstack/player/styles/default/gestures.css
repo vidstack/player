@@ -4,6 +4,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
+:where(.vds-gestures) {
+  display: contents;
+}
+
 :where(.vds-gesture) {
   position: absolute;
   display: block;

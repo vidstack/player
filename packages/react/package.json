@@ -73,8 +73,8 @@
       "development": "./dist/dev/player/vidstack-default-layout.js",
       "default": "./dist/prod/player/vidstack-default-layout.js"
     },
+    "./player/styles/*": "./player/styles/*",
     "./dist/types/*": "./dist/types/*",
-    "./styles/*": "./styles/*",
     "./package.json": "./package.json",
     "./tailwind.cjs": {
       "types": "./tailwind.d.cts",

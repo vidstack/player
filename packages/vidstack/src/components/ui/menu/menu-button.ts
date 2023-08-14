@@ -1,4 +1,4 @@
-import { Component, effect, useContext } from 'maverick.js';
+import { Component, effect, prop, useContext } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { onPress } from '../../../utils/dom';
@@ -17,6 +17,7 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
 
   private _menu!: MenuContext;
 
+  @prop
   get expanded() {
     return this._menu?._expanded() ?? false;
   }

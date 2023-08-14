@@ -41,6 +41,4 @@ export {
   Poster as PosterInstance,
   Thumbnail as ThumbnailInstance,
   Time as TimeInstance,
-  // Skins
-  DefaultSkin as DefaultSkinInstance,
 } from 'vidstack/local';

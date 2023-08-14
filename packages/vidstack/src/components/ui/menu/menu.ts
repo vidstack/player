@@ -154,6 +154,12 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
     if (!expanded) return;
 
+    effect(() => {
+      const { height } = this._media.$state,
+        content = this._content();
+      content && setStyle(content, '--player-height', height() + 'px');
+    });
+
     this._focus._listen();
 
     this.listen('pointerup', this._onPointerUp.bind(this));
