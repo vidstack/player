@@ -1,10 +1,11 @@
 <script lang="ts">
+  import clsx from 'clsx';
   import ArrowLeftIcon from '~icons/lucide/arrow-left';
   import ArrowRightIcon from '~icons/lucide/arrow-right';
-  import clsx from 'clsx';
   import { createEventDispatcher } from 'svelte';
   import { isKeyboardClick } from '../utils/keyboard';
   import { isUndefined } from '../utils/unit';
+  import GradientBorder from './gradient-border.svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -16,7 +17,7 @@
 
   $: buttonClass = clsx(
     'flex items-center rounded-md font-medium group px-5 py-2.5 text-sm shadow-sm',
-    '768:px-6 768:text-base',
+    '768:px-6 768:text-base outline-none',
     primary ? 'bg-inverse' : 'bg-elevate',
     gradient && 'bg-clip-padding border-2 border-transparent',
     !gradient && 'border-2 border-border',
@@ -33,13 +34,7 @@
 
 <div class="relative" style={clsx(typeof gradient === 'string' && gradient)}>
   {#if gradient}
-    <span
-      class={clsx(
-        'text-gradient rounded-md z-[-2] absolute w-full h-full inset-0',
-        'before:w-full before:h-full before:absolute before:bg-clip-padding',
-        'before:blur-[36px] before:z-[-1] before:inset-0 before:border-[13px] before:border-transparent',
-      )}
-    ></span>
+    <GradientBorder class="rounded-md" />
   {/if}
 
   <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -61,15 +56,3 @@
     {/if}
   </svelte:element>
 </div>
-
-<style>
-  .text-gradient {
-    --bg-image: linear-gradient(165deg, var(--from-color), var(--to-color));
-    background-image: var(--bg-image);
-  }
-
-  .text-gradient:before {
-    content: ' ';
-    background-image: var(--bg-image);
-  }
-</style>

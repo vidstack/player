@@ -1,5 +1,4 @@
 import { DOMEvent, EventsTarget, isString, listenEvent } from 'maverick.js/std';
-
 import { TextTrackSymbol } from '../symbols';
 import type { TextTrack } from '../text-track';
 import type { TextRenderer } from './text-renderer';
@@ -11,7 +10,10 @@ export class LibASSTextRenderer implements TextRenderer {
   private _track: TextTrack | null = null;
   private _typeRE = /(ssa|ass)$/;
 
-  constructor(public readonly loader: LibASSModuleLoader, public config?: LibASSConfig) {}
+  constructor(
+    public readonly loader: LibASSModuleLoader,
+    public config?: LibASSConfig,
+  ) {}
 
   canRender(track: TextTrack): boolean {
     return (

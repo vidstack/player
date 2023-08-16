@@ -1,15 +1,17 @@
 ---
 import clsx from 'clsx';
+import Visible from '../../actions/visible.svelte';
 import FadeInWhenVisible from '../style/fade-in-when-visible.astro';
 import TextGradient from '../text-gradient.svelte';
 
 interface Props {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   align?: 'start' | 'center';
+  noTextGradient?: boolean;
 }
 
-const { title, subtitle, align = 'center' } = Astro.props;
+const { title, subtitle, align = 'center', noTextGradient = false } = Astro.props;
 ---
 
 <FadeInWhenVisible>
@@ -17,16 +19,17 @@ const { title, subtitle, align = 'center' } = Astro.props;
     class={clsx(
       'flex w-full flex-col',
       'px-4 768:px-6',
-      'py-32 992:py-40',
       'max-w-[var(--content-max-width)] mx-auto',
       align === 'start' ? '992:flex-row 992:items-center 992:justify-start' : 'justify-center',
+      !subtitle ? 'pb-32 992:pb-40' : 'py-32 992:py-40',
     )}
   >
     <div
       class={clsx(
-        'flex items-center flex-col text-center mb-16 576:mb-[85px] shrink-0',
+        'flex items-center flex-col text-center shrink-0',
         align === 'start' && '992:text-start 992:items-start',
         Astro.slots.has('content') && align === 'start' && '992:mr-10 992:mb-0',
+        !subtitle ? (Astro.slots.has('cta') ? 'mb-10' : 'mb-4') : 'mb-16',
       )}
     >
       <div
@@ -35,21 +38,46 @@ const { title, subtitle, align = 'center' } = Astro.props;
           align === 'start' && '992:justify-start',
         )}
       >
-        <div class="w-10 h-10 text-inverse">
-          <slot name="icon" />
+        <div class="relative w-10 h-10">
+          <slot />
+          <Visible
+            class={clsx(
+              'absolute top-0 left-0 bg-[var(--to-color)] opacity-0 duration-500 delay-700',
+              'data-[visible]:opacity-20 data-[visible]:dark:opacity-30',
+              'data-[visible]:translate-x-1 data-[visible]:translate-y-1',
+              'w-10 h-10 rounded-sm',
+              'transition-all',
+            )}
+            once
+            client:load
+          />
+          <div
+            class={clsx(
+              'bg-[var(--from-color)] rounded-sm w-10 h-10 absolute top-0 left-0',
+              'flex items-center justify-center z-10 opacity-80 backdrop-blur-sm',
+            )}
+          >
+          </div>
+          <div
+            class="w-[25px] h-[25px] text-white absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-20"
+          >
+            <slot name="icon" />
+          </div>
         </div>
       </div>
 
       <h1
-        class="font-semibold mt-4 text-3xl 576:text-4xl mx-auto 576:max-w-none 992:mx-0 leading-tight"
+        class="font-semibold mt-6 text-3xl 576:text-4xl mx-auto 576:max-w-none 992:mx-0 leading-tight"
       >
-        <TextGradient>
-          {title}
-        </TextGradient>
-        <br />
-        <span class="inline-block mt-1.5">
-          {subtitle}
-        </span>
+        {!noTextGradient ? <TextGradient>{title}</TextGradient> : title}
+        {
+          subtitle && (
+            <>
+              <br />
+              <span class="inline-block mt-1.5">{subtitle}</span>
+            </>
+          )
+        }
       </h1>
 
       {
@@ -61,7 +89,11 @@ const { title, subtitle, align = 'center' } = Astro.props;
       }
 
       <div
-        class={clsx('mt-8 flex justify-center w-full', align === 'start' && '992:justify-start')}
+        class={clsx(
+          'flex justify-center w-full',
+          align === 'start' && '992:justify-start',
+          Astro.slots.has('description') ? 'mt-8' : 'mt-4',
+        )}
       >
         <slot name="cta" />
       </div>

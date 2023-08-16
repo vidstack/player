@@ -1,7 +1,6 @@
 import { computed, effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
-
 import { MediaProvider } from '../../components';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 
@@ -27,6 +26,7 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
   }
 
   protected onDestroy(): void {
+    this._mediaElement?.remove();
     this._mediaElement = null;
   }
 
@@ -41,11 +41,13 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
         : null;
 
       if (this._mediaElement !== media) {
+        const parent = this._mediaElement?.parentElement ?? this;
         this._mediaElement?.remove();
         this._mediaElement = media;
-        if (media) this.prepend(media);
-        this.load(media);
+        if (media) parent.prepend(media);
       }
+
+      this.load(media);
     });
   }
 
@@ -75,6 +77,7 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
 
     const { controls, crossorigin, poster } = this._media.$state,
       $poster = computed(() => (poster() && controls() ? poster() : null));
+
     effect(() => {
       setAttribute(video, 'controls', controls());
       setAttribute(video, 'crossorigin', crossorigin());

@@ -297,7 +297,7 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Chapters
+ * Slider Chapters
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -306,13 +306,14 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: var(--track-height);
+  height: 100%;
   contain: layout style;
   border-radius: var(--media-slider-track-border-radius, 1px);
 }
 
 :where(.vds-slider[data-focus], .vds-slider:focus-visible) :where(.vds-slider-chapters) {
   box-shadow: var(--media-focus-ring);
+  height: var(--track-height);
 }
 
 :where(.vds-time-slider .vds-slider-chapter) {

@@ -1,13 +1,14 @@
 <script lang="ts">
+  import clsx from 'clsx';
   import CheckCircleIcon from '~astro-icons/lucide/check-circle-2';
   import ChevronDownIcon from '~astro-icons/lucide/chevron-down';
-  import clsx from 'clsx';
   import { onDestroy, tick } from 'svelte';
   import { get } from 'svelte/store';
   import { visible } from '../../../actions/visible';
   import { ariaBool } from '../../../utils/aria';
   import { IS_BROWSER } from '../../../utils/env';
   import { isKeyboardClick } from '../../../utils/keyboard';
+  import ProgressCircle from '../../progress-circle.svelte';
   import { mockEncodeProgress, mockVideoTitles, type MockEncodeProgress } from './mock-encode';
 
   let expanded = false,
@@ -158,32 +159,13 @@
           {#if percent === 100}
             <CheckCircleIcon class="w-4 h-4 mr-2 text-green-600 dark:text-green-400" />
           {:else}
-            <svg
-              class="w-4 h-4 rounded-full mr-2"
-              fill="none"
-              viewBox="0 0 120 120"
-              aria-hidden="true"
-            >
-              <circle
-                class="text-inverse opacity-25"
-                cx="60"
-                cy="60"
-                r="54"
-                stroke="currentColor"
-                stroke-width="40"
-              ></circle>
-              <circle
-                class="text-green-600 dark:text-green-400 opacity-75"
-                cx="60"
-                cy="60"
-                r="54"
-                stroke="currentColor"
-                stroke-width="40"
-                stroke-dasharray="100"
-                stroke-dashoffset={Math.max(0, 100 - percent)}
-                pathLength="100"
-              ></circle>
-            </svg>
+            <ProgressCircle
+              class="mr-2"
+              size={16}
+              {percent}
+              trackClass="text-inverse opacity-25"
+              fillClass="text-green-600 dark:text-green-400 opacity-75"
+            />
           {/if}
           <span class="font-semibold text-xs">{title} </span>
           <div class="flex-1"></div>

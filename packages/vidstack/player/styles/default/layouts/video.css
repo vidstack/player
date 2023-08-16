@@ -347,7 +347,7 @@
  */
 
 :where(.vds-video-layout[data-size='sm'] .vds-controls-group:nth-last-child(2)) {
-  margin-bottom: -20px;
+  margin-bottom: -26px;
   z-index: 1;
 }
 

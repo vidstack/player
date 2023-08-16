@@ -24,12 +24,8 @@ export class MediaAudioLayoutElement
 {
   static tagName = 'media-audio-layout';
 
-  constructor() {
-    super();
-    this.classList.add('vds-audio-layout');
-  }
-
   protected onSetup() {
+    this.classList.add('vds-audio-layout');
     this.menuContainer = createMenuContainer('vds-audio-layout');
     onDispose(() => this.menuContainer!.remove());
   }

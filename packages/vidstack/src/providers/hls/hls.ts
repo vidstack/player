@@ -1,7 +1,6 @@
 import type * as HLS from 'hls.js';
 import { effect, peek } from 'maverick.js';
 import { camelToKebabCase, DOMEvent, listenEvent } from 'maverick.js/std';
-
 import { QualitySymbol } from '../../core/quality/symbols';
 import { TextTrackSymbol } from '../../core/tracks/text/symbols';
 import { TextTrack } from '../../core/tracks/text/text-track';

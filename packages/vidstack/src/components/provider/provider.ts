@@ -68,6 +68,9 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     // Use a RAF here to prevent hot reloads resetting provider.
     window.cancelAnimationFrame(this._loadRafId);
     this._loadRafId = requestAnimationFrame(() => this._runLoader(target));
+    onDispose(() => {
+      window.cancelAnimationFrame(this._loadRafId);
+    });
   }
 
   protected _runLoader(target: HTMLElement | null | undefined) {

@@ -1,12 +1,10 @@
 <script lang="ts" context="module">
   import type { BadgeColor } from './badge.svelte';
 
-  export type StageTitle = '1.0' | 'Beta' | 'Alpha' | 'Soon' | 'Planned';
+  export type StageTitle = number | 'Beta' | 'Alpha' | 'Soon' | 'Planned' | 'Archived';
 
   function getColor(stage: StageTitle): BadgeColor {
     switch (stage) {
-      case '1.0':
-        return 'blue';
       case 'Beta':
         return 'green';
       case 'Alpha':
@@ -15,6 +13,10 @@
         return 'purple';
       case 'Planned':
         return 'orange';
+      case 'Archived':
+        return 'red';
+      default:
+        return 'blue';
     }
   }
 </script>
@@ -24,6 +26,8 @@
 
   export let stage: StageTitle;
   export let invertTheme = false;
+
+  $: title = typeof stage === 'number' ? stage + '.0' : stage;
 </script>
 
-<Badge color={getColor(stage)} {invertTheme}>{stage}</Badge>
+<Badge color={getColor(stage)} {invertTheme}>{title}</Badge>

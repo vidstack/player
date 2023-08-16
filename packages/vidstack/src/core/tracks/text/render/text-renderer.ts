@@ -1,6 +1,5 @@
 import { effect, onDispose } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
-
 import type { MediaContext } from '../../../api/media-context';
 import { TextTrackSymbol } from '../symbols';
 import { isTrackCaptionKind, TextTrack } from '../text-track';

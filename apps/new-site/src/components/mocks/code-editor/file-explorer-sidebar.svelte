@@ -60,7 +60,7 @@
 
   <div
     class={clsx(
-      'flex-1 z-50 mt-2 px-1 transition-opacity duration-300 overflow-y-auto scrollbar',
+      'flex-1 z-50 mt-1 pt-1 px-1 transition-opacity duration-300 overflow-y-auto scrollbar',
       isOpen ? 'opacity-100' : 'invisible opacity-0',
     )}
   >
