@@ -20,7 +20,7 @@
 
   let orientation: string = 'horizontal',
     defaultPaneType = (IS_BROWSER && localStorage[PANE_TYPE_PREF_KEY]) || 'split',
-    sizes: number[] = [50, 50],
+    sizes: number[] = [35, 65],
     openPane = writable<CodePane>(defaultPaneType),
     userHasNotSeenPaneSwitch = !IS_BROWSER || localStorage[SEEN_PANE_SWITCH_KEY];
 

@@ -41,8 +41,15 @@ export type ComponentPropsWithoutRef<T extends React.ElementType> = PropsWithout
 
 type Primitives = { [E in (typeof NODES)[number]]: PrimitiveForwardRefComponent<E> };
 
-export type PrimitivePropsWithRef<E extends React.ElementType> = React.ComponentPropsWithRef<E> & {
+export type PrimitivePropsWithRef<E extends React.ElementType> = Omit<
+  React.ComponentPropsWithRef<E>,
+  'style'
+> & {
   asChild?: boolean;
+  style?:
+    | React.CSSProperties
+    | (React.CSSProperties & Record<`--${string}`, string | null | undefined>)
+    | undefined;
 };
 
 interface PrimitiveForwardRefComponent<E extends React.ElementType>

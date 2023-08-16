@@ -31,7 +31,8 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
     class: clsx(
       'flex absolute top-0 left-0 m-0 flex-col text-sm leading-[var(--leading)]',
       'flex-none select-none text-right text-soft/40',
-      highlights ? 'pl-2' : 'pl-0',
+      flat && (highlights ? 'pl-2' : 'pl-0'),
+      !flat && (highlights ? 'pl-4 mt-2' : 'pl-2 mt-4'),
     ),
     style: 'border-radius: 0; padding-top: 0;',
     'aria-hidden': 'true',
@@ -46,7 +47,7 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
     'code-block relative text-sm leading-[var(--leading)] flex min-h-0',
     'scrollbar scrollbar-square scroll-contain overflow-auto',
     !flat
-      ? 'shadow-xl rounded-md border-border border 576:max-h-[32rem] max-h-[60vh] mx-auto '
+      ? 'shadow-xl rounded-md border-border border 576:max-h-[32rem] max-h-[60vh] mx-auto p-4'
       : 'w-full min-h-full',
     _class,
   )}

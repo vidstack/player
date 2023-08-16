@@ -1,6 +1,7 @@
 ---
-import ArrowRightIcon from '~astro-icons/lucide/arrow-right';
 import clsx from 'clsx';
+import ArrowRightIcon from '~astro-icons/lucide/arrow-right';
+import StarIcon from '~astro-icons/lucide/star';
 import Badge, { BadgeColor } from '../badge.svelte';
 import type { StageTitle } from '../stage-badge.svelte';
 import StageBadge from '../stage-badge.svelte';
@@ -9,8 +10,9 @@ export interface GridContentItem {
   title: string;
   badge?: string | { title: string; color: BadgeColor };
   stage?: StageTitle;
+  stars?: string;
   description: string;
-  href?: string;
+  href?: string | { title: string; href: string };
 }
 
 interface Props {
@@ -20,6 +22,10 @@ interface Props {
 }
 
 const { label, align = 'center', content } = Astro.props;
+
+function getHref(href: GridContentItem['href']) {
+  return typeof href === 'string' ? href : href?.href;
+}
 ---
 
 <div class="w-full 576:mx-auto 576:max-w-5xl">
@@ -33,8 +39,8 @@ const { label, align = 'center', content } = Astro.props;
     aria-label={label}
   >
     {
-      content.map(({ title, badge, stage, href, description }) => {
-        const isExternal = !!href?.startsWith('http');
+      content.map(({ title, badge, stage, stars, href, description }) => {
+        const isExternal = !!getHref(href)?.startsWith('http');
         return (
           <li class="flex flex-col space-y-2 text-inverse w-full">
             <div class="flex flex-row items-center justify-start">
@@ -45,6 +51,12 @@ const { label, align = 'center', content } = Astro.props;
                   {typeof badge === 'string' ? badge : badge.title}
                 </Badge>
               )}
+              {stars && (
+                <div class="ml-auto text-xs font-medium flex items-center">
+                  <StarIcon class="w-3 h-3 mr-1" />
+                  {stars}
+                </div>
+              )}
             </div>
 
             <p class="text-soft text-sm w-full">{description}</p>
@@ -52,11 +64,11 @@ const { label, align = 'center', content } = Astro.props;
             {href && (
               <a
                 class="flex items-center text-brand group p-0.5 rounded-md text-sm"
-                {href}
+                href={getHref(href)}
                 target={isExternal ? '_blank' : null}
                 rel={isExternal ? 'noreferrer' : null}
               >
-                Learn more
+                {typeof href === 'string' ? 'Learn more' : href.title}
                 <ArrowRightIcon class="-translate-x-2 opacity-0 group-hocus:opacity-100 group-hocus:translate-x-px transition-all w-3.5 h-3.5" />
               </a>
             )}

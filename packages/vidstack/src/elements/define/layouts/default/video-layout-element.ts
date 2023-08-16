@@ -24,12 +24,8 @@ export class MediaVideoLayoutElement
 {
   static tagName = 'media-video-layout';
 
-  constructor() {
-    super();
-    this.classList.add('vds-video-layout');
-  }
-
   protected onSetup() {
+    this.classList.add('vds-video-layout');
     this.menuContainer = createMenuContainer('vds-video-layout');
     onDispose(() => this.menuContainer!.remove());
   }

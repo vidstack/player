@@ -2,7 +2,6 @@ import type { LogLevel } from '../../foundation/logger/log-level';
 import type { ScreenOrientationLockType } from '../../foundation/orientation/types';
 import { MEDIA_KEY_SHORTCUTS } from '../keyboard/controller';
 import type { MediaKeyShortcuts, MediaKeyTarget } from '../keyboard/types';
-import type { TextTrack, TextTrackInit } from '../tracks/text/text-track';
 import type { MediaState } from './player-state';
 import type { MediaLoadingStrategy, MediaResource } from './types';
 
@@ -33,7 +32,6 @@ export const mediaPlayerProps: MediaPlayerProps = {
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
   title: '',
-  textTracks: [],
 };
 
 export interface MediaStateAccessors
@@ -121,12 +119,6 @@ export interface MediaPlayerProps
    * present on the `<media-player>` element).
    */
   preferNativeHLS: boolean;
-  /**
-   * A list of text track objects to load.
-   *
-   * @see {@link https://vidstack.io/docs/player/core-concepts/text-tracks}
-   */
-  textTracks: (TextTrack | TextTrackInit)[];
   /**
    * Whether keyboard support is disabled for the media player globally. This property won't disable
    * standard ARIA keyboard controls for individual components when focused.

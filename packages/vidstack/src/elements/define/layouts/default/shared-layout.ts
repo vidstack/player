@@ -51,8 +51,8 @@ export function DefaultMuteButton({ tooltip }: { tooltip: TooltipPlacement }) {
         </media-mute-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
-        <span data-state="mute">${$i18n(translations, 'Mute')}</span>
-        <span data-state="unmute">${$i18n(translations, 'Unmute')}</span>
+        <span data-state="mute">${$i18n(translations, 'Unmute')}</span>
+        <span data-state="unmute">${$i18n(translations, 'Mute')}</span>
       </media-tooltip-content>
     </media-tooltip>
   `;

@@ -17,9 +17,10 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
   static tagName = 'media-poster';
 
   private _media!: MediaContext;
-  private _img = this._createImg();
+  private _img = document.createElement('img');
 
   protected onSetup(): void {
+    this.prepend(this._img);
     this._media = useMediaContext();
     this.$state.img.set(this._img);
   }
@@ -33,12 +34,6 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
       setAttribute(this._img, 'alt', alt());
       setAttribute(this._img, 'crossorigin', crossorigin());
     });
-  }
-
-  protected _createImg() {
-    const img = document.createElement('img');
-    this.prepend(img);
-    return img;
   }
 }
 

@@ -1,4 +1,5 @@
 ---
+import clsx from 'clsx';
 import ActivitySquareIcon from '~astro-icons/lucide/activity-square';
 import ArchiveIcon from '~astro-icons/lucide/archive';
 import CalendarIcon from '~astro-icons/lucide/calendar-days';
@@ -9,7 +10,7 @@ import ListIcon from '~astro-icons/lucide/list';
 import PlusIcon from '~astro-icons/lucide/plus';
 import SearchIcon from '~astro-icons/lucide/search';
 import SettingsTwoIcon from '~astro-icons/lucide/settings-2';
-import clsx from 'clsx';
+import XIcon from '~astro-icons/lucide/x';
 import ReactIcon from '../../../icons/react-icon.svelte';
 import Menu from '../../menu.svelte';
 
@@ -24,12 +25,13 @@ const filterMenuItems = [
 <div class="flex items-center w-full">
   <div
     class={clsx(
-      'items-center pl-1 pr-1.5 py-0.5 text-inverse border border-inverse/10',
+      'items-center px-1.5 py-0.5 text-inverse border border-inverse/10',
       'bg-inverse/10 text-[10px] rounded-sm mr-2 shadow-sm hidden @sm:flex',
     )}
   >
     <ReactIcon class="w-2.5 h-2.5 mr-1" />
      React Course
+    <XIcon class="w-2.5 h-2.5 ml-0.5" />
   </div>
   <Menu
     class={clsx(

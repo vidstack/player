@@ -7,6 +7,7 @@
 :where([data-media-player]) {
   --media-focus-ring: 0 0 0 3px rgb(78 156 246);
   width: 100%;
+  min-width: 275px;
   display: inline-block;
   position: relative;
   contain: layout style;
@@ -40,7 +41,7 @@
 
 :where([data-media-provider]) {
   position: relative;
-  display: inline-block;
+  display: block;
   width: 100%;
   box-sizing: border-box;
 }

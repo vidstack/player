@@ -18,7 +18,6 @@ export class MediaPlayerElement extends Host(HTMLElement, MediaPlayer) {
 
   static override attrs: Attributes<MediaPlayerProps> = {
     preferNativeHLS: 'prefer-native-hls',
-    textTracks: false,
   };
 }
 

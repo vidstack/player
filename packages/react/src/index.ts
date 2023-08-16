@@ -5,6 +5,7 @@ export * from './components/primitives/instances';
 export { type MediaPlayerProps, MediaPlayer } from './components/player';
 export { type MediaProviderProps, MediaProvider } from './components/provider';
 export { type IconProps, Icon, type IconComponent } from './icon';
+export { TextTrack, type TextTrackProps } from './components/text-track';
 
 // Controls
 export * as Controls from './components/ui/controls';
@@ -99,6 +100,7 @@ export * from './hooks/use-thumbnails';
 export * from './hooks/use-slider-state';
 export * from './hooks/use-active-text-cues';
 export * from './hooks/use-active-text-track';
+export * from './hooks/use-text-track';
 export * from './hooks/options/use-audio-options';
 export * from './hooks/options/use-caption-options';
 export * from './hooks/options/use-chapter-options';

@@ -8,11 +8,13 @@
   </div>
 
   <div
-    class="flex items-center justify-center p-2 overflow-auto"
+    class="overflow-auto grow basis-0 scrollbar scrollbar-square"
     style="display: none"
     data-pane
     slot="right"
   >
-    <slot name="preview" />
+    <div class="p-2 w-full h-full flex items-center justify-center">
+      <slot name="preview" />
+    </div>
   </div>
 </SplitCodePane>

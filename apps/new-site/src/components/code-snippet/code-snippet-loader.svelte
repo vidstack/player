@@ -50,6 +50,7 @@
 {#if loader && !code}
     <IndeterminateLoadingSpinner />
     <code
+      class="inline-block"
       style={`width: ${loader.width * 9.48}px; height: ${loader.lines * 22}px;`}
     />
   {/if}{@html code}

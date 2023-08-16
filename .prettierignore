@@ -1,8 +1,12 @@
-globals.d.ts
 .code
+globals.d.ts
+
 **/partials/markup
 **/partials/import
 **/dist
+
 .gitignore
 .gitkeep
 .prettierignore
+
+apps/new-site/snippets/home/default-layout.tsx

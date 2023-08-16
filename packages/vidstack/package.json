@@ -115,7 +115,7 @@
     "./player": {
       "types": "./player/index.d.ts",
       "node": "./dist/server/define/vidstack-player.js",
-      "development": "./dist/dev/define/vidstack-player.s",
+      "development": "./dist/dev/define/vidstack-player.js",
       "default": "./dist/prod/define/vidstack-player.js"
     },
     "./player/ui": {

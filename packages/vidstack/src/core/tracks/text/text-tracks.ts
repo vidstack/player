@@ -1,5 +1,4 @@
 import { DOMEvent } from 'maverick.js/std';
-
 import { List, type ListReadonlyChangeEvent } from '../../../foundation/list/list';
 import { ListSymbol } from '../../../foundation/list/symbols';
 import { TextTrackSymbol } from './symbols';

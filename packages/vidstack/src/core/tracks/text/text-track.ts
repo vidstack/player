@@ -6,7 +6,6 @@ import {
   type VTTHeaderMetadata,
   type VTTRegion,
 } from 'media-captions';
-
 import { getRequestCredentials } from '../../../utils/network';
 import { TextTrackSymbol } from './symbols';
 import { isCueActive } from './utils';

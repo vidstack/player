@@ -277,7 +277,7 @@ export class SliderChapters extends Component<SliderChaptersProps> {
 
   private _onChapterTitleChange() {
     const cue = this.activePointerCue || this.activeCue;
-    this._titleEl!.textContent = cue?.text || '';
+    if (this._titleEl) this._titleEl.textContent = cue?.text || '';
   }
 
   private _findParentSlider() {
