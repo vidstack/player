@@ -9,4 +9,3 @@ globals.d.ts
 .gitkeep
 .prettierignore
 
-apps/new-site/snippets/home/default-layout.tsx

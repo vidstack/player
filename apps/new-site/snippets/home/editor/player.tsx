@@ -1,8 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
+
 import { Caption, Controls, Gesture, MediaPlayer, MediaProvider, Time } from '@vidstack/react';
+
 import poster from './poster.webp';
 import video from './video.mp4';
+
 import * as Buttons from './buttons';
 import * as Menus from './menus';
 import * as Sliders from './sliders';

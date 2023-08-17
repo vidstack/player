@@ -1,6 +1,8 @@
 <script lang="ts">
   import clsx from 'clsx';
+
   import CheckCircleIcon from '~astro-icons/lucide/check-circle-2';
+
   import { visible } from '../../actions/visible';
   import { useARIATabs } from '../../aria/tabs';
   import { IS_BROWSER } from '../../utils/env';
@@ -9,9 +11,11 @@
   export let label: string;
   export let steps: string[] = [];
   export let animated = false;
+  export let color: 'orange';
 
   let _class = '';
   export { _class as class };
+  export let stepListClass = '';
 
   let startAnimationTimer = -1,
     animationInterval = -1,
@@ -25,13 +29,16 @@
     selectedTab: selectedStep,
     selectTab: selectStep,
   } = useARIATabs({
-    onSelect(step) {
+    onSelect(step, trigger) {
       onPause();
       progressPercent = 0;
       if (step < steps.length) {
-        startAnimationTimer = window.setTimeout(() => {
-          onPlay();
-        }, 2000);
+        startAnimationTimer = window.setTimeout(
+          () => {
+            onPlay();
+          },
+          trigger ? 30000 : 5000,
+        );
       }
     },
   });
@@ -67,7 +74,7 @@
 </script>
 
 <div
-  class={_class}
+  class={clsx('flex flex-col items-center', _class)}
   use:stepsRoot
   use:visible={{
     onChange(visible) {
@@ -75,7 +82,7 @@
     },
   }}
 >
-  <div class="flex relative w-full" use:stepList={label}>
+  <div class={clsx('flex relative w-full', stepListClass)} use:stepList={label}>
     {#each steps as title, i}
       {@const isSelected = $selectedStep === i}
       {@const isComplete = $selectedStep > i || progressPercent >= 100}
@@ -88,7 +95,10 @@
         {#if animated}
           {#if isComplete}
             <CheckCircleIcon
-              class="w-[26px] h-[26px] mr-2 text-[#f9700b] group-hocus:text-[#f9700b]/80"
+              class={clsx(
+                'w-[26px] h-[26px] mr-2',
+                color === 'orange' && 'text-[#f9700b] group-hocus:text-[#f9700b]/80',
+              )}
             />
           {:else}
             <div class="flex relative items-center justify-center w-[26px] h-[26px] mr-2">
@@ -98,7 +108,7 @@
                 thickness={isSelected ? 20 : 18}
                 percent={isComplete ? 100 : $selectedStep === i ? progressPercent : 0}
                 trackClass={clsx('opacity-25')}
-                fillClass={clsx('text-[#f9700b]')}
+                fillClass={clsx(color === 'orange' && 'text-[#f9700b]')}
               />
               <span
                 class={clsx(
@@ -114,8 +124,12 @@
               'rounded-full text-xs mr-1.5 w-[19px] h-[19px] flex items-center justify-center',
               'shadow-sm transition-colors duration-300 font-bold',
               isSelected
-                ? 'bg-[#f9700b] text-white dark:text-black'
-                : 'bg-[#f9700b]/20 text-inverse/40 group-hocus:text-inverse',
+                ? color === 'orange'
+                  ? 'bg-[#f9700b] text-white dark:text-black'
+                  : ''
+                : color === 'orange'
+                ? 'bg-[#f9700b]/20 text-inverse/40 group-hocus:text-inverse'
+                : '',
             )}
           >
             {i + 1}
@@ -134,12 +148,17 @@
       </button>
 
       {#if i < steps.length - 1}
-        <div class="flex-1 border-dashed border-t-2 border-border translate-y-1/2"></div>
+        <div
+          class={clsx(
+            'flex-1 border-dashed border-t-2 border-border translate-y-1/2',
+            // $selectedStep === i + 1 && progressPercent === 0 ? 'animate-pulse' : '',
+          )}
+        ></div>
       {/if}
     {/each}
   </div>
 
-  <div class={clsx('w-full max-h-[680px] overflow-auto scrollbar scrollbar-square pt-6')}>
+  <div class={clsx('w-full mt-8')}>
     <slot />
   </div>
 </div>

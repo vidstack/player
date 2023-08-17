@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
+
 import { TimeSlider, VolumeSlider } from '@vidstack/react';
 
 export function Volume() {

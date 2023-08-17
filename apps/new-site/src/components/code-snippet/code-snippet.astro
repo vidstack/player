@@ -15,38 +15,15 @@ interface Props extends HTMLAttributes<'div'> {
   highlights?: string;
 }
 
-const {
-  id,
-  domId,
-  title,
-  copy,
-  flat,
-  numbered,
-  highlights: propHighlights,
-  ...htmlProps
-} = Astro.props;
+const { id, highlights: propHighlights, ...codeBlockProps } = Astro.props;
 
 const snippet = get(codeSnippets).find((snippet) => snippet.id === id),
-  showTopBar = title || copy,
   highlights = propHighlights ?? snippet?.highlights;
 ---
 
 {
   snippet && (
-    <CodeBlock
-      {id}
-      {domId}
-      {flat}
-      {numbered}
-      {highlights}
-      lines={snippet.lines}
-      {...(htmlProps as any)}
-    >
-      {showTopBar && (
-        <div class="sticky top-0 left-0 z-10 flex items-center py-1 pt-2" slot="top">
-          {title && <span class="ml-3.5 font-mono text-sm text-soft">{title}</span>}
-        </div>
-      )}
+    <CodeBlock {id} {highlights} lines={snippet.lines} {...(codeBlockProps as any)}>
       <CodeSnippetLoader {id} client:visible />
     </CodeBlock>
   )

@@ -7,8 +7,10 @@ import HMRLineNumbers from './hmr/code-line-numbers.svelte';
 
 interface Props extends HTMLAttributes<'div'> {
   id: string;
+  title?: string;
   domId?: string | null;
   flat?: boolean;
+  copy?: boolean;
   numbered?: boolean;
   lines: number;
   highlights?: string;
@@ -18,19 +20,24 @@ const {
   id,
   domId,
   lines,
+  title,
+  copy = false,
   highlights,
-  numbered,
-  flat,
+  numbered = false,
+  flat = false,
   class: _class,
   style,
   ...htmlProps
 } = Astro.props;
 
+const showTopBar = title || copy;
+
 const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
   lineNumberProps = {
     class: clsx(
-      'flex absolute top-0 left-0 m-0 flex-col text-sm leading-[var(--leading)]',
+      'flex absolute left-0 m-0 flex-col text-sm leading-[var(--leading)]',
       'flex-none select-none text-right text-soft/40',
+      showTopBar ? 'top-6' : 'top-0',
       flat && (highlights ? 'pl-2' : 'pl-0'),
       !flat && (highlights ? 'pl-4 mt-2' : 'pl-2 mt-4'),
     ),
@@ -44,11 +51,12 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
   {...htmlProps}
   id={domId}
   class={clsx(
-    'code-block relative text-sm leading-[var(--leading)] flex min-h-0',
-    'scrollbar scrollbar-square scroll-contain overflow-auto',
+    'code-block relative text-sm leading-[var(--leading)] flex flex-col min-h-0',
+    'scrollbar scrollbar-square scroll-contain overflow-auto bg-body',
     !flat
-      ? 'shadow-xl rounded-md border-border border 576:max-h-[32rem] max-h-[60vh] mx-auto p-4'
+      ? 'shadow-xl rounded-md border-border border 576:max-h-[32rem] max-h-[60vh] mx-auto'
       : 'w-full min-h-full',
+    !flat && (showTopBar ? 'px-4 pb-4' : 'p-4'),
     _class,
   )}
   style={clsx(`--leading: 1.375rem;`, style)}
@@ -57,22 +65,29 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
   data-numbers-large={!!numbered && lines >= 100}
   data-hl={!!highlights}
 >
-  <slot name="top" />
+  {
+    showTopBar && (
+      <div class="sticky top-0 left-0 z-10 flex items-center py-2.5 bg-body/50 backdrop-blur-md">
+        {title && <span class="font-mono text-sm text-soft">{title}</span>}
+      </div>
+    )
+  }
 
   <slot />
 
   {
-    numbered && import.meta.env.DEV ? (
-      <HMRLineNumbers
-        {id}
-        {lines}
-        {...lineNumberProps}
-        class={lineNumberProps.class}
-        client:visible
-      />
-    ) : (
-      <pre {...lineNumberProps} set:html={lineNumbers.join('\n')} />
-    )
+    numbered &&
+      (import.meta.env.DEV ? (
+        <HMRLineNumbers
+          {id}
+          {lines}
+          {...lineNumberProps}
+          class={lineNumberProps.class}
+          client:visible
+        />
+      ) : (
+        <pre {...lineNumberProps} set:html={lineNumbers.join('\n')} />
+      ))
   }
 
   {
@@ -96,7 +111,7 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
   .code-block :global(pre code[data-lang-bash] .line:not(:empty)::before) {
     content: '> ';
     font-weight: bold;
-    color: var(--terminal-line-pointer);
+    color: rgb(var(--color-brand));
   }
 
   .code-block[data-numbers] :global(pre:not([data-numbers])) {

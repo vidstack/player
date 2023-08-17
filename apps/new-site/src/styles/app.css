@@ -9,6 +9,8 @@
   --color-elevate: 255 255 255;
   --color-inverse: 5 11 23;
   --color-border: 219 219 219;
+  --color-code-tag: 0 92 197;
+  --color-code-fn: 111 66 193;
 }
 
 :root {
@@ -45,6 +47,8 @@
   --color-elevate: 14 14 14;
   --color-body: 5 5 5;
   --color-focus: 129 140 248;
+  --color-code-tag: 121 184 255;
+  --color-code-fn: 179 146 240;
 }
 
 .js-focus-visible :focus:not([data-focus-visible-added]):not([data-focus]) {

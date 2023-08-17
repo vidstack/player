@@ -2,8 +2,10 @@
 
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+
 import { getHighlighter, renderToHtml } from 'shiki';
-import { resolveCodeHighlights, snippetsMap, stripCodeHighlightComments } from './code-snippets.js';
+
+import { resolveCodeHighlights, snippetsMap, stripComments } from './code-snippets.js';
 
 /**
  * @returns {import('vite').Plugin}
@@ -66,7 +68,7 @@ export default () => {
         snippetsMap.set(snippetId, {
           filePath,
           ext,
-          source: stripCodeHighlightComments(content),
+          source: stripComments(content),
         });
 
         return snippetId;
@@ -117,7 +119,7 @@ export default () => {
           tokensId = `:code_tokens/${baseId}`;
 
         const content = await readFile(file, 'utf8'),
-          lines = stripCodeHighlightComments(content).split(/\n|\r/g).length - 1,
+          lines = stripComments(content).split(/\n|\r/g).length - 1,
           highlights = resolveCodeHighlights(file, content);
 
         [

@@ -2,16 +2,24 @@
 import clsx from 'clsx';
 import Visible from '../../actions/visible.svelte';
 import FadeInWhenVisible from '../style/fade-in-when-visible.astro';
+import TypeWriter from '../style/type-writer.svelte';
 import TextGradient from '../text-gradient.svelte';
 
 interface Props {
   title: string;
   subtitle?: string;
   align?: 'start' | 'center';
+  showContentDelay?: number;
   noTextGradient?: boolean;
 }
 
-const { title, subtitle, align = 'center', noTextGradient = false } = Astro.props;
+const {
+  title,
+  subtitle,
+  align = 'center',
+  noTextGradient = false,
+  showContentDelay = 1500,
+} = Astro.props;
 ---
 
 <FadeInWhenVisible>
@@ -39,15 +47,15 @@ const { title, subtitle, align = 'center', noTextGradient = false } = Astro.prop
         )}
       >
         <div class="relative w-10 h-10">
-          <slot />
           <Visible
             class={clsx(
-              'absolute top-0 left-0 bg-[var(--to-color)] opacity-0 duration-500 delay-700',
+              'absolute top-0 left-0 bg-[var(--to-color)] opacity-0 duration-500',
               'data-[visible]:opacity-20 data-[visible]:dark:opacity-30',
               'data-[visible]:translate-x-1 data-[visible]:translate-y-1',
               'w-10 h-10 rounded-sm',
               'transition-all',
             )}
+            style="transition-delay: 1.5s;"
             once
             client:load
           />
@@ -74,7 +82,9 @@ const { title, subtitle, align = 'center', noTextGradient = false } = Astro.prop
           subtitle && (
             <>
               <br />
-              <span class="inline-block mt-1.5">{subtitle}</span>
+              <span class="inline-block mt-1.5">
+                <TypeWriter text={subtitle} speed={65} delay={600} client:visible />
+              </span>
             </>
           )
         }
@@ -99,7 +109,7 @@ const { title, subtitle, align = 'center', noTextGradient = false } = Astro.prop
       </div>
     </div>
 
-    <FadeInWhenVisible delay={300}>
+    <FadeInWhenVisible delay={showContentDelay}>
       <slot name="content" />
     </FadeInWhenVisible>
   </section>

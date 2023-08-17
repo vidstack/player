@@ -2,6 +2,7 @@
 
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+
 import { globby } from 'globby';
 import { LRUCache } from 'lru-cache';
 
@@ -11,7 +12,8 @@ const SNIPPETS_ID = ':code_snippets',
   SNIPPETS_REQ_ID = `/${SNIPPETS_ID}`;
 
 const startHighlightRE = /\/\/\s\@hl-start/,
-  stripHighlightsRE = /\/\/\s\@hl-(start|end)(\n|\r)/g;
+  stripHighlightsRE = /\s*?\/\/\s\@hl-(start|end)(\n|\r)/g,
+  prettierRE = /\s*?\/\/\sprettier.*?(\n|\r)/g;
 
 /**
  * @typedef {{
@@ -82,11 +84,16 @@ async function getSnippets() {
     files.map(async (filePath) => {
       const content = await readFile(filePath, { encoding: 'utf-8' });
 
-      const source = stripCodeHighlightComments(content),
+      let source = stripComments(content),
         lines = source.split('\n'),
         ext = path.extname(filePath),
         highlights = resolveCodeHighlights(filePath, content),
         width = Math.max(...lines.map((line) => line.length));
+
+      if (lines[lines.length - 1] === '') {
+        lines = lines.slice(0, -1);
+        source = source.slice(0, -1);
+      }
 
       const id = filePath
           .replace(/^snippets\//, '')
@@ -108,7 +115,7 @@ async function getSnippets() {
       snippets.push({
         id,
         width,
-        lines: lines.length - 1,
+        lines: lines.length,
         framework,
         highlights,
         loader: `() => import('${loaderId}')`,
@@ -127,8 +134,8 @@ export function stripImportQuotesFromJson(json) {
 }
 
 /** @param {string} content */
-export function stripCodeHighlightComments(content) {
-  return content.replace(stripHighlightsRE, '');
+export function stripComments(content) {
+  return content.replace(stripHighlightsRE, '').replace(prettierRE, '\n');
 }
 
 /**

@@ -11,7 +11,7 @@ const { duration = 500, delay = 0 } = Astro.props;
 
 <!-- class="opacity-0 data-[visible]:opacity-100 transition-opacity ease-in" -->
 <Visible
-  threshold={0.4}
+  threshold={0.3}
   once
   style={`transition-duration: ${duration}ms; transition-delay: ${delay}ms;`}
   client:load
