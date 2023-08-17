@@ -7,7 +7,7 @@ import { isKeyboardClick } from '../utils/keyboard';
 let globalId = 0;
 
 export interface AriaTabsOptions {
-  onSelect?(tab: number): void;
+  onSelect?(tab: number, trigger?: Event): void;
 }
 
 export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
@@ -24,7 +24,7 @@ export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
     return [...root.querySelectorAll<HTMLElement>('div[role="tabpanel"]')];
   }
 
-  function select(index: number) {
+  function select(index: number, trigger?: Event) {
     const currentIndex = get(selectedTab),
       prevTab = get(tabRefs)[currentIndex],
       nextTab = get(tabRefs)[index],
@@ -38,7 +38,7 @@ export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
     if (nextPanel) selectPanel(nextPanel, true);
 
     selectedTab.set(index);
-    onSelect?.(index);
+    onSelect?.(index, trigger);
   }
 
   function selectTab(tab: HTMLButtonElement, isSelected: boolean) {
@@ -102,8 +102,8 @@ export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
           selectTab(tab, i === 0);
 
           disposal.add(
-            listenEvent(tab, 'pointerup', () => select(i)),
-            listenEvent(tab, 'keydown', (e) => isKeyboardClick(e) && select(i)),
+            listenEvent(tab, 'pointerup', (e) => select(i, e)),
+            listenEvent(tab, 'keydown', (e) => isKeyboardClick(e) && select(i, e)),
           );
 
           if (panel) {

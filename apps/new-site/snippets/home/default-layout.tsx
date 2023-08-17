@@ -1,8 +1,9 @@
-import "@vidstack/react/player/styles/default/theme.css";
-import "@vidstack/react/player/styles/default/layouts/video.css";
+import '@vidstack/react/player/styles/default/theme.css';
+import '@vidstack/react/player/styles/default/layouts/video.css';
 
 import React from 'react';
 import Image from 'next/image';
+
 import { MediaPlayer, MediaProvider, TextTrack } from '@vidstack/react';
 import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 
@@ -17,7 +18,7 @@ function YourPlayer() {
         icons={defaultLayoutIcons}
         thumbnails="/thumbnails.vtt"
         style={{
-          '--video-brand': '#f5f5f5'
+          '--video-brand': '#f5f5f5',
         }}
       />
     </MediaPlayer>

@@ -1,8 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-
 import { getHighlighter, renderToHtml } from 'shiki';
-
 import { getSnippetPath, snippetsMap } from './snippets.js';
 
 /**

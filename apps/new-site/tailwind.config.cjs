@@ -26,21 +26,17 @@ module.exports = {
     },
     extend: {
       colors: {
-        brand: {
-          DEFAULT: 'rgb(var(--color-brand) / <alpha-value>)',
-        },
-        secondary: {
-          DEFAULT: 'rgb(var(--color-secondary) / <alpha-value>)',
-        },
-        focus: {
-          DEFAULT: 'rgb(var(--color-focus) / <alpha-value>)',
-        },
+        brand: 'rgb(var(--color-brand) / <alpha-value>)',
+        secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+        focus: 'rgb(var(--color-focus) / <alpha-value>)',
         gray: {},
         border: 'rgb(var(--color-border) / <alpha-value>)',
         soft: 'rgb(var(--color-soft) / <alpha-value>)',
         inverse: 'rgb(var(--color-inverse) / <alpha-value>)',
         body: 'rgb(var(--color-body) / <alpha-value>)',
         elevate: 'rgb(var(--color-elevate) / <alpha-value>)',
+        'code-tag': 'rgb(var(--color-code-tag) / <alpha-value>)',
+        'code-fn': 'rgb(var(--color-code-fn) / <alpha-value>)',
       },
       animation: {
         indeterminate: 'indeterminate 1.2s linear infinite',

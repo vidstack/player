@@ -1,10 +1,12 @@
 ---
 import clsx from 'clsx';
+
 import BookOpenIcon from '~astro-icons/lucide/book-open';
 import FileVideoIcon from '~astro-icons/lucide/file-video-2';
 import HeartHandshakeIcon from '~astro-icons/lucide/heart-handshake';
 import PackageIcon from '~astro-icons/lucide/package';
 import TerminalIcon from '~astro-icons/lucide/terminal';
+
 import Button from '../components/button.svelte';
 import CodeSnippet from '../components/code-snippet/code-snippet.astro';
 import GradientBorder from '../components/gradient-border.svelte';
@@ -168,10 +170,10 @@ const openSourceProjects: GridContentItem[] = [
 
       <MockCodeEditor
         files={[
-          { path: 'app/page.tsx', snippet: 'home/page' },
-          { path: 'app/player/player.tsx', snippet: 'home/player' },
-          { path: 'app/player/buttons.tsx', snippet: 'home/player-buttons' },
-          { path: 'app/player/sliders.tsx', snippet: 'home/player-sliders' },
+          { path: 'app/page.tsx', snippet: 'home/editor/page' },
+          { path: 'app/player/player.tsx', snippet: 'home/editor/player' },
+          { path: 'app/player/buttons.tsx', snippet: 'home/editor/player-buttons' },
+          { path: 'app/player/sliders.tsx', snippet: 'home/editor/player-sliders' },
           {
             path: 'app/player/poster.webp',
             imgSrc:
@@ -182,7 +184,7 @@ const openSourceProjects: GridContentItem[] = [
             path: 'app/player/video.mp4',
             videoSrc: 'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/low.mp4',
           },
-          { path: 'app/player/menus.tsx', snippet: 'home/player-menus' },
+          { path: 'app/player/menus.tsx', snippet: 'home/editor/player-menus' },
         ]}
         openFile="app/player/player.tsx"
         nextTemplate
@@ -217,7 +219,7 @@ const openSourceProjects: GridContentItem[] = [
             class="text-[var(--from-color)] dark:text-[var(--to-color)] w-4 h-4 absolute top-2.5 left-[18px]"
           />
           <div class="translate-x-10">
-            <TypeWriter text="npm i @vidstack/react" speed={100} delay={750} client:visible />
+            <TypeWriter text="npm i @vidstack/react" speed={100} delay={1200} client:visible />
           </div>
         </div>
         <div class="w-[242px] h-[40px] absolute top-0.5 left-0.5 bg-brand/10 rounded-full"></div>
@@ -240,24 +242,56 @@ const openSourceProjects: GridContentItem[] = [
 
       <JoinWaitlist slot="cta" gradient client:load />
 
-      <Steps
-        label="Next.js Integration Steps"
-        steps={['Setup', 'Play', 'Analyze']}
-        animated
-        client:visible
-        slot="content"
-      >
-        <Step>
-          <!-- .env -> (NEXT_PUBLIC_VIDSTACK_KEY + VIDSTACK_SECRET_KEY) -->
-          <!-- import { VidstackProvider } from '@vidstack/nextjs' -->
-        </Step>
-        <Step>
-          <!--  -->
-        </Step>
-        <Step>
-          <!--  -->
-        </Step>
-      </Steps>
+      <div class="w-full flex items-center justify-center" slot="content">
+        <Steps
+          class="w-full"
+          stepListClass="max-w-xl"
+          color="orange"
+          label="Next.js Integration Steps"
+          steps={['Setup', 'Play', 'Analyze']}
+          client:visible
+          animated
+        >
+          <div class="min-w-full max-w-3xl">
+            <!-- Setup -->
+            <Step>
+              <div class="w-full relative overflow-hidden">
+                <CodeSnippet
+                  title=".env"
+                  id="home/next-steps/setup-env"
+                  class="w-[80%] overflow-hidden max-w-md"
+                />
+                <div class="transform -translate-y-3">
+                  <CodeSnippet
+                    title="app/layout.tsx"
+                    id="home/next-steps/setup"
+                    class="w-full max-w-lg"
+                    numbered
+                  />
+                </div>
+              </div>
+            </Step>
+            <!-- Play -->
+            <Step>
+              <CodeSnippet
+                class="max-w-xl"
+                title="app/watch/page.tsx"
+                id="home/next-steps/play"
+                numbered
+              />
+            </Step>
+            <!-- Analyze -->
+            <Step>
+              <CodeSnippet
+                class="max-w-xl"
+                title="app/watch/page.tsx"
+                id="home/next-steps/analyze"
+                numbered
+              />
+            </Step>
+          </div>
+        </Steps>
+      </div>
     </FeatureSection>
   </Style>
 
