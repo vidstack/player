@@ -1,3 +1,11 @@
+export function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number';
+}
+
 export function isNull(value: unknown): value is null {
   return value === null;
 }

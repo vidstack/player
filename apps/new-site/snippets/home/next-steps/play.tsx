@@ -10,6 +10,7 @@ function WatchPage() {
     currentMedia,
     setMedia
   } = useMediaPlaylist({
+    userId: '...',
     filter: {
       // ❌ Type-safe - did you mean "react course"?
       tags: ['react-cours'],
@@ -20,9 +21,9 @@ function WatchPage() {
   // 🔒 Secure playback by default!
   // prettier-ignore
   const {
-    src, poster, textTracks,
-    title, description,
-    views, duration, watched
+    src, type, poster, textTracks,
+    title, description, views,
+    duration, watchedPercent
   } = currentMedia;
 
   return (

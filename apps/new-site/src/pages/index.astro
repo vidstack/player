@@ -4,24 +4,30 @@ import clsx from 'clsx';
 import BookOpenIcon from '~astro-icons/lucide/book-open';
 import FileVideoIcon from '~astro-icons/lucide/file-video-2';
 import HeartHandshakeIcon from '~astro-icons/lucide/heart-handshake';
+import NetworkIcon from '~astro-icons/lucide/network';
 import PackageIcon from '~astro-icons/lucide/package';
 import TerminalIcon from '~astro-icons/lucide/terminal';
 
 import Button from '../components/button.svelte';
 import CodeSnippet from '../components/code-snippet/code-snippet.astro';
+import GitHubCommentTable from '../components/github-comment-table.astro';
+import GitHubComment from '../components/github-comment.svelte';
 import GradientBorder from '../components/gradient-border.svelte';
 import JoinWaitlist from '../components/join-waitlist.svelte';
 import MockCodeEditor from '../components/mocks/code-editor/mock-code-editor.astro';
 import MockDashboard from '../components/mocks/dashboard/mock-dashboard.astro';
+import GitTerminalProcess from '../components/pages/home/git-terminal-process.svelte';
+import { openSourceProjects } from '../components/pages/home/oss-projects';
 import VideoPlayer from '../components/players/lazy-video-player.svelte';
 import FeatureSection from '../components/sections/feature-section.astro';
-import GridContent, { type GridContentItem } from '../components/sections/grid-content.astro';
+import GridContent from '../components/sections/grid-content.astro';
 import HeroSection from '../components/sections/hero-section.astro';
 import Step from '../components/steps/step.svelte';
 import Steps from '../components/steps/steps.svelte';
 import Style from '../components/style/style.svelte';
 import TypeWriter from '../components/style/type-writer.svelte';
 import TextGradient from '../components/text-gradient.svelte';
+import GitHubIcon from '../icons/github-icon.svelte';
 import NextIcon from '../icons/next-icon.svelte';
 import ReactIcon from '../icons/react-icon.svelte';
 import TailwindIcon from '../icons/tailwind-icon.svelte';
@@ -30,56 +36,6 @@ import SocialLink from '../layouts/parts/social-link.astro';
 
 const title = 'Vidstack: Video platform for frontend developers';
 const description = 'Build robust and accessible video/audio experiences in minutes, not weeks.';
-const openSourceProjects: GridContentItem[] = [
-  {
-    title: 'Player',
-    stage: 'Beta',
-    href: '/player',
-    stars: '1.1k',
-    description: 'UI component library for building video and audio players for the web.',
-  },
-  {
-    title: 'Captions',
-    stage: 'Beta',
-    href: 'https://github.com/vidstack/media-captions',
-    description: 'Modern media captions parser and renderer. Supports VTT, SRT, and SSA.',
-  },
-  {
-    title: 'Icons',
-    stage: 'Beta',
-    href: '/media-icons',
-    description: 'Beautifully hand-crafted collection of media icons designed for players.',
-  },
-  {
-    title: 'Uploader',
-    stage: 'Planned',
-    description: 'UI component library for building your own media uploader.',
-  },
-  {
-    title: 'Analytics',
-    stage: 'Planned',
-    description: 'Drop-in component for collecting media performance and user-behavior data.',
-  },
-  {
-    title: 'Search',
-    stage: 'Planned',
-    description: 'UI components for building beautiful video/audio search experiences.',
-  },
-  {
-    title: 'Plyr',
-    stage: 'Archived',
-    stars: '24.2k',
-    href: 'https://github.com/sampotts/plyr',
-    description: 'Simple, lightweight, accessible and customizable media player.',
-  },
-  {
-    title: 'Vime',
-    stage: 'Archived',
-    stars: '2.6k',
-    href: 'https://github.com/vime-js/vime',
-    description: 'Customizable, extensible, accessible and framework-agnostic media player.',
-  },
-];
 ---
 
 <DefaultLayout {title} {description} announcementBar>
@@ -249,13 +205,13 @@ const openSourceProjects: GridContentItem[] = [
           color="orange"
           label="Next.js Integration Steps"
           steps={['Setup', 'Play', 'Analyze']}
-          client:visible
           animated
+          client:visible
         >
           <div class="min-w-full max-w-3xl">
             <!-- Setup -->
             <Step>
-              <div class="w-full relative overflow-hidden">
+              <div class="w-full relative overflow-hidden min-h-[512px]">
                 <CodeSnippet
                   title=".env"
                   id="home/next-steps/setup-env"
@@ -292,6 +248,60 @@ const openSourceProjects: GridContentItem[] = [
           </div>
         </Steps>
       </div>
+    </FeatureSection>
+  </Style>
+
+  <Style
+    style="--from-color: oklch(0.25 0 0); --to-color: oklch(0.4 0 0);"
+    darkStyle="--from-color: oklch(1 0 0); --to-color: oklch(0.7 0 0);"
+    client:load
+  >
+    <FeatureSection title="Git." subtitle="Built to commit." align="center">
+      <GitHubIcon class="dark:text-black" width="100%" height="100%" slot="icon" />
+
+      <p slot="description">
+        Manage your media files right in your repository and when you're ready just push. Our Git
+        integration will handle the rest for you.
+      </p>
+
+      <JoinWaitlist gradient slot="cta" client:load />
+
+      <div class="w-full flex flex-col items-center justify-center" slot="content">
+        <div class="w-full max-w-3xl mx-auto">
+          <GitTerminalProcess client:visible />
+        </div>
+
+        <div class="w-px h-28 border border-dashed border-border my-8"></div>
+
+        <div class="w-full max-w-3xl mx-auto animate-[levitate_16s_ease_infinite]">
+          <GitHubComment>
+            <GitHubCommentTable
+              rows={[
+                { name: 'Installation', status: '✅ Uploaded' },
+                { name: 'Thinking in React', status: '✅ Encoded' },
+              ]}
+            />
+          </GitHubComment>
+        </div>
+      </div>
+    </FeatureSection>
+  </Style>
+
+  <Style
+    style="--from-color: oklch(0.67 0.19 53.25); --to-color: oklch(0.76 0.17 65.51);"
+    client:load
+  >
+    <FeatureSection title="Connect." subtitle="Built to integrate." align="start">
+      <NetworkIcon width="100%" height="100%" slot="icon" />
+
+      <p slot="description">
+        We focus on optimizing your frontend media workflow using your existing services. Bring your
+        own storage, streaming, and analytics services.
+      </p>
+
+      <JoinWaitlist gradient slot="cta" client:load />
+
+      <div class="w-full flex items-center justify-center" slot="content">...</div>
     </FeatureSection>
   </Style>
 
