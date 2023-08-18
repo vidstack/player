@@ -6,18 +6,16 @@ import { AnalyticEvent, MediaAnalytics, MediaPlayer, MediaProvider } from '@vids
 // 📡 Server action.
 const dispatcher = createAnalyticsDispatcher({
   provider: analytics.providers.vidstack(),
-  filter: {
-    events: [
-      AnalyticEvent.StartDuration({
-        level: 'warn',
-        filter: ({ duration }) => duration >= 5,
-      }),
-      AnalyticEvent.WatchPercent({
-        percents: [25, 50, 75, 100],
-      }),
-      AnalyticEvent.BufferingDuration,
-    ],
-  },
+  events: [
+    AnalyticEvent.LoadTime({
+      level: 'warn',
+      filter: ({ duration }) => duration >= 5,
+    }),
+    AnalyticEvent.WatchPercent({
+      percents: [25, 50, 75, 100],
+    }),
+    AnalyticEvent.BufferingDuration,
+  ],
 });
 
 function WatchPage() {

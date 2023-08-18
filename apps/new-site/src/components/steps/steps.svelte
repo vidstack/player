@@ -11,6 +11,7 @@
   export let label: string;
   export let steps: string[] = [];
   export let animated = false;
+  export let progress = false;
   export let color: 'orange';
 
   let _class = '';
@@ -82,7 +83,7 @@
     },
   }}
 >
-  <div class={clsx('flex relative w-full', stepListClass)} use:stepList={label}>
+  <div class={clsx('flex items-center relative w-full', stepListClass)} use:stepList={label}>
     {#each steps as title, i}
       {@const isSelected = $selectedStep === i}
       {@const isComplete = $selectedStep > i || progressPercent >= 100}
@@ -92,7 +93,7 @@
         )}
         use:step
       >
-        {#if animated}
+        {#if progress}
           {#if isComplete}
             <CheckCircleIcon
               class={clsx(
@@ -148,12 +149,14 @@
       </button>
 
       {#if i < steps.length - 1}
-        <div
-          class={clsx(
-            'flex-1 border-dashed border-t-2 border-border translate-y-1/2',
-            // $selectedStep === i + 1 && progressPercent === 0 ? 'animate-pulse' : '',
-          )}
-        ></div>
+        <div class="flex-1">
+          <div
+            class={clsx(
+              'border-dashed border-t-2 border-border transition-[width] duration-500',
+              $selectedStep > i ? 'w-full' : 'w-0',
+            )}
+          />
+        </div>
       {/if}
     {/each}
   </div>

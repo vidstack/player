@@ -1,5 +1,6 @@
 import { tick } from 'svelte';
 import { get, readonly, writable } from 'svelte/store';
+
 import { ariaBool } from '../utils/aria';
 import { DisposalBin, listenEvent } from '../utils/events';
 import { isKeyboardClick } from '../utils/keyboard';
