@@ -12,8 +12,7 @@ function WatchPage() {
   } = useMediaPlaylist({
     userId: '...',
     filter: {
-      // ❌ Type-safe - did you mean "react course"?
-      tags: ['react-cours'],
+      tags: ['react-course'],
     },
   });
 

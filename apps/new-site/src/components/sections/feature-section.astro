@@ -10,17 +10,10 @@ interface Props {
   title: string;
   subtitle?: string;
   align?: 'start' | 'center';
-  showContentDelay?: number;
   noTextGradient?: boolean;
 }
 
-const {
-  title,
-  subtitle,
-  align = 'center',
-  noTextGradient = false,
-  showContentDelay = 1500,
-} = Astro.props;
+const { title, subtitle, align = 'center', noTextGradient = false } = Astro.props;
 ---
 
 <FadeInWhenVisible>
@@ -110,8 +103,6 @@ const {
       </div>
     </div>
 
-    <FadeInWhenVisible delay={showContentDelay}>
-      <slot name="content" />
-    </FadeInWhenVisible>
+    <slot name="content" />
   </section>
 </FadeInWhenVisible>

@@ -1,9 +1,12 @@
 <script lang="ts">
   import clsx from 'clsx';
+
   import CheckCircleIcon from '~astro-icons/lucide/check-circle-2';
   import ChevronDownIcon from '~astro-icons/lucide/chevron-down';
+
   import { onDestroy, tick } from 'svelte';
   import { get } from 'svelte/store';
+
   import { visible } from '../../../actions/visible';
   import { ariaBool } from '../../../utils/aria';
   import { IS_BROWSER } from '../../../utils/env';
@@ -27,7 +30,7 @@
       if (intervalId === -1) {
         intervalId = window.setInterval(onIntervalTick, 100);
       }
-    }, 1500);
+    }, 2000);
   }
 
   function startEncodingTimer(index: number) {
@@ -88,8 +91,9 @@
 <div
   class={clsx(
     'flex flex-col fixed bottom-6 right-5 rounded-sm min-w-[240px] shadow-md z-20',
-    'opacity-0 data-[visible]:opacity-100 transition-opacity ease-in duration-400 delay-1000',
+    'opacity-0 data-[visible]:opacity-100 transition-opacity ease-in duration-400',
   )}
+  style="transition-delay: 1750;"
   use:visible={{
     once: true,
   }}

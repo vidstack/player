@@ -1,0 +1,92 @@
+---
+import FunctionIcon from '~astro-icons/lucide/function-square';
+import PlusIcon from '~astro-icons/lucide/plus';
+import WebhookIcon from '~astro-icons/lucide/webhook';
+
+import AwsLogo from '../../../icons/logos/aws-logo.svelte';
+import CloudflareLogo from '../../../icons/logos/cloudflare-logo.svelte';
+import DigitalOceanLogo from '../../../icons/logos/digital-ocean-logo.svelte';
+import GoogleLogo from '../../../icons/logos/google-logo.svelte';
+import MuxLogo from '../../../icons/logos/mux-logo.svelte';
+import MysqlLogo from '../../../icons/logos/mysql-logo.svelte';
+import PostgresLogo from '../../../icons/logos/postgres-logo.svelte';
+import VercelLogo from '../../../icons/logos/vercel-logo.svelte';
+import Spin from '../../style/spin.svelte';
+
+const duration = 1000,
+  delay = 1500,
+  spins = 1000,
+  initialDelay = 3000,
+  spinClass = 'border border-inverse w-auto h-24 p-4 rounded-sm shadow-md',
+  separatorClass = 'flex-1 border-b border-border border-dashed h-1 mb-12 shrink',
+  plusIconClass = 'w-5 h-5 420:w-6 420:h-6 rounded-full bg-inverse border-border border-2 mb-12',
+  titleClass = 'font-semibold text-sm mt-4 text-center w-full',
+  subtitleClass =
+    'font-medium text-soft text-xs text-center w-full mt-0.5 min-w-full whitespace-nowrap min-w-[15ch]';
+---
+
+<div class="w-full flex items-center justify-center max-w-lg mx-auto">
+  <div class="flex flex-col flex-1 shrink-0">
+    <Spin class={spinClass} {duration} {initialDelay} {delay} {spins} client:visible>
+      <Fragment slot="boxes">
+        <AwsLogo data-title="AWS S3" />
+        <DigitalOceanLogo data-title="Digital Ocean" />
+        <GoogleLogo data-title="Google Storage" />
+        <div class="flex items-center justify-center" data-title="Vercel Blob">
+          <VercelLogo class="w-[80%] h-[80%]" />
+        </div>
+      </Fragment>
+
+      <div class={titleClass}>Storage</div>
+      <div class={subtitleClass} data-part="title">Vercel Blob</div>
+    </Spin>
+  </div>
+
+  <div class={separatorClass}></div>
+
+  <div class={plusIconClass}>
+    <PlusIcon class="w-full h-full" />
+  </div>
+
+  <div class={separatorClass}></div>
+
+  <div class="flex flex-col flex-1 shrink-0">
+    <Spin class={spinClass} {duration} {initialDelay} {delay} {spins} client:visible>
+      <Fragment slot="boxes">
+        <AwsLogo data-title="AWS Media" />
+        <CloudflareLogo data-title="Cloudflare" />
+        <MuxLogo data-title="Mux" />
+      </Fragment>
+
+      <div class={titleClass}>Streaming</div>
+      <div class={subtitleClass} data-part="title">Mux</div>
+    </Spin>
+  </div>
+
+  <div class={separatorClass}></div>
+
+  <div class={plusIconClass}>
+    <PlusIcon class="w-full h-full" />
+  </div>
+
+  <div class={separatorClass}></div>
+
+  <div class="flex flex-col flex-1 shrink-0">
+    <Spin class={spinClass} {duration} {initialDelay} {delay} {spins} client:visible>
+      <Fragment slot="boxes">
+        <PostgresLogo data-title="Postgres" />
+        <MysqlLogo data-title="MySQL" />
+        <div class="flex items-center justify-center" data-title="Webhook">
+          <WebhookIcon class="w-[80%] h-[80%]" />
+        </div>
+        <FunctionIcon data-title="Serverless Fn" />
+        <div class="flex items-center justify-center" data-title="Vercel Postgres">
+          <VercelLogo class="w-[80%] h-[80%]" />
+        </div>
+      </Fragment>
+
+      <div class={titleClass}>Analytics</div>
+      <div class={subtitleClass} data-part="title">Vercel Postgres</div>
+    </Spin>
+  </div>
+</div>

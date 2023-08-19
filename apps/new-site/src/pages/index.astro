@@ -16,6 +16,7 @@ import GradientBorder from '../components/gradient-border.svelte';
 import JoinWaitlist from '../components/join-waitlist.svelte';
 import MockCodeEditor from '../components/mocks/code-editor/mock-code-editor.astro';
 import MockDashboard from '../components/mocks/dashboard/mock-dashboard.astro';
+import ConnectSpinners from '../components/pages/home/connect-spinners.astro';
 import GitTerminalProcess from '../components/pages/home/git-terminal-process.svelte';
 import { openSourceProjects } from '../components/pages/home/oss-projects';
 import VideoPlayer from '../components/players/lazy-video-player.svelte';
@@ -24,13 +25,14 @@ import GridContent from '../components/sections/grid-content.astro';
 import HeroSection from '../components/sections/hero-section.astro';
 import Step from '../components/steps/step.svelte';
 import Steps from '../components/steps/steps.svelte';
+import FadeInWhenVisible from '../components/style/fade-in-when-visible.astro';
 import Style from '../components/style/style.svelte';
 import TypeWriter from '../components/style/type-writer.svelte';
 import TextGradient from '../components/text-gradient.svelte';
-import GitHubIcon from '../icons/github-icon.svelte';
-import NextIcon from '../icons/next-icon.svelte';
-import ReactIcon from '../icons/react-icon.svelte';
-import TailwindIcon from '../icons/tailwind-icon.svelte';
+import GitHubIcon from '../icons/logos/github-logo.svelte';
+import NextIcon from '../icons/logos/next-logo.svelte';
+import ReactIcon from '../icons/logos/react-logo.svelte';
+import TailwindIcon from '../icons/logos/tailwind-logo.svelte';
 import DefaultLayout from '../layouts/default-layout.astro';
 import SocialLink from '../layouts/parts/social-link.astro';
 
@@ -175,7 +177,7 @@ const description = 'Build robust and accessible video/audio experiences in minu
             class="text-[var(--from-color)] dark:text-[var(--to-color)] w-4 h-4 absolute top-2.5 left-[18px]"
           />
           <div class="translate-x-10">
-            <TypeWriter text="npm i @vidstack/react" speed={100} delay={1200} client:visible />
+            <TypeWriter text="npm i @vidstack/react" speed={100} delay={1400} client:visible />
           </div>
         </div>
         <div class="w-[242px] h-[40px] absolute top-0.5 left-0.5 bg-brand/10 rounded-full"></div>
@@ -206,6 +208,7 @@ const description = 'Build robust and accessible video/audio experiences in minu
           label="Next.js Integration Steps"
           steps={['Setup', 'Play', 'Analyze']}
           animated
+          initialDelay={6000}
           client:visible
         >
           <div class="min-w-full max-w-3xl">
@@ -260,7 +263,7 @@ const description = 'Build robust and accessible video/audio experiences in minu
       <GitHubIcon class="dark:text-black" width="100%" height="100%" slot="icon" />
 
       <p slot="description">
-        Manage your media files right in your repository and when you're ready just push. Our Git
+        Manage your media files inside your repository and when you're ready just push. Our Git
         integration will handle the rest for you.
       </p>
 
@@ -271,18 +274,23 @@ const description = 'Build robust and accessible video/audio experiences in minu
           <GitTerminalProcess client:visible />
         </div>
 
-        <div class="w-px h-28 border border-dashed border-border my-8"></div>
-
-        <div class="w-full max-w-3xl mx-auto animate-[levitate_16s_ease_infinite]">
-          <GitHubComment>
-            <GitHubCommentTable
-              rows={[
-                { name: 'Installation', status: '✅ Uploaded' },
-                { name: 'Thinking in React', status: '✅ Encoded' },
-              ]}
-            />
-          </GitHubComment>
+        <div
+          class="w-px h-28 border border-dashed border-border my-8 animate-[levitate_16s_ease_infinite]"
+        >
         </div>
+
+        <FadeInWhenVisible>
+          <div class="w-full max-w-xl mx-auto">
+            <GitHubComment>
+              <GitHubCommentTable
+                rows={[
+                  { name: 'Installation', status: '✅ Uploaded' },
+                  { name: 'Thinking in React', status: '✅ Encoded' },
+                ]}
+              />
+            </GitHubComment>
+          </div>
+        </FadeInWhenVisible>
       </div>
     </FeatureSection>
   </Style>
@@ -295,13 +303,13 @@ const description = 'Build robust and accessible video/audio experiences in minu
       <NetworkIcon width="100%" height="100%" slot="icon" />
 
       <p slot="description">
-        We focus on optimizing your frontend media workflow using your existing services. Bring your
-        own storage, streaming, and analytics services.
+        We optimize your frontend media workflow using your existing services. Own your data and
+        bring your own storage, streaming provider, and analytics outlet.
       </p>
 
       <JoinWaitlist gradient slot="cta" client:load />
 
-      <div class="w-full flex items-center justify-center" slot="content">...</div>
+      <ConnectSpinners slot="content" />
     </FeatureSection>
   </Style>
 

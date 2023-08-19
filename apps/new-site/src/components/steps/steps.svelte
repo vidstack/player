@@ -13,12 +13,14 @@
   export let animated = false;
   export let progress = false;
   export let color: 'orange';
+  export let initialDelay = 0;
 
   let _class = '';
   export { _class as class };
   export let stepListClass = '';
 
-  let startAnimationTimer = -1,
+  let started = false,
+    startAnimationTimer = -1,
     animationInterval = -1,
     progressPercent = 0,
     isVisible = false;
@@ -34,33 +36,30 @@
       onPause();
       progressPercent = 0;
       if (step < steps.length) {
-        startAnimationTimer = window.setTimeout(
-          () => {
-            onPlay();
-          },
-          trigger ? 30000 : 5000,
-        );
+        startAnimationTimer = window.setTimeout(onPlay, trigger ? 30000 : 5000);
       }
     },
   });
 
   function onPlay() {
-    window.clearInterval(animationInterval);
-    animationInterval = window.setInterval(() => {
-      progressPercent += 2.5;
-      if (progressPercent >= 100) {
+    setTimeout(
+      () => {
         window.clearInterval(animationInterval);
-        const nextStep = $selectedStep + 1;
-        if (nextStep < steps.length) {
-          progressPercent = 0;
-          selectStep(nextStep);
-        }
-      }
-    }, 100);
-  }
-
-  function onResume() {
-    onPlay();
+        animationInterval = window.setInterval(() => {
+          progressPercent += 2.5;
+          if (progressPercent >= 100) {
+            window.clearInterval(animationInterval);
+            const nextStep = $selectedStep + 1;
+            if (nextStep < steps.length) {
+              progressPercent = 0;
+              selectStep(nextStep);
+            }
+          }
+        }, 100);
+      },
+      started ? initialDelay : 0,
+    );
+    started = true;
   }
 
   function onPause() {
@@ -69,7 +68,7 @@
   }
 
   $: if (IS_BROWSER && animated) {
-    if (isVisible) onResume();
+    if (isVisible) onPlay();
     else onPause();
   }
 </script>

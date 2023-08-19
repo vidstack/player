@@ -1,5 +1,6 @@
 <script lang="ts">
   export let size = 28;
+  export let noBg = false;
 </script>
 
 <svg
@@ -11,7 +12,9 @@
   aria-hidden="true"
   role="presentation"
 >
-  <rect width="32" height="32" rx="4.8" fill="#030712"></rect>
+  {#if !noBg}
+    <rect width="32" height="32" rx="4.8" fill="#030712"></rect>
+  {/if}
   <path
     fill-rule="evenodd"
     clip-rule="evenodd"
