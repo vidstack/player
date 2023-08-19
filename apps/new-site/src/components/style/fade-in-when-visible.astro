@@ -2,16 +2,17 @@
 import Visible from '../../actions/visible.svelte';
 
 interface Props {
+  threshold?: number;
   duration?: number;
   delay?: number;
 }
 
-const { duration = 500, delay = 0 } = Astro.props;
+const { threshold = 0.3, duration = 500, delay = 0 } = Astro.props;
 ---
 
-<!-- class="opacity-0 data-[visible]:opacity-100 transition-opacity ease-in" -->
 <Visible
-  threshold={0.3}
+  class="opacity-0 data-[visible]:opacity-100 transition-opacity ease-in"
+  {threshold}
   once
   style={`transition-duration: ${duration}ms; transition-delay: ${delay}ms;`}
   client:load

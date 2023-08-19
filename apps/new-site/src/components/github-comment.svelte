@@ -2,7 +2,7 @@
   import MoreIcon from '~icons/lucide/more-horizontal';
   import SmileIcon from '~icons/lucide/smile';
 
-  import VidstackSymbol from '../icons/brand/vidstack-symbol.svelte';
+  import VidstackSymbol from '../icons/logos/vidstack-symbol.svelte';
 </script>
 
 <div class="flex w-full @container">

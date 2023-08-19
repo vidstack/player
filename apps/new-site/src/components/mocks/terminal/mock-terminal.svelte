@@ -10,7 +10,7 @@
 
   export let directory: string;
   export let branch = 'main';
-  export let delay = 0;
+  export let initialDelay = 0;
   export let prompts: TerminalPrompt[];
 
   setTerminalContext({
@@ -65,7 +65,7 @@
             text={isString(prompt) ? prompt : prompt.text}
             {...isString(prompt) ? {} : prompt}
             active={isActive}
-            delay={i === 0 ? delay : 0}
+            delay={i === 0 ? initialDelay : 0}
             on:end={isActive ? nextPrompt : null}
           />
         {:else if prompt.type === TerminalPromptType.List}

@@ -15,11 +15,11 @@
       select: 1,
       options: ['Create New Project', "Charlie's Site (react-casts.gg)"],
       process: [
-        'Using AWS S3 Storage.',
-        'Using Mux Streaming.',
-        'Using Vidstack Analytics.',
-        'Updated pre-push hook.',
-        'Git LFS initialized.',
+        'Using Vercel Blob Storage.',
+        'Using Mux Streaming Provider.',
+        'Using Vercel Postgres Analytics Outlet.',
+        'Updated Pre-Push Hook.',
+        'Git LFS Initialized.',
       ],
     },
     {
@@ -48,10 +48,10 @@
             return `Git LFS: (${files} of 2 files) ${totalUploaded.toFixed(0)} MB / 175 MB`;
           },
         },
-        'Uploaded to https://charlies-bucket.s3-us-west-2.amazonaws.com',
+        'Uploaded to https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com',
       ],
     },
   ];
 </script>
 
-<MockTerminal directory="next-app" {prompts} delay={2000} />
+<MockTerminal directory="next-app" {prompts} initialDelay={2150} />
