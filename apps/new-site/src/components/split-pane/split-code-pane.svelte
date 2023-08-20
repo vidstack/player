@@ -4,11 +4,14 @@
 
 <script lang="ts">
   import clsx from 'clsx';
+
   import AppWindowIcon from '~icons/lucide/app-window';
   import CodeIcon from '~icons/lucide/code-2';
   import SplitHorizontalIcon from '~icons/lucide/split-square-horizontal';
   import SplitVerticalIcon from '~icons/lucide/split-square-vertical';
+
   import { writable } from 'svelte/store';
+
   import { IS_BROWSER } from '../../utils/env';
   import Switch from '../switch.svelte';
   import SplitPaneGutter from './split-pane-gutter.svelte';
@@ -20,7 +23,7 @@
 
   let orientation: string = 'horizontal',
     defaultPaneType = (IS_BROWSER && localStorage[PANE_TYPE_PREF_KEY]) || 'split',
-    sizes: number[] = [35, 65],
+    sizes: number[] = [30, 70],
     openPane = writable<CodePane>(defaultPaneType),
     userHasNotSeenPaneSwitch = !IS_BROWSER || localStorage[SEEN_PANE_SWITCH_KEY];
 
@@ -87,7 +90,7 @@
 </script>
 
 <div
-  class="flex flex-col w-full h-full relative overflow-hidden"
+  class="flex flex-col w-full relative overflow-hidden"
   style={clsx(orientation === 'vertical' && '--code-block-gutters: 10px;')}
 >
   <!-- Top Bar -->

@@ -1,17 +1,19 @@
 <script lang="ts">
-  import ChevronDownIcon from '~icons/lucide/chevron-down';
   import clsx from 'clsx';
+
+  import ChevronDownIcon from '~icons/lucide/chevron-down';
+
   import { createAriaMenu } from '../../../../aria/menu';
   import type { NavMenuItems } from '../navigation';
 
   export let title: string;
   export let items: NavMenuItems;
   export let grid = false;
-  export let noPositioning = false;
+  export let noPlacement = false;
 
   const { menu, menuTrigger, isMenuOpen } = createAriaMenu({
     placement: 'bottom-start',
-    noPositioning: noPositioning,
+    noPlacement,
   });
 </script>
 
@@ -46,9 +48,11 @@
   use:menu
   style="display: none"
 >
-  {#each items as item}
-    <slot {item} />
-  {/each}
+  {#if $isMenuOpen}
+    {#each items as item}
+      <slot {item} />
+    {/each}
+  {/if}
 
   <slot name="menu-bottom" />
 </div>

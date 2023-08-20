@@ -5,7 +5,7 @@ import { AnalyticEvent, MediaAnalytics, MediaPlayer, MediaProvider } from '@vids
 
 // 📡 Server action.
 const dispatcher = createAnalyticsDispatcher({
-  provider: analytics.providers.vidstack(),
+  provider: analytics.providers.vercel(),
   events: [
     AnalyticEvent.LoadTime({
       level: 'warn',

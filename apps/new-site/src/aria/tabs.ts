@@ -81,12 +81,12 @@ export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
     tabRefs: readonly(tabRefs),
     panelRefs: readonly(panelRefs),
     selectTab: select,
-    tabsRoot(root: HTMLElement) {
+    tabsRoot(el: HTMLElement) {
       const disposal = new DisposalBin();
 
       tick().then(() => {
-        const tabs = getTabs(root),
-          panels = getPanels(root);
+        const tabs = getTabs(el),
+          panels = getPanels(el);
 
         tabRefs.set(tabs);
         panelRefs.set(panels);
@@ -114,7 +114,7 @@ export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
           }
         }
 
-        disposal.add(listenEvent(root, 'keydown', onKeyDown));
+        disposal.add(listenEvent(el, 'keydown', onKeyDown));
       });
 
       return {
@@ -123,19 +123,19 @@ export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
         },
       };
     },
-    tabList(node: HTMLElement, label: string) {
-      node.setAttribute('aria-label', label);
-      node.setAttribute('role', 'tablist');
-      node.setAttribute('tabindex', '-1');
+    tabList(el: HTMLElement, label: string) {
+      el.setAttribute('aria-label', label);
+      el.setAttribute('role', 'tablist');
+      el.setAttribute('tabindex', '-1');
     },
-    tab(node: HTMLButtonElement) {
-      node.setAttribute('role', 'tab');
-      node.setAttribute('type', 'button');
-      selectTab(node, false);
+    tab(el: HTMLButtonElement) {
+      el.setAttribute('role', 'tab');
+      el.setAttribute('type', 'button');
+      selectTab(el, false);
     },
-    tabPanel(node: HTMLButtonElement) {
-      node.setAttribute('role', 'tabpanel');
-      selectPanel(node, false);
+    tabPanel(el: HTMLButtonElement) {
+      el.setAttribute('role', 'tabpanel');
+      selectPanel(el, false);
     },
   };
 }

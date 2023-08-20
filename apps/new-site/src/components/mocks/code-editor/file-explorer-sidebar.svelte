@@ -1,6 +1,8 @@
 <script lang="ts">
   import clsx from 'clsx';
+
   import { onMount } from 'svelte';
+
   import AnimatedPanelIcon from '../../../icons/animated-panel-icon.svelte';
   import { ariaBool } from '../../../utils/aria';
   import { IS_BROWSER } from '../../../utils/env';
@@ -28,7 +30,7 @@
 
 <div
   class={clsx(
-    'flex flex-col z-[60] transition-[width] duration-300 border-r border-border h-full',
+    'flex flex-col z-[60] transition-[width] duration-300 border-r border-border',
     'bg-elevate',
     isOpen ? 'w-[200px]' : 'w-[44px] justify-center',
   )}

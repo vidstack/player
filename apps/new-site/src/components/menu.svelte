@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { offset as _offset } from '@floating-ui/dom';
   import clsx from 'clsx';
+
+  import { offset as _offset } from '@floating-ui/dom';
+
   import { createAriaMenu, type AriaMenuOptions } from '../aria/menu';
 
   export let as = 'button';
@@ -31,5 +33,7 @@
   style="display: none;"
   use:menu
 >
-  <slot name="content" />
+  {#if $isMenuOpen}
+    <slot name="content" />
+  {/if}
 </div>

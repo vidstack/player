@@ -13,6 +13,7 @@ export const FOCUS_TARGET_ELEMENTS = [
   '[contenteditable]',
   '[tabindex]:not([tabindex^="-"])',
   '[role="tab"]',
+  '[role="option"]',
 ];
 
 export interface FocusTrapOptions {
@@ -65,7 +66,7 @@ export function createFocusTrap(options?: FocusTrapOptions) {
     let index = currentIndex;
     do {
       index = (index + delta + focusTargets.length) % focusTargets.length;
-    } while (focusTargets[index].offsetParent === null);
+    } while (focusTargets[index] && focusTargets[index].offsetParent === null);
     return index;
   }
 

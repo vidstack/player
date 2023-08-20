@@ -8,7 +8,7 @@
   export let items: NavMenuItems;
 </script>
 
-<NavMenu {title} {items} noPositioning>
+<NavMenu {title} {items} noPlacement>
   <svelte:fragment let:item>
     {#if 'items' in item}
       <NavMobileSubmenu {item} />

@@ -1,5 +1,6 @@
 import type { ActionReturn } from 'svelte/action';
 import { readonly, writable } from 'svelte/store';
+
 import { DisposalBin, listenEvent } from '../utils/events';
 import { createPopper, PopperOptions } from './popper';
 
@@ -25,7 +26,7 @@ export function createAriaTooltip(options: AriaTooltipOptions) {
           return _arrowEl;
         },
       },
-      { showDelay: 700, ...options },
+      { showDelay: 700, strategy: 'absolute', ...options },
     );
 
   return {
@@ -41,7 +42,7 @@ export function createAriaTooltip(options: AriaTooltipOptions) {
         if (!_contentEl) return;
 
         _stopWatchingPosition?.();
-        if (!options.noPositioning) {
+        if (!options.noPlacement) {
           _stopWatchingPosition = _popper.watchPosition();
         }
 
@@ -88,7 +89,7 @@ export function createAriaTooltip(options: AriaTooltipOptions) {
       contentEl.style.pointerEvents = 'none';
       contentEl.setAttribute('id', _id);
       contentEl.setAttribute('role', 'tooltip');
-      if (!options.noPositioning) contentEl.style.position = 'absolute';
+      if (!options.noPlacement) contentEl.style.position = 'absolute';
 
       return {
         destroy() {
