@@ -6,19 +6,20 @@ import {
   type ComputePositionConfig,
 } from '@floating-ui/dom';
 import { tick } from 'svelte';
+
 import { hasAnimation } from '../utils/dom';
 import { listenEvent } from '../utils/events';
 
 export interface PopperDelegate {
   triggerEl: HTMLElement | null;
   contentEl: HTMLElement | null;
-  arrowEl: HTMLElement | null;
+  arrowEl?: HTMLElement | null;
   onChange?(isShowing: boolean, trigger?: Event): void;
 }
 
 export interface PopperOptions extends ComputePositionConfig {
   showDelay?: number;
-  noPositioning?: boolean;
+  noPlacement?: boolean;
 }
 
 export function createPopper(delegate: PopperDelegate, options: PopperOptions) {
@@ -88,7 +89,7 @@ export function createPopper(delegate: PopperDelegate, options: PopperOptions) {
   }
 
   function position() {
-    if (options.noPositioning || !delegate.triggerEl || !delegate.contentEl) return;
+    if (options.noPlacement || !delegate.triggerEl || !delegate.contentEl) return;
 
     const middleware = options.middleware || [];
     middleware.push(shift({ padding: 8 }));
@@ -129,7 +130,7 @@ export function createPopper(delegate: PopperDelegate, options: PopperOptions) {
   }
 
   function watchPosition() {
-    if (options.noPositioning || !delegate.triggerEl || !delegate.contentEl) return null;
+    if (options.noPlacement || !delegate.triggerEl || !delegate.contentEl) return null;
     return autoUpdate(delegate.triggerEl, delegate.contentEl, position);
   }
 

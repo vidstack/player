@@ -67,7 +67,7 @@ export const mainNavItems: NavItem[] = [
           {
             title: 'UI Components',
             description: 'Browse the complete collection of player UI components.',
-            href: '/player/components',
+            href: '/player#components',
             icon: 'boxes',
           },
           {
@@ -107,7 +107,7 @@ export const mainNavItems: NavItem[] = [
       },
     ],
   },
-  { title: 'Documentation', href: '/docs' },
+  { title: 'Documentation', href: '/docs/react/player' },
   { title: 'Icons', href: '/media-icons' },
   {
     title: 'Releases',

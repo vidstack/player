@@ -1,8 +1,12 @@
 <script lang="ts">
   import clsx from 'clsx';
+
   import ArrowLeftIcon from '~icons/lucide/arrow-left';
   import ArrowRightIcon from '~icons/lucide/arrow-right';
+
   import { createEventDispatcher } from 'svelte';
+  import type { Action } from 'svelte/action';
+
   import { isKeyboardClick } from '../utils/keyboard';
   import { isUndefined } from '../utils/unit';
   import GradientBorder from './gradient-border.svelte';
@@ -12,6 +16,7 @@
   export let primary = false;
   export let gradient: string | boolean | undefined = undefined;
   export let arrow: boolean | 'left' | 'right' | undefined = undefined;
+  export let action: Action<any, any> = () => void 0;
 
   $: isButton = isUndefined($$restProps['href']);
 
@@ -32,7 +37,7 @@
   );
 </script>
 
-<div class="relative" style={clsx(typeof gradient === 'string' && gradient)}>
+<div class="relative z-[1]" style={clsx(typeof gradient === 'string' && gradient)}>
   {#if gradient}
     <GradientBorder class="rounded-md" />
   {/if}
@@ -42,6 +47,7 @@
     this={isButton ? 'button' : 'a'}
     {...$$restProps}
     class={buttonClass}
+    use:action={action}
     on:pointerup={() => dispatch('press')}
     on:keydown={(e) => isKeyboardClick(e) && dispatch('press')}
   >

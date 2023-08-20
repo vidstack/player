@@ -1,5 +1,6 @@
 import type { ActionReturn } from 'svelte/action';
 import { get, readonly, writable } from 'svelte/store';
+
 import { ariaBool } from '../utils/aria';
 import { DisposalBin, onPress } from '../utils/events';
 
@@ -15,22 +16,22 @@ export function createAriaRadioGroup<T extends string = string>(options: AriaRad
 
   return {
     radioValue: readonly(_radioValue),
-    radioGroup(radioGroupEl: HTMLElement, label: string): ActionReturn {
-      radioGroupEl.setAttribute('aria-label', label);
-      radioGroupEl.setAttribute('role', options.menu ? 'group' : 'radiogroup');
+    radioGroup(el: HTMLElement, label: string): ActionReturn {
+      el.setAttribute('aria-label', label);
+      el.setAttribute('role', options.menu ? 'group' : 'radiogroup');
       return {};
     },
-    radio(radioEl: HTMLElement, value: T): ActionReturn {
+    radio(el: HTMLElement, value: T): ActionReturn {
       const disposal = new DisposalBin();
 
-      radioEl.setAttribute('role', options.menu ? 'menuradioitem' : 'radio');
-      radioEl.setAttribute('aria-checked', ariaBool(value === get(_radioValue)));
-      _radios.add(radioEl);
+      el.setAttribute('role', options.menu ? 'menuradioitem' : 'radio');
+      el.setAttribute('aria-checked', ariaBool(value === get(_radioValue)));
+      _radios.add(el);
 
       disposal.add(
-        onPress(radioEl, (event) => {
+        onPress(el, (event) => {
           for (const _radio of _radios) {
-            radioEl.setAttribute('aria-checked', ariaBool(_radio === radioEl));
+            el.setAttribute('aria-checked', ariaBool(_radio === el));
           }
 
           _radioValue.set(value);
@@ -41,7 +42,7 @@ export function createAriaRadioGroup<T extends string = string>(options: AriaRad
       return {
         destroy() {
           disposal.dispose();
-          _radios.delete(radioEl);
+          _radios.delete(el);
         },
       };
     },

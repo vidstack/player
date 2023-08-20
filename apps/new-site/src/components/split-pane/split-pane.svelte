@@ -13,8 +13,10 @@
 
 <script lang="ts">
   import clsx from 'clsx';
+
   import { createEventDispatcher, getContext, onMount, setContext } from 'svelte';
   import { readonly, writable, type Readable } from 'svelte/store';
+
   import { resize } from '../../actions/resize';
   import { animationFrameThrottle } from '../../utils/dom';
   import { IS_BROWSER } from '../../utils/env';

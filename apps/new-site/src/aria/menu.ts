@@ -1,5 +1,6 @@
 import type { ActionReturn } from 'svelte/action';
 import { get, readonly, writable } from 'svelte/store';
+
 import { ariaBool } from '../utils/aria';
 import { inBounds } from '../utils/dom';
 import { DisposalBin, listenEvent, onPress } from '../utils/events';
@@ -48,7 +49,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
           return _arrowEl;
         },
       },
-      { showDelay: 0, noPositioning: options.portal, ...options },
+      { showDelay: 0, strategy: 'fixed', noPlacement: options.portal, ...options },
     ),
     _focusTrap = createFocusTrap({
       selectors: options.selectors?.focus,
@@ -59,7 +60,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
 
   function onShow(event?: Event) {
     _popper.show(event, () => {
-      if (!options.noPositioning) {
+      if (!options.noPlacement) {
         _openDisposal.add(_popper.watchPosition());
       }
 
@@ -180,20 +181,20 @@ export function createAriaMenu(options: AriaMenuOptions) {
     closeMenu(event?: Event) {
       onChange(event, false);
     },
-    menuTrigger(triggerEl: HTMLElement): ActionReturn {
+    menuTrigger(el: HTMLElement): ActionReturn {
       const disposal = new DisposalBin();
 
-      triggerEl.setAttribute('id', _triggerId);
-      if (!triggerEl.hasAttribute('role')) triggerEl.setAttribute('role', 'button');
-      triggerEl.setAttribute('aria-controls', _menuId);
-      triggerEl.setAttribute('aria-expanded', 'false');
-      triggerEl.setAttribute('aria-haspopup', options.type ?? 'menu');
-      _triggerEl = triggerEl;
+      el.setAttribute('id', _triggerId);
+      if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+      el.setAttribute('aria-controls', _menuId);
+      el.setAttribute('aria-expanded', 'false');
+      el.setAttribute('aria-haspopup', options.type ?? 'menu');
+      _triggerEl = el;
 
       disposal.add(
-        onPress(triggerEl, onChange),
-        options.hover && listenEvent(triggerEl, 'pointerenter', (e) => onChange(e, true)),
-        listenEvent(triggerEl, 'keydown', (e) => {
+        onPress(el, onChange),
+        options.hover && listenEvent(el, 'pointerenter', (e) => onChange(e, true)),
+        listenEvent(el, 'keydown', (e) => {
           if (!options.submenu && e.key === 'ArrowDown') {
             onChange(e, true);
           }
@@ -216,49 +217,50 @@ export function createAriaMenu(options: AriaMenuOptions) {
         },
       };
     },
-    menu(menuEl: HTMLElement): ActionReturn {
+    menu(el: HTMLElement): ActionReturn {
       const disposal = new DisposalBin();
 
-      _menuEl = menuEl;
+      _menuEl = el;
 
       if (options.portal) {
-        document.body.append(menuEl);
-      } else if (!options.noPositioning) {
-        menuEl.style.position = 'absolute';
+        document.body.append(el);
+      } else if (!options.noPlacement) {
+        el.style.position = 'absolute';
       }
 
-      menuEl.style.pointerEvents = 'none';
-      menuEl.style.display = 'none';
-      menuEl.setAttribute('id', _menuId);
-      menuEl.setAttribute('role', 'menu');
-      menuEl.setAttribute('tabindex', '-1');
-      menuEl.setAttribute('aria-hidden', 'true');
-      menuEl.setAttribute('aria-describedby', _triggerId);
+      el.style.pointerEvents = 'none';
+      el.style.display = 'none';
+
+      el.setAttribute('id', _menuId);
+      el.setAttribute('role', 'menu');
+      el.setAttribute('tabindex', '-1');
+      el.setAttribute('aria-hidden', 'true');
+      el.setAttribute('aria-describedby', _triggerId);
 
       disposal.add(
         options.hover &&
           !options.submenu &&
-          listenEvent(menuEl, 'pointerleave', (e) => onChange(e, false)),
+          listenEvent(el, 'pointerleave', (e) => onChange(e, false)),
         options.submenu &&
-          listenEvent(menuEl, 'keydown', (e) => {
+          listenEvent(el, 'keydown', (e) => {
             if (e.key === 'ArrowLeft') {
               onChange(e, false);
             }
           }),
         // Prevent it bubbling up to document body so we can determine when to close popup.
-        listenEvent(menuEl, 'click', (e) => e.stopPropagation()),
-        listenEvent(menuEl, 'pointerup', (e) => e.stopPropagation()),
+        listenEvent(el, 'click', (e) => e.stopPropagation()),
+        listenEvent(el, 'pointerup', (e) => e.stopPropagation()),
         // Close when another menu is opened
         !options.noOutSideClick &&
-          activeMenu.subscribe((el) => {
-            if (el && el !== menuEl && !menuEl.contains(el)) {
+          activeMenu.subscribe((current) => {
+            if (current && el !== current && !el.contains(current)) {
               onChange(undefined, false);
             }
           }),
       );
 
       requestAnimationFrame(() => {
-        let parent = menuEl.parentElement;
+        let parent = el.parentElement;
 
         while (parent && parent.getAttribute('role') !== 'menu') {
           parent = parent.parentElement;
