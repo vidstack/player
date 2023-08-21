@@ -30,7 +30,7 @@
       if (intervalId === -1) {
         intervalId = window.setInterval(onIntervalTick, 100);
       }
-    }, 2000);
+    }, 3000);
   }
 
   function startEncodingTimer(index: number) {
@@ -93,7 +93,7 @@
     'flex flex-col fixed bottom-6 right-5 rounded-sm min-w-[240px] shadow-md z-20',
     'opacity-0 data-[visible]:opacity-100 transition-opacity ease-in duration-400',
   )}
-  style="transition-delay: 1750;"
+  style="transition-delay: 750ms;"
   use:visible={{
     once: true,
   }}

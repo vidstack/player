@@ -1,7 +1,8 @@
 <script lang="ts">
   import clsx from 'clsx';
+
   import { createAriaMenu } from '../../../../../aria/menu';
-  import AnimatedMenuIcon from '../../../../../icons/animated-menu-icon.svelte';
+  import AnimatedMenuIcon from '../../../../../icons/animated/animated-menu-icon.svelte';
   import { scrollTop } from '../../../../../stores/scroll';
   import ColorSchemeSwitch from '../../../color-scheme-switch.svelte';
   import NavMobileItems from './nav-mobile-items.svelte';

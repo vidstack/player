@@ -8,7 +8,7 @@
     "build": "astro build",
     "build:vercel": "VERCEL=true astro build",
     "preview": "astro preview",
-    "deploy": "vercel deploy --prebuilt",
+    "deploy": "pnpm build:vercel && vercel deploy --prebuilt",
     "astro": "astro"
   },
   "dependencies": {

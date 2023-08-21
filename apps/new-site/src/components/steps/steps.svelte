@@ -57,7 +57,7 @@
           }
         }, 100);
       },
-      started ? initialDelay : 0,
+      !started ? initialDelay : 0,
     );
     started = true;
   }

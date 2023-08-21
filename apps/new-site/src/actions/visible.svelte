@@ -1,5 +1,6 @@
 <script lang="ts">
   import clsx from 'clsx';
+
   import { visible } from './visible';
 
   export let root: Element | Document | null = null;

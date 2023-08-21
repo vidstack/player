@@ -12,7 +12,7 @@ import codeSnippets from './plugins/code-snippets.js';
 const isLocal = !process.env.VERCEL;
 
 export default defineConfig({
-  site: 'https://vidstack.io',
+  site: 'https://vidstack-preview.vercel.app',
   output: 'hybrid',
   adapter: isLocal ? node({ mode: 'standalone' }) : vercel(),
   vite: {

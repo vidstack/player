@@ -1,6 +1,8 @@
 ---
 import clsx from 'clsx';
+
 import type { HTMLAttributes } from 'astro/types';
+
 import CodeHighlightLines from './code-highlight-lines.astro';
 import HMRCodeHighlightLines from './hmr/code-highlight-lines.svelte';
 import HMRLineNumbers from './hmr/code-line-numbers.svelte';
@@ -52,7 +54,7 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
   id={domId}
   class={clsx(
     'code-block relative text-sm leading-[var(--leading)] flex flex-col min-h-0',
-    'scrollbar scrollbar-square scroll-contain overflow-auto bg-body',
+    'scrollbar scrollbar-square scroll-contain overflow-auto bg-elevate',
     !flat
       ? 'shadow-xl rounded-md border-border border 576:max-h-[32rem] max-h-[60vh] mx-auto'
       : 'w-full min-h-full',
