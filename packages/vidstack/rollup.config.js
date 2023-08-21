@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import * as eslexer from 'es-module-lexer';
 import { transformSync } from 'esbuild';

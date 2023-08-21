@@ -4,7 +4,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(.vds-menu:not([data-submenu]). media-menu:not([data-submenu])) {
+:where(.vds-menu:not([data-submenu]) media-menu:not([data-submenu])) {
   display: contents;
 }
 
@@ -392,7 +392,7 @@
 }
 
 :where(.vds-menu-items [role='menuitem'][aria-hidden='true']),
-:where(.vds-menu-items [role='menuitem'][aria-expanded='true'] .vds-menu-button-open-icon, ) {
+:where(.vds-menu-items [role='menuitem'][aria-expanded='true'] .vds-menu-button-open-icon) {
   display: none !important;
 }
 

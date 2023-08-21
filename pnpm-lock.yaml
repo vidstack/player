@@ -53,8 +53,9 @@ importers:
   apps/new-site:
     specifiers:
       '@algolia/client-search': ^4.14.0
-      '@astrojs/sitemap': ^2.0.1
-      '@astrojs/svelte': ^3.1.0
+      '@astrojs/node': ^5.3.5
+      '@astrojs/sitemap': ^2.0.2
+      '@astrojs/svelte': ^3.1.1
       '@astrojs/tailwind': ^4.0.0
       '@astrojs/vercel': ^3.8.2
       '@docsearch/css': ^3.3.0
@@ -99,8 +100,9 @@ importers:
       vidstack: link:../../packages/vidstack
     devDependencies:
       '@algolia/client-search': 4.17.1
-      '@astrojs/sitemap': 2.0.1
-      '@astrojs/svelte': 3.1.0_hsncbzjg4tvrdybrnmqpqwfk54
+      '@astrojs/node': 5.3.5_astro@2.10.12
+      '@astrojs/sitemap': 2.0.2
+      '@astrojs/svelte': 3.1.1_hsncbzjg4tvrdybrnmqpqwfk54
       '@astrojs/tailwind': 4.0.0_omhaa24rfgsa5s4opdeaewehte
       '@astrojs/vercel': 3.8.2_astro@2.10.12+react@18.2.0
       '@iconify-json/lucide': 1.1.112
@@ -130,7 +132,7 @@ importers:
       '@types/react': ^18.0.0
       esbuild: ^0.16.17
       fs-extra: ^11.0.0
-      maverick.js: 0.38.4
+      maverick.js: 0.38.5
       media-captions: 0.0.18
       media-icons: 0.10.0
       react: ^18.0.0
@@ -149,7 +151,7 @@ importers:
       '@types/react': 18.2.8
       esbuild: 0.16.17
       fs-extra: 11.1.1
-      maverick.js: 0.38.4
+      maverick.js: 0.38.5
       media-icons: 0.10.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -179,7 +181,7 @@ importers:
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
       lit-html: ^2.7.4
-      maverick.js: 0.38.4
+      maverick.js: 0.38.5
       media-captions: 0.0.18
       media-icons: 0.10.0
       postcss: ^8.4.0
@@ -214,7 +216,7 @@ importers:
       just-debounce-it: 3.2.0
       just-throttle: 4.2.0
       lit-html: 2.7.4
-      maverick.js: 0.38.4
+      maverick.js: 0.38.5
       media-icons: 0.10.0
       postcss: 8.4.24
       rimraf: 3.0.2
@@ -409,24 +411,37 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /@astrojs/node/5.3.5_astro@2.10.12:
+    resolution: {integrity: sha512-iWSCB7CVxvVsTVdPzqh8NFwo30titMG723+y4rGegkpdyAisNnYsXy+VePemCxAnViIZDR1v+YUHKXHmfp5tHg==}
+    peerDependencies:
+      astro: ^2.10.12
+    dependencies:
+      '@astrojs/webapi': 2.2.0
+      astro: 2.10.12
+      send: 0.18.0
+      server-destroy: 1.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@astrojs/prism/2.1.2:
     resolution: {integrity: sha512-3antim1gb34689GHRQFJ88JEo93HuZKQBnmxDT5W/nxiNz1p/iRxnCTEhIbJhqMOTRbbo5h2ldm5qSxx+TMFQA==}
     engines: {node: '>=16.12.0'}
     dependencies:
       prismjs: 1.29.0
 
-  /@astrojs/sitemap/2.0.1:
-    resolution: {integrity: sha512-unoaSEyHuR8IApsPN467SD5FMm4PBnaQSHbtvt4dVS3PMDObZV5/lKIbjlfSad7ENzuvpBSLCGyLDOykXUNu6w==}
+  /@astrojs/sitemap/2.0.2:
+    resolution: {integrity: sha512-dFWtdFwN8kxDiqIxF8T8ODqsUr6hG+EQlFEqm+3oQkhAkucF9QkYLM5Q72mEbYytkL4jvKyHbW1u10T5sWBZew==}
     dependencies:
       sitemap: 7.1.1
       zod: 3.21.4
     dev: true
 
-  /@astrojs/svelte/3.1.0_hsncbzjg4tvrdybrnmqpqwfk54:
-    resolution: {integrity: sha512-yk2cp+P7O1SlzfEGMPHFBNSY5XMHwqsfQelTUxMzYYOrUIYSXoSok1k8a/3/k//eE/9hCoXvcPG4xHKLTLzwhA==}
+  /@astrojs/svelte/3.1.1_hsncbzjg4tvrdybrnmqpqwfk54:
+    resolution: {integrity: sha512-sPTe43zqFVvZq7qjCgT6vkOpMyKI0uEpqm/X3zSRse0Sn1ZyMEipes2KLmJQvPOZw3Zxy4+PX3E3Ns59hwRX1Q==}
     engines: {node: '>=16.12.0'}
     peerDependencies:
-      astro: ^2.7.1
+      astro: ^2.10.10
       svelte: ^3.55.0 || ^4.0.0
     dependencies:
       '@sveltejs/vite-plugin-svelte': 2.4.2_svelte@4.1.1+vite@4.3.9
@@ -1576,7 +1591,7 @@ packages:
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
-      magic-string: 0.30.0
+      magic-string: 0.30.2
       svelte: 4.1.1
       svelte-hmr: 0.15.2_svelte@4.1.1
       vite: 4.3.9
@@ -3086,6 +3101,17 @@ packages:
 
   /debounce/1.2.1:
     resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
+    dev: true
+
+  /debug/2.6.9:
+    resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.0.0
     dev: true
 
   /debug/3.2.7:
@@ -4760,8 +4786,8 @@ packages:
   /markdown-table/3.0.3:
     resolution: {integrity: sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==}
 
-  /maverick.js/0.38.4:
-    resolution: {integrity: sha512-eo13WswSkmSKK8F7syMiv8zMP8YhNmU2DtbpmgKooZs0rAlsy03zD72G1LqD+UCKoF76FvUVcIY9x8XopHKhYg==}
+  /maverick.js/0.38.5:
+    resolution: {integrity: sha512-N6qQNd/JUttUX65yUiaUe35xtibOORncnZ0aIFQRaTR9pPAk+M1+00fl0zdFrhs7BSi0X4rwF6zQ9wrSX/2YFg==}
     engines: {node: '>=16'}
     dev: true
 
@@ -5179,6 +5205,12 @@ packages:
       mime-db: 1.52.0
     dev: true
 
+  /mime/1.6.0:
+    resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
+    engines: {node: '>=4'}
+    hasBin: true
+    dev: true
+
   /mime/3.0.0:
     resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
     engines: {node: '>=10.0.0'}
@@ -5259,6 +5291,10 @@ packages:
   /mri/1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
+
+  /ms/2.0.0:
+    resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
+    dev: true
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
@@ -5994,6 +6030,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /range-parser/1.2.1:
+    resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
+    engines: {node: '>= 0.6'}
+    dev: true
+
   /raw-body/2.5.2:
     resolution: {integrity: sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==}
     engines: {node: '>= 0.8'}
@@ -6422,6 +6463,27 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
+
+  /send/0.18.0:
+    resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      debug: 2.6.9
+      depd: 2.0.0
+      destroy: 1.2.0
+      encodeurl: 1.0.2
+      escape-html: 1.0.3
+      etag: 1.8.1
+      fresh: 0.5.2
+      http-errors: 2.0.0
+      mime: 1.6.0
+      ms: 2.1.3
+      on-finished: 2.4.1
+      range-parser: 1.2.1
+      statuses: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
 
   /server-destroy/1.0.1:
     resolution: {integrity: sha512-rb+9B5YBIEzYcD6x2VKidaa+cqYBJQKnU4oe4E3ANwRRN56yk/ua1YCJT1n21NTS8w6CcOclAKNP3PhdCXKYtQ==}

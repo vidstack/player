@@ -1,6 +1,6 @@
 import { Component, effect, onDispose, peek } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
-import { CaptionsRenderer, renderVTTCueString, updateTimedVTTCueNodes } from 'media-captions';
+import type { CaptionsRenderer } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { isTrackCaptionKind } from '../../../core/tracks/text/text-track';
@@ -30,6 +30,7 @@ export class Captions extends Component<CaptionsProps> {
   private _media!: MediaContext;
   private _renderer!: CaptionsRenderer;
   private _textRenderer!: CaptionsTextRenderer;
+  private _lib!: typeof import('media-captions');
 
   protected override onSetup(): void {
     this._media = useMediaContext();
@@ -43,10 +44,14 @@ export class Captions extends Component<CaptionsProps> {
   }
 
   protected override onConnect(el: HTMLElement) {
-    this._renderer = new CaptionsRenderer(el);
-    this._textRenderer = new CaptionsTextRenderer(this._renderer);
-    effect(this._watchViewType.bind(this));
-    onDispose(this._onDisconnect.bind(this));
+    import('media-captions').then((lib) => {
+      this._lib = lib;
+      const { CaptionsRenderer } = this._lib;
+      this._renderer = new CaptionsRenderer(el);
+      this._textRenderer = new CaptionsTextRenderer(this._renderer);
+      effect(this._watchViewType.bind(this));
+      onDispose(this._onDisconnect.bind(this));
+    });
   }
 
   private _onDisconnect() {
@@ -95,6 +100,7 @@ export class Captions extends Component<CaptionsProps> {
       time = peek(currentTime),
       activeCues = peek(textTrack)!.activeCues;
 
+    const { renderVTTCueString } = this._lib;
     for (const cue of activeCues) {
       const cueEl = document.createElement('div');
       cueEl.setAttribute('part', 'cue');
@@ -104,7 +110,8 @@ export class Captions extends Component<CaptionsProps> {
   }
 
   private _onUpdateTimedNodes() {
-    const { currentTime } = this._media.$state;
+    const { currentTime } = this._media.$state,
+      { updateTimedVTTCueNodes } = this._lib;
     updateTimedVTTCueNodes(this.el!, currentTime());
   }
 

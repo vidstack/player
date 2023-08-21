@@ -1,3 +1,5 @@
+import { waitIdlePeriod } from 'maverick.js/std';
+
 import { MediaPlayerController } from '../api/player-controller';
 
 export class MediaLoadController extends MediaPlayerController {
@@ -13,7 +15,6 @@ export class MediaLoadController extends MediaPlayerController {
     if (load === 'eager') {
       requestAnimationFrame(this._callback);
     } else if (load === 'idle') {
-      const { waitIdlePeriod } = await import('maverick.js/std');
       waitIdlePeriod(this._callback);
     } else if (load === 'visible') {
       const observer = new IntersectionObserver((entries) => {

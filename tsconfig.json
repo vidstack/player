@@ -28,6 +28,8 @@
   "exclude": [
     "node_modules",
     "dist",
+    "local",
+    "cdn",
     "packages/*/elements",
     "packages/*/globals.d.ts",
     "packages/*/index.d.ts",
