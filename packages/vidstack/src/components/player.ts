@@ -20,6 +20,7 @@ import {
   setStyle,
   uppercaseFirstChar,
 } from 'maverick.js/std';
+
 import {
   AudioTrackList,
   isTrackCaptionKind,
@@ -402,11 +403,15 @@ export class MediaPlayer
   }
 
   set paused(paused) {
-    this.$$._props.paused.set(paused);
+    this._queuePausedUpdate(paused);
   }
 
   private _watchPaused() {
-    if (this.$props.paused()) {
+    this._queuePausedUpdate(this.$props.paused());
+  }
+
+  private _queuePausedUpdate(paused: boolean) {
+    if (paused) {
       this._canPlayQueue._enqueue('paused', () => this._requestMgr._pause());
     } else this._canPlayQueue._enqueue('paused', () => this._requestMgr._play());
   }
@@ -417,11 +422,14 @@ export class MediaPlayer
   }
 
   set muted(muted) {
-    this.$$._props.muted.set(muted);
+    this._queueMutedUpdate(muted);
   }
 
   private _watchMuted() {
-    const muted = this.$props.muted();
+    this._queueMutedUpdate(this.$props.muted());
+  }
+
+  private _queueMutedUpdate(muted: boolean) {
     this._canPlayQueue._enqueue('muted', () => (this._provider!.muted = muted));
   }
 
@@ -431,11 +439,14 @@ export class MediaPlayer
   }
 
   set currentTime(time) {
-    this.$$._props.currentTime.set(time);
+    this._queueCurrentTimeUpdate(time);
   }
 
   private _watchCurrentTime() {
-    const time = this.$props.currentTime();
+    this._queueCurrentTimeUpdate(this.$props.currentTime());
+  }
+
+  private _queueCurrentTimeUpdate(time: number) {
     this._canPlayQueue._enqueue('currentTime', () => {
       const adapter = this._provider;
       if (time !== adapter!.currentTime) {
@@ -457,12 +468,16 @@ export class MediaPlayer
   }
 
   set volume(volume) {
-    this.$$._props.volume.set(volume);
+    this._queueVolumeUpdate(volume);
   }
 
   private _watchVolume() {
-    const volume = clampNumber(0, this.$props.volume(), 1);
-    this._canPlayQueue._enqueue('volume', () => (this._provider!.volume = volume));
+    this._queueVolumeUpdate(this.$props.volume());
+  }
+
+  private _queueVolumeUpdate(volume: number) {
+    const clampedVolume = clampNumber(0, volume, 1);
+    this._canPlayQueue._enqueue('volume', () => (this._provider!.volume = clampedVolume));
   }
 
   @prop
@@ -471,11 +486,14 @@ export class MediaPlayer
   }
 
   set playsinline(inline) {
-    this.$$._props.playsinline.set(inline);
+    this._queuePlaysinlineUpdate(inline);
   }
 
   private _watchPlaysinline() {
-    const inline = this.$props.playsinline();
+    this._queuePlaysinlineUpdate(this.$props.playsinline());
+  }
+
+  private _queuePlaysinlineUpdate(inline: boolean) {
     this._canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
   }
 
@@ -485,11 +503,14 @@ export class MediaPlayer
   }
 
   set playbackRate(rate) {
-    this.$$._props.playbackRate.set(rate);
+    this._queuePlaybackRateUpdate(rate);
   }
 
   private _watchPlaybackRate() {
-    const rate = this.$props.playbackRate();
+    this._queuePlaybackRateUpdate(this.$props.playbackRate());
+  }
+
+  private _queuePlaybackRateUpdate(rate: number) {
     this._canPlayQueue._enqueue('rate', () => (this._provider!.playbackRate = rate));
   }
 

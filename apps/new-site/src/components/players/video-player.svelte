@@ -1,3 +1,14 @@
+<script>
+  // Styles
+  import 'vidstack/player/styles/default/theme.css';
+  import 'vidstack/player/styles/default/layouts/audio.css';
+  import 'vidstack/player/styles/default/layouts/video.css';
+  // Elements
+  import 'vidstack/player';
+  import 'vidstack/player/layouts';
+  import 'vidstack/player/ui';
+</script>
+
 <media-player
   title="Sprite Fight"
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"

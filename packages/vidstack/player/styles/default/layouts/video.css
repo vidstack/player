@@ -375,7 +375,7 @@
 }
 
 :where([data-media-player]:not([data-started]) .vds-video-layout[data-size='sm'])
-  :where(.vds-button .vds-slider, .vds-time-group, ) {
+  :where(.vds-button .vds-slider, .vds-time-group) {
   opacity: 0;
   visibility: hidden;
 }
