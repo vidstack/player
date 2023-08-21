@@ -1,11 +1,8 @@
 ---
 import clsx from 'clsx';
 
-import BookOpenIcon from '~astro-icons/lucide/book-open';
 import FileVideoIcon from '~astro-icons/lucide/file-video-2';
-import HeartHandshakeIcon from '~astro-icons/lucide/heart-handshake';
 import NetworkIcon from '~astro-icons/lucide/network';
-import PackageIcon from '~astro-icons/lucide/package';
 import TerminalIcon from '~astro-icons/lucide/terminal';
 
 import Button from '../components/button.svelte';
@@ -29,7 +26,10 @@ import FadeInWhenVisible from '../components/style/fade-in-when-visible.astro';
 import Style from '../components/style/style.svelte';
 import TypeWriter from '../components/style/type-writer.svelte';
 import TextGradient from '../components/text-gradient.svelte';
-import GitHubIcon from '../icons/logos/github-logo.svelte';
+import AnimatedBookIcon from '../icons/animated/animated-book-icon.svelte';
+import AnimatedGithubIcon from '../icons/animated/animated-github-icon.svelte';
+import AnimatedHeartHandshakeIcon from '../icons/animated/animated-heart-handshake-icon.svelte';
+import AnimatedPackageIcon from '../icons/animated/animated-package-icon.svelte';
 import NextIcon from '../icons/logos/next-logo.svelte';
 import ReactIcon from '../icons/logos/react-logo.svelte';
 import TailwindIcon from '../icons/logos/tailwind-logo.svelte';
@@ -90,14 +90,32 @@ const description = 'Build robust and accessible video/audio experiences in minu
           aria-label="Next.js"
           target="_blank"
         >
-          <NextIcon class="w-10 h-10" />
+          <NextIcon class="w-9 h-9" />
         </a>
       </Fragment>
     </HeroSection>
   </Style>
 
-  <Style style="--from-color: oklch(0.61 0.27 4.7); --to-color: oklch(0.64 0.3 349.83);">
-    <FeatureSection title="Dashboard." subtitle="Built for video." align="start">
+  <Style
+    style="--from-color: oklch(0.67 0.19 53.25); --to-color: oklch(0.76 0.17 65.51);"
+    client:load
+  >
+    <FeatureSection title="Connect." subtitle="Built to integrate." align="start">
+      <NetworkIcon class="w-full h-full" slot="icon" />
+
+      <p slot="description">
+        We optimize your frontend media workflow using your existing services. Own your data and
+        bring your own storage, streaming provider, and analytics outlet.
+      </p>
+
+      <JoinWaitlist gradient slot="cta" client:load />
+
+      <ConnectSpinners slot="content" />
+    </FeatureSection>
+  </Style>
+
+  <Style style="--from-color: oklch(0.6 0.27 15.16); --to-color: oklch(0.62 0.28 352.63);">
+    <FeatureSection title="Manage." subtitle="Built for video." align="start">
       <FileVideoIcon width="100%" height="100%" slot="icon" />
 
       <p slot="description">
@@ -116,8 +134,8 @@ const description = 'Build robust and accessible video/audio experiences in minu
     darkStyle="--from-color: oklch(0.56 0.19 272.49); --to-color: oklch(0.63 0.13 217.76);"
     client:load
   >
-    <FeatureSection title="React." subtitle="Built for you." align="center">
-      <ReactIcon width="100%" height="100%" slot="icon" />
+    <FeatureSection title="Player." subtitle="Built for React." align="center">
+      <ReactIcon class="w-full h-full" slot="icon" />
 
       <p slot="description">
         Build a production-ready player in minutes using our free and open-source UI library. Use
@@ -158,7 +176,7 @@ const description = 'Build robust and accessible video/audio experiences in minu
     client:load
   >
     <FeatureSection title="Ready." subtitle="Built to ship." align="center">
-      <PackageIcon width="100%" height="100%" slot="icon" />
+      <AnimatedPackageIcon class="w-full h-full" delay={4000} client:visible slot="icon" />
 
       <p slot="description">
         Don't have time to build your own player? We provide high-quality, accessible, and
@@ -177,7 +195,7 @@ const description = 'Build robust and accessible video/audio experiences in minu
             class="text-[var(--from-color)] dark:text-[var(--to-color)] w-4 h-4 absolute top-2.5 left-[18px]"
           />
           <div class="translate-x-10">
-            <TypeWriter text="npm i @vidstack/react" speed={100} delay={1400} client:visible />
+            <TypeWriter text="npm i @vidstack/react" speed={50} delay={2500} caret client:visible />
           </div>
         </div>
         <div class="w-[242px] h-[40px] absolute top-0.5 left-0.5 bg-brand/10 rounded-full"></div>
@@ -191,7 +209,7 @@ const description = 'Build robust and accessible video/audio experiences in minu
 
   <Style style="--from-color: oklch(0.7 0.19 47.31); --to-color: oklch(0.66 0.21 353.93);">
     <FeatureSection title="Next.js." subtitle="Built to be seamless." align="start">
-      <NextIcon width="100%" height="100%" slot="icon" />
+      <NextIcon class="w-full h-full" slot="icon" />
 
       <p slot="description">
         We're building Vidstack for a seamless start-to-finish workflow. No setup headaches, no
@@ -208,7 +226,7 @@ const description = 'Build robust and accessible video/audio experiences in minu
           label="Next.js Integration Steps"
           steps={['Setup', 'Play', 'Analyze']}
           animated
-          initialDelay={6000}
+          initialDelay={2000}
           client:visible
         >
           <div class="min-w-full max-w-3xl">
@@ -260,7 +278,12 @@ const description = 'Build robust and accessible video/audio experiences in minu
     client:load
   >
     <FeatureSection title="Git." subtitle="Built to commit." align="center">
-      <GitHubIcon class="dark:text-black" width="100%" height="100%" slot="icon" />
+      <AnimatedGithubIcon
+        class="dark:text-black w-[110%] h-[110%]"
+        delay={2400}
+        client:visible
+        slot="icon"
+      />
 
       <p slot="description">
         Manage your media files inside your repository and when you're ready, just push. Our Git
@@ -285,7 +308,7 @@ const description = 'Build robust and accessible video/audio experiences in minu
               <GitHubCommentTable
                 rows={[
                   { name: 'Installation', status: '✅ Uploaded' },
-                  { name: 'Thinking in React', status: '✅ Encoded' },
+                  { name: 'Thinking in React', status: '🔄 Encoding' },
                 ]}
               />
             </GitHubComment>
@@ -295,27 +318,9 @@ const description = 'Build robust and accessible video/audio experiences in minu
     </FeatureSection>
   </Style>
 
-  <Style
-    style="--from-color: oklch(0.67 0.19 53.25); --to-color: oklch(0.76 0.17 65.51);"
-    client:load
-  >
-    <FeatureSection title="Connect." subtitle="Built to integrate." align="start">
-      <NetworkIcon width="100%" height="100%" slot="icon" />
-
-      <p slot="description">
-        We optimize your frontend media workflow using your existing services. Own your data and
-        bring your own storage, streaming provider, and analytics outlet.
-      </p>
-
-      <JoinWaitlist gradient slot="cta" client:load />
-
-      <ConnectSpinners slot="content" />
-    </FeatureSection>
-  </Style>
-
   <Style style="--from-color: oklch(0.66 0.23 153.66); --to-color: oklch(0.66 0.15 203.58);">
     <FeatureSection title="Open Source." subtitle="Built transparently." align="center">
-      <BookOpenIcon width="100%" height="100%" slot="icon" />
+      <AnimatedBookIcon class="w-full h-full" delay={1000} client:visible slot="icon" />
 
       <p slot="description">
         Our entire journey is rooted in open-source and you can find all of our work on GitHub. If
@@ -332,7 +337,7 @@ const description = 'Build robust and accessible video/audio experiences in minu
 
   <Style style="--from-color: oklch(0.44 0.24 300.79); --to-color: oklch(0.54 0.27 325.91);">
     <FeatureSection title="Community." subtitle="Built for us." align="center">
-      <HeartHandshakeIcon width="100%" height="100%" slot="icon" />
+      <AnimatedHeartHandshakeIcon class="w-full h-full" delay={2000} client:visible slot="icon" />
 
       <p slot="description">
         We're a community of frontend devs working with video & audio. Join in on the discussions,
@@ -347,4 +352,13 @@ const description = 'Build robust and accessible video/audio experiences in minu
       </div>
     </FeatureSection>
   </Style>
+
+  <FeatureSection
+    title="Better video workflows."
+    subtitle="Built for frontend devs."
+    align="center"
+    noTextGradient
+  >
+    <JoinWaitlist primary client:visible slot="cta" />
+  </FeatureSection>
 </DefaultLayout>

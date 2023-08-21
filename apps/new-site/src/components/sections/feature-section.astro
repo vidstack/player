@@ -34,50 +34,53 @@ const { title, subtitle, align = 'center', noTextGradient = false } = Astro.prop
         !subtitle ? (Astro.slots.has('cta') ? 'mb-10' : 'mb-4') : 'mb-16',
       )}
     >
-      <div
-        class={clsx(
-          'w-full flex justify-center text-inverse',
-          align === 'start' && '992:justify-start',
-        )}
-      >
-        <div class="relative w-10 h-10">
-          <Visible
-            class={clsx(
-              'absolute top-0 left-0 bg-[var(--to-color)] opacity-0 duration-500',
-              'data-[visible]:opacity-20 data-[visible]:dark:opacity-30',
-              'data-[visible]:translate-x-1 data-[visible]:translate-y-1',
-              'w-10 h-10 rounded-sm',
-              'transition-all',
-            )}
-            style="transition-delay: 1.5s;"
-            once
-            client:load
-          />
+      {
+        Astro.slots.has('icon') && (
           <div
             class={clsx(
-              'bg-[var(--from-color)] rounded-sm w-10 h-10 absolute top-0 left-0',
-              'flex items-center justify-center z-10 opacity-80 backdrop-blur-sm',
+              'w-full flex justify-center text-inverse',
+              align === 'start' && '992:justify-start',
             )}
           >
+            <div class="relative w-10 h-10">
+              <Visible
+                class={clsx(
+                  'absolute top-0 left-0 bg-[var(--to-color)] opacity-0 duration-500',
+                  'data-[visible]:opacity-20 data-[visible]:dark:opacity-30',
+                  'data-[visible]:translate-x-1 data-[visible]:translate-y-1',
+                  'w-10 h-10 rounded-sm',
+                  'transition-all',
+                )}
+                style="transition-delay: 750ms"
+                once
+                client:load
+              />
+              <div
+                class={clsx(
+                  'bg-[var(--from-color)] rounded-sm w-10 h-10 absolute top-0 left-0',
+                  'flex items-center justify-center z-10 opacity-80 backdrop-blur-sm shadow-md',
+                )}
+              />
+              <div class="w-[25px] h-[25px] text-white absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-20">
+                <slot name="icon" />
+              </div>
+            </div>
           </div>
-          <div
-            class="w-[25px] h-[25px] text-white absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-20"
-          >
-            <slot name="icon" />
-          </div>
-        </div>
-      </div>
-
+        )
+      }
       <h1
-        class="font-semibold mt-6 text-3xl 576:text-4xl mx-auto 576:max-w-none 992:mx-0 leading-tight"
+        class={clsx(
+          'font-semibold mt-6 mx-auto 576:max-w-none 992:mx-0 leading-tight',
+          Astro.slots.has('subtitle') ? 'text-3xl 576:text-4xl ' : 'text-4xl 576:text-5xl ',
+        )}
       >
         {!noTextGradient ? <TextGradient>{title}</TextGradient> : title}
         {
           subtitle && (
             <>
               <br />
-              <span class="inline-block mt-1.5">
-                <TypeWriter text={subtitle} speed={65} delay={700} client:visible />
+              <span class="inline-block mt-3">
+                <TypeWriter text={subtitle} speed={65} delay={750} caret client:visible />
               </span>
             </>
           )
@@ -86,7 +89,7 @@ const { title, subtitle, align = 'center', noTextGradient = false } = Astro.prop
 
       {
         Astro.slots.has('description') && (
-          <div class="text-soft mt-6 max-w-md mx-auto 992:mx-0 992:max-w-lg 1200:max-w-xl 1200:text-lg">
+          <div class="text-soft mt-4 max-w-md mx-auto 992:mx-0 992:max-w-lg 1200:max-w-xl 1200:text-lg">
             <slot name="description" />
           </div>
         )
@@ -96,7 +99,7 @@ const { title, subtitle, align = 'center', noTextGradient = false } = Astro.prop
         class={clsx(
           'flex justify-center w-full',
           align === 'start' && '992:justify-start',
-          Astro.slots.has('description') ? 'mt-8' : 'mt-4',
+          Astro.slots.has('description') ? 'mt-8' : Astro.slots.has('subtitle') ? 'mt-4' : 'mt-10',
         )}
       >
         <slot name="cta" />

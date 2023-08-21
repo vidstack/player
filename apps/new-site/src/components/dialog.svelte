@@ -23,7 +23,7 @@
 <!-- Menu -->
 <div
   class={clsx(
-    'fixed inset-0 w-screen h-screen bg-black/40 duration-300 backdrop-blur-[3px]',
+    'fixed inset-0 w-screen h-screen bg-black/60 duration-300 backdrop-blur-[3px]',
     'flex items-center justify-center z-[9999]',
     $isMenuOpen ? 'animate-in fade-in' : 'animate-out fade-out',
   )}

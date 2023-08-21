@@ -3,7 +3,7 @@
 
   import { onMount } from 'svelte';
 
-  import AnimatedPanelIcon from '../../../icons/animated-panel-icon.svelte';
+  import AnimatedPanelIcon from '../../../icons/animated/animated-panel-icon.svelte';
   import { ariaBool } from '../../../utils/aria';
   import { IS_BROWSER } from '../../../utils/env';
   import { isKeyboardClick } from '../../../utils/keyboard';
