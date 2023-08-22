@@ -8,7 +8,7 @@
   import type { Action } from 'svelte/action';
 
   import { isKeyboardClick } from '../utils/keyboard';
-  import { isUndefined } from '../utils/unit';
+  import { isUndefined, noop } from '../utils/unit';
   import GradientBorder from './gradient-border.svelte';
 
   const dispatch = createEventDispatcher();
@@ -16,7 +16,7 @@
   export let primary = false;
   export let gradient: string | boolean | undefined = undefined;
   export let arrow: boolean | 'left' | 'right' | undefined = undefined;
-  export let action: Action<any, any> = () => void 0;
+  export let action: Action<any, any> = noop;
 
   $: isButton = isUndefined($$restProps['href']);
 

@@ -62,6 +62,7 @@ importers:
       '@docsearch/js': ^3.3.0
       '@floating-ui/dom': ^1.4.4
       '@iconify-json/lucide': ^1.1.112
+      '@leeoniya/ufuzzy': ^1.0.8
       '@maverick-js/cli': 0.38.0
       '@tailwindcss/container-queries': ^0.1.1
       '@tailwindcss/typography': ^0.5.0
@@ -91,6 +92,7 @@ importers:
       '@docsearch/css': 3.4.0
       '@docsearch/js': 3.4.0_yu2iuzwcrjblis64gemys7emq4
       '@floating-ui/dom': 1.4.4
+      '@leeoniya/ufuzzy': 1.0.8
       '@vercel/postgres': 0.4.1
       astro: 2.10.12
       clsx: 1.2.1
@@ -1420,6 +1422,10 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
+
+  /@leeoniya/ufuzzy/1.0.8:
+    resolution: {integrity: sha512-HQ6aJlYpWLq1f9AiApJl0aOIXlJUtuhBOYfSfv5rt3XNYkCBveojtnL6FvOVpJ2gEJ2wqgMW8xOHkLVYAbXghg==}
+    dev: false
 
   /@lit-labs/ssr-dom-shim/1.1.1:
     resolution: {integrity: sha512-kXOeFbfCm4fFf2A3WwVEeQj55tMZa8c8/f9AKHMobQMkzNUfUj+antR3fRPaZJawsa1aZiP/Da3ndpZrwEe4rQ==}

@@ -1,9 +1,11 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { get } from 'svelte/store';
+
 import { codeSnippets } from '../../stores/code-snippets';
 import CodeBlock from './code-block.astro';
 import CodeSnippetLoader from './code-snippet-loader.svelte';
+import CopyCodeButton from './copy-code-button.svelte';
 
 interface Props extends HTMLAttributes<'div'> {
   id: string;
@@ -15,16 +17,22 @@ interface Props extends HTMLAttributes<'div'> {
   highlights?: string;
 }
 
-const { id, highlights: propHighlights, ...codeBlockProps } = Astro.props;
-
-const snippet = get(codeSnippets).find((snippet) => snippet.id === id),
-  highlights = propHighlights ?? snippet?.highlights;
+const { id, highlights: propHighlights, copy, ...restProps } = Astro.props,
+  snippet = get(codeSnippets).find((snippet) => snippet.id === id),
+  highlights = propHighlights ?? snippet?.highlights,
+  codeBlockProps = { id, highlights, lines: snippet?.lines, ...restProps } as any;
 ---
 
 {
-  snippet && (
-    <CodeBlock {id} {highlights} lines={snippet.lines} {...(codeBlockProps as any)}>
-      <CodeSnippetLoader {id} client:visible />
-    </CodeBlock>
-  )
+  snippet &&
+    (copy ? (
+      <CodeBlock {...codeBlockProps}>
+        <CopyCodeButton {id} {highlights} class="ml-auto" slot="top-bar" client:visible />
+        <CodeSnippetLoader {id} client:visible />
+      </CodeBlock>
+    ) : (
+      <CodeBlock {...codeBlockProps}>
+        <CodeSnippetLoader {id} client:visible />
+      </CodeBlock>
+    ))
 }

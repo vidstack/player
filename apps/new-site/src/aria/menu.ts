@@ -22,6 +22,8 @@ export interface AriaMenuOptions extends PopperOptions {
     focus?: string[];
     close?: string[];
   };
+  onOpen?(event?: Event): void;
+  onClose?(event?: Event): void;
 }
 
 let id = 0;
@@ -37,6 +39,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
     _arrowEl: HTMLElement | null = null,
     _openDisposal = new DisposalBin(),
     _isMenuOpen = writable<boolean>(!!options.defaultOpen),
+    _isMenuVisible = writable<boolean>(!!options.defaultOpen),
     _popper = createPopper(
       {
         get triggerEl() {
@@ -81,6 +84,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
       }
 
       activeMenu.set(_menuEl);
+      options.onOpen?.(event);
     });
   }
 
@@ -97,6 +101,11 @@ export function createAriaMenu(options: AriaMenuOptions) {
         _menuEl.dispatchEvent(new Event('aria-close'));
       }
 
+      requestAnimationFrame(() => {
+        _isMenuVisible.set(false);
+        options.onClose?.(event);
+      });
+
       if (get(activeMenu) === _menuEl) activeMenu.set(null);
     });
   }
@@ -112,6 +121,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
 
     if (options.preventScroll) hideDocumentScrollbar(open);
 
+    if (open) _isMenuVisible.set(true);
     requestAnimationFrame(() => {
       _isMenuOpen.set(open);
     });
@@ -174,7 +184,10 @@ export function createAriaMenu(options: AriaMenuOptions) {
   }
 
   return {
+    triggerId: _triggerEl,
+    menuId: _menuId,
     isMenuOpen: readonly(_isMenuOpen),
+    isMenuVisible: readonly(_isMenuVisible),
     openMenu(event?: Event) {
       onChange(event, true);
     },

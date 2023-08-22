@@ -1,5 +1,5 @@
 import snippets from ':code_snippets';
-import { get, readonly, writable } from 'svelte/store';
+import { readonly, writable } from 'svelte/store';
 
 const store = writable(snippets);
 

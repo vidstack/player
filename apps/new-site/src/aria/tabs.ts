@@ -85,36 +85,38 @@ export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
       const disposal = new DisposalBin();
 
       tick().then(() => {
-        const tabs = getTabs(el),
-          panels = getPanels(el);
+        setTimeout(() => {
+          const tabs = getTabs(el),
+            panels = getPanels(el);
 
-        tabRefs.set(tabs);
-        panelRefs.set(panels);
+          tabRefs.set(tabs);
+          panelRefs.set(panels);
 
-        for (let i = 0; i < tabs.length; i++) {
-          const tab = tabs[i],
-            panel = panels[i],
-            id = ++globalId,
-            tabId = `tab-${id}`,
-            tabPanelId = `tab-panel-${id}`;
+          for (let i = 0; i < tabs.length; i++) {
+            const tab = tabs[i],
+              panel = panels[i],
+              id = ++globalId,
+              tabId = `tab-${id}`,
+              tabPanelId = `tab-panel-${id}`;
 
-          tab.setAttribute('id', tabId);
-          tab.setAttribute('aria-controls', tabPanelId);
-          selectTab(tab, i === 0);
+            tab.setAttribute('id', tabId);
+            tab.setAttribute('aria-controls', tabPanelId);
+            selectTab(tab, i === 0);
 
-          disposal.add(
-            listenEvent(tab, 'pointerup', (e) => select(i, e)),
-            listenEvent(tab, 'keydown', (e) => isKeyboardClick(e) && select(i, e)),
-          );
+            disposal.add(
+              listenEvent(tab, 'pointerup', (e) => select(i, e)),
+              listenEvent(tab, 'keydown', (e) => isKeyboardClick(e) && select(i, e)),
+            );
 
-          if (panel) {
-            panel.setAttribute('id', tabPanelId);
-            panel.setAttribute('aria-labelledby', tabId);
-            selectPanel(panel, i === 0);
+            if (panel) {
+              panel.setAttribute('id', tabPanelId);
+              panel.setAttribute('aria-labelledby', tabId);
+              selectPanel(panel, i === 0);
+            }
           }
-        }
 
-        disposal.add(listenEvent(el, 'keydown', onKeyDown));
+          disposal.add(listenEvent(el, 'keydown', onKeyDown));
+        }, 100);
       });
 
       return {

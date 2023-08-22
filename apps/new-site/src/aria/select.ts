@@ -36,6 +36,7 @@ export function createSelect<T extends string = string>({
     _menuEl: HTMLElement | null = null,
     _activeDescendant = writable(''),
     _isOpen = writable(false),
+    _isVisible = writable(false),
     _openDisposal = new DisposalBin(),
     _selectedValues = writable<T[]>(
       !defaultValue ? [] : isArray(defaultValue) ? defaultValue : [defaultValue],
@@ -61,6 +62,7 @@ export function createSelect<T extends string = string>({
   function onOpen(event?: Event) {
     if (disabled) return;
 
+    _isVisible.set(true);
     requestAnimationFrame(() => {
       _isOpen.set(true);
     });
@@ -117,6 +119,10 @@ export function createSelect<T extends string = string>({
       }
 
       if (get(activeSelect) === _menuEl) activeSelect.set(null);
+
+      requestAnimationFrame(() => {
+        _isVisible.set(false);
+      });
     });
   }
 
@@ -127,6 +133,7 @@ export function createSelect<T extends string = string>({
   return {
     selectedValues: readonly(_selectedValues),
     isSelectOpen: readonly(_isOpen),
+    isSelectVisible: readonly(_isVisible),
     selectTrigger(el: HTMLElement, label: string): ActionReturn {
       _triggerEl = el;
 

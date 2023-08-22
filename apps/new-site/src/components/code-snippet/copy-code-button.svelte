@@ -1,68 +1,72 @@
 <script lang="ts">
-  import { decodeHTML } from '../utils/html';
+  import clsx from 'clsx';
 
-  $: unescapedSourceCode = decodeHTML(source ?? '') ?? '';
+  import CheckIcon from '~icons/lucide/check';
+  import CopyIcon from '~icons/lucide/copy';
 
-  let showCopiedCodePrompt = false;
-  async function copyCodeToClipboard() {
+  import { decodeHTML } from '../../utils/html';
+  import { isKeyboardClick } from '../../utils/keyboard';
+  import { isHighlightLine, resolveHighlightedLines } from './highlight';
+  import { getLoadedCodeSnippet } from './registry';
+
+  export let id: string;
+  export let highlights = '';
+  export let transform: (code: string) => string = (s) => s;
+
+  let _class = '';
+  export { _class as class };
+
+  let copied = false;
+
+  async function onCopy() {
     try {
-      let copiedCode =
-        currentHighlightedLines.length > 0 && (copyHighlight || copySteps)
-          ? unescapedRawCode
+      const snippet = getLoadedCodeSnippet(id),
+        source = transform(snippet?.source || ''),
+        highlightedLines =
+          highlights && resolveHighlightedLines(source.split(/\n/g).length, highlights),
+        decoded = decodeHTML(source),
+        filtered = highlightedLines
+          ? decoded
               .split('\n')
-              .filter((_, i) => isHighlightLine(i + 1))
+              .filter((line, i) => isHighlightLine(highlightedLines, i + 1))
               .join('\n')
-          : unescapedRawCode;
+          : decoded;
 
-      if (lang && /[j|t]sx/.test(lang)) {
-        copiedCode = copiedCode.replace(/;\n?$/, '');
-      }
-
-      await navigator.clipboard.writeText(copiedCode);
+      await navigator.clipboard.writeText(filtered);
     } catch (e) {
       // no-op
     }
 
-    showCopiedCodePrompt = true;
-    if (copySteps) {
-      const nextStep = currentStep + 1;
-      const maxSteps = highlightLines.length > 0 ? highlightLines.length : lines.length;
-      currentStep = nextStep > maxSteps ? 1 : nextStep;
-    }
+    copied = true;
   }
 
-  $: if (showCopiedCodePrompt) {
+  $: if (copied) {
     setTimeout(() => {
-      showCopiedCodePrompt = false;
-    }, 400);
+      copied = false;
+    }, 350);
   }
 </script>
 
 <button
   type="button"
   class={clsx(
-    'mr-2 px-2 py-1 hover:text-inverse',
-    showCopiedCodePrompt ? 'text-inverse' : 'text-soft',
+    'border rounded-sm px-2 py-1 flex items-center justify-center',
+    copied
+      ? clsx(
+          'text-green-600 bg-green-600/20 border-green-600',
+          'dark:text-green-400 dark:bg-green-400/20 dark:border-green-400',
+        )
+      : 'text-brand bg-brand/20 border-brand/20 hocus:border-brand',
+    _class,
   )}
-  on:click={copyCodeToClipboard}
+  on:pointerup|stopPropagation={onCopy}
+  on:keydown|stopPropagation={(e) => isKeyboardClick(e) && onCopy()}
 >
-  <div
-    class={clsx(
-      'absolute top-2.5 right-4 z-10 rounded-md px-2 py-1 font-mono text-sm transition-opacity duration-300 ease-out',
-      showCopiedCodePrompt ? 'opacity-100' : 'hidden opacity-0',
-    )}
-    aria-hidden="true"
-    style="background-color: var(--code-copied-bg-color);"
-  >
-    Copied
-  </div>
+  {#if copied}
+    <CheckIcon class="w-4 h-4" />
+  {:else}
+    <CopyIcon class="w-4 h-4" />
+  {/if}
 
-  <CopyFileIcon
-    width="20"
-    height="20"
-    class={clsx(
-      showCopiedCodePrompt ? 'opacity-0' : 'duration-600 opacity-100 transition-opacity ease-in',
-    )}
-  />
   <span class="sr-only">Copy</span>
 </button>

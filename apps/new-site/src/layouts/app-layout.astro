@@ -29,7 +29,7 @@ const { title, description } = Astro.props;
     <script src="../scripts/scroll-top.ts"></script>
     <script src="../scripts/focus-visible.js"></script>
 
-    <script>
+    <script is:inline>
       const key = 'vidstack::color-scheme',
         scheme = localStorage[key],
         prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches,
