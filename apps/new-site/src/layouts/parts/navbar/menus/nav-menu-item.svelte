@@ -1,14 +1,18 @@
 <script lang="ts">
-  import ArrowRightIcon from '~icons/lucide/arrow-right';
   import clsx from 'clsx';
+
+  import ArrowRightIcon from '~icons/lucide/arrow-right';
+
   import type { Action } from 'svelte/action';
+
   import StageBadge from '../../../../components/stage-badge.svelte';
+  import { noop } from '../../../../utils/unit';
   import { navIcons } from '../nav-icons';
   import type { NavMenuItem } from '../navigation';
 
   export let item: NavMenuItem;
   export let invertTheme = false;
-  export let action: Action = () => void 0;
+  export let action: Action = noop;
 
   let _as: 'a' | 'button' | 'div';
   export { _as as as };

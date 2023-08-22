@@ -12,7 +12,7 @@
     placement: 'bottom',
   };
 
-  const { menuTrigger, menu, isMenuOpen } = createAriaMenu({
+  const { menuTrigger, menu, isMenuOpen, isMenuVisible } = createAriaMenu({
     ...options,
     middleware: [_offset(offset), ...(options.middleware || [])],
   });
@@ -33,7 +33,7 @@
   style="display: none;"
   use:menu
 >
-  {#if $isMenuOpen}
+  {#if $isMenuVisible}
     <slot name="content" />
   {/if}
 </div>

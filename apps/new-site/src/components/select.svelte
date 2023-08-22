@@ -22,16 +22,17 @@
   export let state: 'default' | 'readonly' | 'error' = 'default';
   export let placement: Placement = 'bottom';
 
-  const { selectTrigger, selectMenu, selectOption, selectedValues, isSelectOpen } = createSelect({
-    defaultValue,
-    required,
-    multiple,
-    placement,
-    middleware: [offset(6)],
-    get disabled() {
-      return disabled;
-    },
-  });
+  const { selectTrigger, selectMenu, selectOption, selectedValues, isSelectOpen, isSelectVisible } =
+    createSelect({
+      defaultValue,
+      required,
+      multiple,
+      placement,
+      middleware: [offset(6)],
+      get disabled() {
+        return disabled;
+      },
+    });
 
   $: dispatch('change', $selectedValues);
   $: selectionLabel = $selectedValues.map((v) => options.find(({ value }) => v === value)!.label);
@@ -67,8 +68,9 @@
         : 'animate-out fade-out slide-out-to-top-2',
     )}
     use:selectMenu
+    style="display: none;"
   >
-    {#if $isSelectOpen}
+    {#if $isSelectVisible}
       {#each options as { label, value }}
         {@const isSelected = $selectedValues.includes(value)}
         <button

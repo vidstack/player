@@ -7,8 +7,10 @@
   import { codeSnippets } from '../../stores/code-snippets';
   import { isDarkColorScheme } from '../../stores/color-scheme';
   import IndeterminateLoadingSpinner from '../style/indeterminate-loading-spinner.svelte';
+  import { getLoadedCodeSnippet, registerCodeSnippet } from './registry';
 
   export let id: string;
+  export let transform: (code: string) => string = (s) => s;
 
   let _class: string | undefined = undefined;
   export { _class as class };
@@ -17,8 +19,17 @@
     snippet: CodeSnippet | undefined;
 
   async function loadSnippet(loader: LazyCodeSnippet) {
+    const loadedSnippet = getLoadedCodeSnippet(id);
+
+    if (loadedSnippet) {
+      snippet = loadedSnippet;
+      return;
+    }
+
     const mod = await loader.loader();
     snippet = mod.default;
+
+    registerCodeSnippet(id, snippet);
   }
 
   async function loadCode(snippet: CodeSnippet, darkTheme: boolean) {
@@ -55,5 +66,5 @@
       class="inline-block"
       style={`width: ${loader.width * 9.48}px; height: ${loader.lines * 22}px;`}
     />
-  {/if}{@html code}
+  {/if}{@html transform(code)}
 </pre>

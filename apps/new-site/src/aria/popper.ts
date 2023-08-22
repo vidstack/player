@@ -46,7 +46,7 @@ export function createPopper(delegate: PopperDelegate, options: PopperOptions) {
         _stopAnimationListener = null;
       }
 
-      delegate.contentEl.style.removeProperty('display');
+      delegate.contentEl.style.display = '';
       position();
 
       const isAnimated = delegate.contentEl && hasAnimation(delegate.contentEl);

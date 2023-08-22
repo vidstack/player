@@ -15,6 +15,7 @@
     "@docsearch/css": "^3.3.0",
     "@docsearch/js": "^3.3.0",
     "@floating-ui/dom": "^1.4.4",
+    "@leeoniya/ufuzzy": "^1.0.8",
     "@vercel/postgres": "^0.4.1",
     "astro": "^2.10.10",
     "clsx": "^1.2.0",

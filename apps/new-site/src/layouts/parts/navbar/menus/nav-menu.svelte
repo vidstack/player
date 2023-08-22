@@ -11,7 +11,7 @@
   export let grid = false;
   export let noPlacement = false;
 
-  const { menu, menuTrigger, isMenuOpen } = createAriaMenu({
+  const { menu, menuTrigger, isMenuOpen, isMenuVisible } = createAriaMenu({
     placement: 'bottom-start',
     noPlacement,
   });
@@ -48,7 +48,7 @@
   use:menu
   style="display: none"
 >
-  {#if $isMenuOpen}
+  {#if $isMenuVisible}
     {#each items as item}
       <slot {item} />
     {/each}

@@ -3,16 +3,17 @@ import clsx from 'clsx';
 
 import type { HTMLAttributes } from 'astro/types';
 
+import CodeBlockWrapper from './code-block-wrapper.svelte';
 import CodeHighlightLines from './code-highlight-lines.astro';
 import HMRCodeHighlightLines from './hmr/code-highlight-lines.svelte';
 import HMRLineNumbers from './hmr/code-line-numbers.svelte';
 
-interface Props extends HTMLAttributes<'div'> {
+interface Props extends Omit<HTMLAttributes<'div'>, 'style'> {
   id: string;
   title?: string;
   domId?: string | null;
   flat?: boolean;
-  copy?: boolean;
+  style?: string;
   numbered?: boolean;
   lines: number;
   highlights?: string;
@@ -23,7 +24,6 @@ const {
   domId,
   lines,
   title,
-  copy = false,
   highlights,
   numbered = false,
   flat = false,
@@ -32,16 +32,12 @@ const {
   ...htmlProps
 } = Astro.props;
 
-const showTopBar = title || copy;
-
-const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
+const showTopBar = !!title || Astro.slots.has('top-bar'),
+  lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
   lineNumberProps = {
     class: clsx(
-      'flex absolute left-0 m-0 flex-col text-sm leading-[var(--leading)]',
-      'flex-none select-none text-right text-soft/40',
-      showTopBar ? 'top-6' : 'top-0',
-      flat && (highlights ? 'pl-2' : 'pl-0'),
-      !flat && (highlights ? 'pl-4 mt-2' : 'pl-2 mt-4'),
+      'flex m-0 flex-col text-sm leading-[var(--leading)] mr-4',
+      'flex-none select-none text-right text-soft/40 items-center',
     ),
     style: 'border-radius: 0; padding-top: 0;',
     'aria-hidden': 'true',
@@ -49,33 +45,24 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
   } as const;
 ---
 
-<div
-  {...htmlProps}
+<CodeBlockWrapper
+  {...htmlProps as any}
   id={domId}
-  class={clsx(
-    'code-block relative text-sm leading-[var(--leading)] flex flex-col min-h-0',
-    'scrollbar scrollbar-square scroll-contain overflow-auto bg-elevate',
-    !flat
-      ? 'shadow-xl rounded-md border-border border 576:max-h-[32rem] max-h-[60vh] mx-auto'
-      : 'w-full min-h-full',
-    !flat && (showTopBar ? 'px-4 pb-4' : 'p-4'),
-    _class,
-  )}
-  style={clsx(`--leading: 1.375rem;`, style)}
-  data-flat={!!flat}
-  data-numbers={!!numbered}
-  data-numbers-large={!!numbered && lines >= 100}
-  data-hl={!!highlights}
+  class={_class}
+  {title}
+  {flat}
+  {style}
+  {showTopBar}
 >
+  <slot name="top-bar" slot="top-bar" />
+
   {
-    showTopBar && (
-      <div class="sticky top-0 left-0 z-10 flex items-center py-2.5 bg-body/50 backdrop-blur-md">
-        {title && <span class="font-mono text-sm text-soft">{title}</span>}
-      </div>
+    import.meta.env.DEV ? (
+      <HMRCodeHighlightLines {id} {lines} {highlights} client:visible />
+    ) : (
+      <CodeHighlightLines {lines} {highlights} />
     )
   }
-
-  <slot />
 
   {
     numbered &&
@@ -92,38 +79,5 @@ const lineNumbers = [...Array(lines).keys()].map((n) => n + 1),
       ))
   }
 
-  {
-    import.meta.env.DEV ? (
-      <HMRCodeHighlightLines {id} {lines} {highlights} client:visible />
-    ) : (
-      <CodeHighlightLines {lines} {highlights} />
-    )
-  }
-</div>
-
-<style>
-  .code-block[data-flat] {
-    max-height: calc(var(--code-block-max-h, 0px) - var(--code-block-gutters, 0px));
-  }
-
-  .code-block :global(pre code[data-lang-bash] span) {
-    color: #fafafa !important;
-  }
-
-  .code-block :global(pre code[data-lang-bash] .line:not(:empty)::before) {
-    content: '> ';
-    font-weight: bold;
-    color: rgb(var(--color-brand));
-  }
-
-  .code-block[data-numbers] :global(pre:not([data-numbers])) {
-    tab-size: 2;
-    -o-tab-size: 2;
-    -moz-tab-size: 2;
-    padding-left: 2.5em;
-  }
-
-  .code-block[data-numbers-large] :global(pre:not([data-numbers])) {
-    padding-left: 3em;
-  }
-</style>
+  <slot />
+</CodeBlockWrapper>

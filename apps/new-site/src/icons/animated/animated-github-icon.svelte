@@ -18,7 +18,9 @@
   function onStart() {
     started = false;
     requestAnimationFrame(() => {
-      started = true;
+      setTimeout(() => {
+        started = true;
+      }, duration);
     });
   }
 </script>
