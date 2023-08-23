@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+
   import { createFocusTrap } from '../../../aria/focus-trap';
   import { ariaBool } from '../../../utils/aria';
-  import { isKeyboardClick } from '../../../utils/keyboard';
+  import { isKeyboardPress } from '../../../utils/keyboard';
 
   let root: HTMLElement,
     activeItem: HTMLElement | null = null,
@@ -58,7 +59,7 @@
   tabindex="0"
   on:pointerup={onSelect}
   on:keydown={(event) => {
-    if (isKeyboardClick(event)) {
+    if (isKeyboardPress(event)) {
       if (event.target === root) {
         focusTrap(root);
         return;

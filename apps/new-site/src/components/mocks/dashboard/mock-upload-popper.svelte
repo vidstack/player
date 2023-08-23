@@ -10,7 +10,7 @@
   import { visible } from '../../../actions/visible';
   import { ariaBool } from '../../../utils/aria';
   import { IS_BROWSER } from '../../../utils/env';
-  import { isKeyboardClick } from '../../../utils/keyboard';
+  import { isKeyboardPress } from '../../../utils/keyboard';
   import ProgressCircle from '../../progress-circle.svelte';
   import { mockEncodeProgress, mockVideoTitles, type MockEncodeProgress } from './mock-encode';
 
@@ -114,7 +114,7 @@
       onChange: onVisible,
     }}
     on:pointerup={onPress}
-    on:keydown={(e) => isKeyboardClick(e) && onPress()}
+    on:keydown={(e) => isKeyboardPress(e) && onPress()}
   >
     <div class="flex items-center w-full">
       {#if isUploadComplete}

@@ -4,7 +4,6 @@
   import CheckIcon from '~icons/lucide/check';
   import ChevronDownIcon from '~icons/lucide/chevron-down';
 
-  import { offset, type Placement } from '@floating-ui/dom';
   import { createEventDispatcher } from 'svelte';
 
   import { createSelect } from '../aria/select';
@@ -20,15 +19,12 @@
   export let multiple = false;
   export let disabled = false;
   export let state: 'default' | 'readonly' | 'error' = 'default';
-  export let placement: Placement = 'bottom';
 
   const { selectTrigger, selectMenu, selectOption, selectedValues, isSelectOpen, isSelectVisible } =
     createSelect({
       defaultValue,
       required,
       multiple,
-      placement,
-      middleware: [offset(6)],
       get disabled() {
         return disabled;
       },
@@ -58,35 +54,35 @@
 
   <div class="flex-1"></div>
   <ChevronDownIcon class="w-5 h-5 shrink-0 ml-2" />
-
-  <div
-    class={clsx(
-      'z-50 rounded-md border border-border bg-elevate text-xs p-2',
-      'outline-none shadow-md absolute w-full',
-      $isSelectOpen
-        ? 'animate-in fade-in slide-in-from-top-4'
-        : 'animate-out fade-out slide-out-to-top-2',
-    )}
-    use:selectMenu
-    style="display: none;"
-  >
-    {#if $isSelectVisible}
-      {#each options as { label, value }}
-        {@const isSelected = $selectedValues.includes(value)}
-        <button
-          type="button"
-          class={clsx(
-            'relative flex items-center pl-8 py-2 hocus:bg-brand/10 hocus:text-brand w-full text-sm',
-            isSelected ? 'text-inverse' : 'text-soft',
-          )}
-          use:selectOption={value}
-        >
-          {#if isSelected}
-            <CheckIcon class="w-4 h-4 absolute left-2 text-brand shrink-0" />
-          {/if}
-          {label}
-        </button>
-      {/each}
-    {/if}
-  </div>
 </button>
+
+<div
+  class={clsx(
+    'z-50 rounded-md border border-border bg-elevate text-xs p-2',
+    'outline-none shadow-md fixed',
+    $isSelectOpen
+      ? 'animate-in fade-in slide-in-from-top-4'
+      : 'animate-out fade-out slide-out-to-top-2',
+  )}
+  use:selectMenu
+  style="display: none;"
+>
+  {#if $isSelectVisible}
+    {#each options as { label, value }}
+      {@const isSelected = $selectedValues.includes(value)}
+      <button
+        type="button"
+        class={clsx(
+          'relative flex items-center pl-8 py-2 hocus:bg-brand/10 hocus:text-brand w-full text-sm',
+          isSelected ? 'text-inverse' : 'text-soft',
+        )}
+        use:selectOption={value}
+      >
+        {#if isSelected}
+          <CheckIcon class="w-4 h-4 absolute left-2 text-brand shrink-0" />
+        {/if}
+        {label}
+      </button>
+    {/each}
+  {/if}
+</div>

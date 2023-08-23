@@ -10,7 +10,7 @@
     hide: void;
   }>();
 
-  const { menu, menuTrigger, isMenuOpen, isMenuVisible, closeMenu } = createAriaDialog();
+  const { menu, menuTrigger, isMenuOpen, isMenuVisible } = createAriaDialog();
 
   $: dispatch($isMenuVisible ? 'show' : 'hide');
 </script>
@@ -20,6 +20,6 @@
 </Button>
 
 <!-- Menu -->
-<DialogPopup open={$isMenuOpen} visible={$isMenuVisible} action={menu} on:pointerup={closeMenu}>
+<DialogPopup open={$isMenuOpen} visible={$isMenuVisible} action={menu}>
   <slot name="content" />
 </DialogPopup>

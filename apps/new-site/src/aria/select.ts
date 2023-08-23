@@ -1,3 +1,4 @@
+import { offset, shift } from '@floating-ui/dom';
 import type { ActionReturn } from 'svelte/action';
 import { get, readonly, writable } from 'svelte/store';
 
@@ -51,7 +52,12 @@ export function createSelect<T extends string = string>({
           return _menuEl;
         },
       },
-      { strategy: 'absolute', ...options },
+      {
+        strategy: 'fixed',
+        placement: 'bottom',
+        middleware: [offset(8), shift({ padding: 8 }), ...(options.middleware || [])],
+        ...options,
+      },
     ),
     _focusTrap = createFocusTrap({
       onEscape(event) {
@@ -69,14 +75,18 @@ export function createSelect<T extends string = string>({
 
     _popper.show(event, () => {
       if (_triggerEl) {
-        // Look for parent incase it's a menu since events won't bubble up to document body.
-        let root = _triggerEl.parentElement;
-        while (root && !root.hasAttribute('data-root') && root.getAttribute('role') !== 'menu') {
-          root = root.parentElement;
+        _openDisposal.add(_popper.watchPosition());
+
+        if (_triggerEl) {
+          _openDisposal.add(listenEvent(_triggerEl, 'pointerup', (e) => e.stopPropagation()));
+        }
+
+        if (_menuEl) {
+          _openDisposal.add(listenEvent(_menuEl, 'pointerup', (e) => e.stopPropagation()));
         }
 
         _openDisposal.add(
-          listenEvent(root || document.body, 'pointerup', (e) => {
+          listenEvent(document.body, 'pointerup', (e) => {
             onClose(e);
           }),
         );
@@ -151,8 +161,6 @@ export function createSelect<T extends string = string>({
       const disposal = new DisposalBin();
       disposal.add(
         onPress(el, onToggle),
-        listenEvent(el, 'click', (e) => e.stopPropagation()),
-        listenEvent(el, 'pointerup', (e) => e.stopPropagation()),
         _activeDescendant.subscribe((id) => {
           el.setAttribute('aria-activedescendant', id);
         }),
@@ -177,11 +185,25 @@ export function createSelect<T extends string = string>({
       el.setAttribute('role', 'listbox');
       el.setAttribute('aria-hidden', 'true');
       el.setAttribute('tabindex', '-1');
+      el.style.zIndex = '999999';
+
+      document.body.append(el);
 
       const disposal = new DisposalBin();
+
+      if (_triggerEl) {
+        function onResize() {
+          if (!_triggerEl) return;
+          el.style.width = _triggerEl.offsetWidth + 'px';
+        }
+
+        onResize();
+        const observer = new ResizeObserver(onResize);
+        observer.observe(_triggerEl);
+        disposal.add(() => observer.disconnect());
+      }
+
       disposal.add(
-        listenEvent(el, 'click', (e) => e.stopPropagation()),
-        listenEvent(el, 'pointerup', (e) => e.stopPropagation()),
         activeSelect.subscribe((current) => {
           if (current && el !== current) onClose();
         }),
@@ -190,6 +212,7 @@ export function createSelect<T extends string = string>({
       return {
         destroy() {
           disposal.dispose();
+          _menuEl?.remove();
           _menuEl = null;
         },
       };

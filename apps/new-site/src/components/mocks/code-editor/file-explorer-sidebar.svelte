@@ -6,7 +6,7 @@
   import AnimatedPanelIcon from '../../../icons/animated/animated-panel-icon.svelte';
   import { ariaBool } from '../../../utils/aria';
   import { IS_BROWSER } from '../../../utils/env';
-  import { isKeyboardClick } from '../../../utils/keyboard';
+  import { isKeyboardPress } from '../../../utils/keyboard';
   import { isUndefined } from '../../../utils/unit';
 
   const OPEN_PREF_KEY = 'vidstack::editor-sidebar-open';
@@ -54,7 +54,7 @@
       aria-label="File Explorer"
       aria-pressed={ariaBool(isOpen)}
       on:pointerup={toggle}
-      on:keydown={(e) => isKeyboardClick(e) && toggle()}
+      on:keydown={(e) => isKeyboardPress(e) && toggle()}
     >
       <AnimatedPanelIcon size={18} open={isOpen} />
     </button>

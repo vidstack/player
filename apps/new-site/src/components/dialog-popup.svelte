@@ -21,7 +21,6 @@
   )}
   style="display: none"
   use:action
-  on:pointerup
 >
   {#if visible}
     <div
@@ -34,8 +33,7 @@
         'pointer-events-auto pb-8 border border-border bg-elevate outline-none',
         'transition rounded-md shadow-lg overflow-auto scrollbar',
       )}
-      on:pointerup|stopPropagation
-      data-root
+      data-menu-root
     >
       <div class="flex w-full items-center">
         <div class="flex-1"></div>

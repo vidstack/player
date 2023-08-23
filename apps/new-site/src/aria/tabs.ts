@@ -3,7 +3,7 @@ import { get, readonly, writable } from 'svelte/store';
 
 import { ariaBool } from '../utils/aria';
 import { DisposalBin, listenEvent } from '../utils/events';
-import { isKeyboardClick } from '../utils/keyboard';
+import { isKeyboardPress } from '../utils/keyboard';
 
 let globalId = 0;
 
@@ -105,7 +105,7 @@ export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
 
             disposal.add(
               listenEvent(tab, 'pointerup', (e) => select(i, e)),
-              listenEvent(tab, 'keydown', (e) => isKeyboardClick(e) && select(i, e)),
+              listenEvent(tab, 'keydown', (e) => isKeyboardPress(e) && select(i, e)),
             );
 
             if (panel) {

@@ -7,7 +7,7 @@
   import { createEventDispatcher } from 'svelte';
   import type { Action } from 'svelte/action';
 
-  import { isKeyboardClick } from '../utils/keyboard';
+  import { isKeyboardPress } from '../utils/keyboard';
   import { isUndefined, noop } from '../utils/unit';
   import GradientBorder from './gradient-border.svelte';
 
@@ -49,7 +49,7 @@
     class={buttonClass}
     use:action={action}
     on:pointerup={() => dispatch('press')}
-    on:keydown={(e) => isKeyboardClick(e) && dispatch('press')}
+    on:keydown={(e) => isKeyboardPress(e) && dispatch('press')}
   >
     {#if arrow === 'left'}
       <ArrowLeftIcon class={arrowClass} />
