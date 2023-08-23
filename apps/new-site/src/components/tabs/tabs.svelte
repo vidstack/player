@@ -14,7 +14,7 @@
   $: selectedTabLeft = isReady ? $tabRefs[$selectedTab].offsetLeft + 'px' : 0;
 </script>
 
-<div use:tabsRoot>
+<div class="w-full" use:tabsRoot>
   <div
     class="flex items-center relative w-full overflow-x-auto no-scrollbar p-0.5"
     use:tabList={label}

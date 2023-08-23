@@ -6,14 +6,14 @@ export const FOCUS_TARGET_ELEMENTS = [
   'input:not([disabled]):not([aria-hidden])',
   'select:not([disabled]):not([aria-hidden])',
   'textarea:not([disabled]):not([aria-hidden])',
-  'button:not([disabled]):not([aria-hidden])',
+  'button:not([disabled]):not([aria-hidden]):not([tabindex^="-"])',
   'iframe',
   'object',
   'embed',
   '[contenteditable]',
   '[tabindex]:not([tabindex^="-"])',
-  '[role="tab"]',
-  '[role="option"]',
+  '[role="tab"]:not([tabindex^="-"])',
+  '[role="option"]:not([tabindex^="-"])',
 ];
 
 export interface FocusTrapOptions {
