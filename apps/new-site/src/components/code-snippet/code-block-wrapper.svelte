@@ -33,7 +33,7 @@
 
   <div
     class={clsx(
-      'flex scrollbar scrollbar-square scroll-contain overflow-auto',
+      'flex scrollbar scrollbar-square overflow-auto',
       !flat && (title || showTopBar ? 'px-2 pb-2.5' : 'p-4'),
     )}
   >

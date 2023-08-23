@@ -59,9 +59,9 @@
 </script>
 
 <!-- Don't mess with content inside pre tag - line breaks will show up and mess up layout. -->
-<pre class={clsx('relative w-full min-h-full', _class)}>
+<pre class={clsx('min-h-full', _class)}>
 {#if loader && !code}
-    <IndeterminateLoadingSpinner class="absolute top-2 right-2" />
+    <IndeterminateLoadingSpinner class="absolute top-2 right-4" />
     <code
       class="inline-block"
       style={`width: ${loader.width * 9.48}px; height: ${loader.lines * 22}px;`}

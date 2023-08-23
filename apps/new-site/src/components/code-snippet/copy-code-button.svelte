@@ -4,6 +4,8 @@
   import CheckIcon from '~icons/lucide/check';
   import CopyIcon from '~icons/lucide/copy';
 
+  import { onMount } from 'svelte';
+
   import { decodeHTML } from '../../utils/html';
   import { isKeyboardClick } from '../../utils/keyboard';
   import { isHighlightLine, resolveHighlightedLines } from './highlight';
@@ -16,7 +18,18 @@
   let _class = '';
   export { _class as class };
 
-  let copied = false;
+  let copied = false,
+    loading = true;
+
+  onMount(() => {
+    const intervalId = window.setInterval(() => {
+      if (getLoadedCodeSnippet(id)) {
+        loading = false;
+        window.clearInterval(intervalId);
+        return;
+      }
+    }, 300);
+  });
 
   async function onCopy() {
     try {
@@ -57,6 +70,7 @@
           'dark:text-green-400 dark:bg-green-400/20 dark:border-green-400',
         )
       : 'text-brand bg-brand/20 border-brand/20 hocus:border-brand',
+    loading && 'hidden',
     _class,
   )}
   on:pointerup|stopPropagation={onCopy}

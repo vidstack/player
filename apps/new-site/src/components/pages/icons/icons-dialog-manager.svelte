@@ -3,7 +3,6 @@
 </script>
 
 <script lang="ts">
-  import path from 'path';
   import clsx from 'clsx';
 
   import DownloadIcon from '~icons/lucide/download';
@@ -22,7 +21,7 @@
   import { currentIconLibrary, formatIconName, getIconTypeFromSearchParams } from './shared';
 
   let currentIconName: string = '',
-    currentIconSVGText: string = '',
+    currentIconSVG: SVGElement | null = null,
     currentIconButton: HTMLElement | null = null;
 
   const { menuId, menu, openMenu, closeMenu, isMenuOpen, isMenuVisible } = createAriaDialog({
@@ -37,7 +36,7 @@
       }
 
       currentIconName = '';
-      currentIconSVGText = '';
+      currentIconSVG = null;
       currentIconButton = null;
       updateIconSearchParam('');
     },
@@ -62,7 +61,7 @@
         const button = document.querySelector<HTMLElement>(
           `.icons-grid button[data-icon="${icon}"]`,
         );
-        // if (button) onSelectIcon(button);
+        if (button) onSelectIcon(button, new KeyboardEvent('keydown'));
       }
     }, 100);
 
@@ -89,7 +88,7 @@
     menu.setAttribute('aria-describedby', id);
 
     currentIconName = iconName;
-    currentIconSVGText = button.querySelector('svg')!.outerHTML;
+    currentIconSVG = button.querySelector('svg')!;
     currentIconButton = button;
     updateIconSearchParam(iconName);
 
@@ -103,24 +102,44 @@
     window.history.pushState({}, '', url);
   }
 
-  $: downloadURL = IS_BROWSER
-    ? URL.createObjectURL(new Blob([currentIconSVGText], { type: 'text/plain;charset=utf-8' }))
-    : '';
+  $: downloadURL =
+    IS_BROWSER && currentIconSVG
+      ? URL.createObjectURL(
+          new Blob([currentIconSVG.outerHTML], { type: 'text/plain;charset=utf-8' }),
+        )
+      : '';
 
   export function transformSVGSnippet(code: string) {
-    const paths = currentIconSVGText
-      .replace(/<svg.*?\n/, '')
-      .replace('\n</svg>', '')
-      .trim()
-      .split('<path')
-      .slice(1);
+    if (!code || !currentIconSVG) return code;
 
-    for (const path of paths) {
-      // const d = path.match(/d="(.*?)"/)![1];
-      // pathLines.push(line.replace('__define__', d));
+    const paths = currentIconSVG.innerHTML.split('<path'),
+      lineStartTag = '<span class="line">',
+      isSource = !code.includes(lineStartTag);
+
+    if (isSource) {
+      const pathLines: string[] = [];
+      for (const path of paths) {
+        const d = path.match(/d="(.*?)"/)?.[1];
+        if (d) pathLines.push(`<path d="${d}" fill="currentColor" />`);
+      }
+
+      return code.replace('<path d="__define__" fill="currentColor" />', pathLines.join('\n  '));
+    } else {
+      let lines = code.split(lineStartTag),
+        pathLine = `<span class="line">` + lines[lines.length - 2],
+        pathLines: string[] = [];
+
+      for (const path of paths) {
+        const d = path.match(/d="(.*?)"/)?.[1];
+        if (d) pathLines.push(pathLine.replace('__define__', d));
+      }
+
+      return [
+        ...lines.slice(0, -2),
+        ...pathLines.map((line) => lineStartTag + line),
+        lines[lines.length - 1],
+      ].join('');
     }
-
-    return code;
   }
 
   function transformRawImportSnippet(code: string) {
@@ -171,7 +190,7 @@
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
-          {@html currentIconSVGText}
+          {@html currentIconSVG?.innerHTML}
         </svg>
       </div>
 
@@ -192,7 +211,7 @@
       </a>
     </div>
 
-    <div class="py-4 mt-2 flex justify-center">
+    <div class="py-4 mt-2 flex w-full">
       <Tabs label="Icon Formats" color="brand" tabs={['Component', 'SVG', 'Raw', 'Unplugin']}>
         <TabPanel>
           {#if $currentIconLibrary === 'html'}
