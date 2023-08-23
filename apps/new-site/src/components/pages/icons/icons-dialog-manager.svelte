@@ -24,7 +24,7 @@
     currentIconSVG: SVGElement | null = null,
     currentIconButton: HTMLElement | null = null;
 
-  const { menuId, menu, openMenu, closeMenu, isMenuOpen, isMenuVisible } = createAriaDialog({
+  const { menuId, menu, openMenu, isMenuOpen, isMenuVisible } = createAriaDialog({
     onClose(event) {
       currentIconButton?.setAttribute('aria-expanded', 'false');
 
@@ -78,8 +78,6 @@
   }
 
   function onSelectIcon(button: HTMLElement, event?: Event) {
-    event?.stopPropagation();
-
     const id = button.getAttribute('id')!,
       iconName = button.getAttribute('data-icon')!,
       menu = document.getElementById(menuId)!;
@@ -166,14 +164,8 @@
 
 <slot />
 
-<DialogPopup
-  stretch
-  open={$isMenuOpen}
-  visible={$isMenuVisible}
-  action={menu}
-  on:pointerup={closeMenu}
->
-  <div class="flex flex-col px-6 pb-4" on:pointerup|stopPropagation>
+<DialogPopup stretch open={$isMenuOpen} visible={$isMenuVisible} action={menu}>
+  <div class="flex flex-col px-6 pb-4">
     <div class="flex flex-col items-center justify-center">
       <div
         class={clsx(

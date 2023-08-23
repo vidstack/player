@@ -1,6 +1,7 @@
 import { onDestroy } from 'svelte';
+
 import { mergeFunctions } from './fn';
-import { isKeyboardClick } from './keyboard';
+import { isKeyboardPress } from './keyboard';
 
 export function listenEvent<
   Target extends EventTarget,
@@ -29,7 +30,7 @@ export function onPress(
       if (event.button === 0) handler(event);
     }),
     listenEvent(target, 'keydown', (event) => {
-      if (isKeyboardClick(event)) handler(event);
+      if (isKeyboardPress(event)) handler(event);
     }),
   );
 }

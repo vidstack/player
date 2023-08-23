@@ -10,6 +10,6 @@ export function wasEscapeKeyPressed(event: Event | undefined) {
   return isKeyboardEvent(event) && event.key === 'Escape';
 }
 
-export function isKeyboardClick(event: Event | undefined) {
+export function isKeyboardPress(event: Event | undefined) {
   return isKeyboardEvent(event) && (event.key === 'Enter' || event.key === ' ');
 }

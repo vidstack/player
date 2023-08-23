@@ -77,6 +77,11 @@ export function createAriaMenu(options: AriaMenuOptions) {
       if (_menuEl) {
         _menuEl.style.pointerEvents = '';
         _menuEl.dispatchEvent(new Event('aria-open'));
+
+        // Prevent it bubbling up to document body so we can determine when to close popup.
+        const root = _menuEl.querySelector('[data-menu-root]') || _menuEl;
+        _openDisposal.add(listenEvent(root, 'pointerup', (e) => e.stopPropagation()));
+
         if (isKeyboardEvent(event)) {
           _menuEl.focus();
           _openDisposal.add(_focusTrap(_menuEl));
@@ -260,9 +265,6 @@ export function createAriaMenu(options: AriaMenuOptions) {
               onChange(e, false);
             }
           }),
-        // Prevent it bubbling up to document body so we can determine when to close popup.
-        listenEvent(el, 'click', (e) => e.stopPropagation()),
-        listenEvent(el, 'pointerup', (e) => e.stopPropagation()),
         // Close when another menu is opened
         !options.noOutSideClick &&
           activeMenu.subscribe((current) => {
@@ -290,6 +292,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
         destroy() {
           _openDisposal.dispose();
           disposal.dispose();
+          _menuEl?.remove();
           _menuEl = null;
         },
       };
