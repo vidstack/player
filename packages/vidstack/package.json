@@ -123,7 +123,10 @@
       "types": "./elements.json.d.ts",
       "default": "./elements.json"
     },
-    "./vscode.html-data.json": "./vscode.html-data.json"
+    "./vscode.html-data.json": "./vscode.html-data.json",
+    "./globals": {
+      "types": "./globals.d.ts"
+    }
   },
   "publishConfig": {
     "access": "public"
