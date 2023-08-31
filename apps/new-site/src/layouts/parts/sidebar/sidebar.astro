@@ -19,18 +19,26 @@ const { categories, activeCategory, items, activeItem } = Astro.props;
 <nav
   id="main-sidebar"
   class={clsx(
-    'scrollbar scroll-contain flex flex-col flex-1 max-w-xs min-h-full text-sm min-w-[220px] pt-2.5',
-    'hidden nav-lg:flex px-6 1460:pl-2 pb-8 overflow-auto sticky top-[var(--content-top)] left-0 flex-none',
+    'text-sm hidden nav-lg:block flex-none',
+    'w-[var(--sidebar-width)] h-[calc(var(--content-height)-26px)]',
+    'fixed top-[var(--content-top)] left-[max(0px,calc(50%-45rem))] 1460:ml-4 1480:-ml-0.5',
   )}
 >
-  {
-    categories && activeCategory && (
-      <>
-        <SidebarCategories {categories} {activeCategory} />
-      </>
-    )
-  }
-  <SidebarItems {items} {activeItem} />
+  <div
+    class={clsx(
+      'w-full h-full flex flex-col mt-4 992:mt-6 px-6 1460:pl-2 pb-8',
+      'scrollbar scroll-contain overflow-auto',
+    )}
+  >
+    {
+      categories && activeCategory && (
+        <>
+          <SidebarCategories {categories} {activeCategory} />
+        </>
+      )
+    }
+    <SidebarItems {items} {activeItem} />
+  </div>
 </nav>
 
 <SidebarScroll client:load />
