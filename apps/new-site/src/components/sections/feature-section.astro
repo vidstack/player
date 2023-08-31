@@ -23,7 +23,7 @@ const { title, subtitle, align = 'center', noTextGradient = false } = Astro.prop
       'px-4 768:px-6',
       'max-w-[var(--content-max-width)] mx-auto',
       align === 'start' ? '992:flex-row 992:items-center 992:justify-start' : 'justify-center',
-      !subtitle ? 'pb-32 992:pb-40' : 'py-32 992:py-40',
+      !subtitle ? 'pb-32 992:pb-40' : 'py-32 1200:py-40',
     )}
   >
     <div
@@ -80,7 +80,7 @@ const { title, subtitle, align = 'center', noTextGradient = false } = Astro.prop
             <>
               <br />
               <span class="inline-block mt-3">
-                <TypeWriter text={subtitle} speed={65} delay={750} caret client:visible />
+                <TypeWriter text={subtitle} speed={65} delay={200} caret client:visible />
               </span>
             </>
           )

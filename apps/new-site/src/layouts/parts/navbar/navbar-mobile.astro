@@ -2,36 +2,54 @@
 import clsx from 'clsx';
 
 import VidstackSymbol from '../../../icons/logos/vidstack-symbol.svelte';
-import { NAV_MOBILE_MAX_WIDTH_QUERY } from '../../../stores/media-query';
+import type { NavItem } from '../../nav/nav-items';
 import SocialLink from '../social-link.astro';
-import NavMobilePopover from './menus/mobile/nav-mobile-popover.svelte';
+import NavMobilePopover from './menus/mobile/nav-mobile-popover.astro';
 
 interface Props {
-  announcementBar?: boolean;
+  noSocials?: boolean;
+  navItems?: NavItem[];
 }
 
-const { announcementBar = false } = Astro.props;
+const { noSocials = false, navItems = [] } = Astro.props;
 ---
 
 <div
   class={clsx(
     'nav-lg:hidden px-4 768:px-6 py-4 fixed left-0 blur-bg',
-    'mx-auto h-[var(--navbar-height)] w-full',
+    'mx-auto h-[var(--navbar-height)] mt-[var(--navbar-top)] w-full',
     'flex-col items-center justify-center z-40 transition-[top] duration-300',
-    announcementBar ? 'top-[var(--announcement-bar-height)] scrolled:top-0' : 'top-0',
+    'transition-[margin-top] duration-200',
   )}
 >
   <div class="flex w-full items-center">
-    <a class="mr-12 rounded-md" href="/" aria-label="Go Home">
-      <VidstackSymbol class="h-[32px] hover:scale-110 transition-transform" />
-    </a>
+    <div class="flex items-center">
+      <a class="rounded-md" href="/" aria-label="Go Home">
+        <VidstackSymbol class="h-[32px] hover:scale-110 transition-transform" />
+      </a>
 
-    <div class="flex-1"></div>
+      <slot name="start" />
+    </div>
+
+    <div class="flex items-center flex-1">
+      <slot name="center" />
+    </div>
 
     <div class="flex items-center">
-      <SocialLink class="mr-1" type="twitter" />
-      <SocialLink class="mr-1" type="gitHub" />
-      <NavMobilePopover {announcementBar} client:media={NAV_MOBILE_MAX_WIDTH_QUERY} />
+      <slot name="end" />
+
+      {
+        !noSocials && (
+          <Fragment>
+            <SocialLink class="mr-1" type="twitter" />
+            <SocialLink class="mr-1" type="gitHub" />
+          </Fragment>
+        )
+      }
+
+      <NavMobilePopover {navItems}>
+        <slot name="popover-start" slot="start" />
+      </NavMobilePopover>
     </div>
   </div>
 </div>

@@ -27,17 +27,10 @@ export function visible(
 function createObserver(el: HTMLElement, options?: VisibleActionOptions) {
   const observer = new IntersectionObserver(([entry]) => {
     const isVisible = entry.isIntersecting;
-
-    if (isVisible) {
-      el.setAttribute('data-visible', '');
-      el.removeAttribute('data-invisible');
-      if (options?.once) observer.disconnect();
-    } else {
-      el.setAttribute('data-invisible', '');
-      el.removeAttribute('data-visible');
-    }
-
+    el.toggleAttribute('data-visible', isVisible);
+    el.toggleAttribute('data-invisible', !isVisible);
     options?.onChange?.(isVisible);
+    if (isVisible && options?.once) observer.disconnect();
   }, options);
 
   return observer;

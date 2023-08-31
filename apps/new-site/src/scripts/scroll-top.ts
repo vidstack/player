@@ -2,11 +2,10 @@ import { scrollTop } from '../stores/scroll';
 import { IS_BROWSER } from '../utils/env';
 
 if (IS_BROWSER) {
-  scrollTop.subscribe((top) => {
-    if (top > 0) {
-      document.body.setAttribute('data-scrolled', '');
-    } else {
-      document.body.removeAttribute('data-scrolled');
-    }
-  });
+  function onScroll(top: number) {
+    const el = document.body;
+    el.toggleAttribute('data-scrolled', top > 0);
+  }
+
+  scrollTop.subscribe(onScroll);
 }

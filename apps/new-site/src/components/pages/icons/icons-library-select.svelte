@@ -1,15 +1,22 @@
 <script lang="ts">
+  import { get } from 'svelte/store';
+
+  import { IS_BROWSER } from '../../../utils/env';
   import Select from '../../select.svelte';
   import { currentIconLibrary, iconLibraryOptions, type IconLibrary } from './shared';
 
+  if (IS_BROWSER) {
+    updateURL(get(currentIconLibrary));
+  }
+
   function onChange({ detail: [value] }: CustomEvent<string[]>) {
+    updateURL(value);
+  }
+
+  function updateURL(value: string) {
     currentIconLibrary.set(value as IconLibrary);
-
     const url = new URL(location.href);
-
-    if (value === 'react') url.searchParams.delete('lib');
-    else url.searchParams.set('lib', value);
-
+    url.searchParams.set('lib', value);
     window.history.pushState({}, '', url);
   }
 </script>

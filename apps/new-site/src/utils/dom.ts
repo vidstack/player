@@ -33,3 +33,7 @@ export function animationFrameThrottle<Fn extends (...args: any[]) => void>(func
 
   return throttle as Fn;
 }
+
+export function toggleClasses(el: HTMLElement, tokens: string, isActive: boolean) {
+  el.classList[isActive ? 'add' : 'remove'](...tokens.split(' '));
+}

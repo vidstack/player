@@ -3,7 +3,7 @@
   "redirects": [
     {
       "source": "/docs/player/react/:path*",
-      "destination": "/docs/react/player/:path*",
+      "destination": "/docs/player/:path*",
       "permanent": true
     }
   ]

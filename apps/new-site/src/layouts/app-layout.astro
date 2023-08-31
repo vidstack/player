@@ -4,17 +4,24 @@ import '../styles/app.css';
 import '../styles/tailwind.css';
 import '../styles/docs.css';
 
+import clsx from 'clsx';
+
+import { ViewTransitions } from 'astro:transitions';
+
 import MetaTags from './parts/meta-tags.astro';
 
-interface Props {
+export interface Props {
   title: string;
   description: string;
+  announcementBar?: boolean;
+  breadcrumbBar?: boolean;
+  theme?: 'secondary';
 }
 
-const { title, description } = Astro.props;
+const { title, description, announcementBar, breadcrumbBar, theme } = Astro.props;
 ---
 
-<html lang="en">
+<html class={clsx(theme === 'secondary' && 'theme-secondary')} lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -25,6 +32,7 @@ const { title, description } = Astro.props;
     <link rel="manifest" href="/manifest.json" />
 
     <MetaTags {title} {description} />
+    <ViewTransitions fallback="none" />
 
     <script src="../scripts/scroll-top.ts"></script>
     <script src="../scripts/focus-visible.js"></script>
@@ -33,17 +41,21 @@ const { title, description } = Astro.props;
       const key = 'vidstack::color-scheme',
         scheme = localStorage[key],
         prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches,
-        element = document.documentElement;
+        schemeRoot = document.documentElement;
       if (scheme === 'dark' || (scheme !== 'light' && prefersDark)) {
-        element.classList.add('dark');
-        element.classList.remove('light');
+        schemeRoot.classList.add('dark');
+        schemeRoot.classList.remove('light');
       } else {
-        element.classList.remove('dark');
-        element.classList.add('light');
+        schemeRoot.classList.remove('dark');
+        schemeRoot.classList.add('light');
       }
     </script>
   </head>
-  <body class="bg-body text-inverse min-w-screen min-h-screen overflow-x-hidden">
+  <body
+    class="bg-body text-inverse min-w-screen min-h-screen overflow-x-hidden"
+    data-announcement-bar={announcementBar}
+    data-breadcrumb-bar={breadcrumbBar}
+  >
     <slot />
   </body>
 </html>

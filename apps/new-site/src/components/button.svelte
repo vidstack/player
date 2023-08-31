@@ -14,6 +14,7 @@
   const dispatch = createEventDispatcher();
 
   export let primary = false;
+  export let flat = false;
   export let gradient: string | boolean | undefined = undefined;
   export let arrow: boolean | 'left' | 'right' | undefined = undefined;
   export let action: Action<any, any> = noop;
@@ -21,11 +22,12 @@
   $: isButton = isUndefined($$restProps['href']);
 
   $: buttonClass = clsx(
-    'flex items-center rounded-md font-medium group px-5 py-2.5 text-sm shadow-sm',
+    'flex items-center rounded-md font-medium group px-5 py-2.5 1200:py-3 text-sm',
     '768:px-6 768:text-base outline-none',
-    primary ? 'bg-inverse' : 'bg-elevate',
+    !flat && 'shadow-sm',
+    primary ? 'bg-inverse' : !flat && 'bg-elevate',
     gradient && 'bg-clip-padding border-2 border-transparent',
-    !gradient && 'border-2 border-border',
+    !gradient && !flat && 'border-2 border-border/90',
     $$restProps.class,
   );
 

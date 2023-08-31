@@ -4,7 +4,7 @@
   export let url = '';
 </script>
 
-<div class={clsx('px-2 border-b border-border flex items-center', url ? 'py-1' : 'py-2')}>
+<div class={clsx('px-2 border-b border-border/90 flex items-center', url ? 'py-1' : 'py-2')}>
   <div class="flex items-center space-x-1">
     <div class="w-2 h-2 bg-red-600 dark:bg-red-400 rounded-full"></div>
     <div class="w-2 h-2 bg-yellow-600 dark:bg-yellow-400 rounded-full"></div>

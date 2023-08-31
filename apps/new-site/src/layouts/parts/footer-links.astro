@@ -19,7 +19,7 @@ const { title, links } = Astro.props;
       links.map((link) => {
         const isExternal = link.href.startsWith('http');
         return (
-          <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
+          <li class="text-soft font-base hover:underline hover:text-brand">
             <a
               href={link.href}
               target={isExternal ? '_blank' : null}

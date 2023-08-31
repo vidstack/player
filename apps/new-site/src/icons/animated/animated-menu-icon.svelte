@@ -1,8 +1,8 @@
 <script lang="ts">
   import clsx from 'clsx';
 
-  export let size = 26;
-  export let open: boolean;
+  export let size = 24;
+  export let open = false;
 </script>
 
 <svg
@@ -12,6 +12,7 @@
   height={size}
   viewBox="0 0 24 24"
   stroke="currentColor"
+  data-animated-menu-icon
 >
   <g>
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16" />

@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { offset } from '@floating-ui/dom';
   import clsx from 'clsx';
+
+  import { offset } from '@floating-ui/dom';
+
   import { createAriaTooltip, type AriaTooltipOptions } from '../aria/tooltip';
 
   export let options: AriaTooltipOptions = {
@@ -19,7 +21,7 @@
 
 <div
   class={clsx(
-    'z-10 rounded-md border border-border bg-elevate text-xs font-medium px-1.5 py-1 shadow-sm',
+    'z-10 rounded-md border border-border/90 bg-elevate text-xs font-medium px-1.5 py-1 shadow-sm',
     $isTooltipOpen
       ? 'animate-in fade-in slide-in-from-top-4'
       : 'animate-out fade-out slide-out-to-top-2',

@@ -24,7 +24,7 @@
 
 <div
   class={clsx(
-    'z-50 rounded-md border border-border bg-elevate text-xs font-medium p-3',
+    'z-50 rounded-md border border-border/90 bg-elevate text-xs font-medium p-3',
     'outline-none shadow-md',
     $isMenuOpen
       ? 'animate-in fade-in slide-in-from-top-4'

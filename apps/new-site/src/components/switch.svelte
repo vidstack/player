@@ -9,8 +9,10 @@
 
 <script lang="ts">
   import clsx from 'clsx';
+
   import { createEventDispatcher, onMount } from 'svelte';
   import type { Writable } from 'svelte/store';
+
   import { createAriaRadioGroup } from '../aria/radio-group';
 
   export let label: string;
@@ -45,7 +47,7 @@
   class={clsx(
     'flex items-center relative overflow-hidden',
     !square && 'rounded-full',
-    !compact && 'border border-border',
+    !compact && 'border border-border/90',
   )}
   use:radioGroup={label}
 >
@@ -56,7 +58,9 @@
         'flex items-center outline-none hocus:bg-brand/10 focus-visible:border focus-visible:border-inverse',
         square ? !compact && 'rounded-sm' : 'rounded-full',
         compact ? 'px-2.5 py-[7px]' : 'px-3 py-2',
-        ready && _value === option.value && 'text-brand transition-colors',
+        ready && _value === option.value
+          ? 'text-brand transition-colors'
+          : 'text-soft/90 hocus:text-inverse',
       )}
       use:radio={option.value}
       aria-label={label}

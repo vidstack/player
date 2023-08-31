@@ -1,4 +1,5 @@
 import { Host } from 'maverick.js/element';
+
 import { TooltipTrigger } from '../../../components';
 
 /**
@@ -18,6 +19,10 @@ import { TooltipTrigger } from '../../../components';
  */
 export class MediaTooltipTriggerElement extends Host(HTMLElement, TooltipTrigger) {
   static tagName = 'media-tooltip-trigger';
+  constructor() {
+    super();
+    this.style.display = 'contents';
+  }
 }
 
 declare global {

@@ -8,11 +8,11 @@ import FooterLinks from './footer-links.astro';
 
 <div class="w-full flex mb-8 768:mb-16 pr-4 768:pr-6 992:pr-10">
   <div class="flex-1"></div>
-  <div class="rounded-full w-20 h-6 border-border border-2"></div>
-  <div class="rounded-full w-6 h-6 border-border border-2 ml-3"></div>
+  <div class="rounded-full w-20 h-6 border-border/90 border-2 shadow-sm"></div>
+  <div class="rounded-full w-6 h-6 border-border/90 border-2 ml-3 shadow-sm"></div>
 </div>
 
-<footer class="w-full px-4 768:px-6 pt-10 pb-6 text-base border-t border-border">
+<footer class="w-full px-4 768:px-6 pt-10 pb-6 text-base border-t border-border/80">
   <div class="mx-auto w-full max-w-[var(--content-max-width)]">
     <div class="flex flex-col">
       <div class="768:flex-row 768:space-y-0 768:space-x-16 flex flex-col space-y-10">
@@ -51,9 +51,9 @@ import FooterLinks from './footer-links.astro';
           <FooterLinks
             title="Player"
             links={[
-              { title: 'HTML', href: '/docs/player' },
-              { title: 'React', href: '/docs/react/player' },
-              { title: 'Tailwind', href: '/docs/react/player/core-concepts/tailwind' },
+              { title: 'HTML', href: '/docs/web-components/player' },
+              { title: 'React', href: '/docs/player' },
+              { title: 'Tailwind', href: '/docs/player/styling/tailwind' },
             ]}
           />
 

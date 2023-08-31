@@ -113,9 +113,9 @@
         id="email"
         type="email"
         class={clsx(
-          'bg-transparent text-inverse border border-border rounded-sm w-full py-2 px-2.5',
+          'bg-transparent text-inverse border border-border/90 rounded-sm w-full py-2 px-2.5',
           'text-sm placeholder:text-soft',
-          !readonly ? 'hocus:border-brand' : 'cursor-default',
+          !readonly ? 'hocus:border-brand/90' : 'cursor-default',
         )}
         required
         placeholder="Email"

@@ -25,9 +25,8 @@
   import Badge from './badge.svelte';
 
   export let stage: StageTitle;
-  export let invertTheme = false;
 
   $: title = typeof stage === 'number' ? stage + '.0' : stage;
 </script>
 
-<Badge color={getColor(stage)} {invertTheme}>{title}</Badge>
+<Badge color={getColor(stage)}>{title}</Badge>

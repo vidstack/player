@@ -30,7 +30,7 @@
 
 <div
   class={clsx(
-    'flex flex-col z-[60] transition-[width] duration-300 border-r border-border',
+    'flex flex-col z-[60] transition-[width] duration-300 border-r border-border/90',
     'bg-elevate',
     isOpen ? 'w-[200px]' : 'w-[44px] justify-center',
   )}

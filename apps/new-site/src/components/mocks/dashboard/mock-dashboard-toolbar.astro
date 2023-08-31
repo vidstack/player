@@ -37,7 +37,7 @@ const filterMenuItems = [
   </div>
   <Menu
     class={clsx(
-      'border-dashed border border-border pl-1 pr-1.5 py-px font-medium',
+      'border-dashed border border-border/90 pl-1 pr-1.5 py-px font-medium',
       'text-inverse text-[10px] flex items-center rounded-sm shadow-sm',
       'hocus:text-brand hocus:border-brand cursor-pointer relative',
     )}
@@ -75,7 +75,10 @@ const filterMenuItems = [
 
   <div class="flex-1 hidden @2xl:inline-block">
     <div
-      class="w-full max-w-[150px] mx-auto bg-inverse/10 text-[10px] rounded-sm text-soft px-2 py-1 flex items-center"
+      class={clsx(
+        'w-full max-w-[200px] mx-auto border border-border/90 text-[10px] rounded-sm',
+        'shadow-sm text-soft px-2 py-1 flex items-center',
+      )}
     >
       <SearchIcon class="w-2.5 h-2.5 mr-1" />
        Search
@@ -88,7 +91,10 @@ const filterMenuItems = [
   </div>
 
   <div
-    class="flex items-center justify-center bg-inverse/10 rounded-sm overflow-hidden mr-2 shadow-sm border border-inverse/10"
+    class={clsx(
+      'flex items-center justify-center bg-inverse/10 rounded-sm overflow-hidden mr-2',
+      'shadow-sm border border-inverse/10',
+    )}
   >
     <div class="px-1 py-0.5 text-soft">
       <ListIcon class="w-3.5 h-3.5" />

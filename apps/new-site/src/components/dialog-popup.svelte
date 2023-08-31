@@ -26,11 +26,9 @@
     <div
       class={clsx(
         'flex flex-col w-[90%] h-[90%] max-h-[90%]',
-        !stretch
-          ? '576:w-auto 576:min-w-[450px] 576:max-w-[450px]'
-          : '576:w-[50%] 576:max-w-[580px]',
+        !stretch ? '576:w-auto 576:min-w-[450px] 576:max-w-[450px]' : '576:max-w-[580px]',
         !stretch ? '576:h-auto 576:min-h-[450px] 576:max-h-[80%]' : '576:h-[75%]',
-        'pointer-events-auto pb-8 border border-border bg-elevate outline-none',
+        'pointer-events-auto pb-8 border border-border/90 bg-elevate outline-none',
         'transition rounded-md shadow-lg overflow-auto scrollbar',
       )}
       data-menu-root
@@ -38,7 +36,7 @@
       <div class="flex w-full items-center">
         <div class="flex-1"></div>
         <button
-          class="p-3 mt-0.5 mr-0.5 rounded-md hocus:text-inverse/80"
+          class="p-3 mt-0.5 mr-0.5 rounded-md text-soft hocus:text-inverse/80"
           aria-label="Close Dialog"
           data-close
         >

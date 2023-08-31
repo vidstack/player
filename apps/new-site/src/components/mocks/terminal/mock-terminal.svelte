@@ -45,7 +45,7 @@
 </script>
 
 <section
-  class="w-full border border-border flex flex-col flex-1 h-[500px] rounded-md shadow-md 1200:shadow-lg bg-elevate prefers-dark-scheme"
+  class="w-full border border-border/90 flex flex-col flex-1 h-[450px] rounded-md shadow-md 1200:shadow-lg bg-elevate prefers-dark-scheme"
   aria-label="Mock Terminal"
 >
   <MockWindowBar />

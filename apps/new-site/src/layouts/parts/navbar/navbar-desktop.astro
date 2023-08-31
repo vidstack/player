@@ -1,39 +1,61 @@
 ---
 import clsx from 'clsx';
 
+import GitHubStars from '../../../components/github-stars.svelte';
 import VidstackSymbol from '../../../icons/logos/vidstack-symbol.svelte';
 import { NAV_DESKTOP_MIN_WIDTH_QUERY } from '../../../stores/media-query';
+import type { NavItem } from '../../nav/nav-items';
 import ColorSchemeMenu from '../color-scheme-menu.svelte';
 import SocialLink from '../social-link.astro';
 import NavDesktopItems from './menus/desktop/nav-desktop-items.svelte';
+import NavManager from './nav-manager.svelte';
 
 interface Props {
-  announcementBar?: boolean;
+  navItems?: NavItem[];
+  noSocials?: boolean;
 }
 
-const { announcementBar = false } = Astro.props;
+const { noSocials = false, navItems = [] } = Astro.props;
+const pathname = Astro.url.pathname;
 ---
 
 <div
   class={clsx(
     'hidden nav-lg:flex px-4 768:px-6 fixed left-0 blur-bg',
-    'mx-auto h-[var(--navbar-height)] w-full',
+    'mx-auto h-[var(--navbar-height)] mt-[var(--navbar-top)] w-full',
     'flex-col items-center justify-center z-40 transition-[top] duration-300',
-    announcementBar ? 'top-[var(--announcement-bar-height)] scrolled:top-0' : 'top-0',
+    'transition-[margin-top] duration-200',
   )}
 >
   <div class="flex w-full items-center mx-auto max-w-[var(--content-max-width)]">
-    <a class="mr-12 rounded-md" href="/" aria-label="Go Home">
-      <VidstackSymbol class="h-8 hover:scale-110 transition-transform" />
-    </a>
+    <div class="flex items-center">
+      <a class={clsx('rounded-md', navItems.length && 'mr-12')} href="/" aria-label="Go Home">
+        <VidstackSymbol class="h-8 hover:scale-110 transition-transform" />
+      </a>
 
-    <NavDesktopItems client:media={NAV_DESKTOP_MIN_WIDTH_QUERY} />
+      <NavManager client:media={NAV_DESKTOP_MIN_WIDTH_QUERY}>
+        <NavDesktopItems {navItems} {pathname} />
+      </NavManager>
 
-    <div class="flex-1"></div>
+      <slot name="start" />
+    </div>
+
+    <div class="flex items-center justify-center flex-1">
+      <slot name="center" />
+    </div>
 
     <div class="flex items-center">
-      <SocialLink class="mr-1" type="twitter" />
-      <SocialLink class="mr-1" type="gitHub" />
+      <slot name="end" />
+
+      {
+        !noSocials && (
+          <Fragment>
+            <GitHubStars class="mr-0.5" owner="vidstack" repo="player" client:visible />
+            <SocialLink class="mr-0.5" type="twitter" />
+          </Fragment>
+        )
+      }
+
       <ColorSchemeMenu client:media={NAV_DESKTOP_MIN_WIDTH_QUERY} />
     </div>
   </div>

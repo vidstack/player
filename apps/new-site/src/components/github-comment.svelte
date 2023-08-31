@@ -7,14 +7,16 @@
 
 <div class="flex w-full @container">
   <div class="grow-0 shrink-0">
-    <div class="border border-border rounded-md overflow-hidden shadow-md">
+    <div class="border border-border/90 rounded-md overflow-hidden shadow-md">
       <VidstackSymbol size={28} />
     </div>
   </div>
-  <div class="border border-border ml-4 bg-body rounded-md flex-1 overflow-hidden shadow-md">
-    <div class="px-2.5 py-2 bg-elevate flex items-center border-b border-border">
+  <div class="border border-border/90 ml-4 bg-body rounded-md flex-1 overflow-hidden shadow-md">
+    <div class="px-2.5 py-2 bg-elevate flex items-center border-b border-border/90">
       <div class="font-semibold text-sm">vidstack</div>
-      <div class="border rounded-full border-border px-1.5 py-px text-soft ml-1.5 text-xs">bot</div>
+      <div class="border rounded-full border-border/90 px-1.5 py-px text-soft ml-1.5 text-xs">
+        bot
+      </div>
       <div class="w-1 h-1 bg-soft rounded-full ml-1.5"></div>
       <div class="text-soft ml-1.5 text-sm">
         <span class="@md:hidden">2 mins ago</span>

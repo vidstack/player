@@ -4,7 +4,7 @@ import PlusIcon from '~astro-icons/lucide/plus';
 // import PlanetScaleLogo from '../../../icons/logos/planetscale-logo.svelte';
 import WebhookIcon from '~astro-icons/lucide/webhook';
 
-// import AwsLogo from '../../../icons/logos/aws-logo.svelte';
+import AwsLogo from '../../../icons/logos/aws-logo.svelte';
 import CloudflareLogo from '../../../icons/logos/cloudflare-logo.svelte';
 // import DigitalOceanLogo from '../../../icons/logos/digital-ocean-logo.svelte';
 // import GoogleLogo from '../../../icons/logos/google-logo.svelte';
@@ -19,9 +19,9 @@ const duration = 1000,
   spins = 1000,
   initialDelay = 4000,
   spinClass =
-    'border border-inverse w-24 h-24 1200:w-28 1200:h-28  p-4 rounded-sm shadow-md shrink-0',
-  separatorClass = 'flex-1 border-b border-border border-dashed h-1 mb-12 shrink',
-  plusIconClass = 'w-5 h-5 420:w-6 420:h-6 rounded-full bg-inverse border-border border-2 mb-12',
+    'border border-inverse/80 w-24 h-24 1200:w-28 1200:h-28  p-4 rounded-sm shadow-md shrink-0',
+  separatorClass = 'flex-1 border-b border-border/90 border-dashed h-1 mb-12 shrink',
+  plusIconClass = 'w-5 h-5 420:w-6 420:h-6 rounded-full bg-inverse border-border/80 border-2 mb-12',
   titleClass = 'font-semibold text-sm mt-4 text-center w-full',
   subtitleClass =
     'font-medium text-soft text-xs text-center w-full mt-0.5 min-w-full whitespace-nowrap min-w-[15ch]';
@@ -32,7 +32,7 @@ const duration = 1000,
     <div class="flex flex-col flex-1 shrink-0">
       <Spin class={spinClass} {duration} {initialDelay} {delay} {spins} client:visible>
         <Fragment slot="boxes">
-          <!-- <AwsLogo data-title="AWS S3" /> -->
+          <AwsLogo data-title="AWS S3" />
           <div class="flex items-center justify-center" data-title="Supabase Storage">
             <SupabaseLogo class="w-[80%] h-[80%]" />
           </div>
@@ -103,9 +103,9 @@ const duration = 1000,
   <div class="flex mt-12 items-center justify-center text-soft/80 flex-wrap">
     <div class="flex items-center shrink-0 space-x-3 mt-4">
       <VercelLogo class="w-5 shrink-0" />
-      <!-- <AwsLogo class="w-7 shrink-0" /> -->
       <!-- <DigitalOceanLogo class="w-7 shrink-0" /> -->
       <SupabaseLogo class="w-5 shrink-0" />
+      <AwsLogo class="w-7 shrink-0" />
       <!-- <GoogleLogo class="w-6 shrink-0" /> -->
     </div>
     <div class="w-1 shrink-0 h-1 bg-soft/80 mx-5 rounded-full mt-4"></div>

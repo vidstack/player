@@ -3,9 +3,12 @@
 
   import CheckCircleIcon from '~astro-icons/lucide/check-circle-2';
 
+  import { onMount } from 'svelte';
+
   import { visible } from '../../actions/visible';
   import { useARIATabs } from '../../aria/tabs';
   import { IS_BROWSER } from '../../utils/env';
+  import { DisposalBin, listenEvent } from '../../utils/events';
   import ProgressCircle from '../progress-circle.svelte';
 
   export let label: string;
@@ -19,11 +22,23 @@
   export { _class as class };
   export let stepListClass = '';
 
-  let started = false,
+  let content: HTMLElement,
+    started = false,
     startAnimationTimer = -1,
     animationInterval = -1,
     progressPercent = 0,
     isVisible = false;
+
+  onMount(() => {
+    const scrollContainers = content.querySelectorAll('.scrollbar'),
+      disposal = new DisposalBin();
+
+    for (const container of scrollContainers) {
+      disposal.add(listenEvent(container, 'scroll', onReset));
+    }
+
+    return () => disposal.dispose();
+  });
 
   const {
     tabsRoot: stepsRoot,
@@ -65,6 +80,16 @@
   function onPause() {
     window.clearInterval(animationInterval);
     window.clearTimeout(startAnimationTimer);
+  }
+
+  let resetTimerId = -1;
+  function onReset() {
+    onPause();
+    window.clearTimeout(resetTimerId);
+    resetTimerId = window.setTimeout(() => {
+      resetTimerId = -1;
+      onPlay();
+    }, 800);
   }
 
   $: if (IS_BROWSER && animated) {
@@ -151,7 +176,7 @@
         <div class="flex-1">
           <div
             class={clsx(
-              'border-dashed border-t-2 border-border transition-[width] duration-500',
+              'border-dashed border-t-2 border-border/90 transition-[width] duration-500',
               $selectedStep > i ? 'w-full' : 'w-0',
             )}
           />
@@ -160,7 +185,7 @@
     {/each}
   </div>
 
-  <div class={clsx('w-full mt-8')}>
+  <div class={clsx('w-full mt-8')} bind:this={content}>
     <slot />
   </div>
 </div>

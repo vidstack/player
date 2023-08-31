@@ -41,7 +41,7 @@ if (nextTemplate) {
 <section
   id={editorId}
   class={clsx(
-    'w-full border border-border flex flex-col flex-1 max-w-[1280px] mx-auto min-h-[600px] 1200:min-h-[680px]',
+    'w-full border border-border/90 flex flex-col flex-1 max-w-[1280px] mx-auto min-h-[600px] 1200:min-h-[680px]',
     'rounded-md shadow-md 1200:shadow-lg bg-elevate @container overflow-hidden',
   )}
   aria-label="Mock Code Editor"
@@ -76,7 +76,7 @@ if (nextTemplate) {
                 class="w-full flex items-center justify-center"
                 style="display: none;"
               >
-                <div class="rounded-md overflow-hidden shadow-md max-w-lg aspect-video w-full border border-border">
+                <div class="rounded-md overflow-hidden shadow-md max-w-lg aspect-video w-full border border-border/90">
                   {isImageFile(file) ? (
                     <img
                       class={clsx('w-full object-fill', file.class)}

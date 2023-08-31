@@ -41,8 +41,8 @@
   class={clsx(
     'relative flex items-center px-2.5 py-2',
     'rounded-sm shadow-sm max-w-full text-sm',
-    state === 'error' ? 'border-2 border-red-600 dark:border-red-400' : 'border border-border',
-    !disabled ? 'hocus:border-brand' : 'cursor-default',
+    state === 'error' ? 'border-2 border-red-600 dark:border-red-400' : 'border border-border/90',
+    !disabled ? 'hocus:border-brand/90 hocus:bg-elevate' : 'cursor-default',
     currentLabel === label ? 'text-soft' : 'text-inverse',
     $$restProps.class,
   )}
@@ -58,7 +58,7 @@
 
 <div
   class={clsx(
-    'z-50 rounded-md border border-border bg-elevate text-xs p-2',
+    'z-50 rounded-md border border-border/90 bg-elevate text-xs p-2',
     'outline-none shadow-md fixed',
     $isSelectOpen
       ? 'animate-in fade-in slide-in-from-top-4'
@@ -73,8 +73,8 @@
       <button
         type="button"
         class={clsx(
-          'relative flex items-center pl-8 py-2 hocus:bg-brand/10 hocus:text-brand w-full text-sm',
-          isSelected ? 'text-inverse' : 'text-soft',
+          'relative flex items-center pl-8 py-2 w-full text-sm',
+          isSelected ? 'text-inverse' : 'text-soft hocus:bg-brand/10 hocus:text-inverse ',
         )}
         use:selectOption={value}
       >
