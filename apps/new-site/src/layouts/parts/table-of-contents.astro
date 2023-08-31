@@ -1,0 +1,60 @@
+---
+import clsx from 'clsx';
+
+import type { MarkdownHeading } from 'astro';
+
+import TableOfContentsManager from './table-of-contents-manager.svelte';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+---
+
+{
+  headings.length > 1 && (
+    <>
+      <TableOfContentsManager client:load />
+      <nav
+        id="table-of-contents"
+        class={clsx(
+          'hidden 1280:flex flex-col pl-10 mr-6 1480:mr-0 flex-none',
+          'fixed top-[var(--content-top)] right-[max(0px,calc(50%-45rem))]',
+          'h-[var(--content-height)]',
+        )}
+        aria-label="Table of Contents"
+      >
+        <h5 class="text-inverse w-full text-left text-[15px] font-semibold mt-6 992:mt-8">
+          On this page
+        </h5>
+        <ul
+          class={clsx(
+            'flex flex-col space-y-1.5 pt-1 pr-1 mt-1 -ml-1.5',
+            'scrollbar scroll-contain overflow-y-auto flex-1 pb-2 mb-1',
+          )}
+        >
+          {headings.map((heading, i) => (
+            <li
+              class="p-px"
+              style={heading.depth > 2 ? `margin-left: ${(heading.depth - 2) * 0.25}rem` : null}
+            >
+              <a
+                class={clsx(
+                  'text-sm text-soft border border-transparent px-2 py-1 rounded-md',
+                  'data-[active]:text-brand data-[active]:border-brand/10 data-[active]:bg-brand/10',
+                  'data-[active]:shadow-sm whitespace-nowrap',
+                  'hocus:border-soft/20 hocus:bg-elevate hocus:shadow-sm hocus:text-inverse',
+                )}
+                href={`#${heading.slug}`}
+                data-depth={heading.depth - 2}
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </>
+  )
+}

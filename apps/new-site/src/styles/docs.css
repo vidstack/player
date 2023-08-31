@@ -94,12 +94,14 @@
   background-color: unset;
 }
 
-#main-sidebar {
+#main-sidebar > div,
+#table-of-contents > ul {
   --scrollbar-thumb-bg: none;
   --scrollbar-track-bg: none;
 }
 
-#main-sidebar:hover {
+#main-sidebar:hover > div,
+#table-of-contents:hover > ul {
   --scrollbar-thumb-bg: rgb(var(--color-border));
 }
 
