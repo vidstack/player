@@ -18,11 +18,13 @@ export const noAutoImport: Record<string, [string, string][]> = {
  */
 function createPlugin(): unified.Plugin<[], mdast.Root> {
   const transformer: unified.Transformer<mdast.Root> = (tree) => {
-    visit(tree, (node, index, parent) => {
-      if (!parent || index === null || (node.type as any) !== 'containerDirective') return;
+    visit(tree, (node: any, index, parent) => {
+      if (!parent || index === null || node.type !== 'containerDirective') return;
+
       const type = node.name;
       if (type !== 'no') return;
-      parent.children[index] = createComponentNode(NoTagName, {}, ...node.children);
+
+      parent.children[index!] = createComponentNode(NoTagName, {}, ...node.children);
     });
   };
 

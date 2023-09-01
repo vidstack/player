@@ -1,0 +1,287 @@
+.prose {
+  @apply text-soft text-base;
+}
+
+.prose hr {
+  @apply border-border my-3 h-px w-full border-t;
+}
+
+.prose strong {
+  @apply font-semibold;
+}
+
+.prose a strong,
+.prose blockquote strong,
+.prose thead th strong {
+  @apply text-inherit;
+}
+
+.prose a {
+  @apply text-brand border-border border text-[0.95em] font-medium hover:border-2;
+}
+
+.prose blockquote {
+  @apply text-inverse border-soft my-[1.6em] border-l-4 py-1.5 pl-3 font-medium italic;
+}
+
+.prose p:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply my-10;
+}
+
+.prose ol:not(:where([class~='not-prose'], [class~='not-prose'] *)),
+.prose ul:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply my-5 pl-6;
+}
+
+.prose ol {
+  @apply list-decimal;
+}
+
+.prose ul {
+  @apply list-disc;
+}
+
+.prose ol > li::marker,
+.prose ul > li::marker {
+  @apply text-inverse font-normal;
+}
+
+.prose li:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply my-0.5;
+}
+
+.prose ol > li:not(:where([class~='not-prose'], [class~='not-prose'] *)),
+.prose ul > li:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply pl-1.5;
+}
+
+.prose ul ul:not(:where([class~='not-prose'], [class~='not-prose'] *)),
+.prose ul ol:not(:where([class~='not-prose'], [class~='not-prose'] *)),
+.prose ol ul:not(:where([class~='not-prose'], [class~='not-prose'] *)),
+.prose ol ol:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply my-3;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  @apply text-inverse;
+}
+
+.prose h1 {
+  @apply mb-[0.88em] mt-0 text-4xl font-[800] leading-[1.1];
+}
+
+.prose h1 strong {
+  @apply font-[900] text-inherit;
+}
+
+.prose h2 {
+  @apply mb-[1em] mt-[2em] text-2xl font-[700] leading-[1.33];
+}
+
+.prose h2 strong {
+  @apply font-[800] text-inherit;
+}
+
+.prose h3 {
+  @apply mb-[0.6em] mt-[1.6em] text-xl font-[600] leading-[1.6];
+}
+
+.prose h3 strong {
+  @apply font-[700] text-inherit;
+}
+
+.prose h4 {
+  @apply mb-[0.5em] mt-[1.5em] font-[600] leading-[1.5];
+}
+
+.prose h4 strong {
+  @apply font-[700] text-inherit;
+}
+
+.prose img,
+.prose picture,
+.prose video {
+  @apply my-[2em];
+}
+
+.prose picture > img {
+  @apply my-0;
+}
+
+.prose code:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply text-inverse bg-elevate border-soft/30 mx-px rounded-md border px-1.5 py-[3px] font-mono text-sm font-medium;
+  font-variant-ligatures: none;
+}
+
+.prose h2 code {
+  @apply text-sm;
+}
+.prose h2 code {
+  @apply text-sm;
+}
+
+.prose h2 code {
+  @apply text-[0.9em];
+}
+
+.prose hr + *,
+.prose h2 + *,
+.prose h3 + *,
+.prose h4 + * {
+  @apply mt-0;
+}
+
+.prose table {
+  @apply m-0 w-full border-collapse text-left text-sm leading-[1.71];
+  table-layout: auto;
+}
+
+.prose thead {
+  @apply text-inverse border-border border;
+}
+
+.prose thead th {
+  @apply px-2 pb-2 font-medium;
+}
+
+.prose thead th:first-child {
+  @apply pl-0;
+}
+
+.prose thead th:last-child {
+  @apply pr-0;
+}
+
+.prose tbody {
+  @apply align-baseline;
+}
+
+.prose tr {
+  @apply border-border border-b text-sm;
+}
+
+.prose td {
+  @apply whitespace-nowrap;
+}
+
+.prose tbody code {
+  @apply text-xs;
+}
+
+.prose tbody tr td:first-child > code {
+  @apply text-brand bg-brand/10 border-brand/20;
+}
+
+.prose tbody td,
+.prose tfoot td {
+  @apply p-2;
+}
+
+.prose tbody td:first-child,
+.prose tfoot td:first-child {
+  @apply pl-0;
+}
+
+.prose tbody td:last-child,
+.prose tfoot td:last-child {
+  @apply pr-0;
+}
+
+.prose figure {
+  @apply my-2;
+}
+
+.prose figure > * {
+  @apply my-0;
+}
+
+.prose figcaption {
+  @apply mt-3 text-center text-sm italic leading-[1.42];
+}
+
+.prose * > :first-child:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply mt-0;
+}
+
+.prose * > :last-child:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply mb-0;
+}
+
+.prose p > img {
+  @apply border-border/50 mx-10 my-auto max-w-[600px] rounded-sm border;
+}
+
+.prose pre {
+  tab-size: 2;
+  -o-tab-size: 2;
+  -moz-tab-size: 2;
+}
+
+.prose p + .callout,
+.prose p + .steps {
+  @apply mt-10;
+}
+
+.prose .steps + p {
+  @apply mb-16;
+}
+
+.prose .callout + .steps {
+  @apply mt-14;
+}
+
+.prose .callout + table {
+  @apply mt-16;
+}
+
+.prose .tabbed-links + p {
+  @apply mb-10;
+}
+
+.prose .step .description > code {
+  @apply text-inverse;
+}
+
+.prose .step .code-block {
+  @apply m-0 p-0;
+}
+
+.prose .code-block + .code-block:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply mt-2;
+}
+
+.prose h1 + p {
+  @apply -mt-4 mb-10 text-lg;
+}
+
+.prose h1 + .steps,
+.prose h2 + .steps,
+.prose h3 + .steps {
+  @apply mt-10;
+}
+
+.prose .heading-wrapper {
+  --icon-size: 1.125rem;
+}
+
+.prose .heading-wrapper > * {
+  @apply mb-0 inline;
+}
+
+.prose .heading-wrapper > .anchor-link {
+  @apply relative ml-1.5 inline-flex justify-center rounded-[1px] align-baseline opacity-0;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  text-decoration: none;
+  border-bottom: unset;
+}
+
+.prose .heading-wrapper > .anchor-link:focus-visible,
+.prose .heading-wrapper > .anchor-link:hover {
+  @apply opacity-100;
+}

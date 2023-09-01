@@ -22,7 +22,17 @@ export interface VideoFile {
 
 export type EditorFile = CodeFile | ImageFile | VideoFile;
 
-export type CodeFileType = 'pkg' | 'ts' | 'tsx' | 'dts' | 'tailwind' | 'next';
+export type CodeFileType =
+  | 'pkg'
+  | 'ts'
+  | 'jsx'
+  | 'tsx'
+  | 'dts'
+  | 'tailwind'
+  | 'next'
+  | 'css'
+  | 'html';
+
 export type ImageFileType = 'png' | 'webp';
 export type VideoFileType = 'mp4';
 export type EditorFileType = CodeFileType | ImageFileType | VideoFileType;
@@ -138,7 +148,7 @@ export function isVideoFile(file: EditorFile): file is VideoFile {
 export function getFileType(path: string): EditorFileType {
   if (path.endsWith('.d.ts')) return 'dts';
   else if (path.startsWith('next.config')) return 'next';
-  else if (path.startsWith('tailwind')) return 'tailwind';
+  else if (path.startsWith('tailwind.config')) return 'tailwind';
   else if (path === 'package.json') return 'pkg';
   else return path.split('.').pop() as EditorFileType;
 }

@@ -28,7 +28,7 @@
         window.clearInterval(intervalId);
         return;
       }
-    }, 300);
+    }, 100);
   });
 
   async function onCopy() {

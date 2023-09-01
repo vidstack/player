@@ -13,8 +13,11 @@ import rehypeSlug from 'rehype-slug';
 import icons from 'unplugin-icons/vite';
 
 import codeHighlight from './plugins/code-highlight';
+import codePreviews from './plugins/code-previews';
 import codeSnippets from './plugins/code-snippets';
 import { calloutAutoImport, mdxCallouts } from './plugins/mdx/components/callouts';
+import { codeExamplesAutoImport, mdxCodeExamples } from './plugins/mdx/components/code-examples';
+import { codeSnippetAutoImport, mdxCodeSnippets } from './plugins/mdx/components/code-snippet';
 import { mdxNo, noAutoImport } from './plugins/mdx/components/no';
 import { mdxYes, yesAutoImport } from './plugins/mdx/components/yes';
 import { autolinkConfig } from './plugins/mdx/rehype-autolink-config';
@@ -32,12 +35,20 @@ export default defineConfig({
         '~astro-icons': '~icons',
       },
     },
-    plugins: [, codeHighlight(), codeSnippets(), icons({ compiler: 'svelte' })],
+    plugins: [codeHighlight(), codeSnippets(), codePreviews(), icons({ compiler: 'svelte' })],
   },
   integrations: [
     AutoImport({
-      imports: [calloutAutoImport, yesAutoImport, noAutoImport],
+      imports: [
+        codeSnippetAutoImport,
+        codeExamplesAutoImport,
+        calloutAutoImport,
+        yesAutoImport,
+        noAutoImport,
+      ],
     }),
+    mdxCodeSnippets(),
+    mdxCodeExamples(),
     mdxCallouts(),
     mdxYes(),
     mdxNo(),

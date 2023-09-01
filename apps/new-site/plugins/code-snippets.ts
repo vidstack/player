@@ -5,7 +5,7 @@ import { globby } from 'globby';
 import { LRUCache } from 'lru-cache';
 import type { Plugin } from 'vite';
 
-const snippetsRE = /snippets\//;
+const snippetsRE = /src\/snippets\//;
 
 const SNIPPETS_ID = ':code_snippets',
   SNIPPETS_REQ_ID = `/${SNIPPETS_ID}`;
@@ -19,6 +19,7 @@ interface CodeSnippet {
   width: number;
   lines: number;
   loader: string;
+  ext: string;
   highlights?: string;
 }
 
@@ -67,45 +68,44 @@ export default (): Plugin => {
 };
 
 async function getSnippets() {
-  let snippets: CodeSnippet[] = [];
-
-  const files = await globby('snippets/**/*');
+  const snippets: CodeSnippet[] = [],
+    files = await globby('src/snippets/**/*');
 
   await Promise.all(
-    files.map(async (filePath) => {
-      const content = await readFile(filePath, { encoding: 'utf-8' });
+    files
+      .filter((filePath) => !filePath.includes('[preview]'))
+      .map(async (filePath) => {
+        const content = await readFile(filePath, { encoding: 'utf-8' });
 
-      let source = stripComments(content),
-        lines = source.split('\n'),
-        ext = path.extname(filePath),
-        highlights = resolveCodeHighlights(filePath, content),
-        width = Math.max(...lines.map((line) => line.length));
+        let source = stripComments(content),
+          lines = source.split('\n'),
+          ext = path.extname(filePath),
+          highlights = resolveCodeHighlights(filePath, content),
+          width = Math.max(...lines.map((line) => line.length));
 
-      if (lines[lines.length - 1] === '') {
-        lines = lines.slice(0, -1);
-        source = source.slice(0, -1);
-      }
+        if (lines[lines.length - 1] === '') {
+          lines = lines.slice(0, -1);
+          source = source.slice(0, -1);
+        }
 
-      const id = filePath
-          .replace(/^snippets\//, '')
-          .replace(ext, '')
-          .replace(/\.(html|react)$/, ''),
-        loaderId = `:code_snippet/${id}`;
+        const id = filePath.replace(/^src\/snippets\//, '').replace(ext, ''),
+          loaderId = `:code_snippet/${id}`;
 
-      snippetsMap.set(id, {
-        filePath,
-        ext,
-        source,
-      });
+        snippetsMap.set(id, {
+          filePath,
+          ext,
+          source,
+        });
 
-      snippets.push({
-        id,
-        width,
-        lines: lines.length,
-        highlights,
-        loader: `() => import('${loaderId}')`,
-      });
-    }),
+        snippets.push({
+          id,
+          width,
+          lines: lines.length,
+          highlights,
+          ext: ext.slice(1),
+          loader: `() => import('${loaderId}')`,
+        });
+      }),
   );
 
   return snippets;

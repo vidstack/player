@@ -1,4 +1,7 @@
 ---
+import '../styles/prose.css';
+import '../styles/docs.css';
+
 import type { CollectionEntry } from 'astro:content';
 
 import Algolia from '../components/algolia/algolia.astro';
@@ -77,7 +80,7 @@ const isPlayerPage = page.slug.startsWith('player'),
       class="992:px-8 1200:px-10 flex flex-col flex-1 min-h-full pt-6 992:pt-8 px-6 nav-lg:ml-[var(--sidebar-width)]"
     >
       <div class="flex-1 markdown prose dark:prose-invert w-full max-w-[var(--article-max-width)]">
-        <p class="text-brand mb-2.5 text-[15px] font-semibold leading-6">
+        <p class="category text-brand mb-2.5 text-[15px] font-semibold leading-6">
           {category}
         </p>
 
