@@ -3,6 +3,7 @@ import type { HTMLAttributes } from 'astro/types';
 import { get } from 'svelte/store';
 
 import { codeSnippets } from '../../stores/code-snippets';
+import { currentJSLibrary } from '../../stores/libraries';
 import CodeBlock from './code-block.astro';
 import CodeSnippetLoader from './code-snippet-loader.svelte';
 import CopyCodeButton from './copy-code-button.svelte';
@@ -18,21 +19,49 @@ interface Props extends HTMLAttributes<'div'> {
 }
 
 const { id, highlights: propHighlights, copy, ...restProps } = Astro.props,
-  snippet = get(codeSnippets).find((snippet) => snippet.id === id),
+  { pathname } = Astro.url,
+  isRelativeId = id.startsWith('./'),
+  snippet = findCodeSnippet(id.replace(/^\.\//, '')),
   highlights = propHighlights ?? snippet?.highlights,
   codeBlockProps = { id, highlights, lines: snippet?.lines, ...restProps } as any;
+
+function findCodeSnippet(id: string) {
+  if (isRelativeId) {
+    const pathId = pathname.slice(1).replace(`/${get(currentJSLibrary)}/`, '/'),
+      jsLibDir = get(currentJSLibrary) === 'web-components' ? 'wc' : get(currentJSLibrary),
+      jsLibPathId = `${pathId}/${jsLibDir}`;
+
+    const matches = get(codeSnippets).filter(
+      (snippet) => snippet.id.startsWith(pathId) && snippet.id.endsWith(id),
+    );
+
+    return matches.find((match) => match.id.startsWith(jsLibPathId)) ?? matches[0];
+  }
+
+  return get(codeSnippets).find((snippet) => snippet.id === id);
+}
+
+if (!snippet) {
+  console.warn(`⚠️ No code snippet was found for the id \`${id}\` at \`${pathname}\`.`);
+}
 ---
 
 {
   snippet &&
     (copy ? (
       <CodeBlock {...codeBlockProps}>
-        <CopyCodeButton {id} {highlights} class="ml-auto" slot="top-bar" client:visible />
-        <CodeSnippetLoader {id} client:visible />
+        <CopyCodeButton
+          id={snippet.id}
+          {highlights}
+          class="ml-auto"
+          slot="top-bar"
+          client:visible
+        />
+        <CodeSnippetLoader id={snippet.id} client:visible />
       </CodeBlock>
     ) : (
       <CodeBlock {...codeBlockProps}>
-        <CodeSnippetLoader {id} client:visible />
+        <CodeSnippetLoader id={snippet.id} client:visible />
       </CodeBlock>
     ))
 }

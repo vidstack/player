@@ -1,4 +1,6 @@
 ---
+import { createHash } from 'node:crypto';
+import { basename } from 'node:path';
 import clsx from 'clsx';
 
 import CodeSnippet from '../../code-snippet/code-snippet.astro';
@@ -19,11 +21,21 @@ import FileExplorerTree from './file-explorer-tree.svelte';
 
 interface Props {
   files: EditorFile[];
-  openFile: string;
+  openFile?: string;
+  copy?: boolean;
+  title?: boolean;
   nextTemplate?: boolean;
+  localStorage?: boolean;
 }
 
-const { files, openFile, nextTemplate = false } = Astro.props;
+const {
+  files,
+  openFile = '',
+  title = false,
+  copy = false,
+  nextTemplate = false,
+  localStorage = false,
+} = Astro.props;
 
 const id = genCodeEditorId(),
   editorId = `mock-code-editor-${id}`,
@@ -36,13 +48,20 @@ if (nextTemplate) {
     { path: 'tailwind.config.cjs', snippet: `templates/tailwind.config` },
   );
 }
+
+function buildStorageKey() {
+  return createHash('sha1')
+    .update(files.reduce((p, i) => p + i.path, ''))
+    .digest('hex')
+    .slice(0, 16);
+}
 ---
 
 <section
   id={editorId}
   class={clsx(
-    'w-full border border-border/90 flex flex-col flex-1 max-w-[1280px] mx-auto min-h-[600px] 1200:min-h-[680px]',
-    'rounded-md shadow-md 1200:shadow-lg bg-elevate @container overflow-hidden',
+    'code-editor w-full border border-border/90 flex flex-col flex-1 max-w-[1280px] mx-auto min-h-[600px] 1200:min-h-[680px]',
+    'rounded-md shadow-md 1200:shadow-lg bg-elevate @container overflow-hidden not-prose',
   )}
   aria-label="Mock Code Editor"
   style="--code-block-max-h: 522px;"
@@ -52,7 +71,7 @@ if (nextTemplate) {
   <div class="w-full flex-1 flex flex-row relative">
     <FileExplorerSidebar client:visible>
       <aside>
-        <FileExplorerTree client:visible>
+        <FileExplorerTree hash={localStorage ? buildStorageKey() : undefined} client:visible>
           <FileExplorerTreeItems {id} items={buildTreeItems(files, defaultFile)} depth={0} />
         </FileExplorerTree>
       </aside>
@@ -68,6 +87,8 @@ if (nextTemplate) {
                 domId={getFileId(id, i)}
                 flat
                 numbered
+                {copy}
+                title={title ? basename(file.path) : undefined}
                 style={file !== defaultFile ? 'display: none;' : null}
               />
             ) : (

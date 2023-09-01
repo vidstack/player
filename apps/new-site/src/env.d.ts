@@ -23,6 +23,7 @@ declare module ':code_snippets' {
     id: string;
     width: number;
     lines: number;
+    ext: string;
     highlights?: string;
     loader: () => Promise<CodeSnippetModule>;
   }
@@ -46,4 +47,14 @@ declare module ':code_snippets' {
 
   const snippets: LazyCodeSnippet[];
   export default snippets;
+}
+
+declare module ':code_previews' {
+  export interface CodePreview {
+    id: string;
+    loader: () => Promise<any>;
+  }
+
+  const previews: CodePreview[];
+  export default previews;
 }

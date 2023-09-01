@@ -18,13 +18,13 @@ export const calloutAutoImport: Record<string, [string, string][]> = {
 const calloutTypes = new Set(['note', 'info', 'tip', 'warning', 'danger', 'experimental']);
 
 /**
- * Remark plugin that converts blocks delimited with `:::` into instances of the `<Callout>`
+ * Remark plugin that converts blocks delimited with `:::callout` into instances of the `<Callout>`
  * component.
  */
 function createPlugin(): unified.Plugin<[], mdast.Root> {
   const transformer: unified.Transformer<mdast.Root> = (tree) => {
-    visit(tree, (node, index, parent) => {
-      if (!parent || index === null || (node.type as any) !== 'containerDirective') return;
+    visit(tree, (node: any, index, parent) => {
+      if (!parent || index === null || node.type !== 'containerDirective') return;
 
       const type = node.name;
 
@@ -32,7 +32,7 @@ function createPlugin(): unified.Plugin<[], mdast.Root> {
 
       let title: string | undefined;
 
-      remove(node, (child) => {
+      remove(node, (child: any) => {
         if (child.data?.directiveLabel) {
           if ('children' in child && 'value' in child.children[0]) {
             title = child.children[0].value;
@@ -41,7 +41,7 @@ function createPlugin(): unified.Plugin<[], mdast.Root> {
         }
       });
 
-      parent.children[index] = createComponentNode(
+      parent.children[index!] = createComponentNode(
         CalloutTagName,
         { attributes: { type, title } },
         ...node.children,

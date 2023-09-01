@@ -67,7 +67,7 @@ export const sidebarItemsOrder: Record<string, DocsFileIdentifiers[]> = {
   ],
   Components: [
     // Root
-    'player/components/index.mdx',
+    // 'player/components/index.mdx',
     'player/components/player.mdx',
     'player/components/provider.mdx',
     'player/components/poster.mdx',

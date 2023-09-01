@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import FileImageIcon from '~astro-icons/lucide/file-image';
 import VideoFileIcon from '~astro-icons/lucide/file-video-2';
 
+import CSSIcon from '../../../icons/css-icon.svelte';
+import HTMLIcon from '../../../icons/html-icon.svelte';
 import NextIcon from '../../../icons/logos/next-logo.svelte';
 import NodeIcon from '../../../icons/logos/node-logo.svelte';
 import ReactIcon from '../../../icons/logos/react-logo.svelte';
@@ -17,6 +19,7 @@ import { getFileId, type EditorFileType, type EditorTreeItem } from './code-edit
 interface Props {
   id: number;
   depth: number;
+  path?: string;
   items: EditorTreeItem[];
 }
 
@@ -25,6 +28,9 @@ const Icons: Record<EditorFileType, any> = {
   next: NextIcon,
   pkg: NodeIcon,
   ts: TypescriptIcon,
+  html: HTMLIcon,
+  css: CSSIcon,
+  jsx: ReactIcon,
   tsx: ReactIcon,
   tailwind: TailwindIcon,
   png: FileImageIcon,
@@ -41,6 +47,7 @@ function getIconSelectedColor(type: EditorFileType): string | undefined {
       return 'text-inverse';
     case 'pkg':
       return 'text-[#4a7814] dark:text-[#83cd29]';
+    case 'jsx':
     case 'tsx':
       return 'text-[#2aa7be] dark:text-[#00D8FF]';
     case 'tailwind':
@@ -50,10 +57,14 @@ function getIconSelectedColor(type: EditorFileType): string | undefined {
       return 'text-teal-600 dark:text-teal-500';
     case 'mp4':
       return 'text-indigo-600 dark:text-indigo-400';
+    case 'html':
+      return 'text-red-600 dark:text-red-400';
+    case 'css':
+      return 'text-blue-600 dark:text-blue-400';
   }
 }
 
-const { id, depth, items } = Astro.props;
+const { id, depth, path = '', items } = Astro.props;
 ---
 
 {
@@ -67,12 +78,13 @@ const { id, depth, items } = Astro.props;
           )}
           role="treeitem"
           aria-expanded={ariaBool(item.expanded)}
+          data-path={`${path}/${item.name}`}
           tabindex="-1"
           style={`margin-left: ${depth * 0.3755}rem;`}
         >
           <div
             class={clsx(
-              'rounded-sm flex items-center group-focus-visible:bg-brand/10',
+              'rounded-sm flex items-center group-focus-visible:bg-brand/10 whitespace-nowrap',
               'text-soft/90 py-1 pl-2 pr-2 cursor-pointer border border-transparent',
               'hocus:text-inverse hocus:bg-brand/10 hocus:border-brand/90 hocus:shadow-sm',
             )}
@@ -82,7 +94,7 @@ const { id, depth, items } = Astro.props;
             <FolderOpenIcon class="folder-open-icon w-4 h-4 mr-1.5 hidden" />
             {item.name}
           </div>
-          <Astro.self {id} depth={depth + 1} items={item.children} />
+          <Astro.self {id} depth={depth + 1} items={item.children} path={`${path}/${item.name}`} />
         </ul>
       );
     } else {
@@ -91,7 +103,7 @@ const { id, depth, items } = Astro.props;
         <li
           class={clsx(
             'rounded-sm group text-sm items-center mt-0.5 py-1 text-soft',
-            'aria-selected:text-inverse cursor-pointer',
+            'aria-selected:text-inverse cursor-pointer whitespace-nowrap',
             'aria-selected:font-medium select-none border border-transparent',
             'hocus:border-brand/90 hocus:bg-brand/10 hocus:text-inverse hocus:shadow-sm',
             depth > 0 ? 'hidden' : 'flex',
@@ -100,6 +112,7 @@ const { id, depth, items } = Astro.props;
           tabindex="-1"
           aria-selected={ariaBool(item.selected)}
           data-popup={getFileId(id, item.index)}
+          data-path={`${path}/${item.name}`}
           style={`margin-left: ${depth * 0.375}rem;`}
         >
           {Icon && (

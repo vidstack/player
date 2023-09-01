@@ -1,88 +1,9 @@
-.docs p > img {
-  margin: 2.5rem auto;
-  max-width: 600px;
-  border-radius: 2px;
-  border: 1px solid rgb(var(--color-border) / 0.5);
+.docs .category {
+  @apply mt-0;
 }
 
-.docs pre {
-  tab-size: 2;
-  -o-tab-size: 2;
-  -moz-tab-size: 2;
-}
-
-.docs p + .callout,
-.docs p + .steps {
-  margin-top: 2.5rem;
-}
-
-.docs .steps + p {
-  margin-top: 4rem;
-}
-
-.docs .callout + .steps {
-  margin-top: 3.5rem;
-}
-
-.docs .callout + table {
-  margin-top: 4rem;
-}
-
-.docs .tabbed-links + p {
-  margin-top: 2.5rem;
-}
-
-.docs .step .description > code {
-  color: rgb(var(--color-inverse));
-}
-
-.docs .step .code-block {
-  margin: 0;
-  padding: 0;
-}
-
-.docs .code-block + .code-block {
-  margin-top: 0.5rem;
-}
-
-.docs h1 + p {
-  font-size: 1.125rem;
-  margin-top: -1rem;
-  margin-bottom: 2.5rem;
-}
-
-.docs h1 + .steps,
-.docs h2 + .steps,
-.docs h3 + .steps {
-  margin-top: 2.5rem;
-}
-
-.docs .heading-wrapper {
-  --icon-size: 1.125rem;
-}
-
-.docs .heading-wrapper > * {
-  display: inline;
-  margin-bottom: 0;
-}
-
-.docs .heading-wrapper > .anchor-link {
-  opacity: 0;
-  position: relative;
-  display: inline-flex;
-  width: var(--icon-size);
-  height: var(--icon-size);
-  margin-left: 6px;
-  text-decoration: none;
-  border-bottom: unset;
-  border-radius: 1px;
-  justify-content: center;
-  vertical-align: baseline;
-}
-
-.docs .heading-wrapper > .anchor-link:focus-visible,
-.docs .heading-wrapper > .anchor-link:hover {
-  opacity: 1;
+.docs .category + h1 {
+  @apply -mt-7;
 }
 
 .DocSearch-Button-Key {
@@ -92,6 +13,10 @@
 .api-table tbody tr td:first-child > code,
 .api-table tbody tr td:first-child > div > code {
   background-color: unset;
+}
+
+.docs .code-editor {
+  margin-block: 3.5rem;
 }
 
 #main-sidebar > div,
