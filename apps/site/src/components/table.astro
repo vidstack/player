@@ -1,0 +1,31 @@
+---
+import TableWrapper from './table-wrapper.astro';
+
+interface Props {
+  cols: string[];
+  rows: any[][];
+}
+
+const { cols, rows } = Astro.props;
+---
+
+<TableWrapper>
+  <table>
+    <thead>
+      <tr>
+        {cols.map((col) => <th>{col}</th>)}
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr>
+            {row.map((data) => (
+              <td>{data}</td>
+            ))}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</TableWrapper>

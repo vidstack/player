@@ -1,4 +1,5 @@
 import { State, tick, type Store } from 'maverick.js';
+
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
@@ -603,7 +604,7 @@ export interface MediaState {
    * The type of player view that should be used (i.e., audio or video). By default this is set
    * to `video`.
    *
-   * @defaultValue 'video'
+   * @defaultValue 'unknown'
    */
   viewType: MediaViewType;
   /**

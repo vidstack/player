@@ -25,7 +25,7 @@
 }
 
 .prose p:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply my-10;
+  @apply my-8;
 }
 
 .prose ol:not(:where([class~='not-prose'], [class~='not-prose'] *)),
@@ -33,11 +33,11 @@
   @apply my-5 pl-6;
 }
 
-.prose ol {
+.prose ol:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply list-decimal;
 }
 
-.prose ul {
+.prose ul:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply list-disc;
 }
 
@@ -88,7 +88,7 @@
 }
 
 .prose h3 {
-  @apply mb-[0.6em] mt-[1.6em] text-xl font-[600] leading-[1.6];
+  @apply mb-[0.6em] mt-[1.6em] text-[22px] font-[600] leading-[1.6];
 }
 
 .prose h3 strong {
@@ -96,7 +96,7 @@
 }
 
 .prose h4 {
-  @apply mb-[0.5em] mt-[1.5em] font-[600] leading-[1.5];
+  @apply mb-[0.6em] mt-[1.5em] text-lg font-[600] leading-[1.5];
 }
 
 .prose h4 strong {
@@ -114,7 +114,7 @@
 }
 
 .prose code:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply text-inverse bg-elevate border-soft/30 mx-px rounded-md border px-1.5 py-[3px] font-mono text-sm font-medium;
+  @apply text-inverse bg-elevate border-soft/20 mx-px rounded-[3px] border px-1.5 py-0.5 font-mono text-[13px] font-medium;
   font-variant-ligatures: none;
 }
 
@@ -137,24 +137,17 @@
 }
 
 .prose table {
-  @apply m-0 w-full border-collapse text-left text-sm leading-[1.71];
+  @apply m-0 w-full border-0 text-left;
+  @apply border-spacing-0 text-sm leading-[1.71];
   table-layout: auto;
 }
 
 .prose thead {
-  @apply text-inverse border-border border;
+  @apply text-inverse font-medium;
 }
 
 .prose thead th {
-  @apply px-2 pb-2 font-medium;
-}
-
-.prose thead th:first-child {
-  @apply pl-0;
-}
-
-.prose thead th:last-child {
-  @apply pr-0;
+  @apply whitespace-nowrap p-3;
 }
 
 .prose tbody {
@@ -162,34 +155,27 @@
 }
 
 .prose tr {
-  @apply border-border border-b text-sm;
+  @apply border-border/60 border-b;
 }
 
 .prose td {
-  @apply whitespace-nowrap;
+  @apply whitespace-nowrap p-3;
 }
 
-.prose tbody code {
-  @apply text-xs;
+.prose tbody td:first-child code {
+  @apply text-[13px];
+}
+
+.prose tbody td:not(:first-child) code {
+  @apply text-soft border-0 bg-transparent text-xs shadow-none;
+}
+
+.prose tbody .empty {
+  @apply opacity-50;
 }
 
 .prose tbody tr td:first-child > code {
-  @apply text-brand bg-brand/10 border-brand/20;
-}
-
-.prose tbody td,
-.prose tfoot td {
-  @apply p-2;
-}
-
-.prose tbody td:first-child,
-.prose tfoot td:first-child {
-  @apply pl-0;
-}
-
-.prose tbody td:last-child,
-.prose tfoot td:last-child {
-  @apply pr-0;
+  @apply text-brand border-0 bg-transparent px-1 py-0.5 shadow-none;
 }
 
 .prose figure {
@@ -202,14 +188,6 @@
 
 .prose figcaption {
   @apply mt-3 text-center text-sm italic leading-[1.42];
-}
-
-.prose * > :first-child:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply mt-0;
-}
-
-.prose * > :last-child:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply mb-0;
 }
 
 .prose p > img {

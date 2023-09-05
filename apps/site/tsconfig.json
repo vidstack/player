@@ -2,5 +2,6 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "jsx": "react"
-  }
+  },
+  "exclude": ["./src/snippets"]
 }

@@ -10,6 +10,10 @@ export function kebabToTitleCase(str: string) {
   return uppercaseFirstLetter(str.replace(/-./g, (x) => ' ' + x[1].toUpperCase()));
 }
 
+export function pascalToKebabCase(str: string) {
+  return str.replace(/([a-z])([A-Z])/g, `$1-$2`).toLowerCase();
+}
+
 export function camelToKebabCase(str: string) {
   return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
