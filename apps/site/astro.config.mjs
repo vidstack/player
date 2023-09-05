@@ -18,7 +18,9 @@ import codeSnippets from './plugins/code-snippets';
 import { calloutAutoImport, mdxCallouts } from './plugins/mdx/components/callouts';
 import { codeExamplesAutoImport, mdxCodeExamples } from './plugins/mdx/components/code-examples';
 import { codeSnippetAutoImport, mdxCodeSnippets } from './plugins/mdx/components/code-snippet';
+import { componentApiAutoImport, mdxComponentAPI } from './plugins/mdx/components/component-api';
 import { mdxNo, noAutoImport } from './plugins/mdx/components/no';
+import { mdxTable, tableAutoImport } from './plugins/mdx/components/table';
 import { mdxYes, yesAutoImport } from './plugins/mdx/components/yes';
 import { autolinkConfig } from './plugins/mdx/rehype-autolink-config';
 import { rehypeOptimizeStatic } from './plugins/mdx/rehype-optimize-static';
@@ -45,6 +47,8 @@ export default defineConfig({
         calloutAutoImport,
         yesAutoImport,
         noAutoImport,
+        tableAutoImport,
+        componentApiAutoImport,
       ],
     }),
     mdxCodeSnippets(),
@@ -52,6 +56,8 @@ export default defineConfig({
     mdxCallouts(),
     mdxYes(),
     mdxNo(),
+    mdxTable(),
+    mdxComponentAPI(),
     tailwind(),
     svelte(),
     sitemap(),

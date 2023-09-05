@@ -1,5 +1,74 @@
 ---
-// load api
+import { reactComponents } from '../../../api/component-api';
+import Table from '../../../components/table.astro';
+import { pascalToKebabCase } from '../../../utils/string';
 
-// !internal
+const { pathname } = Astro.url;
+
+const components = reactComponents.filter((c) => {
+  let slug = '/' + pascalToKebabCase(c.name).replace('media-', '').replace(/\..+/, '');
+  if (slug === 'pipbutton') slug = 'pip-button';
+  return pathname.endsWith(slug);
+});
 ---
+
+{
+  components.length && (
+    <>
+      <h2>API Reference</h2>
+
+      {components.map((component) => {
+        const hasValues = component.props?.length || component.callbacks?.length;
+        if (!hasValues) return null;
+
+        // component info card
+        // <ul class="pt-2 not-prose flex flex-col space-y-2 text-sm -mb-2">
+        //   <li>
+        //     <span class="mr-1 font-medium text-inverse">Display Name:</span>{' '}
+        //     <code class="">MediaPlayer</code>
+        //   </li>
+        //   <li>
+        //     <span class="mr-1 font-medium text-inverse">Attributes:</span>{' '}
+        //     <code>HTMLAttributes</code>
+        //   </li>
+        //   <li>
+        //     <span class="mr-1 font-medium text-inverse">Ref:</span>{' '}
+        //     <code>Ref&lt;PlayerInstance&gt;</code>
+        //   </li>
+        // </ul>
+
+        // show component & props import
+        // import { MediaPlayer, type MediaPlayerProps } from "@vidstack/react";
+
+        const props = (component.props || [])
+          .filter((prop) => !prop.internal)
+          .map((prop) => [
+            <code>{prop.name}</code>, // TODO: description dialog (MDN LINK)
+            <code>{prop.type.primitive}</code>, // TODO: primitive (show full in dialog)
+            <code>{prop.default ?? 'undefined'}</code>,
+          ]);
+
+        const callbacks = (component.callbacks || [])
+          .filter((cb) => !cb.internal)
+          .map((cb) => [
+            <code>{cb.name}</code>, // TODO: description dialog (MDN LINK)
+            <code>function</code>, // TODO: primitive (show full in dialog)
+            <code class="empty">-</code>,
+          ]);
+
+        // component.instance (props/methods) - show how to use via ref
+        // const player = useRef<...>()
+        // useEffect(() => {}, [])
+        // <MediaPlayer ref={}>
+
+        return (
+          <section class="mt-10">
+            <h3 class="font-semibold text-lg text-inverse">{component.name}</h3>
+            {component.docs && <Fragment set:html={component.docs} />}
+            <Table cols={['Prop', 'Type', 'Default']} rows={[...props, ...callbacks]} />
+          </section>
+        );
+      })}
+    </>
+  )
+}

@@ -1,0 +1,8 @@
+---
+import ReactApiTable from '../../layouts/parts/api-table/react-api-table.astro';
+import WebComponentApiTable from '../../layouts/parts/api-table/wc-api-table.astro';
+
+const { pathname } = Astro.url;
+---
+
+{pathname.includes('web-components') ? <WebComponentApiTable /> : <ReactApiTable />}
