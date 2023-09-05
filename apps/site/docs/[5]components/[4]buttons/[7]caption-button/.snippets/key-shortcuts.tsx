@@ -1,1 +1,0 @@
-<MediaCaptionButton aria-keyshortcuts="c" />;

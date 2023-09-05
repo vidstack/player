@@ -1,1 +1,0 @@
-<MediaFullscreenButton aria-keyshortcuts="f" />;

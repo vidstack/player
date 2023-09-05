@@ -4,7 +4,7 @@
 [![discord-badge]][discord]
 [![jsdelivr-badge]][jsdelivr]
 
-Vidstack is a platform for frontend developers to build high-quality and accessible video/audio
+Vidstack is a video/audio platform for frontend developers to build high-quality and accessible
 experiences on the web.
 
 ## Player
@@ -18,10 +18,10 @@ as Web Components and React Components. The successor to [Plyr][plyr] `3.x` and 
 
 ### Quickstart
 
-- [Preview the Default Player Skin](https://www.vidstack.io/docs/player/core-concepts/skins#default-skin)
-- [Get Started with Web Components](https://www.vidstack.io/docs/player/getting-started/installation)
-- [Get Started with React](https://www.vidstack.io/docs/react/player/getting-started/installation)
-- [Use our Tailwind Plugin](https://www.vidstack.io/docs/player/core-concepts/tailwind)
+- [Preview the Default Player Layout](https://www.vidstack.io/docs/player/components/default-layout)
+- [Get Started with Web Components](https://www.vidstack.io/docs/web-components/player/getting-started/installation)
+- [Get Started with React](https://www.vidstack.io/docs/player/getting-started/installation)
+- [Use our Tailwind Plugin](https://www.vidstack.io/docs/player/styling/tailwind)
 - [See our Media Icons collection](https://www.vidstack.io/media-icons)
 
 ### Documentation

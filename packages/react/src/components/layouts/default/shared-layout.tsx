@@ -1,10 +1,12 @@
 import * as React from 'react';
+
 import { isString } from 'maverick.js/std';
 import {
   isTrackCaptionKind,
   type DefaultLayoutTranslations,
   type TooltipPlacement,
 } from 'vidstack/local';
+
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { useChapterOptions } from '../../../hooks/options/use-chapter-options';
@@ -50,11 +52,32 @@ interface DefaultMediaMenuProps {
  * -----------------------------------------------------------------------------------------------*/
 
 export interface DefaultMediaLayoutProps extends PrimitivePropsWithRef<'div'> {
+  /**
+   * The icons to be rendered and displayed inside the layout.
+   */
   icons: DefaultLayoutIcons;
+  /**
+   * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
+   * file resource.
+   */
   thumbnails?: string;
+  /**
+   * Translation map from english to your desired language for words used throughout the layout.
+   */
   translations?: DefaultLayoutTranslations | null;
+  /**
+   * Specifies the number of milliseconds to wait before the tooltip is visible after showing it.
+   */
   showTooltipDelay?: number;
+  /**
+   * Specifies the number of milliseconds to wait before the menu is visible after opening it.
+   */
   showMenuDelay?: number;
+  /**
+   * A player query string that determines when the small (e.g., mobile) UI should be displayed. The
+   * special string 'never' will indicate that the small device optimized UI should never be
+   * displayed.
+   */
   smallLayoutWhen?: string | boolean;
   children?: React.ReactNode;
 }

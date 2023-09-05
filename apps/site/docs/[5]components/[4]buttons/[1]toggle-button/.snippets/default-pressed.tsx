@@ -1,1 +1,0 @@
-<MediaToggleButton default-pressed />;

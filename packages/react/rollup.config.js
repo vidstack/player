@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { transformSync } from 'esbuild';
 import { defineConfig } from 'rollup';
@@ -125,7 +126,7 @@ function define({ dev }) {
           }
         },
         generateBundle(_, bundle) {
-          const serverChunks = new Set(['player/vidstack-default-icons.js']),
+          const serverChunks = new Set(),
             neutralChunks = new Set(['vidstack-icons.js']);
 
           for (const fileName of Object.keys(bundle)) {

@@ -1,1 +1,0 @@
-<MediaPIPButton aria-keyshortcuts="i" />;

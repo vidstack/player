@@ -1,9 +1,0 @@
-/* Target slots and override default styles with CSS. */
-
-media-play-button [slot='play'] {
-  /* ... */
-}
-
-media-play-button [slot='pause'] {
-  /* ... */
-}

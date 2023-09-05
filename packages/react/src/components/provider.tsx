@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
   createReactComponent,
   useSignal,
@@ -6,6 +7,7 @@ import {
   type ReactElementProps,
 } from 'maverick.js/react';
 import { mediaState } from 'vidstack/local';
+
 import { MediaProviderInstance } from './primitives/instances';
 
 /* -------------------------------------------------------------------------------------------------
@@ -17,7 +19,7 @@ const MediaProviderBridge = createReactComponent(MediaProviderInstance);
 export interface MediaProviderProps extends ReactElementProps<MediaProviderInstance> {
   mediaProps?: React.HTMLAttributes<HTMLMediaElement>;
   children?: React.ReactNode;
-  ref?: MediaProviderInstance;
+  ref?: React.Ref<MediaProviderInstance>;
 }
 
 /**

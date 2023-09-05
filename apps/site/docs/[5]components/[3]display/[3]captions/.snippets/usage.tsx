@@ -1,4 +1,0 @@
-<MediaPlayer>
-  <MediaProvider />
-  <MediaCaptions />
-</MediaPlayer>;

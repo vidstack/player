@@ -1,1 +1,0 @@
-<MediaPlayer liveEdgeTolerance={10} />;
