@@ -1,7 +1,7 @@
-import type { ComponentMeta, ElementMeta } from '@maverick-js/cli/analyze';
+import type { ComponentMeta, CustomElementMeta } from '@maverick-js/cli/analyze';
 
 declare const json: {
-  elements: ElementMeta[];
+  elements: CustomElementMeta[];
   components: ComponentMeta[];
 };
 

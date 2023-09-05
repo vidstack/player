@@ -3,7 +3,7 @@
 [![package-badge]][package]
 [![discord-badge]][discord]
 
-Vidstack is a platform for frontend developers to build high-quality, accessible video/audio
+Vidstack is a video/audio platform for frontend developers to build high-quality and accessible
 experiences on the web.
 
 ## 📖 Docs

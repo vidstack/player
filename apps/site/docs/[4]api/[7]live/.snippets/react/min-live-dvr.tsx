@@ -1,1 +1,0 @@
-<MediaPlayer minLiveDVRWindow={60} />;

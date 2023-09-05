@@ -16,6 +16,7 @@
     "tailwind.*"
   ],
   "scripts": {
+    "analyze": "maverick analyze \"src/**/*.tsx\" --framework react",
     "dev": "pnpm clean && pnpm prebuild && rollup -c -w",
     "prebuild": "node .scripts/prebuild.js",
     "build": "pnpm prebuild && rollup -c",
@@ -31,6 +32,7 @@
     "media-captions": "0.0.18"
   },
   "devDependencies": {
+    "@maverick-js/cli": "0.38.5",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
@@ -79,6 +81,10 @@
     "./tailwind.cjs": {
       "types": "./tailwind.d.cts",
       "default": "./tailwind.cjs"
+    },
+    "./analyze.json": {
+      "types": "./analyze.json.d.ts",
+      "default": "./analyze.json"
     }
   },
   "publishConfig": {
