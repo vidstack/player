@@ -26,6 +26,7 @@ export interface MediaPlayerEvents
  *
  * @bubbles
  * @composed
+ * @detail player
  */
 export interface MediaPlayerConnectEvent extends DOMEvent<MediaPlayer> {}
 
@@ -33,7 +34,12 @@ export interface FindMediaPlayerEventDetail {
   (player: MediaPlayer | null): void;
 }
 
-/* @internal @bubbles @composed */
+/**
+ * @internal
+ * @bubbles
+ * @composed
+ * @detail callback
+ */
 export interface FindMediaPlayerEvent extends DOMEvent<FindMediaPlayerEventDetail> {}
 
 export interface MediaUserEvents {}

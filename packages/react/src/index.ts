@@ -57,7 +57,7 @@ export type {
 // Radio
 export * as RadioGroup from './components/ui/radio-group';
 export type {
-  GroupProps as RadioGroupProps,
+  RootProps as RadioGroupProps,
   ItemProps as RadioProps,
 } from './components/ui/radio-group';
 

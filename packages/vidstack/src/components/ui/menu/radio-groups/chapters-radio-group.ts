@@ -10,6 +10,7 @@ import {
 } from 'maverick.js';
 import { DOMEvent, isNumber, setStyle } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
+
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { isCueActive, observeActiveTextTrack } from '../../../../core/tracks/text/utils';
@@ -164,6 +165,8 @@ export interface ChaptersRadioGroupEvents {
 
 /**
  * Fired when the checked radio changes.
+ *
+ * @detail cue
  */
 export interface ChaptersRadioGroupChangeEvent extends DOMEvent<VTTCue> {
   target: ChaptersRadioGroup;

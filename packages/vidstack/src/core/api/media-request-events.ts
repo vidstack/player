@@ -130,6 +130,7 @@ export interface MediaPlayRequestEvent extends DOMEvent<void> {}
  *
  * @bubbles
  * @composed
+ * @detail qualityIndex
  */
 export interface MediaQualityChangeRequestEvent extends DOMEvent<number> {}
 
@@ -138,6 +139,7 @@ export interface MediaQualityChangeRequestEvent extends DOMEvent<number> {}
  *
  * @bubbles
  * @composed
+ * @detail rate
  */
 export interface MediaRateChangeRequestEvent extends DOMEvent<number> {}
 
@@ -154,6 +156,7 @@ export interface MediaPauseRequestEvent extends DOMEvent<void> {}
  *
  * @bubbles
  * @composed
+ * @detail seekTo
  */
 export interface MediaSeekRequestEvent extends DOMEvent<number> {}
 
@@ -162,6 +165,7 @@ export interface MediaSeekRequestEvent extends DOMEvent<number> {}
  *
  * @bubbles
  * @composed
+ * @detail time
  */
 export interface MediaSeekingRequestEvent extends DOMEvent<number> {}
 
@@ -170,6 +174,7 @@ export interface MediaSeekingRequestEvent extends DOMEvent<number> {}
  *
  * @bubbles
  * @composed
+ * @detail volume
  */
 export interface MediaVolumeChangeRequestEvent extends DOMEvent<number> {}
 

@@ -1,4 +1,5 @@
 import { DOMEvent } from 'maverick.js/std';
+
 import { List, type ListReadonlyChangeEvent } from '../../../foundation/list/list';
 import { ListSymbol } from '../../../foundation/list/symbols';
 import { TextTrackSymbol } from './symbols';
@@ -109,15 +110,21 @@ export interface TextTrackListEvent<T> extends DOMEvent<T> {
 
 /**
  * Fired when a text track has been added to the list.
+ *
+ * @detail newTrack
  */
 export interface TextTrackAddEvent extends TextTrackListEvent<TextTrack> {}
 
 /**
  * Fired when a text track has been removed from the list.
+ *
+ * @detail removedTrack
  */
 export interface TextTrackRemoveEvent extends TextTrackListEvent<TextTrack> {}
 
 /**
  * Fired when the mode of any text track in the list has changed.
+ *
+ * @detail track
  */
 export interface TextTrackListModeChangeEvent extends TextTrackListEvent<TextTrack> {}

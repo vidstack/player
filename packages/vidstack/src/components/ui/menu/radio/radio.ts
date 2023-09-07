@@ -1,14 +1,15 @@
 import {
+  Component,
   effect,
   hasProvidedContext,
   onDispose,
   peek,
+  prop,
   scoped,
   signal,
   useContext,
   type ReadSignal,
 } from 'maverick.js';
-import { Component, prop } from 'maverick.js';
 import type { DOMEvent } from 'maverick.js/std';
 
 import { FocusVisibleController } from '../../../../foundation/observers/focus-visible';
@@ -126,6 +127,8 @@ export interface RadioEvents {
 
 /**
  * Fired when the radio's checked value changes.
+ *
+ * @detail isSelected
  */
 export interface RadioChangeEvent extends DOMEvent<boolean> {
   target: Radio;

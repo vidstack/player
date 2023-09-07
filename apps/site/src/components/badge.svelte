@@ -5,33 +5,33 @@
     switch (color) {
       case 'blue':
         return clsx(
-          'bg-blue-400/20 text-blue-600 border-blue-600',
-          'dark:text-blue-400 dark:border-blue-400',
+          'bg-blue-400/10 text-blue-700 border-blue-600/20',
+          'dark:text-blue-400 dark:border-blue-400/20',
         );
       case 'green':
         return clsx(
-          'bg-green-400/20 text-green-600 border-green-600',
-          'dark:text-green-400 dark:border-green-400',
+          'bg-green-400/10 text-green-700 border-green-600/20',
+          'dark:text-green-400 dark:border-green-400/20',
         );
       case 'orange':
         return clsx(
-          'bg-orange-400/20 text-orange-600 border-orange-600',
-          'dark:text-orange-400 dark:border-orange-400',
+          'bg-orange-400/10 text-orange-700 border-orange-600/20',
+          'dark:text-orange-400 dark:border-orange-400/20',
         );
       case 'purple':
         return clsx(
-          'bg-indigo-400/20 text-indigo-600 border-indigo-600',
-          'dark:text-indigo-400 dark:border-indigo-400',
+          'bg-indigo-400/10 text-indigo-700 border-indigo-600/20',
+          'dark:text-indigo-400 dark:border-indigo-400/20',
         );
       case 'red':
         return clsx(
-          'bg-red-400/20 text-red-600 border-red-600',
-          'dark:text-red-400 dark:border-red-400',
+          'bg-red-400/10 text-red-700 border-red-600/20',
+          'dark:text-red-400 dark:border-red-400/20',
         );
       case 'yellow':
         return clsx(
-          'bg-yellow-400/20 text-yellow-600 border-yellow-600',
-          'dark:text-yellow-500 dark:border-yellow-500',
+          'bg-yellow-400/10 text-yellow-700 border-yellow-600/20',
+          'dark:text-yellow-500 dark:border-yellow-500/20',
         );
     }
   }

@@ -1,0 +1,53 @@
+---
+import clsx from 'clsx';
+
+import { Code } from 'astro:components';
+
+import Badge from '../../../components/badge.svelte';
+import Heading from '../../../components/docs/heading.svelte';
+
+interface Props {
+  title: string;
+  description?: string;
+  importCode?: string;
+  badges?: Array<string | null | undefined>;
+}
+
+const { title, description, importCode, badges } = Astro.props;
+---
+
+<div class="flex flex-col mb-4">
+  <Heading title={title} level={3} />
+
+  {
+    badges?.filter(Boolean).length ? (
+      <div class="flex items-center not-prose mt-5 -ml-2">
+        <Badge color="blue">
+          <code class="text-xs">{badges[0]}</code>
+        </Badge>
+        {badges[1] && (
+          <Badge color="green">
+            <code class="text-xs">{badges[1]}</code>
+          </Badge>
+        )}
+      </div>
+    ) : null
+  }
+
+  {
+    importCode && (
+      <div class={clsx('not-prose font-medium text-sm mb-5', badges ? 'mt-7' : 'mt-5')}>
+        <Code code={importCode} lang="tsx" theme="github-dark" />
+        <Code code={importCode} lang="tsx" theme="github-light" />
+      </div>
+    )
+  }
+
+  {
+    description && (
+      <div class="-my-8">
+        <Fragment set:html={description} />
+      </div>
+    )
+  }
+</div>

@@ -52,16 +52,22 @@ export interface AudioTrackListEvent<T> extends DOMEvent<T> {
 
 /**
  * Fired when an audio track has been added to the list.
+ *
+ * @detail newTrack
  */
 export interface AudioTrackAddEvent extends AudioTrackListEvent<AudioTrack> {}
 
 /**
  * Fired when an audio track has been removed from the list.
+ *
+ * @detail removedTrack
  */
 export interface AudioTrackRemoveEvent extends AudioTrackListEvent<AudioTrack> {}
 
 /**
  * Fired when the selected audio track has changed.
+ *
+ * @detail change
  */
 export interface AudioTrackChangeEvent extends AudioTrackListEvent<ChangeAudioTrackEventDetail> {}
 

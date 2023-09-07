@@ -6,5 +6,7 @@ export type VideoPresentationEvents = {
 
 /**
  * Fired when the video presentation mode changes. Only available in Safari.
+ *
+ * @detail mode
  */
 export interface VideoPresentationChangeEvent extends DOMEvent<WebKitPresentationMode> {}

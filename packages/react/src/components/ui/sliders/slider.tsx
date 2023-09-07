@@ -1,10 +1,12 @@
 import * as React from 'react';
+
 import {
   composeRefs,
   createReactComponent,
   useSignal,
   type ReactElementProps,
 } from 'maverick.js/react';
+
 import { SliderInstance, SliderPreviewInstance } from '../../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import { SliderValueBridge, type SliderValueProps } from './slider-value';
@@ -30,9 +32,10 @@ export interface RootProps extends ReactElementProps<SliderInstance> {
 }
 
 /**
- * A custom-built range input that is cross-browser friendly, ARIA friendly, mouse/touch-friendly
- * and easily style-able. The slider allows users to input numeric values between a minimum and
- * maximum value.
+ * Versatile and user-friendly input control designed for seamless cross-browser compatibility and
+ * accessibility with ARIA support. It offers a smooth user experience for both mouse and touch
+ * interactions and is highly customizable in terms of styling. Users can effortlessly input numeric
+ * values within a specified range, defined by a minimum and maximum value.
  *
  * @docs {@link https://www.vidstack.io/docs/react/player/components/sliders/slider}
  */
@@ -52,6 +55,10 @@ Root.displayName = 'Slider';
 
 export interface ThumbProps extends PrimitivePropsWithRef<'div'> {}
 
+/**
+ * Purely visual element used to display a draggable handle to the user for adjusting the value
+ * on the slider component.
+ */
 const Thumb = React.forwardRef<HTMLElement, ThumbProps>((props, forwardRef) => (
   <Primitive.div {...props} ref={forwardRef as any} />
 ));
@@ -64,6 +71,12 @@ Thumb.displayName = 'SliderThumb';
 
 export interface TrackProps extends PrimitivePropsWithRef<'div'> {}
 
+/**
+ * Visual element inside the slider that serves as a horizontal or vertical bar, providing a
+ * visual reference for the range or values that can be selected by moving the slider thumb along
+ * it. Users can interact with the slider by dragging the thumb along the track to set a specific
+ * value.
+ */
 const Track = React.forwardRef<HTMLElement, TrackProps>((props, forwardRef) => (
   <Primitive.div {...props} ref={forwardRef as any} />
 ));
@@ -76,6 +89,12 @@ Track.displayName = 'SliderTrack';
 
 export interface TrackFillProps extends PrimitivePropsWithRef<'div'> {}
 
+/**
+ * Portion of the slider track that is visually filled or highlighted to indicate the selected or
+ * currently chosen range or value. As the slider thumb is moved along the track, the track
+ * fill dynamically adjusts to visually represent the portion of the track that corresponds to the
+ * selected value or range, providing users with a clear visual indication of their selection.
+ */
 const TrackFill = React.forwardRef<HTMLElement, TrackFillProps>((props, forwardRef) => (
   <Primitive.div {...props} ref={forwardRef as any} />
 ));
@@ -95,6 +114,10 @@ export interface PreviewProps extends ReactElementProps<SliderPreviewInstance> {
 }
 
 /**
+ * Used to provide users with a real-time or interactive preview of the value or selection they
+ * are making as they move the slider thumb. This can include displaying the current pointer
+ * value numerically, or displaying a thumbnail over the time slider.
+ *
  * @docs {@link https://www.vidstack.io/docs/react/player/components/slider#preview}
  */
 const Preview = React.forwardRef<HTMLElement, PreviewProps>(
@@ -120,6 +143,10 @@ Preview.displayName = 'SliderPreview';
 export interface ValueProps extends SliderValueProps {}
 
 /**
+ * Displays the specific numeric representation of the current or pointer value of the slider.
+ * When a user interacts with a slider by moving its thumb along the track, the slider value
+ * changes accordingly.
+ *
  * @docs {@link https://www.vidstack.io/docs/react/player/components/slider#preview}
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {

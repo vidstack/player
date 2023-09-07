@@ -113,6 +113,8 @@ export interface AudioRadioOption extends RadioOption {
 
 /**
  * Fired when the checked radio changes.
+ *
+ * @detail track
  */
 export interface AudioRadioGroupChangeEvent extends DOMEvent<AudioTrack> {
   target: AudioRadioGroup;

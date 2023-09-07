@@ -66,11 +66,12 @@ export interface DefaultMediaLayoutProps extends PrimitivePropsWithRef<'div'> {
    */
   translations?: DefaultLayoutTranslations | null;
   /**
-   * Specifies the number of milliseconds to wait before the tooltip is visible after showing it.
+   * Specifies the number of milliseconds to wait before tooltips are visible after interacting
+   * with a control.
    */
   showTooltipDelay?: number;
   /**
-   * Specifies the number of milliseconds to wait before the menu is visible after opening it.
+   * Specifies the number of milliseconds to wait before menus are visible after opening them.
    */
   showMenuDelay?: number;
   /**

@@ -16,8 +16,8 @@
   @apply text-inherit;
 }
 
-.prose a {
-  @apply text-brand border-border border text-[0.95em] font-medium hover:border-2;
+.prose a:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply text-brand border-0 text-[0.95em] font-medium hover:border-2;
 }
 
 .prose blockquote {
@@ -30,7 +30,7 @@
 
 .prose ol:not(:where([class~='not-prose'], [class~='not-prose'] *)),
 .prose ul:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply my-5 pl-6;
+  @apply my-5 pl-4;
 }
 
 .prose ol:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
@@ -71,7 +71,7 @@
   @apply text-inverse;
 }
 
-.prose h1 {
+.prose h1:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply mb-[0.88em] mt-0 text-4xl font-[800] leading-[1.1];
 }
 
@@ -79,24 +79,24 @@
   @apply font-[900] text-inherit;
 }
 
-.prose h2 {
-  @apply mb-[1em] mt-[2em] text-2xl font-[700] leading-[1.33];
+.prose h2:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply mb-[1em] mt-[2em] text-3xl font-[700] leading-[1.33];
 }
 
 .prose h2 strong {
   @apply font-[800] text-inherit;
 }
 
-.prose h3 {
-  @apply mb-[0.6em] mt-[1.6em] text-[22px] font-[600] leading-[1.6];
+.prose h3:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply mb-[0.6em] mt-[1.6em] text-2xl font-[600] leading-[1.6];
 }
 
 .prose h3 strong {
   @apply font-[700] text-inherit;
 }
 
-.prose h4 {
-  @apply mb-[0.6em] mt-[1.5em] text-lg font-[600] leading-[1.5];
+.prose h4:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply mb-[0.6em] mt-[1.5em] text-[22px] font-[600] leading-[1.5];
 }
 
 .prose h4 strong {
@@ -114,7 +114,7 @@
 }
 
 .prose code:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply text-inverse bg-elevate border-soft/20 mx-px rounded-[3px] border px-1.5 py-0.5 font-mono text-[13px] font-medium;
+  @apply text-inverse mx-px rounded-[3px] border-0 font-mono text-[0.84em] font-medium;
   font-variant-ligatures: none;
 }
 
@@ -129,10 +129,10 @@
   @apply text-[0.9em];
 }
 
-.prose hr + *,
-.prose h2 + *,
-.prose h3 + *,
-.prose h4 + * {
+.prose hr + *:not(:where([class~='not-prose'], [class~='not-prose'] *)),
+.prose h2 + *:not(:where([class~='not-prose'], [class~='not-prose'] *)),
+.prose h3 + *:not(:where([class~='not-prose'], [class~='not-prose'] *)),
+.prose h4 + *:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply mt-0;
 }
 
@@ -147,7 +147,7 @@
 }
 
 .prose thead th {
-  @apply whitespace-nowrap p-3;
+  @apply flex-1 whitespace-nowrap p-3;
 }
 
 .prose tbody {
@@ -155,27 +155,23 @@
 }
 
 .prose tr {
-  @apply border-border/60 border-b;
+  @apply border-border/60 inline-flex w-full border-b;
 }
 
 .prose td {
-  @apply whitespace-nowrap p-3;
-}
-
-.prose tbody td:first-child code {
-  @apply text-[13px];
+  @apply flex-1 whitespace-nowrap p-3;
 }
 
 .prose tbody td:not(:first-child) code {
-  @apply text-soft border-0 bg-transparent text-xs shadow-none;
+  @apply text-soft border-0 bg-transparent text-xs font-normal shadow-none;
 }
 
 .prose tbody .empty {
   @apply opacity-50;
 }
 
-.prose tbody tr td:first-child > code {
-  @apply text-brand border-0 bg-transparent px-1 py-0.5 shadow-none;
+.prose tbody tr td:first-child code {
+  @apply text-code-fn/90 border-0 bg-transparent px-1 py-0.5 !shadow-transparent;
 }
 
 .prose figure {
@@ -252,7 +248,7 @@
 }
 
 .prose .heading-wrapper > .anchor-link {
-  @apply relative ml-1.5 inline-flex justify-center rounded-[1px] align-baseline opacity-0;
+  @apply text-soft relative ml-1.5 inline-flex justify-center rounded-[1px] border-0 align-baseline opacity-0;
   width: var(--icon-size);
   height: var(--icon-size);
   text-decoration: none;

@@ -1,0 +1,21 @@
+---
+import InfoPopup from './info-popup.astro';
+
+interface Props {
+  name: string;
+  docs?: string;
+}
+
+const { name, docs } = Astro.props;
+---
+
+<div class="flex items-center">
+  <code>{name}</code>
+  {
+    docs && (
+      <InfoPopup label={`Show ${name} description`} contain>
+        <Fragment set:html={docs} />
+      </InfoPopup>
+    )
+  }
+</div>

@@ -1,9 +1,11 @@
 ---
 import clsx from 'clsx';
+
 import CopyIcon from '~astro-icons/lucide/copy';
 import LinkIcon from '~astro-icons/lucide/link';
 import MoreHorizontalIcon from '~astro-icons/lucide/more-horizontal';
 import TrashIcon from '~astro-icons/lucide/trash-2';
+
 import Menu from '../../menu.svelte';
 import { mockVideos } from './mock-encode';
 import MockProgressBadge from './mock-progress-badge.svelte';
@@ -37,10 +39,10 @@ const videoMenuItems = [
                 'hocus:text-brand cursor-pointer relative py-1.5 rounded-sm',
                 'transition-transform hocus:scale-110 min-w-[16px] min-h-[16px]',
               )}
-              options={{ placement: 'bottom-end' }}
               offset={-2}
-              client:visible
+              placement="bottom-end"
               aria-label="Video Options"
+              client:visible
             >
               <MoreHorizontalIcon slot="trigger" />
               <Fragment slot="content">

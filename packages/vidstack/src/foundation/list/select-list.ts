@@ -71,6 +71,9 @@ export interface SelectListEvents<Item extends SelectListItem = SelectListItem>
   change: SelectListChangeEvent<Item>;
 }
 
+/**
+ * @detail change
+ */
 export interface SelectListChangeEvent<Item extends SelectListItem>
   extends DOMEvent<SelectListChangeEventDetail<Item>> {}
 

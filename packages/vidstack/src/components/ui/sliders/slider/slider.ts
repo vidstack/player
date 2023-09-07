@@ -7,9 +7,10 @@ import { sliderState, type SliderState } from './api/state';
 import { SliderController, type SliderControllerProps } from './slider-controller';
 
 /**
- * A custom-built range input that is cross-browser friendly, ARIA friendly, mouse/touch-friendly
- * and easily style-able. The slider allows users to input numeric values between a minimum and
- * maximum value.
+ * Versatile and user-friendly input control designed for seamless cross-browser compatibility and
+ * accessibility with ARIA support. It offers a smooth user experience for both mouse and touch
+ * interactions and is highly customizable in terms of styling. Users can effortlessly input numeric
+ * values within a specified range, defined by a minimum and maximum value.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider}
  */

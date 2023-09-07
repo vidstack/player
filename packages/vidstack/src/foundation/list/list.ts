@@ -87,15 +87,21 @@ export interface ListEvents<Item extends ListItem = ListItem> {
 
 /**
  * Fired when an item has been added to the list.
+ *
+ * @detail item
  */
 export interface ListAddEvent<Item extends ListItem> extends DOMEvent<Item> {}
 
 /**
  * Fired when an item has been removed from the list.
+ *
+ * @detail item
  */
 export interface ListRemoveEvent<Item extends ListItem> extends DOMEvent<Item> {}
 
 /**
  * Fired when the readonly state of the list has changed.
+ *
+ * @detail isReadonly
  */
 export interface ListReadonlyChangeEvent extends DOMEvent<boolean> {}
