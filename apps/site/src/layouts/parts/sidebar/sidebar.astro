@@ -1,6 +1,8 @@
 ---
 import clsx from 'clsx';
 
+import type { visible } from '../../../actions/visible';
+import LibSelect from '../../../components/docs/lib-select.svelte';
 import type { SidebarFeatureItem, SidebarItem } from '../../nav/sidebar-items';
 import SidebarCategories from './sidebar-categories.astro';
 import SidebarItems from './sidebar-items.astro';
@@ -30,6 +32,7 @@ const { categories, activeCategory, items, activeItem } = Astro.props;
       'scrollbar scroll-contain overflow-auto',
     )}
   >
+    <LibSelect class="w-full mb-5" client:load />
     {
       categories && activeCategory && (
         <>

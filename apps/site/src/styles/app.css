@@ -29,7 +29,7 @@ body {
 
   --navbar-height: 4rem;
   --navbar-top: var(--announcement-bar-height, 0px);
-  --sidebar-width: 220px;
+  --sidebar-width: 240px;
 
   --content-top: calc(
     calc(var(--announcement-bar-height, 0px) + var(--navbar-height, 0px)) +

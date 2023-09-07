@@ -48,7 +48,8 @@
   )}
   use:selectTrigger={label}
 >
-  <span class="max-w-full truncate">
+  <span class="flex items-center max-w-full truncate">
+    <slot name="icon" />
     {currentLabel}
   </span>
 
