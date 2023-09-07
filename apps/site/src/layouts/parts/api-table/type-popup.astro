@@ -1,0 +1,26 @@
+---
+import { Code } from 'astro:components';
+
+import InfoPopup from './info-popup.astro';
+
+interface Props {
+  concise: any;
+  full: any;
+}
+
+const { concise, full } = Astro.props;
+---
+
+<div class="flex items-center h-full">
+  <code style="margin-right: 0.25rem;">
+    {concise}
+  </code>
+  {
+    concise !== full && (
+      <InfoPopup label="Show full type" center>
+        <Code code={full} lang="tsx" theme="github-dark" />
+        <Code code={full} lang="tsx" theme="github-light" />
+      </InfoPopup>
+    )
+  }
+</div>

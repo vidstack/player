@@ -1,74 +1,126 @@
 ---
-import { reactComponents } from '../../../api/component-api';
+import { Code } from 'astro:components';
+
+import CodeBlockWrapper from '../../../components/code-snippet/code-block-wrapper.svelte';
+import Heading from '../../../components/docs/heading.svelte';
 import Table from '../../../components/table.astro';
-import { pascalToKebabCase } from '../../../utils/string';
+import { findReactComponents } from './api-utils';
+import Header from './header.astro';
+import NamePopup from './name-popup.astro';
+import TypePopup from './type-popup.astro';
 
-const { pathname } = Astro.url;
-
-const components = reactComponents.filter((c) => {
-  let slug = '/' + pascalToKebabCase(c.name).replace('media-', '').replace(/\..+/, '');
-  if (slug === 'pipbutton') slug = 'pip-button';
-  return pathname.endsWith(slug);
-});
+const { pathname } = Astro.url,
+  components = findReactComponents(pathname);
 ---
 
 {
-  components.length && (
+  components.length ? (
     <>
-      <h2>API Reference</h2>
+      <Heading title="API Reference" level={2} />
 
       {components.map((component) => {
         const hasValues = component.props?.length || component.callbacks?.length;
         if (!hasValues) return null;
 
-        // component info card
-        // <ul class="pt-2 not-prose flex flex-col space-y-2 text-sm -mb-2">
-        //   <li>
-        //     <span class="mr-1 font-medium text-inverse">Display Name:</span>{' '}
-        //     <code class="">MediaPlayer</code>
-        //   </li>
-        //   <li>
-        //     <span class="mr-1 font-medium text-inverse">Attributes:</span>{' '}
-        //     <code>HTMLAttributes</code>
-        //   </li>
-        //   <li>
-        //     <span class="mr-1 font-medium text-inverse">Ref:</span>{' '}
-        //     <code>Ref&lt;PlayerInstance&gt;</code>
-        //   </li>
-        // </ul>
+        let propsType = component.propsType ? `, type ${component.propsType}` : '',
+          importCode = '',
+          refType = component.ref?.type.concise,
+          hasInstance = refType === component.instance?.name,
+          fullComponentName = component.namespace
+            ? `${component.namespace}.${component.name}`
+            : component.name,
+          instanceName =
+            hasInstance && component.instance ? `${component.instance.name}Instance` : refType;
 
-        // show component & props import
-        // import { MediaPlayer, type MediaPlayerProps } from "@vidstack/react";
+        if (component.namespace) {
+          importCode = [
+            `import { ${component.namespace} } from "@vidstack/react";`,
+            '',
+            `type Props = ${component.namespace}.${component.propsType};`,
+            '',
+            `const Component = ${component.namespace}.${component.name};`,
+          ].join('\n');
+        } else {
+          importCode = `import { ${component.name}${propsType} } from "@vidstack/react";`;
+        }
 
         const props = (component.props || [])
           .filter((prop) => !prop.internal)
           .map((prop) => [
-            <code>{prop.name}</code>, // TODO: description dialog (MDN LINK)
-            <code>{prop.type.primitive}</code>, // TODO: primitive (show full in dialog)
+            <NamePopup name={prop.name} docs={prop.docs} />,
+            <TypePopup
+              concise={prop.type.concise.includes(' ') ? prop.type.primitive : prop.type.concise}
+              full={prop.type.full}
+            />,
             <code>{prop.default ?? 'undefined'}</code>,
           ]);
 
         const callbacks = (component.callbacks || [])
           .filter((cb) => !cb.internal)
           .map((cb) => [
-            <code>{cb.name}</code>, // TODO: description dialog (MDN LINK)
-            <code>function</code>, // TODO: primitive (show full in dialog)
+            <NamePopup name={cb.name} docs={cb.docs} />,
+            <TypePopup concise="function" full={cb.type.full} />,
             <code class="empty">-</code>,
           ]);
 
-        // component.instance (props/methods) - show how to use via ref
-        // const player = useRef<...>()
-        // useEffect(() => {}, [])
-        // <MediaPlayer ref={}>
+        const instanceProps = ((hasInstance && component.instance?.members?.props) || [])
+          .filter((prop) => !prop.internal && !component.props?.some((p) => p.name === prop.name))
+          .map((prop) => [
+            <NamePopup name={prop.name} docs={prop.docs} />,
+            <TypePopup
+              concise={prop.type.concise.includes(' ') ? prop.type.primitive : prop.type.concise}
+              full={prop.type.full}
+            />,
+          ]);
+
+        const instanceMethods = ((hasInstance && component.instance?.members?.methods) || [])
+          .filter((prop) => !prop.internal)
+          .map((method) => [
+            <NamePopup name={method.name} docs={method.docs} />,
+            <TypePopup concise="method" full={method.signature.type} />,
+          ]);
+
+        const instanceUsageCode = hasInstance
+          ? [
+              `import { ${
+                component.namespace ?? component.name
+              }, type ${instanceName} } from "@vidstack/react"`,
+              '',
+              `const ref = useRef<${instanceName}>(null);`,
+              '',
+              'useEffect(() => { /** Use props/methods here. */ }, [])',
+              '',
+              `<${fullComponentName} ref={ref}>`,
+            ].join('\n')
+          : '';
 
         return (
-          <section class="mt-10">
-            <h3 class="font-semibold text-lg text-inverse">{component.name}</h3>
-            {component.docs && <Fragment set:html={component.docs} />}
+          <section class="mt-6">
+            <Header
+              title={fullComponentName}
+              description={component.docs}
+              {importCode}
+              badges={[component.attributes, refType ? `Ref<${instanceName}>` : null]}
+            />
+
             <Table cols={['Prop', 'Type', 'Default']} rows={[...props, ...callbacks]} />
+
+            {instanceProps.length || instanceMethods.length ? (
+              <>
+                <Heading title={component.instance!.name + 'Instance'} level={4} />
+                <CodeBlockWrapper class="mt-6 not-prose">
+                  <Code code={instanceUsageCode} lang="tsx" theme="github-dark" />
+                  <Code code={instanceUsageCode} lang="tsx" theme="github-light" />
+                </CodeBlockWrapper>
+                <Table
+                  cols={['Prop/Method', 'Type']}
+                  rows={[...instanceProps, ...instanceMethods]}
+                />
+              </>
+            ) : null}
           </section>
         );
       })}
     </>
-  )
+  ) : null
 }

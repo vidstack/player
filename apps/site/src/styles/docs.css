@@ -19,6 +19,26 @@
   margin-block: 3.5rem;
 }
 
+.github-light,
+.github-dark {
+  background-color: unset !important;
+}
+
+.github-light code,
+.github-dark code {
+  padding: 0 !important;
+  border: unset !important;
+  background-color: unset !important;
+}
+
+.dark .github-light {
+  display: none;
+}
+
+.light .github-dark {
+  display: none;
+}
+
 #main-sidebar > div,
 #table-of-contents > ul {
   --scrollbar-thumb-bg: none;

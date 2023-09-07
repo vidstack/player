@@ -140,6 +140,8 @@ export interface CaptionsRadioOption extends RadioOption {
 /**
  * Fired when the checked radio changes. The event detail will be `null` when no track is selected
  * or captions are turned off.
+ *
+ * @detail track
  */
 export interface CaptionsRadioGroupChangeEvent extends DOMEvent<TextTrack | null> {
   target: CaptionsRadioGroup;

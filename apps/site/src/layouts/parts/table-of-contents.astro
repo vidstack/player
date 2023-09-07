@@ -2,14 +2,51 @@
 import clsx from 'clsx';
 
 import type { MarkdownHeading } from 'astro';
+import slugify from 'slugify';
+import { get } from 'svelte/store';
 
+import { currentJSLibrary } from '../../stores/libraries';
+import { findReactComponents } from './api-table/api-utils';
 import TableOfContentsManager from './table-of-contents-manager.svelte';
 
 interface Props {
   headings: MarkdownHeading[];
 }
 
-const { headings } = Astro.props;
+const { headings } = Astro.props,
+  { pathname } = Astro.url;
+
+function addHeading(title: string, depth: number) {
+  headings.push({
+    depth,
+    slug: slugify(title, { lower: true }),
+    text: title,
+  });
+}
+
+if (pathname.includes('components/')) {
+  if (get(currentJSLibrary) === 'react') {
+    const components = findReactComponents(pathname);
+    if (components.length) {
+      addHeading('API Reference', 2);
+      for (const component of components) {
+        addHeading(
+          component.namespace ? `${component.namespace}.${component.name}` : component.name,
+          3,
+        );
+        const hasInstance =
+          component.instance &&
+          component.ref?.type.concise === component.instance.name &&
+          (component.instance.members?.props || component.instance.members?.methods);
+        if (hasInstance) {
+          addHeading(component.instance!.name + 'Instance', 4);
+        }
+      }
+    }
+  } else {
+    //
+  }
+}
 ---
 
 {

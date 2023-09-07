@@ -1,5 +1,6 @@
 import { Component, effect } from 'maverick.js';
 import { DOMEvent, setStyle } from 'maverick.js/std';
+
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { setAttributeIfEmpty } from '../../utils/dom';
 
@@ -69,5 +70,7 @@ export interface ControlsEvents {
 
 /**
  * Fired when the active state of the controls change.
+ *
+ * @detail isVisible
  */
 export interface ControlsChangeEvent extends DOMEvent<boolean> {}

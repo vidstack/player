@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { effect, signal, type WriteSignal } from 'maverick.js';
 import {
   composeRefs,
@@ -9,6 +10,7 @@ import {
 } from 'maverick.js/react';
 import { VTTCue } from 'media-captions';
 import { mediaState } from 'vidstack/local';
+
 import {
   SliderChaptersInstance,
   SliderThumbnailInstance,
@@ -47,9 +49,12 @@ export interface RootProps extends ReactElementProps<TimeSliderInstance> {
 }
 
 /**
- * A slider control that lets the user specify their desired volume level.
+ * Versatile and user-friendly input time control designed for seamless cross-browser and provider
+ * compatibility and accessibility with ARIA support. It offers a smooth user experience for both
+ * mouse and touch interactions and is highly customizable in terms of styling. Users can
+ * effortlessly change the current playback time within the range 0 to seekable end.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/sliders/volume-slider}
+ * @docs {@link https://www.vidstack.io/docs/react/player/components/sliders/time-slider}
  */
 const Root = React.forwardRef<TimeSliderInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
@@ -77,6 +82,9 @@ export interface ChaptersProps extends Omit<ReactElementProps<SliderChaptersInst
 }
 
 /**
+ * Used to create predefined sections within a time slider interface based on the currently
+ * active chapters text track.
+ *
  * @docs {@link https://www.vidstack.io/docs/react/player/components/slider-chapters}
  */
 const Chapters = React.forwardRef<HTMLDivElement, ChaptersProps>(
@@ -137,6 +145,9 @@ ChapterTracks.displayName = 'SliderChapterTracks';
 
 export interface ChapterTitleProps extends PrimitivePropsWithRef<'div'> {}
 
+/**
+ * Used to display the active cue text of the currently active chapter text track.
+ */
 const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
   ({ children, ...props }, forwardRef) => {
     const { $chapters } = React.useContext(TimeSliderContext)!,
@@ -166,6 +177,10 @@ ChapterTitle.displayName = 'SliderChapterTitle';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
+ * Displays the specific numeric representation of the current or pointer value of the time slider.
+ * When a user interacts with a slider by moving its thumb along the track, the slider value
+ * and current playback time updates accordingly.
+ *
  * @docs {@link https://www.vidstack.io/docs/react/player/components/time-slider#preview}
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {

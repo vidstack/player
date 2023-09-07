@@ -612,6 +612,8 @@ export class MediaPlayer
    * A player query supports the same syntax as media queries and allows media state properties
    * to be used like so:
    *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList}
+   * @example
    * ```ts
    * const queryList = player.matchQuery("(width < 680) and (streamType: on-demand)");
    *
@@ -624,8 +626,6 @@ export class MediaPlayer
    *   // ...
    * });
    * ```
-   *
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList}
    */
   @method
   matchQuery(query: string) {

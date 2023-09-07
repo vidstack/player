@@ -66,6 +66,8 @@ export interface RadioGroupEvents {
 
 /**
  * Fired when the checked radio changes.
+ *
+ * @detail value
  */
 export interface RadioGroupChangeEvent extends DOMEvent<string> {
   target: RadioGroup;

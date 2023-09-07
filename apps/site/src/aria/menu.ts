@@ -247,14 +247,14 @@ export function createAriaMenu(options: AriaMenuOptions) {
       if (options.portal) {
         document.body.append(el);
       } else if (options.placement !== false) {
-        el.style.position = 'absolute';
+        el.style.position = 'fixed';
       }
 
       el.style.pointerEvents = 'none';
       el.style.display = 'none';
 
       el.setAttribute('id', _menuId);
-      el.setAttribute('role', 'menu');
+      el.setAttribute('role', options.type ?? 'menu');
       el.setAttribute('tabindex', '-1');
       el.setAttribute('aria-hidden', 'true');
       el.setAttribute('aria-describedby', _triggerId);

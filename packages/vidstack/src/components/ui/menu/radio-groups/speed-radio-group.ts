@@ -91,6 +91,8 @@ export interface SpeedRadioGroupEvents {
 
 /**
  * Fired when the checked radio changes.
+ *
+ * @detail speed
  */
 export interface SpeedRadioGroupChangeEvent extends DOMEvent<number> {
   target: SpeedRadioGroup;

@@ -1,5 +1,6 @@
 import { Component, effect, prop, useContext } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
+
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { onPress } from '../../../utils/dom';
 import { menuContext, type MenuContext } from './menu-context';

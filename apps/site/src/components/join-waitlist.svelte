@@ -1,10 +1,6 @@
 <script lang="ts">
   import clsx from 'clsx';
 
-  import LockIcon from '~icons/lucide/lock';
-  import UnlockIcon from '~icons/lucide/unlock';
-  import XOctagon from '~icons/lucide/x-octagon';
-
   import { isDarkColorScheme } from '../stores/color-scheme';
   import Button from './button.svelte';
   import Dialog from './dialog.svelte';
@@ -70,22 +66,7 @@
     )}
     slot="content"
   >
-    <div class="relative prefers-light-scheme">
-      <div class="w-20 h-20 p-4 rounded-md bg-[var(--from-color)] transition-colors duration-500">
-        {#if failed}
-          <XOctagon class="w-full h-full text-white" />
-        {:else if success}
-          <UnlockIcon class="w-full h-full text-white" />
-        {:else}
-          <LockIcon class="w-full h-full text-white" />
-        {/if}
-      </div>
-      <div
-        class="w-20 h-20 absolute top-1 left-1 bg-[var(--from-color)] opacity-30 rounded-md"
-      ></div>
-    </div>
-
-    <h1 class="font-bold text-2xl mt-6 text-center transition-colors duration-500">
+    <h1 class="font-bold text-4xl mb-1 text-center transition-colors duration-500">
       <TextGradient>
         {#if failed}
           Request Failed

@@ -3,15 +3,17 @@
  * -----------------------------------------------------------------------------------------------*/
 
 import React from 'react';
+
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { RadioGroupInstance, RadioInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
 
-const GroupBridge = createReactComponent(RadioGroupInstance, {
+const RadioGroupBridge = createReactComponent(RadioGroupInstance, {
   events: ['onChange'],
 });
 
-export interface GroupProps extends ReactElementProps<RadioGroupInstance> {
+export interface RootProps extends ReactElementProps<RadioGroupInstance> {
   asChild?: boolean;
   children?: React.ReactNode;
   ref?: React.Ref<RadioGroupInstance>;
@@ -23,17 +25,17 @@ export interface GroupProps extends ReactElementProps<RadioGroupInstance> {
  *
  * @docs {@link https://www.vidstack.io/docs/react/player/components/menu/radio-group}
  */
-const Group = React.forwardRef<RadioGroupInstance, GroupProps>(
+const Root = React.forwardRef<RadioGroupInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
     return (
-      <GroupBridge {...props} ref={forwardRef}>
+      <RadioGroupBridge {...props} ref={forwardRef}>
         {(props) => <Primitive.div {...props}>{children}</Primitive.div>}
-      </GroupBridge>
+      </RadioGroupBridge>
     );
   },
 );
 
-Group.displayName = 'RadioGroup';
+Root.displayName = 'RadioGroup';
 
 /* -------------------------------------------------------------------------------------------------
  * RadioItem
@@ -69,4 +71,4 @@ const Item = React.forwardRef<HTMLElement, ItemProps>(({ children, ...props }, f
 
 Item.displayName = 'RadioItem';
 
-export { Group, Item };
+export { Root, Item };

@@ -24,5 +24,6 @@ export interface LogEventDetail {
 /**
  * @bubbles
  * @composed
+ * @detail log
  */
 export interface LogEvent extends DOMEvent<LogEventDetail> {}

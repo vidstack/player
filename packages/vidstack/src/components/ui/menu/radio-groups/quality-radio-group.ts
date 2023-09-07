@@ -159,6 +159,8 @@ export interface QualityRadioGroupEvents {
 
 /**
  * Fired when the checked radio changes.
+ *
+ * @detail quality
  */
 export interface QualityRadioGroupChangeEvent extends DOMEvent<'auto' | VideoQuality> {
   target: QualityRadioGroup;

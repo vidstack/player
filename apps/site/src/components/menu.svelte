@@ -1,20 +1,19 @@
 <script lang="ts">
   import clsx from 'clsx';
 
-  import { offset as _offset } from '@floating-ui/dom';
+  import { offset as _offset, type Placement } from '@floating-ui/dom';
 
-  import { createAriaMenu, type AriaMenuOptions } from '../aria/menu';
+  import { createAriaMenu } from '../aria/menu';
 
   export let as = 'button';
   export let offset = 8;
-
-  export let options: AriaMenuOptions = {
-    placement: 'bottom',
-  };
+  export let placement: Placement = 'bottom';
+  export let type: 'menu' | 'dialog' = 'menu';
 
   const { menuTrigger, menu, isMenuOpen, isMenuVisible } = createAriaMenu({
-    ...options,
-    middleware: [_offset(offset), ...(options.middleware || [])],
+    placement,
+    type,
+    middleware: [_offset(offset)],
   });
 </script>
 
@@ -27,8 +26,14 @@
     'z-50 rounded-md border border-border/90 bg-elevate text-xs font-medium p-3',
     'outline-none shadow-md',
     $isMenuOpen
-      ? 'animate-in fade-in slide-in-from-top-4'
-      : 'animate-out fade-out slide-out-to-top-2',
+      ? clsx(
+          'animate-in fade-in',
+          placement.includes('bottom') ? 'slide-in-from-top-4' : 'slide-in-from-bottom-4',
+        )
+      : clsx(
+          'animate-out fade-out',
+          placement.includes('bottom') ? 'slide-out-to-top-2' : 'slide-out-to-bottom-2',
+        ),
   )}
   style="display: none;"
   use:menu

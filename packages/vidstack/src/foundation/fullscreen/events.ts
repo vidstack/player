@@ -11,6 +11,7 @@ export interface FullscreenEvents {
  *
  * @bubbles
  * @composed
+ * @detail isFullscreen
  */
 export interface FullscreenChangeEvent extends DOMEvent<boolean> {}
 
@@ -20,5 +21,6 @@ export interface FullscreenChangeEvent extends DOMEvent<boolean> {}
  *
  * @bubbles
  * @composed
+ * @detail error
  */
 export interface FullscreenErrorEvent extends DOMEvent<unknown> {}
