@@ -1,4 +1,5 @@
 import { Component } from 'maverick.js';
+
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { setARIALabel } from '../../../utils/dom';
 import {
@@ -11,6 +12,8 @@ export interface MuteButtonProps extends ToggleButtonControllerProps {}
 /**
  * A button for toggling the muted state of the player.
  *
+ * @attr data-muted - Whether volume is muted (0).
+ * @attr data-volume - Current volume setting (low/high/muted).
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/mute-button}
  */
 export class MuteButton extends Component<MuteButtonProps> {

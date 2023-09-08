@@ -18,8 +18,16 @@ import { SliderController, type SliderControllerProps } from './slider/slider-co
 export interface VolumeSliderProps extends SliderControllerProps {}
 
 /**
- * A slider control that lets the user specify their desired volume level.
+ * Versatile and user-friendly input volume control designed for seamless cross-browser and provider
+ * compatibility and accessibility with ARIA support. It offers a smooth user experience for both
+ * mouse and touch interactions and is highly customizable in terms of styling. Users can
+ * effortlessly change the volume level within the range 0 (muted) to 100.
  *
+ * @attr data-dragging - Whether slider thumb is being dragged.
+ * @attr data-pointing - Whether user's pointing device is over slider.
+ * @attr data-interactive - Whether slider is being interacted with.
+ * @attr data-focus - Whether slider is being keyboard focused.
+ * @attr data-hocus - Whether slider is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/volume-slider}
  */
 export class VolumeSlider extends Component<

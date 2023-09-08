@@ -8,6 +8,8 @@ import { formatTime } from '../../utils/time';
  * Outputs a media duration (eg: `currentTime`, `duration`, `bufferedAmount`, etc.) value as time
  * formatted text.
  *
+ * @attr data-type - The type prop setting (current, duration, etc.).
+ * @attr data-remainder - Whether time remaining is being shown.
  * @docs {@link https://www.vidstack.io/docs/player/components/display/time}
  */
 export class Time extends Component<TimeProps, TimeState> {

@@ -10,6 +10,8 @@ import { Slider } from './slider/slider';
  * the time slider. The preview video will automatically be updated to be in-sync with the current
  * preview position, so ensure it has the same length as the original media (i.e., same duration).
  *
+ * @attr data-loading - Whether the video is loading.
+ * @attr aria-hidden - Whether the video has failed to load.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-video}
  */
 export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, SliderVideoEvents> {

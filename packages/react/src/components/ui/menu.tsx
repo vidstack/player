@@ -29,7 +29,8 @@ export interface RootProps extends ReactElementProps<MenuInstance> {
 }
 
 /**
- * Root menu container used to hold and manage a menu button and menu items.
+ * Root menu container used to hold and manage a menu button and menu items. This component is
+ * used to display options in a floating panel.
  *
  * @docs {@link https://www.vidstack.io/docs/react/player/components/menu/menu}
  */

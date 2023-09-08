@@ -6,6 +6,7 @@ import {
   useContext,
   type ReadSignal,
 } from 'maverick.js';
+
 import { PlayerQueryList } from '../../core';
 
 export class DefaultLayout extends Component<DefaultLayoutProps> {
@@ -56,6 +57,10 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
   }
 }
 
+/**
+ * @attr data-match - Whether this layout is being used (query match).
+ * @attr data-size - The active layout size.
+ */
 export class DefaultAudioLayout extends DefaultLayout {
   static override props: DefaultLayoutProps = {
     ...super.props,
@@ -64,6 +69,10 @@ export class DefaultAudioLayout extends DefaultLayout {
   };
 }
 
+/**
+ * @attr data-match - Whether this layout is being used (query match).
+ * @attr data-size - The active layout size.
+ */
 export class DefaultVideoLayout extends DefaultLayout {
   static override props: DefaultLayoutProps = {
     ...super.props,

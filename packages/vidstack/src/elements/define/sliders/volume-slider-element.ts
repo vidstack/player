@@ -7,10 +7,10 @@ import { VolumeSlider } from '../../../components';
  * @example
  * ```html
  * <media-volume-slider>
- *   <div class="slider-track"></div>
- *   <div class="slider-track-fill"></div>
- *   <div class="slider-track-progress"></div>
- *   <div class="slider-thumb"></div>
+ *   <div class="track"></div>
+ *   <div class="track-fill"></div>
+ *   <div class="track-progress"></div>
+ *   <div class="thumb"></div>
  * </media-volume-slider>
  * ```
  * @example

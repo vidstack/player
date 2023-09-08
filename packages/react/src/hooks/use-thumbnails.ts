@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { scoped, signal } from 'maverick.js';
 import { useReactScope, useSignal } from 'maverick.js/react';
 import type { VTTCue } from 'media-captions';
@@ -18,7 +19,7 @@ export interface ThumbnailData {
  * data such as the VTTCue, coordinates, dimensions, and url. It's safe to call this hook in
  * multiple places with the same `src` argument as work is de-duped and cached.
  *
- * @see {@link https://www.vidstack.io/docs/player/components/display/thumbnail#webvtt}
+ * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-thumbnails}
  */
 export function useThumbnails(src: string): ThumbnailData[] {
   const scope = useReactScope(),

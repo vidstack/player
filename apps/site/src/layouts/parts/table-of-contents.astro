@@ -26,44 +26,72 @@ function addHeading(title: string, depth: number, slug?: string) {
 
 if (pathname.includes('components/')) {
   if (get(currentJSLibrary) === 'react') {
-    const components = findReactComponents(pathname);
+    const components = findReactComponents(pathname),
+      tableHeadingLevel = components.length === 1 ? 3 : 4;
+
     if (components.length) {
       addHeading('API Reference', 2);
+
       for (const component of components) {
         const fullName = component.namespace
           ? `${component.namespace}.${component.name}`
           : component.name;
-        addHeading(component.name, 3, fullName);
-
-        if (component.callbacks?.length) {
-          addHeading('Callbacks', 4, fullName + '.callbacks');
-        }
 
         const hasInstance =
           component.instance &&
           component.ref?.type.concise === component.instance.name &&
           (component.instance.members?.props || component.instance.members?.methods);
 
+        if (components.length > 1) {
+          addHeading(component.name, 3, fullName);
+        }
+
+        if (hasInstance && component.instance?.state) {
+          addHeading('State', tableHeadingLevel, fullName + '.state');
+        }
+
+        if (component.callbacks?.length) {
+          addHeading('Callbacks', tableHeadingLevel, fullName + '.callbacks');
+        }
+
         if (hasInstance) {
-          addHeading('Instance', 4, fullName + '.instance');
+          addHeading('Instance', tableHeadingLevel, fullName + '.instance');
+        }
+
+        if (component.instance?.doctags?.some((tag) => tag.name === 'attr' && tag.text)) {
+          addHeading('Data Attributes', tableHeadingLevel, fullName + '.attrs');
         }
       }
     }
   } else {
-    const components = findWebComponents(pathname);
+    const components = findWebComponents(pathname),
+      tableHeadingLevel = components.length === 1 ? 3 : 4;
+
     addHeading('API Reference', 2);
+
     for (const component of components) {
       const name = component.name.replace('Media', '').replace('Element', '');
 
       if (components.length > 1) {
         addHeading(name, 3);
       } else if (component.instance?.props) {
-        addHeading('Props', 4, name + '.props');
+        addHeading('Props', tableHeadingLevel, name + '.props');
       }
 
-      if (component.instance?.events) addHeading('Events', 4, name + '.events');
+      if (component.instance?.state) addHeading('State', tableHeadingLevel, name + '.state');
+
+      if (component.instance?.events) addHeading('Events', tableHeadingLevel, name + '.events');
+
       if (component.instance?.members?.props || component.instance?.members?.methods) {
-        addHeading('Instance', 4, name + '.instance');
+        addHeading('Instance', tableHeadingLevel, name + '.instance');
+      }
+
+      if (component.instance?.doctags?.some((tag) => tag.name === 'attr' && tag.text)) {
+        addHeading('Data Attributes', tableHeadingLevel, name + '.attrs');
+      }
+
+      if (component.doctags?.some((tag) => tag.name === 'part' && tag.text)) {
+        addHeading('Data Parts', tableHeadingLevel, name + '.parts');
       }
     }
   }

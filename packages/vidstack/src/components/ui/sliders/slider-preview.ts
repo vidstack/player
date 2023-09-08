@@ -1,8 +1,14 @@
 import { Component, effect, onDispose, useContext, useState } from 'maverick.js';
+
 import { Slider } from './slider/slider';
 import { sliderContext, type SliderContext } from './slider/slider-context';
 
 /**
+ * Used to provide users with a real-time or interactive preview of the value or selection they
+ * are making as they move the slider thumb. This can include displaying the current pointer
+ * value numerically, or displaying a thumbnail over the time slider.
+ *
+ * @attr data-showing - Whether the preview is visible.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider#preview}
  */
 export class SliderPreview extends Component<SliderPreviewProps> {

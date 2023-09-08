@@ -7,6 +7,8 @@ import { tooltipContext } from './tooltip-context';
 /**
  * This component contains the content that is visible when the tooltip trigger is interacted with.
  *
+ * @attr data-placement - The placement prop setting.
+ * @attr data-hocus - Whether tooltip is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
  */
 export class TooltipContent extends Component<TooltipContentProps> {

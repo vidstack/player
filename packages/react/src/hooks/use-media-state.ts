@@ -1,12 +1,14 @@
 import type { RefObject } from 'react';
+
 import { useSignal, useSignalRecord, useStateContext } from 'maverick.js/react';
 import { mediaState, type MediaState } from 'vidstack/local';
+
 import type { MediaPlayerInstance } from '../components/primitives/instances';
 
 /**
- * This hook is used to subscribe to a single media state.
+ * This hook is used to subscribe to a specific media state.
  *
- * @docs {@link https://vidstack.io/docs/react/player/core-concepts/state#reading}
+ * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-media-state}
  */
 export function useMediaState<T extends keyof MediaState>(
   prop: T,

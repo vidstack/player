@@ -3,6 +3,7 @@ import { Host } from 'maverick.js/element';
 import { Menu } from '../../../components';
 
 /**
+ * @part close-target - Closes menu when pressed.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  * @example
  * ```html

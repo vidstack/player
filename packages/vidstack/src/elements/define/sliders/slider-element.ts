@@ -7,10 +7,10 @@ import { Slider } from '../../../components';
  * @example
  * ```html
  * <media-slider min="0" max="100" value="50" aria-label="...">
- *   <div class="slider-track"></div>
- *   <div class="slider-track-fill"></div>
- *   <div class="slider-track-progress"></div>
- *   <div class="slider-thumb"></div>
+ *   <div class="track"></div>
+ *   <div class="track-fill"></div>
+ *   <div class="track-progress"></div>
+ *   <div class="thumb"></div>
  * </media-slider>
  * ```
  */

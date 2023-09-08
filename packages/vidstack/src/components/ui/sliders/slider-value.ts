@@ -15,7 +15,9 @@ import type { SliderValueFormat } from './slider/format';
 import { sliderValueFormatContext } from './slider/format';
 
 /**
- * Outputs the current slider value as text.
+ * Displays the specific numeric representation of the current or pointer value of the slider.
+ * When a user interacts with a slider by moving its thumb along the track, the slider value
+ * changes accordingly.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-value}
  */

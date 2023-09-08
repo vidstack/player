@@ -1,5 +1,6 @@
 import { Component, createContext, effect, provideContext } from 'maverick.js';
 import { setAttribute } from 'maverick.js/std';
+
 import type { MediaContext } from '../../../core';
 import { useMediaContext } from '../../../core/api/media-context';
 import { requestScopedAnimationFrame } from '../../../utils/dom';
@@ -7,6 +8,7 @@ import { requestScopedAnimationFrame } from '../../../utils/dom';
 /**
  * Portals menu items into the document body.
  *
+ * @attr data-portal - Whether portal is active (determined by `disabled` prop).
  * @docs {@link https://www.vidstack.io/docs/player/components/menu#portal}
  */
 export class MenuPortal extends Component<MenuPortalProps> {

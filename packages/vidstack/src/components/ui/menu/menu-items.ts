@@ -6,6 +6,7 @@ import {
   provideContext,
   useContext,
 } from 'maverick.js';
+
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { autoPlacement } from '../../../utils/dom';
 import { menuContext, type MenuContext } from './menu-context';
@@ -14,6 +15,9 @@ import { menuPortalContext } from './menu-portal';
 /**
  * Menu items can be used to display settings or arbitrary content in a floating panel.
  *
+ * @attr data-placement - The placement prop setting.
+ * @attr data-focus - Whether item are being keyboard focused.
+ * @attr data-hocus - Whether items are being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  */
 export class MenuItems extends Component<MenuItemsProps> {

@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { effect } from 'maverick.js';
 import { useReactContext } from 'maverick.js/react';
 import { mediaContext, type MediaProviderAdapter } from 'vidstack/local';
@@ -6,7 +7,7 @@ import { mediaContext, type MediaProviderAdapter } from 'vidstack/local';
 /**
  * Returns the current parent media provider.
  *
- * @docs {@link https://vidstack.io/docs/react/player/core-concepts/state#media-provider}
+ * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-media-provider}
  */
 export function useMediaProvider(): MediaProviderAdapter | null {
   const [provider, setProvider] = React.useState<MediaProviderAdapter | null>(null),

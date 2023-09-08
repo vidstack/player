@@ -7,7 +7,7 @@ import Badge from '../../../components/badge.svelte';
 import Heading from '../../../components/docs/heading.svelte';
 
 interface Props {
-  title: string;
+  title?: string;
   slug?: string;
   description?: string;
   importCode?: string;
@@ -18,11 +18,11 @@ const { title, slug, description, importCode, badges } = Astro.props;
 ---
 
 <div class="flex flex-col mb-4">
-  <Heading title={title} {slug} level={3} />
+  {title ? <Heading title={title} {slug} level={3} /> : null}
 
   {
     badges?.filter(Boolean).length ? (
-      <div class="flex space-x-2 items-center not-prose mt-5">
+      <div class={clsx('flex space-x-2 items-center not-prose', title && 'mt-5')}>
         <Badge color="blue">
           <code class="text-xs">{badges[0]}</code>
         </Badge>

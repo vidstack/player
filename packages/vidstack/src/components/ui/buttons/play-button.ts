@@ -1,4 +1,5 @@
 import { Component } from 'maverick.js';
+
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { setARIALabel } from '../../../utils/dom';
 import {
@@ -11,6 +12,8 @@ export interface PlayButtonProps extends ToggleButtonControllerProps {}
 /**
  * A button for toggling the playback state (play/pause) of the current media.
  *
+ * @attr data-paused - Whether playback has stopped.
+ * @attr data-ended - Whether playback has ended.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/play-button}
  */
 export class PlayButton extends Component<PlayButtonProps> {

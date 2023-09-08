@@ -7,6 +7,8 @@ import { setAttributeIfEmpty } from '../../utils/dom';
 /**
  * This component creates a container for control groups.
  *
+ * @attr data-showing - Whether controls should be visible.
+ * @attr data-fullscreen - Whether fullscreen mode is active.
  * @docs {@link https://www.vidstack.io/docs/player/components/media/controls}
  */
 export class Controls extends Component<ControlsProps, {}, ControlsEvents> {

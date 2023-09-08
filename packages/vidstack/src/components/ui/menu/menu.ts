@@ -19,6 +19,7 @@ import {
   setAttribute,
   setStyle,
 } from 'maverick.js/std';
+
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { $ariaBool } from '../../../utils/aria';
 import { isElementParent, onPress, setAttributeIfEmpty } from '../../../utils/dom';
@@ -31,8 +32,13 @@ import type { MenuItems } from './menu-items';
 let idCount = 0;
 
 /**
- * This component is used to display options in a floating panel.
+ * Root menu container used to hold and manage a menu button and menu items. This component is
+ * used to display options in a floating panel.
  *
+ * @attr data-open - Whether menu is open.
+ * @attr data-submenu - Whether menu is a submenu.
+ * @attr data-disabled - Whether menu is disabled.
+ * @attr data-resizing - Whether the menu is resizing.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  */
 export class Menu extends Component<MenuProps, {}, MenuEvents> {

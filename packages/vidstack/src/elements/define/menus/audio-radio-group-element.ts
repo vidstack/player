@@ -4,6 +4,7 @@ import { AudioRadioGroup } from '../../../components';
 import { renderMenuItemsTemplate } from './_template';
 
 /**
+ * @part label - Contains the audio track option label.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/audio-menu}
  * @example
  * ```html

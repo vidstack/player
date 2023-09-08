@@ -1,5 +1,6 @@
 import type { TextTrackInit } from 'vidstack/local';
-import { useTextTrack } from '../hooks/use-text-track';
+
+import { createTextTrack } from '../hooks/create-text-track';
 
 export interface TextTrackProps extends TextTrackInit {
   readonly lang?: TextTrackInit['language'];
@@ -11,7 +12,7 @@ export interface TextTrackProps extends TextTrackInit {
  * @see {@link https://www.vidstack.io/docs/player/api/text-tracks}
  */
 function TextTrack({ lang, ...props }: TextTrackProps) {
-  useTextTrack({ language: lang, ...props });
+  createTextTrack({ language: lang, ...props });
   return null;
 }
 

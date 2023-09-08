@@ -1,4 +1,5 @@
 import { Component } from 'maverick.js';
+
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
@@ -12,6 +13,8 @@ export interface PIPButtonProps extends ToggleButtonControllerProps {}
 /**
  * A button for toggling the picture-in-picture (PIP) mode of the player.
  *
+ * @attr data-pip - Whether picture-in-picture mode is active.
+ * @attr aria-hidden - Whether picture-in-picture mode is _not_ available.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/pip-button}
  * @see {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture}
  */
@@ -34,8 +37,8 @@ export class PIPButton extends Component<PIPButtonProps> {
 
     const { pictureInPicture } = this._media.$state;
     this.setAttributes({
-      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
       'data-pip': pictureInPicture,
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
     });
   }
 

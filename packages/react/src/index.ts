@@ -91,6 +91,7 @@ export type {
 } from './components/ui/thumbnail';
 
 // Hooks
+export * from './hooks/use-state';
 export * from './hooks/use-media-player';
 export * from './hooks/use-player-query';
 export * from './hooks/use-media-provider';
@@ -100,7 +101,7 @@ export * from './hooks/use-thumbnails';
 export * from './hooks/use-slider-state';
 export * from './hooks/use-active-text-cues';
 export * from './hooks/use-active-text-track';
-export * from './hooks/use-text-track';
+export * from './hooks/create-text-track';
 export * from './hooks/options/use-audio-options';
 export * from './hooks/options/use-caption-options';
 export * from './hooks/options/use-chapter-options';

@@ -1,5 +1,6 @@
 import { isWriteSignal, ViewController, type ReadSignal } from 'maverick.js';
 import { ariaBool } from 'maverick.js/std';
+
 import { ARIAKeyShortcuts, type MediaKeyShortcut } from '../../../core';
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
