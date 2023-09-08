@@ -24,6 +24,7 @@
           placement: placement !== 'none' && (placement || 'bottom-start'),
           portal,
           preventScroll: portal,
+          offset: 2,
         });
 
       disposal.add(
@@ -49,6 +50,7 @@
           hover,
           submenu: true,
           showDelay: showDelay ? +showDelay : 200,
+          offset: 0,
         });
 
       disposal.add(

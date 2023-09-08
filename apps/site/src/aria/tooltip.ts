@@ -1,3 +1,4 @@
+import { flip, offset, shift } from '@floating-ui/dom';
 import type { ActionReturn } from 'svelte/action';
 import { readonly, writable } from 'svelte/store';
 
@@ -6,7 +7,9 @@ import { createPopper, type PopperOptions } from './popper';
 
 let id = 0;
 
-export interface AriaTooltipOptions extends PopperOptions {}
+export interface AriaTooltipOptions extends PopperOptions {
+  offset?: number;
+}
 
 export function createAriaTooltip(options: AriaTooltipOptions) {
   let _id = `aria-tooltip-${++id}`,
@@ -26,7 +29,17 @@ export function createAriaTooltip(options: AriaTooltipOptions) {
           return _arrowEl;
         },
       },
-      { showDelay: 700, strategy: 'absolute', ...options },
+      {
+        showDelay: 700,
+        strategy: 'absolute',
+        middleware: [
+          offset(options.offset ?? 8),
+          flip(),
+          shift({ padding: options.offset ?? 8 }),
+          ...(options.middleware || []),
+        ],
+        ...options,
+      },
     );
 
   return {

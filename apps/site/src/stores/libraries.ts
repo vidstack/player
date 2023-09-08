@@ -10,5 +10,5 @@ export const currentJSLibrary = writable<JSLibrary>(initJSLibraryFromURL());
 
 function initJSLibraryFromURL(): JSLibrary {
   if (!IS_BROWSER) return 'react';
-  return location.href.includes('web-components') ? 'web-components' : 'react';
+  return location.href.includes('/wc') ? 'web-components' : 'react';
 }

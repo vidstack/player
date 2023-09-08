@@ -44,7 +44,7 @@
     </svelte:element>
 
     {#if item.stage}
-      <StageBadge stage={item.stage} />
+      <StageBadge class="text-[11px] nav-lg:text-xs nav-lg:py-px ml-2" stage={item.stage} />
     {/if}
   </div>
 

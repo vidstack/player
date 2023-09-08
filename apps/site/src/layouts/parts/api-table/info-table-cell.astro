@@ -14,7 +14,7 @@ interface Props {
 const { label, center, contain } = Astro.props;
 ---
 
-<Menu class="ml-px" client:visible placement="top" type="dialog">
+<Menu class="ml-px rounded-full" client:visible placement="top" type="dialog">
   <Fragment slot="trigger">
     <InfoIcon class="w-[14px] h-[14px] hover:text-inverse" />
     <span class="sr-only">{label}</span>
@@ -23,7 +23,7 @@ const { label, center, contain } = Astro.props;
   <div
     class={clsx(
       'max-h-[300px] leading-5 whitespace-normal text-soft text-[13px] content',
-      'overflow-auto scrollbar',
+      'overflow-auto scrollbar font-normal not-prose',
       contain ? 'max-w-[45ch]' : 'max-w-[88ch]',
       center && 'text-center',
     )}
@@ -36,6 +36,7 @@ const { label, center, contain } = Astro.props;
 <style>
   div :global(p) {
     margin: 12px 0;
+    font-weight: 400;
   }
 
   div :global(p + ul) {
@@ -45,6 +46,8 @@ const { label, center, contain } = Astro.props;
   div :global(ul),
   div :global(ol) {
     margin: 8px 0;
+    padding-left: 16px;
+    list-style: disc;
   }
 
   div :global(li) {
@@ -52,6 +55,7 @@ const { label, center, contain } = Astro.props;
   }
 
   div :global(code) {
+    font-weight: 500;
     font-size: 0.9em !important;
     padding: 0 !important;
   }

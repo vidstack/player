@@ -140,21 +140,6 @@ function parseDocs(meta: ComponentMeta | CustomElementMeta | ReactComponentMeta)
   (meta as any)[PARSED] = true;
 }
 
-export function getLinks(
-  prop: PropMeta | MethodMeta | EventMeta | ReactPropMeta | ReactCallbackMeta,
-) {
-  return prop.doctags
-    ? prop.doctags
-        .filter((tag) => /(see|link)/.test(tag.name) && tag.text && tag.text.includes('http'))
-        .map((tag) => tag.text!)
-    : [];
-}
-
-const mdnRE = /(mozilla|mdn)/;
-export function findMDNLink(links: string[]) {
-  return links.find((tag) => mdnRE.test(tag));
-}
-
 function compareAlphabetically(a: { name: string }, b: { name: string }) {
   return a.name === b.name ? 0 : a.name < b.name ? -1 : 1;
 }

@@ -34,7 +34,7 @@ export async function getStaticPaths() {
   return jsLibraries.flatMap((jsLibrary) => {
     pagePropsMap.clear();
 
-    const jsLibPrefix = jsLibrary === 'react' ? '' : jsLibrary,
+    const jsLibPrefix = jsLibrary === 'react' ? '' : 'wc',
       jsLibSegment = '/' + (jsLibrary === 'web-components' ? 'wc' : jsLibrary) + '/',
       categories: SidebarFeatureItem[] = [],
       sidebarItems: SidebarItems = { Overview: [], API: [], Components: [] };

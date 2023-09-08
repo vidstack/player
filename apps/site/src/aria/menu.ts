@@ -1,3 +1,4 @@
+import { flip, offset, shift } from '@floating-ui/dom';
 import type { ActionReturn } from 'svelte/action';
 import { get, readonly, writable } from 'svelte/store';
 
@@ -12,6 +13,7 @@ import { createPopper, type PopperOptions } from './popper';
 
 export interface AriaMenuOptions extends PopperOptions {
   type?: 'menu' | 'dialog';
+  offset?: number;
   portal?: boolean;
   preventScroll?: boolean;
   defaultOpen?: boolean;
@@ -55,6 +57,12 @@ export function createAriaMenu(options: AriaMenuOptions) {
       {
         showDelay: 0,
         strategy: 'fixed',
+        middleware: [
+          offset(options.offset ?? 8),
+          flip(),
+          shift({ padding: options.offset ?? 8 }),
+          ...(options.middleware || []),
+        ],
         ...options,
       },
     ),

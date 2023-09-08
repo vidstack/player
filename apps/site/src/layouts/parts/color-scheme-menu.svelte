@@ -24,12 +24,10 @@
 
   const { tooltipTrigger, tooltipContent, isTooltipOpen } = createAriaTooltip({
     placement: 'bottom-end',
-    middleware: [offset(8)],
   });
 
   const { menuTrigger, menu, isMenuOpen } = createAriaMenu({
     placement: 'bottom-end',
-    middleware: [offset(8)],
     hover: true,
   });
 

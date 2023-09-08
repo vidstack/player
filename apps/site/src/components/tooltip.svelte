@@ -1,17 +1,16 @@
 <script lang="ts">
   import clsx from 'clsx';
 
-  import { offset } from '@floating-ui/dom';
+  import { type Placement } from '@floating-ui/dom';
 
-  import { createAriaTooltip, type AriaTooltipOptions } from '../aria/tooltip';
+  import { createAriaTooltip } from '../aria/tooltip';
 
-  export let options: AriaTooltipOptions = {
-    placement: 'bottom',
-  };
+  export let placement: Placement = 'bottom';
+  export let offset = 8;
 
   const { tooltipTrigger, tooltipContent, isTooltipOpen } = createAriaTooltip({
-    ...options,
-    middleware: [offset(8), ...(options.middleware || [])],
+    placement,
+    offset,
   });
 </script>
 

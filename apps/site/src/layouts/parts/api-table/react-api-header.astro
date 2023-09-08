@@ -8,20 +8,21 @@ import Heading from '../../../components/docs/heading.svelte';
 
 interface Props {
   title: string;
+  slug?: string;
   description?: string;
   importCode?: string;
   badges?: Array<string | null | undefined>;
 }
 
-const { title, description, importCode, badges } = Astro.props;
+const { title, slug, description, importCode, badges } = Astro.props;
 ---
 
 <div class="flex flex-col mb-4">
-  <Heading title={title} level={3} />
+  <Heading title={title} {slug} level={3} />
 
   {
     badges?.filter(Boolean).length ? (
-      <div class="flex items-center not-prose mt-5 -ml-2">
+      <div class="flex space-x-2 items-center not-prose mt-5">
         <Badge color="blue">
           <code class="text-xs">{badges[0]}</code>
         </Badge>
@@ -36,7 +37,11 @@ const { title, description, importCode, badges } = Astro.props;
 
   {
     importCode && (
-      <div class={clsx('not-prose font-medium text-sm mb-5', badges ? 'mt-7' : 'mt-5')}>
+      <div
+        class={clsx(
+          'not-prose font-medium text-sm mb-4 overflow-auto scrollbar scrollbar-square py-1.5 mt-5',
+        )}
+      >
         <Code code={importCode} lang="tsx" theme="github-dark" />
         <Code code={importCode} lang="tsx" theme="github-light" />
       </div>
@@ -45,7 +50,7 @@ const { title, description, importCode, badges } = Astro.props;
 
   {
     description && (
-      <div class="-my-8">
+      <div class="-mt-8 -mb-6">
         <Fragment set:html={description} />
       </div>
     )

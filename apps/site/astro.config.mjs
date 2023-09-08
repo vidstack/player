@@ -74,7 +74,7 @@ export default defineConfig({
     ],
   },
   redirects: {
-    ...['', 'web-components']
+    ...['', 'wc']
       .flatMap((libPrefix) => {
         const docs = join('/docs', libPrefix),
           player = join(docs, 'player');

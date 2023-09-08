@@ -1,6 +1,149 @@
 ---
-// !internal
-// find prop attr
+import { Code } from 'astro:components';
+
+import CodeBlockWrapper from '../../../components/code-snippet/code-block-wrapper.svelte';
+import Heading from '../../../components/docs/heading.svelte';
+import Table from '../../../components/table.astro';
+import { camelToKebabCase } from '../../../utils/string';
+import { findMDNLink, findWebComponents, getLinks } from './api-utils';
+import NameCell from './name-table-cell.astro';
+import TypeCell from './type-table-cell.astro';
+
+const { pathname } = Astro.url,
+  components = findWebComponents(pathname);
 ---
 
-Web Component API
+{
+  components.length ? (
+    <>
+      <Heading title="API Reference" level={2} />
+
+      {components.map((component, index) => {
+        const componentName = component.name.replace('Media', '').replace('Element', '');
+
+        const importCode = [
+          `import { defineCustomElement, ${component?.name} } from "vidstack/elements";`,
+          '',
+          `defineCustomElement(${component?.name});`,
+        ].join('\n');
+
+        const instanceCode = [
+          '// Get element reference to call props/methods.',
+          `const instance = document.querySelector("${component.tag.name}");`,
+        ].join('\n');
+
+        const html = [`<${component?.tag.name}></${component?.tag.name}>`].join('\n');
+
+        const props = (component?.instance?.props || [])
+          .filter((prop) => !prop.internal)
+          .map((prop) => {
+            let attr: string | false | undefined =
+              component.attrs?.[prop.name]?.attr ?? camelToKebabCase(prop.name);
+            if (attr === false) attr = undefined;
+
+            return [
+              <NameCell
+                name={prop.name}
+                docs={prop.docs}
+                badges={[attr && `Attribute: ${attr}`]}
+                mdnLink={findMDNLink(getLinks(prop))}
+              />,
+              <TypeCell concise={prop.type.primitive} full={prop.type.full} />,
+              <code>{prop.default ?? 'undefined'}</code>,
+            ];
+          });
+
+        const events = (component.instance?.events || [])
+          .filter((event) => !event.internal)
+          .map((event) => [
+            <NameCell
+              name={event.name}
+              docs={event.docs}
+              badges={[`Detail: ${event.detail.concise}`]}
+              mdnLink={findMDNLink(getLinks(event))}
+            />,
+            <TypeCell concise={event.type.concise} full={`Detail: ${event.detail.full}`} />,
+          ]);
+
+        const instanceProps = (component.instance?.members?.props || [])
+          .filter((prop) => !prop.internal)
+          .map((prop) => [
+            <NameCell
+              name={prop.name}
+              docs={prop.docs}
+              badges={[prop.readonly && 'readonly']}
+              mdnLink={findMDNLink(getLinks(prop))}
+            />,
+            <TypeCell
+              concise={prop.type.concise.includes(' ') ? prop.type.primitive : prop.type.concise}
+              full={prop.type.full}
+            />,
+          ]);
+
+        const instanceMethods = (component.instance?.members?.methods || [])
+          .filter((prop) => !prop.internal)
+          .map((method) => [
+            <NameCell
+              name={method.name}
+              docs={method.docs}
+              mdnLink={findMDNLink(getLinks(method))}
+            />,
+            <TypeCell concise="method" full={method.signature.type} />,
+          ]);
+
+        return (
+          <div class={index === 0 ? 'mt-8' : 'my-16'}>
+            {components.length > 1 ? <Heading title={componentName} level={3} /> : null}
+
+            <div class="not-prose my-5">
+              <CodeBlockWrapper class="text-sm font-normal not-prose">
+                <div class="flex flex-col">
+                  <Code code={importCode} lang="tsx" theme="github-dark" />
+                  <Code code={importCode} lang="tsx" theme="github-light" />
+                  <div class="mt-6">
+                    <Code code={html} lang="html" theme="github-dark" />
+                    <Code code={html} lang="html" theme="github-light" />
+                  </div>
+                </div>
+              </CodeBlockWrapper>
+            </div>
+
+            {component.docs ? <div set:html={component.docs} /> : null}
+
+            {props.length ? (
+              <div>
+                {components.length === 1 ? (
+                  <Heading title="Props" slug={`${componentName}.props`} level={4} />
+                ) : null}
+                <Table cols={['Prop', 'Type', 'Default']} rows={props} />{' '}
+              </div>
+            ) : null}
+
+            {events.length ? (
+              <div class="mt-8">
+                <Heading title="Events" slug={`${componentName}.events`} level={4} />
+                <Table cols={['Event', 'Type']} rows={events} />
+              </div>
+            ) : null}
+
+            {instanceProps.length || instanceMethods.length ? (
+              <div class="mt-8">
+                <Heading title="Instance" slug={`${componentName}.instance`} level={4} />
+                <div class="mt-6 -mb-2">
+                  <CodeBlockWrapper class="text-sm font-normal not-prose">
+                    <Code code={instanceCode} lang="ts" theme="github-dark" />
+                    <Code code={instanceCode} lang="ts" theme="github-light" />
+                  </CodeBlockWrapper>
+                </div>
+                <Table
+                  cols={['Prop/Method', 'Type']}
+                  rows={[...instanceProps, ...instanceMethods]}
+                />
+              </div>
+            ) : null}
+          </div>
+        );
+      })}
+    </>
+  ) : null
+}

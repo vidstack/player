@@ -16,7 +16,7 @@ const { items, activeItem, depth = 0 } = Astro.props;
   items.map((item) => {
     if (isSidebarGroup(item)) {
       return (
-        <ul class="flex flex-col mt-6" role="group">
+        <ul class="flex flex-col mt-7" role="group">
           <h5 class="mb-2 font-semibold text-inverse">{item.title}</h5>
           <Astro.self items={item.items} {activeItem} depth={depth + 1} />
         </ul>
