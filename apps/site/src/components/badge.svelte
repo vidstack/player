@@ -41,12 +41,16 @@
   import clsx from 'clsx';
 
   export let color: BadgeColor = 'purple';
+
+  let _class: string | undefined = undefined;
+  export { _class as class };
 </script>
 
 <div
   class={clsx(
-    'px-1 rounded-sm text-[10px] nav-lg:text-xs nav-lg:py-px border ml-2 font-medium',
+    'px-1 rounded-sm text-[10px] leading-5 border font-medium',
     getBadgeColor(color),
+    _class,
   )}
 >
   <slot />

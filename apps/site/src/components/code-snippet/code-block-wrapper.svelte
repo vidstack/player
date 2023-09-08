@@ -15,7 +15,7 @@
   class={clsx(
     'code-block relative text-sm leading-[var(--leading)] flex flex-col min-h-0 bg-elevate',
     !flat
-      ? 'shadow-md rounded-md border-border/90 border 576:max-h-[32rem] max-h-[60vh] mx-auto'
+      ? 'shadow-sm rounded-md border-border/90 border 576:max-h-[32rem] max-h-[60vh] mx-auto'
       : 'w-full min-h-full',
     _class,
   )}

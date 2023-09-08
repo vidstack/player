@@ -1,8 +1,10 @@
 ---
 import clsx from 'clsx';
+
 import ArrowRightIcon from '~astro-icons/lucide/arrow-right';
 import StarIcon from '~astro-icons/lucide/star';
-import Badge, { BadgeColor } from '../badge.svelte';
+
+import Badge, { type BadgeColor } from '../badge.svelte';
 import type { StageTitle } from '../stage-badge.svelte';
 import StageBadge from '../stage-badge.svelte';
 
@@ -45,9 +47,12 @@ function getHref(href: GridContentItem['href']) {
           <li class="flex flex-col space-y-2 text-inverse w-full">
             <div class="flex flex-row items-center justify-start">
               <span class="font-medium text-inverse">{title}</span>
-              {stage && <StageBadge stage={stage} client:visible />}
+              {stage && <StageBadge class="text-xs ml-2" stage={stage} client:visible />}
               {badge && (
-                <Badge color={typeof badge === 'string' ? undefined : badge.color}>
+                <Badge
+                  class="text-xs ml-2"
+                  color={typeof badge === 'string' ? undefined : badge.color}
+                >
                   {typeof badge === 'string' ? badge : badge.title}
                 </Badge>
               )}

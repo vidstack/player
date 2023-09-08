@@ -4,10 +4,10 @@ import { Code } from 'astro:components';
 import CodeBlockWrapper from '../../../components/code-snippet/code-block-wrapper.svelte';
 import Heading from '../../../components/docs/heading.svelte';
 import Table from '../../../components/table.astro';
-import { findReactComponents } from './api-utils';
-import Header from './header.astro';
-import NamePopup from './name-popup.astro';
-import TypePopup from './type-popup.astro';
+import { findMDNLink, findReactComponents, getLinks } from './api-utils';
+import NameCell from './name-table-cell.astro';
+import Header from './react-api-header.astro';
+import TypeCell from './type-table-cell.astro';
 
 const { pathname } = Astro.url,
   components = findReactComponents(pathname);
@@ -47,8 +47,8 @@ const { pathname } = Astro.url,
         const props = (component.props || [])
           .filter((prop) => !prop.internal)
           .map((prop) => [
-            <NamePopup name={prop.name} docs={prop.docs} />,
-            <TypePopup
+            <NameCell name={prop.name} docs={prop.docs} mdnLink={findMDNLink(getLinks(prop))} />,
+            <TypeCell
               concise={prop.type.concise.includes(' ') ? prop.type.primitive : prop.type.concise}
               full={prop.type.full}
             />,
@@ -58,16 +58,20 @@ const { pathname } = Astro.url,
         const callbacks = (component.callbacks || [])
           .filter((cb) => !cb.internal)
           .map((cb) => [
-            <NamePopup name={cb.name} docs={cb.docs} />,
-            <TypePopup concise="function" full={cb.type.full} />,
-            <code class="empty">-</code>,
+            <NameCell name={cb.name} docs={cb.docs} mdnLink={findMDNLink(getLinks(cb))} />,
+            <TypeCell concise="function" full={cb.type.full} />,
           ]);
 
         const instanceProps = ((hasInstance && component.instance?.members?.props) || [])
           .filter((prop) => !prop.internal && !component.props?.some((p) => p.name === prop.name))
           .map((prop) => [
-            <NamePopup name={prop.name} docs={prop.docs} />,
-            <TypePopup
+            <NameCell
+              name={prop.name}
+              docs={prop.docs}
+              badges={[prop.readonly && 'readonly']}
+              mdnLink={findMDNLink(getLinks(prop))}
+            />,
+            <TypeCell
               concise={prop.type.concise.includes(' ') ? prop.type.primitive : prop.type.concise}
               full={prop.type.full}
             />,
@@ -76,8 +80,12 @@ const { pathname } = Astro.url,
         const instanceMethods = ((hasInstance && component.instance?.members?.methods) || [])
           .filter((prop) => !prop.internal)
           .map((method) => [
-            <NamePopup name={method.name} docs={method.docs} />,
-            <TypePopup concise="method" full={method.signature.type} />,
+            <NameCell
+              name={method.name}
+              docs={method.docs}
+              mdnLink={findMDNLink(getLinks(method))}
+            />,
+            <TypeCell concise="method" full={method.signature.type} />,
           ]);
 
         const instanceUsageCode = hasInstance
@@ -95,30 +103,38 @@ const { pathname } = Astro.url,
           : '';
 
         return (
-          <section class="mt-6">
+          <div class="mt-6">
             <Header
-              title={fullComponentName}
+              title={component.name}
+              slug={fullComponentName}
               description={component.docs}
               {importCode}
               badges={[component.attributes, refType ? `Ref<${instanceName}>` : null]}
             />
 
-            <Table cols={['Prop', 'Type', 'Default']} rows={[...props, ...callbacks]} />
+            {props.length && <Table cols={['Prop', 'Type', 'Default']} rows={props} />}
+
+            {callbacks.length ? (
+              <div class="mt-8">
+                <Heading title="Callbacks" slug={`${fullComponentName}.callbacks`} level={4} />
+                <Table cols={['Callback', 'Type']} rows={callbacks} />
+              </div>
+            ) : null}
 
             {instanceProps.length || instanceMethods.length ? (
-              <>
-                <Heading title={component.instance!.name + 'Instance'} level={4} />
-                <CodeBlockWrapper class="mt-6 not-prose">
+              <div>
+                <Heading title="Instance" slug={`${fullComponentName}.instance`} level={4} />
+                <CodeBlockWrapper class="mt-6 not-prose text-sm">
                   <Code code={instanceUsageCode} lang="tsx" theme="github-dark" />
                   <Code code={instanceUsageCode} lang="tsx" theme="github-light" />
                 </CodeBlockWrapper>
                 <Table
-                  cols={['Prop/Method', 'Type']}
+                  cols={['Instance Prop', 'Type']}
                   rows={[...instanceProps, ...instanceMethods]}
                 />
-              </>
+              </div>
             ) : null}
-          </section>
+          </div>
         );
       })}
     </>

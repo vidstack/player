@@ -1,19 +1,21 @@
 <script lang="ts">
   import clsx from 'clsx';
 
-  import { offset as _offset, type Placement } from '@floating-ui/dom';
+  import { type Placement } from '@floating-ui/dom';
 
   import { createAriaMenu } from '../aria/menu';
 
   export let as = 'button';
   export let offset = 8;
+  export let hover = false;
   export let placement: Placement = 'bottom';
   export let type: 'menu' | 'dialog' = 'menu';
 
   const { menuTrigger, menu, isMenuOpen, isMenuVisible } = createAriaMenu({
     placement,
     type,
-    middleware: [_offset(offset)],
+    offset,
+    hover,
   });
 </script>
 

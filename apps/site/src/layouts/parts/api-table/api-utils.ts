@@ -1,18 +1,48 @@
 import { LRUCache } from 'lru-cache/min';
 
-import { reactComponents } from '../../../api/component-api';
+import { reactComponents, webComponents } from '../../../api/component-api';
 import { pascalToKebabCase } from '../../../utils/string';
 
 const cache = new LRUCache<string, any[]>({
   maxSize: 512,
-  sizeCalculation(value) {
+  sizeCalculation() {
     return 1;
   },
 });
 
+export function findWebComponents(pathname: string) {
+  if (cache.has(pathname)) {
+    return cache.get(pathname)! as typeof webComponents;
+  }
+
+  let components = webComponents.filter((c) => {
+    let slug = '/' + c.tag.name.replace('media-', '');
+
+    // Special Cases.
+    if (/^plyr-$/.test(slug)) {
+      slug = '/plyr-layout';
+    } else if (/-layout$/.test(slug)) {
+      slug = '/default-layout';
+    } else if (/\/controls/.test(slug)) {
+      slug = '/controls';
+    } else if (/\/tooltip/.test(slug)) {
+      slug = '/tooltip';
+    } else if (/\/menu/.test(slug)) {
+      slug = '/menu';
+    } else if (/\/radio/.test(slug)) {
+      slug = '/radio-group';
+    }
+
+    return pathname.endsWith(slug);
+  });
+
+  cache.set(pathname, components);
+  return components;
+}
+
 export function findReactComponents(pathname: string) {
   if (cache.has(pathname)) {
-    return cache.get(pathname)!;
+    return cache.get(pathname)! as typeof reactComponents;
   }
 
   let components = reactComponents.filter((c) => {
@@ -57,4 +87,19 @@ export function findReactComponents(pathname: string) {
 
   cache.set(pathname, components);
   return components;
+}
+
+export function getLinks(
+  prop: PropMeta | MethodMeta | EventMeta | ReactPropMeta | ReactCallbackMeta,
+) {
+  return prop.doctags
+    ? prop.doctags
+        .filter((tag) => /(see|link)/.test(tag.name) && tag.text && tag.text.includes('http'))
+        .map((tag) => tag.text!)
+    : [];
+}
+
+const mdnRE = /(mozilla|mdn)/;
+export function findMDNLink(links: string[]) {
+  return links.find((tag) => mdnRE.test(tag));
 }

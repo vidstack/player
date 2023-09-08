@@ -20,8 +20,8 @@
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-  --font-family-mono: Fira Code VF, ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
-    Liberation, Mono, monospace;
+  --font-family-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation, Mono,
+    monospace;
 }
 
 body {

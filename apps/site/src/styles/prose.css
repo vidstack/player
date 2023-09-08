@@ -25,7 +25,7 @@
 }
 
 .prose p:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply my-8;
+  @apply my-8 font-normal;
 }
 
 .prose ol:not(:where([class~='not-prose'], [class~='not-prose'] *)),
@@ -62,17 +62,8 @@
   @apply my-3;
 }
 
-.prose h1,
-.prose h2,
-.prose h3,
-.prose h4,
-.prose h5,
-.prose h6 {
-  @apply text-inverse;
-}
-
 .prose h1:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply mb-[0.88em] mt-0 text-4xl font-[800] leading-[1.1];
+  @apply text-inverse mb-[0.88em] mt-0 text-4xl font-[800] leading-[1.1];
 }
 
 .prose h1 strong {
@@ -80,7 +71,7 @@
 }
 
 .prose h2:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply mb-[1em] mt-[2em] text-3xl font-[700] leading-[1.33];
+  @apply text-inverse mb-[1em] mt-[2em] text-3xl font-[700] leading-[1.33];
 }
 
 .prose h2 strong {
@@ -88,7 +79,7 @@
 }
 
 .prose h3:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply mb-[0.6em] mt-[1.6em] text-2xl font-[600] leading-[1.6];
+  @apply text-inverse mb-[0.6em] mt-[1.6em] text-2xl font-[600] leading-[1.6];
 }
 
 .prose h3 strong {
@@ -96,7 +87,7 @@
 }
 
 .prose h4:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply mb-[0.6em] mt-[1.5em] text-[22px] font-[600] leading-[1.5];
+  @apply text-inverse mb-[0.6em] mt-[1.5em] text-[20px] font-[500] leading-[1.5];
 }
 
 .prose h4 strong {
@@ -143,7 +134,8 @@
 }
 
 .prose thead {
-  @apply text-inverse font-medium;
+  @apply text-inverse bg-border/10 dark:bg-border/30 sticky left-0 top-0 w-full font-medium;
+  backdrop-filter: blur(8px);
 }
 
 .prose thead th {
@@ -151,11 +143,11 @@
 }
 
 .prose tbody {
-  @apply align-baseline;
+  @apply w-full align-baseline;
 }
 
 .prose tr {
-  @apply border-border/60 inline-flex w-full border-b;
+  @apply border-border/60 w-full border-b;
 }
 
 .prose td {
@@ -191,6 +183,8 @@
 }
 
 .prose pre {
+  display: inline-flex;
+  overflow: visible !important;
   tab-size: 2;
   -o-tab-size: 2;
   -moz-tab-size: 2;

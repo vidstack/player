@@ -7,11 +7,12 @@
 
   export let title: string;
   export let level: number;
+  export let slug: string | undefined = undefined;
 
   let _class: string | undefined = undefined;
   export { _class as class };
 
-  const titleSlug = slugify(title, { lower: true });
+  const titleSlug = slugify(slug ?? title, { lower: true });
 </script>
 
 <div class={clsx('heading-wrapper', _class)}>

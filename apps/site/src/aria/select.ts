@@ -1,4 +1,4 @@
-import { offset, shift } from '@floating-ui/dom';
+import { flip, offset, shift } from '@floating-ui/dom';
 import type { ActionReturn } from 'svelte/action';
 import { get, readonly, writable } from 'svelte/store';
 
@@ -11,6 +11,7 @@ import { createPopper, type PopperOptions } from './popper';
 
 export interface AriaSelectOptions<T extends string> extends PopperOptions {
   defaultValue?: T | T[];
+  offset?: number;
   multiple?: boolean;
   disabled?: boolean;
   required?: boolean;
@@ -55,7 +56,12 @@ export function createSelect<T extends string = string>({
       {
         strategy: 'fixed',
         placement: 'bottom',
-        middleware: [offset(8), shift({ padding: 8 }), ...(options.middleware || [])],
+        middleware: [
+          offset(options.offset ?? 6),
+          flip(),
+          shift({ padding: options.offset ?? 6 }),
+          ...(options.middleware || []),
+        ],
         ...options,
       },
     ),

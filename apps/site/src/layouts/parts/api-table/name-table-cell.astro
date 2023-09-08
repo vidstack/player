@@ -1,0 +1,54 @@
+---
+import ExternalLinkIcon from '~astro-icons/lucide/external-link';
+
+import Badge from '../../../components/badge.svelte';
+import InfoCell from './info-table-cell.astro';
+
+interface Props {
+  name: string;
+  badges?: (string | null | undefined | false)[];
+  mdnLink?: string;
+  docs?: string;
+}
+
+const { name, docs, badges, mdnLink } = Astro.props;
+
+const badgeColors = ['green', 'purple', 'blue'] as const;
+---
+
+<div class="inline-flex items-center">
+  <code>{name}</code>
+  {
+    docs && (
+      <InfoCell label={`Show ${name} description`} contain>
+        {badges?.length || mdnLink ? (
+          <div class="flex space-x-2 items-center w-full">
+            {badges?.length
+              ? badges.filter(Boolean).map((badge, i) => (
+                  <Badge class="text-xs" color={badgeColors[i]}>
+                    {badge}
+                  </Badge>
+                ))
+              : null}
+            {mdnLink ? (
+              <>
+                <div class="flex-1" />
+                <a
+                  class="flex items-center text-[13px] text-soft hover:text-inverse not-prose hover:cursor-pointer"
+                  aria-label="Learn more on MDN"
+                  target="_blank"
+                  rel="noreferrer"
+                  href={mdnLink}
+                >
+                  <span class="mr-1">MDN</span>
+                  <ExternalLinkIcon class="w-3 h-3" />
+                </a>
+              </>
+            ) : null}
+          </div>
+        ) : null}
+        <Fragment set:html={docs} />
+      </InfoCell>
+    )
+  }
+</div>

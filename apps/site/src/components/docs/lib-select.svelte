@@ -16,9 +16,9 @@
     $currentJSLibrary = value as JSLibrary;
 
     if ($currentJSLibrary === 'react') {
-      location.href = location.href.replace('/web-components', '');
+      location.href = location.href.replace('/wc', '');
     } else {
-      location.href = location.href.replace('/docs', '/docs/web-components');
+      location.href = location.href.replace('/docs', '/docs/wc');
     }
   }
 </script>

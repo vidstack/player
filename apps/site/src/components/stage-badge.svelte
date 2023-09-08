@@ -24,9 +24,12 @@
 <script lang="ts">
   import Badge from './badge.svelte';
 
+  let _class: string | undefined = undefined;
+  export { _class as class };
+
   export let stage: StageTitle;
 
   $: title = typeof stage === 'number' ? stage + '.0' : stage;
 </script>
 
-<Badge color={getColor(stage)}>{title}</Badge>
+<Badge class={_class} color={getColor(stage)}>{title}</Badge>
