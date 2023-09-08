@@ -1,4 +1,5 @@
 import { Component } from 'maverick.js';
+
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaFullscreenRequestTarget } from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
@@ -20,6 +21,8 @@ export interface FullscreenButtonProps extends ToggleButtonControllerProps {
 /**
  * A button for toggling the fullscreen mode of the player.
  *
+ * @attr data-fullscreen - Whether fullscreen mode is active.
+ * @attr aria-hidden - Whether fullscreen is _not_ available.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/fullscreen-button}
  * @see {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen}
  */

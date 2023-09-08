@@ -1,5 +1,6 @@
 import { Component, provideContext, signal } from 'maverick.js';
 import { listenEvent, setAttribute } from 'maverick.js/std';
+
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { Popper } from '../popper/popper';
@@ -11,6 +12,8 @@ let id = 0;
  * A contextual text bubble that displays a description for an element that appears on pointer
  * hover or keyboard focus.
  *
+ * @attr data-showing - Whether tooltip is visible.
+ * @attr data-hocus - Whether tooltip is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tooltip_role}
  */

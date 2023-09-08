@@ -1,6 +1,7 @@
 import { Component, effect, peek, State } from 'maverick.js';
 import { animationFrameThrottle, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
+
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { findActiveCue } from '../../../core/tracks/text/utils';
 import { $ariaBool } from '../../../utils/aria';
@@ -17,6 +18,8 @@ export interface ThumbnailState {
 /**
  * Used to load and display a preview thumbnail at the given `time`.
  *
+ * @attr data-loading - Whether thumbnail image is loading.
+ * @attr aria-hidden - Whether thumbnail is not available.
  * @docs {@link https://www.vidstack.io/docs/player/components/display/thumbnail}
  */
 export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {

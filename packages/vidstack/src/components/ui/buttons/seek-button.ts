@@ -20,6 +20,9 @@ export interface SeekButtonProps {
 /**
  * A button for seeking the current media playback forwards or backwards by a specified amount.
  *
+ * @attr data-focus - Whether button is being keyboard focused.
+ * @attr data-hocus - Whether button is being keyboard focused or hovered over.
+ * @attr aria-hidden - Whether seeking operations are _not_ permitted.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/seek-button}
  */
 export class SeekButton extends Component<SeekButtonProps> {

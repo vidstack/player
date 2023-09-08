@@ -75,6 +75,38 @@ declare global {
  * requests, and expose media state through HTML attributes and CSS properties for styling
  * purposes.
  *
+ * @attr data-autoplay - Autoplay has successfully started.
+ * @attr data-autoplay-error - Autoplay has failed to start.
+ * @attr data-buffering - Media is not ready for playback or waiting for more data.
+ * @attr data-can-fullscreen - Fullscreen mode is available.
+ * @attr data-can-load - Media can now begin loading.
+ * @attr data-can-pip - Picture-in-Picture mode is available.
+ * @attr data-can-play - Media is ready for playback.
+ * @attr data-can-seek - Seeking operations are permitted.
+ * @attr data-captions - Captions are available and visible.
+ * @attr data-controls - Controls are visible.
+ * @attr data-ended - Playback has ended.
+ * @attr data-error - Issue with media loading/playback.
+ * @attr data-fullscreen - Fullscreen mode is active.
+ * @attr data-ios-controls - iOS controls are visible.
+ * @attr data-live - Media is live stream.
+ * @attr data-live-edge - Playback is at the live edge.
+ * @attr data-loop - Media is set to replay on end.
+ * @attr data-media-type - Current media type (audio/video).
+ * @attr data-muted - Whether volume is muted (0).
+ * @attr data-orientation - Current screen orientation (horizontal/vertical).
+ * @attr data-paused - Whether playback is paused.
+ * @attr data-pip - Picture-in-picture mode is active.
+ * @attr data-playing - Playback is active.
+ * @attr data-playsinline - Media should play inline by default (iOS).
+ * @attr data-pointer - The user's pointer device type (coarse/fine).
+ * @attr data-seeking - User is seeking to a new playback position.
+ * @attr data-started - Media playback has started.
+ * @attr data-stream-type - Current stream type.
+ * @attr data-view-type - Current view type (audio/video).
+ * @attr data-waiting - Media is waiting for more data to resume playback.
+ * @attr data-focus - Whether player is being keyboard focused.
+ * @attr data-hocus - Whether player is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/media/player}
  */
 export class MediaPlayer

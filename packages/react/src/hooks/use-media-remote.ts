@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { useReactContext } from 'maverick.js/react';
 import { mediaContext, MediaRemoteControl } from 'vidstack/local';
 
@@ -9,7 +10,7 @@ import { mediaContext, MediaRemoteControl } from 'vidstack/local';
  * @param target - The DOM event target to dispatch request events from. Defaults to player
  * if no target is provided.
  *
- * @docs {@link https://vidstack.io/docs/react/player/core-concepts/state#updating}
+ * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-media-remote}
  */
 export function useMediaRemote(
   target?: EventTarget | null | React.RefObject<EventTarget | null>,

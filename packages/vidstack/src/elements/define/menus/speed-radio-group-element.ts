@@ -4,6 +4,7 @@ import { SpeedRadioGroup } from '../../../components';
 import { renderMenuItemsTemplate } from './_template';
 
 /**
+ * @part label - Contains the speed option label.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/playback-rate-menu}
  * @example
  * ```html

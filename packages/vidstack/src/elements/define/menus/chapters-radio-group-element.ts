@@ -1,9 +1,13 @@
 import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
+
 import { ChaptersRadioGroup, type ChaptersRadioOption } from '../../../components';
 import { renderMenuItemsTemplate } from './_template';
 
 /**
+ * @part label - Contains the chapter option title.
+ * @part start-time - Contains the chapter option start time.
+ * @part duration - Contains the chapter option duration.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/chapters-menu}
  * @example
  * ```html

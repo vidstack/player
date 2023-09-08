@@ -105,7 +105,7 @@
 }
 
 .prose code:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply text-inverse mx-px rounded-[3px] border-0 font-mono text-[0.84em] font-medium;
+  @apply text-inverse mx-px rounded-[3px] border-0 font-mono text-[0.84em] font-semibold;
   font-variant-ligatures: none;
 }
 
@@ -163,7 +163,7 @@
 }
 
 .prose tbody tr td:first-child code {
-  @apply text-code-fn/90 border-0 bg-transparent px-1 py-0.5 !shadow-transparent;
+  @apply text-code-fn/90 border-0 bg-transparent px-1 py-0.5 font-medium !shadow-transparent;
 }
 
 .prose figure {

@@ -1,11 +1,12 @@
 import { useReactContext } from 'maverick.js/react';
 import { mediaContext } from 'vidstack/local';
+
 import type { MediaPlayerInstance } from '../components/primitives/instances';
 
 /**
  * Returns the nearest parent player component.
  *
- * @docs {@link https://vidstack.io/docs/react/player/core-concepts/state#media-player}
+ * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-media-player}
  */
 export function useMediaPlayer(): MediaPlayerInstance | null {
   const context = useReactContext(mediaContext);

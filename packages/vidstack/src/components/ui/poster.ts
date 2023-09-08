@@ -1,5 +1,6 @@
 import { Component, effect, State } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
+
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { preconnect } from '../../utils/network';
 
@@ -27,6 +28,8 @@ export interface PosterState {
  * Loads and displays the current media poster image. By default, the media provider's
  * loading strategy is respected meaning the poster won't load until the media can.
  *
+ * @attr data-loading - Whether poster image is loading.
+ * @attr data-hidden - Whether poster should be hidden (failed to load).
  * @docs {@link https://www.vidstack.io/docs/player/components/media/poster}
  */
 export class Poster extends Component<PosterProps, PosterState> {

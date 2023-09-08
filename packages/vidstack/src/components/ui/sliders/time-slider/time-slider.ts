@@ -1,6 +1,7 @@
 import throttle from 'just-throttle';
 import { Component, effect, peek, provideContext, signal, useContext } from 'maverick.js';
 import { isNull, setAttribute } from 'maverick.js/std';
+
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { observeActiveTextTrack } from '../../../../core/tracks/text/utils';
@@ -21,8 +22,16 @@ import { sliderContext } from '../slider/slider-context';
 import { SliderController, type SliderControllerProps } from '../slider/slider-controller';
 
 /**
- * A slider control that lets the user specify their desired time level.
+ * Versatile and user-friendly input time control designed for seamless cross-browser and provider
+ * compatibility and accessibility with ARIA support. It offers a smooth user experience for both
+ * mouse and touch interactions and is highly customizable in terms of styling. Users can
+ * effortlessly change the current playback time within the range 0 to seekable end.
  *
+ * @attr data-dragging - Whether slider thumb is being dragged.
+ * @attr data-pointing - Whether user's pointing device is over slider.
+ * @attr data-interactive - Whether slider is being interacted with.
+ * @attr data-focus - Whether slider is being keyboard focused.
+ * @attr data-hocus - Whether slider is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/time-slider}
  */
 export class TimeSlider extends Component<

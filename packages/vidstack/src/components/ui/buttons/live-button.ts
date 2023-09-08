@@ -1,4 +1,5 @@
 import { Component } from 'maverick.js';
+
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { $ariaBool, ariaBool } from '../../../utils/aria';
@@ -17,6 +18,11 @@ export interface LiveIndicatorProps {
  * live, at the live edge, or not live. In addition, when this button is pressed it will skip
  * ahead to the live edge.
  *
+ * @attr data-live - Current media is live.
+ * @attr data-live-edge - Playback is at the live edge.
+ * @attr aria-hidden - Whether current media is _not_ live.
+ * @attr data-focus - Whether button is being keyboard focused.
+ * @attr data-hocus - Whether button is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/live-button}
  */
 export class LiveButton extends Component<LiveIndicatorProps> {

@@ -1,4 +1,5 @@
 import { Host } from 'maverick.js/element';
+
 import { TimeSlider } from '../../../components';
 
 /**
@@ -6,10 +7,10 @@ import { TimeSlider } from '../../../components';
  * @example
  * ```html
  * <media-time-slider>
- *   <div class="slider-track"></div>
- *   <div class="slider-track-fill"></div>
- *   <div class="slider-track-progress"></div>
- *   <div class="slider-thumb"></div>
+ *   <div class="track"></div>
+ *   <div class="track-fill"></div>
+ *   <div class="track-progress"></div>
+ *   <div class="thumb"></div>
  * </media-time-slider>
  * ```
  * @example

@@ -15,6 +15,7 @@ import {
 } from 'maverick.js';
 import { animationFrameThrottle } from 'maverick.js/std';
 import { VTTCue } from 'media-captions';
+
 import { observeActiveTextTrack } from '../../../../core';
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
@@ -23,6 +24,9 @@ import type { SliderState } from '../slider/api/state';
 import { TimeSlider } from './time-slider';
 
 /**
+ * Used to create predefined sections within a time slider interface based on the currently
+ * active chapters text track.
+ *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-chapters}
  */
 export class SliderChapters extends Component<SliderChaptersProps> {

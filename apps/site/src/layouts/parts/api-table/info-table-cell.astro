@@ -39,6 +39,15 @@ const { label, center, contain } = Astro.props;
     font-weight: 400;
   }
 
+  div :global(p:last-child) {
+    margin-top: 12px;
+    margin-bottom: 0;
+  }
+
+  div :global(p:only-child) {
+    margin: 4px 0;
+  }
+
   div :global(p + ul) {
     margin-top: -4px;
   }

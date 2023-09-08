@@ -23,6 +23,7 @@ import { RadioGroupController } from '../radio/radio-group-controller';
 /**
  * This component manages media chapters inside of a radio group.
  *
+ * @attr data-thumbnails - Whether thumbnails are available.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/chapters-menu}
  */
 export class ChaptersRadioGroup extends Component<

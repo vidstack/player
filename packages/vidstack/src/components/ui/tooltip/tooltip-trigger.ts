@@ -8,6 +8,7 @@ import { tooltipContext } from './tooltip-context';
  * Wraps the element that will trigger showing/hiding the tooltip on hover or keyboard focus. The
  * tooltip content is positioned relative to this element.
  *
+ * @attr data-hocus - Whether tooltip is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
  */
 export class TooltipTrigger extends Component {

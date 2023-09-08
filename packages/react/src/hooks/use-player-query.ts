@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { scoped } from 'maverick.js';
 import { useReactScope } from 'maverick.js/react';
 import { listenEvent } from 'maverick.js/std';
@@ -16,7 +17,7 @@ import { PlayerQueryList } from 'vidstack/local';
  * const matches = usePlayerQuery("(width < 680) and (streamType: on-demand)");
  * ```
  *
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList}
+ * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-player-query}
  */
 export function usePlayerQuery(query: string): boolean {
   const scope = useReactScope(),

@@ -48,7 +48,13 @@ export const sidebarItemsOrder: Record<string, DocsFileIdentifiers[]> = {
     'player/api/providers/audio.mdx',
     'player/api/providers/video.mdx',
     'player/api/providers/hls.mdx',
-    // Hooks
+    // WC Classes
+    'player/api/wc/classes/media-remote-control.mdx',
+    // WC Utils
+    'player/api/wc/utils/event-triggers.mdx',
+    // React Hooks
+    'player/api/react/hooks/use-state.mdx',
+    'player/api/react/hooks/use-store.mdx',
     'player/api/react/hooks/use-media-player.mdx',
     'player/api/react/hooks/use-media-provider.mdx',
     'player/api/react/hooks/use-media-remote.mdx',
@@ -56,7 +62,7 @@ export const sidebarItemsOrder: Record<string, DocsFileIdentifiers[]> = {
     'player/api/react/hooks/use-slider-state.mdx',
     'player/api/react/hooks/use-player-query.mdx',
     'player/api/react/hooks/use-thumbnails.mdx',
-    'player/api/react/hooks/use-text-track.mdx',
+    'player/api/react/hooks/create-text-track.mdx',
     'player/api/react/hooks/use-active-text-cues.mdx',
     'player/api/react/hooks/use-active-text-track.mdx',
     'player/api/react/hooks/use-audio-options.mdx',
