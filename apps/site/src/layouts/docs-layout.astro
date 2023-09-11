@@ -6,7 +6,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import Algolia from '../components/algolia/algolia.astro';
 import LibSelect from '../components/docs/lib-select.svelte';
-import { currentJSLibrary, type JSLibrary } from '../stores/libraries';
+import { currentJSLibrary, getJSLibraryFromPathname, type JSLibrary } from '../stores/libraries';
 import { kebabToTitleCase } from '../utils/string';
 import AppLayout from './app-layout.astro';
 import type { DocsPagination } from './nav/docs-sidebar-items';
@@ -28,14 +28,16 @@ export interface Props {
   sidebar: {
     id: string;
     root: string;
-    item: SidebarItem | null;
     items: SidebarItem[];
+    deepMatch?: boolean;
   };
 }
 
-const { jsLibrary, categories, category, page, pageTitle, pagination, sidebar } = Astro.props,
+const { pathname } = Astro.url,
+  { categories, category, page, pageTitle, pagination, sidebar } = Astro.props,
   { description } = page.data,
-  { headings, Content } = await page.render();
+  { headings, Content } = await page.render(),
+  jsLibrary = getJSLibraryFromPathname(pathname);
 
 currentJSLibrary.set(jsLibrary);
 
@@ -75,7 +77,7 @@ const isPlayerPage = page.slug.startsWith('player'),
       {categories}
       activeCategory={sidebar.root}
       items={sidebar.items}
-      activeItem={sidebar.item}
+      deepMatch={sidebar.deepMatch}
     />
 
     <main

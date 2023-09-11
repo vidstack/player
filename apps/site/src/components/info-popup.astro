@@ -3,18 +3,22 @@ import clsx from 'clsx';
 
 import InfoIcon from '~astro-icons/lucide/info';
 
-import Menu from '../../../components/menu.svelte';
+import type { Placement } from '@floating-ui/dom';
+
+import Menu from './menu.svelte';
 
 interface Props {
   label: string;
+  class?: string;
   center?: boolean;
   contain?: boolean;
+  placement?: Placement;
 }
 
-const { label, center, contain } = Astro.props;
+const { label, class: _class, center, contain, placement = 'top' } = Astro.props;
 ---
 
-<Menu class="ml-px rounded-full" client:visible placement="top" type="dialog">
+<Menu class={clsx('rounded-full', _class)} {placement} type="dialog" client:visible>
   <Fragment slot="trigger">
     <InfoIcon class="w-[14px] h-[14px] hover:text-inverse" />
     <span class="sr-only">{label}</span>
@@ -24,8 +28,8 @@ const { label, center, contain } = Astro.props;
     class={clsx(
       'max-h-[300px] leading-5 whitespace-normal text-soft text-[13px] content',
       'overflow-auto scrollbar font-normal not-prose',
-      contain ? 'max-w-[45ch]' : 'max-w-[88ch]',
-      center && 'text-center',
+      contain ? 'max-w-[46ch]' : 'max-w-[88ch]',
+      center ? 'text-center' : 'text-left',
     )}
     slot="content"
   >
@@ -64,6 +68,7 @@ const { label, center, contain } = Astro.props;
   }
 
   div :global(code) {
+    color: rgb(var(--color-brand));
     font-weight: 500;
     font-size: 0.9em !important;
     padding: 0 !important;
@@ -71,5 +76,15 @@ const { label, center, contain } = Astro.props;
 
   div :global(pre) {
     overflow: visible !important;
+  }
+
+  div :global(a) {
+    border: 0;
+    font-weight: 500;
+    text-decoration: underline;
+  }
+
+  div :global(:where(a:hover, a:focus-visible)) {
+    color: rgb(var(--color-inverse));
   }
 </style>

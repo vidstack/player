@@ -1,7 +1,7 @@
 ---
 import { Code } from 'astro:components';
 
-import InfoCell from './info-table-cell.astro';
+import InfoPopup from '../../../components/info-popup.astro';
 
 interface Props {
   concise: any;
@@ -17,10 +17,10 @@ const { concise, full } = Astro.props;
   </code>
   {
     concise !== full && (
-      <InfoCell label="Show more info" center>
+      <InfoPopup class="ml-px" label="Show more info" center>
         <Code code={full} lang="tsx" theme="github-dark" />
         <Code code={full} lang="tsx" theme="github-light" />
-      </InfoCell>
+      </InfoPopup>
     )
   }
 </div>

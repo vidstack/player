@@ -17,7 +17,7 @@
 }
 
 .prose a:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply text-brand border-0 text-[0.95em] font-medium hover:border-2;
+  @apply hocus:text-inverse border-0 text-[0.95em] font-medium underline;
 }
 
 .prose blockquote {

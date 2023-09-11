@@ -1,7 +1,11 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"]
+    }
   },
-  "exclude": ["./src/snippets"]
+  "exclude": ["./src/snippets/home/**", "./src/snippets/media-icons/**"]
 }

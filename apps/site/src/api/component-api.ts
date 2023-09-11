@@ -2,12 +2,7 @@ import {
   walkComponentDocs,
   type ComponentMeta,
   type CustomElementMeta,
-  type EventMeta,
-  type MethodMeta,
-  type PropMeta,
-  type ReactCallbackMeta,
   type ReactComponentMeta,
-  type ReactPropMeta,
 } from '@maverick-js/cli/analyze';
 import reactAnalysis from '@vidstack/react/analyze.json';
 import MarkdownIt from 'markdown-it';

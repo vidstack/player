@@ -1,3 +1,10 @@
+import type {
+  EventMeta,
+  MethodMeta,
+  PropMeta,
+  ReactCallbackMeta,
+  ReactPropMeta,
+} from '@maverick-js/cli/analyze';
 import { LRUCache } from 'lru-cache/min';
 
 import { reactComponents, webComponents } from '../../../api/component-api';
@@ -11,6 +18,8 @@ const cache = new LRUCache<string, any[]>({
 });
 
 export function findWebComponents(pathname: string) {
+  pathname = pathname.replace(/\/$/, '');
+
   if (cache.has(pathname)) {
     return cache.get(pathname)! as typeof webComponents;
   }
@@ -41,6 +50,8 @@ export function findWebComponents(pathname: string) {
 }
 
 export function findReactComponents(pathname: string) {
+  pathname = pathname.replace(/\/$/, '');
+
   if (cache.has(pathname)) {
     return cache.get(pathname)! as typeof reactComponents;
   }

@@ -5,4 +5,4 @@ import WebComponentApiTable from '../../layouts/parts/api-table/wc-api-table.ast
 const { pathname } = Astro.url;
 ---
 
-{pathname.includes('wc') ? <WebComponentApiTable /> : <ReactApiTable />}
+{pathname.includes('wc/') ? <WebComponentApiTable /> : <ReactApiTable />}

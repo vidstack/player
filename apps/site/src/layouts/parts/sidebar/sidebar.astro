@@ -1,9 +1,8 @@
 ---
 import clsx from 'clsx';
 
-import type { visible } from '../../../actions/visible';
 import LibSelect from '../../../components/docs/lib-select.svelte';
-import type { SidebarFeatureItem, SidebarItem } from '../../nav/sidebar-items';
+import { type SidebarFeatureItem, type SidebarItem } from '../../nav/sidebar-items';
 import SidebarCategories from './sidebar-categories.astro';
 import SidebarItems from './sidebar-items.astro';
 import SidebarScroll from './sidebar-scroll.svelte';
@@ -12,10 +11,10 @@ interface Props {
   categories?: SidebarFeatureItem[];
   activeCategory?: string;
   items: SidebarItem[];
-  activeItem: SidebarItem | null;
+  deepMatch?: boolean;
 }
 
-const { categories, activeCategory, items, activeItem } = Astro.props;
+const { categories, activeCategory, items, deepMatch } = Astro.props;
 ---
 
 <nav
@@ -32,7 +31,7 @@ const { categories, activeCategory, items, activeItem } = Astro.props;
       'scrollbar scroll-contain overflow-auto',
     )}
   >
-    <LibSelect class="w-full mb-5" client:load />
+    <LibSelect class="w-full mb-5 mt-px" client:load />
     {
       categories && activeCategory && (
         <>
@@ -40,7 +39,7 @@ const { categories, activeCategory, items, activeItem } = Astro.props;
         </>
       )
     }
-    <SidebarItems {items} {activeItem} />
+    <SidebarItems {items} {deepMatch} />
   </div>
 </nav>
 

@@ -20,8 +20,6 @@ export const sidebarItemsOrder: Record<string, DocsFileIdentifiers[]> = {
     'player/overview/getting-started/introduction.mdx',
     // Getting Started
     'player/overview/getting-started/installation/index.mdx',
-    'player/overview/getting-started/editor-setup.mdx',
-    'player/overview/getting-started/browser-support.mdx',
     'player/overview/getting-started/architecture.mdx',
     'player/overview/getting-started/accessibility.mdx',
     // Core Concepts

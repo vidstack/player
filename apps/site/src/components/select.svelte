@@ -1,9 +1,19 @@
+<script lang="ts" context="module">
+  export interface Option {
+    label: string;
+    value: string;
+    group?: string;
+  }
+</script>
+
 <script lang="ts">
   import clsx from 'clsx';
 
   import CheckIcon from '~icons/lucide/check';
   import ChevronDownIcon from '~icons/lucide/chevron-down';
 
+  import { visible } from '~/actions/visible';
+  import { isString } from '~/utils/unit';
   import { createEventDispatcher } from 'svelte';
 
   import { createSelect } from '../aria/select';
@@ -13,8 +23,9 @@
   }>();
 
   export let label: string;
-  export let options: { label: string; value: string }[];
-  export let defaultValue: string | undefined = undefined;
+  export let value: string | string[] | undefined = undefined;
+  export let options: Option[];
+  export let defaultValue: string | string[] | undefined = undefined;
   export let required = false;
   export let multiple = false;
   export let disabled = false;
@@ -22,7 +33,7 @@
 
   const { selectTrigger, selectMenu, selectOption, selectedValues, isSelectOpen, isSelectVisible } =
     createSelect({
-      defaultValue,
+      defaultValue: defaultValue ?? value,
       required,
       multiple,
       get disabled() {
@@ -30,9 +41,23 @@
       },
     });
 
+  $: if (value) {
+    selectedValues.set(isString(value) ? [value] : value);
+  }
+
   $: dispatch('change', $selectedValues);
-  $: selectionLabel = $selectedValues.map((v) => options.find(({ value }) => v === value)!.label);
+
+  $: selectionLabel = $selectedValues
+    .map((v) => options.find(({ value }) => v === value)?.label)
+    .filter(Boolean) as string[];
+
   $: currentLabel = selectionLabel.join(', ') || label;
+
+  // Sort into groups.
+  $: groups = options.reduce(
+    (p, option) => ({ ...p, [option.group || '']: [...(p[option.group || ''] || []), option] }),
+    {} as Record<string, Option[]>,
+  );
 </script>
 
 <button
@@ -48,7 +73,10 @@
   )}
   use:selectTrigger={label}
 >
-  <span class="flex items-center max-w-full truncate">
+  <span
+    class="flex items-center max-w-full truncate opacity-0 data-[visible]:opacity-100 transition-opacity"
+    use:visible
+  >
     <slot name="icon" />
     {currentLabel}
   </span>
@@ -69,21 +97,30 @@
   style="display: none;"
 >
   {#if $isSelectVisible}
-    {#each options as { label, value }}
-      {@const isSelected = $selectedValues.includes(value)}
-      <button
-        type="button"
-        class={clsx(
-          'relative flex items-center pl-8 py-2 w-full text-sm',
-          isSelected ? 'text-inverse' : 'text-soft hocus:bg-brand/10 hocus:text-inverse ',
-        )}
-        use:selectOption={value}
-      >
-        {#if isSelected}
-          <CheckIcon class="w-4 h-4 absolute left-2 text-brand shrink-0" />
+    {#each Object.keys(groups) as group}
+      <svelte:element this={group ? 'section' : 'div'} class="flex flex-col pt-2.5">
+        {#if group}
+          <h1 class="text-xs font-medium text-soft mb-2 ml-0.5">{group}</h1>
         {/if}
-        {label}
-      </button>
+
+        {#each groups[group] as { label, value }}
+          {@const isSelected = $selectedValues.includes(value)}
+          <button
+            type="button"
+            class={clsx(
+              'relative flex items-center pl-8 py-2 w-full text-sm',
+              isSelected ? 'text-inverse' : 'text-soft hocus:bg-brand/10 hocus:text-inverse ',
+            )}
+            data-group={group}
+            use:selectOption={value}
+          >
+            {#if isSelected}
+              <CheckIcon class="w-4 h-4 absolute left-2 text-brand shrink-0" />
+            {/if}
+            {label}
+          </button>
+        {/each}
+      </svelte:element>
     {/each}
   {/if}
 </div>

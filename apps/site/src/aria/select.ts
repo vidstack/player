@@ -147,7 +147,7 @@ export function createSelect<T extends string = string>({
   }
 
   return {
-    selectedValues: readonly(_selectedValues),
+    selectedValues: _selectedValues,
     isSelectOpen: readonly(_isOpen),
     isSelectVisible: readonly(_isVisible),
     selectTrigger(el: HTMLElement, label: string): ActionReturn {
@@ -224,7 +224,8 @@ export function createSelect<T extends string = string>({
       };
     },
     selectOption(el: HTMLElement, value: T): ActionReturn {
-      const id = `aria-select-option-${_id}-${++_optionId}`;
+      const id = `aria-select-option-${_id}-${++_optionId}`,
+        group = el.getAttribute('data-group');
 
       el.setAttribute('id', id);
       el.setAttribute('role', 'option');
@@ -236,20 +237,40 @@ export function createSelect<T extends string = string>({
       const disposal = new DisposalBin();
       disposal.add(
         onPress(el, (event) => {
-          const values = get(_selectedValues);
-
-          for (const [option, _value] of _options) {
-            option.setAttribute('aria-selected', ariaBool(values.includes(_value)));
-          }
-
           if (multiple) {
+            const values = get(_selectedValues);
+
             if (!values.includes(value)) {
-              _selectedValues.set([...values, value]);
+              let newValues = [...values, value],
+                order: string[] = [];
+
+              if (group) {
+                for (const [option, _value] of _options) {
+                  order.push(_value);
+
+                  if (option === el) continue;
+
+                  const _group = option.getAttribute('data-group');
+                  if (_group && _group === group) {
+                    newValues = newValues.filter((v) => v !== _value);
+                  }
+                }
+
+                newValues.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+              }
+
+              _selectedValues.set(newValues);
             } else {
               _selectedValues.set(values.filter((v) => v !== value));
             }
           } else {
             _selectedValues.set([value]);
+          }
+
+          const values = get(_selectedValues);
+          for (const [option, _value] of _options) {
+            const isSelected = values.includes(_value);
+            option.setAttribute('aria-selected', ariaBool(isSelected));
           }
 
           options.onSelect?.(value, event);

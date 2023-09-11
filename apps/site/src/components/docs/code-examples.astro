@@ -9,7 +9,7 @@ import MockCodeEditor from '../mocks/code-editor/mock-code-editor.astro';
 import CodePreviewLoader from './code-preview-loader.svelte';
 
 const { pathname } = Astro.url,
-  id = pathname.slice(1) + '/examples',
+  id = pathname.slice(1).replace(/\/$/, '') + '/examples',
   jsLibDir = get(currentJSLibrary) === 'web-components' ? 'wc' : get(currentJSLibrary),
   jsLibDirRE = /examples\/(wc|react)\//,
   pathJSLibId = `${id}/${jsLibDir}`,
