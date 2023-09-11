@@ -15,8 +15,8 @@ import {
   isSidebarGroup,
   type SidebarFeatureItem,
   type SidebarGroup,
-  type SidebarItem,
   type SidebarItems,
+  type SidebarLink,
 } from '../../layouts/nav/sidebar-items';
 import { jsLibraries } from '../../stores/libraries';
 import { kebabToTitleCase } from '../../utils/string';
@@ -59,8 +59,8 @@ export async function getStaticPaths() {
             sidebar: {
               id: sidebarId,
               root: rootCategory,
-              item: null, // Set below.
               items: sidebarItems[rootCategory],
+              deepMatch: page.slug.includes('/installation'),
             },
           };
 
@@ -109,13 +109,12 @@ export async function getStaticPaths() {
           group = next.items;
         }
 
-        const item: SidebarItem = {
+        const item: SidebarLink = {
           title: sidebarTitle,
           href: `${basePath}/${page.slug}`,
         };
 
         group.push(item);
-        props.sidebar.item = item;
 
         if (prevPage) {
           props.pagination.prev = {

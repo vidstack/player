@@ -1,5 +1,5 @@
 .docs .category {
-  @apply mt-0;
+  @apply mt-0 font-semibold;
 }
 
 .docs .category + h1 {

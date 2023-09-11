@@ -5,11 +5,14 @@ import { isSidebarGroup, type SidebarItem } from '../../nav/sidebar-items';
 
 interface Props {
   items: SidebarItem[];
-  activeItem: SidebarItem | null;
+  deepMatch?: boolean;
   depth?: number;
 }
 
-const { items, activeItem, depth = 0 } = Astro.props;
+let { pathname } = Astro.url,
+  { items, deepMatch, depth = 0 } = Astro.props;
+
+pathname = pathname.replace(/\/$/, '');
 ---
 
 {
@@ -18,15 +21,21 @@ const { items, activeItem, depth = 0 } = Astro.props;
       return (
         <ul class="flex flex-col mt-7" role="group">
           <h5 class="mb-2 font-semibold text-inverse">{item.title}</h5>
-          <Astro.self items={item.items} {activeItem} depth={depth + 1} />
+          <Astro.self items={item.items} {deepMatch} depth={depth + 1} />
         </ul>
       );
     } else {
+      const isActive = deepMatch
+        ? item.href === pathname ||
+          (pathname.split('/').at(-2) === item.href.split('/').pop() &&
+            pathname.startsWith(item.href))
+        : item.href === pathname;
+
       const link = (
         <a
           class={clsx(
             'flex items-center px-2 py-1.5 rounded-md border mt-px -ml-1',
-            item === activeItem
+            isActive
               ? 'bg-brand/10 border-brand/10 text-brand font-medium shadow-sm'
               : clsx(
                   'text-soft/90 border-transparent',
@@ -34,11 +43,12 @@ const { items, activeItem, depth = 0 } = Astro.props;
                 ),
           )}
           href={item.href}
-          data-active={item === activeItem ? '' : null}
+          data-active={isActive ? '' : null}
         >
           {item.title}
         </a>
       );
+
       return depth == 0 ? link : <li>{link}</li>;
     }
   })

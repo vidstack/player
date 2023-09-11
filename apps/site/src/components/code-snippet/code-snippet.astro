@@ -27,7 +27,10 @@ const { id, highlights: propHighlights, copy, ...restProps } = Astro.props,
 
 function findCodeSnippet(id: string) {
   if (isRelativeId) {
-    const pathId = pathname.slice(1).replace(`/${get(currentJSLibrary)}/`, '/'),
+    const pathId = pathname
+        .slice(1)
+        .replace(/\/$/, '')
+        .replace(`/${get(currentJSLibrary)}/`, '/'),
       jsLibDir = get(currentJSLibrary) === 'web-components' ? 'wc' : get(currentJSLibrary),
       jsLibPathId = `${pathId}/${jsLibDir}`;
 

@@ -1,0 +1,44 @@
+---
+import CSSIcon from '~/icons/css-icon.svelte';
+import TailwindLogo from '~/icons/logos/tailwind-logo.svelte';
+import DefaultLayoutIcon from '~icons/lucide/layout-dashboard';
+
+import DefaultThemeIcon from './icons/default-theme-icon.svelte';
+import CSSInfo from './info/styling/css-info.mdx';
+import DefaultLayoutInfo from './info/styling/default-layout-info.mdx';
+import DefaultThemeInfo from './info/styling/default-theme-info.mdx';
+import TailwindInfo from './info/styling/tailwind-info.mdx';
+import Selections from './selections.astro';
+---
+
+<Selections
+  label="Styling Options"
+  type="css"
+  param="styling"
+  options={[
+    {
+      label: 'CSS',
+      Info: CSSInfo,
+      Icon: CSSIcon,
+      color: 'blue',
+    },
+    {
+      label: 'Default Theme',
+      Info: DefaultThemeInfo,
+      Icon: DefaultThemeIcon,
+      color: 'green',
+    },
+    {
+      label: 'Default Layout',
+      Info: DefaultLayoutInfo,
+      Icon: DefaultLayoutIcon,
+      color: 'orange',
+    },
+    {
+      label: 'Tailwind CSS',
+      Info: TailwindInfo,
+      Icon: TailwindLogo,
+      color: 'cyan',
+    },
+  ]}
+/>

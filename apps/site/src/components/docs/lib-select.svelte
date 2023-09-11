@@ -1,40 +1,51 @@
 <script lang="ts">
-  import HtmlIcon from '../../icons/html-icon.svelte';
-  import ReactLogo from '../../icons/logos/react-logo.svelte';
-  import { currentJSLibrary, jsLibraries, type JSLibrary } from '../../stores/libraries';
+  import {
+    cssLibraries,
+    currentCSSLibrary,
+    currentJSLibrary,
+    jsLibraries,
+    type CSSLibrary,
+    type JSLibrary,
+  } from '../../stores/libraries';
   import { kebabToTitleCase } from '../../utils/string';
-  import Select from '../select.svelte';
+  import Select, { type Option } from '../select.svelte';
 
   let _class: string | undefined = undefined;
   export { _class as class };
 
-  const options = jsLibraries.map((value) => ({ label: kebabToTitleCase(value), value }));
+  const options: Option[] = [
+    ...jsLibraries.map((value) => ({ label: kebabToTitleCase(value), value, group: 'JS' })),
+    ...cssLibraries.map((value) => ({
+      label: kebabToTitleCase(value.replace('css', 'CSS')),
+      value,
+      group: 'CSS',
+    })),
+  ];
 
-  function onChange({ detail: [value] }: CustomEvent<string[]>) {
-    if ($currentJSLibrary === value) return;
+  function onChange({ detail: [jsLib, cssLib] }: CustomEvent<string[]>) {
+    if ($currentJSLibrary !== jsLib) {
+      $currentJSLibrary = jsLib as JSLibrary;
+      if ($currentJSLibrary === 'react') {
+        location.href = location.href.replace('/wc', '');
+      } else {
+        location.href = location.href.replace('/docs', '/docs/wc');
+      }
+    }
 
-    $currentJSLibrary = value as JSLibrary;
-
-    if ($currentJSLibrary === 'react') {
-      location.href = location.href.replace('/wc', '');
-    } else {
-      location.href = location.href.replace('/docs', '/docs/wc');
+    if ($currentCSSLibrary !== cssLib) {
+      $currentCSSLibrary = cssLib as CSSLibrary;
+      const url = new URL(location.href);
+      url.searchParams.set('styling', cssLib);
+      window.history.pushState({}, '', url);
     }
   }
 </script>
 
 <Select
   class={_class}
-  label="JS Library"
+  label="Libraries"
   {options}
-  defaultValue={$currentJSLibrary}
+  value={[$currentJSLibrary, $currentCSSLibrary]}
+  multiple
   on:change={onChange}
->
-  <div slot="icon">
-    {#if $currentJSLibrary === 'web-components'}
-      <HtmlIcon class="w-4 h-4 mr-1" />
-    {:else}
-      <ReactLogo class="w-4 h-4 mr-1.5" />
-    {/if}
-  </div>
-</Select>
+/>

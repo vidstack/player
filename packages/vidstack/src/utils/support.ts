@@ -27,12 +27,7 @@ export function canObserveIntersection(): boolean {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation}
  */
 export function canOrientScreen(): boolean {
-  return (
-    !__SERVER__ &&
-    !isUndefined(screen.orientation) &&
-    isFunction(screen.orientation.lock) &&
-    isFunction(screen.orientation.unlock)
-  );
+  return canRotateScreen() && isFunction(screen.orientation.unlock);
 }
 
 /**
@@ -44,7 +39,7 @@ export function canRotateScreen(): boolean {
   return (
     !__SERVER__ &&
     !isUndefined(window.screen.orientation) &&
-    !isUndefined(window.screen.orientation.lock)
+    !isUndefined((window.screen.orientation as any).lock)
   );
 }
 

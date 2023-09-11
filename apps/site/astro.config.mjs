@@ -75,8 +75,8 @@ export default defineConfig({
   },
   redirects: {
     ...['', 'wc']
-      .flatMap((libPrefix) => {
-        const docs = join('/docs', libPrefix),
+      .flatMap((lib) => {
+        const docs = join('/docs', lib),
           player = join(docs, 'player');
         return Object.entries({
           // Redirects for old links from the previous site.
@@ -86,12 +86,26 @@ export default defineConfig({
           [`${player}/core-concepts/styling`]: `${player}/styling/introduction`,
           [`${player}/core-concepts/tailwind`]: `${player}/styling/tailwind`,
           [`${player}/core-concepts/skins`]: `${player}/styling/layouts`,
-          [`${player}/getting-started/installation`]: `${player}/getting-started/installation/video`,
           // New Redirects.
           [docs]: player,
-          [`${player}/getting-started/installation`]: `${player}/getting-started/installation/video`,
         });
       })
       .reduce((p, [from, to]) => ({ ...p, [from]: to }), {}),
+    // Redirect old installation links.
+    ...['', 'react/']
+      .flatMap((lib) =>
+        ['/cdn', '/cdn/audio', '/cdn/hls', '', '/audio', '/hls'].map(
+          (slug) => `/docs/${lib}player/getting-started/installation${slug}`,
+        ),
+      )
+      .reduce(
+        (p, from) => ({
+          ...p,
+          [from]: `/docs/player/getting-started/installation${
+            from.includes('/react') ? '/react' : ''
+          }`,
+        }),
+        {},
+      ),
   },
 });

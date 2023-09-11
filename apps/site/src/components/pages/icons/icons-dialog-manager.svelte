@@ -218,7 +218,7 @@
           {/if}
         </TabPanel>
         <TabPanel>
-          <CodeSnippet title="html" id="media-icons/svg" copy transform={transformSVGSnippet} />
+          <CodeSnippet title="html" id="media-icons/vector" copy transform={transformSVGSnippet} />
         </TabPanel>
         <TabPanel>
           <CodeSnippet

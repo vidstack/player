@@ -2,13 +2,41 @@ import { writable } from 'svelte/store';
 
 import { IS_BROWSER } from '../utils/env';
 
+// We check other frameworks in this regex for the installation page.
+const wcPathRE = /\/(wc|web\-c|angular|vue|svelte|cdn)/;
+
 export type JSLibrary = 'web-components' | 'react';
 
 export const jsLibraries: JSLibrary[] = ['web-components', 'react'];
 
-export const currentJSLibrary = writable<JSLibrary>(initJSLibraryFromURL());
+export const currentJSLibrary = writable<JSLibrary>(
+  getJSLibraryFromPathname(IS_BROWSER ? location.href : undefined),
+);
 
-function initJSLibraryFromURL(): JSLibrary {
-  if (!IS_BROWSER) return 'react';
-  return location.href.includes('/wc') ? 'web-components' : 'react';
+export function getJSLibraryFromPathname(pathname?: string): JSLibrary {
+  if (!pathname) return 'react';
+  return wcPathRE.test(pathname) ? 'web-components' : 'react';
+}
+
+export type CSSLibrary = 'css' | 'tailwind' | 'default-theme';
+
+export const cssLibraries: CSSLibrary[] = ['css', 'tailwind', 'default-theme'];
+
+export const currentCSSLibrary = writable<CSSLibrary>(
+  getCSSLibraryFromPathname(IS_BROWSER ? location.href : undefined),
+);
+
+export function getCSSLibraryFromPathname(pathname?: string): CSSLibrary {
+  if (!pathname) return 'css';
+
+  const url = new URL(location.href),
+    param = url.searchParams.get('styling');
+
+  // Can be tailwind or tailwind-css on installation page.
+  return param?.startsWith('tailwind')
+    ? 'tailwind'
+    : // Can be default-theme or default-layout on installation page.
+    param?.startsWith('default')
+    ? 'default-theme'
+    : 'css';
 }

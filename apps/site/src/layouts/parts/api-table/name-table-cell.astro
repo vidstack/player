@@ -2,7 +2,7 @@
 import ExternalLinkIcon from '~astro-icons/lucide/external-link';
 
 import Badge from '../../../components/badge.svelte';
-import InfoCell from './info-table-cell.astro';
+import InfoPopup from '../../../components/info-popup.astro';
 
 interface Props {
   name: string;
@@ -20,7 +20,7 @@ const badgeColors = ['green', 'purple', 'blue'] as const;
   <code>{name}</code>
   {
     docs && (
-      <InfoCell label={`Show ${name} description`} contain>
+      <InfoPopup class="ml-px" label={`Show ${name} description`} contain>
         {badges?.length || mdnLink ? (
           <div class="flex space-x-2 items-center w-full">
             {badges?.length
@@ -48,7 +48,7 @@ const badgeColors = ['green', 'purple', 'blue'] as const;
           </div>
         ) : null}
         <Fragment set:html={docs} />
-      </InfoCell>
+      </InfoPopup>
     )
   }
 </div>

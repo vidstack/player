@@ -98,7 +98,7 @@ export class ScreenOrientationController extends ViewController<{}, {}, ScreenOr
   async lock(lockType: ScreenOrientationLockType): Promise<void> {
     if (peek(this._locked) || this._currentLock === lockType) return;
     assertScreenOrientationAPI();
-    await screen.orientation.lock(lockType);
+    await (screen.orientation as any).lock(lockType);
     this._locked.set(true);
     this._currentLock = lockType;
   }
