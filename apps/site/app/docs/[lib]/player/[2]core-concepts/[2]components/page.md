@@ -143,10 +143,10 @@ and directly call properties/methods like so:
 const player = document.querySelector('media-player');
 
 player.onAttach(() => {
-  // Set a instance property:
+  // Set an instance property:
   player.muted = true;
 
-  // Call a instance method:
+  // Call an instance method:
   player.play();
 });
 ```
