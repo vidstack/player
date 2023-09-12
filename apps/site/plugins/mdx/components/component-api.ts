@@ -9,7 +9,7 @@ import { createComponentNode } from './create-component';
 const ComponentAPITagName = 'AutoImportedComponentAPI';
 
 export const componentApiAutoImport: Record<string, [string, string][]> = {
-  './src/components/docs/component-api.astro': [['default', ComponentAPITagName]],
+  './src/docs/components/component-api.astro': [['default', ComponentAPITagName]],
 };
 
 /**

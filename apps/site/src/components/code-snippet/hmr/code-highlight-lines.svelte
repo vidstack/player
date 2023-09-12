@@ -21,7 +21,7 @@
 
 {#if highlightedLines.length > 0}
   <div
-    class="pointer-events-none absolute inset-0 h-full w-full leading-[var(--leading)]"
+    class="pointer-events-none absolute inset-0 h-full w-full leading-[var(--leading)] pt-[var(--code-block-top,0px)]"
     aria-hidden="true"
   >
     {#each lineNumbers as lineNumber}

@@ -45,8 +45,8 @@
     code = (await snippet.code[darkTheme ? 'dark' : 'light']()).default;
   }
 
-  const loader = $codeSnippets.find((snippet) => snippet.id === id);
-  if (loader) loadSnippet(loader);
+  $: loader = $codeSnippets.find((snippet) => snippet.id === id);
+  $: if (loader) loadSnippet(loader);
 
   $: if (snippet) loadCode(snippet, $isDarkColorScheme);
 

@@ -12,7 +12,7 @@ import { createComponentNode } from './create-component';
 const CalloutTagName = 'AutoImportedCallout';
 
 export const calloutAutoImport: Record<string, [string, string][]> = {
-  './src/components/docs/callout.svelte': [['default', CalloutTagName]],
+  './src/docs/components/callout.svelte': [['default', CalloutTagName]],
 };
 
 const calloutTypes = new Set(['note', 'info', 'tip', 'warning', 'danger', 'experimental']);

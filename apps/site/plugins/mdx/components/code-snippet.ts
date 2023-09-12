@@ -14,7 +14,7 @@ export const codeSnippetAutoImport: Record<string, [string, string][]> = {
 };
 
 /**
- * Remark plugin that converts blocks delimited with `:::code` into instances of the `<CodeSnippet>`
+ * Remark plugin that converts blocks delimited with `::code` into instances of the `<CodeSnippet>`
  * component.
  */
 function createPlugin(): unified.Plugin<[], mdast.Root> {

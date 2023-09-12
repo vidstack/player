@@ -1,10 +1,10 @@
 ---
+import CodeBlockWrapper from '~/components/code-snippet/code-block-wrapper.svelte';
+import Table from '~/components/table.astro';
+import Heading from '~/docs/components/heading.svelte';
+import { camelToKebabCase } from '~/utils/string';
 import { Code } from 'astro:components';
 
-import CodeBlockWrapper from '../../../components/code-snippet/code-block-wrapper.svelte';
-import Heading from '../../../components/docs/heading.svelte';
-import Table from '../../../components/table.astro';
-import { camelToKebabCase } from '../../../utils/string';
 import { findMDNLink, findWebComponents, getLinks } from './api-utils';
 import NameCell from './name-table-cell.astro';
 import TypeCell from './type-table-cell.astro';
@@ -133,25 +133,21 @@ const { pathname } = Astro.url,
           : '';
 
         return (
-          <div class={index === 0 ? 'mt-8' : 'my-16'}>
+          <div>
             {components.length > 1 ? <Heading title={componentName} level={3} /> : null}
 
-            {component.instance?.docs ? (
-              <div class="-mt-2" set:html={component.instance?.docs} />
-            ) : null}
+            {component.instance?.docs ? <Fragment set:html={component.instance?.docs} /> : null}
 
-            <div class="not-prose mt-5 mb-7">
-              <CodeBlockWrapper class="text-sm font-normal not-prose">
-                <div class="flex flex-col">
-                  <Code code={importCode} lang="tsx" theme="github-dark" />
-                  <Code code={importCode} lang="tsx" theme="github-light" />
-                  <div class="mt-6">
-                    <Code code={html} lang="html" theme="github-dark" />
-                    <Code code={html} lang="html" theme="github-light" />
-                  </div>
+            <CodeBlockWrapper class="text-sm font-normal not-prose">
+              <div class="flex flex-col">
+                <Code code={importCode} lang="tsx" theme="github-dark" />
+                <Code code={importCode} lang="tsx" theme="github-light" />
+                <div class="mt-6">
+                  <Code code={html} lang="html" theme="github-dark" />
+                  <Code code={html} lang="html" theme="github-light" />
                 </div>
-              </CodeBlockWrapper>
-            </div>
+              </div>
+            </CodeBlockWrapper>
 
             {props.length ? (
               <div>
@@ -169,12 +165,10 @@ const { pathname } = Astro.url,
             {state.length ? (
               <div>
                 <Heading title="State" slug={`${componentName}.state`} level={tableHeadingLevel} />
-                <div class="mt-6 -mb-2">
-                  <CodeBlockWrapper class="text-sm font-normal not-prose">
-                    <Code code={stateUsageCode} lang="ts" theme="github-dark" />
-                    <Code code={stateUsageCode} lang="ts" theme="github-light" />
-                  </CodeBlockWrapper>
-                </div>
+                <CodeBlockWrapper class="text-sm font-normal not-prose">
+                  <Code code={stateUsageCode} lang="ts" theme="github-dark" />
+                  <Code code={stateUsageCode} lang="ts" theme="github-light" />
+                </CodeBlockWrapper>
                 <Table cols={['Prop', 'Type', 'Default']} rows={state} />{' '}
               </div>
             ) : null}
@@ -191,52 +185,46 @@ const { pathname } = Astro.url,
             ) : null}
 
             {instanceProps.length || instanceMethods.length ? (
-              <div class="mt-8">
+              <div>
                 <Heading
                   title="Instance"
                   slug={`${componentName}.instance`}
                   level={tableHeadingLevel}
                 />
-                <div class="mt-6 -mb-2">
-                  <CodeBlockWrapper class="text-sm font-normal not-prose">
-                    <Code code={instanceCode} lang="ts" theme="github-dark" />
-                    <Code code={instanceCode} lang="ts" theme="github-light" />
-                  </CodeBlockWrapper>
-                </div>
+                <CodeBlockWrapper class="text-sm font-normal not-prose">
+                  <Code code={instanceCode} lang="ts" theme="github-dark" />
+                  <Code code={instanceCode} lang="ts" theme="github-light" />
+                </CodeBlockWrapper>
                 <Table cols={['Prop', 'Type']} rows={[...instanceProps, ...instanceMethods]} />
               </div>
             ) : null}
 
             {dataAttrs?.length ? (
-              <div class="mt-8">
+              <div>
                 <Heading
                   title="Data Attributes"
                   slug={`${componentName}.attrs`}
                   level={tableHeadingLevel}
                 />
-                <div class="mt-6 -mb-2">
-                  <CodeBlockWrapper class="text-sm font-normal not-prose">
-                    <Code code={dataAttrsUsageCode} lang="css" theme="github-dark" />
-                    <Code code={dataAttrsUsageCode} lang="css" theme="github-light" />
-                  </CodeBlockWrapper>
-                </div>
+                <CodeBlockWrapper class="text-sm font-normal not-prose">
+                  <Code code={dataAttrsUsageCode} lang="css" theme="github-dark" />
+                  <Code code={dataAttrsUsageCode} lang="css" theme="github-light" />
+                </CodeBlockWrapper>
                 <Table cols={['Name', 'Description']} rows={dataAttrs} />
               </div>
             ) : null}
 
             {dataParts?.length ? (
-              <div class="mt-8">
+              <div>
                 <Heading
                   title="Data Parts"
                   slug={`${componentName}.parts`}
                   level={tableHeadingLevel}
                 />
-                <div class="mt-6 -mb-2">
-                  <CodeBlockWrapper class="text-sm font-normal not-prose">
-                    <Code code={dataPartUsageCode} lang="html" theme="github-dark" />
-                    <Code code={dataPartUsageCode} lang="html" theme="github-light" />
-                  </CodeBlockWrapper>
-                </div>
+                <CodeBlockWrapper class="text-sm font-normal not-prose">
+                  <Code code={dataPartUsageCode} lang="html" theme="github-dark" />
+                  <Code code={dataPartUsageCode} lang="html" theme="github-light" />
+                </CodeBlockWrapper>
                 <Table cols={['Name', 'Description']} rows={dataParts} />
               </div>
             ) : null}

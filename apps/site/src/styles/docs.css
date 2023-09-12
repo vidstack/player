@@ -15,6 +15,10 @@
   background-color: unset;
 }
 
+.docs .code-block {
+  margin-block: 2rem;
+}
+
 .docs .code-editor {
   margin-block: 3.5rem;
 }

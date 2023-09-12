@@ -7,7 +7,7 @@
 }
 
 .prose strong {
-  @apply font-semibold;
+  @apply text-inverse font-semibold;
 }
 
 .prose a strong,
@@ -20,8 +20,16 @@
   @apply hocus:text-inverse border-0 text-[0.95em] font-medium underline;
 }
 
+.prose a .external-link-icon {
+  @apply ml-0.5 inline-block h-[0.8em] w-[0.8em];
+}
+
 .prose blockquote {
   @apply text-inverse border-soft my-[1.6em] border-l-4 py-1.5 pl-3 font-medium italic;
+}
+
+.prose blockquote > p:first-child {
+  margin: 0;
 }
 
 .prose p:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
@@ -71,7 +79,7 @@
 }
 
 .prose h2:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply text-inverse mb-[1em] mt-[2em] text-3xl font-[700] leading-[1.33];
+  @apply text-inverse mb-[1.1em] mt-[1.3em] text-3xl font-[700] leading-[1.33];
 }
 
 .prose h2 strong {
@@ -79,7 +87,7 @@
 }
 
 .prose h3:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply text-inverse mb-[0.6em] mt-[1.6em] text-2xl font-[600] leading-[1.6];
+  @apply text-inverse mb-[1.1em] mt-[1.2em] text-2xl font-[600] leading-[1.6];
 }
 
 .prose h3 strong {
@@ -87,11 +95,15 @@
 }
 
 .prose h4:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply text-inverse mb-[0.6em] mt-[1.5em] text-[20px] font-[500] leading-[1.5];
+  @apply text-inverse mb-[1em] mt-[1em] text-[20px] font-[500] leading-[1.5];
 }
 
 .prose h4 strong {
   @apply font-[700] text-inherit;
+}
+
+.prose img {
+  @apply border-border/90 mx-auto border shadow-sm;
 }
 
 .prose img,
@@ -238,7 +250,7 @@
 }
 
 .prose .heading-wrapper > * {
-  @apply mb-0 inline;
+  @apply inline-block;
 }
 
 .prose .heading-wrapper > .anchor-link {
@@ -248,8 +260,32 @@
   text-decoration: none;
   border-bottom: unset;
 }
+.prose .heading-wrapper .anchor-icon {
+  @apply h-[1.2em] w-[1.2em];
+}
 
 .prose .heading-wrapper > .anchor-link:focus-visible,
 .prose .heading-wrapper > .anchor-link:hover {
   @apply opacity-100;
+}
+
+.prose .heading-wrapper + *,
+.prose .heading-wrapper + astro-island astro-slot > div,
+.prose .heading-wrapper + style + astro-island astro-slot > div,
+.prose .heading-wrapper + style + script + astro-island astro-slot > div,
+.prose .heading-wrapper + astro-island > div,
+.prose .heading-wrapper + style + astro-island > div,
+.prose .heading-wrapper + style + script + astro-island > div,
+.prose .heading-wrapper + * > .heading-wrapper:first-child > *:first-child,
+.prose .heading-wrapper + * > div:first-child > .heading-wrapper:first-child > *:first-child,
+.prose .heading-wrapper + div > *:first-child {
+  margin-top: 0 !important;
+}
+
+.prose .callout-content p:first-child {
+  margin-top: 0;
+}
+
+.prose .callout-content p:only-child {
+  margin: 0;
 }

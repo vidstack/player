@@ -9,6 +9,7 @@ import vercel from '@astrojs/vercel/serverless';
 import AutoImport from 'astro-auto-import';
 import { defineConfig } from 'astro/config';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeExternalLinks from 'rehype-external-links';
 import rehypeSlug from 'rehype-slug';
 import icons from 'unplugin-icons/vite';
 
@@ -23,6 +24,7 @@ import { mdxNo, noAutoImport } from './plugins/mdx/components/no';
 import { mdxTable, tableAutoImport } from './plugins/mdx/components/table';
 import { mdxYes, yesAutoImport } from './plugins/mdx/components/yes';
 import { autolinkConfig } from './plugins/mdx/rehype-autolink-config';
+import { externalLinksConfig } from './plugins/mdx/rehype-external-links-config';
 import { rehypeOptimizeStatic } from './plugins/mdx/rehype-optimize-static';
 
 const isLocal = !process.env.VERCEL;
@@ -69,6 +71,8 @@ export default defineConfig({
       rehypeSlug,
       // This adds links to headings
       [rehypeAutolinkHeadings, autolinkConfig],
+      // Add rel and target attrs to external links
+      [rehypeExternalLinks, externalLinksConfig],
       // Collapse static parts of the hast to html
       rehypeOptimizeStatic,
     ],
