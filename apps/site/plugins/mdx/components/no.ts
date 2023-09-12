@@ -9,7 +9,7 @@ import { createComponentNode } from './create-component';
 const NoTagName = 'AutoImportedNo';
 
 export const noAutoImport: Record<string, [string, string][]> = {
-  './src/components/docs/no.astro': [['default', NoTagName]],
+  './src/docs/components/no.astro': [['default', NoTagName]],
 };
 
 /**

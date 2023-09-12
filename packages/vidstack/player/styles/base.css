@@ -39,11 +39,14 @@
   box-shadow: var(--media-focus-ring);
 }
 
-:where([data-media-provider]) {
+[data-media-provider] {
   position: relative;
   display: block;
-  width: 100%;
   box-sizing: border-box;
+}
+
+:where([data-media-provider]) {
+  width: 100%;
 }
 
 :where([data-media-player]:not([data-view-type='audio']) [data-media-provider]),

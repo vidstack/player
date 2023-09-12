@@ -1,0 +1,45 @@
+---
+import type { LazyCodeSnippet } from ':code_snippets';
+import MockCodeEditor from '~/components/mocks/code-editor/mock-code-editor.astro';
+import { codePreviews } from '~/stores/code-previews';
+import { codeSnippets } from '~/stores/code-snippets';
+import { currentJSLibrary } from '~/stores/libraries';
+import { get } from 'svelte/store';
+
+import CodePreviewLoader from './code-preview-loader.svelte';
+
+const { pathname } = Astro.url,
+  id = pathname.slice(1).replace(/\/$/, '') + '/examples',
+  jsLibDir = get(currentJSLibrary) === 'web-components' ? 'wc' : get(currentJSLibrary),
+  jsLibDirRE = /examples\/(wc|react)\//,
+  pathJSLibId = `${id}/${jsLibDir}`,
+  preview = findCodePreview(id),
+  files = resolveFiles(findCodeSnippets(id));
+
+function findCodeSnippets(id: string) {
+  return get(codeSnippets).filter(
+    (snippet) =>
+      snippet.id.startsWith(id) &&
+      (!jsLibDirRE.test(snippet.id) || snippet.id.includes(pathJSLibId)),
+  );
+}
+
+function findCodePreview(id: string) {
+  return get(codePreviews).find((preview) => `${preview.id}/examples` === id);
+}
+
+function resolveFiles(snippets: LazyCodeSnippet[]) {
+  const paths: { path: string; snippet: string }[] = [],
+    pathRE = /.*?\/examples\/(wc|react\/)?/;
+
+  for (const snippet of snippets) {
+    paths.push({ path: `${snippet.id.replace(pathRE, '')}.${snippet.ext}`, snippet: snippet.id });
+  }
+
+  return paths;
+}
+---
+
+<MockCodeEditor {files} title copy openFile={files[0]?.path} localStorage>
+  <CodePreviewLoader id={preview?.id} client:visible slot="preview" />
+</MockCodeEditor>

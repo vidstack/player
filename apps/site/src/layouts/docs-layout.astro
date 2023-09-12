@@ -2,10 +2,10 @@
 import '../styles/prose.css';
 import '../styles/docs.css';
 
+import LibSelect from '~/docs/components/lib-select.svelte';
 import type { CollectionEntry } from 'astro:content';
 
 import Algolia from '../components/algolia/algolia.astro';
-import LibSelect from '../components/docs/lib-select.svelte';
 import { currentJSLibrary, getJSLibraryFromPathname, type JSLibrary } from '../stores/libraries';
 import { kebabToTitleCase } from '../utils/string';
 import AppLayout from './app-layout.astro';

@@ -9,11 +9,11 @@ import { createComponentNode } from './create-component';
 const CodeExamplesTagName = 'AutoImportedCodeExamples';
 
 export const codeExamplesAutoImport: Record<string, [string, string][]> = {
-  './src/components/docs/code-examples.astro': [['default', CodeExamplesTagName]],
+  './src/docs/components/code-examples.astro': [['default', CodeExamplesTagName]],
 };
 
 /**
- * Remark plugin that converts blocks delimited with `:::examples` into instances of
+ * Remark plugin that converts blocks delimited with `::examples` into instances of
  * the `<CodeExamples>` component.
  */
 function createPlugin(): unified.Plugin<[], mdast.Root> {

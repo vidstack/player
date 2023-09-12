@@ -19,6 +19,7 @@
   import { createSelect } from '../aria/select';
 
   const dispatch = createEventDispatcher<{
+    select: string[];
     change: string[];
   }>();
 
@@ -45,7 +46,8 @@
     selectedValues.set(isString(value) ? [value] : value);
   }
 
-  $: dispatch('change', $selectedValues);
+  $: dispatch('select', $selectedValues);
+  $: if (!$isSelectOpen) dispatch('change', $selectedValues);
 
   $: selectionLabel = $selectedValues
     .map((v) => options.find(({ value }) => v === value)?.label)

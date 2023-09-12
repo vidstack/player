@@ -8,6 +8,8 @@
   export let flat = false;
   export let style = '';
   export let showTopBar = false;
+
+  const hasTopBar = title || showTopBar;
 </script>
 
 <div
@@ -19,10 +21,10 @@
       : 'w-full min-h-full',
     _class,
   )}
-  style={clsx(`--leading: 1.375rem;`, style)}
+  style={clsx(`--leading: 1.375rem;`, hasTopBar && '--code-block-top: 2.8125rem;', style)}
   data-flat={flat ? '' : null}
 >
-  {#if title || showTopBar}
+  {#if hasTopBar}
     <div class="sticky top-0 z-10 flex items-center shrink-0 py-2.5 px-2 mb-1.5">
       {#if title}
         <span class="font-mono text-sm text-soft ml-1">{title}</span>
@@ -44,10 +46,6 @@
 <style>
   .code-block[data-flat] {
     max-height: calc(var(--code-block-max-h, 0px) - var(--code-block-gutters, 0px));
-  }
-
-  .code-block :global(pre code[data-lang-bash] span) {
-    color: #fafafa !important;
   }
 
   .code-block :global(pre code[data-lang-bash] .line:not(:empty)::before) {

@@ -20,23 +20,27 @@ interface Props extends HTMLAttributes<'div'> {
 
 const { id, highlights: propHighlights, copy, ...restProps } = Astro.props,
   { pathname } = Astro.url,
-  isRelativeId = id.startsWith('./'),
-  snippet = findCodeSnippet(id.replace(/^\.\//, '')),
+  isRelativeId = id.startsWith('./') || id.startsWith('../'),
+  snippet = findCodeSnippet(id.replace(/^\.\.?\//, ''), id.startsWith('../')),
   highlights = propHighlights ?? snippet?.highlights,
   codeBlockProps = { id, highlights, lines: snippet?.lines, ...restProps } as any;
 
-function findCodeSnippet(id: string) {
+function findCodeSnippet(id: string, up?: boolean) {
   if (isRelativeId) {
-    const pathId = pathname
-        .slice(1)
-        .replace(/\/$/, '')
-        .replace(`/${get(currentJSLibrary)}/`, '/'),
-      jsLibDir = get(currentJSLibrary) === 'web-components' ? 'wc' : get(currentJSLibrary),
-      jsLibPathId = `${pathId}/${jsLibDir}`;
+    let pathId = pathname
+      .slice(1)
+      .replace(/\/$/, '')
+      .replace(`/${get(currentJSLibrary)}/`, '/');
 
-    const matches = get(codeSnippets).filter(
-      (snippet) => snippet.id.startsWith(pathId) && snippet.id.endsWith(id),
-    );
+    if (up) {
+      pathId = pathId.split('/').slice(0, -1).join('/');
+    }
+
+    let jsLibDir = get(currentJSLibrary) === 'web-components' ? 'wc' : get(currentJSLibrary),
+      jsLibPathId = `${pathId}/${jsLibDir}`,
+      matches = get(codeSnippets).filter(
+        (snippet) => snippet.id.startsWith(pathId) && snippet.id.endsWith(id),
+      );
 
     return matches.find((match) => match.id.startsWith(jsLibPathId)) ?? matches[0];
   }
@@ -47,12 +51,15 @@ function findCodeSnippet(id: string) {
 if (!snippet) {
   console.warn(`⚠️ No code snippet was found for the id \`${id}\` at \`${pathname}\`.`);
 }
+
+const defaultTitle =
+  copy && snippet ? (snippet.ext === 'bash' ? 'terminal' : snippet.ext) : undefined;
 ---
 
 {
   snippet &&
     (copy ? (
-      <CodeBlock {...codeBlockProps}>
+      <CodeBlock title={defaultTitle} {...codeBlockProps}>
         <CopyCodeButton
           id={snippet.id}
           {highlights}

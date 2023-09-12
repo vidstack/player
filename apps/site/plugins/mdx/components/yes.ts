@@ -9,7 +9,7 @@ import { createComponentNode } from './create-component';
 const YesTagName = 'AutoImportedYes';
 
 export const yesAutoImport: Record<string, [string, string][]> = {
-  './src/components/docs/yes.astro': [['default', YesTagName]],
+  './src/docs/components/yes.astro': [['default', YesTagName]],
 };
 
 /**
