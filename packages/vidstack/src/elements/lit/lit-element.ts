@@ -15,6 +15,7 @@ export class LitElement extends HTMLElement {
 
   disconnectedCallback() {
     this.rootPart?.setConnected(false);
+    this.rootPart?._$setValue(null);
   }
 }
 

@@ -135,7 +135,7 @@ export function autoPlacement(
 
   return autoUpdate(trigger, el, () => {
     computePosition(trigger, el, { placement: floatingPlacement, ...options }).then(({ x, y }) => {
-      const negate = (v: string) => (y < 0 ? `calc(-1 * ${v})` : v);
+      const negate = (v: string) => (placement.includes('top') ? `calc(-1 * ${v})` : v);
       Object.assign(el.style, {
         top: `calc(${y + 'px'} + ${negate(`var(--${offsetVarName}-y-offset, ${xOffset}px)`)})`,
         left: `calc(${x + 'px'} + ${negate(`var(--${offsetVarName}-x-offset, ${yOffset}px)`)})`,

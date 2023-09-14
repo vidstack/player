@@ -33,6 +33,7 @@ export { MediaAudioRadioGroupElement } from './define/menus/audio-radio-group-el
 export { MediaCaptionsRadioGroupElement } from './define/menus/captions-radio-group-element';
 export { MediaMenuElement } from './define/menus/menu-element';
 export { MediaMenuButtonElement } from './define/menus/menu-button-element';
+export { MediaMenuPortalElement } from './define/menus/menu-portal-element';
 export { MediaMenuItemsElement } from './define/menus/menu-items-element';
 export { MediaSpeedRadioGroupElement } from './define/menus/speed-radio-group-element';
 export { MediaQualityRadioGroupElement } from './define/menus/quality-radio-group-element';

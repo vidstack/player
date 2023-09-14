@@ -43,6 +43,7 @@ export class MenuPortal extends Component<MenuPortalProps> {
     // slots to be replaced.
     requestScopedAnimationFrame(() => {
       requestScopedAnimationFrame(() => {
+        if (!this.connectScope) return;
         effect(this._watchDisabled.bind(this));
       });
     });

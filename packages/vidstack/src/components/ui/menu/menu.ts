@@ -36,6 +36,7 @@ let idCount = 0;
  * used to display options in a floating panel.
  *
  * @attr data-open - Whether menu is open.
+ * @attr data-keyboard - Whether the menu is opened via keyboard.
  * @attr data-submenu - Whether menu is a submenu.
  * @attr data-disabled - Whether menu is disabled.
  * @attr data-resizing - Whether the menu is resizing.
@@ -271,6 +272,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       } else {
         trigger?.focus();
       }
+
+      this.el?.setAttribute('data-keyboard', '');
+    } else {
+      this.el?.removeAttribute('data-keyboard');
     }
 
     this.dispatch(isExpanded ? 'open' : 'close', { trigger: event });

@@ -30,6 +30,7 @@ class SignalDirective extends AsyncDirective {
   override disconnected() {
     this._stop?.();
     this._stop = null;
+    this.setValue(null);
   }
 
   protected _watch() {
@@ -38,7 +39,7 @@ class SignalDirective extends AsyncDirective {
   }
 
   protected _onValueChange() {
-    this.setValue(this._signal!());
+    this.setValue(this._signal?.());
   }
 }
 

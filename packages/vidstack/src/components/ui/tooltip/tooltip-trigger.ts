@@ -20,6 +20,7 @@ export class TooltipTrigger extends Component {
   protected override onConnect(el: HTMLElement): void {
     onDispose(
       requestScopedAnimationFrame(() => {
+        if (!this.connectScope) return;
         this._attach();
         const tooltip = useContext(tooltipContext);
         onDispose(() => {

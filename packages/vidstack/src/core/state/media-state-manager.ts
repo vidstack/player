@@ -37,7 +37,10 @@ export class MediaStateManager extends MediaPlayerController {
   private _firingWaiting = false;
   private _waitingTrigger: Event | undefined;
 
-  constructor(private _request: MediaRequestContext, private _media: MediaContext) {
+  constructor(
+    private _request: MediaRequestContext,
+    private _media: MediaContext,
+  ) {
     super();
   }
 
@@ -202,17 +205,29 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['media-type-change'](event: ME.MediaTypeChangeEvent) {
     appendTriggerEvent(event, this._trackedEvents.get('source-change'));
+
     const viewType = this.$state.viewType();
     this.$state.mediaType.set(event.detail);
-    if (viewType !== this.$state.viewType()) {
-      setTimeout(
-        () =>
-          this.dispatch('view-type-change', {
-            detail: this.$state.viewType(),
-            trigger: event,
-          }),
-        0,
-      );
+
+    const providedViewType = this.$state.providedViewType(),
+      currentViewType = providedViewType === 'unknown' ? event.detail : providedViewType;
+
+    if (viewType !== currentViewType) {
+      this.el?.setAttribute('data-view-type', currentViewType);
+      if (__SERVER__) {
+        this.$state.inferredViewType.set(currentViewType);
+      } else {
+        // Wait for player to resize.
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            this.$state.inferredViewType.set(event.detail);
+            this.dispatch('view-type-change', {
+              detail: currentViewType,
+              trigger: event,
+            });
+          });
+        }, 0);
+      }
     }
   }
 

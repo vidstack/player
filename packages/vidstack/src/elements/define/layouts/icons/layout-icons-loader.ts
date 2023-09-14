@@ -1,4 +1,5 @@
 import { listenEvent } from 'maverick.js/std';
+
 import type { MediaPlayerElement } from '../../player-element';
 import { IconsLoader } from './icons-loader';
 

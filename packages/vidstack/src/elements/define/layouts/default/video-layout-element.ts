@@ -1,6 +1,7 @@
 import { html } from 'lit-html';
 import { computed, onDispose } from 'maverick.js';
 import { Host } from 'maverick.js/element';
+
 import { DefaultVideoLayout } from '../../../../components/layouts/default-layout';
 import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
