@@ -60,7 +60,7 @@ export const mediaState = new State<MediaState>({
   volume: 1,
   waiting: false,
   get viewType() {
-    return this.providedViewType !== 'unknown' ? this.providedViewType : this.mediaType;
+    return this.providedViewType !== 'unknown' ? this.providedViewType : this.inferredViewType;
   },
   get streamType() {
     return this.providedStreamType !== 'unknown'
@@ -129,6 +129,7 @@ export const mediaState = new State<MediaState>({
 
   // ~~ internal props ~~
   autoplaying: false,
+  inferredViewType: 'unknown',
   providedViewType: 'unknown',
   providedStreamType: 'unknown',
   inferredStreamType: 'unknown',
@@ -141,12 +142,14 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'canLoad',
   'canPictureInPicture',
   'controls',
+  'crossorigin',
   'fullscreen',
   'height',
   'logLevel',
   'loop',
   'mediaHeight',
   'mediaWidth',
+  'mediaType',
   'muted',
   'orientation',
   'pictureInPicture',
@@ -155,6 +158,7 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'poster',
   'preload',
   'providedStreamType',
+  'inferredViewType',
   'providedViewType',
   'source',
   'sources',
@@ -654,6 +658,8 @@ export interface MediaState {
 
   /* @internal */
   autoplaying: boolean;
+  /* @internal */
+  inferredViewType: MediaViewType;
   /* @internal */
   providedViewType: MediaViewType;
   /* @internal */

@@ -13,7 +13,6 @@
 }
 
 :where([data-media-player][data-view-type='video']) {
-  --media-focus-ring: var(--video-focus-ring, 0 0 0 3px rgb(78 156 246));
   border-radius: var(--video-border-radius, 6px);
   background-color: var(--video-bg, black);
 }
@@ -30,16 +29,18 @@
 }
 
 :where(.vds-video-layout) {
-  --brand: var(--video-brand, #f5f5f5);
+  --media-brand: var(--video-brand, #f5f5f5);
   --media-font-family: var(--video-font-family, sans-serif);
-  --media-slider-track-fill-bg: var(--brand);
-  --media-chapters-progress-bg: var(--brand);
   --media-controls-color: var(--video-controls-color, #f5f5f5);
   --media-tooltip-y-offset: 4px;
   --media-menu-y-offset: 4px;
-  --media-menu-radio-check-active-color: var(--brand);
-  --media-focus-ring: var(--video-focus-ring, 0 0 0 3px rgb(78 156 246));
+  --media-focus-ring-color: var(--video-focus-ring-color, rgb(78 156 246));
+  --media-focus-ring: var(--video-focus-ring, 0 0 0 3px var(--media-focus-ring-color));
   color: var(--video-controls-color, #f5f5f5);
+}
+
+:where([data-media-player][data-focus]:not([data-playing]) .vds-controls) {
+  box-shadow: var(--media-focus-ring);
 }
 
 /*

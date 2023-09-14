@@ -45,6 +45,9 @@ export class MenuFocusController {
   _attachMenu(el: HTMLElement) {
     listenEvent(el, 'focus', this._onFocus.bind(this));
     this._el = el;
+    onDispose(() => {
+      this._el = null;
+    });
     return this;
   }
 

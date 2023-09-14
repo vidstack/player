@@ -1,5 +1,5 @@
 import { effect } from 'maverick.js';
-import { isString, unwrap } from 'maverick.js/std';
+import { isString } from 'maverick.js/std';
 
 import type { RadioOption } from '../../../components';
 import { cloneTemplate } from '../../../utils/dom';
@@ -16,14 +16,11 @@ export function renderMenuItemsTemplate(
     if (__DEV__ && !template.content.firstElementChild?.localName) {
       throw Error('[vidstack] menu items template requires root element');
     }
-
     const options = el.getOptions();
     cloneTemplate<MediaRadioElement>(template, options.length, (radio, i) => {
       const { label, value } = options[i],
         labelEl = radio.querySelector(`[data-part="label"]`);
-
       radio.setAttribute('value', value);
-
       if (labelEl) {
         if (isString(label)) {
           labelEl.textContent = label;
@@ -33,7 +30,6 @@ export function renderMenuItemsTemplate(
           });
         }
       }
-
       onCreate?.(radio, options[i], i);
     });
   });

@@ -81,7 +81,7 @@
 
 :where(.vds-slider .vds-slider-track-fill) {
   z-index: 2; /** above track and track progress. */
-  background-color: var(--media-slider-track-fill-bg, #fafafa);
+  background-color: var(--media-slider-track-fill-bg, var(--media-brand));
   width: var(--slider-fill, 0%);
   will-change: width;
 }

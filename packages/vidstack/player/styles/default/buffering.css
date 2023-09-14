@@ -26,7 +26,7 @@
 }
 
 :where(.vds-buffering-indicator .vds-buffering-track-fill) {
-  color: var(--media-buffering-track-fill-color, #f5f5f5);
+  color: var(--media-buffering-track-fill-color, var(--media-brand));
   opacity: var(--media-buffering-track-fill-opacity, 0.75);
   stroke-width: var(--media-buffering-track-fill-width, 9);
   stroke-dasharray: 100;

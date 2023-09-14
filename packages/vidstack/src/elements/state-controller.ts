@@ -1,12 +1,18 @@
-import { effect, type ReadSignal } from 'maverick.js';
+import { effect, onDispose, type ReadSignal } from 'maverick.js';
+
 import { requestScopedAnimationFrame } from '../utils/dom';
 
 export class StateController {
   constructor(
-    private _el: HTMLElement,
+    private _el: HTMLElement | null,
     private _states: ReadSignal<Record<string, boolean>>,
   ) {
-    this._observe(this._el);
+    if (this._el) this._observe(this._el);
+
+    onDispose(() => {
+      this._el = null;
+    });
+
     requestScopedAnimationFrame(() => {
       const tooltip = this._getTooltip();
       if (tooltip) this._observe(tooltip);
@@ -14,6 +20,7 @@ export class StateController {
   }
 
   private _getTooltip() {
+    if (!this._el) return;
     const describedBy =
       this._el.getAttribute('aria-describedby') ?? this._el.getAttribute('data-describedby');
     return describedBy && document.getElementById(describedBy);

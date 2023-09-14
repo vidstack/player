@@ -47,6 +47,7 @@ export class TooltipContent extends Component<TooltipContentProps> {
 
     onDispose(
       requestScopedAnimationFrame(() => {
+        if (!this.connectScope) return;
         effect(this._watchPlacement.bind(this));
       }),
     );

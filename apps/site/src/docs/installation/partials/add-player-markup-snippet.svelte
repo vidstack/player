@@ -27,7 +27,7 @@
           : $provider === 'video'
           ? `https://stream.mux.com/${muxPlaybackId}/low.mp4`
           : `https://stream.mux.com/${muxPlaybackId}.m3u8`,
-      thumbnails = `https://image.mux.com/${muxPlaybackId}/storyboard.webp`;
+      thumbnails = `https://image.mux.com/${muxPlaybackId}/storyboard.vtt`;
 
     return code.replace('{TITLE}', title).replace('{SRC}', src).replace('{THUMBNAILS}', thumbnails);
   }

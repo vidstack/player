@@ -1,0 +1,15 @@
+{
+  "name": "wc-default-layout",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vidstack": "workspace:*",
+    "vite": "^4.4.0"
+  }
+}

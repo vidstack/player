@@ -7,18 +7,23 @@ import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
 
+const MODE_WATCH = process.argv.includes('-w');
 const MODE_TYPES = process.argv.includes('--config-types');
 const MODE_LOCAL = process.argv.includes('--config-local');
+
 const MAIN_EXTERNAL = ['hls.js', 'media-captions', 'media-icons'];
 
 const LOCAL_EXTERNAL = [...MAIN_EXTERNAL, /maverick/];
 
-if (!MODE_TYPES) {
+if (!MODE_TYPES || MODE_WATCH) {
   buildDefaultTheme();
 }
 
 // Used by other packages (e.g., `@vidstack/react`) to build without duplicate deps.
 const LOCAL = [define({ type: 'local-prod' }), define({ type: 'local-dev' })];
+const TYPES = [defineTypes({ local: true }), defineTypes({ local: false })];
+const NPM = [define({ type: 'server' }), define({ type: 'dev' }), define({ type: 'prod' })];
+const CDN = [defineCDN({ dev: true }), defineCDN(), defineCDN({ layouts: true })];
 
 /** @type {import('rollup').WarningHandlerWithDefault} */
 function onWarn(warning, defaultHandler) {
@@ -26,20 +31,13 @@ function onWarn(warning, defaultHandler) {
 }
 
 export default defineConfig(
-  MODE_TYPES
-    ? [defineTypes({ local: true }), defineTypes({ local: false })]
+  MODE_WATCH
+    ? [...NPM, ...TYPES]
+    : MODE_TYPES
+    ? TYPES
     : MODE_LOCAL
     ? LOCAL
-    : [
-        ...LOCAL,
-        define({ type: 'server' }),
-        define({ type: 'dev' }),
-        define({ type: 'prod' }),
-        // cdn
-        defineCDN({ dev: true }),
-        defineCDN(),
-        defineCDN({ layouts: true }),
-      ],
+    : [...LOCAL, ...NPM, ...CDN],
 );
 
 /**
@@ -82,7 +80,9 @@ function defineTypes({ local }) {
       {
         name: 'cleanup',
         closeBundle() {
-          if (!local) fs.rmSync('types', { recursive: true });
+          if (!local && !MODE_WATCH) {
+            fs.rmSync('types', { recursive: true });
+          }
         },
       },
     ],

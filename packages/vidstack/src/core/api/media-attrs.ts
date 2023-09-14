@@ -25,6 +25,5 @@ export const mediaAttributes: (keyof MediaState)[] = [
   'seeking',
   'started',
   'streamType',
-  'viewType',
   'waiting',
 ];
