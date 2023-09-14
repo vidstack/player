@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "blitz": "node .blitz/version.js && npm install && npm run dev"
   },
   "dependencies": {
     "vidstack": "workspace:*",
