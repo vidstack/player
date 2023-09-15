@@ -54,7 +54,7 @@ const { pathname } = Astro.url,
     {
       options.map(({ label, Info, Icon, color }, i) => {
         const id = label.replace(' ', '-').toLowerCase(),
-          isActive = !param && pathname.endsWith(`/${id}`);
+          isActive = !param && pathname.replace(/\/$/, '').endsWith(`/${id}`);
 
         const props = {
           class:
