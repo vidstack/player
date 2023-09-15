@@ -7,8 +7,8 @@ export type ProviderSelection = 'audio' | 'video' | 'hls';
 
 export const selections = {
   js: writable<JSSelection>(),
-  css: writable<CSSSelection>(),
-  provider: writable<ProviderSelection>(),
+  css: writable<CSSSelection>('default-layout'),
+  provider: writable<ProviderSelection>('video'),
 };
 
 selections.js.subscribe((lib) => {

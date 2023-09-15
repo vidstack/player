@@ -1,7 +1,7 @@
 <script lang="ts">
   import { DisposalBin, onPress } from '~/utils/events';
   import { onMount } from 'svelte';
-  import type { Writable } from 'svelte/store';
+  import { get, type Writable } from 'svelte/store';
 
   import { selections } from './selection-stores';
 
@@ -24,7 +24,7 @@
         if (!value) continue;
 
         if (param) {
-          const isActive = url.searchParams.get(param!) === value;
+          const isActive = url.searchParams.get(param!) === value || get(_store) === value;
           if (isActive) {
             updateParam(option);
             _store.set(value);

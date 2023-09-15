@@ -94,22 +94,21 @@ export default defineConfig({
           [docs]: player,
         });
       })
-      .reduce((p, [from, to]) => ({ ...p, [from]: to }), {}),
+      .reduce((current, [from, to]) => ({ ...current, [from]: to }), {}),
     // Redirect old installation links.
     ...['', 'react/']
-      .flatMap((lib) =>
-        ['/cdn', '/cdn/audio', '/cdn/hls', '', '/audio', '/hls'].map(
-          (slug) => `/docs/${lib}player/getting-started/installation${slug}`,
-        ),
-      )
-      .reduce(
-        (p, from) => ({
-          ...p,
+      .flatMap((lib) => {
+        const slugs = ['/cdn', '/cdn/audio', '/cdn/hls', '/audio', '/hls'];
+        if (lib !== '') slugs.push('');
+        return slugs.map((slug) => `/docs/${lib}player/getting-started/installation${slug}`);
+      })
+      .reduce((current, from) => {
+        return {
+          ...current,
           [from]: `/docs/player/getting-started/installation${
             from.includes('/react') ? '/react' : ''
           }`,
-        }),
-        {},
-      ),
+        };
+      }, {}),
   },
 });
