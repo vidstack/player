@@ -5,12 +5,18 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 
-    <link rel="stylesheet" href="./src/styles.css" />
+    <style>
+      /* Prevent FOUC - you don't need this if you're loading styles via link tags. */
+      *:not(:defined) {
+        opacity: 0;
+      }
+    </style>
+
     <script src="./src/main.ts" type="module"></script>
   </head>
   <body>
     <main>
-      <media-player title="Sprite Fight" crossorigin="">
+      <media-player title="Sprite Fight" crossorigin>
         <media-provider>
           <media-poster
             class="vds-poster"

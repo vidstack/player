@@ -1,0 +1,172 @@
+media-player[data-view-type='video'] {
+  --media-brand: #f5f5f5;
+  --media-focus-ring-color: #4e9cf6;
+  --media-focus-ring: 0 0 0 3px var(--media-focus-ring-color);
+  --media-border-radius: 6px;
+
+  --media-tooltip-y-offset: 30px;
+  --media-menu-y-offset: 30px;
+
+  contain: layout;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #212121;
+  border-radius: var(--media-border-radius);
+}
+
+media-player video,
+media-poster {
+  border-radius: var(--media-border-radius);
+}
+
+/*************************************************************************************************
+ * Gestures
+ *************************************************************************************************/
+
+media-gesture {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+media-gesture[action='seek:-10'],
+media-gesture[action='seek:10'] {
+  width: 20%;
+  z-index: 1;
+}
+
+media-gesture[action='seek:10'] {
+  left: unset;
+  right: 0;
+}
+
+/* Remove toggle to pause on touch. */
+@media (pointer: coarse) {
+  media-gesture[action='toggle:paused'] {
+    display: none;
+  }
+}
+
+/* Remove toggle controls on mouse. */
+@media not (pointer: coarse) {
+  media-gesture[action='toggle:controls'] {
+    display: none;
+  }
+}
+
+/*************************************************************************************************
+ * Controls
+ *************************************************************************************************/
+
+media-controls-group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+media-controls-group {
+  padding-inline: 8px;
+}
+
+media-controls-group:last-child {
+  margin-top: -4px;
+  padding-bottom: 8px;
+}
+
+/*************************************************************************************************
+ * Time Slider
+ *************************************************************************************************/
+
+media-time-slider {
+  --media-slider-height: 40px;
+}
+
+media-time-slider media-slider-value {
+  background-color: unset;
+}
+
+/*************************************************************************************************
+ * Volume
+ *************************************************************************************************/
+
+media-volume-slider {
+  --media-slider-preview-offset: 32px;
+  margin: 0;
+  max-width: 0;
+  transition: all 0.15s ease;
+  transform: translateX(-2px);
+}
+
+:where(*[data-hocus], *:focus-within) + media-volume-slider,
+media-volume-slider[data-interactive] {
+  margin-left: 2px;
+  max-width: 80px;
+}
+
+/*************************************************************************************************
+ * Time
+ *************************************************************************************************/
+
+.media-time-group {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.media-time-divider {
+  margin: 0 2.5px;
+  color: #e0e0e0;
+}
+
+/*************************************************************************************************
+ * Chapter Title
+ *************************************************************************************************/
+
+media-chapter-title {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: sans-serif;
+  color: rgba(255 255 255 / 0.64);
+  flex: 1 1 0%;
+  padding-inline: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+media-chapter-title::before {
+  content: '|';
+  display: inline-block;
+  margin-right: 6px;
+  color: rgba(255 255 255 / 0.64);
+}
+
+media-chapter-title:empty::before {
+  content: '';
+  margin-left: 0;
+}
+
+/*************************************************************************************************
+ * Captions
+ *************************************************************************************************/
+
+media-captions {
+  z-index: 10;
+  bottom: 0;
+  transition: bottom 0.15s linear;
+}
+
+/* Pull captions up when controls are visible. */
+media-player[data-controls] media-captions {
+  bottom: 72px;
+}
+
+/* Hide captions when interacting with time slider. */
+media-player[data-preview] media-captions {
+  opacity: 0;
+}

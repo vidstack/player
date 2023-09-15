@@ -1,10 +1,10 @@
 import { effect, peek, signal, type StopEffect } from 'maverick.js';
 import { lazyPaths, type IconType } from 'media-icons';
 
-import { cloneTemplate, cloneTemplateContent, createTemplate } from '../../utils/dom';
+import { cloneTemplateContent, createTemplate } from '../../utils/dom';
 
 const svgTemplate = /* #__PURE__*/ createTemplate(
-  `<svg class="vds-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"></svg>`,
+  `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"></svg>`,
 );
 
 /**
@@ -43,17 +43,27 @@ export class MediaIconElement extends HTMLElement {
     this._type.set(type);
   }
 
+  constructor() {
+    super();
+    this.style.display = 'contents';
+  }
+
   attributeChangedCallback(name: string, _, newValue: string | null) {
     if (name === 'type') this._type.set(newValue ? (newValue as IconType) : null);
   }
 
   connectedCallback() {
+    const observer = new MutationObserver(this._forwardClass.bind(this));
+    this._forwardClass();
+    observer.observe(this, { attributeFilter: ['class'] });
+
     this._disposal.push(
+      () => observer.disconnect(),
       // Load
       effect(this._loadIcon.bind(this)),
       // Render
       effect(() => {
-        this._svg.textContent = this._paths();
+        this._svg.innerHTML = this._paths();
       }),
     );
   }
@@ -67,6 +77,17 @@ export class MediaIconElement extends HTMLElement {
     const svg = cloneTemplateContent<SVGElement>(svgTemplate);
     this.prepend(svg);
     return svg;
+  }
+
+  private _forwardClass() {
+    this._svg.removeAttribute('class');
+
+    for (const token of this.classList) {
+      this._svg.classList.add(token);
+    }
+
+    this._svg.classList.add('vds-icon');
+    this.removeAttribute('class');
   }
 
   private _loadIcon() {

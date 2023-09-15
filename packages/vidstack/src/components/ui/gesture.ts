@@ -135,7 +135,7 @@ export class Gesture extends Component<GestureProps> {
   /** Validate gesture has the highest z-index in this triggered group. */
   private _isTopLayer() {
     const gestures = this._media.player!.el!.querySelectorAll(
-      '.vds-gesture[data-triggered]',
+      '.vds-gesture[data-triggered],media-gesture[data-triggered]',
     ) as NodeListOf<HTMLElement>;
 
     return (

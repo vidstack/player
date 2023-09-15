@@ -1,8 +1,8 @@
 import { html } from 'lit-html';
+
 import {
   DefaultCaptionButton,
   DefaultChaptersMenu,
-  DefaultChapterTitle,
   DefaultMuteButton,
   DefaultPlayButton,
   DefaultSeekButton,
@@ -25,7 +25,9 @@ export function DefaultAudioLayoutLarge() {
           tooltip: 'top',
           seconds: 10,
         })}
-        ${DefaultTimeGroup()}${DefaultChapterTitle()}${DefaultMuteButton({ tooltip: 'top' })}
+        ${DefaultTimeGroup()}
+        <media-chapter-title class="vds-media-title"></media-chapter-title>
+        ${DefaultMuteButton({ tooltip: 'top' })}
         ${DefaultVolumeSlider()}${DefaultCaptionButton({ tooltip: 'top' })} ${DefaultAudioMenus()}
       </media-controls-group>
     </media-controls>
@@ -37,7 +39,8 @@ export function DefaultAudioLayoutSmall() {
     <media-captions class="vds-captions"></media-captions>
     <media-controls class="vds-controls">
       <media-controls-group class="vds-controls-group">
-        ${DefaultMuteButton({ tooltip: 'top start' })}${DefaultChapterTitle()}
+        ${DefaultMuteButton({ tooltip: 'top start' })}
+        <media-chapter-title class="vds-media-title"></media-chapter-title>
         ${DefaultCaptionButton({ tooltip: 'top' })}${DefaultAudioMenus()}
       </media-controls-group>
 

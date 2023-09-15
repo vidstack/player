@@ -8,4 +8,4 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url)),
 
 pkg.dependencies.vidstack = `${pkg.version}@next`;
 
-fs.writeFile(JSON.stringify(pkg, null, 2), pkgPath);
+fs.writeFile(pkgPath, JSON.stringify(pkg, null, 2));

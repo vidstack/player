@@ -9,6 +9,7 @@ export { MediaThumbnailElement } from './define/thumbnail-element';
 export { MediaTimeElement } from './define/time-element';
 export { MediaControlsElement } from './define/controls-element';
 export { MediaControlsGroupElement } from './define/controls-group-element';
+export { MediaChapterTitleElement } from './define/chapter-title-element';
 
 // Layouts
 export { MediaLayoutElement } from './define/layouts/layout-element';

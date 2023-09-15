@@ -1,4 +1,5 @@
 import { defineCustomElement } from 'maverick.js/element';
+
 import { MediaCaptionButtonElement } from '../define/buttons/caption-button-element';
 import { MediaFullscreenButtonElement } from '../define/buttons/fullscreen-button-element';
 import { MediaLiveButtonElement } from '../define/buttons/live-button-element';
@@ -8,6 +9,7 @@ import { MediaPlayButtonElement } from '../define/buttons/play-button-element';
 import { MediaSeekButtonElement } from '../define/buttons/seek-button-element';
 import { MediaToggleButtonElement } from '../define/buttons/toggle-button-element';
 import { MediaCaptionsElement } from '../define/captions-element';
+import { MediaChapterTitleElement } from '../define/chapter-title-element';
 import { MediaControlsElement } from '../define/controls-element';
 import { MediaControlsGroupElement } from '../define/controls-group-element';
 import { MediaGestureElement } from '../define/gesture-element';
@@ -83,3 +85,4 @@ defineCustomElement(MediaThumbnailElement);
 defineCustomElement(MediaCaptionsElement);
 defineCustomElement(MediaLiveButtonElement);
 defineCustomElement(MediaTimeElement);
+defineCustomElement(MediaChapterTitleElement);

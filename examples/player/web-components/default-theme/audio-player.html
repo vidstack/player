@@ -1,0 +1,198 @@
+<html>
+  <head>
+    <title>Default Theme</title>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+    <link rel="stylesheet" href="./src/audio-player.css" />
+    <link rel="stylesheet" href="./src/document.css" />
+
+    <style>
+      /*
+       * Do note, we don't use Shadow DOM. This line prevents FOUC because we're loading styles
+       * through the `main.ts` import. You don't need this if you're loading the default theme via
+       * link tags or server-side rendering.
+       */
+      *:not(:defined) {
+        opacity: 0;
+      }
+    </style>
+
+    <script src="./src/main.ts" type="module"></script>
+  </head>
+  <body>
+    <main>
+      <media-player
+        title="Sprite Fight"
+        src="https://media-files.vidstack.io/sprite-fight/audio.mp3"
+        crossorigin
+      >
+        <media-provider></media-provider>
+
+        <!-- In this example captions are placed outside the controls container. -->
+        <media-captions class="vds-captions"></media-captions>
+
+        <media-controls class="vds-controls">
+          <!-- Top Controls Group -->
+          <media-controls-group class="vds-controls-group">
+            <!-- Time Slider -->
+            <media-time-slider class="vds-time-slider vds-slider">
+              <media-slider-chapters class="vds-slider-chapters">
+                <template>
+                  <div class="vds-slider-chapter">
+                    <div class="vds-slider-track"></div>
+                    <div class="vds-slider-track-fill vds-slider-track"></div>
+                    <div class="vds-slider-progress vds-slider-track"></div>
+                  </div>
+                </template>
+              </media-slider-chapters>
+
+              <div class="vds-slider-thumb"></div>
+
+              <!-- Slider Preview -->
+              <media-slider-preview class="vds-slider-preview">
+                <div class="vds-slider-chapter-title" data-part="chapter-title"></div>
+                <media-slider-value
+                  class="vds-slider-value"
+                  type="pointer"
+                  format="time"
+                ></media-slider-value>
+              </media-slider-preview>
+            </media-time-slider>
+          </media-controls-group>
+
+          <!-- Lower Controls Group -->
+          <media-controls-group class="vds-controls-group">
+            <!-- Seek Backward Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-seek-button class="vds-button" seconds="-10">
+                  <media-icon type="seek-backward-10"></media-icon>
+                </media-seek-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content class="vds-tooltip-content" placement="top start">
+                Seek Backward
+              </media-tooltip-content>
+            </media-tooltip>
+
+            <!-- Play Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-play-button class="vds-button">
+                  <media-icon type="play" data-state="play"></media-icon>
+                  <media-icon type="pause" data-state="pause"></media-icon>
+                </media-play-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content class="vds-tooltip-content" placement="top">
+                <span data-state="play">Play</span>
+                <span data-state="pause">Pause</span>
+              </media-tooltip-content>
+            </media-tooltip>
+
+            <!-- Seek Forward Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-seek-button class="vds-button" seconds="10">
+                  <media-icon type="seek-forward-10"></media-icon>
+                </media-seek-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content class="vds-tooltip-content" placement="top">
+                Seek Forward
+              </media-tooltip-content>
+            </media-tooltip>
+
+            <!-- Time Group -->
+            <div class="media-time-group">
+              <media-time class="vds-time" type="current"></media-time>
+              <div class="media-time-divider">/</div>
+              <media-time class="vds-time" type="duration"></media-time>
+            </div>
+
+            <!-- Chapter Title -->
+            <media-chapter-title></media-chapter-title>
+
+            <!-- Mute Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-mute-button class="vds-button">
+                  <media-icon type="mute" data-state="volume-mute"></media-icon>
+                  <media-icon type="volume-low" data-state="volume-low"></media-icon>
+                  <media-icon type="volume-high" data-state="volume-high"></media-icon>
+                </media-mute-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content class="vds-tooltip-content" placement="top">
+                <span data-state="mute">Unmute</span>
+                <span data-state="unmute">Mute</span>
+              </media-tooltip-content>
+            </media-tooltip>
+
+            <!-- Volume Slider -->
+            <media-volume-slider class="vds-slider">
+              <div class="vds-slider-track"></div>
+              <div class="vds-slider-track-fill vds-slider-track"></div>
+              <media-slider-preview class="vds-slider-preview" no-clamp>
+                <media-slider-value
+                  class="vds-slider-value"
+                  type="pointer"
+                  format="percent"
+                ></media-slider-value>
+              </media-slider-preview>
+              <div class="vds-slider-thumb"></div>
+            </media-volume-slider>
+
+            <!-- Caption Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-caption-button class="vds-button">
+                  <media-icon type="closed-captions-on" data-state="on"></media-icon>
+                  <media-icon type="closed-captions" data-state="off"></media-icon>
+                </media-caption-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content class="vds-tooltip-content" placement="top">
+                <span data-state="on">Closed-Captions Off</span>
+                <span data-state="off">Closed-Captions On</span>
+              </media-tooltip-content>
+            </media-tooltip>
+
+            <!-- Settings Menu -->
+            <media-menu class="vds-menu">
+              <media-tooltip>
+                <media-tooltip-trigger>
+                  <media-menu-button class="vds-menu-button vds-button">
+                    <media-icon class="vds-rotate-icon" type="settings"></media-icon>
+                  </media-menu-button>
+                </media-tooltip-trigger>
+                <media-tooltip-content class="vds-tooltip-content" placement="top end">
+                  Settings
+                </media-tooltip-content>
+              </media-tooltip>
+              <media-menu-items class="vds-menu-items" placement="top end">
+                <!-- Caption Submenu -->
+                <media-menu class="vds-menu">
+                  <media-menu-button class="vds-menu-button">
+                    <media-icon class="vds-menu-button-close-icon" type="chevron-left"></media-icon>
+                    <media-icon class="vds-menu-button-icon" type="closed-captions"></media-icon>
+                    <span class="vds-menu-button-label">Captions</span>
+                    <span class="vds-menu-button-hint" data-part="hint"></span>
+                    <media-icon class="vds-menu-button-open-icon" type="chevron-right"></media-icon>
+                  </media-menu-button>
+                  <media-menu-items class="vds-menu-items">
+                    <media-captions-radio-group class="vds-captions-radio-group vds-radio-group">
+                      <template>
+                        <media-radio class="vds-radio">
+                          <div class="vds-radio-check"></div>
+                          <span class="vds-radio-label" data-part="label"></span>
+                        </media-radio>
+                      </template>
+                    </media-captions-radio-group>
+                  </media-menu-items>
+                </media-menu>
+              </media-menu-items>
+            </media-menu>
+          </media-controls-group>
+        </media-controls>
+      </media-player>
+    </main>
+  </body>
+</html>
