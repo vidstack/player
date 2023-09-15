@@ -1,5 +1,5 @@
 {
-  "name": "wc-default-layout",
+  "name": "wc-default-theme",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -10,6 +10,7 @@
     "blitz": "node .stackblitz/version.js && npm install && npm run dev"
   },
   "dependencies": {
+    "media-icons": "0.10.0",
     "vidstack": "workspace:*",
     "vite": "^4.4.0"
   },

@@ -387,6 +387,7 @@
 
 :where(.vds-menu-items [role='menuitem'])
   :where(.vds-menu-button-hint + .vds-menu-button-open-icon),
+:where(.vds-menu-button-hint + media-icon .vds-menu-button-open-icon),
 :where(.vds-menu-button-hint + slot > .vds-menu-button-open-icon) {
   margin-left: 2px;
 }

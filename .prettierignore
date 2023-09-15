@@ -1,5 +1,6 @@
 .code
 globals.d.ts
+*.png
 
 **/partials/markup
 **/partials/import

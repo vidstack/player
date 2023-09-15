@@ -2,6 +2,7 @@
 import 'vidstack/player/styles/default/theme.css';
 import 'vidstack/player/styles/default/layouts/audio.css';
 import 'vidstack/player/styles/default/layouts/video.css';
+import './styles.css';
 // Register elements.
 import 'vidstack/player';
 import 'vidstack/player/layouts';
@@ -20,7 +21,9 @@ player.addEventListener('provider-setup', (event) => {
 });
 
 // We can listen for the `can-play` event to be notified when the player is ready.
-player.addEventListener('can-play', () => {});
+player.addEventListener('can-play', () => {
+  // ...
+});
 
 // ***********************************************************************************************
 // Source Management

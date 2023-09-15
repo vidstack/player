@@ -35,7 +35,8 @@ export class StateController {
     for (const state of Object.keys(states)) {
       const el = root.querySelector<HTMLElement>(`[data-state="${state}"]`);
       if (el) {
-        const display = el.localName === 'slot' ? 'contents' : 'inline-block';
+        const display =
+          el.localName === 'slot' || el.localName === 'media-icon' ? 'contents' : 'inline-block';
         el.style.display = !states[state] ? 'none' : display;
       }
     }

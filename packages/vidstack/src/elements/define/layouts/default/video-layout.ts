@@ -1,8 +1,8 @@
 import { html } from 'lit-html';
+
 import {
   DefaultCaptionButton,
   DefaultChaptersMenu,
-  DefaultChapterTitle,
   DefaultFullscreenButton,
   DefaultMuteButton,
   DefaultPIPButton,
@@ -33,7 +33,8 @@ export function DefaultVideoLayoutLarge() {
       <media-controls-group class="vds-controls-group">
         ${DefaultPlayButton({ tooltip: 'top start' })}
         ${DefaultMuteButton({ tooltip: 'top' })}${DefaultVolumeSlider()}${DefaultTimeGroup()}
-        ${DefaultChapterTitle()}${DefaultCaptionButton({ tooltip: 'top' })}${DefaultPIPButton()}
+        <media-chapter-title class="vds-media-title"></media-chapter-title>
+        ${DefaultCaptionButton({ tooltip: 'top' })}${DefaultPIPButton()}
         ${DefaultFullscreenButton({ tooltip: 'top end' })}
       </media-controls-group>
     </media-controls>
@@ -57,7 +58,8 @@ export function DefaultVideoLayoutSmall() {
       <div class="vds-controls-group">${DefaultPlayButton({ tooltip: 'top' })}</div>
 
       <media-controls-group class="vds-controls-group">
-        ${DefaultTimeGroup()}${DefaultChapterTitle()}
+        ${DefaultTimeGroup()}
+        <media-chapter-title class="vds-media-title"></media-chapter-title>
         <div class="vds-controls-spacer"></div>
         ${DefaultFullscreenButton({ tooltip: 'top end' })}
       </media-controls-group>

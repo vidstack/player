@@ -1,6 +1,6 @@
 import { html } from 'lit-html';
-import { computed, signal, type ReadSignal } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { computed, type ReadSignal } from 'maverick.js';
+
 import {
   useDefaultLayoutContext,
   useDefaultLayoutLang,
@@ -8,7 +8,6 @@ import {
   type MenuPlacement,
   type TooltipPlacement,
 } from '../../../../components';
-import { observeActiveTextTrack } from '../../../../core';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
 import { renderMenuButton } from './menu-layout';
@@ -158,33 +157,6 @@ export function DefaultMainTitle() {
     $state: { title },
   } = useMediaContext();
   return html`<span class="vds-media-title">${$signal(title)}</span>`;
-}
-
-export function DefaultChapterTitle() {
-  const {
-    textTracks,
-    $state: { title, started },
-  } = useMediaContext();
-
-  const chapterTitle = signal(''),
-    mainTitle = computed(() => (started() ? chapterTitle() || title() : title()));
-
-  observeActiveTextTrack(textTracks, 'chapters', (track) => {
-    if (!track) {
-      chapterTitle.set('');
-      return;
-    }
-
-    function onCueChange() {
-      const activeCue = track?.activeCues[0];
-      chapterTitle.set(activeCue?.text || '');
-    }
-
-    onCueChange();
-    listenEvent(track, 'cue-change', onCueChange);
-  });
-
-  return html`<span class="vds-media-title">${$signal(mainTitle)}</span>`;
 }
 
 export function DefaultTimeSlider() {
