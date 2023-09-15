@@ -1,6 +1,11 @@
 .code
 globals.d.ts
 *.png
+*.jpeg
+*.mp4
+*.mp3
+*.vtt
+*.ico
 
 **/partials/markup
 **/partials/import
