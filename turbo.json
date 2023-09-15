@@ -9,6 +9,10 @@
       "dependsOn": ["^analyze", "^build", "clean"],
       "outputs": ["cdn/**", "dist/**", "local/**", ".vercel/**", "player/styles/default/theme.css"]
     },
+    "build:vercel": {
+      "dependsOn": ["^analyze", "^build", "clean"],
+      "outputs": [".vercel/**"]
+    },
     "clean": {
       "cache": false
     },
