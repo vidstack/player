@@ -102,7 +102,7 @@ media-volume-slider {
 }
 
 :where(*[data-hocus], *:focus-within) + media-volume-slider,
-media-volume-slider[data-interactive] {
+media-volume-slider[data-active] {
   margin-left: 2px;
   max-width: 80px;
 }

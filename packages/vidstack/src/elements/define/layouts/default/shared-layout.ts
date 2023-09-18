@@ -1,5 +1,6 @@
-import { html } from 'lit-html';
+import { html, type TemplateResult } from 'lit-html';
 import { computed, type ReadSignal } from 'maverick.js';
+import { isFunction, unwrap } from 'maverick.js/std';
 
 import {
   useDefaultLayoutContext,
@@ -199,15 +200,52 @@ export function DefaultTimeGroup() {
   `;
 }
 
+function MenuPortal(container: HTMLElement | null, template: TemplateResult) {
+  return html`
+    <media-menu-portal .container=${container} disabled="fullscreen">
+      ${template}
+    </media-menu-portal>
+  `;
+}
+
 export function DefaultChaptersMenu({
   placement,
   tooltip,
+  portal,
 }: {
-  placement?: MenuPlacement;
-  tooltip: TooltipPlacement;
+  portal?: boolean;
+  placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
+  tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
 }) {
-  const { translations, smQueryList, thumbnails, menuContainer } = useDefaultLayoutContext(),
-    $placement = computed(() => (smQueryList.matches ? null : placement));
+  const { translations, smQueryList, thumbnails, menuContainer, noPopupMenu } =
+      useDefaultLayoutContext(),
+    $placement = computed(() =>
+      noPopupMenu() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
+    );
+
+  const items = html`
+    <media-menu-items
+      class="vds-chapters-menu-items vds-menu-items"
+      placement=${$signal($placement)}
+    >
+      <media-chapters-radio-group
+        class="vds-chapters-radio-group vds-radio-group"
+        thumbnails=${$signal(thumbnails)}
+      >
+        <template>
+          <media-radio class="vds-chapter-radio vds-radio">
+            <media-thumbnail class="vds-thumbnail"></media-thumbnail>
+            <div class="vds-chapter-radio-content">
+              <span class="vds-chapter-radio-label" data-part="label"></span>
+              <span class="vds-chapter-radio-start-time" data-part="start-time"></span>
+              <span class="vds-chapter-radio-duration" data-part="duration"></span>
+            </div>
+          </media-radio>
+        </template>
+      </media-chapters-radio-group>
+    </media-menu-items>
+  `;
+
   return html`
     <!-- Chapters Menu -->
     <media-menu class="vds-chapters-menu vds-menu">
@@ -217,45 +255,41 @@ export function DefaultChaptersMenu({
             <slot name="chapters-icon"></slot>
           </media-menu-button>
         </media-tooltip-trigger>
-        <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
+        <media-tooltip-content
+          class="vds-tooltip-content"
+          placement=${isFunction(tooltip) ? $signal(tooltip) : tooltip}
+        >
           ${$i18n(translations, 'Chapters')}
         </media-tooltip-content>
       </media-tooltip>
-      <media-menu-portal .container=${menuContainer} disabled="fullscreen">
-        <media-menu-items
-          class="vds-chapters-menu-items vds-menu-items"
-          placement=${$signal($placement)}
-        >
-          <media-chapters-radio-group
-            class="vds-chapters-radio-group vds-radio-group"
-            thumbnails=${$signal(thumbnails)}
-          >
-            <template>
-              <media-radio class="vds-chapter-radio vds-radio">
-                <media-thumbnail class="vds-thumbnail"></media-thumbnail>
-                <div class="vds-chapter-radio-content">
-                  <span class="vds-chapter-radio-label" data-part="label"></span>
-                  <span class="vds-chapter-radio-start-time" data-part="start-time"></span>
-                  <span class="vds-chapter-radio-duration" data-part="duration"></span>
-                </div>
-              </media-radio>
-            </template>
-          </media-chapters-radio-group>
-        </media-menu-items>
-      </media-menu-portal>
+      ${portal ? MenuPortal(menuContainer, items) : items}
     </media-menu>
   `;
 }
 
 export function DefaultSettingsMenu({
   placement,
+  portal,
   tooltip,
 }: {
-  tooltip: TooltipPlacement;
-  placement?: MenuPlacement;
+  portal?: boolean;
+  tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
+  placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
 }) {
-  const { translations, smQueryList, menuContainer } = useDefaultLayoutContext(),
-    $placement = computed(() => (smQueryList.matches ? null : placement));
+  const { translations, smQueryList, menuContainer, noPopupMenu } = useDefaultLayoutContext(),
+    $placement = computed(() =>
+      noPopupMenu() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
+    );
+
+  const items = html`
+    <media-menu-items
+      class="vds-settings-menu-items vds-menu-items"
+      placement=${$signal($placement)}
+    >
+      ${DefaultAudioSubmenu()}${DefaultSpeedSubmenu()}${DefaultQualitySubmenu()}${DefaultCaptionsSubmenu()}
+    </media-menu-items>
+  `;
+
   return html`
     <media-menu class="vds-settings-menu vds-menu">
       <media-tooltip class="vds-tooltip">
@@ -264,18 +298,14 @@ export function DefaultSettingsMenu({
             <slot name="settings-icon" data-class="vds-rotate-icon"></slot>
           </media-menu-button>
         </media-tooltip-trigger>
-        <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
+        <media-tooltip-content
+          class="vds-tooltip-content"
+          placement=${isFunction(tooltip) ? $signal(tooltip) : tooltip}
+        >
           ${$i18n(translations, 'Settings')}
         </media-tooltip-content>
       </media-tooltip>
-      <media-menu-portal .container=${menuContainer} disabled="fullscreen">
-        <media-menu-items
-          class="vds-settings-menu-items vds-menu-items"
-          placement=${$signal($placement)}
-        >
-          ${DefaultAudioSubmenu()}${DefaultSpeedSubmenu()}${DefaultQualitySubmenu()}${DefaultCaptionsSubmenu()}
-        </media-menu-items>
-      </media-menu-portal>
+      ${portal ? MenuPortal(menuContainer, items) : items}
     </media-menu>
   `;
 }

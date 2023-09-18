@@ -44,7 +44,7 @@
   transition: var(--media-controls-out-transition, opacity 0.2s ease-out);
 }
 
-:where([data-view-type='video'] .vds-controls[data-showing]) {
+:where([data-view-type='video'] .vds-controls[data-visible]) {
   opacity: 1;
   visibility: visible;
   transition: var(--media-controls-in-transition, opacity 0.2s ease-in);

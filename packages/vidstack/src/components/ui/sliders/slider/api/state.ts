@@ -8,7 +8,7 @@ export const sliderState = new State<SliderState>({
   focused: false,
   dragging: false,
   pointing: false,
-  get interactive() {
+  get active() {
     return this.dragging || this.focused || this.pointing;
   },
   get fillRate() {
@@ -65,7 +65,7 @@ export interface SliderState {
   /**
    * Whether the slider is being interacted with via keyboard or pointer device.
    */
-  readonly interactive: boolean;
+  readonly active: boolean;
   /**
    * The current value to range ratio.
    *

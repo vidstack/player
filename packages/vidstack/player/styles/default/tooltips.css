@@ -21,12 +21,12 @@
   white-space: nowrap;
   z-index: 10;
   will-change: transform, opacity;
-  border-radius: var(--media-tooltip-border-radius, 2px);
+  border-radius: var(--media-tooltip-border-radius, 4px);
   padding: var(--media-tooltip-padding, 2px 8px);
 }
 
 .vds-tooltip-content {
-  border: var(--media-tooltip-border, 1px solid rgb(255 255 255 / 0.15));
+  border: var(--media-tooltip-border, 1px solid rgb(255 255 255 / 0.1));
 }
 
 :where(.vds-menu .vds-menu-button[role='button'][data-pressed] .vds-tooltip-content) {
@@ -49,11 +49,11 @@
   --exit-transform: translateY(12px) scale(0.8);
 }
 
-:where(.vds-tooltip-content:not([data-showing])) {
+:where(.vds-tooltip-content:not([data-visible])) {
   animation: vds-tooltip-exit 0.2s ease-out;
 }
 
-:where(.vds-tooltip-content[data-showing]) {
+:where(.vds-tooltip-content[data-visible]) {
   animation: vds-tooltip-enter 0.2s ease-in;
   animation-fill-mode: forwards;
 }

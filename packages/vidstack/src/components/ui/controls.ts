@@ -7,7 +7,8 @@ import { setAttributeIfEmpty } from '../../utils/dom';
 /**
  * This component creates a container for control groups.
  *
- * @attr data-showing - Whether controls should be visible.
+ * @attr data-visible - Whether controls should be visible.
+ * @attr data-pip - Whether picture-in-picture mode is active.
  * @attr data-fullscreen - Whether fullscreen mode is active.
  * @docs {@link https://www.vidstack.io/docs/player/components/media/controls}
  */
@@ -24,14 +25,15 @@ export class Controls extends Component<ControlsProps, {}, ControlsEvents> {
   }
 
   protected override onAttach(el: HTMLElement): void {
-    const { fullscreen } = this._media.$state;
+    const { pictureInPicture, fullscreen } = this._media.$state;
 
     setStyle(el, 'pointer-events', 'none');
     setAttributeIfEmpty(el, 'role', 'group');
 
     this.setAttributes({
-      'data-showing': this._isShowing.bind(this),
+      'data-visible': this._isShowing.bind(this),
       'data-fullscreen': fullscreen,
+      'data-pip': pictureInPicture,
     });
 
     effect(() => {

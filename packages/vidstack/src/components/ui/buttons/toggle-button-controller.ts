@@ -34,9 +34,9 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
   protected override onSetup(): void {
     const { disabled } = this.$props;
     this.setAttributes({
-      'aria-disabled': () => (disabled() ? 'true' : null),
       'data-pressed': this._delegate._isPressed,
       'aria-pressed': this._isARIAPressed.bind(this),
+      'aria-disabled': () => (disabled() ? 'true' : null),
     });
   }
 

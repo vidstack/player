@@ -5,8 +5,6 @@
  */
 
 :where(.vds-slider) {
-  -webkit-tap-highlight-color: transparent;
-
   --width: var(--media-slider-width, 100%);
   --height: var(--media-slider-height, 48px);
 
@@ -28,7 +26,6 @@
   contain: layout style;
   outline: none;
   pointer-events: auto;
-  width: 100%;
   cursor: pointer;
   user-select: none;
   touch-action: none;
@@ -74,7 +71,7 @@
   outline-offset: var(--thumb-size);
 }
 
-:where(.vds-slider:not([data-chapters])[data-interactive] .vds-slider-track) {
+:where(.vds-slider:not([data-chapters])[data-active] .vds-slider-track) {
   width: var(--track-focus-width);
   height: var(--track-focus-height);
 }
@@ -109,7 +106,7 @@
   box-shadow: var(--media-slider-focused-thumb-shadow, 0 0 0 4px hsla(0, 0%, 100%, 0.4));
 }
 
-:where(.vds-slider[data-interactive] .vds-slider-thumb) {
+:where(.vds-slider[data-active] .vds-slider-thumb) {
   opacity: 1;
   transition: var(--media-slider-thumb-transition, opacity 0.2s ease-in, box-shadow 0.2s ease);
 }
@@ -170,7 +167,7 @@
 }
 
 /* Hide video if it fails to load. */
-:where(.vds-slider-video[aria-hidden='true'], .vds-slider-video[aria-hidden='true'] video) {
+:where(.vds-slider-video[data-hidden], .vds-slider-video[data-hidden] video) {
   display: none;
   width: 0px;
 }
@@ -194,7 +191,7 @@
   contain: layout paint style;
 }
 
-:where(.vds-slider-preview[data-showing]) {
+:where(.vds-slider-preview[data-visible]) {
   opacity: 1;
   transition: opacity 0.2s ease-in;
 }
@@ -211,12 +208,13 @@
 }
 
 :where(
-    .vds-slider-video:not([aria-hidden='true']) + .vds-slider-value,
-    .vds-slider-video:not([aria-hidden='true']) + .vds-slider-chapter-title,
-    .vds-slider-thumbnail:not([aria-hidden='true']) + .vds-slider-value,
-    .vds-slider-thumbnail:not([aria-hidden='true']) + .vds-slider-chapter-title
+    .vds-slider-video:not([data-hidden]) + .vds-slider-value,
+    .vds-slider-video:not([data-hidden]) + .vds-slider-chapter-title,
+    .vds-slider-thumbnail:not([data-hidden]) + .vds-slider-value,
+    .vds-slider-thumbnail:not([data-hidden]) + .vds-slider-chapter-title,
+    .vds-slider-chapter-title + .vds-slider-value
   ) {
-  margin-top: var(--media-slider-value-gap, 8px);
+  margin-top: var(--media-slider-value-gap, 6px);
 }
 
 /*

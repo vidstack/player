@@ -6,15 +6,12 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview",
-    "blitz": "node .stackblitz/version.js && npm install && npm run dev"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "vidstack": "workspace:*",
-    "vite": "^4.4.0"
+    "vidstack": "workspace:*"
   },
-  "stackblitz": {
-    "installDependencies": false,
-    "startCommand": "npm run blitz"
+  "devDependencies": {
+    "vite": "^4.4.0"
   }
 }

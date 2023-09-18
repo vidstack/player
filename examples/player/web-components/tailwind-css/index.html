@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>Tailwind CSS Example</title>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+    <link rel="stylesheet" href="./src/base.css" />
+
+    <script src="./src/main.ts" type="module"></script>
+  </head>
+  <body class="m-0 flex h-screen w-screen items-center justify-center p-0">
+    <main class="mx-auto w-full max-w-5xl">
+      <media-player
+        class="ring-media-focus aspect-video w-full overflow-hidden rounded-md bg-slate-950 font-sans text-white data-[focus]:ring-4"
+        title="Sprite Fight"
+        src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/low.mp4"
+        crossorigin
+      >
+        <media-provider>
+          <media-poster
+            class="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 [&>img]:h-full [&>img]:w-full"
+            src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=1200"
+            alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
+          ></media-poster>
+        </media-provider>
+
+        <!-- Gestures -->
+        <media-gesture
+          class="absolute inset-0 z-0 block h-full w-full"
+          event="pointerup"
+          action="toggle:paused"
+        ></media-gesture>
+        <media-gesture
+          class="absolute inset-0 z-0 block h-full w-full"
+          event="dblpointerup"
+          action="toggle:fullscreen"
+        ></media-gesture>
+        <media-gesture
+          class="absolute left-0 top-0 z-10 block h-full w-1/5"
+          event="dblpointerup"
+          action="seek:-10"
+        ></media-gesture>
+        <media-gesture
+          class="absolute right-0 top-0 z-10 block h-full w-1/5"
+          event="dblpointerup"
+          action="seek:10"
+        ></media-gesture>
+
+        <!-- Captions -->
+        <media-captions
+          class="media-preview:opacity-0 media-controls:bottom-20 absolute inset-0 bottom-2 z-10 select-none break-words transition-[bottom]"
+        ></media-captions>
+
+        <!-- Controls -->
+        <media-controls
+          class="media-controls:opacity-100 absolute inset-0 z-10 flex h-full w-full flex-col bg-gradient-to-t from-black/5 to-transparent opacity-0 transition-opacity"
+        >
+          <div class="pointer-events-none flex-1"></div>
+          <media-controls-group class="flex w-full items-center px-2">
+            <!-- ... -->
+          </media-controls-group>
+          <media-controls-group class="-mt-1 flex w-full items-center px-2 pb-2">
+            <!-- Play Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-play-button
+                  class="ring-media-focus relative mr-1 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4"
+                >
+                  <media-icon class="h-8 w-8" type="play" data-state="play"></media-icon>
+                  <media-icon class="h-8 w-8" type="pause" data-state="pause"></media-icon>
+                </media-play-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content class="media-tooltip" placement="top">
+                <span data-state="play">Play</span>
+                <span data-state="pause">Pause</span>
+              </media-tooltip-content>
+            </media-tooltip>
+          </media-controls-group>
+        </media-controls>
+      </media-player>
+    </main>
+  </body>
+</html>

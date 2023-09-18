@@ -2,7 +2,7 @@ import { Component } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
-import { $ariaBool, ariaBool } from '../../../utils/aria';
+import { $ariaBool } from '../../../utils/aria';
 import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
 
 export interface LiveIndicatorProps {
@@ -18,9 +18,8 @@ export interface LiveIndicatorProps {
  * live, at the live edge, or not live. In addition, when this button is pressed it will skip
  * ahead to the live edge.
  *
- * @attr data-live - Current media is live.
- * @attr data-live-edge - Playback is at the live edge.
- * @attr aria-hidden - Whether current media is _not_ live.
+ * @attr data-edge - Playback is at the live edge.
+ * @attr data-hidden - Whether current media is _not_ live.
  * @attr data-focus - Whether button is being keyboard focused.
  * @attr data-hocus - Whether button is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/live-button}
@@ -37,13 +36,14 @@ export class LiveButton extends Component<LiveIndicatorProps> {
     this._media = useMediaContext();
 
     const { disabled } = this.$props,
-      { live, liveEdge } = this._media.$state;
+      { live, liveEdge } = this._media.$state,
+      isHidden = () => !live();
 
     this.setAttributes({
-      'data-live': live,
-      'data-live-edge': liveEdge,
+      'data-edge': liveEdge,
+      'data-hidden': isHidden,
       'aria-disabled': $ariaBool(disabled),
-      'aria-hidden': () => ariaBool(!live()),
+      'aria-hidden': $ariaBool(isHidden),
     });
   }
 

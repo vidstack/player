@@ -25,9 +25,10 @@ export interface VolumeSliderProps extends SliderControllerProps {}
  *
  * @attr data-dragging - Whether slider thumb is being dragged.
  * @attr data-pointing - Whether user's pointing device is over slider.
- * @attr data-interactive - Whether slider is being interacted with.
+ * @attr data-active - Whether slider is being interacted with.
  * @attr data-focus - Whether slider is being keyboard focused.
  * @attr data-hocus - Whether slider is being keyboard focused or hovered over.
+ * @attr data-supported - Whether volume control is supported.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/volume-slider}
  */
 export class VolumeSlider extends Component<
@@ -64,7 +65,11 @@ export class VolumeSlider extends Component<
 
     if (!__SERVER__) {
       canChangeVolume().then((canSet) => {
-        if (!canSet) setAttribute(el, 'aria-hidden', 'true');
+        if (canSet) {
+          setAttribute(el, 'data-supported', '');
+        } else {
+          setAttribute(el, 'aria-hidden', 'true');
+        }
       });
     }
   }

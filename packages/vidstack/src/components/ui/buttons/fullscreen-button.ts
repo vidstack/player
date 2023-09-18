@@ -21,8 +21,8 @@ export interface FullscreenButtonProps extends ToggleButtonControllerProps {
 /**
  * A button for toggling the fullscreen mode of the player.
  *
- * @attr data-fullscreen - Whether fullscreen mode is active.
- * @attr aria-hidden - Whether fullscreen is _not_ available.
+ * @attr data-active - Whether fullscreen mode is active.
+ * @attr data-supported - Whether fullscreen mode is supported.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/fullscreen-button}
  * @see {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen}
  */
@@ -46,10 +46,13 @@ export class FullscreenButton extends Component<FullscreenButtonProps> {
   protected override onSetup(): void {
     this._media = useMediaContext();
 
-    const { fullscreen } = this._media.$state;
+    const { fullscreen } = this._media.$state,
+      isSupported = this._isSupported.bind(this);
+
     this.setAttributes({
-      'data-fullscreen': fullscreen,
-      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
+      'data-active': fullscreen,
+      'data-supported': isSupported,
+      'aria-hidden': $ariaBool(() => !isSupported()),
     });
   }
 
@@ -70,9 +73,9 @@ export class FullscreenButton extends Component<FullscreenButtonProps> {
     return fullscreen();
   }
 
-  private _isHidden() {
+  private _isSupported() {
     const { canFullscreen } = this._media.$state;
-    return !canFullscreen();
+    return canFullscreen();
   }
 
   private _getLabel() {

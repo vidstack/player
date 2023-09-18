@@ -394,8 +394,13 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
     if (!content || __SERVER__) return;
 
-    let style = getComputedStyle(content),
-      height = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    let { paddingTop, paddingBottom, borderTopWidth, borderBottomWidth } =
+        getComputedStyle(content),
+      height =
+        parseFloat(paddingTop) +
+        parseFloat(paddingBottom) +
+        parseFloat(borderTopWidth) +
+        parseFloat(borderBottomWidth);
 
     for (const child of content.children) {
       height += (child as HTMLElement).offsetHeight;
@@ -408,7 +413,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
       setTimeout(() => {
         if (content) setAttribute(content, 'data-resizing', false);
-      }, 250);
+      }, 400);
 
       setStyle(content, '--menu-height', height + 'px');
     });

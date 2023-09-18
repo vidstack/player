@@ -1,5 +1,5 @@
 import { Component, effect, prop, State, useState, type StateContext } from 'maverick.js';
-import { listenEvent, type DOMEvent } from 'maverick.js/std';
+import { isNull, listenEvent, type DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { $ariaBool } from '../../../utils/aria';
@@ -11,7 +11,8 @@ import { Slider } from './slider/slider';
  * preview position, so ensure it has the same length as the original media (i.e., same duration).
  *
  * @attr data-loading - Whether the video is loading.
- * @attr aria-hidden - Whether the video has failed to load.
+ * @attr data-error - Whether an error occurred loading video.
+ * @attr data-hidden - Whether the video is not ready or has failed to load.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-video}
  */
 export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, SliderVideoEvents> {
@@ -23,8 +24,8 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
     video: null,
     src: null,
     canPlay: false,
-    error: false,
-    hidden: true,
+    error: null,
+    hidden: false,
   });
 
   private _media!: MediaContext;
@@ -40,6 +41,8 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
     this._slider = useState(Slider.state);
     this.setAttributes({
       'data-loading': this._isLoading.bind(this),
+      'data-hidden': this.$state.hidden,
+      'data-error': this._hasError.bind(this),
       'aria-hidden': $ariaBool(this.$state.hidden),
     });
   }
@@ -74,39 +77,48 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
     return !canPlay() && !hidden();
   }
 
+  private _hasError() {
+    const { error } = this.$state;
+    return !isNull(error);
+  }
+
   private _watchHidden() {
-    const { hidden, canPlay, error } = this.$state,
-      { duration } = this._media.$state;
-    hidden.set(!!error() || !canPlay() || !Number.isFinite(duration()));
+    const { src, hidden } = this.$state,
+      { canLoad, duration } = this._media.$state;
+    hidden.set(canLoad() && (!src() || this._hasError() || !Number.isFinite(duration())));
   }
 
   private _onSrcChange() {
     const { src, canPlay, error } = this.$state;
     src();
     canPlay.set(false);
-    error.set(false);
+    error.set(null);
   }
 
   private _onCanPlay(event?: Event) {
     const { canPlay, error } = this.$state;
     canPlay.set(true);
-    error.set(false);
+    error.set(null);
     this.dispatch('can-play', { trigger: event });
   }
 
-  private _onError(event?: Event) {
+  private _onError(event: ErrorEvent) {
     const { canPlay, error } = this.$state;
     canPlay.set(false);
-    error.set(true);
+    error.set(event);
     this.dispatch('error', { trigger: event });
   }
 
   private _onUpdateTime() {
     const { video, canPlay } = this.$state,
       { duration } = this._media.$state,
-      { pointerRate } = this._slider;
-    if (canPlay() && video() && Number.isFinite(duration()) && Number.isFinite(pointerRate())) {
-      video()!.currentTime = pointerRate() * duration();
+      { pointerRate } = this._slider,
+      media = video(),
+      canUpdate =
+        canPlay() && media && Number.isFinite(duration()) && Number.isFinite(pointerRate());
+
+    if (canUpdate) {
+      media!.currentTime = pointerRate() * duration();
     }
   }
 }
@@ -124,7 +136,7 @@ export interface SliderVideoState {
   video: HTMLVideoElement | null;
   src: string | null;
   canPlay: boolean;
-  error: boolean;
+  error: ErrorEvent | null;
   hidden: boolean;
 }
 

@@ -109,12 +109,12 @@ export class SliderController extends ViewController<
 
   private _setupAttrs() {
     const { orientation } = this.$props,
-      { dragging, interactive, pointing } = this.$state;
+      { dragging, active, pointing } = this.$state;
 
     this.setAttributes({
       'data-dragging': dragging,
       'data-pointing': pointing,
-      'data-interactive': interactive,
+      'data-active': active,
       'aria-disabled': this._getARIADisabled.bind(this),
       'aria-valuemin': this.$state.min,
       'aria-valuemax': this.$state.max,

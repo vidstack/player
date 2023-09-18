@@ -12,7 +12,7 @@ let id = 0;
  * A contextual text bubble that displays a description for an element that appears on pointer
  * hover or keyboard focus.
  *
- * @attr data-showing - Whether tooltip is visible.
+ * @attr data-visible - Whether tooltip is visible.
  * @attr data-hocus - Whether tooltip is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tooltip_role}
@@ -95,7 +95,7 @@ export class Tooltip extends Component<TooltipProps> {
     }
 
     for (const el of [this.el, this._content()]) {
-      el && setAttribute(el, 'data-showing', isShowing);
+      el && setAttribute(el, 'data-visible', isShowing);
     }
   }
 }

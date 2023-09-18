@@ -13,8 +13,8 @@ export interface PIPButtonProps extends ToggleButtonControllerProps {}
 /**
  * A button for toggling the picture-in-picture (PIP) mode of the player.
  *
- * @attr data-pip - Whether picture-in-picture mode is active.
- * @attr aria-hidden - Whether picture-in-picture mode is _not_ available.
+ * @attr data-active - Whether picture-in-picture mode is active.
+ * @attr data-supported - Whether picture-in-picture mode is available.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/pip-button}
  * @see {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture}
  */
@@ -35,10 +35,13 @@ export class PIPButton extends Component<PIPButtonProps> {
   protected override onSetup(): void {
     this._media = useMediaContext();
 
-    const { pictureInPicture } = this._media.$state;
+    const { pictureInPicture } = this._media.$state,
+      isSupported = this._isSupported.bind(this);
+
     this.setAttributes({
-      'data-pip': pictureInPicture,
-      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
+      'data-active': pictureInPicture,
+      'data-supported': isSupported,
+      'aria-hidden': $ariaBool(() => !isSupported()),
     });
   }
 
@@ -56,9 +59,9 @@ export class PIPButton extends Component<PIPButtonProps> {
     return pictureInPicture();
   }
 
-  private _isHidden() {
+  private _isSupported() {
     const { canPictureInPicture } = this._media.$state;
-    return !canPictureInPicture();
+    return canPictureInPicture();
   }
 
   private _getLabel() {

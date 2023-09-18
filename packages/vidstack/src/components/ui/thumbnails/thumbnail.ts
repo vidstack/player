@@ -1,5 +1,5 @@
 import { Component, effect, peek, State } from 'maverick.js';
-import { animationFrameThrottle, listenEvent } from 'maverick.js/std';
+import { animationFrameThrottle, isNull, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
@@ -12,14 +12,17 @@ export interface ThumbnailState {
   img: HTMLImageElement | null | undefined;
   coords: ThumbnailCoords | null;
   activeCue: VTTCue | null;
-  loaded: boolean;
+  loading: boolean;
+  error: ErrorEvent | null;
+  hidden: boolean;
 }
 
 /**
  * Used to load and display a preview thumbnail at the given `time`.
  *
  * @attr data-loading - Whether thumbnail image is loading.
- * @attr aria-hidden - Whether thumbnail is not available.
+ * @attr data-error - Whether an error occurred loading thumbnail.
+ * @attr data-hidden - Whether thumbnail is not available or failed to load.
  * @docs {@link https://www.vidstack.io/docs/player/components/display/thumbnail}
  */
 export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
@@ -33,7 +36,9 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     img: null,
     coords: null,
     activeCue: null,
-    loaded: false,
+    loading: false,
+    error: null,
+    hidden: false,
   });
 
   protected _media!: MediaContext;
@@ -47,12 +52,15 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
 
     this.setAttributes({
       'data-loading': this._isLoading.bind(this),
-      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
+      'data-error': this._hasError.bind(this),
+      'data-hidden': this.$state.hidden,
+      'aria-hidden': $ariaBool(this.$state.hidden),
     });
   }
 
   protected override onConnect(el: HTMLElement) {
     effect(this._watchImg.bind(this));
+    effect(this._watchHidden.bind(this));
     effect(this._onLoadStart.bind(this));
     effect(this._onFindActiveCue.bind(this));
     effect(this._onResolveThumbnail.bind(this));
@@ -62,29 +70,44 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     const img = this.$state.img();
     if (!img) return;
     listenEvent(img, 'load', this._onLoaded.bind(this));
+    listenEvent(img, 'error', this._onError.bind(this));
   }
 
   private _onLoadStart() {
-    const { src, loaded } = this.$state;
+    const { src, loading, error } = this.$state;
     src();
-    loaded.set(false);
+    loading.set(true);
+    error.set(null);
   }
 
   private _onLoaded() {
-    const { loaded } = this.$state;
-    loaded.set(true);
+    const { loading, error } = this.$state;
+    loading.set(false);
+    error.set(null);
     this._requestResize();
   }
 
-  private _isLoading() {
-    const { loaded } = this.$state;
-    return !this._isHidden() && !loaded();
+  private _onError(event: ErrorEvent) {
+    const { loading, error } = this.$state;
+    loading.set(false);
+    error.set(event);
   }
 
-  private _isHidden() {
-    const { duration } = this._media.$state,
+  private _isLoading() {
+    const { loading, hidden } = this.$state;
+    return !hidden() && loading();
+  }
+
+  private _hasError() {
+    const { error } = this.$state;
+    return !isNull(error());
+  }
+
+  private _watchHidden() {
+    const { hidden } = this.$state,
+      { duration } = this._media.$state,
       cues = this._thumbnails.$cues();
-    return !Number.isFinite(duration()) || cues.length === 0;
+    hidden.set(this._hasError() || !Number.isFinite(duration()) || cues.length === 0);
   }
 
   protected _getTime() {

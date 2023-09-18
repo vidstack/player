@@ -1,0 +1,18 @@
+{
+  "name": "wc-css",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "media-icons": "0.10.0",
+    "vidstack": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^4.4.0"
+  }
+}

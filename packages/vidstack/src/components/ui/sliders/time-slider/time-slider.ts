@@ -29,7 +29,7 @@ import { SliderController, type SliderControllerProps } from '../slider/slider-c
  *
  * @attr data-dragging - Whether slider thumb is being dragged.
  * @attr data-pointing - Whether user's pointing device is over slider.
- * @attr data-interactive - Whether slider is being interacted with.
+ * @attr data-active - Whether slider is being interacted with.
  * @attr data-focus - Whether slider is being keyboard focused.
  * @attr data-hocus - Whether slider is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/time-slider}
@@ -129,7 +129,7 @@ export class TimeSlider extends Component<
   private _watchPreviewing() {
     const player = this._media.player.el,
       { _preview } = useContext(sliderContext);
-    player && _preview() && setAttribute(player, 'data-preview', this.$state.interactive());
+    player && _preview() && setAttribute(player, 'data-preview', this.$state.active());
   }
 
   private _seeking(time: number, event: Event) {

@@ -127,7 +127,7 @@ media-captions {
 
 media-captions [part='cue'] {
   color: white;
-  border: rgb(255 255 255 / 0.15);
+  border: rgb(255 255 255 / 0.1);
   background-color: black;
 }
 

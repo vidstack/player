@@ -9,6 +9,9 @@ import { Slider } from './slider/slider';
  * The time ranges in the WebVTT file will automatically be matched based on the current slider
  * pointer position.
  *
+ * @attr data-loading - Whether thumbnail image is loading.
+ * @attr data-error - Whether an error occurred loading thumbnail.
+ * @attr data-hidden - Whether thumbnail is not available or failed to load.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-thumbnail}
  */
 export class SliderThumbnail extends Thumbnail {

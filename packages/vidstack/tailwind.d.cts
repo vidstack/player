@@ -10,5 +10,5 @@ export = plugin;
 
 export interface PluginOptions {
   prefix?: string;
-  mediaPrefix?: string;
+  webComponents?: boolean;
 }

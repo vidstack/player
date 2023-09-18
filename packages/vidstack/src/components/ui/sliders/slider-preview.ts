@@ -8,7 +8,7 @@ import { sliderContext, type SliderContext } from './slider/slider-context';
  * are making as they move the slider thumb. This can include displaying the current pointer
  * value numerically, or displaying a thumbnail over the time slider.
  *
- * @attr data-showing - Whether the preview is visible.
+ * @attr data-visible - Whether the preview is visible.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider#preview}
  */
 export class SliderPreview extends Component<SliderPreviewProps> {
@@ -22,9 +22,9 @@ export class SliderPreview extends Component<SliderPreviewProps> {
   protected override onSetup(): void {
     this._slider = useContext(sliderContext);
 
-    const { interactive } = useState(Slider.state);
+    const { active } = useState(Slider.state);
     this.setAttributes({
-      'data-showing': interactive,
+      'data-visible': active,
     });
   }
 

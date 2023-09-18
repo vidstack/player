@@ -66,7 +66,7 @@ export function DefaultAudioLayoutSmall() {
 function DefaultAudioMenus() {
   const placement = 'top end';
   return html`
-    ${DefaultChaptersMenu({ tooltip: 'top', placement })}
-    ${DefaultSettingsMenu({ tooltip: 'top end', placement })}
+    ${DefaultChaptersMenu({ tooltip: 'top', placement, portal: true })}
+    ${DefaultSettingsMenu({ tooltip: 'top end', placement, portal: true })}
   `;
 }
