@@ -37,6 +37,6 @@
   display: none;
 }
 
-:where([data-view-type='video']:not([data-started]) .vds-poster) {
+:where(.vds-poster[data-visible]) {
   opacity: 1;
 }

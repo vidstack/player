@@ -164,7 +164,7 @@
   backdrop-filter: blur(4px);
   height: var(--menu-height, auto);
   will-change: width, height;
-  overflow-y: auto;
+  overflow-y: scroll;
   overscroll-behavior: contain;
   opacity: 0;
   box-sizing: border-box;
@@ -180,7 +180,6 @@
 }
 
 :where(.vds-menu-items[data-resizing]) {
-  overflow: hidden;
   pointer-events: none;
 }
 
@@ -412,12 +411,6 @@
   display: inline !important;
 }
 
-:where(.vds-radio .vds-radio-hint) {
-  color: var(--media-menu-item-info-color, rgb(168, 169, 171));
-  font-size: var(--media-menu-item-info-font-size, 13px);
-  margin-left: auto;
-}
-
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Radio
@@ -473,6 +466,12 @@
   border-width: unset !important; /* prevent tailwind breaking */
 }
 
+:where(.vds-radio .vds-radio-hint) {
+  color: var(--media-menu-item-info-color, rgb(168, 169, 171));
+  font-size: var(--media-menu-item-info-font-size, 13px);
+  margin-left: auto;
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Chapters Menu
@@ -493,7 +492,7 @@
 }
 
 .vds-chapters-radio {
-  border-bottom: var(--media-chapters-divider, 1px solid rgb(245 245 245 / 0.15));
+  border-bottom: var(--media-chapters-divider, 1px solid rgb(245 245 245 / 0.1));
 }
 
 :where(.vds-chapter-radio:last-child) {

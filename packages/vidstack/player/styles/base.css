@@ -9,7 +9,7 @@
   min-width: 275px;
   display: inline-block;
   position: relative;
-  contain: layout style;
+  contain: style;
   box-sizing: border-box;
   user-select: none;
 }

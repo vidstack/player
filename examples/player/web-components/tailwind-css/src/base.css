@@ -1,0 +1,10 @@
+@import './captions.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --media-brand: 245 245 245;
+  --media-focus: 78 156 246;
+}

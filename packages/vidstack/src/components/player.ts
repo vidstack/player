@@ -100,6 +100,7 @@ declare global {
  * @attr data-playing - Playback is active.
  * @attr data-playsinline - Media should play inline by default (iOS).
  * @attr data-pointer - The user's pointer device type (coarse/fine).
+ * @attr data-preview - The user is interacting with the time slider.
  * @attr data-seeking - User is seeking to a new playback position.
  * @attr data-started - Media playback has started.
  * @attr data-stream-type - Current stream type.
@@ -312,6 +313,10 @@ export class MediaPlayer
       'data-buffering': function (this: MediaPlayer) {
         const { canPlay, waiting } = this.$state;
         return !canPlay() || waiting();
+      },
+      'data-error': function (this: MediaPlayer) {
+        const { error } = this.$state;
+        return !!error();
       },
     };
 

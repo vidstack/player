@@ -1,0 +1,27 @@
+/*************************************************************************************************
+ * Buttons
+ *************************************************************************************************/
+
+/* Easy way to hide all buttons that are not supported in current env (e.g. fullscreen/pip). */
+.media-button[aria-hidden='true'] {
+  display: none;
+}
+
+.media-button[data-focus] svg {
+  box-shadow: var(--media-focus-ring);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .media-button:hover {
+    background-color: rgb(255 255 255 / 0.2);
+  }
+}
+
+media-mute-button {
+  margin-left: -5px;
+  margin-right: -2px !important;
+}
+
+media-fullscreen-button {
+  margin-right: 0 !important;
+}

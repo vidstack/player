@@ -22,18 +22,21 @@ const mediaAttributes = [
   'pip',
   'playing',
   'playsinline',
+  'preview',
   'seeking',
   'started',
   'waiting',
 ];
 
 module.exports = createPlugin.withOptions(function (options) {
-  const prefixOpt = options?.prefix ?? options?.mediaPrefix;
-  const prefix = prefixOpt ? `${prefixOpt}-` : 'media-';
+  const playerId = options.webComponents ? 'media-player' : 'div',
+    prefixOpt = options?.prefix ?? options?.mediaPrefix,
+    prefix = prefixOpt ? `${prefixOpt}-` : 'media-';
+
   return function ({ addVariant }) {
     mediaAttributes.forEach((name) => {
-      addVariant(`${prefix}${name}`, `[data-${name}] &`);
-      addVariant(`not-${prefix}${name}`, `[data-media-player]:not([data-${name}]) &`);
+      addVariant(`${prefix}${name}`, `${playerId}[data-${name}] &`);
+      addVariant(`not-${prefix}${name}`, `${playerId}:not([data-${name}]) &`);
     });
   };
 });

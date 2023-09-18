@@ -23,7 +23,7 @@ export class MediaIconElement extends HTMLElement {
   static tagName = 'media-icon';
 
   static get observedAttributes() {
-    return ['type'];
+    return ['class', 'type', 'size'];
   }
 
   private _svg = this._createSVG();
@@ -49,16 +49,23 @@ export class MediaIconElement extends HTMLElement {
   }
 
   attributeChangedCallback(name: string, _, newValue: string | null) {
-    if (name === 'type') this._type.set(newValue ? (newValue as IconType) : null);
+    if (name === 'type') {
+      this._type.set(newValue ? (newValue as IconType) : null);
+    } else if (name === 'size') {
+      if (newValue === null) {
+        this._svg.removeAttribute('width');
+        this._svg.removeAttribute('height');
+      } else {
+        this._svg.setAttribute('width', newValue);
+        this._svg.setAttribute('height', newValue);
+      }
+    } else if (name === 'class') {
+      this._forwardClass();
+    }
   }
 
   connectedCallback() {
-    const observer = new MutationObserver(this._forwardClass.bind(this));
-    this._forwardClass();
-    observer.observe(this, { attributeFilter: ['class'] });
-
     this._disposal.push(
-      () => observer.disconnect(),
       // Load
       effect(this._loadIcon.bind(this)),
       // Render
@@ -87,7 +94,6 @@ export class MediaIconElement extends HTMLElement {
     }
 
     this._svg.classList.add('vds-icon');
-    this.removeAttribute('class');
   }
 
   private _loadIcon() {

@@ -11,7 +11,6 @@ export const mediaAttributes: (keyof MediaState)[] = [
   'canPlay',
   'canSeek',
   'ended',
-  'error',
   'fullscreen',
   'loop',
   'live',

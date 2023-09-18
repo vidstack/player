@@ -1,4 +1,5 @@
 import { Host } from 'maverick.js/element';
+
 import { TooltipContent } from '../../../components';
 
 /**

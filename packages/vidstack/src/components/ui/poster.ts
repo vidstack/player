@@ -1,5 +1,5 @@
 import { Component, effect, State } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { isNull, listenEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { preconnect } from '../../utils/network';
@@ -21,15 +21,18 @@ export interface PosterState {
   src: string | null;
   alt: string | null | undefined;
   loading: boolean;
-  error: boolean;
+  error: ErrorEvent | null;
+  hidden: boolean;
 }
 
 /**
  * Loads and displays the current media poster image. By default, the media provider's
  * loading strategy is respected meaning the poster won't load until the media can.
  *
+ * @attr data-visible - Whether poster image should be shown.
  * @attr data-loading - Whether poster image is loading.
- * @attr data-hidden - Whether poster should be hidden (failed to load).
+ * @attr data-error - Whether an error occurred loading poster.
+ * @attr data-hidden - Whether poster has no src or has failed to load.
  * @docs {@link https://www.vidstack.io/docs/player/components/media/poster}
  */
 export class Poster extends Component<PosterProps, PosterState> {
@@ -43,7 +46,8 @@ export class Poster extends Component<PosterProps, PosterState> {
     src: null,
     alt: null,
     loading: true,
-    error: false,
+    error: null,
+    hidden: false,
   });
 
   private _media!: MediaContext;
@@ -52,6 +56,7 @@ export class Poster extends Component<PosterProps, PosterState> {
     this._media = useMediaContext();
     this._watchImgSrc();
     this._watchImgAlt();
+    this._watchHidden();
   }
 
   protected override onAttach(el: HTMLElement): void {
@@ -60,10 +65,14 @@ export class Poster extends Component<PosterProps, PosterState> {
     effect(this._watchImg.bind(this));
     effect(this._watchImgSrc.bind(this));
     effect(this._watchImgAlt.bind(this));
+    effect(this._watchHidden.bind(this));
 
+    const { started } = this._media.$state;
     this.setAttributes({
-      'data-loading': this.$state.loading,
-      'data-hidden': this._isHidden.bind(this),
+      'data-visible': () => !started(),
+      'data-loading': this._isLoading.bind(this),
+      'data-error': this._hasError.bind(this),
+      'data-hidden': this.$state.hidden,
     });
   }
 
@@ -77,10 +86,20 @@ export class Poster extends Component<PosterProps, PosterState> {
     effect(this._onLoadStart.bind(this));
   }
 
-  private _isHidden() {
+  private _hasError() {
+    const { error } = this.$state;
+    return !isNull(error());
+  }
+
+  private _watchHidden() {
     const { src } = this.$props,
       { poster } = this._media.$state;
-    return this.$state.error() || !(src() || poster());
+    this.$state.hidden.set(this._hasError() || !(src() || poster()));
+  }
+
+  private _isLoading() {
+    const { loading, hidden } = this.$state;
+    return !hidden() && loading();
   }
 
   private _watchImg() {
@@ -109,19 +128,19 @@ export class Poster extends Component<PosterProps, PosterState> {
   private _onLoadStart() {
     const { loading, error } = this.$state,
       { canLoad, poster } = this._media.$state;
-    const isLoading = canLoad() && !!poster();
-    loading.set(isLoading);
-    error.set(false);
+    loading.set(canLoad() && !!poster());
+    error.set(null);
   }
 
   private _onLoad() {
-    const { loading } = this.$state;
-    loading.set(false);
-  }
-
-  private _onError() {
     const { loading, error } = this.$state;
     loading.set(false);
-    error.set(true);
+    error.set(null);
+  }
+
+  private _onError(event: ErrorEvent) {
+    const { loading, error } = this.$state;
+    loading.set(false);
+    error.set(event);
   }
 }

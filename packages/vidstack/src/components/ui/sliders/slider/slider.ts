@@ -14,7 +14,7 @@ import { SliderController, type SliderControllerProps } from './slider-controlle
  *
  * @attr data-dragging - Whether slider thumb is being dragged.
  * @attr data-pointing - Whether user's pointing device is over slider.
- * @attr data-interactive - Whether slider is being interacted with.
+ * @attr data-active - Whether slider is being interacted with.
  * @attr data-focus - Whether slider is being keyboard focused.
  * @attr data-hocus - Whether slider is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider}

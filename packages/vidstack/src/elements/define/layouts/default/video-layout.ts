@@ -1,5 +1,8 @@
 import { html } from 'lit-html';
+import { computed } from 'maverick.js';
 
+import { useDefaultLayoutContext } from '../../../../components';
+import { $signal } from '../../../lit/directives/signal';
 import {
   DefaultCaptionButton,
   DefaultChaptersMenu,
@@ -14,6 +17,7 @@ import {
 } from './shared-layout';
 
 export function DefaultVideoLayoutLarge() {
+  const { menuGroup } = useDefaultLayoutContext();
   return html`
     ${DefaultVideoGestures()}${DefaultBufferingIndicator()}
     <media-captions class="vds-captions"></media-captions>
@@ -21,10 +25,7 @@ export function DefaultVideoLayoutLarge() {
     <div class="vds-scrim"></div>
 
     <media-controls class="vds-controls">
-      <media-controls-group class="vds-controls-group">
-        <div class="vds-controls-spacer"></div>
-        ${DefaultVideoMenus()}
-      </media-controls-group>
+      ${$signal(computed(DefaultControlsGroupTop))}
 
       <div class="vds-controls-spacer"></div>
 
@@ -34,10 +35,26 @@ export function DefaultVideoLayoutLarge() {
         ${DefaultPlayButton({ tooltip: 'top start' })}
         ${DefaultMuteButton({ tooltip: 'top' })}${DefaultVolumeSlider()}${DefaultTimeGroup()}
         <media-chapter-title class="vds-media-title"></media-chapter-title>
-        ${DefaultCaptionButton({ tooltip: 'top' })}${DefaultPIPButton()}
-        ${DefaultFullscreenButton({ tooltip: 'top end' })}
+        ${DefaultCaptionButton({ tooltip: 'top' })}
+        ${$signal(computed(() => (menuGroup() === 'bottom' ? DefaultVideoMenus() : null)))}
+        ${DefaultPIPButton()} ${DefaultFullscreenButton({ tooltip: 'top end' })}
       </media-controls-group>
     </media-controls>
+  `;
+}
+
+function DefaultControlsGroupTop() {
+  const { menuGroup } = useDefaultLayoutContext(),
+    children =
+      menuGroup() === 'top'
+        ? html`
+            <div class="vds-controls-spacer"></div>
+            ${DefaultVideoMenus()}
+          `
+        : null;
+
+  return html`
+    <media-controls-group class="vds-controls-group">${children}</media-controls-group>
   `;
 }
 
@@ -92,10 +109,13 @@ function DefaultBufferingIndicator() {
 }
 
 function DefaultVideoMenus() {
-  const tooltip = 'bottom end',
-    placement = 'bottom end';
+  const { menuGroup } = useDefaultLayoutContext(),
+    $side = () => (menuGroup() === 'top' ? 'bottom' : 'top'),
+    $tooltip = computed(() => `${$side()} end` as const),
+    $placement = computed(() => `${$side()} end` as const);
   return html`
-    ${DefaultChaptersMenu({ tooltip, placement })}${DefaultSettingsMenu({ tooltip, placement })}
+    ${DefaultChaptersMenu({ tooltip: $tooltip, placement: $placement, portal: true })}
+    ${DefaultSettingsMenu({ tooltip: $tooltip, placement: $placement, portal: true })}
   `;
 }
 

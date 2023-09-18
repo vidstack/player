@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Default Theme</title>
+    <title>Video: Default Theme Example</title>
 
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -150,22 +150,9 @@
               </media-tooltip-content>
             </media-tooltip>
 
-            <!-- PIP Button -->
-            <media-tooltip>
-              <media-tooltip-trigger>
-                <media-pip-button class="vds-button">
-                  <media-icon type="picture-in-picture" data-state="enter"></media-icon>
-                  <media-icon type="picture-in-picture-exit" data-state="exit"></media-icon>
-                </media-pip-button>
-              </media-tooltip-trigger>
-              <media-tooltip-content class="vds-tooltip-content" placement="top">
-                <span data-state="enter">Enter PIP</span>
-                <span data-state="exit">Exit PIP</span>
-              </media-tooltip-content>
-            </media-tooltip>
-
             <!-- Settings Menu -->
             <media-menu class="vds-menu">
+              <!-- Settings Menu Button -->
               <media-tooltip>
                 <media-tooltip-trigger>
                   <media-menu-button class="vds-menu-button vds-button">
@@ -176,6 +163,7 @@
                   Settings
                 </media-tooltip-content>
               </media-tooltip>
+              <!-- Settings Menu Items -->
               <media-menu-items class="vds-menu-items" placement="top end">
                 <!-- Caption Submenu -->
                 <media-menu class="vds-menu">
@@ -199,6 +187,21 @@
                 </media-menu>
               </media-menu-items>
             </media-menu>
+
+            <!-- PIP Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-pip-button class="vds-button">
+                  <media-icon type="picture-in-picture" data-state="enter"></media-icon>
+                  <media-icon type="picture-in-picture-exit" data-state="exit"></media-icon>
+                </media-pip-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content class="vds-tooltip-content" placement="top">
+                <span data-state="enter">Enter PIP</span>
+                <span data-state="exit">Exit PIP</span>
+              </media-tooltip-content>
+            </media-tooltip>
+
             <!-- Fullscreen Button -->
             <media-tooltip>
               <media-tooltip-trigger>

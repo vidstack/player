@@ -16,6 +16,8 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     thumbnails: '',
     icons: '',
     translations: null,
+    menuGroup: 'top',
+    noPopupMenu: false,
   };
 
   private _whenQueryList!: PlayerQueryList;
@@ -35,7 +37,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
   }
 
   protected override onSetup(): void {
-    const { when, smallWhen, thumbnails, translations } = this.$props;
+    const { when, smallWhen, thumbnails, translations, menuGroup, noPopupMenu } = this.$props;
 
     this._whenQueryList = PlayerQueryList.create(when);
     this._whenSmQueryList = PlayerQueryList.create(smallWhen);
@@ -50,6 +52,8 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       smQueryList: this._whenSmQueryList,
       thumbnails,
       translations,
+      menuGroup,
+      noPopupMenu,
       get menuContainer() {
         return self.menuContainer;
       },
@@ -107,12 +111,25 @@ export interface DefaultLayoutProps {
    * Translation map from english to your desired language for words used throughout the layout.
    */
   translations: DefaultLayoutTranslations | null;
+  /**
+   * Specifies whether menu buttons should be placed in the top or bottom controls group. This
+   * only applies to the large video layout.
+   */
+  menuGroup: 'top' | 'bottom';
+  /**
+   * Whether popup menus should be disabled when the small layout is active. A popup menu is a
+   * floating panel that floats up from the bottom of the screen. It's enabled by default as it
+   * provides a better user experience for touch devices.
+   */
+  noPopupMenu: boolean;
 }
 
 export interface DefaultLayoutContext {
   smQueryList: PlayerQueryList;
   thumbnails: ReadSignal<string>;
   translations: ReadSignal<DefaultLayoutTranslations | null>;
+  noPopupMenu: ReadSignal<DefaultLayoutProps['noPopupMenu']>;
+  menuGroup: ReadSignal<DefaultLayoutProps['menuGroup']>;
   menuContainer: HTMLElement | null;
 }
 

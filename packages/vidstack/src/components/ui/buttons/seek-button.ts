@@ -20,9 +20,10 @@ export interface SeekButtonProps {
 /**
  * A button for seeking the current media playback forwards or backwards by a specified amount.
  *
+ * @attr data-seeking - Whether a seeking operation is in progress.
+ * @attr data-supported - Whether seeking operations are permitted.
  * @attr data-focus - Whether button is being keyboard focused.
  * @attr data-hocus - Whether button is being keyboard focused or hovered over.
- * @attr aria-hidden - Whether seeking operations are _not_ permitted.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/seek-button}
  */
 export class SeekButton extends Component<SeekButtonProps> {
@@ -41,10 +42,15 @@ export class SeekButton extends Component<SeekButtonProps> {
   protected override onSetup(): void {
     this._media = useMediaContext();
 
-    const { seconds } = this.$props;
+    const { seeking } = this._media.$state,
+      { seconds } = this.$props,
+      isSupported = this._isSupported.bind(this);
+
     this.setAttributes({
       seconds,
-      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
+      'data-seeking': seeking,
+      'data-supported': isSupported,
+      'aria-hidden': $ariaBool(() => !isSupported()),
     });
   }
 
@@ -58,9 +64,9 @@ export class SeekButton extends Component<SeekButtonProps> {
     onPress(el, this._onPress.bind(this));
   }
 
-  protected _isHidden() {
+  protected _isSupported() {
     const { canSeek } = this._media.$state;
-    return !canSeek();
+    return canSeek();
   }
 
   protected _getLabel() {
