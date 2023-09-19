@@ -34,10 +34,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where([data-media-player][data-focus]:not([data-playing]) [data-media-provider]) {
-  box-shadow: var(--media-focus-ring);
-}
-
 [data-media-provider] {
   position: relative;
   display: block;
@@ -58,15 +54,20 @@
   background-color: unset;
 }
 
-:where([data-media-provider] audio) {
+[data-media-provider] audio {
   width: 100%;
 }
 
-:where([data-media-provider] video) {
+[data-media-provider] video {
   display: inline-block;
   width: 100%;
   height: auto;
+  object-fit: cover;
   touch-action: manipulation;
+}
+
+[data-media-player][data-fullscreen] video {
+  height: 100%;
 }
 
 .vds-icon:focus {

@@ -26,14 +26,14 @@ export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
     <media-tooltip class="vds-play-tooltip vds-tooltip">
       <media-tooltip-trigger>
         <media-play-button class="vds-play-button vds-button">
-          <slot name="play-icon" data-state="play"></slot>
-          <slot name="pause-icon" data-state="pause"></slot>
-          <slot name="replay-icon" data-state="replay"></slot>
+          <slot name="play-icon" data-class="vds-play-icon"></slot>
+          <slot name="pause-icon" data-class="vds-pause-icon"></slot>
+          <slot name="replay-icon" data-class="vds-replay-icon"></slot>
         </media-play-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
-        <span data-state="play">${$i18n(translations, 'Play')}</span>
-        <span data-state="pause">${$i18n(translations, 'Pause')}</span>
+        <span class="vds-play-tooltip-text">${$i18n(translations, 'Play')}</span>
+        <span class="vds-pause-tooltip-text">${$i18n(translations, 'Pause')}</span>
       </media-tooltip-content>
     </media-tooltip>
   `;
@@ -45,14 +45,14 @@ export function DefaultMuteButton({ tooltip }: { tooltip: TooltipPlacement }) {
     <media-tooltip class="vds-mute-tooltip vds-tooltip">
       <media-tooltip-trigger>
         <media-mute-button class="vds-mute-button vds-button">
-          <slot name="mute-icon" data-state="mute"></slot>
-          <slot name="volume-low-icon" data-state="volume-low"></slot>
-          <slot name="volume-high-icon" data-state="volume-high"></slot>
+          <slot name="mute-icon" data-class="vds-mute-icon"></slot>
+          <slot name="volume-low-icon" data-class="vds-volume-low-icon"></slot>
+          <slot name="volume-high-icon" data-class="vds-volume-high-icon"></slot>
         </media-mute-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
-        <span data-state="mute">${$i18n(translations, 'Unmute')}</span>
-        <span data-state="unmute">${$i18n(translations, 'Mute')}</span>
+        <span class="vds-mute-tooltip-text">${$i18n(translations, 'Unmute')}</span>
+        <span class="vds-unmute-tooltip-text">${$i18n(translations, 'Mute')}</span>
       </media-tooltip-content>
     </media-tooltip>
   `;
@@ -64,13 +64,13 @@ export function DefaultCaptionButton({ tooltip }: { tooltip: TooltipPlacement })
     <media-tooltip class="vds-caption-tooltip vds-tooltip">
       <media-tooltip-trigger>
         <media-caption-button class="vds-caption-button vds-button">
-          <slot name="cc-on-icon" data-state="on"></slot>
-          <slot name="cc-off-icon" data-state="off"></slot>
+          <slot name="cc-on-icon" data-class="vds-cc-on-icon"></slot>
+          <slot name="cc-off-icon" data-class="vds-cc-off-icon"></slot>
         </media-caption-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
-        <span data-state="on">${$i18n(translations, 'Closed-Captions Off')}</span>
-        <span data-state="off">${$i18n(translations, 'Closed-Captions On')}</span>
+        <span class="vds-cc-on-tooltip-text">${$i18n(translations, 'Closed-Captions Off')}</span>
+        <span class="vds-cc-off-tooltip-text">${$i18n(translations, 'Closed-Captions On')}</span>
       </media-tooltip-content>
     </media-tooltip>
   `;
@@ -82,13 +82,13 @@ export function DefaultPIPButton() {
     <media-tooltip class="vds-pip-tooltip vds-tooltip">
       <media-tooltip-trigger>
         <media-pip-button class="vds-pip-button vds-button">
-          <slot name="pip-enter-icon" data-state="enter"></slot>
-          <slot name="pip-exit-icon" data-state="exit"></slot>
+          <slot name="pip-enter-icon" data-class="vds-pip-enter-icon"></slot>
+          <slot name="pip-exit-icon" data-class="vds-pip-exit-icon"></slot>
         </media-pip-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content">
-        <span data-state="enter">${$i18n(translations, 'Enter PiP')}</span>
-        <span data-state="exit">${$i18n(translations, 'Exit PiP')}</span>
+        <span class="vds-pip-enter-tooltip-text">${$i18n(translations, 'Enter PiP')}</span>
+        <span class="vds-pip-exit-tooltip-text">${$i18n(translations, 'Exit PiP')}</span>
       </media-tooltip-content>
     </media-tooltip>
   `;
@@ -100,13 +100,13 @@ export function DefaultFullscreenButton({ tooltip }: { tooltip: TooltipPlacement
     <media-tooltip class="vds-fullscreen-tooltip vds-tooltip">
       <media-tooltip-trigger>
         <media-fullscreen-button class="vds-fullscreen-button vds-button">
-          <slot name="fs-enter-icon" data-state="enter"></slot>
-          <slot name="fs-exit-icon" data-state="exit"></slot>
+          <slot name="fs-enter-icon" data-class="vds-fs-enter-icon"></slot>
+          <slot name="fs-exit-icon" data-class="vds-fs-exit-icon"></slot>
         </media-fullscreen-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
-        <span data-state="enter">${$i18n(translations, 'Enter Fullscreen')}</span>
-        <span data-state="exit">${$i18n(translations, 'Exit Fullscreen')}</span>
+        <span class="vds-fs-enter-tooltip-text">${$i18n(translations, 'Enter Fullscreen')}</span>
+        <span class="vds-fs-exit-tooltip-text">${$i18n(translations, 'Exit Fullscreen')}</span>
       </media-tooltip-content>
     </media-tooltip>
   `;

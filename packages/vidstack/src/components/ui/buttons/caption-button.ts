@@ -1,4 +1,5 @@
 import { Component } from 'maverick.js';
+
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { isTrackCaptionKind } from '../../../core/tracks/text/text-track';
 import { $ariaBool } from '../../../utils/aria';
@@ -13,6 +14,7 @@ export interface CaptionButtonProps extends ToggleButtonControllerProps {}
 /**
  * A button for toggling the showing state of the captions.
  *
+ * @attr data-active - Whether closed captions or subtitles are on.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/caption-button}
  */
 export class CaptionButton extends Component<CaptionButtonProps> {
@@ -33,6 +35,7 @@ export class CaptionButton extends Component<CaptionButtonProps> {
     this._media = useMediaContext();
 
     this.setAttributes({
+      'data-active': this._isPressed.bind(this),
       'aria-hidden': $ariaBool(this._isHidden.bind(this)),
     });
   }

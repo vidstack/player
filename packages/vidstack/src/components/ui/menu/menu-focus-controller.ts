@@ -92,6 +92,7 @@ export class MenuFocusController {
   }
 
   protected _onFocus() {
+    this._update();
     // Timeout to allow size to be updated via transition.
     setTimeout(() => {
       const index = this._findActiveIndex();

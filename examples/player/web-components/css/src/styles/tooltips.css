@@ -58,3 +58,28 @@
     transform: var(--exit-transform);
   }
 }
+
+media-player:not([data-paused]) .media-play-tooltip-text,
+media-player[data-paused] .media-pause-tooltip-text {
+  display: none;
+}
+
+media-player[data-pip] .media-pip-enter-tooltip-text,
+media-player:not([data-pip]) .media-pip-exit-tooltip-text {
+  display: none;
+}
+
+media-player[data-fullscreen] .media-fs-enter-tooltip-text,
+media-player:not([data-fullscreen]) .media-fs-exit-tooltip-text {
+  display: none;
+}
+
+media-player:not([data-captions]) .media-cc-on-tooltip-text,
+media-player[data-captions] .media-cc-off-tooltip-text {
+  display: none;
+}
+
+media-player:not([data-muted]) .media-mute-tooltip-text,
+media-player[data-muted] .media-unmute-tooltip-text {
+  display: none;
+}

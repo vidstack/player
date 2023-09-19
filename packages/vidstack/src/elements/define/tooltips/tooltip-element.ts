@@ -1,4 +1,5 @@
 import { Host } from 'maverick.js/element';
+
 import { Tooltip } from '../../../components';
 
 /**
@@ -10,8 +11,8 @@ import { Tooltip } from '../../../components';
  *     <media-play-button></media-play-button>
  *   </media-tooltip-trigger>
  *   <media-tooltip-content placement="top start">
- *      <span data-state="play">Play</span>
- *      <span data-state="pause">Pause</span>
+ *      <span class="play-tooltip-text">Play</span>
+ *      <span class="pause-tooltip-text">Pause</span>
  *   </media-tooltip-content>
  * </media-tooltip>
  * ```

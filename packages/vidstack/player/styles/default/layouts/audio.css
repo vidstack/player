@@ -152,13 +152,13 @@
 :where(.vds-audio-layout .vds-button) {
   min-width: var(--audio-button-size, 40px);
   min-height: var(--audio-button-size, 40px);
-  margin-right: 2px;
+  margin-right: 2.5px;
 }
 
 :where(.vds-audio-layout .vds-play-button) {
   min-width: var(--audio-play-button-size, 43px);
   min-height: var(--audio-play-button-size, 43px);
-  margin-left: -4px;
+  margin-left: -5px;
   margin-right: -2px;
 }
 
@@ -206,7 +206,7 @@
   min-width: 72px;
   max-width: 72px;
   margin-left: -0.5px;
-  margin-right: 8px;
+  margin-right: 12px;
   transition: transform 0.15s ease;
 }
 

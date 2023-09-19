@@ -13,7 +13,7 @@ export interface MuteButtonProps extends ToggleButtonControllerProps {}
  * A button for toggling the muted state of the player.
  *
  * @attr data-muted - Whether volume is muted (0).
- * @attr data-volume - Current volume setting (low/high/muted).
+ * @attr data-state - Current volume setting (low/high/muted).
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/mute-button}
  */
 export class MuteButton extends Component<MuteButtonProps> {
@@ -35,7 +35,7 @@ export class MuteButton extends Component<MuteButtonProps> {
 
     this.setAttributes({
       'data-muted': this._isPressed.bind(this),
-      'data-volume': this._getVolumeText.bind(this),
+      'data-state': this._getState.bind(this),
     });
   }
 
@@ -57,7 +57,7 @@ export class MuteButton extends Component<MuteButtonProps> {
     return this._isPressed() ? 'Unmute' : 'Mute';
   }
 
-  private _getVolumeText() {
+  private _getState() {
     const { muted, volume } = this._media.$state,
       $volume = volume();
     if (muted() || $volume === 0) return 'muted';

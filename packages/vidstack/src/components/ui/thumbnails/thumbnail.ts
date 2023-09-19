@@ -192,6 +192,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     this._style(img, 'width', `${img.naturalWidth * scale}px`);
     this._style(img, 'height', `${img.naturalHeight * scale}px`);
     this._style(img, 'transform', `translate(-${x * scale}px, -${y * scale}px)`);
+    this._style(img, 'max-width', 'none');
   }
 
   private _style(el: HTMLElement, name: string, value: string) {

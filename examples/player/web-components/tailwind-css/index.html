@@ -19,7 +19,7 @@
       >
         <media-provider>
           <media-poster
-            class="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 [&>img]:h-full [&>img]:w-full"
+            class="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 [&>img]:h-full [&>img]:w-full [&>img]:object-cover"
             src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=1200"
             alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
           ></media-poster>
@@ -49,31 +49,318 @@
 
         <!-- Captions -->
         <media-captions
-          class="media-preview:opacity-0 media-controls:bottom-20 absolute inset-0 bottom-2 z-10 select-none break-words transition-[bottom]"
+          class="media-preview:opacity-0 media-controls:bottom-[85px] media-captions:opacity-100 absolute inset-0 bottom-2 z-10 select-none break-words opacity-0 transition-[opacity,bottom] duration-300"
         ></media-captions>
 
         <!-- Controls -->
         <media-controls
-          class="media-controls:opacity-100 absolute inset-0 z-10 flex h-full w-full flex-col bg-gradient-to-t from-black/5 to-transparent opacity-0 transition-opacity"
+          class="media-controls:opacity-100 absolute inset-0 z-10 flex h-full w-full flex-col bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity"
         >
           <div class="pointer-events-none flex-1"></div>
           <media-controls-group class="flex w-full items-center px-2">
-            <!-- ... -->
+            <!-- Time Slider -->
+            <media-time-slider
+              class="group relative mx-[7.5px] inline-flex h-10 w-full cursor-pointer touch-none select-none items-center outline-none"
+            >
+              <media-slider-chapters class="relative flex h-full w-full items-center rounded-[1px]">
+                <template>
+                  <!-- Slider Chapter -->
+                  <div
+                    class="last-child:mr-0 relative mr-0.5 flex h-full w-full items-center rounded-[1px]"
+                    style="contain: layout style"
+                  >
+                    <!-- Slider Chapter Track -->
+                    <div
+                      class="ring-media-focus absolute left-0 top-1/2 z-0 h-[5px] w-full -translate-y-1/2 rounded-sm bg-white/30 group-data-[focus]:ring-[3px]"
+                    ></div>
+                    <!-- Slider Chapter Track Fill -->
+                    <div
+                      class="bg-media-brand absolute left-0 top-1/2 z-10 h-[5px] w-[var(--chapter-fill)] -translate-y-1/2 rounded-sm"
+                      style="will-change: width"
+                    ></div>
+                    <!-- Slider Chapter Progress -->
+                    <div
+                      class="absolute left-0 top-1/2 z-10 h-[5px] w-[var(--chapter-progress)] -translate-y-1/2 rounded-sm bg-white/50"
+                      style="will-change: width"
+                    ></div>
+                  </div>
+                </template>
+              </media-slider-chapters>
+              <!-- Slider Thumb -->
+              <div
+                class="absolute left-[var(--slider-fill)] top-1/2 z-20 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity group-data-[active]:opacity-100 group-data-[dragging]:ring-4"
+                style="will-change: left"
+              ></div>
+              <!-- Slider Preview -->
+              <media-slider-preview
+                class="flex flex-col items-center opacity-0 transition-opacity duration-200 data-[visible]:opacity-100"
+              >
+                <media-slider-thumbnail
+                  class="block h-[var(--thumbnail-height)] max-h-[160px] min-h-[80px] w-[var(--thumbnail-width)] min-w-[120px] max-w-[180px] overflow-hidden border border-white bg-black"
+                  src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
+                ></media-slider-thumbnail>
+                <div class="mt-1 text-sm" data-part="chapter-title"></div>
+                <media-slider-value
+                  class="text-[13px]"
+                  type="pointer"
+                  format="time"
+                ></media-slider-value>
+              </media-slider-preview>
+            </media-time-slider>
           </media-controls-group>
-          <media-controls-group class="-mt-1 flex w-full items-center px-2 pb-2">
+
+          <media-controls-group class="-mt-0.5 flex w-full items-center px-2 pb-2">
             <!-- Play Button -->
             <media-tooltip>
               <media-tooltip-trigger>
                 <media-play-button
-                  class="ring-media-focus relative mr-1 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4"
+                  class="ring-media-focus relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4"
                 >
-                  <media-icon class="h-8 w-8" type="play" data-state="play"></media-icon>
-                  <media-icon class="h-8 w-8" type="pause" data-state="pause"></media-icon>
+                  <media-icon class="media-paused:block hidden h-8 w-8" type="play"></media-icon>
+                  <media-icon class="media-paused:hidden h-8 w-8" type="pause"></media-icon>
                 </media-play-button>
               </media-tooltip-trigger>
-              <media-tooltip-content class="media-tooltip" placement="top">
-                <span data-state="play">Play</span>
-                <span data-state="pause">Pause</span>
+              <media-tooltip-content
+                class="animate-out fade-out slide-out-to-bottom-2 data-[visible]:animate-in data-[visible]:fade-in data-[visible]:slide-in-from-bottom-4 z-10 rounded-sm bg-black/90 px-2 py-0.5 text-sm font-medium text-white"
+                placement="top start"
+                offset="30"
+              >
+                <span class="media-paused:block hidden">Play</span>
+                <span class="media-paused:hidden">Pause</span>
+              </media-tooltip-content>
+            </media-tooltip>
+
+            <!-- Mute Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-mute-button
+                  class="ring-media-focus group relative -mr-1.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4"
+                >
+                  <media-icon
+                    class="hidden h-8 w-8 group-data-[state='muted']:block"
+                    type="mute"
+                  ></media-icon>
+                  <media-icon
+                    class="hidden h-8 w-8 group-data-[state='low']:block"
+                    type="volume-low"
+                  ></media-icon>
+                  <media-icon
+                    class="hidden h-8 w-8 group-data-[state='high']:block"
+                    type="volume-high"
+                  ></media-icon>
+                </media-mute-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content
+                class="animate-out fade-out slide-out-to-bottom-2 data-[visible]:animate-in data-[visible]:fade-in data-[visible]:slide-in-from-bottom-4 z-10 rounded-sm bg-black/90 px-2 py-0.5 text-sm font-medium text-white"
+                placement="top"
+                offset="30"
+              >
+                <span class="media-muted:hidden">Mute</span>
+                <span class="media-muted:block hidden">Unmute</span>
+              </media-tooltip-content>
+            </media-tooltip>
+
+            <!-- Volume Slider -->
+            <media-volume-slider
+              class="group relative mx-[7.5px] inline-flex h-10 w-full max-w-[80px] cursor-pointer touch-none select-none items-center outline-none"
+            >
+              <!-- Slider Track -->
+              <div
+                class="ring-media-focus absolute left-0 top-1/2 z-0 h-[5px] w-full -translate-y-1/2 rounded-sm bg-white/30 group-data-[focus]:ring-4"
+              ></div>
+              <!-- Slider Track Fill -->
+              <div
+                class="bg-media-brand absolute left-0 top-1/2 z-10 h-[5px] w-[var(--slider-fill)] -translate-y-1/2 rounded-sm"
+                style="will-change: width"
+              ></div>
+              <!-- Slider Thumb -->
+              <div
+                class="absolute left-[var(--slider-fill)] top-1/2 z-20 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity group-data-[active]:opacity-100 group-data-[dragging]:ring-4"
+                style="will-change: left"
+              ></div>
+              <media-slider-preview
+                class="opacity-0 transition-opacity duration-200 data-[visible]:opacity-100"
+                no-clamp
+                offset="30"
+              >
+                <media-slider-value
+                  class="rounded-sm bg-black px-2 py-px text-[13px] font-medium"
+                  type="pointer"
+                  format="percent"
+                ></media-slider-value>
+              </media-slider-preview>
+            </media-volume-slider>
+
+            <!-- Time Group -->
+            <div class="ml-1.5 flex items-center text-sm font-medium">
+              <media-time type="current"></media-time>
+              <div class="mx-1 text-white/80">/</div>
+              <media-time type="duration"></media-time>
+            </div>
+
+            <span
+              class="inline-block flex-1 overflow-hidden text-ellipsis whitespace-nowrap px-2 text-sm font-medium text-white/70"
+            >
+              <span class="mr-1">|</span>
+              <media-chapter-title></media-chapter-title>
+            </span>
+
+            <!-- Caption Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-caption-button
+                  class="ring-media-focus group relative mr-0.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4"
+                >
+                  <media-icon
+                    class="media-captions:block hidden h-8 w-8"
+                    type="closed-captions-on"
+                  ></media-icon>
+                  <media-icon
+                    class="media-captions:hidden h-8 w-8"
+                    type="closed-captions"
+                  ></media-icon>
+                </media-caption-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content
+                class="animate-out fade-out slide-out-to-bottom-2 data-[visible]:animate-in data-[visible]:fade-in data-[visible]:slide-in-from-bottom-4 z-10 rounded-sm bg-black/90 px-2 py-0.5 text-sm font-medium text-white"
+                placement="top"
+                offset="30"
+              >
+                <span class="media-captions:block hidden">Closed-Captions Off</span>
+                <span class="media-captions:hidden">Closed-Captions On</span>
+              </media-tooltip-content>
+            </media-tooltip>
+
+            <!-- Settings Menu -->
+            <media-menu class="group">
+              <!-- Settings Menu Button -->
+              <media-tooltip>
+                <media-tooltip-trigger>
+                  <media-menu-button
+                    class="ring-media-focus relative mr-0.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4"
+                  >
+                    <media-icon
+                      class="h-8 w-8 transform transition-transform duration-200 ease-out group-data-[open]:rotate-90"
+                      type="settings"
+                    ></media-icon>
+                  </media-menu-button>
+                </media-tooltip-trigger>
+                <media-tooltip-content
+                  class="animate-out fade-out slide-out-to-bottom-2 data-[visible]:animate-in data-[visible]:fade-in data-[visible]:slide-in-from-bottom-4 z-10 rounded-sm bg-black/90 px-2 py-0.5 text-sm font-medium text-white group-data-[open]:hidden"
+                  placement="top"
+                  offset="30"
+                >
+                  Settings
+                </media-tooltip-content>
+              </media-tooltip>
+              <!-- Settings Menu Items -->
+              <media-menu-items
+                class="animate-out fade-out slide-out-to-bottom-2 data-[open]:animate-in data-[open]:fade-in data-[open]:slide-in-from-bottom-4 flex h-[var(--menu-height)] max-h-[400px] min-w-[260px] flex-col overflow-y-auto overscroll-y-contain rounded-md border border-white/10 bg-black/95 p-2.5 font-sans text-[15px] font-medium outline-none backdrop-blur-sm transition-[height] duration-300 data-[resizing]:overflow-hidden"
+                offset="30"
+                placement="top end"
+                style="will-change: height"
+              >
+                <!-- Caption Submenu -->
+                <media-menu>
+                  <!-- Caption Submenu Button -->
+                  <media-menu-button
+                    class="ring-media-focus parent left-0 z-10 flex w-full cursor-pointer select-none items-center justify-start rounded-sm bg-black/60 p-2.5 outline-none ring-inset data-[open]:sticky data-[open]:-top-2.5 data-[hocus]:bg-white/10 data-[focus]:ring-[3px]"
+                  >
+                    <!-- Close Icon -->
+                    <media-icon
+                      class="parent-data-[open]:block -ml-0.5 mr-1.5 hidden h-[18px] w-[18px]"
+                      type="chevron-left"
+                    ></media-icon>
+                    <!-- Icon -->
+                    <media-icon
+                      class="parent-data-[open]:hidden mr-1.5 h-5 w-5"
+                      type="closed-captions"
+                    ></media-icon>
+                    <!-- Label -->
+                    <span>Captions</span>
+                    <!-- Hint -->
+                    <span class="ml-auto text-sm text-white/50" data-part="hint"></span>
+                    <!-- Open Icon -->
+                    <media-icon
+                      class="parent-data-[open]:hidden ml-0.5 h-[18px] w-[18px] text-sm text-white/50"
+                      type="chevron-right"
+                    ></media-icon>
+                  </media-menu-button>
+                  <!-- Caption Submenu Items -->
+                  <media-menu-items
+                    class="hidden w-full flex-col items-start justify-center outline-none data-[keyboard]:mt-[3px] data-[open]:inline-block"
+                  >
+                    <media-captions-radio-group class="flex w-full flex-col">
+                      <template>
+                        <media-radio
+                          class="ring-media-focus group relative flex w-full cursor-pointer select-none items-center justify-start rounded-sm p-2.5 outline-none data-[hocus]:bg-white/10 data-[focus]:ring-[3px]"
+                        >
+                          <media-icon
+                            class="h-4 w-4 group-data-[checked]:hidden"
+                            type="radio-button"
+                          ></media-icon>
+                          <media-icon
+                            class="text-media-brand hidden h-4 w-4 group-data-[checked]:block"
+                            type="radio-button-selected"
+                          ></media-icon>
+                          <span class="ml-2" data-part="label"></span>
+                        </media-radio>
+                      </template>
+                    </media-captions-radio-group>
+                  </media-menu-items>
+                </media-menu>
+              </media-menu-items>
+            </media-menu>
+
+            <!-- PIP Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-pip-button
+                  class="ring-media-focus group relative mr-0.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4"
+                >
+                  <media-icon
+                    class="media-pip:hidden h-8 w-8"
+                    type="picture-in-picture"
+                  ></media-icon>
+                  <media-icon
+                    class="media-pip:block hidden h-8 w-8"
+                    type="picture-in-picture-exit"
+                  ></media-icon>
+                </media-pip-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content
+                class="animate-out fade-out slide-out-to-bottom-2 data-[visible]:animate-in data-[visible]:fade-in data-[visible]:slide-in-from-bottom-4 z-10 rounded-sm bg-black/90 px-2 py-0.5 text-sm font-medium text-white"
+                placement="top"
+                offset="30"
+              >
+                <span class="media-pip:hidden">Enter PIP</span>
+                <span class="media-pip:block hidden">Exit PIP</span>
+              </media-tooltip-content>
+            </media-tooltip>
+
+            <!-- Fullscreen Button -->
+            <media-tooltip>
+              <media-tooltip-trigger>
+                <media-fullscreen-button
+                  class="ring-media-focus group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4"
+                >
+                  <media-icon
+                    class="media-fullscreen:hidden h-8 w-8"
+                    type="fullscreen"
+                  ></media-icon>
+                  <media-icon
+                    class="media-fullscreen:block hidden h-8 w-8"
+                    type="fullscreen-exit"
+                  ></media-icon>
+                </media-fullscreen-button>
+              </media-tooltip-trigger>
+              <media-tooltip-content
+                class="animate-out fade-out slide-out-to-bottom-2 data-[visible]:animate-in data-[visible]:fade-in data-[visible]:slide-in-from-bottom-4 z-10 rounded-sm bg-black/90 px-2 py-0.5 text-sm font-medium text-white"
+                placement="top end"
+                offset="30"
+              >
+                <span class="media-fullscreen:hidden">Enter Fullscreen</span>
+                <span class="media-fullscreen:block hidden">Exit Fullscreen</span>
               </media-tooltip-content>
             </media-tooltip>
           </media-controls-group>
