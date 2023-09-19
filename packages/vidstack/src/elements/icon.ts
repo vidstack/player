@@ -4,6 +4,7 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { unsafeSVG } from 'lit-html/directives/unsafe-svg.js';
 import { type ReadSignal } from 'maverick.js';
 import { isString } from 'maverick.js/std';
+
 import { $signal } from './lit/directives/signal';
 
 export function Icon({ name, class: _class, state, paths }: IconProps) {
@@ -15,7 +16,6 @@ export function Icon({ name, class: _class, state, paths }: IconProps) {
     focusable="false"
     xmlns="http://www.w3.org/2000/svg"
     data-icon=${ifDefined(name ?? state)}
-    data-state=${ifDefined(state)}
   >
     ${!isString(paths) ? $signal(paths) : unsafeSVG(paths)}
   </svg>`;

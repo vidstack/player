@@ -1,4 +1,5 @@
 import { Host } from 'maverick.js/element';
+
 import { LiveButton } from '../../../components';
 
 /**
@@ -6,9 +7,7 @@ import { LiveButton } from '../../../components';
  * @example
  * ```html
  * <media-live-button>
- *   <div data-state="live"></div>
- *   <div data-state="live-edge"></div>
- *   <div data-state="not-live"></div>
+ *   <!-- ... -->
  * </media-live-button>
  * ```
  */

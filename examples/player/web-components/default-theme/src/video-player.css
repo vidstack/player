@@ -163,7 +163,7 @@ media-captions {
 
 /* Pull captions up when controls are visible. */
 media-player[data-controls] media-captions {
-  bottom: 72px;
+  bottom: 80px;
 }
 
 /* Hide captions when interacting with time slider. */

@@ -37,8 +37,6 @@
     [role='menuitemradio']:focus-visible,
     [role='menuitemradio'][data-focus]
   ),
-:where(.vds-menu-button[role='button'][data-focus] media-icon),
-:where(.vds-menu-button[role='button'][data-focus] svg),
 :where(.vds-radio[data-focus]) {
   outline: none;
   box-shadow: var(--media-focus-ring);

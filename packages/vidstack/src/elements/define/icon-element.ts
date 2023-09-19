@@ -4,7 +4,7 @@ import { lazyPaths, type IconType } from 'media-icons';
 import { cloneTemplateContent, createTemplate } from '../../utils/dom';
 
 const svgTemplate = /* #__PURE__*/ createTemplate(
-  `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"></svg>`,
+  `<svg width="100%" height="100%" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"></svg>`,
 );
 
 /**
@@ -23,7 +23,7 @@ export class MediaIconElement extends HTMLElement {
   static tagName = 'media-icon';
 
   static get observedAttributes() {
-    return ['class', 'type', 'size'];
+    return ['type'];
   }
 
   private _svg = this._createSVG();
@@ -45,22 +45,12 @@ export class MediaIconElement extends HTMLElement {
 
   constructor() {
     super();
-    this.style.display = 'contents';
+    this.classList.add('vds-icon');
   }
 
   attributeChangedCallback(name: string, _, newValue: string | null) {
     if (name === 'type') {
       this._type.set(newValue ? (newValue as IconType) : null);
-    } else if (name === 'size') {
-      if (newValue === null) {
-        this._svg.removeAttribute('width');
-        this._svg.removeAttribute('height');
-      } else {
-        this._svg.setAttribute('width', newValue);
-        this._svg.setAttribute('height', newValue);
-      }
-    } else if (name === 'class') {
-      this._forwardClass();
     }
   }
 
@@ -84,16 +74,6 @@ export class MediaIconElement extends HTMLElement {
     const svg = cloneTemplateContent<SVGElement>(svgTemplate);
     this.prepend(svg);
     return svg;
-  }
-
-  private _forwardClass() {
-    this._svg.removeAttribute('class');
-
-    for (const token of this.classList) {
-      this._svg.classList.add(token);
-    }
-
-    this._svg.classList.add('vds-icon');
   }
 
   private _loadIcon() {

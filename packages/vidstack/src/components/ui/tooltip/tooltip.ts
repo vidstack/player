@@ -89,12 +89,14 @@ export class Tooltip extends Component<TooltipProps> {
   }
 
   private _onShowingChange(isShowing: boolean) {
-    const trigger = this._trigger();
+    const trigger = this._trigger(),
+      content = this._content();
+
     if (trigger) {
       setAttribute(trigger, 'aria-describedby', isShowing ? this._id : null);
     }
 
-    for (const el of [this.el, this._content()]) {
+    for (const el of [this.el, trigger, content]) {
       el && setAttribute(el, 'data-visible', isShowing);
     }
   }

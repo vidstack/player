@@ -90,17 +90,8 @@ media-menu-items[data-placement~='bottom'] {
 }
 
 .media-menu-button[aria-expanded='true'] .media-rotate-icon {
-  transform: rotate(var(--media-menu-button-icon-rotate-deg, 90deg));
+  transform: rotate(90deg);
   transition: transform 0.2s ease-in;
-}
-
-/* SR-only. */
-.media-menu-button[role='button'] :where(.media-menu-button-label, .media-menu-button-hint) {
-  position: absolute;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
 }
 
 .media-menu-button[role='button']
@@ -109,8 +100,8 @@ media-menu-items[data-placement~='bottom'] {
 }
 
 .media-menu-button :where(.media-menu-button-hint, .media-menu-button-open-icon) {
-  color: var(--media-menu-hint-color, rgb(245 245 245 / 0.5));
-  font-size: var(--media-menu-hint-font-size, 14px);
+  color: rgb(245 245 245 / 0.5);
+  font-size: 14px;
 }
 
 /*************************************************************************************************
@@ -192,7 +183,7 @@ media-menu-items media-menu-button[aria-expanded='true'] {
 }
 
 .media-menu-button-close-icon {
-  margin-right: var(--media-menu-item-icon-spacing, 6px);
+  margin-right: 6px;
 }
 
 .media-menu-button-open-icon,
@@ -238,7 +229,6 @@ media-menu-button[aria-expanded='true'] .media-menu-button-close-icon {
  */
 
 .media-radio-group {
-  box-sizing: border-box;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -248,7 +238,6 @@ media-radio {
   position: relative;
   align-items: center;
   border-radius: 2px;
-  box-sizing: border-box;
   cursor: pointer;
   display: flex;
   contain: content;
@@ -258,7 +247,6 @@ media-radio {
 .media-radio-check {
   align-items: center;
   border-radius: 9999px;
-  box-sizing: border-box;
   display: flex;
   width: 9px;
   height: 9px;
@@ -267,16 +255,15 @@ media-radio {
   margin-right: 8px;
 }
 
-media-radio[aria-checked='true'] .media-radio-check {
+media-radio[data-checked] .media-radio-check {
   border: 2px solid var(--media-brand);
 }
 
-media-radio[aria-checked='true'] .media-radio-check::after {
+media-radio[data-checked] .media-radio-check::after {
   content: '';
   border-color: #f5f5f5;
   background-color: #f5f5f5;
   border-radius: 9999px;
-  box-sizing: border-box;
   height: 4px;
   width: 4px;
 }

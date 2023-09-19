@@ -22,6 +22,7 @@ import { radioControllerContext, type RadioController } from './radio-controller
  * A radio represents a option that a user can select inside of a radio group. Only one radio
  * can be checked in a group.
  *
+ * @attr data-checked - Whether radio is checked.
  * @attr data-focus - Whether radio is being keyboard focused.
  * @attr data-hocus - Whether radio is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/radio}
@@ -56,6 +57,7 @@ export class Radio extends Component<RadioProps, {}, RadioEvents> {
     this._addToGroup();
     this.setAttributes({
       value: this.$props.value,
+      'data-checked': this._checked,
       'aria-checked': $ariaBool(this._checked),
     });
   }

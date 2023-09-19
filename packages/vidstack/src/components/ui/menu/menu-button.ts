@@ -9,6 +9,7 @@ import { menuContext, type MenuContext } from './menu-context';
  * A button that controls the opening and closing of a menu component. The button will become a
  * menuitem when used inside a submenu.
  *
+ * @attr data-open - Whether menu is currently open.
  * @attr data-focus - Whether button is being keyboard focused.
  * @attr data-hocus - Whether button is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}

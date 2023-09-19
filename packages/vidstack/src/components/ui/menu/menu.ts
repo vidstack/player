@@ -190,9 +190,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       this._stopClickPropagation(el);
     }
 
-    function watchAttrs() {
+    const watchAttrs = () => {
+      setAttribute(el, 'data-open', this._expanded());
       setAttribute(el, 'aria-disabled', isARIADisabled());
-    }
+    };
 
     if (__SERVER__) watchAttrs();
     else effect(watchAttrs);
@@ -218,6 +219,13 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     if (!this.isSubmenu) {
       this._stopClickPropagation(el);
     }
+
+    const watchAttrs = () => {
+      setAttribute(el, 'data-open', this._expanded());
+    };
+
+    if (__SERVER__) watchAttrs();
+    else effect(watchAttrs);
 
     this._focus._attachMenu(el);
     this._updateMenuItemsHidden(false);
@@ -273,9 +281,13 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
         trigger?.focus();
       }
 
-      this.el?.setAttribute('data-keyboard', '');
+      for (const el of [this.el, content]) {
+        el && el.setAttribute('data-keyboard', '');
+      }
     } else {
-      this.el?.removeAttribute('data-keyboard');
+      for (const el of [this.el, content]) {
+        el && el.removeAttribute('data-keyboard');
+      }
     }
 
     this.dispatch(isExpanded ? 'open' : 'close', { trigger: event });
