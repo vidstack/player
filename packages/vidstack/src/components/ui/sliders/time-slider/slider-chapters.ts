@@ -262,6 +262,7 @@ export class SliderChapters extends Component<SliderChaptersProps> {
   }
 
   private _onTrackChange() {
+    // Might run the "load" track event after the component is destroyed.
     if (!this.scope) return;
 
     const { disabled } = this.$props;

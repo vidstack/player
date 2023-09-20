@@ -4,32 +4,32 @@ import FullscreenButton from '../buttons/FullscreenButton.vue';
 import MuteButton from '../buttons/MuteButton.vue';
 import PIPButton from '../buttons/PIPButton.vue';
 import PlayButton from '../buttons/PlayButton.vue';
+import Captions from '../Captions.vue';
 import ChapterTitle from '../ChapterTitle.vue';
+import Gestures from '../Gestures.vue';
 import SettingsMenu from '../menus/SettingsMenu.vue';
 import TimeSlider from '../sliders/TimeSlider.vue';
 import VolumeSlider from '../sliders/VolumeSlider.vue';
 import TimeGroup from '../TimeGroup.vue';
-import VideoCaptions from '../VideoCaptions.vue';
-import VideoGestures from '../VideoGestures.vue';
 </script>
 
 <template>
-  <VideoGestures />
-  <VideoCaptions />
-  <media-controls class="vds-controls controls">
-    <div class="vds-controls-spacer" />
-    <media-controls-group class="vds-controls-group controls-group">
+  <Gestures />
+  <Captions />
+  <media-controls class="controls">
+    <div class="spacer" />
+    <media-controls-group class="controls-group">
       <TimeSlider
         thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
       />
     </media-controls-group>
-    <media-controls-group class="vds-controls-group controls-group">
+    <media-controls-group class="controls-group">
       <PlayButton tooltip-placement="top start" />
       <MuteButton tooltip-placement="top" />
       <VolumeSlider />
       <TimeGroup />
       <ChapterTitle />
-      <div class="vds-controls-spacer" />
+      <div class="spacer" />
       <CaptionButton tooltip-placement="top" />
       <SettingsMenu />
       <PIPButton tooltip-placement="top" />
@@ -39,18 +39,28 @@ import VideoGestures from '../VideoGestures.vue';
 </template>
 
 <style scoped>
-.controls :deep(media-time-slider) {
-  --media-slider-height: 40px;
+.controls {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
 }
 
-.controls :deep(media-time-slider media-slider-value) {
-  background-color: unset;
-}
-
-.controls :deep(media-volume-slider) {
-  --media-slider-height: 40px;
-  --media-slider-preview-offset: 32px;
-  max-width: 80px;
+.controls[data-visible] {
+  opacity: 1;
+  background-image: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.5),
+    10%,
+    transparent,
+    95%,
+    rgb(0 0 0 / 0.3)
+  );
 }
 
 .controls-group {
@@ -58,11 +68,31 @@ import VideoGestures from '../VideoGestures.vue';
   align-items: center;
   width: 100%;
 }
+
 .controls-group {
   padding-inline: 8px;
 }
+
 .controls-group:last-child {
   margin-top: -4px;
   padding-bottom: 8px;
+}
+
+.spacer {
+  flex: 1 1 0%;
+  pointer-events: none;
+}
+
+.controls :deep(.media-button) {
+  margin-right: 2.5px;
+}
+
+.controls :deep(media-mute-button) {
+  margin-left: -2.5px;
+  margin-right: -2px !important;
+}
+
+.controls :deep(media-fullscreen-button) {
+  margin-right: 0 !important;
 }
 </style>

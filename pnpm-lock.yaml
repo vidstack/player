@@ -243,6 +243,31 @@ importers:
         specifier: ^4.4.9
         version: 4.4.9(@types/node@16.18.34)
 
+  examples/player/vue/css:
+    dependencies:
+      media-icons:
+        specifier: 0.10.0
+        version: 0.10.0
+      vidstack:
+        specifier: workspace:*
+        version: link:../../../../packages/vidstack
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^4.3.4
+        version: 4.3.4(vite@4.4.9)(vue@3.3.4)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+      vite:
+        specifier: ^4.4.0
+        version: 4.4.9(@types/node@16.18.34)
+      vue-tsc:
+        specifier: ^1.8.11
+        version: 1.8.11(typescript@5.2.2)
+
   examples/player/vue/default-layout:
     dependencies:
       vidstack:
