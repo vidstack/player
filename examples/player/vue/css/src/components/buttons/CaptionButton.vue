@@ -12,8 +12,8 @@ const { tooltipPlacement } = defineProps<{
   <Tooltip :placement="tooltipPlacement">
     <template #trigger>
       <media-caption-button class="media-button">
-        <media-icon class="on-icon" type="closed-captions-on"></media-icon>
-        <media-icon class="off-icon" type="closed-captions"></media-icon>
+        <media-icon class="on-icon" type="closed-captions-on" />
+        <media-icon class="off-icon" type="closed-captions" />
       </media-caption-button>
     </template>
 

@@ -315,6 +315,43 @@ importers:
         specifier: ^1.8.11
         version: 1.8.11(typescript@5.2.2)
 
+  examples/player/vue/tailwind-css:
+    dependencies:
+      media-icons:
+        specifier: 0.10.0
+        version: 0.10.0
+      vidstack:
+        specifier: workspace:*
+        version: link:../../../../packages/vidstack
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^4.3.4
+        version: 4.3.4(vite@4.4.9)(vue@3.3.4)
+      autoprefixer:
+        specifier: ^10.4.2
+        version: 10.4.15(postcss@8.4.29)
+      postcss:
+        specifier: ^8.4.0
+        version: 8.4.29
+      tailwindcss:
+        specifier: ^3.0.0
+        version: 3.3.3
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.3.3)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+      vite:
+        specifier: ^4.4.0
+        version: 4.4.9(@types/node@16.18.34)
+      vue-tsc:
+        specifier: ^1.8.11
+        version: 1.8.11(typescript@5.2.2)
+
   examples/player/web-components/css:
     dependencies:
       media-icons:

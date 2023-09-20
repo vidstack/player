@@ -41,6 +41,10 @@ export class MediaIconElement extends HTMLElement {
 
   set type(type) {
     this._type.set(type);
+
+    // Make sure type is reflected as attribute incase the element is cloned.
+    if (type) this.setAttribute('type', type);
+    else this.removeAttribute('type');
   }
 
   attributeChangedCallback(name: string, _, newValue: string | null) {
