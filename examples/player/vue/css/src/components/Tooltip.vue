@@ -1,0 +1,81 @@
+<script setup lang="ts">
+import type { TooltipPlacement } from 'vidstack';
+
+const { placement } = defineProps<{
+  placement: TooltipPlacement;
+}>();
+</script>
+
+<template>
+  <media-tooltip>
+    <media-tooltip-trigger>
+      <slot name="trigger" />
+    </media-tooltip-trigger>
+    <media-tooltip-content class="tooltip" :placement="placement">
+      <slot name="content" />
+    </media-tooltip-content>
+  </media-tooltip>
+</template>
+
+<style scoped>
+.tooltip {
+  display: inline-block;
+  color: hsl(0, 0%, 80%);
+  background-color: black;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+  border-radius: 2px;
+  padding: 2px 8px;
+  will-change: transform, opacity;
+}
+
+.tooltip {
+  --enter-transform: translateY(0px) scale(1);
+  --exit-transform: translateY(12px) scale(0.8);
+}
+
+.tooltip[data-visible] {
+  animation: media-tooltip-enter 0.2s ease-in;
+  animation-fill-mode: forwards;
+}
+
+.tooltip:not([data-visible]) {
+  animation: media-tooltip-exit 0.2s ease-out;
+}
+
+/* Bottom */
+.tooltip[data-placement~='bottom'] {
+  --enter-transform: translateY(0) scale(1);
+  --exit-transform: translateY(-12px) scale(0.8);
+}
+
+@keyframes media-tooltip-enter {
+  from {
+    opacity: 0;
+    transform: var(--exit-transform);
+  }
+  to {
+    opacity: 1;
+    transform: var(--enter-transform);
+  }
+}
+
+@keyframes media-tooltip-exit {
+  from {
+    opacity: 1;
+    transform: var(--enter-transform);
+  }
+  to {
+    opacity: 0;
+    transform: var(--exit-transform);
+  }
+}
+
+media-menu[data-open] .tooltip {
+  display: none !important;
+}
+</style>

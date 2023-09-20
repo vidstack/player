@@ -15,13 +15,13 @@ import TimeGroup from '../TimeGroup.vue';
 <template>
   <AudioCaptions />
 
-  <media-controls class="vds-controls">
+  <media-controls class="vds-controls controls">
     <!-- Top Controls Group -->
-    <media-controls-group class="vds-controls-group">
+    <media-controls-group class="vds-controls-group controls-group">
       <TimeSlider />
     </media-controls-group>
     <!-- Lower Controls Group -->
-    <media-controls-group class="vds-controls-group">
+    <media-controls-group class="vds-controls-group controls-group">
       <SeekBackButton tooltip-placement="top start" />
       <PlayButton tooltip-placement="top" />
       <SeekForwardButton tooltip-placement="top" />
@@ -36,39 +36,39 @@ import TimeGroup from '../TimeGroup.vue';
 </template>
 
 <style scoped>
-media-controls {
+.controls {
   border-radius: var(--media-border-radius);
 }
 
-media-controls-group {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-media-controls-group:nth-child(2) {
-  padding-inline: 8px;
-  padding-bottom: 8px;
-}
-
-media-player[data-focus]:not([data-playing]) media-controls {
+media-player[data-focus]:not([data-playing]) .controls {
   box-shadow: var(--media-focus-ring);
 }
 
-media-controls :deep(media-time-slider) {
+.controls :deep(media-time-slider) {
   --media-slider-height: 36px;
   --media-slider-preview-offset: 8px;
 }
 
-media-controls :deep(media-mute-button) {
+.controls :deep(media-mute-button) {
   margin-right: 2.5px;
 }
 
-media-controls :deep(media-volume-slider) {
+.controls :deep(media-volume-slider) {
   --media-slider-width: 72px;
   --media-slider-height: 40px;
   --media-slider-preview-offset: 40px;
   margin-left: -0.5px;
   margin-right: 8px;
+}
+
+.controls-group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.controls-group:nth-child(2) {
+  padding-inline: 8px;
+  padding-bottom: 8px;
 }
 </style>

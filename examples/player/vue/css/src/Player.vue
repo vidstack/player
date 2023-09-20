@@ -1,30 +1,20 @@
 <script lang="ts" setup>
 // Import styles.
 import 'vidstack/player/styles/default/theme.css';
+import './buttons.css';
 // Register elements.
 import 'vidstack/player';
 import 'vidstack/player/ui';
 import 'vidstack/icons';
 
-import {
-  isHLSProvider,
-  MediaViewType,
-  type MediaCanPlayEvent,
-  type MediaProviderSetupEvent,
-} from 'vidstack';
+import { isHLSProvider, type MediaCanPlayEvent, type MediaProviderSetupEvent } from 'vidstack';
 import type { MediaPlayerElement } from 'vidstack/elements';
 import { onMounted, ref } from 'vue';
 
-import AudioLayout from './components/layouts/AudioLayout.vue';
 import VideoLayout from './components/layouts/VideoLayout.vue';
 import { textTracks } from './tracks';
 
-const $player = ref<MediaPlayerElement>(),
-  $src = ref(''),
-  $viewType = ref<MediaViewType>('unknown');
-
-// Initialize src.
-changeSource('audio');
+const $player = ref<MediaPlayerElement>();
 
 onMounted(() => {
   /**
@@ -42,7 +32,6 @@ onMounted(() => {
 
   // Subscribe to state updates - you can connect them to Vue refs if needed.
   $player.value!.subscribe(({ paused, viewType }) => {
-    $viewType.value = viewType;
     // console.log('is paused?', '->', paused);
     // console.log('is audio view?', '->', viewType === 'audio');
   });
@@ -60,28 +49,13 @@ function onProviderSetup(event: MediaProviderSetupEvent) {
 function onCanPlay(event: MediaCanPlayEvent) {
   // ...
 }
-
-function changeSource(type: string) {
-  const muxPlaybackId = 'VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU';
-  switch (type) {
-    case 'audio':
-      $src.value = 'https://media-files.vidstack.io/sprite-fight/audio.mp3';
-      break;
-    case 'video':
-      $src.value = `https://stream.mux.com/${muxPlaybackId}/low.mp4`;
-      break;
-    case 'hls':
-      $src.value = `https://stream.mux.com/${muxPlaybackId}.m3u8`;
-      break;
-  }
-}
 </script>
 
 <template>
   <media-player
     class="player"
     title="Sprite Fight"
-    :src="$src"
+    src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/low.mp4"
     crossorigin
     @provider-setup="onProviderSetup"
     @can-play="onCanPlay"
@@ -89,22 +63,14 @@ function changeSource(type: string) {
   >
     <media-provider>
       <media-poster
-        v-if="$viewType !== 'audio'"
-        class="vds-poster"
+        class="poster"
         src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=1200"
         alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
       ></media-poster>
     </media-provider>
 
-    <AudioLayout v-if="$viewType === 'audio'" />
-    <VideoLayout v-if="$viewType !== 'audio'" />
+    <VideoLayout />
   </media-player>
-
-  <div class="src-buttons">
-    <button @click="changeSource('audio')">Audio</button>
-    <button @click="changeSource('video')">Video</button>
-    <button @click="changeSource('hls')">HLS</button>
-  </div>
 </template>
 
 <style scoped>
@@ -112,40 +78,46 @@ function changeSource(type: string) {
   --media-brand: #f5f5f5;
   --media-focus-ring-color: #4e9cf6;
   --media-focus-ring: 0 0 0 3px var(--media-focus-ring-color);
-  width: 100%;
-}
 
-.player[data-view-type='audio'] {
-  --media-tooltip-y-offset: 44px;
-  --media-menu-y-offset: 40px;
-  --media-slider-chapter-title-color: black;
-  --media-border-radius: 4px;
-  background-color: #212121;
-  border-radius: var(--media-border-radius);
-  contain: layout;
-}
-
-.player[data-view-type='video'] {
   --media-tooltip-y-offset: 30px;
   --media-menu-y-offset: 30px;
+
   width: 100%;
   aspect-ratio: 16 /9;
   background-color: #212121;
   border-radius: var(--media-border-radius);
+  color: #f5f5f5;
   contain: layout;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+.player[data-focus]:not([data-playing]) {
+  box-shadow: var(--media-focus-ring);
 }
 
 .player :deep(video),
-media-poster {
+.poster {
   border-radius: var(--media-border-radius);
 }
 
-.src-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  margin-top: 40px;
-  margin-inline: auto;
-  max-width: 300px;
+.poster {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.poster :deep(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.poster[data-visible] {
+  opacity: 1;
 }
 </style>

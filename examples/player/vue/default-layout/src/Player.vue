@@ -72,6 +72,7 @@ function changeSource(type: string) {
 
 <template>
   <media-player
+    class="player"
     title="Sprite Fight"
     :src="$src"
     crossorigin
@@ -101,7 +102,7 @@ function changeSource(type: string) {
 </template>
 
 <style scoped>
-media-player {
+.player {
   --brand-color: #f5f5f5;
   --focus-color: #4e9cf6;
 
@@ -118,7 +119,7 @@ media-player {
   width: 100%;
 }
 
-media-player[data-view-type='video'] {
+.player[data-view-type='video'] {
   aspect-ratio: 16 /9;
 }
 
