@@ -28,7 +28,7 @@ export class MediaVideoLayoutElement
   protected onSetup() {
     this.classList.add('vds-video-layout');
     this.menuContainer = createMenuContainer('vds-video-layout');
-    onDispose(() => this.menuContainer!.remove());
+    onDispose(() => this.menuContainer?.remove());
   }
 
   protected onConnect() {

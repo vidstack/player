@@ -1,6 +1,7 @@
 import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
+
 import { Thumbnail } from '../../components';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { cloneTemplateContent, createTemplate } from '../../utils/dom';
@@ -37,6 +38,10 @@ export class MediaThumbnailElement extends Host(HTMLElement, Thumbnail) {
     const { src } = this.$state,
       { crossorigin } = this._media.$props;
 
+    if (this._img.parentNode !== this) {
+      this.prepend(this._img);
+    }
+
     effect(() => {
       setAttribute(this._img, 'src', src());
       setAttribute(this._img, 'crossorigin', crossorigin());
@@ -44,9 +49,7 @@ export class MediaThumbnailElement extends Host(HTMLElement, Thumbnail) {
   }
 
   private _createImg() {
-    const img = cloneTemplateContent<HTMLImageElement>(imgTemplate);
-    this.prepend(img);
-    return img;
+    return cloneTemplateContent<HTMLImageElement>(imgTemplate);
   }
 }
 

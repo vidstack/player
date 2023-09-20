@@ -26,8 +26,12 @@ export { MediaFullscreenButtonElement } from './define/buttons/fullscreen-button
 export { MediaPIPButtonElement } from './define/buttons/pip-button-element';
 export { MediaSeekButtonElement } from './define/buttons/seek-button-element';
 export { MediaToggleButtonElement } from './define/buttons/toggle-button-element';
-export { MediaTooltipElement } from './define/tooltips/tooltip-element';
 export { MediaLiveButtonElement } from './define/buttons/live-button-element';
+
+// Tooltips
+export { MediaTooltipElement } from './define/tooltips/tooltip-element';
+export { MediaTooltipTriggerElement } from './define/tooltips/tooltip-trigger-element';
+export { MediaTooltipContentElement } from './define/tooltips/tooltip-content-element';
 
 // Menus
 export { MediaAudioRadioGroupElement } from './define/menus/audio-radio-group-element';
@@ -35,7 +39,9 @@ export { MediaCaptionsRadioGroupElement } from './define/menus/captions-radio-gr
 export { MediaMenuElement } from './define/menus/menu-element';
 export { MediaMenuButtonElement } from './define/menus/menu-button-element';
 export { MediaMenuPortalElement } from './define/menus/menu-portal-element';
+export { MediaMenuItemElement } from './define/menus/menu-item-element';
 export { MediaMenuItemsElement } from './define/menus/menu-items-element';
+export { MediaChaptersRadioGroupElement } from './define/menus/chapters-radio-group-element';
 export { MediaSpeedRadioGroupElement } from './define/menus/speed-radio-group-element';
 export { MediaQualityRadioGroupElement } from './define/menus/quality-radio-group-element';
 export { MediaRadioElement } from './define/menus/radio-element';
@@ -47,5 +53,6 @@ export { MediaSliderThumbnailElement } from './define/sliders/slider-thumbnail-e
 export { MediaSliderValueElement } from './define/sliders/slider-value-element';
 export { MediaSliderVideoElement } from './define/sliders/slider-video-element';
 export { MediaTimeSliderElement } from './define/sliders/time-slider-element';
+export { MediaSliderPreviewElement } from './define/sliders/slider-preview-element';
 export { MediaVolumeSliderElement } from './define/sliders/volume-slider-element';
 export { MediaSliderChaptersElement } from './define/sliders/slider-chapters-element';

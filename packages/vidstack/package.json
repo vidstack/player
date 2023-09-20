@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.4.4",
-    "@maverick-js/cli": "0.39.1",
+    "@maverick-js/cli": "0.39.4",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -60,7 +60,7 @@
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
-    "maverick.js": "0.39.1",
+    "maverick.js": "0.39.4",
     "media-icons": "0.10.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
@@ -73,7 +73,8 @@
     "type-fest": "^3.8.0",
     "typescript": "^5.2.2",
     "vite": "^4.2.0",
-    "vitest": "^0.30.0"
+    "vitest": "^0.30.0",
+    "vue": "^3.3.4"
   },
   "contributors": [
     "Rahim Alwer <rahim.alwer@gmail.com>",
@@ -142,6 +143,10 @@
     "./analyze.json": {
       "types": "./analyze.json.d.ts",
       "default": "./analyze.json"
+    },
+    "./vue": {
+      "types": "./vue.d.ts",
+      "default": "./vue.d.ts"
     },
     "./vscode.html-data.json": "./vscode.html-data.json"
   },

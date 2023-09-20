@@ -81,6 +81,13 @@ export function cloneTemplate<T extends HTMLElement>(
     content = template.content.firstElementChild,
     elements: T[] = [];
 
+  // Simple patch for Vue since it incorrectly appends template.
+  if (!content && template.firstElementChild) {
+    template.innerHTML = template.firstElementChild.outerHTML;
+    template.firstElementChild.remove();
+    content = template.content.firstElementChild;
+  }
+
   if (__DEV__ && content?.nodeType !== 1) {
     throw Error('[vidstack] template must contain root element');
   }

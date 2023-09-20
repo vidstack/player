@@ -3,7 +3,7 @@
   "pipeline": {
     "analyze": {
       "dependsOn": ["^types"],
-      "outputs": ["analyze.json", "vscode.html-data.json"]
+      "outputs": ["analyze.json", "vscode.html-data.json", "vue.d.ts"]
     },
     "build": {
       "dependsOn": ["^analyze", "^build", "clean"],

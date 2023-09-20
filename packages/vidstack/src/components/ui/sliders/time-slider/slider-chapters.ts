@@ -262,6 +262,8 @@ export class SliderChapters extends Component<SliderChaptersProps> {
   }
 
   private _onTrackChange() {
+    if (!this.scope) return;
+
     const { disabled } = this.$props;
     if (disabled()) return;
 

@@ -43,11 +43,6 @@ export class MediaIconElement extends HTMLElement {
     this._type.set(type);
   }
 
-  constructor() {
-    super();
-    this.classList.add('vds-icon');
-  }
-
   attributeChangedCallback(name: string, _, newValue: string | null) {
     if (name === 'type') {
       this._type.set(newValue ? (newValue as IconType) : null);
@@ -55,6 +50,12 @@ export class MediaIconElement extends HTMLElement {
   }
 
   connectedCallback() {
+    this.classList.add('vds-icon');
+
+    if (this._svg.parentNode !== this) {
+      this.prepend(this._svg);
+    }
+
     this._disposal.push(
       // Load
       effect(this._loadIcon.bind(this)),
@@ -71,9 +72,7 @@ export class MediaIconElement extends HTMLElement {
   }
 
   private _createSVG() {
-    const svg = cloneTemplateContent<SVGElement>(svgTemplate);
-    this.prepend(svg);
-    return svg;
+    return cloneTemplateContent<SVGElement>(svgTemplate);
   }
 
   private _loadIcon() {
