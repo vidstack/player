@@ -93,7 +93,7 @@ export function cloneTemplate<T extends HTMLElement>(
   }
 
   for (let i = 0; i < length; i++) {
-    current = content!.cloneNode(true) as HTMLElement;
+    current = document.importNode(content!, true) as HTMLElement;
     onCreate?.(current as T, i);
     parent.insertBefore(current, prev.nextSibling);
     elements.push(current as T);

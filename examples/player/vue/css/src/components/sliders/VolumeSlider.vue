@@ -5,8 +5,8 @@ import SliderThumb from './SliderThumb.vue';
 
 <template>
   <media-volume-slider class="media-slider">
-    <div class="track"></div>
-    <div class="track-fill track"></div>
+    <div class="track" />
+    <div class="track-fill track" />
     <SliderThumb />
     <SliderPreview no-clamp>
       <media-slider-value class="value" type="pointer" format="percent" />

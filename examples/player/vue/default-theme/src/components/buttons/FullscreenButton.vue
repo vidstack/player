@@ -12,8 +12,8 @@ const { tooltipPlacement } = defineProps<{
   <Tooltip :placement="tooltipPlacement">
     <template #trigger>
       <media-fullscreen-button class="vds-button">
-        <media-icon class="vds-fs-enter-icon" type="fullscreen"></media-icon>
-        <media-icon class="vds-fs-exit-icon" type="fullscreen-exit"></media-icon>
+        <media-icon class="vds-fs-enter-icon" type="fullscreen" />
+        <media-icon class="vds-fs-exit-icon" type="fullscreen-exit" />
       </media-fullscreen-button>
     </template>
 
