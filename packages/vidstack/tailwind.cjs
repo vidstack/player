@@ -29,7 +29,7 @@ const mediaAttributes = [
 ];
 
 module.exports = createPlugin.withOptions(function (options) {
-  const playerId = options.webComponents ? 'media-player' : 'div',
+  const playerId = options?.webComponents ? 'media-player' : 'div',
     prefixOpt = options?.prefix ?? options?.mediaPrefix,
     prefix = prefixOpt ? `${prefixOpt}-` : 'media-';
 

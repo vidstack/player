@@ -1,6 +1,7 @@
 import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
+
 import { Poster } from '../../components';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 
@@ -20,7 +21,6 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
   private _img = document.createElement('img');
 
   protected onSetup(): void {
-    this.prepend(this._img);
     this._media = useMediaContext();
     this.$state.img.set(this._img);
   }
@@ -28,6 +28,10 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
   protected onConnect(): void {
     const { src, alt } = this.$state,
       { crossorigin } = this._media.$state;
+
+    if (this._img.parentNode !== this) {
+      this.prepend(this._img);
+    }
 
     effect(() => {
       setAttribute(this._img, 'src', src());

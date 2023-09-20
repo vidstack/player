@@ -13,10 +13,12 @@ export function renderMenuItemsTemplate(
   if (!template) return;
 
   effect(() => {
-    if (__DEV__ && !template.content.firstElementChild?.localName) {
+    if (__DEV__ && !template.content.firstElementChild?.localName && !template.firstElementChild) {
       throw Error('[vidstack] menu items template requires root element');
     }
+
     const options = el.getOptions();
+
     cloneTemplate<MediaRadioElement>(template, options.length, (radio, i) => {
       const { label, value } = options[i],
         labelEl = radio.querySelector(`[data-part="label"]`);

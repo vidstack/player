@@ -35,6 +35,11 @@ export class MediaSliderVideoElement extends Host(HTMLElement, SliderVideo) {
   protected onConnect(): void {
     const { crossorigin, canLoad } = this._media.$state,
       { src } = this.$state;
+
+    if (this._video.parentNode !== this) {
+      this.prepend(this._video);
+    }
+
     effect(() => {
       setAttribute(this._video, 'src', src());
       setAttribute(this._video, 'crossorigin', crossorigin());
@@ -43,9 +48,7 @@ export class MediaSliderVideoElement extends Host(HTMLElement, SliderVideo) {
   }
 
   private _createVideo() {
-    const video = cloneTemplateContent<HTMLVideoElement>(videoTemplate);
-    this.prepend(video);
-    return video;
+    return cloneTemplateContent<HTMLVideoElement>(videoTemplate);
   }
 }
 

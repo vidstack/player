@@ -66,7 +66,7 @@ function defineTypes({ local }) {
     input,
     output: {
       dir: '.',
-      chunkFileNames: 'dist/types/vidstack-[hash].ts',
+      chunkFileNames: 'dist/types/vidstack-[hash].d.ts',
       manualChunks(id) {
         if (local) return null;
         if (id.includes('maverick') || id.includes('lit-html') || id.includes('@floating-ui')) {

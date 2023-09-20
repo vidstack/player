@@ -25,7 +25,7 @@ function defineTypes() {
     },
     output: {
       dir: '.',
-      chunkFileNames: 'dist/types/[name].ts',
+      chunkFileNames: 'dist/types/[name].d.ts',
       manualChunks(id) {
         if (id.includes('maverick')) return 'vidstack-framework.d';
         if (id.includes('vidstack')) return 'vidstack.d';

@@ -1,0 +1,22 @@
+{
+  "name": "vue-default-theme",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "media-icons": "0.10.0",
+    "vidstack": "workspace:*",
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.3.4",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.0",
+    "vue-tsc": "^1.8.11"
+  }
+}

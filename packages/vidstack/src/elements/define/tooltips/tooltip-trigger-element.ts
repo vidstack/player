@@ -19,8 +19,8 @@ import { TooltipTrigger } from '../../../components';
  */
 export class MediaTooltipTriggerElement extends Host(HTMLElement, TooltipTrigger) {
   static tagName = 'media-tooltip-trigger';
-  constructor() {
-    super();
+
+  onConnect() {
     this.style.display = 'contents';
   }
 }

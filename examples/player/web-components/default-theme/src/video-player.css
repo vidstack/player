@@ -94,6 +94,7 @@ media-time-slider media-slider-value {
  *************************************************************************************************/
 
 media-volume-slider {
+  --media-slider-height: 40px;
   --media-slider-preview-offset: 32px;
   margin: 0;
   max-width: 0;

@@ -32,6 +32,7 @@ packages/vidstack/index.d.ts
 packages/vidstack/local.d.ts
 packages/vidstack/elements.d.ts
 packages/vidstack/icons.d.ts
+packages/vidstack/vue.d.ts
 packages/vidstack/player/styles/default/theme.css
 
 packages/react/src/icons.ts

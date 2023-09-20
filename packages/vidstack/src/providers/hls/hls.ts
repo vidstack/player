@@ -1,6 +1,7 @@
 import type * as HLS from 'hls.js';
 import { effect, peek } from 'maverick.js';
 import { camelToKebabCase, DOMEvent, listenEvent } from 'maverick.js/std';
+
 import { QualitySymbol } from '../../core/quality/symbols';
 import { TextTrackSymbol } from '../../core/tracks/text/symbols';
 import { TextTrack } from '../../core/tracks/text/text-track';
@@ -74,7 +75,7 @@ export class HLSController {
   }
 
   private _dispatchHLSEvent(eventType: string, detail: any) {
-    this._context.player.dispatch(new DOMEvent(toDOMEventType(eventType), { detail }));
+    this._context.player?.dispatch(new DOMEvent(toDOMEventType(eventType), { detail }));
   }
 
   private _onTracksFound(eventType: string, data: HLS.NonNativeTextTracksData) {
