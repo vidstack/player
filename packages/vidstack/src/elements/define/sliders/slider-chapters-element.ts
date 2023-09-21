@@ -2,7 +2,7 @@ import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 
 import { SliderChapters } from '../../../components';
-import { cloneTemplate } from '../../../utils/dom';
+import { cloneTemplate, requestScopedAnimationFrame } from '../../../utils/dom';
 
 /**
  * @part chapter-title - Contains the current chapter title.
@@ -29,11 +29,15 @@ export class MediaSliderChaptersElement extends Host(HTMLElement, SliderChapters
   protected _template: HTMLTemplateElement | null = null;
 
   protected onConnect(): void {
-    const template = this.querySelector('template') as HTMLTemplateElement | null;
-    if (template) {
-      this._template = template;
-      effect(this._renderTemplate.bind(this));
-    }
+    // Animation frame required as some frameworks append late for some reason.
+    requestScopedAnimationFrame(() => {
+      if (!this.connectScope) return;
+      const template = this.querySelector('template') as HTMLTemplateElement | null;
+      if (template) {
+        this._template = template;
+        effect(this._renderTemplate.bind(this));
+      }
+    });
   }
 
   private _renderTemplate() {

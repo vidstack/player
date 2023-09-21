@@ -148,6 +148,10 @@
       "types": "./vue.d.ts",
       "default": "./vue.d.ts"
     },
+    "./svelte": {
+      "types": "./svelte.d.ts",
+      "default": "./svelte.d.ts"
+    },
     "./vscode.html-data.json": "./vscode.html-data.json"
   },
   "publishConfig": {

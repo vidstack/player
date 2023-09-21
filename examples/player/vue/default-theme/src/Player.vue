@@ -89,7 +89,7 @@ function changeSource(type: string) {
   >
     <media-provider>
       <media-poster
-        v-if="$viewType !== 'audio'"
+        v-if="$viewType === 'video'"
         class="vds-poster"
         src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=1200"
         alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
@@ -97,7 +97,7 @@ function changeSource(type: string) {
     </media-provider>
 
     <AudioLayout v-if="$viewType === 'audio'" />
-    <VideoLayout v-if="$viewType !== 'audio'" />
+    <VideoLayout v-if="$viewType === 'video'" />
   </media-player>
 
   <div class="src-buttons">

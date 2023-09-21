@@ -5,7 +5,7 @@ import 'vidstack/player';
 import 'vidstack/player/ui';
 import 'vidstack/icons';
 
-import { TextTrackInit } from 'vidstack';
+import { type TextTrackInit } from 'vidstack';
 
 const player = document.querySelector('media-player')!;
 
