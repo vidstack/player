@@ -1,0 +1,28 @@
+<media-chapter-title class="title" />
+
+<style>
+  .title {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: sans-serif;
+    color: rgba(255 255 255 / 0.64);
+    flex: 1 1 0%;
+    padding-inline: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .title::before {
+    content: '|';
+    display: inline-block;
+    margin-right: 6px;
+    color: rgba(255 255 255 / 0.64);
+  }
+
+  .title:empty::before {
+    content: '';
+    margin-left: 0;
+  }
+</style>

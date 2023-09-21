@@ -31,6 +31,9 @@ const { placement, tooltipPlacement } = defineProps<{
 
 <style scoped>
 .content {
+  --enter-transform: translateY(0px);
+  --exit-transform: translateY(12px);
+
   display: flex;
   font-size: 15px;
   font-weight: 500;
@@ -38,14 +41,6 @@ const { placement, tooltipPlacement } = defineProps<{
   flex-direction: column;
   transition: height 0.35s ease;
   min-width: 260px;
-}
-
-.content :where([role='menuitem'][data-focus], [role='menuitemradio'][data-focus]) {
-  outline: none;
-  box-shadow: var(--media-focus-ring);
-}
-
-.content {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid rgb(255 255 255 / 0.1);
@@ -64,11 +59,6 @@ const { placement, tooltipPlacement } = defineProps<{
   pointer-events: none;
 }
 
-.content {
-  --enter-transform: translateY(0px);
-  --exit-transform: translateY(12px);
-}
-
 .content:not([data-open]) {
   animation: media-menu-exit 0.2s ease-out;
 }
@@ -81,6 +71,11 @@ const { placement, tooltipPlacement } = defineProps<{
 .content[data-placement~='bottom'] {
   --enter-transform: translateY(0);
   --exit-transform: translateY(-12px);
+}
+
+.content :where([role='menuitem'][data-focus], [role='menuitemradio'][data-focus]) {
+  outline: none;
+  box-shadow: var(--media-focus-ring);
 }
 
 @keyframes media-menu-enter {

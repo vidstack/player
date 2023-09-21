@@ -243,6 +243,37 @@ importers:
         specifier: ^4.4.9
         version: 4.4.9(@types/node@16.18.34)
 
+  examples/player/svelte/css:
+    dependencies:
+      media-icons:
+        specifier: 0.10.0
+        version: 0.10.0
+      vidstack:
+        specifier: workspace:*
+        version: link:../../../../packages/vidstack
+    devDependencies:
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^2.4.6
+        version: 2.4.6(svelte@4.2.0)(vite@4.4.9)
+      '@tsconfig/svelte':
+        specifier: ^5.0.2
+        version: 5.0.2
+      postcss:
+        specifier: ^8.4.0
+        version: 8.4.29
+      svelte:
+        specifier: ^4.2.0
+        version: 4.2.0
+      svelte-check:
+        specifier: ^3.5.1
+        version: 3.5.2(@babel/core@7.22.9)(postcss@8.4.29)(svelte@4.2.0)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+      vite:
+        specifier: ^4.4.0
+        version: 4.4.9(@types/node@16.18.34)
+
   examples/player/svelte/default-layout:
     dependencies:
       vidstack:
@@ -2949,10 +2980,10 @@ packages:
       rollup: 3.25.1
     dev: true
 
-  /@sveltejs/vite-plugin-svelte-inspector@1.0.3(@sveltejs/vite-plugin-svelte@2.4.5)(svelte@4.2.0)(vite@4.4.9):
+  /@sveltejs/vite-plugin-svelte-inspector@1.0.4(@sveltejs/vite-plugin-svelte@2.4.5)(svelte@4.2.0)(vite@4.4.9):
     resolution:
       {
-        integrity: sha512-Khdl5jmmPN6SUsVuqSXatKpQTMIifoQPDanaxC84m9JxIibWvSABJyHpyys0Z+1yYrxY5TTEQm+6elh0XCMaOA==,
+        integrity: sha512-zjiuZ3yydBtwpF3bj0kQNV0YXe+iKE545QGZVTaylW3eAzFr+pJ/cwK8lZEaRp4JtaJXhD5DyWAV4AxLh6DgaQ==,
       }
     engines: { node: ^14.18.0 || >= 16 }
     peerDependencies:
@@ -2997,7 +3028,7 @@ packages:
       svelte: ^3.54.0 || ^4.0.0
       vite: ^4.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 1.0.3(@sveltejs/vite-plugin-svelte@2.4.5)(svelte@4.2.0)(vite@4.4.9)
+      '@sveltejs/vite-plugin-svelte-inspector': 1.0.4(@sveltejs/vite-plugin-svelte@2.4.5)(svelte@4.2.0)(vite@4.4.9)
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
@@ -4044,7 +4075,7 @@ packages:
         integrity: sha512-umOSDSDrfHbTNPuNpC2NSnnA3LUrqpevPb4T9jRx4MagXNS0rs+gwiTcAvqCRmsD6utzsrzNt+ebm00SNWiC3Q==,
       }
     dependencies:
-      acorn: 8.8.2
+      acorn: 8.10.0
       acorn-walk: 8.2.0
     dev: true
 
@@ -9699,7 +9730,7 @@ packages:
         integrity: sha512-HT5mcgIQKkOrZecOjOX3DJorTikWXwsBfpcr/MGBkhfWcjiqvnaL/9ppxvIUXfjT6xt4DVIAsN9fMUz1ev4bIw==,
       }
     dependencies:
-      acorn: 8.8.2
+      acorn: 8.10.0
       pathe: 1.1.1
       pkg-types: 1.0.3
       ufo: 1.1.2
@@ -12157,7 +12188,7 @@ packages:
         integrity: sha512-QZTsipNpa2Ppr6v1AmJHESqJ3Uz247MUS0OjrnnZjFAvEoWqxuyFuXn2xLgMtRnijJShAa1HL0gtJyUs7u7n3Q==,
       }
     dependencies:
-      acorn: 8.8.2
+      acorn: 8.10.0
     dev: true
 
   /style-to-object@0.4.2:

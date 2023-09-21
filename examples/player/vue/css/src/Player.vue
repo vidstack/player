@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // Import styles.
-import 'vidstack/player/styles/default/theme.css';
+import 'vidstack/player/styles/base.css';
 import './buttons.css';
 // Register elements.
 import 'vidstack/player';
@@ -66,7 +66,7 @@ function onCanPlay(event: MediaCanPlayEvent) {
         class="poster"
         src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=1200"
         alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
-      ></media-poster>
+      />
     </media-provider>
 
     <VideoLayout />

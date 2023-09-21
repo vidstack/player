@@ -11,6 +11,10 @@ import VolumeSlider from '../sliders/VolumeSlider.vue';
 import TimeGroup from '../TimeGroup.vue';
 import VideoCaptions from '../VideoCaptions.vue';
 import VideoGestures from '../VideoGestures.vue';
+
+const { thumbnails } = defineProps<{
+  thumbnails?: string;
+}>();
 </script>
 
 <template>
@@ -19,9 +23,7 @@ import VideoGestures from '../VideoGestures.vue';
   <media-controls class="vds-controls controls">
     <div class="vds-controls-spacer" />
     <media-controls-group class="vds-controls-group controls-group">
-      <TimeSlider
-        thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
-      />
+      <TimeSlider :thumbnails="thumbnails" />
     </media-controls-group>
     <media-controls-group class="vds-controls-group controls-group">
       <PlayButton tooltip-placement="top start" />

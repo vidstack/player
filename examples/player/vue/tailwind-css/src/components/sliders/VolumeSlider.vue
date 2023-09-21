@@ -5,7 +5,7 @@ import SliderThumb from './SliderThumb.vue';
 
 <template>
   <media-volume-slider
-    class="group relative mx-[7.5px] inline-flex h-10 w-full max-w-[80px] cursor-pointer touch-none select-none items-center outline-none"
+    class="group relative mx-[7.5px] inline-flex h-10 w-full max-w-[80px] cursor-pointer touch-none select-none items-center outline-none aria-hidden:hidden"
   >
     <!-- Track -->
     <div

@@ -1,7 +1,7 @@
 <template>
   <media-radio class="radio">
-    <div class="check"></div>
-    <span class="label" data-part="label"></span>
+    <div class="check" />
+    <span class="label" data-part="label" />
   </media-radio>
 </template>
 

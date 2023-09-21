@@ -14,6 +14,7 @@ export interface CaptionButtonProps extends ToggleButtonControllerProps {}
 /**
  * A button for toggling the showing state of the captions.
  *
+ * @attr data-supported - Whether captions/subtitles are available.
  * @attr data-active - Whether closed captions or subtitles are on.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/caption-button}
  */
@@ -36,6 +37,7 @@ export class CaptionButton extends Component<CaptionButtonProps> {
 
     this.setAttributes({
       'data-active': this._isPressed.bind(this),
+      'data-supported': () => !this._isHidden(),
       'aria-hidden': $ariaBool(this._isHidden.bind(this)),
     });
   }
