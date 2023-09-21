@@ -52,7 +52,7 @@ function onCanPlay(event: MediaCanPlayEvent) {
 
 <template>
   <media-player
-    class="player w-full aspect-video bg-slate-900 text-white font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
+    class="w-full aspect-video bg-slate-900 text-white font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
     title="Sprite Fight"
     src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/low.mp4"
     crossorigin
