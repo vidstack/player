@@ -8,7 +8,7 @@ import 'vidstack/player';
 import 'vidstack/player/layouts';
 import 'vidstack/player/ui';
 
-import { isHLSProvider, TextTrackInit } from 'vidstack';
+import { isHLSProvider, type TextTrackInit } from 'vidstack';
 
 const player = document.querySelector('media-player')!;
 

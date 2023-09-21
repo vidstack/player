@@ -1,4 +1,4 @@
-import { TextTrackInit } from 'vidstack';
+import type { TextTrackInit } from 'vidstack';
 
 export const textTracks: TextTrackInit[] = [
   // Subtitles

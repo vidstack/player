@@ -87,7 +87,7 @@ function changeSource(type: string) {
         alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
       />
     </media-provider>
-
+    <!-- Layouts -->
     <media-audio-layout />
     <media-video-layout
       thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"

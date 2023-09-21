@@ -12,7 +12,7 @@ const { tooltipPlacement } = defineProps<{
   <Tooltip :placement="tooltipPlacement">
     <template #trigger>
       <media-seek-button class="vds-button" :seconds="-10">
-        <media-icon type="seek-backward-10"></media-icon>
+        <media-icon type="seek-backward-10" />
       </media-seek-button>
     </template>
 

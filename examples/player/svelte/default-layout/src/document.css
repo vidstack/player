@@ -1,0 +1,35 @@
+/*************************************************************************************************
+ * Document
+ *************************************************************************************************/
+
+* {
+  box-sizing: border-box;
+}
+
+/*
+ * Prevent FOUC - you don't need this if you're loading styles via link tags or server-side
+ * rendering with a framework like Nuxt.
+ */
+*:not(:defined) {
+  opacity: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main {
+  width: 100%;
+  max-width: 980px;
+  margin-inline: auto;
+}
