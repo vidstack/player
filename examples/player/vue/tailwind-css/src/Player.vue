@@ -30,7 +30,7 @@ onMounted(() => {
   for (const track of textTracks) $player.value!.textTracks.add(track);
 
   // Subscribe to state updates - you can connect them to Vue refs if needed.
-  $player.value!.subscribe(({ paused, viewType }) => {
+  return $player.value!.subscribe(({ paused, viewType }) => {
     // console.log('is paused?', '->', paused);
     // console.log('is audio view?', '->', viewType === 'audio');
   });

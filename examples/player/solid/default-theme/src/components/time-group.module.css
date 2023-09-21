@@ -1,0 +1,10 @@
+.group {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.divider {
+  margin: 0 2.5px;
+  color: #e0e0e0;
+}

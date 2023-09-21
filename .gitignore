@@ -34,6 +34,7 @@ packages/vidstack/elements.d.ts
 packages/vidstack/icons.d.ts
 packages/vidstack/vue.d.ts
 packages/vidstack/svelte.d.ts
+packages/vidstack/solid.d.ts
 packages/vidstack/player/styles/default/theme.css
 
 packages/react/src/icons.ts

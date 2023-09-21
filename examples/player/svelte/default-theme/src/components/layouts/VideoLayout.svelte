@@ -11,6 +11,8 @@
   import TimeGroup from '../TimeGroup.svelte';
   import VideoCaptions from '../VideoCaptions.svelte';
   import VideoGestures from '../VideoGestures.svelte';
+
+  export let thumbnails: string | undefined = undefined;
 </script>
 
 <VideoGestures />
@@ -19,9 +21,7 @@
 <media-controls class="vds-controls controls">
   <div class="vds-controls-spacer" />
   <media-controls-group class="vds-controls-group controls-group">
-    <TimeSlider
-      thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
-    />
+    <TimeSlider {thumbnails} />
   </media-controls-group>
   <media-controls-group class="vds-controls-group controls-group">
     <PlayButton tooltipPlacement="top start" />

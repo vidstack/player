@@ -1,4 +1,5 @@
 <script lang="ts">
+  import MenuRadio from './MenuRadio.svelte';
   import Submenu from './Submenu.svelte';
 </script>
 
@@ -7,10 +8,7 @@
 
   <media-captions-radio-group class="vds-captions-radio-group vds-radio-group" slot="content">
     <template>
-      <media-radio class="vds-radio">
-        <div class="vds-radio-check"></div>
-        <span class="vds-radio-label" data-part="label"></span>
-      </media-radio>
+      <MenuRadio />
     </template>
   </media-captions-radio-group>
 </Submenu>

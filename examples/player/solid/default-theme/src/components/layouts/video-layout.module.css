@@ -1,0 +1,28 @@
+.controls media-time-slider {
+  --media-slider-height: 40px;
+}
+
+.controls media-time-slider media-slider-value {
+  background-color: unset;
+}
+
+.controls media-volume-slider {
+  --media-slider-height: 40px;
+  --media-slider-preview-offset: 32px;
+  max-width: 80px;
+}
+
+.controlsGroup {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.controlsGroup {
+  padding-inline: 8px;
+}
+
+.controlsGroup:last-child {
+  margin-top: -4px;
+  padding-bottom: 8px;
+}

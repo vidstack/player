@@ -31,7 +31,7 @@
     for (const track of textTracks) player.textTracks.add(track);
 
     // Subscribe to state updates.
-    player.subscribe(({ paused, viewType }) => {
+    return player.subscribe(({ paused, viewType }) => {
       // console.log('is paused?', '->', paused);
       // console.log('is audio view?', '->', viewType === 'audio');
     });
