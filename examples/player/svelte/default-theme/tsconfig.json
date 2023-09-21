@@ -1,14 +1,15 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "resolveJsonModule": true,
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
-    "types": ["vidstack/svelte"]
+    "module": "ESNext",
+    "resolveJsonModule": true,
+    "target": "ESNext",
+    "types": ["svelte", "vidstack/svelte"],
+    "useDefineForClassFields": true,
+    "verbatimModuleSyntax": true
   },
   "include": ["src/**/*.js", "src/**/*.ts", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

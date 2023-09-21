@@ -68,6 +68,8 @@
     "rollup-plugin-dts": "^5.3.0",
     "rollup-plugin-esbuild": "^5.0.0",
     "rollup-plugin-visualizer": "^5.9.2",
+    "solid-js": "^1.7.11",
+    "svelte": "^4.2.1",
     "tailwindcss": "^3.2.0",
     "tslib": "^2.5.0",
     "type-fest": "^3.8.0",
@@ -151,6 +153,10 @@
     "./svelte": {
       "types": "./svelte.d.ts",
       "default": "./svelte.d.ts"
+    },
+    "./solid": {
+      "types": "./solid.d.ts",
+      "default": "./solid.d.ts"
     },
     "./vscode.html-data.json": "./vscode.html-data.json"
   },

@@ -41,7 +41,7 @@
     for (const track of textTracks) player.textTracks.add(track);
 
     // Subscribe to state updates.
-    player.subscribe((state) => {
+    return player.subscribe((state) => {
       viewType = state.viewType;
     });
   });
@@ -97,7 +97,9 @@
   {#if viewType === 'audio'}
     <AudioLayout />
   {:else if viewType === 'video'}
-    <VideoLayout />
+    <VideoLayout
+      thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
+    />
   {/if}
 </media-player>
 

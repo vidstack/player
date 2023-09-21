@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MenuRadio from './MenuRadio.vue';
 import Submenu from './Submenu.vue';
 </script>
 
@@ -10,10 +11,7 @@ import Submenu from './Submenu.vue';
     <template #content>
       <media-captions-radio-group class="vds-captions-radio-group vds-radio-group">
         <template>
-          <media-radio class="vds-radio">
-            <div class="vds-radio-check"></div>
-            <span class="vds-radio-label" data-part="label"></span>
-          </media-radio>
+          <MenuRadio />
         </template>
       </media-captions-radio-group>
     </template>
