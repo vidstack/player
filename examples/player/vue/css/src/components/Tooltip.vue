@@ -19,6 +19,9 @@ const { placement } = defineProps<{
 
 <style scoped>
 .tooltip {
+  --enter-transform: translateY(0px) scale(1);
+  --exit-transform: translateY(12px) scale(0.8);
+
   display: inline-block;
   color: hsl(0, 0%, 80%);
   background-color: black;
@@ -33,11 +36,6 @@ const { placement } = defineProps<{
   will-change: transform, opacity;
 }
 
-.tooltip {
-  --enter-transform: translateY(0px) scale(1);
-  --exit-transform: translateY(12px) scale(0.8);
-}
-
 .tooltip[data-visible] {
   animation: media-tooltip-enter 0.2s ease-in;
   animation-fill-mode: forwards;
@@ -49,7 +47,6 @@ const { placement } = defineProps<{
 
 /* Bottom */
 .tooltip[data-placement~='bottom'] {
-  --enter-transform: translateY(0) scale(1);
   --exit-transform: translateY(-12px) scale(0.8);
 }
 

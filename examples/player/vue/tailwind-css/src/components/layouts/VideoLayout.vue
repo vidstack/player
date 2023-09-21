@@ -11,6 +11,10 @@ import SettingsMenu from '../menus/SettingsMenu.vue';
 import TimeSlider from '../sliders/TimeSlider.vue';
 import VolumeSlider from '../sliders/VolumeSlider.vue';
 import TimeGroup from '../TimeGroup.vue';
+
+const { thumbnails } = defineProps<{
+  thumbnails?: string;
+}>();
 </script>
 
 <template>
@@ -21,9 +25,7 @@ import TimeGroup from '../TimeGroup.vue';
   >
     <div class="flex-1" />
     <media-controls-group class="flex w-full items-center px-2">
-      <TimeSlider
-        thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
-      />
+      <TimeSlider :thumbnails="thumbnails" />
     </media-controls-group>
     <media-controls-group class="-mt-0.5 flex w-full items-center px-2 pb-2">
       <PlayButton tooltip-placement="top start" />
