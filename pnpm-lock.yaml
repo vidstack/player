@@ -243,6 +243,28 @@ importers:
         specifier: ^4.4.9
         version: 4.4.9(@types/node@16.18.34)
 
+  examples/player/solid/css:
+    dependencies:
+      media-icons:
+        specifier: 0.10.0
+        version: 0.10.0
+      solid-js:
+        specifier: ^1.7.11
+        version: 1.7.12
+      vidstack:
+        specifier: workspace:*
+        version: link:../../../../packages/vidstack
+    devDependencies:
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+      vite:
+        specifier: ^4.4.0
+        version: 4.4.9(@types/node@16.18.34)
+      vite-plugin-solid:
+        specifier: ^2.7.0
+        version: 2.7.0(solid-js@1.7.12)(vite@4.4.9)
+
   examples/player/solid/default-layout:
     dependencies:
       solid-js:

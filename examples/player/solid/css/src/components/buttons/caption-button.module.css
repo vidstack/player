@@ -1,0 +1,9 @@
+media-caption-button:not([data-active]) .onIcon,
+media-caption-button[data-active] .offIcon {
+  display: none;
+}
+
+media-player:not([data-captions]) .onTooltipText,
+media-player[data-captions] .offTooltipText {
+  display: none;
+}

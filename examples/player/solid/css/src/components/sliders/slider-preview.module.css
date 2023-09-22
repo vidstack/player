@@ -1,0 +1,30 @@
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  border-radius: 2px;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out;
+  will-change: left, opacity;
+  contain: layout paint style;
+}
+
+.preview[data-visible] {
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}
+
+.thumbnail {
+  display: block;
+  width: var(--thumbnail-width);
+  height: var(--thumbnail-height);
+  background-color: black;
+  border: 1px solid white;
+  contain: strict;
+  overflow: hidden;
+  min-width: 120px;
+  min-height: 80px;
+  max-width: 180px;
+  max-height: 160px;
+}
