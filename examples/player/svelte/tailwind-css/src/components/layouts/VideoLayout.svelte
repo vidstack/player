@@ -46,7 +46,7 @@
     --media-menu-y-offset: 30px;
   }
 
-  media-controls :global(media-volume-slider media-slider-preview) {
+  media-controls :global(media-volume-slider) {
     --media-slider-preview-offset: 30px;
   }
 </style>
