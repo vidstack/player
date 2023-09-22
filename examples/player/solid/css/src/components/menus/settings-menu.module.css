@@ -1,0 +1,8 @@
+.rotateIcon {
+  transition: transform 0.2s ease-out;
+}
+
+media-menu-button[aria-expanded='true'] .rotateIcon {
+  transform: rotate(90deg);
+  transition: transform 0.2s ease-in;
+}

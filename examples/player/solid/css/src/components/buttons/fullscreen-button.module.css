@@ -1,0 +1,9 @@
+media-fullscreen-button[data-active] .enterIcon,
+media-fullscreen-button:not([data-active]) .exitIcon {
+  display: none;
+}
+
+media-player[data-fullscreen] .enterTooltipText,
+media-player:not([data-fullscreen]) .exitTooltipText {
+  display: none;
+}

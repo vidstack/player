@@ -1,0 +1,10 @@
+media-mute-button:not([data-muted]) .muteIcon,
+media-mute-button:not([data-state='low']) .volumeLowIcon,
+media-mute-button:not([data-state='high']) .volumeHighIcon {
+  display: none;
+}
+
+media-player:not([data-muted]) .muteTooltipText,
+media-player[data-muted] .unmuteTooltipText {
+  display: none;
+}
