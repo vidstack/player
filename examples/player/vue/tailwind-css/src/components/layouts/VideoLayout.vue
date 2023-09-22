@@ -49,7 +49,7 @@ media-controls {
   --media-menu-y-offset: 30px;
 }
 
-media-controls :deep(media-volume-slider media-slider-preview) {
+media-controls :deep(media-volume-slider) {
   --media-slider-preview-offset: 30px;
 }
 </style>

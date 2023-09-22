@@ -306,6 +306,40 @@ importers:
         specifier: ^2.7.0
         version: 2.7.0(solid-js@1.7.12)(vite@4.4.9)
 
+  examples/player/solid/tailwind-css:
+    dependencies:
+      media-icons:
+        specifier: 0.10.0
+        version: 0.10.0
+      solid-js:
+        specifier: ^1.7.11
+        version: 1.7.12
+      vidstack:
+        specifier: workspace:*
+        version: link:../../../../packages/vidstack
+    devDependencies:
+      autoprefixer:
+        specifier: ^10.4.2
+        version: 10.4.15(postcss@8.4.29)
+      postcss:
+        specifier: ^8.4.0
+        version: 8.4.29
+      tailwindcss:
+        specifier: ^3.0.0
+        version: 3.3.3
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.3.3)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+      vite:
+        specifier: ^4.4.0
+        version: 4.4.9(@types/node@16.18.34)
+      vite-plugin-solid:
+        specifier: ^2.7.0
+        version: 2.7.0(solid-js@1.7.12)(vite@4.4.9)
+
   examples/player/svelte/css:
     dependencies:
       media-icons:
@@ -1238,16 +1272,6 @@ packages:
       - supports-color
     dev: true
 
-  /@babel/code-frame@7.21.4:
-    resolution:
-      {
-        integrity: sha512-LYvhNKfwWSPpocw8GI7gpK2nq3HSDuEPC/uSYaALSJu9xjsalaaYFOq0Pwt5KmVqwEbZlDu81aLXwBOmD/Fv9g==,
-      }
-    engines: { node: '>=6.9.0' }
-    dependencies:
-      '@babel/highlight': 7.18.6
-    dev: true
-
   /@babel/code-frame@7.22.13:
     resolution:
       {
@@ -1367,7 +1391,7 @@ packages:
     engines: { node: '>=6.9.0' }
     dependencies:
       '@babel/compat-data': 7.22.9
-      '@babel/helper-validator-option': 7.22.5
+      '@babel/helper-validator-option': 7.22.15
       browserslist: 4.21.10
       lru-cache: 5.1.1
       semver: 6.3.1
@@ -1423,6 +1447,7 @@ packages:
         integrity: sha512-XGmhECfVA/5sAt+H+xpSg0mfrHq6FzNr9Oxh7PSEBBRUb/mL7Kz3NICXb194rCqAEdxkhPT1a88teizAFyvk8Q==,
       }
     engines: { node: '>=6.9.0' }
+    dev: true
 
   /@babel/helper-function-name@7.22.5:
     resolution:
@@ -1460,7 +1485,7 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
     dev: true
 
   /@babel/helper-module-imports@7.22.15:
@@ -1521,7 +1546,7 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
     dev: true
 
   /@babel/helper-plugin-utils@7.22.5:
@@ -1562,7 +1587,7 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
     dev: true
 
   /@babel/helper-split-export-declaration@7.22.6:
@@ -1601,7 +1626,6 @@ packages:
         integrity: sha512-bMn7RmyFjY/mdECUbgn9eoSY4vqvacUnS9i9vGAGttgFWesO6B4CYWA7XlpbWgBt71iv/hfbPlynohStqnu5hA==,
       }
     engines: { node: '>=6.9.0' }
-    dev: true
 
   /@babel/helper-validator-option@7.22.5:
     resolution:
@@ -1609,6 +1633,7 @@ packages:
         integrity: sha512-R3oB6xlIVKUnxNUxbmgq7pKjxpru24zlimpE8WK47fACIlM0II/Hm1RS8IaOI7NgCr6LNS+jl5l75m20npAziw==,
       }
     engines: { node: '>=6.9.0' }
+    dev: true
 
   /@babel/helpers@7.22.11:
     resolution:
@@ -1635,18 +1660,6 @@ packages:
       '@babel/types': 7.22.11
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /@babel/highlight@7.18.6:
-    resolution:
-      {
-        integrity: sha512-u7stbOuYjaPezCuLj29hNW1v64M2Md2qupEKP1fHc7WdOA3DgLh37suiSrZYY7haUB7iBeQZ9P1uiRF359do3g==,
-      }
-    engines: { node: '>=6.9.0' }
-    dependencies:
-      '@babel/helper-validator-identifier': 7.22.5
-      chalk: 2.4.2
-      js-tokens: 4.0.0
     dev: true
 
   /@babel/highlight@7.22.13:
@@ -1802,12 +1815,12 @@ packages:
     dependencies:
       '@babel/code-frame': 7.22.13
       '@babel/generator': 7.22.10
-      '@babel/helper-environment-visitor': 7.22.5
+      '@babel/helper-environment-visitor': 7.22.20
       '@babel/helper-function-name': 7.22.5
       '@babel/helper-hoist-variables': 7.22.5
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.22.13
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
       debug: 4.3.4
       globals: 11.12.0
     transitivePeerDependencies:
@@ -4977,8 +4990,8 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001524
-      electron-to-chromium: 1.4.467
-      node-releases: 2.0.12
+      electron-to-chromium: 1.4.505
+      node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.9)
     dev: true
 
@@ -6180,13 +6193,6 @@ packages:
 
   /ee-first@1.1.1:
     resolution: { integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0= }
-    dev: true
-
-  /electron-to-chromium@1.4.467:
-    resolution:
-      {
-        integrity: sha512-2qI70O+rR4poYeF2grcuS/bCps5KJh6y1jtZMDDEteyKJQrzLOEhFyXCLcHW6DTBjKjWkk26JhWoAi+Ux9A0fg==,
-      }
     dev: true
 
   /electron-to-chromium@1.4.505:
@@ -10228,13 +10234,6 @@ packages:
       }
     hasBin: true
 
-  /node-releases@2.0.12:
-    resolution:
-      {
-        integrity: sha512-QzsYKWhXTWx8h1kIvqfnC++o0pEmpRQA/aenALsL2F4pqNVr7YzcdMlDij5WBnwftRbJCNJL/O7zdKaxKPHqgQ==,
-      }
-    dev: true
-
   /node-releases@2.0.13:
     resolution:
       {
@@ -10581,7 +10580,7 @@ packages:
       }
     engines: { node: '>=8' }
     dependencies:
-      '@babel/code-frame': 7.21.4
+      '@babel/code-frame': 7.22.13
       error-ex: 1.3.2
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
@@ -12235,8 +12234,8 @@ packages:
       solid-js: ^1.3
     dependencies:
       '@babel/generator': 7.22.10
-      '@babel/helper-module-imports': 7.22.5
-      '@babel/types': 7.22.11
+      '@babel/helper-module-imports': 7.22.15
+      '@babel/types': 7.22.19
       solid-js: 1.7.12
     dev: true
 
