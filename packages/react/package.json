@@ -17,10 +17,11 @@
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.tsx\" --framework react",
-    "dev": "pnpm clean && pnpm prebuild && rollup -c -w",
+    "dev": "pnpm prebuild && pnpm clean && pnpm run build:types && pnpm run build:types -w & rollup -c -w",
     "prebuild": "node .scripts/prebuild.js",
     "build": "pnpm prebuild && rollup -c",
-    "types": "tsc -p tsconfig.build.json && rollup -c --config-types",
+    "build:types": "tsc -p tsconfig.build.json",
+    "types": "pnpm build:types && rollup -c --config-types",
     "clean": "rimraf dist styles",
     "format": "prettier src --write --loglevel warn"
   },

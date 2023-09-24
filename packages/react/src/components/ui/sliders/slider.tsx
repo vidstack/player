@@ -37,7 +37,7 @@ export interface RootProps extends ReactElementProps<SliderInstance> {
  * interactions and is highly customizable in terms of styling. Users can effortlessly input numeric
  * values within a specified range, defined by a minimum and maximum value.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/sliders/slider}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider}
  */
 const Root = React.forwardRef<SliderInstance, RootProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -118,7 +118,7 @@ export interface PreviewProps extends ReactElementProps<SliderPreviewInstance> {
  * are making as they move the slider thumb. This can include displaying the current pointer
  * value numerically, or displaying a thumbnail over the time slider.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/slider#preview}
+ * @docs {@link https://www.vidstack.io/docs/player/components/slider#preview}
  */
 const Preview = React.forwardRef<HTMLElement, PreviewProps>(
   ({ children, ...props }, forwardRef) => {
@@ -147,7 +147,7 @@ export interface ValueProps extends SliderValueProps {}
  * When a user interacts with a slider by moving its thumb along the track, the slider value
  * changes accordingly.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/slider#preview}
+ * @docs {@link https://www.vidstack.io/docs/player/components/slider#preview}
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
   return (

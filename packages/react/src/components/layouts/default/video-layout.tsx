@@ -42,6 +42,7 @@ export { DefaultVideoLayout };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoLayoutLarge() {
+  const { menuGroup } = React.useContext(DefaultLayoutContext);
   return (
     <>
       <DefaultVideoGestures />
@@ -50,7 +51,7 @@ function DefaultVideoLayoutLarge() {
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
           <div className="vds-controls-spacer" />
-          <DefaultVideoMenus />
+          {menuGroup === 'top' && <DefaultVideoMenus />}
         </Controls.Group>
 
         <div className="vds-controls-spacer" />
@@ -66,6 +67,7 @@ function DefaultVideoLayoutLarge() {
           <DefaultTimeGroup />
           <DefaultChapterTitle />
           <DefaultCaptionButton tooltip="top" />
+          {menuGroup === 'bottom' && <DefaultVideoMenus />}
           <DefaultPIPButton tooltip="top" />
           <DefaultFullscreenButton tooltip="top end" />
         </Controls.Group>
@@ -172,12 +174,18 @@ export { DefaultBufferingIndicator };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoMenus() {
-  const { isSmallLayout } = React.useContext(DefaultLayoutContext),
-    placement = !isSmallLayout ? 'bottom end' : null;
+  const { isSmallLayout, noPopupMenu, menuGroup } = React.useContext(DefaultLayoutContext),
+    side = menuGroup === 'top' || isSmallLayout ? 'bottom' : ('top' as const),
+    tooltip = `${side} end` as const,
+    placement = noPopupMenu
+      ? (`${side} end` as const)
+      : !isSmallLayout
+      ? (`${side} end` as const)
+      : null;
   return (
     <>
-      <DefaultChaptersMenu tooltip="bottom" placement={placement} portalClass="vds-video-layout" />
-      <DefaultSettingsMenu tooltip="bottom" placement={placement} portalClass="vds-video-layout" />
+      <DefaultChaptersMenu tooltip={tooltip} placement={placement} portalClass="vds-video-layout" />
+      <DefaultSettingsMenu tooltip={tooltip} placement={placement} portalClass="vds-video-layout" />
     </>
   );
 }

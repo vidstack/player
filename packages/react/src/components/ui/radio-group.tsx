@@ -23,7 +23,7 @@ export interface RootProps extends ReactElementProps<RadioGroupInstance> {
  * A radio group consists of options where only one of them can be checked. Each option is
  * provided as a radio (i.e., a selectable element).
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/menu/radio-group}
+ * @docs {@link https://www.vidstack.io/docs/player/components/menu/radio-group}
  */
 const Root = React.forwardRef<RadioGroupInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
@@ -55,7 +55,7 @@ export interface ItemProps extends ReactElementProps<RadioInstance> {
  * A radio represents a option that a user can select inside of a radio group. Only one radio
  * can be checked in a group.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/menu/radio}
+ * @docs {@link https://www.vidstack.io/docs/player/components/menu/radio}
  */
 const Item = React.forwardRef<HTMLElement, ItemProps>(({ children, ...props }, forwardRef) => {
   return (

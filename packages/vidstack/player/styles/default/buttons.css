@@ -15,6 +15,7 @@
   background: none;
   outline: none;
   border: none;
+  padding: var(--media-button-padding, 0px);
   border-radius: var(--media-button-border-radius, 8px);
   color: var(--media-button-color, var(--media-controls-color, #f5f5f5));
   width: var(--media-button-size, 40px);

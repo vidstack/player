@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { PropsWithoutRef, SVGProps } from 'react';
+
 import arrowLeftPaths from 'media-icons/dist/icons/arrow-left.js';
 import chaptersIconPaths from 'media-icons/dist/icons/chapters.js';
 import arrowRightPaths from 'media-icons/dist/icons/chevron-right.js';
@@ -21,6 +22,7 @@ import qualityIconPaths from 'media-icons/dist/icons/settings-menu.js';
 import settingsIconPaths from 'media-icons/dist/icons/settings.js';
 import volumeHighIconPaths from 'media-icons/dist/icons/volume-high.js';
 import volumeLowIconPaths from 'media-icons/dist/icons/volume-low.js';
+
 import { Icon } from '../../../icon';
 
 function createIcon(paths: string) {

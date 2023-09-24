@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { GestureInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
 
@@ -18,7 +20,7 @@ export interface GestureProps extends ReactElementProps<GestureInstance> {
 /**
  * This component enables actions to be performed on the media based on user gestures.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/media/gesture}
+ * @docs {@link https://www.vidstack.io/docs/player/components/media/gesture}
  */
 const Gesture = React.forwardRef<GestureInstance, GestureProps>(
   ({ children, ...props }, forwardRef) => {

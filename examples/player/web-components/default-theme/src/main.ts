@@ -1,5 +1,3 @@
-// Import theme.
-import 'vidstack/player/styles/default/theme.css';
 // Register elements.
 import 'vidstack/player';
 import 'vidstack/player/ui';

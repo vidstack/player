@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { ControlsGroupInstance, ControlsInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
 
@@ -18,7 +20,7 @@ export interface RootProps extends ReactElementProps<ControlsInstance> {
 /**
  * This component creates a container for control groups.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/media/controls}
+ * @docs {@link https://www.vidstack.io/docs/player/components/media/controls}
  */
 const Root = React.forwardRef<HTMLElement, RootProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -49,7 +51,7 @@ export interface GroupProps extends ReactElementProps<ControlsGroupInstance> {
 /**
  * This component creates a container for media controls.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/media/controls#group}
+ * @docs {@link https://www.vidstack.io/docs/player/components/media/controls#group}
  */
 const Group = React.forwardRef<HTMLElement, GroupProps>(({ children, ...props }, forwardRef) => {
   return (

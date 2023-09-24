@@ -1,10 +1,12 @@
 import * as React from 'react';
+
 import {
   composeRefs,
   createReactComponent,
   useSignal,
   type ReactElementProps,
 } from 'maverick.js/react';
+
 import { TimeInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
 
@@ -24,7 +26,7 @@ export interface TimeProps extends ReactElementProps<TimeInstance> {
  * Outputs a media duration (eg: `currentTime`, `duration`, `bufferedAmount`, etc.) value as time
  * formatted text.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/display/time}
+ * @docs {@link https://www.vidstack.io/docs/player/components/display/time}
  */
 const Time = React.forwardRef<HTMLElement, TimeProps>(({ children, ...props }, forwardRef) => {
   return (

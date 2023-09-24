@@ -6,11 +6,13 @@ import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
 
+const MODE_WATCH = process.argv.includes('-w');
 const MODE_TYPES = process.argv.includes('--config-types');
 const EXTERNAL = ['react', 'react-dom', 'media-icons', 'media-captions', 'hls.js', /@radix-ui/];
+const NPM = [define({ dev: true }), define({ dev: false })];
 
 export default defineConfig(
-  MODE_TYPES ? [defineTypes()] : [define({ dev: true }), define({ dev: false })],
+  MODE_WATCH ? [defineTypes(), ...NPM] : MODE_TYPES ? [defineTypes()] : NPM,
 );
 
 /**

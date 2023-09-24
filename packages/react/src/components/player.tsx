@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { MediaPlayerInstance } from './primitives/instances';
 import { Primitive } from './primitives/nodes';
 
@@ -43,7 +45,7 @@ export interface MediaPlayerProps extends ReactElementProps<MediaPlayerInstance>
  * requests, and expose media state through HTML attributes and CSS properties for styling
  * purposes.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/media/player}
+ * @docs {@link https://www.vidstack.io/docs/player/components/media/player}
  * @example
  * ```tsx
  * <MediaPlayer>

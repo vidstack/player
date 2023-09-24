@@ -176,6 +176,8 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   private _requestResize = animationFrameThrottle(this._resize.bind(this));
 
   private _resize() {
+    if (!this.scope) return;
+
     const img = this.$state.img(),
       coords = this.$state.coords();
 

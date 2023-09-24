@@ -12,8 +12,6 @@ import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { useChapterOptions } from '../../../hooks/options/use-chapter-options';
 import { usePlaybackRateOptions } from '../../../hooks/options/use-playback-rate-options';
 import { useVideoQualityOptions } from '../../../hooks/options/use-video-quality-options';
-import { useActiveTextCues } from '../../../hooks/use-active-text-cues';
-import { useActiveTextTrack } from '../../../hooks/use-active-text-track';
 import { useMediaRemote } from '../../../hooks/use-media-remote';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { usePlayerQuery } from '../../../hooks/use-player-query';
@@ -24,6 +22,7 @@ import { MuteButton } from '../../ui/buttons/mute-button';
 import { PIPButton } from '../../ui/buttons/pip-button';
 import { PlayButton } from '../../ui/buttons/play-button';
 import { SeekButton } from '../../ui/buttons/seek-button';
+import { ChapterTitle } from '../../ui/chapter-title';
 import * as MenuBase from '../../ui/menu';
 import * as TimeSliderBase from '../../ui/sliders/time-slider';
 import * as VolumeSliderBase from '../../ui/sliders/volume-slider';
@@ -52,6 +51,7 @@ interface DefaultMediaMenuProps {
  * -----------------------------------------------------------------------------------------------*/
 
 export interface DefaultMediaLayoutProps extends PrimitivePropsWithRef<'div'> {
+  children?: React.ReactNode;
   /**
    * The icons to be rendered and displayed inside the layout.
    */
@@ -80,7 +80,17 @@ export interface DefaultMediaLayoutProps extends PrimitivePropsWithRef<'div'> {
    * displayed.
    */
   smallLayoutWhen?: string | boolean;
-  children?: React.ReactNode;
+  /**
+   * Specifies whether menu buttons should be placed in the top or bottom controls group. This
+   * only applies to the large video layout.
+   */
+  menuGroup?: 'top' | 'bottom';
+  /**
+   * Whether popup menus should be disabled when the small layout is active. A popup menu is a
+   * floating panel that floats up from the bottom of the screen. It's enabled by default as it
+   * provides a better user experience for touch devices.
+   */
+  noPopupMenu?: boolean;
 }
 
 export interface CreateDefaultMediaLayout {
@@ -106,6 +116,8 @@ export const createDefaultMediaLayout = ({
         showMenuDelay,
         showTooltipDelay = type === 'video' ? 500 : 700,
         smallLayoutWhen = smLayoutWhen,
+        noPopupMenu = false,
+        menuGroup = 'top',
         children,
         ...props
       },
@@ -134,6 +146,8 @@ export const createDefaultMediaLayout = ({
                 isSmallLayout,
                 showMenuDelay,
                 showTooltipDelay,
+                noPopupMenu,
+                menuGroup,
                 Icons: icons,
               }}
             >
@@ -401,11 +415,11 @@ export { DefaultMainTitle };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultChapterTitle() {
-  const $started = useMediaState('started'),
-    $title = useMediaState('title'),
-    track = useActiveTextTrack('chapters'),
-    cues = useActiveTextCues(track);
-  return <span className="vds-media-title">{$started ? cues[0]?.text || $title : $title}</span>;
+  return (
+    <span className="vds-media-title">
+      <ChapterTitle />
+    </span>
+  );
 }
 
 DefaultChapterTitle.displayName = 'DefaultChapterTitle';
@@ -433,11 +447,44 @@ export { DefaultTimeGroup };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
-  const { showMenuDelay, Icons } = React.useContext(DefaultLayoutContext),
+  const { showMenuDelay, noPopupMenu, isSmallLayout, Icons } =
+      React.useContext(DefaultLayoutContext),
     chaptersText = useDefaultLayoutLang('Chapters'),
     options = useChapterOptions(),
     disabled = !options.length,
     { thumbnails } = React.useContext(DefaultLayoutContext);
+
+  const Content = (
+    <MenuBase.Content className="vds-chapters-menu-items vds-menu-items" placement={placement}>
+      <MenuBase.RadioGroup
+        className="vds-chapters-radio-group vds-radio-group"
+        value={options.selectedValue}
+        data-thumbnails={!!thumbnails}
+      >
+        {options.map(
+          ({ cue, label, value, startTimeText, durationText, select, setProgressVar }) => (
+            <MenuBase.Radio
+              className="vds-chapter-radio vds-radio"
+              value={value}
+              key={value}
+              onSelect={select}
+              ref={setProgressVar}
+            >
+              <ThumbnailBase.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
+                <ThumbnailBase.Img />
+              </ThumbnailBase.Root>
+              <div className="vds-chapter-radio-content">
+                <span className="vds-chapter-radio-label">{label}</span>
+                <span className="vds-chapter-radio-start-time">{startTimeText}</span>
+                <span className="vds-chapter-radio-duration">{durationText}</span>
+              </div>
+            </MenuBase.Radio>
+          ),
+        )}
+      </MenuBase.RadioGroup>
+    </MenuBase.Content>
+  );
+
   return (
     <MenuBase.Root className="vds-chapters-menu vds-menu" showDelay={showMenuDelay}>
       <DefaultTooltip content={chaptersText} placement={tooltip}>
@@ -445,40 +492,17 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
           <Icons.Menu.Chapters className="vds-icon" />
         </MenuBase.Button>
       </DefaultTooltip>
-      <MenuBase.Portal className={portalClass} disabled="fullscreen">
-        <MenuBase.Content className="vds-chapters-menu-items vds-menu-items" placement={placement}>
-          <MenuBase.RadioGroup
-            className="vds-chapters-radio-group vds-radio-group"
-            value={options.selectedValue}
-            data-thumbnails={!!thumbnails}
-          >
-            {options.map(
-              ({ cue, label, value, startTimeText, durationText, select, setProgressVar }) => (
-                <MenuBase.Radio
-                  className="vds-chapter-radio vds-radio"
-                  value={value}
-                  key={value}
-                  onSelect={select}
-                  ref={setProgressVar}
-                >
-                  <ThumbnailBase.Root
-                    src={thumbnails}
-                    className="vds-thumbnail"
-                    time={cue.startTime}
-                  >
-                    <ThumbnailBase.Img />
-                  </ThumbnailBase.Root>
-                  <div className="vds-chapter-radio-content">
-                    <span className="vds-chapter-radio-label">{label}</span>
-                    <span className="vds-chapter-radio-start-time">{startTimeText}</span>
-                    <span className="vds-chapter-radio-duration">{durationText}</span>
-                  </div>
-                </MenuBase.Radio>
-              ),
-            )}
-          </MenuBase.RadioGroup>
-        </MenuBase.Content>
-      </MenuBase.Portal>
+      {noPopupMenu || !isSmallLayout ? (
+        Content
+      ) : (
+        <MenuBase.Portal
+          className={portalClass}
+          disabled="fullscreen"
+          data-size={isSmallLayout ? 'sm' : null}
+        >
+          {Content}
+        </MenuBase.Portal>
+      )}
     </MenuBase.Root>
   );
 }
@@ -491,8 +515,19 @@ export { DefaultChaptersMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
-  const { showMenuDelay, Icons } = React.useContext(DefaultLayoutContext),
+  const { showMenuDelay, Icons, isSmallLayout, noPopupMenu } =
+      React.useContext(DefaultLayoutContext),
     settingsText = useDefaultLayoutLang('Settings');
+
+  const Content = (
+    <MenuBase.Content className="vds-settings-menu-items vds-menu-items" placement={placement}>
+      <DefaultAudioSubmenu />
+      <DefaultSpeedSubmenu />
+      <DefaultQualitySubmenu />
+      <DefaultCaptionSubmenu />
+    </MenuBase.Content>
+  );
+
   return (
     <MenuBase.Root className="vds-settings-menu vds-menu" showDelay={showMenuDelay}>
       <DefaultTooltip content={settingsText} placement={tooltip}>
@@ -500,14 +535,17 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMe
           <Icons.Menu.Settings className="vds-icon vds-rotate-icon" />
         </MenuBase.Button>
       </DefaultTooltip>
-      <MenuBase.Portal className={portalClass} disabled="fullscreen">
-        <MenuBase.Content className="vds-settings-menu-items vds-menu-items" placement={placement}>
-          <DefaultAudioSubmenu />
-          <DefaultSpeedSubmenu />
-          <DefaultQualitySubmenu />
-          <DefaultCaptionSubmenu />
-        </MenuBase.Content>
-      </MenuBase.Portal>
+      {noPopupMenu || !isSmallLayout ? (
+        Content
+      ) : (
+        <MenuBase.Portal
+          className={portalClass}
+          disabled="fullscreen"
+          data-size={isSmallLayout ? 'sm' : null}
+        >
+          {Content}
+        </MenuBase.Portal>
+      )}
     </MenuBase.Root>
   );
 }

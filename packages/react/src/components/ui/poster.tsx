@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
   composeRefs,
   createReactComponent,
@@ -7,6 +8,7 @@ import {
   type ReactElementProps,
 } from 'maverick.js/react';
 import { mediaState } from 'vidstack/local';
+
 import { PosterInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
 
@@ -27,7 +29,7 @@ export interface PosterProps extends ReactElementProps<PosterInstance, HTMLImage
  * Loads and displays the current media poster image. By default, the media provider's
  * loading strategy is respected meaning the poster won't load until the media can.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/media/poster}
+ * @docs {@link https://www.vidstack.io/docs/player/components/media/poster}
  */
 const Poster = React.forwardRef<HTMLImageElement, PosterProps>(
   ({ children, ...props }, forwardRef) => {

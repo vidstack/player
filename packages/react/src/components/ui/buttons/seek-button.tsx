@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { SeekButtonInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 
@@ -18,7 +20,7 @@ export interface SeekButtonProps extends ReactElementProps<SeekButtonInstance, H
 /**
  * A button for seeking the current media playback forwards or backwards by a specified amount.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/buttons/seek-button}
+ * @docs {@link https://www.vidstack.io/docs/player/components/buttons/seek-button}
  */
 const SeekButton = React.forwardRef<HTMLButtonElement, SeekButtonProps>(
   ({ children, ...props }, forwardRef) => {

@@ -32,7 +32,9 @@ function onWarn(warning, defaultHandler) {
 
 export default defineConfig(
   MODE_WATCH
-    ? [...NPM, ...TYPES]
+    ? LOCAL
+      ? [...LOCAL, ...TYPES]
+      : [...NPM, ...TYPES]
     : MODE_TYPES
     ? TYPES
     : MODE_LOCAL

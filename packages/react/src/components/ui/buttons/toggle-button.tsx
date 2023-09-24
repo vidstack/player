@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { ToggleButtonInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 
@@ -19,7 +21,7 @@ export interface ToggleButtonProps
 /**
  * A toggle button is a two-state button that can be either off (not pressed) or on (pressed).
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/buttons/toggle-button}
+ * @docs {@link https://www.vidstack.io/docs/player/components/buttons/toggle-button}
  */
 const ToggleButton = React.forwardRef<HTMLButtonElement, ToggleButtonProps>(
   ({ children, ...props }, forwardRef) => {

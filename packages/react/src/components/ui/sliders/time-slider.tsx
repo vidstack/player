@@ -54,7 +54,7 @@ export interface RootProps extends ReactElementProps<TimeSliderInstance> {
  * mouse and touch interactions and is highly customizable in terms of styling. Users can
  * effortlessly change the current playback time within the range 0 to seekable end.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/sliders/time-slider}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/time-slider}
  */
 const Root = React.forwardRef<TimeSliderInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
@@ -85,7 +85,7 @@ export interface ChaptersProps extends Omit<ReactElementProps<SliderChaptersInst
  * Used to create predefined sections within a time slider interface based on the currently
  * active chapters text track.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/slider-chapters}
+ * @docs {@link https://www.vidstack.io/docs/player/components/slider-chapters}
  */
 const Chapters = React.forwardRef<HTMLDivElement, ChaptersProps>(
   ({ children, ...props }, forwardRef) => {
@@ -181,7 +181,7 @@ ChapterTitle.displayName = 'SliderChapterTitle';
  * When a user interacts with a slider by moving its thumb along the track, the slider value
  * and current playback time updates accordingly.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/time-slider#preview}
+ * @docs {@link https://www.vidstack.io/docs/player/components/time-slider#preview}
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -232,7 +232,7 @@ export type ThumbnailImgProps = ThumbnailBase.ImgProps;
  * The time ranges in the WebVTT file will automatically be matched based on the current slider
  * pointer position.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/sliders/slider-thumbnail}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-thumbnail}
  */
 const ThumbnailRoot = React.forwardRef<HTMLElement, ThumbnailProps>(
   ({ children, ...props }, forwardRef) => {
@@ -274,7 +274,7 @@ export interface VideoProps extends ReactElementProps<SliderVideoInstance, HTMLV
  * the time slider. The preview video will automatically be updated to be in-sync with the current
  * preview position, so ensure it has the same length as the original media (i.e., same duration).
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/sliders/slider-video}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-video}
  */
 const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
   ({ children, ...props }, forwardRef) => {

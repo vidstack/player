@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import type { DefaultLayoutTranslations } from 'vidstack/local';
+
 import type { DefaultLayoutIcons } from './icons';
 
 export const DefaultLayoutContext = React.createContext<DefaultLayoutContext>({} as any);
@@ -11,6 +13,8 @@ interface DefaultLayoutContext {
   isSmallLayout: boolean;
   showMenuDelay?: number;
   showTooltipDelay?: number;
+  menuGroup: 'top' | 'bottom';
+  noPopupMenu: boolean;
   Icons: DefaultLayoutIcons;
 }
 

@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { CaptionsInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
 
@@ -19,7 +21,7 @@ export interface CaptionsProps extends ReactElementProps<CaptionsInstance> {
  * Renders and displays captions/subtitles. This will be an overlay for video and a simple
  * captions box for audio.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/display/captions}
+ * @docs {@link https://www.vidstack.io/docs/player/components/display/captions}
  */
 const Captions = React.forwardRef<CaptionsInstance, CaptionsProps>(
   ({ children, ...props }, forwardRef) => {

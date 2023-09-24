@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { LiveButtonInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 
@@ -23,7 +25,7 @@ export interface LiveButtonProps extends ReactElementProps<LiveButtonInstance, H
  * 🚨 This component will have `aria-hidden="true"` applied when the current stream is _not_
  * live.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/buttons/live-button}
+ * @docs {@link https://www.vidstack.io/docs/player/components/buttons/live-button}
  */
 const LiveButton = React.forwardRef<HTMLButtonElement, LiveButtonProps>(
   ({ children, ...props }, forwardRef) => {

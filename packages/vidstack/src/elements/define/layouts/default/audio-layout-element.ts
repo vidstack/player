@@ -1,6 +1,7 @@
 import { html } from 'lit-html';
-import { computed, onDispose } from 'maverick.js';
+import { computed, effect, onDispose } from 'maverick.js';
 import { Host } from 'maverick.js/element';
+import { setAttribute } from 'maverick.js/std';
 
 import { DefaultAudioLayout } from '../../../../components/layouts/default-layout';
 import { $signal } from '../../../lit/directives/signal';
@@ -28,6 +29,12 @@ export class MediaAudioLayoutElement
   protected onSetup() {
     this.classList.add('vds-audio-layout');
     this.menuContainer = createMenuContainer('vds-audio-layout');
+
+    effect(() => {
+      if (!this.menuContainer) return;
+      setAttribute(this.menuContainer, 'data-size', this.isSmallLayout);
+    });
+
     onDispose(() => this.menuContainer?.remove());
   }
 

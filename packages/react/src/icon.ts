@@ -25,10 +25,9 @@ export interface IconProps
 export interface IconComponent extends ForwardRefExoticComponent<IconProps> {}
 
 const Icon: IconComponent = /* #__PURE__*/ forwardRef((props, ref) => {
-  const { width, height, size = 32, className, paths, ...restProps } = props;
+  const { width, height, size = null, paths, ...restProps } = props;
   return createElement('svg', {
     ...restProps,
-    className: (className ? `${className} ` : '') + 'vds-icon',
     width: width ?? size,
     height: height ?? size,
     viewBox: '0 0 32 32',

@@ -5,7 +5,7 @@ export * from './components/primitives/instances';
 export { type MediaPlayerProps, MediaPlayer } from './components/player';
 export { type MediaProviderProps, MediaProvider } from './components/provider';
 export { type IconProps, Icon, type IconComponent } from './icon';
-export { TextTrack, type TextTrackProps } from './components/text-track';
+export { Track, type TrackProps } from './components/text-track';
 
 // Controls
 export * as Controls from './components/ui/controls';
@@ -75,6 +75,7 @@ export type {
 } from './components/ui/menu';
 
 // Display
+export { ChapterTitle, type ChapterTitleProps } from './components/ui/chapter-title';
 export { type GestureProps, Gesture } from './components/ui/gesture';
 export { Captions, type CaptionsProps } from './components/ui/captions';
 export * as Caption from './components/ui/caption';
