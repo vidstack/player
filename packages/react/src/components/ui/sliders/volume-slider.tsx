@@ -30,7 +30,7 @@ export interface RootProps extends ReactElementProps<VolumeSliderInstance> {
  * mouse and touch interactions and is highly customizable in terms of styling. Users can
  * effortlessly change the volume level within the range 0 (muted) to 100.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/sliders/volume-slider}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/volume-slider}
  */
 const Root = React.forwardRef<VolumeSliderInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
@@ -53,7 +53,7 @@ Root.displayName = 'VolumeSlider';
  * slider. When a user interacts with a slider by moving its thumb along the track, the slider value
  * and volume updates accordingly.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/volume-slider#preview}
+ * @docs {@link https://www.vidstack.io/docs/player/components/volume-slider#preview}
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
   return (

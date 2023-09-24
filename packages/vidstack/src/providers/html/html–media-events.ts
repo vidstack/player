@@ -25,7 +25,10 @@ export class HTMLMediaEvents {
     return this._context.delegate;
   }
 
-  constructor(private _provider: HTMLMediaProvider, private _context: MediaSetupContext) {
+  constructor(
+    private _provider: HTMLMediaProvider,
+    private _context: MediaSetupContext,
+  ) {
     this._attachInitialListeners();
     effect(this._attachTimeUpdate.bind(this));
     onDispose(this._onDispose.bind(this));

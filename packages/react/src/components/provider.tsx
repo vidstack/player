@@ -25,7 +25,7 @@ export interface MediaProviderProps extends ReactElementProps<MediaProviderInsta
 /**
  * Renders the current provider at this component location.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/media/provider}
+ * @docs {@link https://www.vidstack.io/docs/player/components/media/provider}
  * @example
  * ```tsx
  * <MediaPlayer src="...">

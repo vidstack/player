@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { CaptionButtonInstance, MuteButtonInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 
@@ -19,7 +21,7 @@ export interface CaptionButtonProps
 /**
  * A button for toggling the showing state of the captions.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/buttons/caption-button}
+ * @docs {@link https://www.vidstack.io/docs/player/components/buttons/caption-button}
  */
 const CaptionButton = React.forwardRef<HTMLButtonElement, CaptionButtonProps>(
   ({ children, ...props }, forwardRef) => {

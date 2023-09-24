@@ -18,6 +18,8 @@ export class MediaLoadController extends MediaPlayerController {
       waitIdlePeriod(this._callback);
     } else if (load === 'visible') {
       const observer = new IntersectionObserver((entries) => {
+        if (!this.scope) return;
+
         if (entries[0].isIntersecting) {
           observer.disconnect();
           this._callback();

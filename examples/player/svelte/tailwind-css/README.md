@@ -12,4 +12,4 @@ Web Components with Svelte.
 
 [tailwind]: https://tailwindcss.com
 [tailwind-plugin]: https://next.vidstack.io/docs/wc/player/styling/tailwind
-[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/vidstack/tree/next/examples/player/svelte/css?title=Vidstack%20Player%20-%20Svelte%20%28Tailwind%20CSS%29&file=src/main.ts&showSidebar=1
+[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/vidstack/tree/next/examples/player/svelte/tailwind-css?title=Vidstack%20Player%20-%20Svelte%20%28Tailwind%20CSS%29&file=src/main.ts&showSidebar=1

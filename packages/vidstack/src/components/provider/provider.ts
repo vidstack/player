@@ -33,15 +33,17 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
   protected override onSetup() {
     this._media = useMediaContext();
-    new SourceSelection(this._domSources, this._media, this.$state.loader);
+    if (__SERVER__) this._watchSources();
   }
 
   protected override onAttach(el: HTMLElement) {
     el.setAttribute('data-media-provider', '');
-    new Tracks(this._domTracks, this._media);
   }
 
   protected override onConnect(el: HTMLElement) {
+    this._watchSources();
+    new Tracks(this._domTracks, this._media);
+
     const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
     resize.observe(el);
 
@@ -62,6 +64,10 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     });
   }
 
+  private _watchSources() {
+    new SourceSelection(this._domSources, this._media, this.$state.loader);
+  }
+
   protected _loadRafId = -1;
 
   @method
@@ -75,6 +81,8 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   protected _runLoader(target: HTMLElement | null | undefined) {
+    if (!this.scope) return;
+
     const loader = this.$state.loader();
 
     if (this._loader === loader && loader?.target === target) return;
@@ -86,6 +94,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     if (!loader || !target) return;
 
     loader.load(this._media).then((provider) => {
+      if (!this.scope) return;
       // The src/loader might've changed by the time we load the provider.
       if (peek(this.$state.loader) !== loader) return;
       this._media.delegate._dispatch('provider-change', {
@@ -104,9 +113,11 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   private _onResize() {
+    if (!this.el) return;
+
     const player = this._media.player,
-      width = this.el!.offsetWidth,
-      height = this.el!.offsetHeight;
+      width = this.el.offsetWidth,
+      height = this.el.offsetHeight;
 
     if (!player) return;
 

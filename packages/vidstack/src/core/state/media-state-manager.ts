@@ -33,7 +33,6 @@ import { TRACKED_EVENT } from './tracked-media-events';
 export class MediaStateManager extends MediaPlayerController {
   private readonly _trackedEvents = new Map<string, ME.MediaEvent>();
 
-  private _skipInitialSrcChange = true;
   private _firingWaiting = false;
   private _waitingTrigger: Event | undefined;
 
@@ -177,7 +176,9 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['provider-change'](event: ME.MediaProviderChangeEvent) {
-    const prevProvider = this._media.$provider();
+    const prevProvider = this._media.$provider(),
+      newProvider = event.detail;
+    if (prevProvider?.type === newProvider?.type) return;
     prevProvider?.destroy?.();
     this._media.$provider.set(event.detail);
     if (prevProvider && event.detail === null) this._resetMediaState(event);
@@ -220,6 +221,7 @@ export class MediaStateManager extends MediaPlayerController {
         // Wait for player to resize.
         setTimeout(() => {
           requestAnimationFrame(() => {
+            if (!this.scope) return;
             this.$state.inferredViewType.set(event.detail);
             this.dispatch('view-type-change', {
               detail: currentViewType,
@@ -250,6 +252,9 @@ export class MediaStateManager extends MediaPlayerController {
   ['source-change'](event: ME.MediaSourceChangeEvent) {
     appendTriggerEvent(event, this._trackedEvents.get('sources-change'));
 
+    this._resetMediaState(event);
+    this._trackedEvents.set(event.type, event);
+
     this.$state.source.set(event.detail);
     this.el?.setAttribute('aria-busy', 'true');
 
@@ -259,15 +264,6 @@ export class MediaStateManager extends MediaPlayerController {
         .labelledLog('Source', event.detail)
         .dispatch();
     }
-
-    // Skip resets before first playback to ensure initial properties and tracked events are kept.
-    if (this._skipInitialSrcChange) {
-      this._skipInitialSrcChange = false;
-      return;
-    }
-
-    this._resetMediaState(event);
-    this._trackedEvents.set(event.type, event);
   }
 
   private _resetMediaState(event: Event) {

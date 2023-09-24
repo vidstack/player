@@ -165,6 +165,7 @@
   overflow-y: scroll;
   overscroll-behavior: contain;
   opacity: 0;
+  z-index: 9999999;
   box-sizing: border-box;
   max-height: var(--media-menu-max-height, 250px);
 }
@@ -251,7 +252,6 @@
   top: unset;
   bottom: 0;
   max-height: var(--media-sm-menu-portrait-max-height, 40vh);
-  z-index: 9999999;
 }
 
 :where(.vds-menu-items:not([data-submenu]):not([data-placement])) {

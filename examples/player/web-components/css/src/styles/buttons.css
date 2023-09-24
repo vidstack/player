@@ -29,13 +29,15 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.media-button > media-icon {
+.media-button > media-icon,
+.media-button > svg {
   width: 80%;
   height: 80%;
   border-radius: 2px;
 }
 
-.media-button[data-focus] > media-icon {
+.media-button[data-focus] > media-icon,
+.media-button[data-focus] > svg {
   box-shadow: var(--media-focus-ring);
 }
 

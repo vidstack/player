@@ -1,7 +1,4 @@
 // Import styles.
-import 'vidstack/player/styles/default/theme.css';
-import 'vidstack/player/styles/default/layouts/audio.css';
-import 'vidstack/player/styles/default/layouts/video.css';
 import './styles.css';
 // Register elements.
 import 'vidstack/player';

@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { MuteButtonInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 
@@ -18,7 +20,7 @@ export interface MuteButtonProps extends ReactElementProps<MuteButtonInstance, H
 /**
  * A button for toggling the muted state of the player.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/buttons/mute-button}
+ * @docs {@link https://www.vidstack.io/docs/player/components/buttons/mute-button}
  */
 const MuteButton = React.forwardRef<HTMLButtonElement, MuteButtonProps>(
   ({ children, ...props }, forwardRef) => {

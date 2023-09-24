@@ -109,8 +109,8 @@ function DefaultBufferingIndicator() {
 }
 
 function DefaultVideoMenus() {
-  const { menuGroup } = useDefaultLayoutContext(),
-    $side = () => (menuGroup() === 'top' ? 'bottom' : 'top'),
+  const { menuGroup, smQueryList } = useDefaultLayoutContext(),
+    $side = () => (menuGroup() === 'top' || smQueryList.matches ? 'bottom' : 'top'),
     $tooltip = computed(() => `${$side()} end` as const),
     $placement = computed(() => `${$side()} end` as const);
   return html`

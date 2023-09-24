@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+
 import { PlayButtonInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 
@@ -18,7 +20,7 @@ export interface PlayButtonProps extends ReactElementProps<PlayButtonInstance, H
 /**
  * A button for toggling the playback state (play/pause) of the current media.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/buttons/play-button}
+ * @docs {@link https://www.vidstack.io/docs/player/components/buttons/play-button}
  */
 const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps>(
   ({ children, ...props }, forwardRef) => {

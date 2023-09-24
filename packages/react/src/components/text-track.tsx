@@ -2,8 +2,9 @@ import type { TextTrackInit } from 'vidstack/local';
 
 import { createTextTrack } from '../hooks/create-text-track';
 
-export interface TextTrackProps extends TextTrackInit {
+export interface TrackProps extends TextTrackInit {
   readonly lang?: TextTrackInit['language'];
+  readonly key?: string;
 }
 
 /**
@@ -11,10 +12,10 @@ export interface TextTrackProps extends TextTrackInit {
  *
  * @see {@link https://www.vidstack.io/docs/player/api/text-tracks}
  */
-function TextTrack({ lang, ...props }: TextTrackProps) {
+function Track({ lang, ...props }: TrackProps) {
   createTextTrack({ language: lang, ...props });
   return null;
 }
 
-TextTrack.displayName = 'TextTrack';
-export { TextTrack };
+Track.displayName = 'Track';
+export { Track };

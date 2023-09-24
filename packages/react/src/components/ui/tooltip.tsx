@@ -1,10 +1,12 @@
 import * as React from 'react';
+
 import {
   composeRefs,
   createReactComponent,
   type ReactElementProps,
   type ReactProps,
 } from 'maverick.js/react';
+
 import {
   TooltipContentInstance,
   TooltipInstance,
@@ -27,7 +29,7 @@ export interface RootProps extends ReactProps<TooltipInstance> {
  * A contextual text bubble that displays a description for an element that appears on pointer
  * hover or keyboard focus.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/tooltip}
+ * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tooltip_role}
  */
 function Root({ children, ...props }: RootProps) {
@@ -52,7 +54,7 @@ export interface TriggerProps extends ReactElementProps<TooltipTriggerInstance> 
  * Wraps the element that will trigger showing/hiding the tooltip on hover or keyboard focus. The
  * tooltip content is positioned relative to this element.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/tooltip}
+ * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
  */
 const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(
   ({ children, ...props }, forwardRef) => {
@@ -85,7 +87,7 @@ export interface ContentProps extends ReactElementProps<TooltipContentInstance> 
 /**
  * This component contains the content that is visible when the tooltip trigger is interacted with.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/tooltip}
+ * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
  */
 const Content = React.forwardRef<HTMLElement, ContentProps>(
   ({ children, ...props }, forwardRef) => {

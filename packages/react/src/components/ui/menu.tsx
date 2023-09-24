@@ -32,7 +32,7 @@ export interface RootProps extends ReactElementProps<MenuInstance> {
  * Root menu container used to hold and manage a menu button and menu items. This component is
  * used to display options in a floating panel.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/menu/menu}
+ * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  */
 const Root = React.forwardRef<MenuInstance, RootProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -69,7 +69,7 @@ export interface ButtonProps extends ReactElementProps<MenuButtonInstance, HTMLB
  * A button that controls the opening and closing of a menu component. The button will become a
  * `menuitem` when used inside a submenu.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/menu/menu}
+ * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, ...props }, forwardRef) => {
@@ -100,7 +100,7 @@ export interface PortalProps extends Omit<ReactElementProps<MenuPortalInstance>,
 /**
  * Portals menu items into the document body.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/menu#portal}
+ * @docs {@link https://www.vidstack.io/docs/player/components/menu#portal}
  */
 const Portal = React.forwardRef<HTMLElement, PortalProps>(
   ({ disabled = false, children, ...props }, forwardRef) => {
@@ -138,7 +138,7 @@ export interface ItemsProps extends ReactElementProps<MenuItemsInstance> {
 /**
  * Used to group and display settings or arbitrary content in a floating panel.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/menu/menu}
+ * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  */
 const Items = React.forwardRef<HTMLElement, ItemsProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -170,7 +170,7 @@ export interface ItemProps extends ReactElementProps<MenuItemInstance> {
  * Represents a specific option or action, typically displayed as a text label or icon, which
  * users can select to access or perform a particular function or view related content.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/menu/menu}
+ * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  */
 const Item = React.forwardRef<HTMLElement, ItemProps>(({ children, ...props }, forwardRef) => {
   return (

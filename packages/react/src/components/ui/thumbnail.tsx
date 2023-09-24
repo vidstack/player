@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
   composeRefs,
   createReactComponent,
@@ -7,6 +8,7 @@ import {
   type ReactElementProps,
 } from 'maverick.js/react';
 import { mediaState } from 'vidstack/local';
+
 import { ThumbnailInstance } from '../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../primitives/nodes';
 
@@ -25,7 +27,7 @@ export interface RootProps extends ReactElementProps<ThumbnailInstance, HTMLElem
 /**
  * Used to load and display a preview thumbnail at the given `time`.
  *
- * @docs {@link https://www.vidstack.io/docs/react/player/components/display/thumbnail}
+ * @docs {@link https://www.vidstack.io/docs/player/components/display/thumbnail}
  */
 const Root = React.forwardRef<HTMLElement, RootProps>(({ children, ...props }, forwardRef) => {
   return (

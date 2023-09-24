@@ -25,8 +25,8 @@
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.ts\"",
-    "dev": "pnpm clean && pnpm run build:types && pnpm run build:types -w & rollup -c -w",
-    "dev:local": "rollup -c -w --config-local",
+    "dev": "pnpm clean && pnpm build:types && pnpm run build:types -w & rollup -c -w",
+    "dev:local": "pnpm clean && pnpm run build:types && pnpm run build:types -w & rollup -c -w --config-local",
     "build": "rollup -c",
     "build:types": "tsc -p tsconfig.build.json",
     "types": "pnpm run build:types && rollup -c --config-types",
