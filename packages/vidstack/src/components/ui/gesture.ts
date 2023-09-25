@@ -33,6 +33,7 @@ export class Gesture extends Component<GestureProps> {
   }
 
   protected override onAttach(el: HTMLElement): void {
+    el.setAttribute('data-media-gesture', '');
     el.style.pointerEvents = 'none';
   }
 
@@ -135,7 +136,7 @@ export class Gesture extends Component<GestureProps> {
   /** Validate gesture has the highest z-index in this triggered group. */
   private _isTopLayer() {
     const gestures = this._media.player!.el!.querySelectorAll(
-      '.vds-gesture[data-triggered],media-gesture[data-triggered]',
+      '[data-media-gesture][data-triggered]',
     ) as NodeListOf<HTMLElement>;
 
     return (

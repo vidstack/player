@@ -5,7 +5,7 @@ components. All components including the player itself provide styling hooks via
 support animations. Our [optional plugin][tailwind-plugin] can help speed you up even more by
 providing you with easy to use media variants such as `media-paused:opacity-0`.
 
-This example demonstrates setting up your custom layout with Tailwind CSS using Vidstack Player
+This example demonstrates setting up your custom video player layout with Tailwind CSS using Vidstack Player
 Web Components with Solid.
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)][stackblitz-demo]

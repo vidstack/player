@@ -1,5 +1,6 @@
 import {
   CaptionButton,
+  FullscreenButton,
   isTrackCaptionKind,
   MuteButton,
   PIPButton,
@@ -104,9 +105,9 @@ export function Fullscreen({ tooltipPlacement }: MediaButtonProps) {
   return (
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
-        <PIPButton className="vds-button">
+        <FullscreenButton className="vds-button">
           {isActive ? <FullscreenExitIcon /> : <FullscreenIcon />}
-        </PIPButton>
+        </FullscreenButton>
       </Tooltip.Trigger>
       <Tooltip.Content className="vds-tooltip-content" placement={tooltipPlacement}>
         {isActive ? 'Exit Fullscreen' : 'Enter Fullscreen'}
