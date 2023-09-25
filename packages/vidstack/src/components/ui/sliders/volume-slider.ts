@@ -1,11 +1,10 @@
 import throttle from 'just-throttle';
 import { Component, effect } from 'maverick.js';
-import { setAttribute } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import { $ariaBool } from '../../../utils/aria';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
-import { canChangeVolume } from '../../../utils/support';
 import type { SliderCSSVars } from './slider/api/cssvars';
 import type {
   SliderDragValueChangeEvent,
@@ -63,15 +62,11 @@ export class VolumeSlider extends Component<
     el.setAttribute('data-media-volume-slider', '');
     setAttributeIfEmpty(el, 'aria-label', 'Media volume');
 
-    if (!__SERVER__) {
-      canChangeVolume().then((canSet) => {
-        if (canSet) {
-          setAttribute(el, 'data-supported', '');
-        } else {
-          setAttribute(el, 'aria-hidden', 'true');
-        }
-      });
-    }
+    const { canSetVolume } = this._media.$state;
+    this.setAttributes({
+      'data-supported': canSetVolume,
+      'aria-hidden': $ariaBool(() => !canSetVolume()),
+    });
   }
 
   private _getARIAValueNow() {

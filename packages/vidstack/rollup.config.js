@@ -12,7 +12,6 @@ const MODE_TYPES = process.argv.includes('--config-types');
 const MODE_LOCAL = process.argv.includes('--config-local');
 
 const MAIN_EXTERNAL = ['hls.js', 'media-captions', 'media-icons'];
-
 const LOCAL_EXTERNAL = [...MAIN_EXTERNAL, /maverick/];
 
 if (!MODE_TYPES || MODE_WATCH) {
@@ -32,7 +31,7 @@ function onWarn(warning, defaultHandler) {
 
 export default defineConfig(
   MODE_WATCH
-    ? LOCAL
+    ? MODE_LOCAL
       ? [...LOCAL, ...TYPES]
       : [...NPM, ...TYPES]
     : MODE_TYPES

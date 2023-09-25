@@ -31,3 +31,11 @@ export * from './components';
 
 // Utils
 export { formatTime, formatSpokenTime } from './utils/time';
+export {
+  canChangeVolume,
+  canOrientScreen,
+  canPlayHLSNatively,
+  canUsePictureInPicture,
+  canUseVideoPresentation,
+  canRotateScreen,
+} from './utils/support';
