@@ -8,12 +8,12 @@
 >
   <!-- Track -->
   <div
-    class="ring-media-focus absolute left-0 top-1/2 z-0 h-[5px] w-full -translate-y-1/2 rounded-sm bg-white/30 group-data-[focus]:ring-4"
-  />
-  <!-- Track Fill -->
-  <div
-    class="track-fill bg-media-brand absolute left-0 top-1/2 z-10 h-[5px] w-[var(--slider-fill)] -translate-y-1/2 rounded-sm will-change-[width]"
-  />
+    class="ring-media-focus relative z-0 h-[5px] w-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px]"
+  >
+    <div
+      class="bg-media-brand absolute h-full w-[var(--slider-fill)] rounded-sm will-change-[width]"
+    />
+  </div>
   <SliderThumb />
   <SliderPreview noClamp>
     <media-slider-value

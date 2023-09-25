@@ -3,8 +3,10 @@ import { TimeSlider, VolumeSlider } from '@vidstack/react';
 export function Volume() {
   return (
     <VolumeSlider.Root className="volume-slider group relative mx-[7.5px] inline-flex h-10 w-full max-w-[80px] cursor-pointer touch-none select-none items-center outline-none aria-hidden:hidden">
-      <VolumeSlider.Track className="ring-media-focus absolute left-0 top-1/2 z-0 h-[5px] w-full -translate-y-1/2 rounded-sm bg-white/30 group-data-[focus]:ring-4" />
-      <VolumeSlider.TrackFill className="track-fill bg-media-brand absolute left-0 top-1/2 z-10 h-[5px] w-[var(--slider-fill)] -translate-y-1/2 rounded-sm will-change-[width]" />
+      <VolumeSlider.Track className="relative ring-media-focus z-0 h-[5px] w-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px]">
+        <VolumeSlider.TrackFill className="bg-media-brand absolute h-full w-[var(--slider-fill)] rounded-sm will-change-[width]" />
+      </VolumeSlider.Track>
+
       <VolumeSlider.Preview
         className="flex flex-col items-center opacity-0 transition-opacity duration-200 data-[visible]:opacity-100"
         noClamp
@@ -36,9 +38,10 @@ export function Time({ thumbnails }: TimeSliderProps) {
               key={cue.startTime}
               ref={forwardRef}
             >
-              <TimeSlider.Track className="track ring-media-focus absolute left-0 top-1/2 z-0 h-[5px] w-full -translate-y-1/2 rounded-sm bg-white/30 group-data-[focus]:ring-[3px]" />
-              <TimeSlider.TrackFill className="bg-media-brand absolute left-0 top-1/2 z-10 h-[5px] w-[var(--chapter-fill)] -translate-y-1/2 rounded-sm will-change-[width]" />
-              <TimeSlider.Progress className="absolute left-0 top-1/2 z-10 h-[5px] w-[var(--chapter-progress)] -translate-y-1/2 rounded-sm bg-white/50 will-change-[width]" />
+              <TimeSlider.Track className="relative ring-media-focus z-0 h-[5px] w-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px]">
+                <TimeSlider.TrackFill className="bg-media-brand absolute h-full w-[var(--chapter-fill)] rounded-sm will-change-[width]" />
+                <TimeSlider.Progress className="absolute z-10 h-full w-[var(--chapter-progress)] rounded-sm bg-white/50 will-change-[width]" />
+              </TimeSlider.Track>
             </div>
           ))
         }

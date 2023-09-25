@@ -2,6 +2,7 @@ import { Component, effect, onDispose, useContext, useState } from 'maverick.js'
 
 import { Slider } from './slider/slider';
 import { sliderContext, type SliderContext } from './slider/slider-context';
+import type { SliderOrientation } from './slider/types';
 
 /**
  * Used to provide users with a real-time or interactive preview of the value or selection they
@@ -55,43 +56,61 @@ export class SliderPreview extends Component<SliderPreviewProps> {
     if (_disabled()) return;
 
     const el = this.el!,
-      orientation = _orientation(),
       { offset, noClamp } = this.$props;
 
-    const { width, height } = el.getBoundingClientRect(),
-      styles: Record<string, string | null> = {
-        top: null,
-        right: null,
-        bottom: null,
-        left: null,
-      };
-
-    styles[
-      orientation === 'horizontal' ? 'bottom' : 'left'
-    ] = `calc(100% + var(--media-slider-preview-offset, ${offset()}px))`;
-
-    if (orientation === 'horizontal') {
-      const widthHalf = width / 2;
-      if (noClamp()) {
-        styles.left = `calc(var(--slider-pointer) - ${widthHalf}px)`;
-      } else {
-        const leftClamp = `max(0px, calc(var(--slider-pointer) - ${widthHalf}px))`,
-          rightClamp = `calc(100% - ${width}px)`;
-        styles.left = `min(${leftClamp}, ${rightClamp})`;
-      }
-    } else {
-      const heightHalf = height / 2;
-      if (noClamp()) {
-        styles.bottom = `calc(var(--slider-pointer) - ${heightHalf}px)`;
-      } else {
-        const topClamp = `max(${heightHalf}px, calc(var(--slider-pointer) - ${heightHalf}px))`,
-          bottomClamp = `calc(100% - ${height}px)`;
-        styles.bottom = `min(${topClamp}, ${bottomClamp})`;
-      }
-    }
-
-    Object.assign(el.style, styles);
+    updateSliderPreviewPlacement(el, {
+      clamp: !noClamp(),
+      offset: offset(),
+      orientation: _orientation(),
+    });
   }
+}
+
+export function updateSliderPreviewPlacement(
+  el: HTMLElement,
+  {
+    clamp,
+    offset,
+    orientation,
+  }: {
+    clamp: boolean;
+    offset: number;
+    orientation: SliderOrientation;
+  },
+) {
+  const { width, height } = el.getBoundingClientRect(),
+    styles: Record<string, string | null> = {
+      top: null,
+      right: null,
+      bottom: null,
+      left: null,
+    };
+
+  styles[
+    orientation === 'horizontal' ? 'bottom' : 'left'
+  ] = `calc(100% + var(--media-slider-preview-offset, ${offset}px))`;
+
+  if (orientation === 'horizontal') {
+    const widthHalf = width / 2;
+    if (!clamp) {
+      styles.left = `calc(var(--slider-pointer) - ${widthHalf}px)`;
+    } else {
+      const leftClamp = `max(0px, calc(var(--slider-pointer) - ${widthHalf}px))`,
+        rightClamp = `calc(100% - ${width}px)`;
+      styles.left = `min(${leftClamp}, ${rightClamp})`;
+    }
+  } else {
+    const heightHalf = height / 2;
+    if (!clamp) {
+      styles.bottom = `calc(var(--slider-pointer) - ${heightHalf}px)`;
+    } else {
+      const topClamp = `max(${heightHalf}px, calc(var(--slider-pointer) - ${heightHalf}px))`,
+        bottomClamp = `calc(100% - ${height}px)`;
+      styles.bottom = `min(${topClamp}, ${bottomClamp})`;
+    }
+  }
+
+  Object.assign(el.style, styles);
 }
 
 export interface SliderPreviewProps {

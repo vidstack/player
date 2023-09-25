@@ -25,8 +25,8 @@
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.ts\"",
-    "dev": "pnpm clean && pnpm build:types && pnpm run build:types -w & rollup -c -w",
-    "dev:local": "pnpm clean && pnpm run build:types && pnpm run build:types -w & rollup -c -w --config-local",
+    "dev": "pnpm clean && pnpm run build:types && pnpm run watch",
+    "dev:local": "pnpm clean && pnpm run build:types && pnpm run watch:local",
     "build": "rollup -c",
     "build:types": "tsc -p tsconfig.build.json",
     "types": "pnpm run build:types && rollup -c --config-types",
@@ -37,7 +37,9 @@
     "test": "vitest --run",
     "test:watch": "vitest --watch",
     "test:server": "SERVER=true vitest --run",
-    "test:server:watch": "SERVER=true vitest --watch"
+    "test:server:watch": "SERVER=true vitest --watch",
+    "watch": "pnpm run build:types -w & rollup -c -w",
+    "watch:local": "pnpm run build:types -w & rollup -c -w --config-local"
   },
   "dependencies": {
     "media-captions": "0.0.18"

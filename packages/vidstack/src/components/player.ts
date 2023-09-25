@@ -60,7 +60,7 @@ import { RequestQueue } from '../foundation/queue/request-queue';
 import type { AnyMediaProvider } from '../providers';
 import { setAttributeIfEmpty } from '../utils/dom';
 import { clampNumber } from '../utils/number';
-import { IS_IPHONE } from '../utils/support';
+import { canChangeVolume, IS_IPHONE } from '../utils/support';
 
 declare global {
   interface HTMLElementEventMap {
@@ -207,6 +207,8 @@ export class MediaPlayer
 
   protected override onConnect(el: HTMLElement) {
     if (IS_IPHONE) setAttribute(el, 'data-iphone', '');
+
+    canChangeVolume().then(this.$state.canSetVolume.set);
 
     const pointerQuery = window.matchMedia('(pointer: coarse)');
     this._onPointerChange(pointerQuery);

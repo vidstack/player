@@ -49,6 +49,7 @@ export const mediaState = new State<MediaState>({
   quality: null,
   autoQuality: false,
   canSetQuality: true,
+  canSetVolume: false,
   seekable: new TimeRange(),
   seeking: false,
   source: { src: '', type: '' },
@@ -141,6 +142,7 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'canFullscreen',
   'canLoad',
   'canPictureInPicture',
+  'canSetVolume',
   'controls',
   'crossorigin',
   'fullscreen',
@@ -519,6 +521,11 @@ export interface MediaState {
    * third-party embeds such as YouTube.
    */
   canSetQuality: boolean;
+  /**
+   * Whether the current volume can be changed. This depends on the current provider and browser
+   * environment. It will generally be `false` on mobile devices as it's set by system controls.
+   */
+  canSetVolume: boolean;
   /**
    * Contains the time ranges that the user is able to seek to, if any. This tells us which parts
    * of the media can be played without delay; this is irrespective of whether that part has

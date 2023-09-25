@@ -71,16 +71,15 @@
                   >
                     <!-- Slider Chapter Track -->
                     <div
-                      class="ring-media-focus absolute left-0 top-1/2 z-0 h-[5px] w-full -translate-y-1/2 rounded-sm bg-white/30 group-data-[focus]:ring-[3px]"
-                    ></div>
-                    <!-- Slider Chapter Track Fill -->
-                    <div
-                      class="bg-media-brand absolute left-0 top-1/2 z-10 h-[5px] w-[var(--chapter-fill)] -translate-y-1/2 rounded-sm will-change-[width]"
-                    ></div>
-                    <!-- Slider Chapter Progress -->
-                    <div
-                      class="absolute left-0 top-1/2 z-10 h-[5px] w-[var(--chapter-progress)] -translate-y-1/2 rounded-sm bg-white/50 will-change-[width]"
-                    ></div>
+                      class="ring-media-focus relative z-0 h-[5px] w-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px]"
+                    >
+                      <div
+                        class="bg-media-brand absolute h-full w-[var(--chapter-fill)] rounded-sm will-change-[width]"
+                      ></div>
+                      <div
+                        class="absolute z-10 h-full w-[var(--chapter-progress)] rounded-sm bg-white/50 will-change-[width]"
+                      ></div>
+                    </div>
                   </div>
                 </template>
               </media-slider-chapters>
@@ -163,12 +162,12 @@
             >
               <!-- Slider Track -->
               <div
-                class="ring-media-focus absolute left-0 top-1/2 z-0 h-[5px] w-full -translate-y-1/2 rounded-sm bg-white/30 group-data-[focus]:ring-4"
-              ></div>
-              <!-- Slider Track Fill -->
-              <div
-                class="bg-media-brand absolute left-0 top-1/2 z-10 h-[5px] w-[var(--slider-fill)] -translate-y-1/2 rounded-sm will-change-[width]"
-              ></div>
+                class="ring-media-focus relative z-0 h-[5px] w-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px]"
+              >
+                <div
+                  class="bg-media-brand absolute h-full w-[var(--slider-fill)] rounded-sm will-change-[width]"
+                ></div>
+              </div>
               <!-- Slider Thumb -->
               <div
                 class="absolute left-[var(--slider-fill)] top-1/2 z-20 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity will-change-[left] group-data-[active]:opacity-100 group-data-[dragging]:ring-4"
