@@ -19,6 +19,7 @@
   margin-right: 2.5px;
   cursor: pointer;
   /* Resets. */
+  padding: 0;
   user-select: none;
   appearance: none;
   background: none;

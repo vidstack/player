@@ -18,10 +18,14 @@
   word-break: break-word;
   bottom: 8px;
   transition: bottom 0.15s linear;
+}
 
-  &[data-dir='rtl'] [part='cue-display'] {
-    direction: rtl;
-  }
+.captions[data-dir='rtl'] [part='cue-display'] {
+  direction: rtl;
+}
+
+.captions[aria-hidden='true'] {
+  display: none;
 }
 
 /*************************************************************************************************

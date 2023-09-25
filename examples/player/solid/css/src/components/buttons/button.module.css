@@ -13,6 +13,7 @@
   border-radius: 8px;
   cursor: pointer;
   /* Resets. */
+  padding: 0;
   user-select: none;
   appearance: none;
   background: none;

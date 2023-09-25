@@ -51,6 +51,6 @@
   }
 }
 
-:global(.media-menu)[data-open] .tooltip {
+:global(.menu[data-open]) .tooltip {
   display: none !important;
 }
