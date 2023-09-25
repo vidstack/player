@@ -31,7 +31,7 @@
     <ChapterTitle />
     <div class="spacer" />
     <CaptionButton tooltipPlacement="top" />
-    <SettingsMenu />
+    <SettingsMenu placement="top end" tooltipPlacement="top end" />
     <PIPButton tooltipPlacement="top" />
     <FullscreenButton tooltipPlacement="top end" />
   </media-controls-group>
@@ -88,7 +88,7 @@
 
   .controls :global(media-mute-button) {
     margin-left: -2.5px;
-    margin-right: -2px !important;
+    margin-right: -5px !important;
   }
 
   .controls :global(media-fullscreen-button) {

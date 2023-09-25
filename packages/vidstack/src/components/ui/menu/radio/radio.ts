@@ -54,7 +54,6 @@ export class Radio extends Component<RadioProps, {}, RadioEvents> {
   }
 
   protected override onSetup(): void {
-    this._addToGroup();
     this.setAttributes({
       value: this.$props.value,
       'data-checked': this._checked,

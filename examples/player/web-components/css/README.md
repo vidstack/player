@@ -10,4 +10,4 @@ Web Components.
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)][stackblitz-demo]
 
-[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/vidstack/tree/next/examples/player/web-components/css?title=Vidstack%20Player%20-%20Web%20Components%20%28CSS%29&file=src/main.ts&showSidebar=1
+[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/examples/tree/player/web-components/css?title=Vidstack%20Player%20-%20Web%20Components%20%28CSS%29&file=src/main.ts&showSidebar=1

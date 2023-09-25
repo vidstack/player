@@ -9,7 +9,12 @@
 .controls media-volume-slider {
   --media-slider-height: 40px;
   --media-slider-preview-offset: 32px;
+  margin-left: 1.5px;
   max-width: 80px;
+}
+
+.controls :global(.vds-time-group) {
+  margin-left: 8px;
 }
 
 .controlsGroup {

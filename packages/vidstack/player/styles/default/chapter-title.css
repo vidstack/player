@@ -1,0 +1,25 @@
+:where(.vds-chapter-title) {
+  --color: var(--media-chapter-title-color, rgba(255 255 255 / 0.64));
+  display: inline-block;
+  font-family: var(--media-font-family, sans-serif);
+  font-size: var(--media-chapter-title-font-size, 14px);
+  font-weight: var(--media-chapter-title-font-weight, 500);
+  color: var(--color);
+  flex: 1 1 0%;
+  padding-inline: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vds-chapter-title::before {
+  content: var(--media-chapter-title-separator, '\2022');
+  display: inline-block;
+  margin-right: var(--media-chapter-title-separator-gap, 6px);
+  color: var(--media-chapter-title-separator-color, var(--color));
+}
+
+.vds-chapter-title:empty::before {
+  content: '';
+  margin: 0;
+}

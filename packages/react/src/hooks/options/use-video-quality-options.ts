@@ -1,12 +1,14 @@
 import * as React from 'react';
 
 import { useReactContext, useSignal } from 'maverick.js/react';
+import { isString } from 'maverick.js/std';
 import { mediaContext, type VideoQuality } from 'vidstack/local';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-video-quality-options}
  */
 export function useVideoQualityOptions({
+  auto = true,
   sort = 'descending',
 }: UseVideoQualityOptions = {}): VideoQualityOptions {
   const media = useReactContext(mediaContext)!,
@@ -39,6 +41,30 @@ export function useVideoQualityOptions({
         };
       });
 
+    if (auto) {
+      options.unshift({
+        quality: null,
+        label: isString(auto) ? auto : 'Auto',
+        value: 'auto',
+        bitrateText: null,
+        get selected() {
+          return autoQuality();
+        },
+        get autoSelected() {
+          return autoQuality();
+        },
+        select(trigger) {
+          media.remote.requestAutoQuality(trigger);
+        },
+      });
+    }
+
+    Object.defineProperty(options, 'disabled', {
+      get() {
+        return !$qualities.length;
+      },
+    });
+
     Object.defineProperty(options, 'selectedQuality', {
       get() {
         return quality();
@@ -48,7 +74,7 @@ export function useVideoQualityOptions({
     Object.defineProperty(options, 'selectedValue', {
       get() {
         const $quality = quality();
-        return $quality ? getQualityValue($quality) : undefined;
+        return !autoQuality() && $quality ? getQualityValue($quality) : 'auto';
       },
     });
 
@@ -57,6 +83,10 @@ export function useVideoQualityOptions({
 }
 
 export interface UseVideoQualityOptions {
+  /**
+   * Whether an auto option should be included. A string can be provided to specify the label.
+   */
+  auto?: boolean | string;
   /**
    * Specifies how the options should be sorted. The sorting algorithm looks at both the quality
    * resolution and bitrate.
@@ -70,17 +100,18 @@ export interface UseVideoQualityOptions {
 }
 
 export type VideoQualityOptions = VideoQualityOption[] & {
+  readonly disabled: boolean;
   readonly selectedQuality: VideoQuality | null;
-  readonly selectedValue: string | undefined;
+  readonly selectedValue: string;
 };
 
 export interface VideoQualityOption {
-  readonly quality: VideoQuality;
+  readonly quality: VideoQuality | null;
   readonly label: string;
   readonly value: string;
   readonly selected: boolean;
   readonly autoSelected: boolean;
-  readonly bitrateText: string;
+  readonly bitrateText: string | null;
   select(trigger?: Event): void;
 }
 

@@ -1,10 +1,8 @@
-import styles from './time-group.module.css';
-
 export function TimeGroup() {
   return (
-    <div class={styles.group}>
+    <div class="vds-time-group">
       <media-time class="vds-time" type="current" />
-      <div class={styles.divider}>/</div>
+      <div class="vds-time-divider">/</div>
       <media-time class="vds-time" type="duration" />
     </div>
   );

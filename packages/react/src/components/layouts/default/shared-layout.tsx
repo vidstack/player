@@ -12,7 +12,6 @@ import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { useChapterOptions } from '../../../hooks/options/use-chapter-options';
 import { usePlaybackRateOptions } from '../../../hooks/options/use-playback-rate-options';
 import { useVideoQualityOptions } from '../../../hooks/options/use-video-quality-options';
-import { useMediaRemote } from '../../../hooks/use-media-remote';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { usePlayerQuery } from '../../../hooks/use-player-query';
 import type { PrimitivePropsWithRef } from '../../primitives/nodes';
@@ -75,6 +74,10 @@ export interface DefaultMediaLayoutProps extends PrimitivePropsWithRef<'div'> {
    */
   showMenuDelay?: number;
   /**
+   * Whether the bitrate should be hidden in the settings quality menu next to each option.
+   */
+  hideQualityBitrate?: boolean;
+  /**
    * A player query string that determines when the small (e.g., mobile) UI should be displayed. The
    * special string 'never' will indicate that the small device optimized UI should never be
    * displayed.
@@ -86,11 +89,11 @@ export interface DefaultMediaLayoutProps extends PrimitivePropsWithRef<'div'> {
    */
   menuGroup?: 'top' | 'bottom';
   /**
-   * Whether popup menus should be disabled when the small layout is active. A popup menu is a
-   * floating panel that floats up from the bottom of the screen. It's enabled by default as it
-   * provides a better user experience for touch devices.
+   * Whether modal menus should be disabled when the small layout is active. A modal menu is
+   * a floating panel that floats up from the bottom of the screen (outside of the player). It's
+   * enabled by default as it provides a better user experience for touch devices.
    */
-  noPopupMenu?: boolean;
+  noModal?: boolean;
 }
 
 export interface CreateDefaultMediaLayout {
@@ -116,8 +119,9 @@ export const createDefaultMediaLayout = ({
         showMenuDelay,
         showTooltipDelay = type === 'video' ? 500 : 700,
         smallLayoutWhen = smLayoutWhen,
-        noPopupMenu = false,
+        noModal = false,
         menuGroup = 'top',
+        hideQualityBitrate = false,
         children,
         ...props
       },
@@ -146,7 +150,8 @@ export const createDefaultMediaLayout = ({
                 isSmallLayout,
                 showMenuDelay,
                 showTooltipDelay,
-                noPopupMenu,
+                hideQualityBitrate,
+                noModal,
                 menuGroup,
                 Icons: icons,
               }}
@@ -399,27 +404,11 @@ DefaultTimeSlider.displayName = 'DefaultTimeSlider';
 export { DefaultTimeSlider };
 
 /* -------------------------------------------------------------------------------------------------
- * MainTitle
- * -----------------------------------------------------------------------------------------------*/
-
-function DefaultMainTitle() {
-  const $title = useMediaState('title');
-  return <span className="vds-media-title">{$title}</span>;
-}
-
-DefaultMainTitle.displayName = 'DefaultMainTitle';
-export { DefaultMainTitle };
-
-/* -------------------------------------------------------------------------------------------------
  * DefaultChapterTitle
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultChapterTitle() {
-  return (
-    <span className="vds-media-title">
-      <ChapterTitle />
-    </span>
-  );
+  return <ChapterTitle className="vds-chapter-title" />;
 }
 
 DefaultChapterTitle.displayName = 'DefaultChapterTitle';
@@ -447,8 +436,7 @@ export { DefaultTimeGroup };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
-  const { showMenuDelay, noPopupMenu, isSmallLayout, Icons } =
-      React.useContext(DefaultLayoutContext),
+  const { showMenuDelay, noModal, isSmallLayout, Icons } = React.useContext(DefaultLayoutContext),
     chaptersText = useDefaultLayoutLang('Chapters'),
     options = useChapterOptions(),
     disabled = !options.length,
@@ -492,7 +480,7 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
           <Icons.Menu.Chapters className="vds-icon" />
         </MenuBase.Button>
       </DefaultTooltip>
-      {noPopupMenu || !isSmallLayout ? (
+      {noModal || !isSmallLayout ? (
         Content
       ) : (
         <MenuBase.Portal
@@ -515,8 +503,7 @@ export { DefaultChaptersMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
-  const { showMenuDelay, Icons, isSmallLayout, noPopupMenu } =
-      React.useContext(DefaultLayoutContext),
+  const { showMenuDelay, Icons, isSmallLayout, noModal } = React.useContext(DefaultLayoutContext),
     settingsText = useDefaultLayoutLang('Settings');
 
   const Content = (
@@ -535,7 +522,7 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMe
           <Icons.Menu.Settings className="vds-icon vds-rotate-icon" />
         </MenuBase.Button>
       </DefaultTooltip>
-      {noPopupMenu || !isSmallLayout ? (
+      {noModal || !isSmallLayout ? (
         Content
       ) : (
         <MenuBase.Portal
@@ -595,7 +582,7 @@ function DefaultAudioSubmenu() {
       <DefaultSubmenuButton
         label={label}
         hint={track?.label ?? defaultText}
-        disabled={!options.length}
+        disabled={options.disabled}
         Icon={Icons.Menu.Audio}
       />
       <MenuBase.Content className="vds-menu-items">
@@ -637,7 +624,7 @@ function DefaultSpeedSubmenu() {
       <DefaultSubmenuButton
         label={label}
         hint={hint}
-        disabled={!options.length}
+        disabled={options.disabled}
         Icon={Icons.Menu.Speed}
       />
       <MenuBase.Content className="vds-menu-items">
@@ -669,35 +656,28 @@ DefaultSpeedSubmenu.displayName = 'DefaultSpeedSubmenu';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultQualitySubmenu() {
-  const { Icons } = React.useContext(DefaultLayoutContext),
+  const { hideQualityBitrate, Icons } = React.useContext(DefaultLayoutContext),
     label = useDefaultLayoutLang('Quality'),
     autoText = useDefaultLayoutLang('Auto'),
-    autoQuality = useMediaState('autoQuality'),
-    options = useVideoQualityOptions({ sort: 'descending' }),
-    remote = useMediaRemote(),
-    currentQualityText = options.selectedQuality?.height + 'p' ?? '',
-    hint = !autoQuality ? currentQualityText : `${autoText} (${currentQualityText})`;
+    options = useVideoQualityOptions({ auto: autoText, sort: 'descending' }),
+    currentQuality = options.selectedQuality?.height,
+    hint =
+      options.selectedValue !== 'auto' && currentQuality
+        ? `${currentQuality}p`
+        : `${autoText}${currentQuality ? ` (${currentQuality}p)` : ''}`;
   return (
     <MenuBase.Root className="vds-quality-menu vds-menu">
       <DefaultSubmenuButton
         label={label}
         hint={hint}
-        disabled={!options.length}
+        disabled={options.disabled}
         Icon={Icons.Menu.Quality}
       />
       <MenuBase.Content className="vds-menu-items">
         <MenuBase.RadioGroup
           className="vds-quality-radio-group vds-radio-group"
-          value={autoQuality ? 'auto' : options.selectedValue}
+          value={options.selectedValue}
         >
-          <MenuBase.Radio
-            className="vds-quality-radio vds-radio"
-            value="auto"
-            onSelect={(event) => remote.requestAutoQuality(event)}
-          >
-            <div className="vds-radio-check" />
-            {autoText}
-          </MenuBase.Radio>
           {options.map(({ label, value, bitrateText, select }) => (
             <MenuBase.Radio
               className="vds-quality-radio vds-radio"
@@ -707,7 +687,9 @@ function DefaultQualitySubmenu() {
             >
               <div className="vds-radio-check" />
               <span className="vds-radio-label">{label}</span>
-              <span className="vds-radio-hint">{bitrateText}</span>
+              {!hideQualityBitrate && bitrateText ? (
+                <span className="vds-radio-hint">{bitrateText}</span>
+              ) : null}
             </MenuBase.Radio>
           ))}
         </MenuBase.RadioGroup>
@@ -726,16 +708,14 @@ function DefaultCaptionSubmenu() {
   const { Icons } = React.useContext(DefaultLayoutContext),
     label = useDefaultLayoutLang('Captions'),
     offText = useDefaultLayoutLang('Off'),
-    track = useMediaState('textTrack'),
-    options = useCaptionOptions(),
-    remote = useMediaRemote(),
-    hint = track && isTrackCaptionKind(track) && track.mode === 'showing' ? track.label : offText;
+    options = useCaptionOptions({ off: offText }),
+    hint = options.selectedTrack?.label ?? offText;
   return (
     <MenuBase.Root className="vds-captions-menu vds-menu">
       <DefaultSubmenuButton
         label={label}
         hint={hint}
-        disabled={!options.length}
+        disabled={options.disabled}
         Icon={Icons.Menu.Captions}
       />
       <MenuBase.Content className="vds-menu-items">
@@ -743,14 +723,6 @@ function DefaultCaptionSubmenu() {
           className="vds-captions-radio-group vds-radio-group"
           value={options.selectedValue}
         >
-          <MenuBase.Radio
-            className="vds-caption-radio vds-radio"
-            value="off"
-            onSelect={(event) => remote.toggleCaptions(event)}
-          >
-            <div className="vds-radio-check" />
-            {offText}
-          </MenuBase.Radio>
           {options.map(({ label, value, select }) => (
             <MenuBase.Radio
               className="vds-caption-radio vds-radio"

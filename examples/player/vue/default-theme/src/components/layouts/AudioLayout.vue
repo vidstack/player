@@ -30,7 +30,7 @@ import TimeGroup from '../TimeGroup.vue';
       <MuteButton tooltip-placement="top" />
       <VolumeSlider />
       <CaptionButton tooltip-placement="top" />
-      <SettingsMenu />
+      <SettingsMenu placement="top end" tooltip-placement="top end" />
     </media-controls-group>
   </media-controls>
 </template>
@@ -57,7 +57,7 @@ media-player[data-focus]:not([data-playing]) .controls {
   --media-slider-width: 72px;
   --media-slider-height: 40px;
   --media-slider-preview-offset: 40px;
-  margin-left: -0.5px;
+  margin-left: 1.5px;
   margin-right: 8px;
 }
 

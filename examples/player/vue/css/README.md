@@ -10,4 +10,4 @@ Web Components with Vue.
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)][stackblitz-demo]
 
-[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/vidstack/tree/next/examples/player/vue/css?title=Vidstack%20Player%20-%20Vue%20%28CSS%29&file=src/main.ts&showSidebar=1
+[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/examples/tree/player/vue/css?title=Vidstack%20Player%20-%20Vue%20%28CSS%29&file=src/main.ts&showSidebar=1

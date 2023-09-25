@@ -105,32 +105,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(.vds-video-layout .vds-media-title) {
-  display: inline-block;
-  font-size: var(--video-title-font-size, 14px);
-  font-weight: var(--video-title-font-weight, 500);
-  font-family: var(--video-font-family, sans-serif);
-  color: var(--video-title-color, rgba(255 255 255 / 0.64));
-  flex: 1 1 0%;
-  padding-inline: 8px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-:where(.vds-video-layout) .vds-media-title::before {
-  content: '•';
-  display: inline-block;
-  margin-right: 6px;
-}
-
-:where(.vds-video-layout) .vds-media-title:empty::before {
-  content: '';
-  margin-left: 0;
-}
-
-:where([data-fullscreen] .vds-video-layout .vds-media-title) {
-  font-size: var(--video-fullscreen-title-font-size, 16px);
+:where([data-fullscreen] .vds-video-layout .vds-chapter-title) {
+  font-size: var(--video-fullscreen-chapter-title-font-size, 16px);
 }
 
 /*
@@ -155,6 +131,7 @@
  */
 
 :where(.vds-video-layout .vds-time-slider) {
+  --media-slider-height: 45px;
   flex-grow: 0;
 }
 
@@ -177,6 +154,15 @@
 }
 
 :where(.vds-video-layout .vds-volume-slider) {
+  margin: 0;
+  max-width: 0;
+  transition: all 0.15s ease;
+  transform: translateX(-2px);
+}
+
+.vds-video-layout :where(*[data-hocus], *:focus-within) + .vds-volume-slider,
+:where(.vds-video-layout .vds-volume-slider[data-active]) {
+  margin-left: 9px;
   max-width: var(--video-volume-slider-max-width, 72px);
 }
 
@@ -293,19 +279,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(.vds-video-layout .vds-time-group) {
-  display: flex;
-  align-items: center;
-}
-
 :where(.vds-video-layout:not([data-size='sm']) .vds-time-group) {
-  margin-left: 6px;
-}
-
-:where(.vds-video-layout .vds-time-divider) {
-  margin-left: 2px;
-  margin-right: 3px;
-  color: var(--video-time-divider-color, rgb(224, 224, 224));
+  margin-left: 10px;
 }
 
 :where([data-fullscreen] .vds-video-layout .vds-time) {
@@ -341,7 +316,7 @@
     .vds-slider:not(.vds-time-slider),
     .vds-time,
     .vds-time-divider,
-    .vds-media-title
+    .vds-chapter-title
   ) {
   transition: opacity 0.15s ease;
 }
@@ -357,7 +332,7 @@
     .vds-button,
     .vds-slider:not(.vds-time-slider),
     .vds-time,
-    .vds-media-title,
+    .vds-chapter-title,
     .vds-time-divider,
     .vds-captions
   ) {

@@ -114,7 +114,7 @@ function changeSource(type: string) {
   --video-focus-ring-color: var(--focus-color);
   --video-border-radius: 2px;
 
-  /* 👉 https://next.vidstack.io/docs/player/components/layouts/default#css-variables for more. */
+  /* 👉 https://vidstack.io/docs/player/components/layouts/default#css-variables for more. */
 
   width: 100%;
 }

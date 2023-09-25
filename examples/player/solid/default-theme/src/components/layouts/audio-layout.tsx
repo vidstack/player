@@ -29,7 +29,7 @@ export function AudioLayout() {
           <MuteButton tooltipPlacement="top" />
           <VolumeSlider />
           <CaptionButton tooltipPlacement="top" />
-          <SettingsMenu />
+          <SettingsMenu placement="top end" tooltipPlacement="top end" />
         </media-controls-group>
       </media-controls>
     </>

@@ -112,8 +112,8 @@ export { DefaultAudioLayoutSmall };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultAudioMenus() {
-  const { isSmallLayout, noPopupMenu } = React.useContext(DefaultLayoutContext),
-    placement = noPopupMenu ? 'top end' : !isSmallLayout ? 'top end' : null;
+  const { isSmallLayout, noModal } = React.useContext(DefaultLayoutContext),
+    placement = noModal ? 'top end' : !isSmallLayout ? 'top end' : null;
   return (
     <>
       <DefaultChaptersMenu tooltip="top" placement={placement} portalClass="vds-audio-layout" />

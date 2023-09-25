@@ -1,15 +1,22 @@
+import type { MenuPlacement, TooltipPlacement } from 'vidstack';
+
 import { CaptionSubmenu } from './caption-submenu';
 import { Menu } from './menu';
 
-export function SettingsMenu() {
+export function SettingsMenu(props: SettingsMenuProps) {
   return (
     <Menu
-      placement="top end"
+      placement={props.placement}
       buttonSlot={<media-icon class="vds-rotate-icon" type="settings" />}
-      tooltipPlacement="top end"
+      tooltipPlacement={props.tooltipPlacement}
       tooltipSlot={<span>Settings</span>}
     >
       <CaptionSubmenu />
     </Menu>
   );
+}
+
+export interface SettingsMenuProps {
+  placement: MenuPlacement;
+  tooltipPlacement: TooltipPlacement;
 }

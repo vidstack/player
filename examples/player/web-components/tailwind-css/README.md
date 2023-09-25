@@ -11,5 +11,5 @@ Web Components.
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)][stackblitz-demo]
 
 [tailwind]: https://tailwindcss.com
-[tailwind-plugin]: https://next.vidstack.io/docs/wc/player/styling/tailwind
-[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/vidstack/tree/next/examples/player/web-components/tailwind-css?title=Vidstack%20Player%20-%20Web%20Components%20%28Tailwind%20CSS%29&file=src/main.ts&showSidebar=1
+[tailwind-plugin]: https://vidstack.io/docs/wc/player/styling/tailwind
+[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/examples/tree/player/web-components/tailwind-css?title=Vidstack%20Player%20-%20Web%20Components%20%28Tailwind%20CSS%29&file=src/main.ts&showSidebar=1
