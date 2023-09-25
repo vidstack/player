@@ -19,6 +19,10 @@
     &[data-dir='rtl'] :global([part='cue-display']) {
       direction: rtl;
     }
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
   }
 
   /*************************************************************************************************

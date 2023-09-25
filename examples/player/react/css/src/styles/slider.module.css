@@ -1,0 +1,172 @@
+/*************************************************************************************************
+ * Slider
+ *************************************************************************************************/
+
+.slider {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  position: relative;
+  contain: layout style;
+  outline: none;
+  pointer-events: auto;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  /** Prevent thumb flowing out of slider (15px = thumb width). */
+  margin: 0 calc(15px / 2);
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sliderSmall {
+  max-width: 72px;
+}
+
+.slider[data-focus] .track {
+  box-shadow: var(--media-focus-ring);
+}
+
+.track {
+  z-index: 0;
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  top: 50%;
+  left: 0;
+  border-radius: 1px;
+  transform: translateY(-50%) translateZ(0);
+  background-color: rgb(255 255 255 / 0.3);
+  contain: strict;
+}
+
+.trackFill {
+  z-index: 2; /** above track and track progress. */
+  background-color: var(--media-brand);
+  width: var(--slider-fill, 0%);
+  will-change: width;
+}
+
+:global(.time-slider) .trackFill {
+  width: var(--chapter-fill, 0%);
+}
+
+.progress {
+  width: var(--chapter-progress, 0%);
+  will-change: width;
+  background-color: rgb(255 255 255 / 0.5);
+}
+
+/*************************************************************************************************
+ * Slider Chapters
+ *************************************************************************************************/
+
+.chapters {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  contain: layout style;
+  border-radius: 1px;
+}
+
+.chapter {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  will-change: height, transform;
+  contain: layout style;
+  border-radius: 1px;
+  margin-right: 2px;
+}
+
+.chapter:last-child {
+  margin-right: 0;
+}
+
+/*************************************************************************************************
+ * Slider Preview
+ *************************************************************************************************/
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  border-radius: 2px;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out;
+  will-change: left, opacity;
+  contain: layout paint style;
+}
+
+.preview[data-visible] {
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}
+
+.chapterTitle {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.timeValue {
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.volumeValue {
+  font-size: 13px;
+  padding: 1px 10px;
+  border-radius: 2px;
+  background-color: black;
+}
+
+.thumbnail {
+  display: block;
+  width: var(--thumbnail-width);
+  height: var(--thumbnail-height);
+  background-color: black;
+  border: 1px solid white;
+  contain: strict;
+  overflow: hidden;
+  min-width: 120px;
+  min-height: 80px;
+  max-width: 180px;
+  max-height: 160px;
+}
+
+/*************************************************************************************************
+ * Slider Thumb
+ *************************************************************************************************/
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  left: var(--slider-fill);
+  opacity: 0;
+  contain: layout size style;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #cacaca;
+  border-radius: 9999px;
+  background-color: #fff;
+  transform: translate(-50%, -50%) translateZ(0);
+  transition: opacity 0.15s ease-in;
+  pointer-events: none;
+  will-change: left;
+  z-index: 2; /** above track fill. */
+}
+
+[data-active] > .thumb {
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}
+
+[data-dragging] > .thumb {
+  box-shadow: 0 0 0 3px hsla(0, 0%, 100%, 0.4);
+}

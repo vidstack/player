@@ -8,7 +8,7 @@
 
 /*
  * Prevent FOUC - you don't need this if you're loading styles via link tags or server-side
- * rendering with a framework like Nuxt.
+ * rendering with a framework like SolidStart.
  */
 *:not(:defined) {
   opacity: 0;

@@ -6,14 +6,6 @@
   box-sizing: border-box;
 }
 
-/*
- * Prevent FOUC - you don't need this if you're loading styles via link tags or server-side
- * rendering with a framework like Nuxt.
- */
-*:not(:defined) {
-  opacity: 0;
-}
-
 html,
 body {
   margin: 0;

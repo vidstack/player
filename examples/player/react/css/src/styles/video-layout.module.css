@@ -1,0 +1,99 @@
+/*************************************************************************************************
+ * Controls
+ *************************************************************************************************/
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.controls[data-visible] {
+  opacity: 1;
+  background-image: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.5),
+    10%,
+    transparent,
+    95%,
+    rgb(0 0 0 / 0.3)
+  );
+}
+
+.controlsGroup {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.controlsGroup {
+  padding-inline: 8px;
+}
+
+.controlsGroup:last-child {
+  margin-top: -4px;
+  padding-bottom: 8px;
+}
+
+.spacer {
+  flex: 1 1 0%;
+  pointer-events: none;
+}
+
+.controls :global(.mute-button) {
+  margin-left: -2.5px;
+  margin-right: -5px !important;
+}
+
+.controls :global(.fullscreen-button) {
+  margin-right: 0 !important;
+}
+
+.controls :global(.volume-slider) {
+  --media-slider-preview-offset: 30px;
+}
+
+/*************************************************************************************************
+ * Gestures
+ *************************************************************************************************/
+
+.gesture {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.gesture[action='seek:-10'],
+.gesture[action='seek:10'] {
+  width: 20%;
+  z-index: 1;
+}
+
+.gesture[action='seek:10'] {
+  left: unset;
+  right: 0;
+}
+
+/* Remove toggle to pause on touch. */
+@media (pointer: coarse) {
+  .gesture[action='toggle:paused'] {
+    display: none;
+  }
+}
+
+/* Remove toggle controls on mouse. */
+@media not (pointer: coarse) {
+  .gesture[action='toggle:controls'] {
+    display: none;
+  }
+}

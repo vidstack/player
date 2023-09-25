@@ -1,15 +1,8 @@
 /*************************************************************************************************
  * Buttons
- *
- * Using global styles for buttons so we don't have to repeat ourselves for each one.
  *************************************************************************************************/
 
-/* Easy way to hide all buttons that are not supported in current env (e.g. fullscreen/pip). */
-.media-button[aria-hidden='true'] {
-  display: none;
-}
-
-.media-button {
+.button {
   display: inline-flex;
   position: relative;
   justify-content: center;
@@ -31,20 +24,23 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.media-button > media-icon,
-.media-button > svg {
+/* Easy way to hide all buttons that are not supported in current env (e.g. fullscreen/pip). */
+.button[aria-hidden='true'] {
+  display: none;
+}
+
+.button > svg {
   width: 80%;
   height: 80%;
   border-radius: 2px;
 }
 
-.media-button[data-focus] > media-icon,
-.media-button[data-focus] > svg {
-  box-shadow: var(--media-focus-ring);
+.button[data-focus] > svg {
+  box-shadow: var(--focus-ring);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .media-button:hover {
+  .button:hover {
     background-color: rgb(255 255 255 / 0.2);
   }
 }

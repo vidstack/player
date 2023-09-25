@@ -1,8 +1,4 @@
-/*************************************************************************************************
- * Captions
- *************************************************************************************************/
-
-media-captions {
+.captions {
   /* Recommended settings in the WebVTT spec (https://www.w3.org/TR/webvtt1). */
   --cue-color: var(--media-cue-color, white);
   --cue-bg-color: var(--media-cue-bg, rgba(0, 0, 0, 0.7));
@@ -24,7 +20,11 @@ media-captions {
   transition: bottom 0.15s linear;
 }
 
-media-captions[aria-hidden='true'] {
+.captions[data-dir='rtl'] [part='cue-display'] {
+  direction: rtl;
+}
+
+.captions[aria-hidden='true'] {
   display: none;
 }
 
@@ -38,7 +38,7 @@ media-captions[aria-hidden='true'] {
 * free to ignore them and style the captions as desired, but we don't recommend it unless the
 * captions file contains no cue settings. Otherwise, you might be breaking accessibility.
 */
-media-captions [part='cue-display'] {
+.captions [part='cue-display'] {
   position: absolute;
   direction: ltr;
   overflow: visible;
@@ -58,11 +58,7 @@ media-captions [part='cue-display'] {
   min-height: min-content;
 }
 
-media-captions[data-dir='rtl'] [part='cue-display'] {
-  direction: rtl;
-}
-
-media-captions [part='cue'] {
+.captions [part='cue'] {
   display: inline-block;
   contain: content;
   border-radius: 2px;
@@ -76,17 +72,17 @@ media-captions [part='cue'] {
   text-shadow: var(--cue-text-shadow);
 }
 
-media-captions [part='cue-display'][data-vertical] [part='cue'] {
+.captions [part='cue-display'][data-vertical] [part='cue'] {
   padding: var(--cue-padding-x) var(--cue-padding-y);
 }
 
 /* Hide captions when interacting with time slider. */
-media-player[data-preview] media-captions {
+:global(.player[data-preview]) .captions {
   opacity: 0;
   visibility: hidden;
 }
 
 /* Push captions up when controls are visible. */
-media-player[data-controls] media-captions {
+:global(.player[data-controls]) .captions {
   bottom: 78px;
 }

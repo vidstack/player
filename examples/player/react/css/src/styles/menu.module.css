@@ -1,0 +1,261 @@
+/*************************************************************************************************
+ * Menu
+ *************************************************************************************************/
+
+.menu {
+  --enter-transform: translateY(0px);
+  --exit-transform: translateY(12px);
+
+  display: flex;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: sans-serif;
+  flex-direction: column;
+  transition: height 0.35s ease;
+  min-width: 260px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background-color: rgb(10 10 10 / 0.95);
+  backdrop-filter: blur(4px);
+  height: var(--menu-height, auto);
+  will-change: width, height;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  opacity: 0;
+  max-height: 250px;
+}
+
+.menu[data-resizing] {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.menu:not([data-open]) {
+  animation: media-menu-exit 0.2s ease-out;
+}
+
+.menu[data-open] {
+  animation: media-menu-enter 0.3s ease-out;
+  animation-fill-mode: forwards;
+}
+
+.menu[data-placement~='bottom'] {
+  --enter-transform: translateY(0);
+  --exit-transform: translateY(-12px);
+}
+
+.menu :global([role='menuitem'][data-focus]),
+.menu :global([role='menuitemradio'][data-focus]) {
+  outline: none;
+  box-shadow: var(--media-focus-ring);
+}
+
+@keyframes media-menu-enter {
+  from {
+    opacity: 0;
+    transform: var(--exit-transform);
+  }
+  to {
+    opacity: 1;
+    transform: var(--enter-transform);
+  }
+}
+
+@keyframes media-menu-exit {
+  from {
+    opacity: 1;
+    transform: var(--enter-transform);
+  }
+  to {
+    opacity: 0;
+    transform: var(--exit-transform);
+  }
+}
+
+/*************************************************************************************************
+ * Menu Button
+ *************************************************************************************************/
+
+.rotateIcon {
+  transition: transform 0.2s ease-out;
+}
+
+.menuButton[aria-expanded='true'] .rotateIcon {
+  transform: rotate(90deg);
+  transition: transform 0.2s ease-in;
+}
+
+/*************************************************************************************************
+ * Submenu Button
+ *************************************************************************************************/
+
+.submenuButton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 10px;
+  border-radius: 2px;
+  color: white;
+  /* Resets. */
+  user-select: none;
+  appearance: none;
+  background: none;
+  outline: none;
+  border: none;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.submenuButton[data-open] {
+  position: sticky;
+  top: calc(-1 * 10px);
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+  border-radius: 0;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom: 1px solid rgb(245 245 245 /0.15);
+  background-color: rgb(10 10 10 / 0.6);
+}
+
+.submenuButton[data-focus] {
+  background-color: rgb(245 245 245 / 0.08);
+}
+
+.submenuButton[aria-disabled='true'],
+.submenuButton[aria-hidden='true'] {
+  display: none;
+}
+
+.submenuButton[data-open] .submenuCloseIcon {
+  display: inline-block;
+}
+
+.submenuIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.submenuButton[data-open] .submenuIcon {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .submenuButton:hover {
+    cursor: pointer;
+    background-color: rgb(245 245 245 / 0.08);
+  }
+}
+
+.submenuButton:not([data-open]) .submenuLabel {
+  margin-left: 6px;
+}
+
+.submenuCloseIcon {
+  margin-right: 2px;
+}
+
+.submenuOpenIcon,
+.submenuCloseIcon {
+  width: 18px;
+  height: 18px;
+  display: none;
+}
+
+.submenuHint,
+.submenuOpenIcon {
+  margin-left: auto;
+  color: rgb(245 245 245 / 0.5);
+  font-size: 14px;
+}
+
+.submenuHint:not(:empty) + .submenuOpenIcon {
+  margin-left: 2px;
+}
+
+.submenuButton:not([data-open]) .submenuOpenIcon {
+  display: inline-block;
+}
+
+/*************************************************************************************************
+ * Submenu
+ *************************************************************************************************/
+
+.submenu {
+  display: inline-block;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.submenu[aria-hidden='true'] {
+  display: none;
+}
+
+/*************************************************************************************************
+ * Radio Group
+ *************************************************************************************************/
+
+.radioGroup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.radio {
+  align-items: center;
+  appearance: none;
+  font-size: 14px;
+  border-radius: 2px;
+  contain: content;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  padding: 12px;
+  position: relative;
+  width: 100%;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.radio[data-focus] {
+  background-color: rgb(245 245 245 / 0.08);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .radio:hover {
+    cursor: pointer;
+    background-color: rgb(245 245 245 / 0.08);
+  }
+}
+
+.radioCheck {
+  align-items: center;
+  border-radius: 9999px;
+  display: flex;
+  width: 9px;
+  height: 9px;
+  border: 2px solid rgb(245 245 245 / 0.5);
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.radio[data-checked] .radioCheck {
+  border: 2px solid var(--media-brand);
+}
+
+.radio[data-checked] .radioCheck::after {
+  content: '';
+  border-color: #f5f5f5;
+  background-color: #f5f5f5;
+  border-radius: 9999px;
+  height: 4px;
+  width: 4px;
+}

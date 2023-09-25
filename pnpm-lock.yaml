@@ -243,6 +243,37 @@ importers:
         specifier: ^4.4.9
         version: 4.4.9(@types/node@16.18.34)
 
+  examples/player/react/css:
+    dependencies:
+      '@vidstack/react':
+        specifier: workspace:*
+        version: link:../../../../packages/react
+      media-icons:
+        specifier: ^0.10.0
+        version: 0.10.0
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.18
+        version: 18.2.22
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.2.7
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.0.4(vite@4.4.9)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+      vite:
+        specifier: ^4.4.0
+        version: 4.4.9(@types/node@16.18.34)
+
   examples/player/react/default-layout:
     dependencies:
       '@vidstack/react':
@@ -1348,7 +1379,8 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/highlight': 7.22.5
+      '@babel/highlight': 7.22.13
+    dev: true
 
   /@babel/compat-data@7.22.9:
     resolution:
@@ -1415,7 +1447,7 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
       jsesc: 2.5.2
@@ -1440,7 +1472,7 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@babel/helper-compilation-targets@7.22.10:
     resolution:
@@ -1466,7 +1498,7 @@ packages:
     dependencies:
       '@babel/compat-data': 7.22.9
       '@babel/core': 7.22.9
-      '@babel/helper-validator-option': 7.22.5
+      '@babel/helper-validator-option': 7.22.15
       browserslist: 4.21.10
       lru-cache: 5.1.1
       semver: 6.3.1
@@ -1483,7 +1515,7 @@ packages:
     dependencies:
       '@babel/core': 7.22.11
       '@babel/helper-annotate-as-pure': 7.22.5
-      '@babel/helper-environment-visitor': 7.22.5
+      '@babel/helper-environment-visitor': 7.22.20
       '@babel/helper-function-name': 7.22.5
       '@babel/helper-member-expression-to-functions': 7.22.15
       '@babel/helper-optimise-call-expression': 7.22.5
@@ -1516,7 +1548,7 @@ packages:
     engines: { node: '>=6.9.0' }
     dependencies:
       '@babel/template': 7.22.5
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@babel/helper-hoist-variables@7.22.5:
     resolution:
@@ -1525,7 +1557,7 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@babel/helper-member-expression-to-functions@7.22.15:
     resolution:
@@ -1556,15 +1588,6 @@ packages:
     dependencies:
       '@babel/types': 7.22.19
 
-  /@babel/helper-module-imports@7.22.5:
-    resolution:
-      {
-        integrity: sha512-8Dl6+HD/cKifutF5qGd/8ZJi84QeAKh+CEe1sBzz8UayBBGg1dAIJrdHOcOM5b2MpzWL2yuotJTtGjETq0qjXg==,
-      }
-    engines: { node: '>=6.9.0' }
-    dependencies:
-      '@babel/types': 7.22.11
-
   /@babel/helper-module-transforms@7.22.20(@babel/core@7.22.11):
     resolution:
       {
@@ -1591,11 +1614,11 @@ packages:
       '@babel/core': ^7.0.0
     dependencies:
       '@babel/core': 7.22.9
-      '@babel/helper-environment-visitor': 7.22.5
-      '@babel/helper-module-imports': 7.22.5
+      '@babel/helper-environment-visitor': 7.22.20
+      '@babel/helper-module-imports': 7.22.15
       '@babel/helper-simple-access': 7.22.5
       '@babel/helper-split-export-declaration': 7.22.6
-      '@babel/helper-validator-identifier': 7.22.5
+      '@babel/helper-validator-identifier': 7.22.20
     dev: true
 
   /@babel/helper-optimise-call-expression@7.22.5:
@@ -1637,7 +1660,7 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@babel/helper-skip-transparent-expression-wrappers@7.22.5:
     resolution:
@@ -1656,7 +1679,7 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@babel/helper-string-parser@7.22.5:
     resolution:
@@ -1678,6 +1701,7 @@ packages:
         integrity: sha512-aJXu+6lErq8ltp+JhkJUfk1MTGyuA4v7f3pA+BJ5HLfNC6nAQ0Cpi9uOquUj8Hehg0aUiHzWQbOVJGao6ztBAQ==,
       }
     engines: { node: '>=6.9.0' }
+    dev: true
 
   /@babel/helper-validator-option@7.22.15:
     resolution:
@@ -1685,14 +1709,6 @@ packages:
         integrity: sha512-bMn7RmyFjY/mdECUbgn9eoSY4vqvacUnS9i9vGAGttgFWesO6B4CYWA7XlpbWgBt71iv/hfbPlynohStqnu5hA==,
       }
     engines: { node: '>=6.9.0' }
-
-  /@babel/helper-validator-option@7.22.5:
-    resolution:
-      {
-        integrity: sha512-R3oB6xlIVKUnxNUxbmgq7pKjxpru24zlimpE8WK47fACIlM0II/Hm1RS8IaOI7NgCr6LNS+jl5l75m20npAziw==,
-      }
-    engines: { node: '>=6.9.0' }
-    dev: true
 
   /@babel/helpers@7.22.11:
     resolution:
@@ -1715,8 +1731,8 @@ packages:
     engines: { node: '>=6.9.0' }
     dependencies:
       '@babel/template': 7.22.5
-      '@babel/traverse': 7.22.8
-      '@babel/types': 7.22.11
+      '@babel/traverse': 7.22.11
+      '@babel/types': 7.22.19
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1729,18 +1745,7 @@ packages:
     engines: { node: '>=6.9.0' }
     requiresBuild: true
     dependencies:
-      '@babel/helper-validator-identifier': 7.22.5
-      chalk: 2.4.2
-      js-tokens: 4.0.0
-
-  /@babel/highlight@7.22.5:
-    resolution:
-      {
-        integrity: sha512-BSKlD1hgnedS5XRnGOljZawtag7H1yPfQp0tdNJCHoH6AZ+Pcm9VvkrK59/Yy593Ypg0zMxH2BxD1VPYUQ7UIw==,
-      }
-    engines: { node: '>=6.9.0' }
-    dependencies:
-      '@babel/helper-validator-identifier': 7.22.5
+      '@babel/helper-validator-identifier': 7.22.20
       chalk: 2.4.2
       js-tokens: 4.0.0
 
@@ -1752,7 +1757,7 @@ packages:
     engines: { node: '>=6.0.0' }
     hasBin: true
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@babel/parser@7.22.7:
     resolution:
@@ -1842,10 +1847,10 @@ packages:
     dependencies:
       '@babel/core': 7.22.11
       '@babel/helper-annotate-as-pure': 7.22.5
-      '@babel/helper-module-imports': 7.22.5
+      '@babel/helper-module-imports': 7.22.15
       '@babel/helper-plugin-utils': 7.22.5
       '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.22.11)
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@babel/plugin-transform-typescript@7.22.15(@babel/core@7.22.11):
     resolution:
@@ -1887,9 +1892,9 @@ packages:
       }
     engines: { node: '>=6.9.0' }
     dependencies:
-      '@babel/code-frame': 7.22.5
+      '@babel/code-frame': 7.22.13
       '@babel/parser': 7.22.13
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@babel/traverse@7.22.11:
     resolution:
@@ -1940,7 +1945,7 @@ packages:
     engines: { node: '>=6.9.0' }
     dependencies:
       '@babel/helper-string-parser': 7.22.5
-      '@babel/helper-validator-identifier': 7.22.5
+      '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
 
   /@babel/types@7.22.19:
@@ -3519,7 +3524,7 @@ packages:
         integrity: sha512-tFkciB9j2K755yrTALxD44McOrk+gfpIpvC3sxHjRawj6PfnQxrse4Clq5y/Rq+G3mrBurMax/lG8Qn2t9mSsg==,
       }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@types/babel__template@7.4.1:
     resolution:
@@ -3528,7 +3533,7 @@ packages:
       }
     dependencies:
       '@babel/parser': 7.22.13
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@types/babel__traverse@7.20.1:
     resolution:
@@ -3536,7 +3541,7 @@ packages:
         integrity: sha512-MitHFXnhtgwsGZWtT68URpOvLN4EREih1u3QtQiN4VdAxWKRVvGCSvw/Qth0M0Qq3pJpnGOu5JaM/ydK7OGbqg==,
       }
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
 
   /@types/body-parser@1.19.2:
     resolution:
@@ -4967,7 +4972,7 @@ packages:
       '@babel/core': 7.22.11
       '@babel/helper-module-imports': 7.18.6
       '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.22.11)
-      '@babel/types': 7.22.11
+      '@babel/types': 7.22.19
       html-entities: 2.3.3
       validate-html-nesting: 1.2.2
     dev: true
