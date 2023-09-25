@@ -17,7 +17,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     icons: '',
     translations: null,
     menuGroup: 'top',
-    noPopupMenu: false,
+    noModal: false,
   };
 
   private _whenQueryList!: PlayerQueryList;
@@ -37,7 +37,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
   }
 
   protected override onSetup(): void {
-    const { when, smallWhen, thumbnails, translations, menuGroup, noPopupMenu } = this.$props;
+    const { when, smallWhen, thumbnails, translations, menuGroup, noModal } = this.$props;
 
     this._whenQueryList = PlayerQueryList.create(when);
     this._whenSmQueryList = PlayerQueryList.create(smallWhen);
@@ -53,7 +53,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       thumbnails,
       translations,
       menuGroup,
-      noPopupMenu,
+      noModal,
       get menuContainer() {
         return self.menuContainer;
       },
@@ -117,18 +117,18 @@ export interface DefaultLayoutProps {
    */
   menuGroup: 'top' | 'bottom';
   /**
-   * Whether popup menus should be disabled when the small layout is active. A popup menu is a
-   * floating panel that floats up from the bottom of the screen. It's enabled by default as it
-   * provides a better user experience for touch devices.
+   * Whether modal menus should be disabled when the small layout is active. A modal menu is
+   * a floating panel that floats up from the bottom of the screen (outside of the player). It's
+   * enabled by default as it provides a better user experience for touch devices.
    */
-  noPopupMenu: boolean;
+  noModal: boolean;
 }
 
 export interface DefaultLayoutContext {
   smQueryList: PlayerQueryList;
   thumbnails: ReadSignal<string>;
   translations: ReadSignal<DefaultLayoutTranslations | null>;
-  noPopupMenu: ReadSignal<DefaultLayoutProps['noPopupMenu']>;
+  noModal: ReadSignal<DefaultLayoutProps['noModal']>;
   menuGroup: ReadSignal<DefaultLayoutProps['menuGroup']>;
   menuContainer: HTMLElement | null;
 }

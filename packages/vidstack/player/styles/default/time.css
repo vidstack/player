@@ -4,6 +4,16 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
+:where(.vds-time-group) {
+  display: flex;
+  align-items: center;
+}
+
+:where(.vds-time-divider) {
+  margin: 0 var(--media-time-divider-gap, 2.5px);
+  color: var(--media-time-divider-color, #e0e0e0);
+}
+
 :where(.vds-time) {
   display: inline-block;
   contain: content;

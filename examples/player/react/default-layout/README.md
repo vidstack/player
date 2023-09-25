@@ -4,10 +4,9 @@ The [Default Layout][default-layout] is our production-ready player UI. If you'r
 something pre-designed and ready out of the box then this is the best option. You can easily
 customize the icons, branding, colors, and components to your liking.
 
-This example demonstrates setting up and customizing the Default Layout using Vidstack Player
-Web Components with React JS.
+This example demonstrates setting up and customizing the Default Layout using Vidstack Player React.
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)][stackblitz-demo]
 
-[default-layout]: https://next.vidstack.io/docs/wc/player/components/layouts/default-layout
-[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/vidstack/tree/next/examples/player/react/default-layout?title=Vidstack%20Player%20-%20React%20%28Default%20Layout%29&file=src/main.ts&showSidebar=1
+[default-layout]: https://vidstack.io/docs/wc/player/components/layouts/default-layout
+[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/examples/tree/player/react/default-layout?title=Vidstack%20Player%20-%20React%20%28Default%20Layout%29&file=src/main.ts&showSidebar=1

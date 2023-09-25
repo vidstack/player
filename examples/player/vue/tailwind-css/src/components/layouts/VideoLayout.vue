@@ -35,7 +35,7 @@ const { thumbnails } = defineProps<{
       <ChapterTitle />
       <div class="flex-1" />
       <CaptionButton tooltip-placement="top" />
-      <SettingsMenu />
+      <SettingsMenu placement="top end" tooltip-placement="top" />
       <PIPButton tooltip-placement="top" />
       <FullscreenButton tooltip-placement="top end" />
     </media-controls-group>

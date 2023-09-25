@@ -43,15 +43,8 @@ media-controls-group:nth-child(2) {
  * Time
  *************************************************************************************************/
 
-.media-time-group {
-  display: flex;
-  align-items: center;
+.vds-time-group {
   margin-left: 8px;
-}
-
-.media-time-divider {
-  margin: 0 2.5px;
-  color: #e0e0e0;
 }
 
 /*************************************************************************************************
@@ -68,47 +61,14 @@ media-time-slider {
 }
 
 /*************************************************************************************************
- * Chapter Title
- *************************************************************************************************/
-
-media-chapter-title {
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: sans-serif;
-  color: rgba(255 255 255 / 0.64);
-  flex: 1 1 0%;
-  padding-inline: 8px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-media-chapter-title::before {
-  content: '|';
-  display: inline-block;
-  margin-right: 6px;
-  color: rgba(255 255 255 / 0.64);
-}
-
-media-chapter-title:empty::before {
-  content: '';
-  margin-left: 0;
-}
-
-/*************************************************************************************************
  * Volume
  *************************************************************************************************/
-
-media-mute-button {
-  margin-right: 2.5px;
-}
 
 media-volume-slider {
   --media-slider-height: 40px;
   --media-slider-preview-offset: 40px;
   width: 72px;
-  margin-left: -0.5px;
+  margin-left: 1.5px;
   margin-right: 8px;
 }
 

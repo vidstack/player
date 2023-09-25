@@ -153,13 +153,6 @@ export function DefaultVolumeSlider() {
   `;
 }
 
-export function DefaultMainTitle() {
-  const {
-    $state: { title },
-  } = useMediaContext();
-  return html`<span class="vds-media-title">${$signal(title)}</span>`;
-}
-
 export function DefaultTimeSlider() {
   const { smQueryList, thumbnails } = useDefaultLayoutContext();
   return html`
@@ -217,10 +210,10 @@ export function DefaultChaptersMenu({
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
 }) {
-  const { translations, smQueryList, thumbnails, menuContainer, noPopupMenu } =
+  const { translations, smQueryList, thumbnails, menuContainer, noModal } =
       useDefaultLayoutContext(),
     $placement = computed(() =>
-      noPopupMenu() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
+      noModal() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
     );
 
   const items = html`
@@ -276,9 +269,9 @@ export function DefaultSettingsMenu({
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
 }) {
-  const { translations, smQueryList, menuContainer, noPopupMenu } = useDefaultLayoutContext(),
+  const { translations, smQueryList, menuContainer, noModal } = useDefaultLayoutContext(),
     $placement = computed(() =>
-      noPopupMenu() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
+      noModal() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
     );
 
   const items = html`

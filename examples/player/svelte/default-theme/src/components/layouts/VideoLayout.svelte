@@ -31,7 +31,7 @@
     <ChapterTitle />
     <div class="vds-controls-spacer" />
     <CaptionButton tooltipPlacement="top" />
-    <SettingsMenu />
+    <SettingsMenu placement="top end" tooltipPlacement="top" />
     <PIPButton tooltipPlacement="top" />
     <FullscreenButton tooltipPlacement="top end" />
   </media-controls-group>
@@ -49,6 +49,7 @@
   .controls :global(media-volume-slider) {
     --media-slider-height: 40px;
     --media-slider-preview-offset: 32px;
+    margin-left: 1.5px;
     max-width: 80px;
   }
 

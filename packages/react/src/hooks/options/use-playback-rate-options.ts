@@ -33,6 +33,12 @@ export function usePlaybackRateOptions({
       };
     });
 
+    Object.defineProperty(options, 'disabled', {
+      get() {
+        return !options.length;
+      },
+    });
+
     Object.defineProperty(options, 'selectedValue', {
       get() {
         return playbackRate() + '';
@@ -48,6 +54,7 @@ export interface UsePlaybackRateOptions {
 }
 
 export type PlaybackRateOptions = PlaybackRateOption[] & {
+  readonly disabled: boolean;
   readonly selectedValue: string | undefined;
 };
 

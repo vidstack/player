@@ -1,0 +1,96 @@
+/*************************************************************************************************
+ * Controls
+ *************************************************************************************************/
+
+.controls :global(.vds-time-slider) {
+  --media-slider-height: 40px;
+}
+
+.controls :global(.vds-time-slider .vds-slider-value) {
+  background-color: unset;
+}
+
+.controls :global(.vds-volume-slider) {
+  --media-slider-height: 40px;
+  --media-slider-preview-offset: 32px;
+  margin-left: 1.5px;
+  max-width: 80px;
+}
+
+.controls :global(.vds-time-group) {
+  margin-left: 8px;
+}
+
+.controlsGroup {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.controlsGroup {
+  padding-inline: 8px;
+}
+
+.controlsGroup:last-child {
+  margin-top: -4px;
+  padding-bottom: 8px;
+}
+
+/*************************************************************************************************
+ * Gestures
+ *************************************************************************************************/
+
+.gesture {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.gesture[action='seek:-10'],
+.gesture[action='seek:10'] {
+  width: 20%;
+  z-index: 1;
+}
+
+.gesture[action='seek:10'] {
+  left: unset;
+  right: 0;
+}
+
+/* Remove toggle to pause on touch. */
+@media (pointer: coarse) {
+  .gesture[action='toggle:paused'] {
+    display: none;
+  }
+}
+
+/* Remove toggle controls on mouse. */
+@media not (pointer: coarse) {
+  .gesture[action='toggle:controls'] {
+    display: none;
+  }
+}
+
+/*************************************************************************************************
+ * Captions
+ *************************************************************************************************/
+
+.captions {
+  z-index: 10;
+  bottom: 0;
+  transition: bottom 0.15s linear;
+}
+
+/* Pull captions up when controls are visible. */
+:global(.media-player[data-controls]) .captions {
+  bottom: 80px;
+}
+
+/* Hide captions when interacting with time slider. */
+:global(.media-player[data-preview]) .captions {
+  opacity: 0;
+}

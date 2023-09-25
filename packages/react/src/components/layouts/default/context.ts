@@ -13,8 +13,9 @@ interface DefaultLayoutContext {
   isSmallLayout: boolean;
   showMenuDelay?: number;
   showTooltipDelay?: number;
+  hideQualityBitrate?: boolean;
   menuGroup: 'top' | 'bottom';
-  noPopupMenu: boolean;
+  noModal: boolean;
   Icons: DefaultLayoutIcons;
 }
 

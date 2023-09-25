@@ -174,10 +174,10 @@ export { DefaultBufferingIndicator };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoMenus() {
-  const { isSmallLayout, noPopupMenu, menuGroup } = React.useContext(DefaultLayoutContext),
+  const { isSmallLayout, noModal, menuGroup } = React.useContext(DefaultLayoutContext),
     side = menuGroup === 'top' || isSmallLayout ? 'bottom' : ('top' as const),
     tooltip = `${side} end` as const,
-    placement = noPopupMenu
+    placement = noModal
       ? (`${side} end` as const)
       : !isSmallLayout
       ? (`${side} end` as const)

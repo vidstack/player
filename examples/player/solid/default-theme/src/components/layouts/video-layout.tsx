@@ -31,7 +31,7 @@ export function VideoLayout(props: VideoLayoutProps) {
           <ChapterTitle />
           <div class="vds-controls-spacer" />
           <CaptionButton tooltipPlacement="top" />
-          <SettingsMenu />
+          <SettingsMenu placement="top end" tooltipPlacement="top" />
           <PIPButton tooltipPlacement="top" />
           <FullscreenButton tooltipPlacement="top end" />
         </media-controls-group>

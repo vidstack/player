@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import fs from 'fs-extra';
 import { kebabToCamelCase, kebabToPascalCase } from 'maverick.js/std';
 
@@ -44,7 +45,7 @@ async function buildIcons() {
         `/** [Click here to preview icon](https://vidstack.io/media-icons?lib=react&icon=${iconName}) */\n` +
         `export const ${IconName}: IconComponent = /* #__PURE__*/ forwardRef` +
         '((props, ref) => {\n' +
-        `  return createElement(Icon, { ...props, ref, paths: ${
+        `  return createElement(Icon, { ...props, className: cn(props.className), ref, paths: ${
           kebabToCamelCase(iconName) + 'Paths'
         } });\n` +
         '});\n' +
@@ -59,6 +60,8 @@ async function buildIcons() {
 import { createElement, forwardRef } from 'react';
 
 import { Icon, type IconComponent } from './icon';
+
+const cn = (className?: string) => className ? \`\${className} vds-icon\` : 'vds-icon';
 
 ${components}`,
   );

@@ -27,6 +27,12 @@ export function useAudioOptions(): AudioOptions {
       },
     }));
 
+    Object.defineProperty(options, 'disabled', {
+      get() {
+        return !options.length;
+      },
+    });
+
     Object.defineProperty(options, 'selectedTrack', {
       get() {
         return audioTrack();
@@ -45,6 +51,7 @@ export function useAudioOptions(): AudioOptions {
 }
 
 export type AudioOptions = AudioOption[] & {
+  readonly disabled: boolean;
   readonly selectedTrack: AudioTrack | null;
   readonly selectedValue: string | undefined;
 };

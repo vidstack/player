@@ -29,7 +29,7 @@
     <MuteButton tooltipPlacement="top" />
     <VolumeSlider />
     <CaptionButton tooltipPlacement="top" />
-    <SettingsMenu />
+    <SettingsMenu placement="top end" tooltipPlacement="top end" />
   </media-controls-group>
 </media-controls>
 
@@ -47,15 +47,11 @@
     --media-slider-preview-offset: 8px;
   }
 
-  .controls :global(media-mute-button) {
-    margin-right: 2.5px;
-  }
-
   .controls :global(media-volume-slider) {
     --media-slider-width: 72px;
     --media-slider-height: 40px;
     --media-slider-preview-offset: 40px;
-    margin-left: -0.5px;
+    margin-left: 1.5px;
     margin-right: 8px;
   }
 

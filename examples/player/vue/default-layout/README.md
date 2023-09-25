@@ -9,5 +9,5 @@ Web Components with Vue.
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)][stackblitz-demo]
 
-[default-layout]: https://next.vidstack.io/docs/wc/player/components/layouts/default-layout
-[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/vidstack/tree/next/examples/player/vue/default-layout?title=Vidstack%20Player%20-%20Vue%20%28Default%20Layout%29&file=src/main.ts&showSidebar=1
+[default-layout]: https://vidstack.io/docs/wc/player/components/layouts/default-layout
+[stackblitz-demo]: https://stackblitz.com/fork/github/vidstack/examples/tree/player/vue/default-layout?title=Vidstack%20Player%20-%20Vue%20%28Default%20Layout%29&file=src/main.ts&showSidebar=1

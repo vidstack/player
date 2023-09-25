@@ -33,7 +33,7 @@ const { thumbnails } = defineProps<{
       <ChapterTitle />
       <div class="vds-controls-spacer" />
       <CaptionButton tooltip-placement="top" />
-      <SettingsMenu />
+      <SettingsMenu placement="top end" tooltip-placement="top" />
       <PIPButton tooltip-placement="top" />
       <FullscreenButton tooltip-placement="top end" />
     </media-controls-group>
@@ -52,6 +52,7 @@ const { thumbnails } = defineProps<{
 .controls :deep(media-volume-slider) {
   --media-slider-height: 40px;
   --media-slider-preview-offset: 32px;
+  margin-left: 1.5px;
   max-width: 80px;
 }
 

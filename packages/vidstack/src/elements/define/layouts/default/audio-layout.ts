@@ -26,7 +26,7 @@ export function DefaultAudioLayoutLarge() {
           seconds: 10,
         })}
         ${DefaultTimeGroup()}
-        <media-chapter-title class="vds-media-title"></media-chapter-title>
+        <media-chapter-title class="vds-chapter-title"></media-chapter-title>
         ${DefaultMuteButton({ tooltip: 'top' })}
         ${DefaultVolumeSlider()}${DefaultCaptionButton({ tooltip: 'top' })} ${DefaultAudioMenus()}
       </media-controls-group>
@@ -40,7 +40,7 @@ export function DefaultAudioLayoutSmall() {
     <media-controls class="vds-controls">
       <media-controls-group class="vds-controls-group">
         ${DefaultMuteButton({ tooltip: 'top start' })}
-        <media-chapter-title class="vds-media-title"></media-chapter-title>
+        <media-chapter-title class="vds-chapter-title"></media-chapter-title>
         ${DefaultCaptionButton({ tooltip: 'top' })}${DefaultAudioMenus()}
       </media-controls-group>
 
