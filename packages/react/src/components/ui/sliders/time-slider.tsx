@@ -55,6 +55,16 @@ export interface RootProps extends ReactElementProps<TimeSliderInstance> {
  * effortlessly change the current playback time within the range 0 to seekable end.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/time-slider}
+ * @example
+ * ```tsx
+ * <TimeSlider.Root>
+ *   <TimeSlider.Track>
+ *     <TimeSlider.TrackFill />
+ *     <TimeSlider.Progress />
+ *   </TimeSlider.Track>
+ *   <TimeSlider.Thumb />
+ * </TimeSlider.Root>
+ * ```
  */
 const Root = React.forwardRef<TimeSliderInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
@@ -86,6 +96,22 @@ export interface ChaptersProps extends Omit<ReactElementProps<SliderChaptersInst
  * active chapters text track.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/slider-chapters}
+ * @example
+ * ```tsx
+ * <TimeSlider.Root>
+ *   <TimeSlider.Chapters>
+ *     {(cues, forwardRef) =>
+ *       cues.map((cue) => (
+ *         <div key={cue.startTime} ref={forwardRef}>
+ *           <TimeSlider.Track>
+ *             <TimeSlider.TrackFill />
+ *             <TimeSlider.Progress />
+ *           </TimeSlider.Track>
+ *        </div>
+ *     ))}
+ *   </TimeSlider.Chapters>
+ * </TimeSlider.Root>
+ * ```
  */
 const Chapters = React.forwardRef<HTMLDivElement, ChaptersProps>(
   ({ children, ...props }, forwardRef) => {
@@ -182,6 +208,14 @@ ChapterTitle.displayName = 'SliderChapterTitle';
  * and current playback time updates accordingly.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/time-slider#preview}
+ * @example
+ * ```tsx
+ * <TimeSlider.Root>
+ *   <TimeSlider.Preview>
+ *     <TimeSlider.Value />
+ *   </TimeSlider.Preview>
+ * </TimeSlider.Root>
+ * ```
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -207,6 +241,19 @@ Value.displayName = 'SliderValue';
 
 export interface ProgressProps extends PrimitivePropsWithRef<'div'> {}
 
+/**
+ * Visual element inside the slider that serves as a horizontal or vertical bar, providing a
+ * visual reference for the range of playback that has buffered/loaded.
+ *
+ * @example
+ * ```tsx
+ * <TimeSlider.Root>
+ *   <TimeSlider.Track>
+ *     <TimeSlider.Progress />
+ *   </TimeSlider.Track>
+ * </TimeSlider.Root>
+ * ```
+ */
 const Progress = React.forwardRef<HTMLElement, ProgressProps>((props, forwardRef) => (
   <Primitive.div {...props} ref={forwardRef as any} />
 ));
@@ -233,6 +280,17 @@ export type ThumbnailImgProps = ThumbnailBase.ImgProps;
  * pointer position.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-thumbnail}
+ *
+ * @example
+ * ```tsx
+ * <TimeSlider.Root>
+ *   <TimeSlider.Preview>
+ *     <TimeSlider.Thumbnail.Root src="thumbnails.vtt">
+ *       <TimeSlider.Thumbnail.Img />
+ *     </TimeSlider.Thumbnail.Root>
+ *   </TimeSlider.Preview>
+ * </TimeSlider.Root>
+ * ```
  */
 const ThumbnailRoot = React.forwardRef<HTMLElement, ThumbnailProps>(
   ({ children, ...props }, forwardRef) => {
@@ -275,6 +333,14 @@ export interface VideoProps extends ReactElementProps<SliderVideoInstance, HTMLV
  * preview position, so ensure it has the same length as the original media (i.e., same duration).
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-video}
+ * @example
+ * ```tsx
+ * <TimeSlider.Root>
+ *   <TimeSlider.Preview>
+ *     <TimeSlider.Video src="preview.mp4" />
+ *   </TimeSlider.Preview>
+ * </TimeSlider.Root>
+ * ```
  */
 const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
   ({ children, ...props }, forwardRef) => {

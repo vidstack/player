@@ -30,9 +30,16 @@ export interface RootProps extends ReactElementProps<MenuInstance> {
 
 /**
  * Root menu container used to hold and manage a menu button and menu items. This component is
- * used to display options in a floating panel.
+ * used to display options in a floating panel. They can be nested to create submenus.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
+ * @example
+ * ```tsx
+ * <Menu.Root>
+ *   <Menu.Button></Menu.Button>
+ *   <Menu.Content placement="top end"></Menu.Content>
+ * </Menu.Root>
+ * ```
  */
 const Root = React.forwardRef<MenuInstance, RootProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -70,6 +77,13 @@ export interface ButtonProps extends ReactElementProps<MenuButtonInstance, HTMLB
  * `menuitem` when used inside a submenu.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
+ * @example
+ * ```tsx
+ * <Menu.Root>
+ *   <Menu.Button></Menu.Button>
+ *   <Menu.Content placement="top end"></Menu.Content>
+ * </Menu.Root>
+ * ```
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, ...props }, forwardRef) => {
@@ -101,6 +115,15 @@ export interface PortalProps extends Omit<ReactElementProps<MenuPortalInstance>,
  * Portals menu items into the document body.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu#portal}
+ * @example
+ * ```tsx
+ * <Menu.Root>
+ *   <Menu.Button></Menu.Button>
+ *   <Menu.Portal>
+ *     <Menu.Content placement="top end"></Menu.Content>
+ *   </Menu.Portal>
+ * </Menu.Root>
+ * ```
  */
 const Portal = React.forwardRef<HTMLElement, PortalProps>(
   ({ disabled = false, children, ...props }, forwardRef) => {
@@ -139,6 +162,13 @@ export interface ItemsProps extends ReactElementProps<MenuItemsInstance> {
  * Used to group and display settings or arbitrary content in a floating panel.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
+ * @example
+ * ```tsx
+ * <Menu.Root>
+ *   <Menu.Button></Menu.Button>
+ *   <Menu.Items placement="top end"></Menu.Items>
+ * </Menu.Root>
+ * ```
  */
 const Items = React.forwardRef<HTMLElement, ItemsProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -171,6 +201,15 @@ export interface ItemProps extends ReactElementProps<MenuItemInstance> {
  * users can select to access or perform a particular function or view related content.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
+ * @example
+ * ```tsx
+ * <Menu.Root>
+ *   <Menu.Button></Menu.Button>
+ *   <Menu.Content placement="top end">
+ *     <Menu.Item></Menu.Item>
+ *   </Menu.Content>
+ * </Menu.Root>
+ * ```
  */
 const Item = React.forwardRef<HTMLElement, ItemProps>(({ children, ...props }, forwardRef) => {
   return (

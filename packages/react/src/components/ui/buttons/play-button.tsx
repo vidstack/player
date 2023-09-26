@@ -21,6 +21,13 @@ export interface PlayButtonProps extends ReactElementProps<PlayButtonInstance, H
  * A button for toggling the playback state (play/pause) of the current media.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/play-button}
+ * @example
+ * ```tsx
+ * const isPaused = useMediaState('paused');
+ * <PlayButton>
+ *   {isPaused ? <PlayIcon /> : <PauseIcon />}
+ * </PlayButton>
+ * ```
  */
 const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps>(
   ({ children, ...props }, forwardRef) => {

@@ -31,6 +31,15 @@ export interface RootProps extends ReactElementProps<VolumeSliderInstance> {
  * effortlessly change the volume level within the range 0 (muted) to 100.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/volume-slider}
+ * @example
+ * ```tsx
+ * <VolumeSlider.Root>
+ *   <VolumeSlider.Track>
+ *     <VolumeSlider.TrackFill />
+ *   </VolumeSlider.Track>
+ *   <VolumeSlider.Thumb />
+ * </VolumeSlider.Root>
+ * ```
  */
 const Root = React.forwardRef<VolumeSliderInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
@@ -54,6 +63,14 @@ Root.displayName = 'VolumeSlider';
  * and volume updates accordingly.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/volume-slider#preview}
+ * @example
+ * ```tsx
+ * <VolumeSlider.Root>
+ *   <VolumeSlider.Preview>
+ *     <VolumeSlider.Value />
+ *   </VolumeSlider.Preview>
+ * </VolumeSlider.Root>
+ * ```
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
   return (

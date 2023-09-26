@@ -27,7 +27,10 @@ export function Volume() {
       <Slider.Track className="h-[5px] w-full rounded-sm bg-white/30 relative">
         <Slider.Range className="bg-media-brand absolute h-full rounded-sm will-change-[width]" />
       </Slider.Track>
-      <Slider.Thumb className="block h-[15px] w-[15px] rounded-full border border-[#cacaca] bg-white outline-none opacity-0 ring-white/40 transition-opacity group-hocus:opacity-100 focus:opacity-100 focus:ring-4 will-change-[left]" />
+      <Slider.Thumb
+        aria-label="Volume"
+        className="block h-[15px] w-[15px] rounded-full border border-[#cacaca] bg-white outline-none opacity-0 ring-white/40 transition-opacity group-hocus:opacity-100 focus:opacity-100 focus:ring-4 will-change-[left]"
+      />
     </Slider.Root>
   );
 }
@@ -76,7 +79,10 @@ export function Time({ thumbnails }: TimeSliderProps) {
         <Slider.Range className="bg-media-brand absolute h-full rounded-sm will-change-[width]" />
       </Slider.Track>
 
-      <Slider.Thumb className="block h-[15px] w-[15px] rounded-full border border-[#cacaca] bg-white outline-none opacity-0 ring-white/40 transition-opacity group-hocus:opacity-100 focus:opacity-100 focus:ring-4 will-change-[left]" />
+      <Slider.Thumb
+        aria-label="Current Time"
+        className="block h-[15px] w-[15px] rounded-full border border-[#cacaca] bg-white outline-none opacity-0 ring-white/40 transition-opacity group-hocus:opacity-100 focus:opacity-100 focus:ring-4 will-change-[left]"
+      />
 
       {/* Preview */}
       <div

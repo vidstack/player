@@ -33,7 +33,11 @@ export function Captions({
     <DropdownMenu.Root>
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
-          <DropdownMenu.Trigger className={buttonClass} disabled={options.disabled}>
+          <DropdownMenu.Trigger
+            aria-label="Settings"
+            className={buttonClass}
+            disabled={options.disabled}
+          >
             <SubtitlesIcon className="w-7 h-7" />
           </DropdownMenu.Trigger>
         </Tooltip.Trigger>
@@ -58,7 +62,11 @@ export function Captions({
           Captions
           <span className="ml-auto text-sm text-white/50">{hint}</span>
         </DropdownMenu.Label>
-        <DropdownMenu.RadioGroup className="w-full flex flex-col" value={options.selectedValue}>
+        <DropdownMenu.RadioGroup
+          aria-label="Captions"
+          className="w-full flex flex-col"
+          value={options.selectedValue}
+        >
           {options.map(({ label, value, select }) => (
             <Radio value={value} onSelect={select} key={value}>
               {label}

@@ -23,6 +23,13 @@ export interface FullscreenButtonProps
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/fullscreen-button}
  * @see {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen}
+ * @example
+ * ```tsx
+ * const isActive = useMediaState('fullscreen');
+ * <FullscreenButton>
+ *   {!isActive ? <EnterIcon /> : <ExitIcon />}
+ * </FullscreenButton>
+ * ```
  */
 const FullscreenButton = React.forwardRef<HTMLButtonElement, FullscreenButtonProps>(
   ({ children, ...props }, forwardRef) => {

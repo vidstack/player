@@ -5,7 +5,9 @@
 
   const { js, css, provider } = selections;
 
-  $: basePath = `docs/player/getting-started/installation/styles${$js === 'cdn' ? '/cdn' : ''}`;
+  $: basePath = `docs/player/getting-started/installation/styles${
+    $js === 'cdn' ? '/cdn' : $js === 'react' ? '/react' : ''
+  }`;
 
   $: styleId =
     $css === 'css' || $css === 'tailwind-css'

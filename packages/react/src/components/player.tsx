@@ -48,8 +48,8 @@ export interface MediaPlayerProps extends ReactElementProps<MediaPlayerInstance>
  * @docs {@link https://www.vidstack.io/docs/player/components/media/player}
  * @example
  * ```tsx
- * <MediaPlayer>
- *  ...
+ * <MediaPlayer src="...">
+ *   <MediaProvider />
  * </MediaPlayer>
  * ```
  */

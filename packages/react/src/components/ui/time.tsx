@@ -27,6 +27,10 @@ export interface TimeProps extends ReactElementProps<TimeInstance> {
  * formatted text.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/display/time}
+ * @example
+ * ```tsx
+ * <Time type="current" />
+ * ```
  */
 const Time = React.forwardRef<HTMLElement, TimeProps>(({ children, ...props }, forwardRef) => {
   return (

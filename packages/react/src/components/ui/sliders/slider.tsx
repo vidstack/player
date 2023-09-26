@@ -38,6 +38,15 @@ export interface RootProps extends ReactElementProps<SliderInstance> {
  * values within a specified range, defined by a minimum and maximum value.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider}
+ * @example
+ * ```tsx
+ * <Slider.Root>
+ *   <Slider.Track>
+ *     <Slider.TrackFill />
+ *   </Slider.Track>
+ *   <Slider.Thumb />
+ * </Slider.Root>
+ * ```
  */
 const Root = React.forwardRef<SliderInstance, RootProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -58,6 +67,13 @@ export interface ThumbProps extends PrimitivePropsWithRef<'div'> {}
 /**
  * Purely visual element used to display a draggable handle to the user for adjusting the value
  * on the slider component.
+ *
+ * @example
+ * ```tsx
+ * <Slider.Root>
+ *   <Slider.Thumb />
+ * </Slider.Root>
+ * ```
  */
 const Thumb = React.forwardRef<HTMLElement, ThumbProps>((props, forwardRef) => (
   <Primitive.div {...props} ref={forwardRef as any} />
@@ -76,6 +92,15 @@ export interface TrackProps extends PrimitivePropsWithRef<'div'> {}
  * visual reference for the range or values that can be selected by moving the slider thumb along
  * it. Users can interact with the slider by dragging the thumb along the track to set a specific
  * value.
+ *
+ * @example
+ * ```tsx
+ * <Slider.Root>
+ *   <Slider.Track>
+ *     <Slider.TrackFill />
+ *   </Slider.Track>
+ * </Slider.Root>
+ * ```
  */
 const Track = React.forwardRef<HTMLElement, TrackProps>((props, forwardRef) => (
   <Primitive.div {...props} ref={forwardRef as any} />
@@ -94,6 +119,15 @@ export interface TrackFillProps extends PrimitivePropsWithRef<'div'> {}
  * currently chosen range or value. As the slider thumb is moved along the track, the track
  * fill dynamically adjusts to visually represent the portion of the track that corresponds to the
  * selected value or range, providing users with a clear visual indication of their selection.
+ *
+ * @example
+ * ```tsx
+ * <Slider.Root>
+ *   <Slider.Track>
+ *     <Slider.TrackFill />
+ *   </Slider.Track>
+ * </Slider.Root>
+ * ```
  */
 const TrackFill = React.forwardRef<HTMLElement, TrackFillProps>((props, forwardRef) => (
   <Primitive.div {...props} ref={forwardRef as any} />
@@ -119,6 +153,14 @@ export interface PreviewProps extends ReactElementProps<SliderPreviewInstance> {
  * value numerically, or displaying a thumbnail over the time slider.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/slider#preview}
+ * @example
+ * ```tsx
+ * <Slider.Root>
+ *   <Slider.Preview>
+ *     <Slider.Value />
+ *   </Slider.Preview>
+ * </Slider.Root>
+ * ```
  */
 const Preview = React.forwardRef<HTMLElement, PreviewProps>(
   ({ children, ...props }, forwardRef) => {
@@ -148,6 +190,14 @@ export interface ValueProps extends SliderValueProps {}
  * changes accordingly.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/slider#preview}
+ * @example
+ * ```tsx
+ * <Slider.Root>
+ *   <Slider.Preview>
+ *     <Slider.Value />
+ *   </Slider.Preview>
+ * </Slider.Root>
+ * ```
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
   return (

@@ -33,7 +33,9 @@ const { pathname } = Astro.url,
           instanceName =
             hasInstance && component.instance ? `${component.instance.name}Instance` : refType;
 
-        if (component.namespace) {
+        if (component.name.includes('Layout')) {
+          importCode = `import { ${component.name} } from "@vidstack/react/player/layouts/default";`;
+        } else if (component.namespace) {
           importCode = [
             `import { ${component.namespace} } from "@vidstack/react";`,
             '',
@@ -81,6 +83,10 @@ const { pathname } = Astro.url,
             <NameCell name={cb.name} docs={cb.docs} mdnLink={findMDNLink(getLinks(cb))} />,
             <TypeCell concise="function" full={cb.type.full} />,
           ]);
+
+        const example = component.doctags?.find((tag) => tag.name === 'example')?.text,
+          exampleCode =
+            example?.replace(/\`\`\`.*?\n/, '').replace('\n```', '') ?? `<${component.name} />`;
 
         const instanceProps = ((hasInstance && component.instance?.members?.props) || [])
           .filter((prop) => !prop.internal && !component.props?.some((p) => p.name === prop.name))
@@ -132,8 +138,9 @@ const { pathname } = Astro.url,
             <Header
               title={components.length > 1 ? component.name : undefined}
               slug={fullComponentName}
-              description={component.docs}
+              description={component.docs ?? component.instance?.docs}
               {importCode}
+              {exampleCode}
               badges={[component.attributes, refType ? `Ref<${instanceName}>` : null]}
             />
 

@@ -28,6 +28,12 @@ export interface RootProps extends ReactElementProps<ThumbnailInstance, HTMLElem
  * Used to load and display a preview thumbnail at the given `time`.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/display/thumbnail}
+ * @example
+ * ```tsx
+ * <Thumbnail.Root src="thumbnails.vtt" time={10} >
+ *   <Thumbnail.Img />
+ * </Thumbnail.Root>
+ * ```
  */
 const Root = React.forwardRef<HTMLElement, RootProps>(({ children, ...props }, forwardRef) => {
   return (

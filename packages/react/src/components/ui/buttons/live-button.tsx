@@ -26,6 +26,12 @@ export interface LiveButtonProps extends ReactElementProps<LiveButtonInstance, H
  * live.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/live-button}
+ * @example
+ * ```tsx
+ * <LiveButton>
+ *   <LiveIcon />
+ * </LiveButton>
+ * ```
  */
 const LiveButton = React.forwardRef<HTMLButtonElement, LiveButtonProps>(
   ({ children, ...props }, forwardRef) => {
