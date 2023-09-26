@@ -39,6 +39,8 @@ export default defineConfig({
         '~astro-icons': '~icons',
       },
     },
+    // Throwing some annoying type errors for src/snippets directory, just get rid of it for now.
+    optimizeDeps: { disabled: true },
     plugins: [codeHighlight(), codeSnippets(), codePreviews(), icons({ compiler: 'svelte' })],
   },
   integrations: [

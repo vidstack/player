@@ -46,6 +46,21 @@ const isPlayerPage = page.slug.startsWith('player'),
   titleFramework = jsLibrary === 'react' ? '' : ` (${kebabToTitleCase(jsLibrary)})`,
   titleCategory = category ? `${category}: ` : '',
   title = `${titleCategory}${pageTitle} | ${titleBrand}${titleFramework}`;
+
+if (sidebar.deepMatch && !pagination.prev) {
+  const items = sidebar.items.flatMap((item) => ('href' in item ? item : item.items)),
+    activeItemIndex = items.findIndex(
+      (item) =>
+        'href' in item &&
+        (item.href === pathname ||
+          (pathname.split('/').at(-2) === item.href.split('/').pop() &&
+            pathname.startsWith(item.href))),
+    ),
+    prevItem = items[activeItemIndex - 1],
+    nextItem = items[activeItemIndex + 1];
+  if (prevItem) pagination.prev = prevItem;
+  if (nextItem) pagination.next = nextItem;
+}
 ---
 
 <AppLayout {title} {description} theme="secondary">

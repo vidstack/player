@@ -145,8 +145,12 @@ export function autoPlacement(
   return autoUpdate(trigger, el, () => {
     computePosition(trigger, el, { placement: floatingPlacement, ...options }).then(({ x, y }) => {
       Object.assign(el.style, {
-        top: `calc(${y + 'px'} + ${negate(`var(--${offsetVarName}-y-offset, ${yOffset}px)`)})`,
-        left: `calc(${x + 'px'} + ${negate(`var(--${offsetVarName}-x-offset, ${xOffset}px)`)})`,
+        top: `calc(${y + 'px'} + ${negate(
+          yOffset ? yOffset + 'px' : `var(--${offsetVarName}-y-offset, 0px)`,
+        )})`,
+        left: `calc(${x + 'px'} + ${negate(
+          xOffset ? xOffset + 'px' : `var(--${offsetVarName}-x-offset, 0px)`,
+        )})`,
       });
     });
   });

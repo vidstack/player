@@ -21,7 +21,7 @@
       : 'w-full min-h-full',
     _class,
   )}
-  style={clsx(`--leading: 1.375rem;`, hasTopBar && '--code-block-top: 2.8125rem;', style)}
+  style={clsx(`--leading: 1.375rem;`, hasTopBar && '--code-block-top: 3.25rem;', style)}
   data-flat={flat ? '' : null}
 >
   {#if hasTopBar}

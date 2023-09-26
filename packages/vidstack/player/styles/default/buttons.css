@@ -140,26 +140,24 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(
-  /* Play Button */
-    .vds-button:not([data-paused]) .vds-play-icon,
-    .vds-button[data-ended] .vds-play-icon,
-    .vds-button[data-paused] .vds-pause-icon,
-    .vds-button[data-ended] .vds-pause-icon,
-    .vds-button:not([data-ended]) .vds-replay-icon,
-    /* PIP Button */
-    .vds-button[data-active] .vds-pip-enter-icon,
-    .vds-button:not([data-active]) .vds-pip-exit-icon,
-    /* Fullscreen Button */
-    .vds-button[data-active] .vds-fs-enter-icon,
-    .vds-button:not([data-active]) .vds-fs-exit-icon,
-    /* Caption Button */
-    .vds-button:not([data-active]) .vds-cc-on-icon,
-    .vds-button[data-active] .vds-cc-off-icon,
-    /* Mute Button */
-    .vds-button:not([data-muted]) .vds-mute-icon,
-    .vds-button:not([data-state='low']) .vds-volume-low-icon,
-    .vds-button:not([data-state='high']) .vds-volume-high-icon
-  ) {
+/* Play Button */
+.vds-button:not([data-paused]) .vds-play-icon,
+.vds-button[data-ended] .vds-play-icon,
+.vds-button[data-paused] .vds-pause-icon,
+.vds-button[data-ended] .vds-pause-icon,
+.vds-button:not([data-ended]) .vds-replay-icon,
+/* PIP Button */
+.vds-button[data-active] .vds-pip-enter-icon,
+.vds-button:not([data-active]) .vds-pip-exit-icon,
+/* Fullscreen Button */
+.vds-button[data-active] .vds-fs-enter-icon,
+.vds-button:not([data-active]) .vds-fs-exit-icon,
+/* Caption Button */
+.vds-button:not([data-active]) .vds-cc-on-icon,
+.vds-button[data-active] .vds-cc-off-icon,
+/* Mute Button */
+.vds-button:not([data-muted]) .vds-mute-icon,
+.vds-button:not([data-state='low']) .vds-volume-low-icon,
+.vds-button:not([data-state='high']) .vds-volume-high-icon {
   display: none;
 }
