@@ -9,7 +9,7 @@ import { isHLSProvider, type TextTrackInit } from 'vidstack';
 
 const player = document.querySelector('media-player')!;
 
-player.addEventListener('provider-setup', (event) => {
+player.addEventListener('provider-change', (event) => {
   const provider = event.detail;
   // We can configure provider's here.
   if (isHLSProvider(provider)) {
