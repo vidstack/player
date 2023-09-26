@@ -9,7 +9,7 @@ import 'vidstack/icons';
 import {
   isHLSProvider,
   type MediaCanPlayEvent,
-  type MediaProviderSetupEvent,
+  type MediaProviderChangeEvent,
   type MediaViewType,
 } from 'vidstack';
 import type { MediaPlayerElement } from 'vidstack/elements';
@@ -48,7 +48,7 @@ onMounted(() => {
   });
 });
 
-function onProviderSetup(event: MediaProviderSetupEvent) {
+function onProviderChange(event: MediaProviderChangeEvent) {
   const provider = event.detail;
   // We can configure provider's here.
   if (isHLSProvider(provider)) {
@@ -83,7 +83,7 @@ function changeSource(type: string) {
     title="Sprite Fight"
     :src="$src"
     crossorigin
-    @provider-setup="onProviderSetup"
+    @provider-change="onProviderChange"
     @can-play="onCanPlay"
     ref="$player"
   >

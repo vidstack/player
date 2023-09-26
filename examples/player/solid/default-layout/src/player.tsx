@@ -9,7 +9,7 @@ import 'vidstack/player/layouts';
 import 'vidstack/player/ui';
 
 import { createSignal, onCleanup, onMount } from 'solid-js';
-import { isHLSProvider, type MediaCanPlayEvent, type MediaProviderSetupEvent } from 'vidstack';
+import { isHLSProvider, type MediaCanPlayEvent, type MediaProviderChangeEvent } from 'vidstack';
 import type { MediaPlayerElement } from 'vidstack/elements';
 
 import { textTracks } from './tracks';
@@ -44,7 +44,7 @@ export function Player() {
     );
   });
 
-  function onProviderSetup(event: MediaProviderSetupEvent) {
+  function onProviderChange(event: MediaProviderChangeEvent) {
     const provider = event.detail;
     // We can configure provider's here.
     if (isHLSProvider(provider)) {
@@ -79,7 +79,7 @@ export function Player() {
         title="Sprite Fight"
         src={src()}
         crossorigin
-        on:provider-setup={onProviderSetup}
+        on:provider-change={onProviderChange}
         on:can-play={onCanPlay}
         ref={player}
       >

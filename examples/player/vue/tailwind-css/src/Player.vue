@@ -6,7 +6,7 @@ import 'vidstack/player';
 import 'vidstack/player/ui';
 import 'vidstack/icons';
 
-import { isHLSProvider, type MediaCanPlayEvent, type MediaProviderSetupEvent } from 'vidstack';
+import { isHLSProvider, type MediaCanPlayEvent, type MediaProviderChangeEvent } from 'vidstack';
 import type { MediaPlayerElement } from 'vidstack/elements';
 import { onMounted, ref } from 'vue';
 
@@ -36,7 +36,7 @@ onMounted(() => {
   });
 });
 
-function onProviderSetup(event: MediaProviderSetupEvent) {
+function onProviderChange(event: MediaProviderChangeEvent) {
   const provider = event.detail;
   // We can configure provider's here.
   if (isHLSProvider(provider)) {
@@ -56,7 +56,7 @@ function onCanPlay(event: MediaCanPlayEvent) {
     title="Sprite Fight"
     src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/low.mp4"
     crossorigin
-    @provider-setup="onProviderSetup"
+    @provider-change="onProviderChange"
     @can-play="onCanPlay"
     ref="$player"
   >

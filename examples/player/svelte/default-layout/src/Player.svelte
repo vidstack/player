@@ -9,7 +9,7 @@
   import 'vidstack/player/ui';
 
   import { onMount } from 'svelte';
-  import { isHLSProvider, type MediaCanPlayEvent, type MediaProviderSetupEvent } from 'vidstack';
+  import { isHLSProvider, type MediaCanPlayEvent, type MediaProviderChangeEvent } from 'vidstack';
   import type { MediaPlayerElement } from 'vidstack/elements';
 
   import { textTracks } from './tracks';
@@ -41,7 +41,7 @@
     });
   });
 
-  function onProviderSetup(event: MediaProviderSetupEvent) {
+  function onProviderChange(event: MediaProviderChangeEvent) {
     const provider = event.detail;
     // We can configure provider's here.
     if (isHLSProvider(provider)) {
@@ -75,7 +75,7 @@
   title="Sprite Fight"
   {src}
   crossorigin
-  on:provider-setup={onProviderSetup}
+  on:provider-change={onProviderChange}
   on:can-play={onCanPlay}
   bind:this={player}
 >
