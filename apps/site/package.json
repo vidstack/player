@@ -34,7 +34,7 @@
     "@astrojs/tailwind": "^5.0.0",
     "@astrojs/vercel": "^5.0.0",
     "@iconify-json/lucide": "^1.1.112",
-    "@maverick-js/cli": "0.39.4",
+    "@maverick-js/cli": "0.40.0",
     "@tailwindcss/container-queries": "^0.1.1",
     "@types/markdown-it": "^12.2.0",
     "@types/mdast": "^4.0.0",

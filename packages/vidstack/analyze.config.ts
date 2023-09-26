@@ -1,7 +1,14 @@
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { createJSONPlugin, createVSCodePlugin, type AnalyzePlugin } from '@maverick-js/cli/analyze';
+import {
+  createJSONPlugin,
+  createVSCodePlugin,
+  solidJSXTypesPlugin,
+  svelteJSXTypesPlugin,
+  vueJSXTypesPlugin,
+  type AnalyzePlugin,
+} from '@maverick-js/cli/analyze';
 
 export default [
   createJSONPlugin(),
@@ -73,9 +80,20 @@ export default [
     },
   }),
   checkElementExports(),
-  vueTypesPlugin(),
-  svelteTypesPlugin(),
-  solidTypesPlugin(),
+  vueJSXTypesPlugin({
+    imports: [`import type { IconType } from "./icons";`],
+    components: [`"media-icon": HTMLAttributes & { type: IconType }`],
+  }),
+  svelteJSXTypesPlugin({
+    imports: [`import type { IconType } from './icons';`],
+    components: [
+      `"media-icon": import('svelte/elements').HTMLAttributes<HTMLElement> & { type: IconType }`,
+    ],
+  }),
+  solidJSXTypesPlugin({
+    imports: [`import type { IconType } from "./icons";`],
+    components: [`"media-icon": JSX.HTMLAttributes<HTMLElement> & { type: IconType };`],
+  }),
 ];
 
 function checkElementExports(): AnalyzePlugin {
@@ -90,275 +108,4 @@ function checkElementExports(): AnalyzePlugin {
       }
     },
   };
-}
-
-function vueTypesPlugin(): AnalyzePlugin {
-  return {
-    name: 'vue-types',
-    async transform({ components, customElements }) {
-      const elementImports = customElements.map((el) => el.name),
-        typeImports = customElements
-          .map((el) => el.component?.name && components.find((c) => c.name === el.component!.name))
-          .flatMap((c) => (c ? [c.generics?.props, c.generics?.events].filter(Boolean) : [])),
-        globalComponents = customElements.map(
-          (el) => `"${el.tag.name}": ${el.name.replace('Element', '') + 'Component'}`,
-        );
-
-      const dts = [
-        "import type { HTMLAttributes, Ref, ReservedProps } from 'vue';",
-        `import type { ${elementImports.join(', ')} } from './elements';`,
-        `import type { ${unique(typeImports).join(', ')} } from './index';`,
-        `import type { IconType } from "./icons";`,
-        '',
-        "declare module 'vue' {",
-        '  export interface GlobalComponents {',
-        `    ${globalComponents.join(';\n    ')}`,
-        `    "media-icon": HTMLAttributes & { type: IconType }`,
-        '  }',
-        '}',
-        '',
-        'export type ElementRef<T> = string | Ref<T> | ((el: T | null) => void);',
-        '',
-        'export interface EventHandler<T> {',
-        '  (event: T): void;',
-        '}',
-        ...customElements.map((el) => {
-          const name = el.name.replace('Element', ''),
-            component = components.find((c) => c.name === el.component?.name),
-            propsType = component?.generics?.props,
-            eventsType = component?.generics?.events,
-            hasEvents = eventsType && component?.events?.length,
-            attrsName = `${name}Attributes`,
-            eventsAttrsName = `${name}EventAttributes`,
-            omitHTMLAttrs = [
-              propsType && `keyof ${propsType}`,
-              hasEvents && `keyof ${eventsAttrsName}`,
-              '"is"',
-            ]
-              .filter(Boolean)
-              .join(' | '),
-            _extends = [
-              propsType && `Partial<${propsType}>`,
-              hasEvents && eventsAttrsName,
-              `Omit<HTMLAttributes, ${omitHTMLAttrs}>`,
-              "Omit<ReservedProps, 'ref'>",
-            ].filter(Boolean);
-          return [
-            '/**********************************************************************************************',
-            `* ${name}`,
-            '/**********************************************************************************************/',
-            '',
-            `export interface ${name}Component {`,
-            `  (props: ${attrsName}): ${el.name};`,
-            '}',
-            '',
-            `export interface ${attrsName} extends ${_extends.join(', ')} {`,
-            `  ref?: ElementRef<${el.name}>;`,
-            '}',
-            '',
-            ...(hasEvents
-              ? [
-                  `export interface ${eventsAttrsName} {`,
-                  component
-                    .events!.map(
-                      (event) =>
-                        `  on${kebabToPascalCase(event.name)}?: EventHandler<${eventsType}['${
-                          event.name
-                        }']>;`,
-                    )
-                    .join('\n'),
-                  '}',
-                ]
-              : []),
-            '',
-          ].join('\n');
-        }),
-      ];
-
-      writeFileSync('vue.d.ts', dts.join('\n'));
-    },
-  };
-}
-
-function svelteTypesPlugin(): AnalyzePlugin {
-  return {
-    name: 'svelte-types',
-    async transform({ components, customElements }) {
-      const elementImports = customElements.map((el) => el.name),
-        typeImports = customElements
-          .map((el) => el.component?.name && components.find((c) => c.name === el.component!.name))
-          .flatMap((c) => (c ? [c.generics?.props, c.generics?.events].filter(Boolean) : [])),
-        svelteElements = customElements.map(
-          (el) => `"${el.tag.name}": ${el.name.replace('Element', '') + 'Attributes'}`,
-        );
-
-      const dts = [
-        `import type { ${elementImports.join(', ')} } from './elements';`,
-        `import type { ${unique(typeImports).join(', ')} } from './index';`,
-        `import type { IconType } from './icons';`,
-        '',
-        'declare global {',
-        '  namespace svelteHTML {',
-        '    interface IntrinsicElements {',
-        `      ${svelteElements.join(';\n    ')}`,
-        `      "media-icon": import('svelte/elements').HTMLAttributes<HTMLElement> & { type: IconType }`,
-        '    }',
-        '  }',
-        '}',
-        '',
-        'export interface EventHandler<T> {',
-        '  (event: T): void;',
-        '}',
-        ...customElements.map((el) => {
-          const name = el.name.replace('Element', ''),
-            component = components.find((c) => c.name === el.component?.name),
-            propsType = component?.generics?.props,
-            eventsType = component?.generics?.events,
-            hasEvents = eventsType && component?.events?.length,
-            attrsName = `${name}Attributes`,
-            eventsAttrsName = `${name}EventAttributes`,
-            omitHTMLAttrs = [
-              propsType && `keyof ${propsType}`,
-              hasEvents && `keyof ${eventsAttrsName}`,
-              '"is"',
-            ]
-              .filter(Boolean)
-              .join(' | '),
-            _extends = [
-              propsType && `Partial<${propsType}>`,
-              hasEvents && eventsAttrsName,
-              `Omit<import('svelte/elements').HTMLAttributes<${el.name}>, ${omitHTMLAttrs}>`,
-            ].filter(Boolean);
-          return [
-            '/**********************************************************************************************',
-            `* ${name}`,
-            '/**********************************************************************************************/',
-            '',
-            '',
-            `export interface ${attrsName} extends ${_extends.join(', ')} {`,
-            '}',
-            '',
-            ...(hasEvents
-              ? [
-                  `export interface ${eventsAttrsName} {`,
-                  component
-                    .events!.map((event) => {
-                      const docs = event.docs
-                        ? `/**\n${event.docs}\n${event.doctags
-                            ?.map((tag) => `@${tag.name} ${tag.text}`)
-                            .join('\n')}\n*/\n  `
-                        : '';
-
-                      return `  ${docs}"on:${event.name}"?: EventHandler<${eventsType}['${event.name}']>;`;
-                    })
-                    .join('\n'),
-                  '}',
-                ]
-              : []),
-            '',
-          ].join('\n');
-        }),
-      ];
-
-      writeFileSync('svelte.d.ts', dts.join('\n'));
-    },
-  };
-}
-
-function solidTypesPlugin(): AnalyzePlugin {
-  return {
-    name: 'solid-types',
-    async transform({ components, customElements }) {
-      const elementImports = customElements.map((el) => el.name),
-        typeImports = customElements
-          .map((el) => el.component?.name && components.find((c) => c.name === el.component!.name))
-          .flatMap((c) => (c ? [c.generics?.props, c.generics?.events].filter(Boolean) : [])),
-        svelteElements = customElements.map(
-          (el) => `"${el.tag.name}": ${el.name.replace('Element', '') + 'Attributes'}`,
-        );
-
-      const dts = [
-        "import type { JSX } from 'solid-js';",
-        `import type { ${elementImports.join(', ')} } from './elements';`,
-        `import type { ${unique(typeImports).join(', ')} } from './index';`,
-        `import type { IconType } from "./icons";`,
-        '',
-        'declare module "solid-js"{',
-        '  namespace JSX {',
-        '    interface IntrinsicElements {',
-        `      ${svelteElements.join(';\n    ')}`,
-        `      "media-icon": JSX.HTMLAttributes<HTMLElement> & { type: IconType };`,
-        '    }',
-        '  }',
-        '}',
-        '',
-        'export interface EventHandler<T> {',
-        '  (event: T): void;',
-        '}',
-        ...customElements.map((el) => {
-          const name = el.name.replace('Element', ''),
-            component = components.find((c) => c.name === el.component?.name),
-            propsType = component?.generics?.props,
-            eventsType = component?.generics?.events,
-            hasEvents = eventsType && component?.events?.length,
-            attrsName = `${name}Attributes`,
-            eventsAttrsName = `${name}EventAttributes`,
-            omitHTMLAttrs = [
-              propsType && `keyof ${propsType}`,
-              hasEvents && `keyof ${eventsAttrsName}`,
-              '"is"',
-            ]
-              .filter(Boolean)
-              .join(' | '),
-            _extends = [
-              propsType && `Partial<${propsType}>`,
-              hasEvents && eventsAttrsName,
-              `Omit<JSX.HTMLAttributes<${el.name}>, ${omitHTMLAttrs}>`,
-            ].filter(Boolean);
-          return [
-            '/**********************************************************************************************',
-            `* ${name}`,
-            '/**********************************************************************************************/',
-            '',
-            '',
-            `export interface ${attrsName} extends ${_extends.join(', ')} {`,
-            '}',
-            '',
-            ...(hasEvents
-              ? [
-                  `export interface ${eventsAttrsName} {`,
-                  component
-                    .events!.map((event) => {
-                      const docs = event.docs
-                        ? `/**\n${event.docs}\n${event.doctags
-                            ?.map((tag) => `@${tag.name} ${tag.text}`)
-                            .join('\n')}\n*/\n  `
-                        : '';
-
-                      return `  ${docs}"on:${event.name}"?: EventHandler<${eventsType}['${event.name}']>;`;
-                    })
-                    .join('\n'),
-                  '}',
-                ]
-              : []),
-            '',
-          ].join('\n');
-        }),
-      ];
-
-      writeFileSync('solid.d.ts', dts.join('\n'));
-    },
-  };
-}
-
-function kebabToPascalCase(text) {
-  return text.replace(/(^\w|-\w)/g, clearAndUpper);
-}
-
-function clearAndUpper(text) {
-  return text.replace(/-/, '').toUpperCase();
-}
-
-function unique<T>(items: T[]): T[] {
-  return [...new Set(items)];
 }
