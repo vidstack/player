@@ -11,6 +11,7 @@ import { kebabToTitleCase } from '../utils/string';
 import AppLayout from './app-layout.astro';
 import type { DocsPagination } from './nav/docs-sidebar-items';
 import type { SidebarFeatureItem, SidebarItem } from './nav/sidebar-items';
+import AnnouncementBar from './parts/announcement-bar.astro';
 import NavbarDesktop from './parts/navbar/navbar-desktop.astro';
 import NavbarMobile from './parts/navbar/navbar-mobile.astro';
 import Pagination from './parts/pagination.astro';
@@ -61,9 +62,20 @@ if (sidebar.deepMatch && !pagination.prev) {
   if (prevItem) pagination.prev = prevItem;
   if (nextItem) pagination.next = nextItem;
 }
+
+const showOldDocsLink =
+  sidebar.id.endsWith('getting-started/introduction.mdx') || /\/installation/.test(sidebar.id);
 ---
 
-<AppLayout {title} {description} theme="secondary">
+<AppLayout {title} {description} theme="secondary" announcementBar={showOldDocsLink}>
+  {
+    showOldDocsLink ? (
+      <AnnouncementBar href="https://old.vidstack.io" action="Go here" type="help">
+        Looking for the old docs?
+      </AnnouncementBar>
+    ) : null
+  }
+
   <NavbarDesktop>
     <Algolia slot="center" />
   </NavbarDesktop>
