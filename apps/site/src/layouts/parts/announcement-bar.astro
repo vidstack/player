@@ -2,13 +2,16 @@
 import clsx from 'clsx';
 
 import ArrowRightIcon from '~astro-icons/lucide/arrow-right';
+import HelpIcon from '~astro-icons/lucide/help-circle';
 import MegaphoneIcon from '~astro-icons/lucide/megaphone';
 
 interface Props {
+  type?: 'announcement' | 'help';
   href?: string;
+  action?: string;
 }
 
-const { href } = Astro.props;
+const { href, action = 'Learn more', type } = Astro.props;
 ---
 
 <div
@@ -20,14 +23,20 @@ const { href } = Astro.props;
   )}
   style="--height: var(--announcement-bar-height);"
 >
-  <MegaphoneIcon class="mr-1.5 mb-0.5 w-5 h-5" />
+  {
+    type === 'help' ? (
+      <HelpIcon class="mr-1.5 w-4 h-4" />
+    ) : (
+      <MegaphoneIcon class="mr-1.5 mb-0.5 w-5 h-5" />
+    )
+  }
 
   <span class="mr-1">
     <slot />
   </span>
 
   <a class="flex items-center text-brand group font-medium p-0.5 rounded-md" {href}>
-    Learn more
+    {action}
     <ArrowRightIcon
       class="-translate-x-2 opacity-0 group-hocus:opacity-100 group-hocus:translate-x-px transition-all w-3.5 h-3.5"
     />
