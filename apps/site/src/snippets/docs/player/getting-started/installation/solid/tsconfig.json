@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // @hl-start
-    "types": ["vidstack/globals"]
+    "types": ["vidstack/solid"]
     // @hl-end
   }
 }

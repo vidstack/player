@@ -210,16 +210,18 @@ export function DefaultChaptersMenu({
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
 }) {
-  const { translations, smQueryList, thumbnails, menuContainer, noModal } =
+  const { translations, smQueryList, thumbnails, menuContainer, noModal, menuGroup } =
       useDefaultLayoutContext(),
     $placement = computed(() =>
       noModal() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
-    );
+    ),
+    $offset = computed(() => (!smQueryList.matches && menuGroup() === 'bottom' ? 26 : 0));
 
   const items = html`
     <media-menu-items
       class="vds-chapters-menu-items vds-menu-items"
       placement=${$signal($placement)}
+      offset=${$signal($offset)}
     >
       <media-chapters-radio-group
         class="vds-chapters-radio-group vds-radio-group"
@@ -269,15 +271,18 @@ export function DefaultSettingsMenu({
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
 }) {
-  const { translations, smQueryList, menuContainer, noModal } = useDefaultLayoutContext(),
+  const { translations, smQueryList, menuContainer, noModal, menuGroup } =
+      useDefaultLayoutContext(),
     $placement = computed(() =>
       noModal() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
-    );
+    ),
+    $offset = computed(() => (!smQueryList.matches && menuGroup() === 'bottom' ? 26 : 0));
 
   const items = html`
     <media-menu-items
       class="vds-settings-menu-items vds-menu-items"
       placement=${$signal($placement)}
+      offset=${$signal($offset)}
     >
       ${DefaultAudioSubmenu()}${DefaultSpeedSubmenu()}${DefaultQualitySubmenu()}${DefaultCaptionsSubmenu()}
     </media-menu-items>

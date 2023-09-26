@@ -60,7 +60,7 @@ export class Poster extends Component<PosterProps, PosterState> {
   }
 
   protected override onAttach(el: HTMLElement): void {
-    el.style.pointerEvents = 'none';
+    el.style.setProperty('pointer-events', 'none');
 
     effect(this._watchImg.bind(this));
     effect(this._watchImgSrc.bind(this));

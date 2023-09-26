@@ -47,7 +47,7 @@ export class Tooltip extends Component<TooltipProps> {
   }
 
   protected override onAttach(el: HTMLElement): void {
-    el.style.display = 'contents';
+    el.style.setProperty('display', 'contents');
   }
 
   protected override onSetup(): void {

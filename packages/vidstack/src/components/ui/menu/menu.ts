@@ -67,6 +67,22 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   private _focus!: MenuFocusController;
 
   /**
+   * The menu trigger element.
+   */
+  @prop
+  get triggerElement() {
+    return this._trigger();
+  }
+
+  /**
+   * The menu items element.
+   */
+  @prop
+  get contentElement() {
+    return this._content();
+  }
+
+  /**
    * Whether this menu is the child of another menu that contains it.
    */
   @prop
@@ -136,6 +152,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   }
 
   protected override onAttach(el: HTMLElement) {
+    el.style.setProperty('display', 'contents');
     this._focus._attachMenu(el);
   }
 
@@ -206,7 +223,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _attachMenuItems(items: MenuItems) {
     const el = items.el!;
-    el.style.display = 'none';
+    el.style.setProperty('display', 'none');
 
     setAttribute(el, 'id', this._menuId);
     setAttributeIfEmpty(el, 'role', 'menu');
@@ -389,16 +406,29 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   private _onSubmenuOpenBind = this._onSubmenuOpen.bind(this);
   private _onSubmenuOpen(event: MenuOpenEvent) {
     for (const target of this._submenus) {
-      if (target !== event.target) target.el?.setAttribute('aria-hidden', 'true');
+      if (target !== event.target) {
+        for (const el of [target.el, target.triggerElement]) {
+          el?.setAttribute('aria-hidden', 'true');
+        }
+      }
     }
 
-    this._onResize();
+    requestAnimationFrame(() => {
+      this._onResize();
+    });
   }
 
   private _onSubmenuCloseBind = this._onSubmenuClose.bind(this);
   private _onSubmenuClose() {
-    for (const target of this._submenus) target.el?.removeAttribute('aria-hidden');
-    this._onResize();
+    for (const target of this._submenus) {
+      for (const el of [target.el, target.triggerElement]) {
+        el?.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    requestAnimationFrame(() => {
+      this._onResize();
+    });
   }
 
   private _onResize() {
@@ -412,10 +442,15 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
         parseFloat(paddingTop) +
         parseFloat(paddingBottom) +
         parseFloat(borderTopWidth) +
-        parseFloat(borderBottomWidth);
+        parseFloat(borderBottomWidth),
+      children = [...content.children];
 
-    for (const child of content.children) {
-      height += (child as HTMLElement).offsetHeight;
+    for (const child of children) {
+      if (child instanceof HTMLElement && child.style.display === 'contents') {
+        children.push(...child.children);
+      } else {
+        height += (child as HTMLElement).offsetHeight || 0;
+      }
     }
 
     requestAnimationFrame(() => {

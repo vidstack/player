@@ -16,7 +16,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     thumbnails: '',
     icons: '',
     translations: null,
-    menuGroup: 'top',
+    menuGroup: 'bottom',
     noModal: false,
   };
 

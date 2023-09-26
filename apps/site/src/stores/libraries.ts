@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 import { IS_BROWSER } from '../utils/env';
 
 // We check other frameworks in this regex for the installation page.
-const wcPathRE = /\/(wc|web\-c|angular|vue|svelte|cdn)/;
+const wcPathRE = /\/(wc|web\-c|angular|vue|svelte|cdn|solid)/;
 
 export type JSLibrary = 'web-components' | 'react';
 

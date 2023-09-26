@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    // @hl-start
+    "types": ["vidstack/svelte"]
+    // @hl-end
+  }
+}

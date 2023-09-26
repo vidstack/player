@@ -28,7 +28,12 @@ export class MenuPortal extends Component<MenuPortalProps> {
   }
 
   protected override onAttach(el: HTMLElement): void {
-    el.style.display = 'contents';
+    el.style.setProperty('display', 'contents');
+  }
+
+  // Need this so connect scope is defined.
+  protected override onConnect(el: HTMLElement): void {
+    // no-op
   }
 
   protected override onDestroy(): void {

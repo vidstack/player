@@ -6,7 +6,7 @@
   const { js, provider } = selections;
 
   $: packages = [
-    $js === 'react' ? '@vidstack/react' : 'vidstack',
+    $js === 'react' ? '@vidstack/react@next' : 'vidstack@next',
     $provider === 'hls' && 'hls.js',
   ].filter(Boolean) as string[];
 </script>

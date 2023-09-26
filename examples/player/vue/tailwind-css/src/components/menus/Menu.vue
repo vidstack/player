@@ -15,7 +15,7 @@ const { placement, tooltipPlacement } = defineProps<{
     <Tooltip :placement="tooltipPlacement">
       <template #trigger>
         <media-menu-button
-          class="group ring-media-focus relative mr-0.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4"
+          class="group ring-media-focus relative mr-0.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4 aria-hidden:hidden"
         >
           <slot name="button" />
         </media-menu-button>

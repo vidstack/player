@@ -88,22 +88,20 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(
-    /* Play Button */
-    [data-media-player]:not([data-paused]) .vds-play-tooltip-text,
-    [data-media-player][data-paused] .vds-pause-tooltip-text,
-    /* PIP Button */
-    [data-media-player][data-pip] .vds-pip-enter-tooltip-text,
-    [data-media-player]:not([data-pip]) .vds-pip-exit-tooltip-text,
-    /* Fullscreen Button */
-    [data-media-player][data-fullscreen] .vds-fs-enter-tooltip-text,
-    [data-media-player]:not([data-fullscreen]) .vds-fs-exit-tooltip-text,
-    /* Caption Button */
-    [data-media-player]:not([data-captions]) .vds-cc-on-tooltip-text,
-    [data-media-player][data-captions] .vds-cc-off-tooltip-text,
-    /* Mute Button */
-    [data-media-player]:not([data-muted]) .vds-mute-tooltip-text,
-    [data-media-player][data-muted] .vds-unmute-tooltip-text
-  ) {
+/* Play Button */
+[data-media-player]:not([data-paused]) .vds-play-tooltip-text,
+[data-media-player][data-paused] .vds-pause-tooltip-text,
+/* PIP Button */
+[data-media-player][data-pip] .vds-pip-enter-tooltip-text,
+[data-media-player]:not([data-pip]) .vds-pip-exit-tooltip-text,
+/* Fullscreen Button */
+[data-media-player][data-fullscreen] .vds-fs-enter-tooltip-text,
+[data-media-player]:not([data-fullscreen]) .vds-fs-exit-tooltip-text,
+/* Caption Button */
+[data-media-player]:not([data-captions]) .vds-cc-on-tooltip-text,
+[data-media-player][data-captions] .vds-cc-off-tooltip-text,
+/* Mute Button */
+[data-media-player]:not([data-muted]) .vds-mute-tooltip-text,
+[data-media-player][data-muted] .vds-unmute-tooltip-text {
   display: none;
 }

@@ -68,44 +68,51 @@ const { pathname } = Astro.url,
         } as const;
 
         const contents = (
-          <>
-            <div class="relative">
-              <GradientBorder class="rounded-md hidden group-hocus:inline group-data-[active]:inline" />
-              <div
-                class={clsx(
-                  'group-hocus:bg-elevate group-hocus:border-transparent flex items-center justify-center',
-                  'rounded-md bg-clip-padding border-2 border-border/90 font-medium',
-                  'font-mono group-data-[active]:border-transparent py-8 cursor-pointer',
-                  'group-data-[active]:bg-elevate',
-                )}
-              >
-                <Icon class="w-[50px] h-[50px] shrink-0" />
-              </div>
-            </div>
+          <div class="relative">
+            <GradientBorder class="rounded-md hidden group-hocus:inline group-data-[active]:inline" />
             <div
               class={clsx(
-                'flex items-center justify-center font-medium text-center w-full pt-3 text-sm text-soft',
-                'group-data-[active]:text-inverse group-hocus:text-inverse',
+                'group-hocus:bg-elevate group-hocus:border-transparent flex items-center justify-center',
+                'rounded-md bg-clip-padding border-2 border-border/90 font-medium',
+                'font-mono group-data-[active]:border-transparent py-8 cursor-pointer',
+                'group-data-[active]:bg-elevate',
               )}
             >
-              {label}
-              {Info ? (
-                <InfoPopup class="ml-1" label="More information" contain placement="bottom">
-                  {isString(Info) ? Info : <Info />}
-                </InfoPopup>
-              ) : null}
+              <Icon class="w-[50px] h-[50px] shrink-0" />
             </div>
-          </>
+          </div>
+        );
+
+        const title = (
+          <div
+            class={clsx(
+              'flex items-center justify-center font-medium text-center w-full pt-3 text-sm text-soft',
+              'group-data-[active]:text-inverse group-hocus:text-inverse',
+            )}
+          >
+            {label}
+            {Info ? (
+              <InfoPopup class="ml-1" label="More information" contain placement="bottom">
+                {isString(Info) ? Info : <Info />}
+              </InfoPopup>
+            ) : null}
+          </div>
         );
 
         return (
           <Style {...(color ? gradients[color] : {})} client:load>
             {param ? (
-              <div {...props}>{contents}</div>
-            ) : (
-              <a {...props} href={`${basePath}/${id}`}>
+              <div {...props}>
                 {contents}
-              </a>
+                {title}
+              </div>
+            ) : (
+              <div class="flex flex-col">
+                <a {...props} href={`${basePath}/${id}`}>
+                  {contents}
+                </a>
+                {title}
+              </div>
             )}
           </Style>
         );

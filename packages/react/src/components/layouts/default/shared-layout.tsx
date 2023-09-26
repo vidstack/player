@@ -67,31 +67,43 @@ export interface DefaultMediaLayoutProps extends PrimitivePropsWithRef<'div'> {
   /**
    * Specifies the number of milliseconds to wait before tooltips are visible after interacting
    * with a control.
+   *
+   * @defaultValue 700
    */
   showTooltipDelay?: number;
   /**
    * Specifies the number of milliseconds to wait before menus are visible after opening them.
+   *
+   * @defaultValue 0
    */
   showMenuDelay?: number;
   /**
    * Whether the bitrate should be hidden in the settings quality menu next to each option.
+   *
+   * @defaultValue false
    */
   hideQualityBitrate?: boolean;
   /**
    * A player query string that determines when the small (e.g., mobile) UI should be displayed. The
    * special string 'never' will indicate that the small device optimized UI should never be
    * displayed.
+   *
+   * @defaultValue '(width < 576) or (height < 380)'
    */
   smallLayoutWhen?: string | boolean;
   /**
    * Specifies whether menu buttons should be placed in the top or bottom controls group. This
    * only applies to the large video layout.
+   *
+   * @defaultValue 'bottom'
    */
   menuGroup?: 'top' | 'bottom';
   /**
    * Whether modal menus should be disabled when the small layout is active. A modal menu is
    * a floating panel that floats up from the bottom of the screen (outside of the player). It's
    * enabled by default as it provides a better user experience for touch devices.
+   *
+   * @defaultValue false
    */
   noModal?: boolean;
 }
@@ -120,7 +132,7 @@ export const createDefaultMediaLayout = ({
         showTooltipDelay = type === 'video' ? 500 : 700,
         smallLayoutWhen = smLayoutWhen,
         noModal = false,
-        menuGroup = 'top',
+        menuGroup = 'bottom',
         hideQualityBitrate = false,
         children,
         ...props

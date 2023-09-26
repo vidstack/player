@@ -32,7 +32,7 @@ export class MediaAudioLayoutElement
 
     effect(() => {
       if (!this.menuContainer) return;
-      setAttribute(this.menuContainer, 'data-size', this.isSmallLayout);
+      setAttribute(this.menuContainer, 'data-size', this.isSmallLayout && 'sm');
     });
 
     onDispose(() => this.menuContainer?.remove());

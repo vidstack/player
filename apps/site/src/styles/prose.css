@@ -10,6 +10,10 @@
   @apply text-inverse font-semibold;
 }
 
+.prose br {
+  display: block;
+}
+
 .prose a strong,
 .prose blockquote strong,
 .prose thead th strong {
@@ -270,6 +274,8 @@
 }
 
 .prose .heading-wrapper + *,
+.prose .heading-wrapper + astro-island > *:first-child,
+.prose .heading-wrapper + astro-island astro-slot > *:first-child,
 .prose .heading-wrapper + astro-island astro-slot > div,
 .prose .heading-wrapper + style + astro-island astro-slot > div,
 .prose .heading-wrapper + style + script + astro-island astro-slot > div,

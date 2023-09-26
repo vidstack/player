@@ -8,7 +8,7 @@ export function Menu(props: MenuProps) {
     <media-menu>
       <Tooltip
         triggerSlot={
-          <media-menu-button class="group ring-media-focus relative mr-0.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4">
+          <media-menu-button class="group ring-media-focus relative mr-0.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset hover:bg-white/20 data-[focus]:ring-4 aria-hidden:hidden">
             {props.buttonSlot}
           </media-menu-button>
         }

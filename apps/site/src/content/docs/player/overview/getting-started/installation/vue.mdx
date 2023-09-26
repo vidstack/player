@@ -2,3 +2,85 @@
 title: Vue Installation Guide
 description: Instructions to get your player installed and on-screen using Vue.
 ---
+
+import MediaIconsSetup from '~/docs/installation/partials/media-icons-setup.mdx';
+
+import AddPlayerMarkup from '~/docs/installation/partials/add-player-markup.mdx';
+import BrowserSupport from '~/docs/installation/partials/browser-support.mdx';
+import ImportElements from '~/docs/installation/partials/import-elements.mdx';
+import ImportStyles from '~/docs/installation/partials/import-styles.mdx';
+import InstallPackages from '~/docs/installation/partials/install-packages.mdx';
+import NextSteps from '~/docs/installation/partials/next-steps.mdx';
+import VSCodeSetup from '~/docs/installation/partials/vscode-setup.mdx';
+import FrameworkSelection from '~/docs/installation/selection/framework-selection.astro';
+import ProviderSelection from '~/docs/installation/selection/provider-selection.astro';
+import StylingSelection from '~/docs/installation/selection/styling-selection.astro';
+
+## 1. Select Framework
+
+<FrameworkSelection />
+
+## 2. Select Provider
+
+<ProviderSelection />
+
+## 3. Select Styling
+
+<StylingSelection />
+
+## 4. Check Support
+
+<BrowserSupport />
+
+## 5. Install Packages
+
+<InstallPackages />
+
+## 6. Configure Plugin
+
+:::info
+Refer to the [Custom Elements in Vue][vue-ce-guide] guide for more information.
+:::
+
+::code[./vue/config]{title="vite.config.js" copy=true}
+
+[vue-ce-guide]: https://vuejs.org/guide/extras/web-components.html#using-custom-elements-in-vue
+
+## 7. Add Types
+
+If you're using TypeScript, add the following to your `tsconfig` to enable fully-typed
+custom elements:
+
+::code[./vue/tsconfig]{title="tsconfig.json" copy=true}
+
+## 8. Import Styles
+
+<ImportStyles />
+
+## 9. Import Elements
+
+<ImportElements />
+
+## 10. Add Player Markup
+
+<AddPlayerMarkup />
+
+## 11. Setup Visual Studio
+
+<VSCodeSetup />
+
+## 12. Install Media Icons
+
+<MediaIconsSetup />
+
+## 13. Examples
+
+You should be all set up by this point. We recommend exploring our 👉 [examples][examples] to
+learn how to start building and customizing your player. You can also use the examples to make
+sure you've set everything up correctly.
+
+[examples]: https://github.com/vidstack/player/tree/next/examples/player/vue
+
+## 14. Next Steps
+
+<NextSteps />

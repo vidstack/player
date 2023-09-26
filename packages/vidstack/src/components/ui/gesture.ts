@@ -34,7 +34,7 @@ export class Gesture extends Component<GestureProps> {
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-gesture', '');
-    el.style.pointerEvents = 'none';
+    el.style.setProperty('pointer-events', 'none');
   }
 
   protected override onConnect(el: HTMLElement) {
