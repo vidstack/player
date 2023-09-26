@@ -2,6 +2,7 @@
 import clsx from 'clsx';
 
 import Badge from '~/components/badge.svelte';
+import CodeBlockWrapper from '~/components/code-snippet/code-block-wrapper.svelte';
 import Heading from '~/docs/components/heading.svelte';
 import { Code } from 'astro:components';
 
@@ -10,10 +11,11 @@ interface Props {
   slug?: string;
   description?: string;
   importCode?: string;
+  exampleCode?: string;
   badges?: Array<string | null | undefined>;
 }
 
-const { title, slug, description, importCode, badges } = Astro.props;
+const { title, slug, description, importCode, exampleCode, badges } = Astro.props;
 ---
 
 <div class="flex flex-col mb-4">
@@ -36,14 +38,18 @@ const { title, slug, description, importCode, badges } = Astro.props;
 
   {
     importCode && (
-      <div
-        class={clsx(
-          'not-prose font-medium text-sm mb-4 overflow-auto scrollbar scrollbar-square py-1.5 mt-5',
-        )}
-      >
-        <Code code={importCode} lang="tsx" theme="github-dark" />
-        <Code code={importCode} lang="tsx" theme="github-light" />
-      </div>
+      <CodeBlockWrapper class="text-sm font-normal not-prose w-full">
+        <div class="flex flex-col">
+          <Code code={importCode} lang="tsx" theme="github-dark" />
+          <Code code={importCode} lang="tsx" theme="github-light" />
+          {exampleCode && (
+            <div class="mt-6">
+              <Code code={exampleCode} lang="tsx" theme="github-dark" />
+              <Code code={exampleCode} lang="tsx" theme="github-light" />
+            </div>
+          )}
+        </div>
+      </CodeBlockWrapper>
     )
   }
 

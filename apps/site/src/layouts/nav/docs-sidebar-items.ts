@@ -58,6 +58,7 @@ export const sidebarItemsOrder: Record<string, DocsFileIdentifiers[]> = {
     'player/api/react/hooks/use-media-remote.mdx',
     'player/api/react/hooks/use-media-state.mdx',
     'player/api/react/hooks/use-slider-state.mdx',
+    'player/api/react/hooks/use-slider-preview.mdx',
     'player/api/react/hooks/use-player-query.mdx',
     'player/api/react/hooks/use-thumbnails.mdx',
     'player/api/react/hooks/create-text-track.mdx',
@@ -85,6 +86,7 @@ export const sidebarItemsOrder: Record<string, DocsFileIdentifiers[]> = {
     'player/components/display/captions.mdx',
     'player/components/display/thumbnail.mdx',
     'player/components/display/time.mdx',
+    'player/components/display/react/track.mdx',
     'player/components/display/buffering-indicator.mdx',
     // Buttons
     'player/components/buttons/toggle-button.mdx',

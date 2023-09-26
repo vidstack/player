@@ -24,6 +24,13 @@ export interface RootProps extends ReactElementProps<RadioGroupInstance> {
  * provided as a radio (i.e., a selectable element).
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/radio-group}
+ * @example
+ * ```tsx
+ * <RadioGroup.Root>
+ *   <RadioGroup.Item value="1080">1080p</RadioGroup.Item>
+ *   <RadioGroup.Item value="720">720p</RadioGroup.Item>
+ * </RadioGroup.Root>
+ * ```
  */
 const Root = React.forwardRef<RadioGroupInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
@@ -56,6 +63,10 @@ export interface ItemProps extends ReactElementProps<RadioInstance> {
  * can be checked in a group.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/radio}
+ * @example
+ * ```tsx
+ * <RadioGroup.Item value="1080">1080p</RadioGroup.Item>
+ * ```
  */
 const Item = React.forwardRef<HTMLElement, ItemProps>(({ children, ...props }, forwardRef) => {
   return (

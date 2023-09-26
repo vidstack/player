@@ -22,6 +22,10 @@ export interface CaptionsProps extends ReactElementProps<CaptionsInstance> {
  * captions box for audio.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/display/captions}
+ * @example
+ * ```tsx
+ * <Captions />
+ * ```
  */
 const Captions = React.forwardRef<CaptionsInstance, CaptionsProps>(
   ({ children, ...props }, forwardRef) => {

@@ -16,6 +16,10 @@ export interface ChapterTitleProps extends PrimitivePropsWithRef<'span'> {}
  * provided.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/display/chapter-title}
+ * @example
+ * ```tsx
+ * <ChapterTitle />
+ * ```
  */
 const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
   ({ children, ...props }, forwardRef) => {

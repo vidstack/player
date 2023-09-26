@@ -22,6 +22,13 @@ export interface PIPButtonProps extends ReactElementProps<PIPButtonInstance, HTM
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/pip-button}
  * @see {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture}
+ * @example
+ * ```tsx
+ * const isActive = useMediaState('pictureInPicture');
+ * <PIPButton>
+ *   {!isActive ? <EnterIcon /> : <ExitIcon />}
+ * </PIPButton>
+ * ```
  */
 const PIPButton = React.forwardRef<HTMLButtonElement, PIPButtonProps>(
   ({ children, ...props }, forwardRef) => {

@@ -21,6 +21,13 @@ export interface RootProps extends ReactElementProps<ControlsInstance> {
  * This component creates a container for control groups.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/media/controls}
+ * @example
+ * ```tsx
+ * <Controls.Root>
+ *   <Controls.Group></Controls.Group>
+ *   <Controls.Group></Controls.Group>
+ * <Controls.Root>
+ * ```
  */
 const Root = React.forwardRef<HTMLElement, RootProps>(({ children, ...props }, forwardRef) => {
   return (
@@ -52,6 +59,13 @@ export interface GroupProps extends ReactElementProps<ControlsGroupInstance> {
  * This component creates a container for media controls.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/media/controls#group}
+ * @example
+ * ```tsx
+ * <Controls.Root>
+ *   <Controls.Group></Controls.Group>
+ *   <Controls.Group></Controls.Group>
+ * <Controls.Root>
+ * ```
  */
 const Group = React.forwardRef<HTMLElement, GroupProps>(({ children, ...props }, forwardRef) => {
   return (

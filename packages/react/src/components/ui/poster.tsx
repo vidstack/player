@@ -30,6 +30,14 @@ export interface PosterProps extends ReactElementProps<PosterInstance, HTMLImage
  * loading strategy is respected meaning the poster won't load until the media can.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/media/poster}
+ * @example
+ * ```tsx
+ * <MediaPlayer>
+ *   <MediaProvider>
+ *     <Poster src="..." alt="..." />
+ *   </MediaProvider>
+ * </MediaPlayer>
+ * ```
  */
 const Poster = React.forwardRef<HTMLImageElement, PosterProps>(
   ({ children, ...props }, forwardRef) => {

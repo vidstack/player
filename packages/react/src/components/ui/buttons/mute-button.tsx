@@ -21,6 +21,20 @@ export interface MuteButtonProps extends ReactElementProps<MuteButtonInstance, H
  * A button for toggling the muted state of the player.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/mute-button}
+ * @example
+ * ```tsx
+ * const volume = useMediaState('volume'),
+ *   isMuted = useMediaState('muted');
+ * <MuteButton>
+ *   {isMuted || volume == 0 ? (
+ *     <MuteIcon />
+ *   ) : volume < 0.5 ? (
+ *     <VolumeLowIcon />
+ *   ) : (
+ *     <VolumeHighIcon />
+ *   )}
+ * </MuteButton>
+ * ```
  */
 const MuteButton = React.forwardRef<HTMLButtonElement, MuteButtonProps>(
   ({ children, ...props }, forwardRef) => {

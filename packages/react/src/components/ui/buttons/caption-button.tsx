@@ -22,6 +22,14 @@ export interface CaptionButtonProps
  * A button for toggling the showing state of the captions.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/caption-button}
+ * @example
+ * ```tsx
+ * const track = useMediaState('textTrack'),
+ *   isOn = track && isTrackCaptionKind(track);
+ * <CaptionButton>
+ *   {isOn ? <OnIcon /> : <OffIcon />}
+ * </CaptionButton>
+ * ```
  */
 const CaptionButton = React.forwardRef<HTMLButtonElement, CaptionButtonProps>(
   ({ children, ...props }, forwardRef) => {

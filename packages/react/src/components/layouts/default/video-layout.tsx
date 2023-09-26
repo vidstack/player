@@ -27,6 +27,20 @@ import {
 
 export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps {}
 
+/**
+ * The video layout is our production-ready UI that's displayed when the media view type is set to
+ * 'video'. It includes support for picture-in-picture, fullscreen, slider chapters, slider
+ * previews, captions, and audio/quality settings out of the box. It doesn't support live
+ * streams just yet.
+ *
+ * @example
+ * ```tsx
+ * <MediaPlayer src="audio.mp3">
+ *   <MediaProvider />
+ *   <DefaultVideoLayout thumbnails="thumbnails.vtt" icons={defaultLayoutIcons} />
+ * </MediaPlayer>
+ * ```
+ */
 const DefaultVideoLayout = createDefaultMediaLayout({
   type: 'video',
   smLayoutWhen: '(width < 576) or (height < 380)',

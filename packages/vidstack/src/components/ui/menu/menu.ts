@@ -33,7 +33,7 @@ let idCount = 0;
 
 /**
  * Root menu container used to hold and manage a menu button and menu items. This component is
- * used to display options in a floating panel.
+ * used to display options in a floating panel. They can be nested to create submenus.
  *
  * @attr data-open - Whether menu is open.
  * @attr data-keyboard - Whether the menu is opened via keyboard.

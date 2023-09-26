@@ -31,6 +31,13 @@ export interface RootProps extends ReactProps<TooltipInstance> {
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tooltip_role}
+ * @example
+ * ```tsx
+ * <Tooltip.Root>
+ *   <Tooltip.Trigger></Tooltip.Trigger>
+ *   <Tooltip.Content></Tooltip.Content>
+ * </Tooltip.Root>
+ * ```
  */
 function Root({ children, ...props }: RootProps) {
   return <TooltipBridge {...props}>{children}</TooltipBridge>;
@@ -55,6 +62,13 @@ export interface TriggerProps extends ReactElementProps<TooltipTriggerInstance> 
  * tooltip content is positioned relative to this element.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
+ * @example
+ * ```tsx
+ * <Tooltip.Root>
+ *   <Tooltip.Trigger></Tooltip.Trigger>
+ *   <Tooltip.Content></Tooltip.Content>
+ * </Tooltip.Root>
+ * ```
  */
 const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(
   ({ children, ...props }, forwardRef) => {
@@ -88,6 +102,13 @@ export interface ContentProps extends ReactElementProps<TooltipContentInstance> 
  * This component contains the content that is visible when the tooltip trigger is interacted with.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
+ * @example
+ * ```tsx
+ * <Tooltip.Root>
+ *   <Tooltip.Trigger></Tooltip.Trigger>
+ *   <Tooltip.Content></Tooltip.Content>
+ * </Tooltip.Root>
+ * ```
  */
 const Content = React.forwardRef<HTMLElement, ContentProps>(
   ({ children, ...props }, forwardRef) => {

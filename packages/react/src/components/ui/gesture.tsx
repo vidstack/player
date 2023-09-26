@@ -21,6 +21,11 @@ export interface GestureProps extends ReactElementProps<GestureInstance> {
  * This component enables actions to be performed on the media based on user gestures.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/media/gesture}
+ * @example
+ * ```tsx
+ * <Gesture event="pointerup" action="toggle:paused" />
+ * <Gesture event="dblpointerup" action="toggle:fullscreen" />
+ * ```
  */
 const Gesture = React.forwardRef<GestureInstance, GestureProps>(
   ({ children, ...props }, forwardRef) => {
