@@ -24,7 +24,7 @@ const { title, slug, description, importCode, exampleCode, badges } = Astro.prop
 
   {
     hasBadges ? (
-      <div class={clsx('flex space-x-2 items-center not-prose -mt-2 -mb-2')}>
+      <div class={clsx('flex space-x-2 items-center not-prose -mt-2')}>
         <Badge color="blue">
           <code class="text-xs">{badges[0]}</code>
         </Badge>
@@ -39,7 +39,7 @@ const { title, slug, description, importCode, exampleCode, badges } = Astro.prop
 
   {
     description && (
-      <div class={clsx('-mb-8', !hasBadges && '-mt-8')}>
+      <div class={clsx('-mb-4', !hasBadges && '-mt-8')}>
         <Fragment set:html={description} />
       </div>
     )

@@ -57,7 +57,7 @@ const showTopBar = !!title || Astro.slots.has('top-bar'),
   <slot name="top-bar" slot="top-bar" />
   {
     import.meta.env.DEV ? (
-      <HMRCodeHighlightLines {id} {lines} {highlights} client:visible />
+      <HMRCodeHighlightLines {id} {lines} {highlights} client:load />
     ) : (
       <CodeHighlightLines {lines} {highlights} />
     )
@@ -70,7 +70,7 @@ const showTopBar = !!title || Astro.slots.has('top-bar'),
           {lines}
           {...lineNumberProps}
           class={lineNumberProps.class}
-          client:visible
+          client:load
         />
       ) : (
         <pre {...lineNumberProps} set:html={lineNumbers.join('\n')} />

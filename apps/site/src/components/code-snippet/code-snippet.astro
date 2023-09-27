@@ -23,23 +23,29 @@ const { id, highlights: propHighlights, copy, ...restProps } = Astro.props,
   isRelativeId = id.startsWith('./') || id.startsWith('../'),
   snippet = findCodeSnippet(id.replace(/^\.\.?\//, ''), id.startsWith('../')),
   highlights = propHighlights ?? snippet?.highlights,
-  codeBlockProps = { id, highlights, lines: snippet?.lines, ...restProps } as any;
+  codeBlockProps = {
+    id: snippet?.id ?? id,
+    highlights,
+    lines: snippet?.lines,
+    ...restProps,
+  } as any;
 
 function findCodeSnippet(id: string, up?: boolean) {
   if (isRelativeId) {
-    let pathId = pathname
-      .slice(1)
-      .replace(/\/$/, '')
-      .replace(`/${get(currentJSLibrary)}/`, '/');
+    let jsLibDir = get(currentJSLibrary) === 'web-components' ? 'wc' : get(currentJSLibrary),
+      pathId = pathname.slice(1).replace(/\/$/, '').replace(`/${jsLibDir}/`, '/');
 
     if (up) {
       pathId = pathId.split('/').slice(0, -1).join('/');
+      if (id.includes('/')) {
+        pathId += '/' + id.split('/').slice(0, -1);
+      }
     }
 
-    let jsLibDir = get(currentJSLibrary) === 'web-components' ? 'wc' : get(currentJSLibrary),
-      jsLibPathId = `${pathId}/${jsLibDir}`,
+    let jsLibPathId = `${pathId}/${jsLibDir}`,
       matches = get(codeSnippets).filter(
-        (snippet) => snippet.id.startsWith(pathId) && snippet.id.endsWith(id),
+        (snippet) =>
+          snippet.id.startsWith(pathId) && snippet.id.replace(`/${jsLibDir}`, '').endsWith(id),
       );
 
     return matches.find((match) => match.id.startsWith(jsLibPathId)) ?? matches[0];
@@ -59,7 +65,7 @@ const defaultTitle =
 {
   snippet &&
     (copy ? (
-      <CodeBlock title={defaultTitle} {...codeBlockProps}>
+      <CodeBlock title={defaultTitle} {...codeBlockProps} copy>
         <CopyCodeButton
           id={snippet.id}
           {highlights}

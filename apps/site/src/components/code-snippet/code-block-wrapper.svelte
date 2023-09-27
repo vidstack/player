@@ -7,6 +7,7 @@
   export let title = '';
   export let flat = false;
   export let style = '';
+  export let copy = false;
   export let showTopBar = false;
 
   const hasTopBar = title || showTopBar;
@@ -21,7 +22,11 @@
       : 'w-full min-h-full',
     _class,
   )}
-  style={clsx(`--leading: 1.375rem;`, hasTopBar && '--code-block-top: 3.25rem;', style)}
+  style={clsx(
+    `--leading: 1.375rem;`,
+    `--code-block-top: ${hasTopBar ? (copy ? 3.25 : 2.85) : 1}rem;`,
+    style,
+  )}
   data-flat={flat ? '' : null}
 >
   {#if hasTopBar}

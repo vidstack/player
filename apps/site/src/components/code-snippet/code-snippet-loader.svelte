@@ -37,26 +37,25 @@
     code = (await snippet.code[darkTheme ? 'dark' : 'light']()).default;
   }
 
-  $: loader = $codeSnippets.find((snippet) => snippet.id === id);
-  $: if (loader) loadSnippet(loader);
-
-  $: if (snippet) loadCode(snippet, $isDarkColorScheme);
-
   if (import.meta.hot) {
     import.meta.hot.on(':invalidate_code_snippet', async ({ id, imports }) => {
       if (loader?.id !== id) return;
 
-      snippet = (await import(/* @vite-ignore */ imports.snippet)).default;
-
       if (snippet) {
-        snippet.code.light = () => import(/* @vite-ignore */ imports.code.light);
-        snippet.code.dark = () => import(/* @vite-ignore */ imports.code.dark);
+        Object.assign(snippet.code, {
+          light: () => import(/* @vite-ignore */ imports.code.light),
+          dark: () => import(/* @vite-ignore */ imports.code.dark),
+        });
       }
 
-      const theme = get(isDarkColorScheme) ? 'dark' : 'light';
-      code = (await import(/* @vite-ignore */ imports.code[theme])).default;
+      snippet = (await import(/* @vite-ignore */ imports.snippet)).default;
     });
   }
+
+  $: loader = $codeSnippets.find((snippet) => snippet.id === id);
+  $: if (loader) loadSnippet(loader);
+
+  $: if (snippet) loadCode(snippet, $isDarkColorScheme);
 </script>
 
 <pre class={clsx('min-h-full inline-flex not-prose', _class)}>

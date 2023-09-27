@@ -13,7 +13,7 @@
   export let transform: ((code: string) => string) | undefined = undefined;
 </script>
 
-<CodeBlockWrapper class={_class} {title} {flat} showTopBar={!!title || copy}>
+<CodeBlockWrapper class={_class} {title} {flat} showTopBar={!!title || copy} {copy}>
   <CopyCodeButton {id} class="ml-auto" slot="top-bar" {transform} />
   <CodeSnippetLoader {id} {transform} />
 </CodeBlockWrapper>

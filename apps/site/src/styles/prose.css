@@ -37,7 +37,7 @@
 }
 
 .prose p:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply my-8 font-normal;
+  @apply my-6 font-normal;
 }
 
 .prose ol:not(:where([class~='not-prose'], [class~='not-prose'] *)),
