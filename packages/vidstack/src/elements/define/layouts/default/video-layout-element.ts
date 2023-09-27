@@ -6,6 +6,7 @@ import { setAttribute } from 'maverick.js/std';
 import { DefaultVideoLayout } from '../../../../components/layouts/default-layout';
 import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
+import { SlotManager } from '../slot-manager';
 import { DefaultLayoutIconsLoader } from './icons-loader';
 import { createMenuContainer } from './shared-layout';
 import { DefaultVideoLayoutLarge, DefaultVideoLayoutSmall } from './video-layout';
@@ -39,8 +40,13 @@ export class MediaVideoLayoutElement
   }
 
   protected onConnect() {
-    const iconsLoader = new DefaultLayoutIconsLoader(this, this.$props.icons, 'vds-icon');
-    iconsLoader.connect();
+    effect(() => {
+      if (this.$props.customIcons()) {
+        new SlotManager(this).connect();
+      } else {
+        new DefaultLayoutIconsLoader(this).connect();
+      }
+    });
   }
 
   private _render() {

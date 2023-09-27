@@ -1,13 +1,10 @@
 import type { TemplateResult } from 'lit-html';
+
 import { Icon } from '../../../icon';
-import { TemplateIconsLoader } from '../icons/template-icons-loader';
+import { LayoutIconsLoader } from '../icons/layout-icons-loader';
 
-export class DefaultLayoutIconsLoader extends TemplateIconsLoader {
-  protected override _resolveIcons(id: string) {
-    return id === '' ? this._loadDefaultIcons() : super._resolveIcons(id);
-  }
-
-  protected async _loadDefaultIcons() {
+export class DefaultLayoutIconsLoader extends LayoutIconsLoader {
+  async _load() {
     const paths = (await import('./icons')).icons,
       icons: Record<string, TemplateResult> = {};
 

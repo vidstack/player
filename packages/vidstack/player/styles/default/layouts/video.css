@@ -345,7 +345,7 @@
 
 @media (pointer: coarse) {
   :where([data-preview] .vds-video-layout[data-size='sm'] .vds-time-slider) {
-    --track-height: var(--video-slider-track-height, 12px);
+    --track-height: var(--video-sm-slider-focus-track-height, 12px);
     transform: translateY(-6px);
     transition: transform 0.1s linear;
   }

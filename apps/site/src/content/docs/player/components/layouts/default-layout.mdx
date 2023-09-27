@@ -2,8 +2,6 @@
 description: A guide on how to setup the default audio/video layout and available customization options.
 ---
 
-## Usage
-
 The Default Layout ships with support for audio and video. You can include both layouts at the
 same time, only one will be matched depending on the view type.
 
@@ -29,7 +27,8 @@ If you'd like to disable small layouts, set the query to `false` or `'never'`:
 
 ## Icons
 
-You can easily replace the icons used in the layouts to match the style of your application.
+You can easily replace the icons used in the layouts to match the style of your application like
+so:
 
 ::code[./icons]{copy=true}
 
@@ -37,14 +36,50 @@ You can easily replace the icons used in the layouts to match the style of your 
 
 ## Thumbnails
 
-...
+You can provide thumbnails which will be used to display preview images when interacting with
+the time slider and in the chapters menu. The `thumbnails` property must be an absolute or
+relative URL to a WebVTT file resource ([example][thumbnails-example]).
+
+- The image URLs specified in the WebVTT file can be absolute
+  `https://foo.com/media/thumbnail-1.jpg` or relative `/media/thumbnail-1.jpg`.
+- The width and height of each thumbnail image should be kept the same. If sizes differ, the
+  aspect ratio should remain the same to avoid jumping when previewing.
+- You can specify multiple images or use a sprite (recommended) which is a large storyboard image
+  as shown in the linked example.
+
+::code[./thumbnails]
+
+[thumbnails-example]: https://media-files.vidstack.io/thumbnails.vtt
 
 ## CSS Variables
 
-...
+The following snippets contain a complete list of CSS variables and their respective default values.
+They can all be adjusted by you to customize the audio/video layout and child components as desired.
 
-## Languages
+### Audio Layout
 
-...
+The following variables can be used to specifically customize the audio layout. See the
+[Components](#components) section for more.
+
+::code[./audio-vars]{copy=true}
+
+### Video Layout
+
+The following variables can be used to specifically customize the video layout. See the
+[Components](#components) section for more.
+
+::code[./video-vars]{copy=true}
+
+### Components
+
+::code[./component-vars]{copy=true}
+
+## Language
+
+Both the audio and video layout support internationalization by accepting custom language
+translations. You can dynamically set the `translations` property to update the language like so:
+
+::code[./language]{copy=true}
+::code[./provide-language]
 
 ::component_api

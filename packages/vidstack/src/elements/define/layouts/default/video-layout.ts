@@ -111,7 +111,7 @@ function DefaultBufferingIndicator() {
 function DefaultVideoMenus() {
   const { menuGroup, smQueryList } = useDefaultLayoutContext(),
     $side = () => (menuGroup() === 'top' || smQueryList.matches ? 'bottom' : 'top'),
-    $tooltip = computed(() => `${$side()} end` as const),
+    $tooltip = computed(() => `${$side()} ${menuGroup() === 'top' ? 'end' : 'center'}` as const),
     $placement = computed(() => `${$side()} end` as const);
   return html`
     ${DefaultChaptersMenu({ tooltip: $tooltip, placement: $placement, portal: true })}

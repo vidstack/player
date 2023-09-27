@@ -199,11 +199,11 @@
 }
 
 :where(.vds-menu-items:not([data-submenu])[aria-hidden='true']) {
-  animation: vds-menu-exit 0.2s ease-out;
+  animation: var(--media-menu-exit-animation, vds-menu-exit 0.2s ease-out);
 }
 
 :where(.vds-menu-items:not([data-submenu])[aria-hidden='false']) {
-  animation: vds-menu-enter 0.3s ease-out;
+  animation: var(--media-menu-enter-animation, vds-menu-enter 0.3s ease-out);
   animation-fill-mode: forwards;
 }
 
