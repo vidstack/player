@@ -25,6 +25,7 @@ export interface MuteButtonProps extends ReactElementProps<MuteButtonInstance, H
  * ```tsx
  * const volume = useMediaState('volume'),
  *   isMuted = useMediaState('muted');
+ *
  * <MuteButton>
  *   {isMuted || volume == 0 ? (
  *     <MuteIcon />

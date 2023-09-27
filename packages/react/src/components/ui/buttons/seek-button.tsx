@@ -26,6 +26,7 @@ export interface SeekButtonProps extends ReactElementProps<SeekButtonInstance, H
  * <SeekButton seconds={-10}>
  *   <SeekBackwardIcon />
  * </SeekButton>
+ *
  * <SeekButton seconds={10}>
  *   <SeekForwardIcon />
  * </SeekButton>

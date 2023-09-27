@@ -26,6 +26,7 @@ export interface CaptionButtonProps
  * ```tsx
  * const track = useMediaState('textTrack'),
  *   isOn = track && isTrackCaptionKind(track);
+ *
  * <CaptionButton>
  *   {isOn ? <OnIcon /> : <OffIcon />}
  * </CaptionButton>

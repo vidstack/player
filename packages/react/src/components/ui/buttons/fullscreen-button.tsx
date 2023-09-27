@@ -26,6 +26,7 @@ export interface FullscreenButtonProps
  * @example
  * ```tsx
  * const isActive = useMediaState('fullscreen');
+ *
  * <FullscreenButton>
  *   {!isActive ? <EnterIcon /> : <ExitIcon />}
  * </FullscreenButton>

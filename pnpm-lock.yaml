@@ -138,8 +138,8 @@ importers:
         specifier: ^1.1.112
         version: 1.1.112
       '@maverick-js/cli':
-        specifier: 0.40.0
-        version: 0.40.0
+        specifier: 0.40.1
+        version: 0.40.1
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
         version: 0.1.1(tailwindcss@3.3.3)
@@ -844,8 +844,8 @@ importers:
         version: 0.0.18
     devDependencies:
       '@maverick-js/cli':
-        specifier: 0.40.0
-        version: 0.40.0
+        specifier: 0.40.1
+        version: 0.40.1
       '@rollup/plugin-node-resolve':
         specifier: ^15.1.0
         version: 15.1.0(rollup@3.25.1)
@@ -862,8 +862,8 @@ importers:
         specifier: ^11.0.0
         version: 11.1.1
       maverick.js:
-        specifier: 0.40.0
-        version: 0.40.0
+        specifier: 0.40.1
+        version: 0.40.1
       media-icons:
         specifier: 0.10.0
         version: 0.10.0
@@ -902,8 +902,8 @@ importers:
         specifier: ^1.4.4
         version: 1.4.4
       '@maverick-js/cli':
-        specifier: 0.40.0
-        version: 0.40.0
+        specifier: 0.40.1
+        version: 0.40.1
       '@open-wc/semantic-dom-diff':
         specifier: ^0.19.5
         version: 0.19.9
@@ -950,8 +950,8 @@ importers:
         specifier: ^2.7.4
         version: 2.7.4
       maverick.js:
-        specifier: 0.40.0
-        version: 0.40.0
+        specifier: 0.40.1
+        version: 0.40.1
       media-icons:
         specifier: 0.10.0
         version: 0.10.0
@@ -3349,10 +3349,10 @@ packages:
       - supports-color
     dev: true
 
-  /@maverick-js/cli@0.40.0:
+  /@maverick-js/cli@0.40.1:
     resolution:
       {
-        integrity: sha512-8GqkCpE9m1O7nuo79cHoi5QERxP/dwSI60og9eDx//FSAx3RD+H3BK5gITZ7MKUqOCqhlLMoHoVwiBz/lPbtrQ==,
+        integrity: sha512-241la1QWjlb4ue8e4TpBHRORpo4Z0rxWStAd3iroploYGtHjJYNIZJHDQQQg22WueaemP8V78v9yq44jpuKYfA==,
       }
     engines: { node: '>=16' }
     hasBin: true
@@ -9753,10 +9753,10 @@ packages:
         integrity: sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==,
       }
 
-  /maverick.js@0.40.0:
+  /maverick.js@0.40.1:
     resolution:
       {
-        integrity: sha512-VDoDCFS+hmXO4Ub7K0Eavi0m4MxnIOnvLCyojb+/N4z6b5SBX/MaeSvno85BqpQgSs9P0hDYOdLBKjlcRQk7Zg==,
+        integrity: sha512-yEI+4VpeFeO+f2oqbG17RBIw8FxKnkFoKNoOTJCEoJ9RA8/MA1vLhr3XJtTfdXXbVbVyza98jdiIkbKp9g3GMg==,
       }
     engines: { node: '>=16' }
     dev: true

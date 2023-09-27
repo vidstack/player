@@ -172,7 +172,16 @@ ChapterTracks.displayName = 'SliderChapterTracks';
 export interface ChapterTitleProps extends PrimitivePropsWithRef<'div'> {}
 
 /**
- * Used to display the active cue text of the currently active chapter text track.
+ * Used to display the active cue text based on the slider value and preview value.
+ *
+ * @example
+ * ```tsx
+ * <TimeSlider.Root>
+ *   <TimeSlider.Preview>
+ *     <TimeSlider.Chapter />
+ *   </TimeSlider.Preview>
+ * </TimeSlider.Root>
+ * ```
  */
 const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
   ({ children, ...props }, forwardRef) => {

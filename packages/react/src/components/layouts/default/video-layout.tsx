@@ -33,9 +33,11 @@ export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps {}
  * previews, captions, and audio/quality settings out of the box. It doesn't support live
  * streams just yet.
  *
+ * @attr data-match - Whether this layout is being used (query match).
+ * @attr data-size - The active layout size.
  * @example
  * ```tsx
- * <MediaPlayer src="audio.mp3">
+ * <MediaPlayer src="video.mp4">
  *   <MediaProvider />
  *   <DefaultVideoLayout thumbnails="thumbnails.vtt" icons={defaultLayoutIcons} />
  * </MediaPlayer>
