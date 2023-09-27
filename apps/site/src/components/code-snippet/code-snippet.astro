@@ -49,7 +49,10 @@ function findCodeSnippet(id: string, up?: boolean) {
           snippet.id.replace(`/${jsLibDir}`, '').endsWith(`/${id}`),
       );
 
-    return matches.find((match) => match.id.startsWith(jsLibPathId)) ?? matches[0];
+    return (
+      matches.find((match) => match.id.startsWith(jsLibPathId)) ??
+      matches.find((match) => match.id === `${pathId}/${id}`)
+    );
   }
 
   return get(codeSnippets).find((snippet) => snippet.id === id);

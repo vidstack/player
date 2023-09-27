@@ -14,7 +14,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     when: '',
     smallWhen: '',
     thumbnails: '',
-    icons: '',
+    customIcons: false,
     translations: null,
     menuGroup: 'bottom',
     noModal: false,
@@ -112,10 +112,10 @@ export interface DefaultLayoutProps {
    */
   thumbnails: string;
   /**
-   * The DOM identifier for a `<template>` element that contains SVG elements to be used as
+   * Whether the default icons should _not_ be loaded. Set this to `true` when providing your own
    * icons.
    */
-  icons: string;
+  customIcons: boolean;
   /**
    * Translation map from english to your desired language for words used throughout the layout.
    */

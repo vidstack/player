@@ -1,0 +1,1 @@
+<DefaultVideoLayout translations={SPANISH} />;

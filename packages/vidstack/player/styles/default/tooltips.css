@@ -46,11 +46,11 @@
 }
 
 :where(.vds-tooltip-content:not([data-visible])) {
-  animation: vds-tooltip-exit 0.2s ease-out;
+  animation: var(--media-tooltip-exit-animation, vds-tooltip-exit 0.2s ease-out);
 }
 
 :where(.vds-tooltip-content[data-visible]) {
-  animation: vds-tooltip-enter 0.2s ease-in;
+  animation: var(--media-tooltip-enter-animation, vds-tooltip-enter 0.2s ease-in);
   animation-fill-mode: forwards;
 }
 

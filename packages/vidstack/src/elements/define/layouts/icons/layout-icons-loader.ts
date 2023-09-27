@@ -4,16 +4,11 @@ import type { MediaPlayerElement } from '../../player-element';
 import { IconsLoader } from './icons-loader';
 
 export abstract class LayoutIconsLoader extends IconsLoader {
-  constructor(protected _el: HTMLElement) {
-    super();
-  }
-
   override connect() {
     const player = this._findPlayerElement();
     if (!player) return;
 
     super.connect();
-    this.slots.observe(this._el);
 
     if (player.$state.canLoad()) {
       this.load();
@@ -23,7 +18,7 @@ export abstract class LayoutIconsLoader extends IconsLoader {
   }
 
   protected _findPlayerElement() {
-    let node = this._el.parentElement;
+    let node = this._root.parentElement;
 
     while (node && node.localName !== 'media-player') {
       node = node.parentElement;

@@ -1,0 +1,38 @@
+.vds-audio-layout {
+  --audio-brand: #f5f5f5;
+  --audio-controls-color: #f5f5f5;
+  --audio-focus-ring-color: rgb(78 156 246);
+  --audio-focus-ring: 0 0 0 3px var(--media-focus-ring-color);
+  --audio-font-family: sans-serif;
+
+  --audio-bg: black;
+  --audio-border-radius: 6px;
+  --audio-border: 1px solid rgb(255 255 255 / 0.1);
+
+  /* Buttons. */
+  --audio-button-size: 40px;
+  --audio-button-size: 40px;
+  --audio-play-button-size: 43px;
+  --audio-play-button-size: 43px;
+
+  /* Sliders. */
+  --audio-slider-chapter-title-color: black;
+  --audio-slider-chapter-title-color: white;
+  --audio-slider-value-border: 1px solid rgb(255 255 255 / 0.1);
+
+  /* Menus. */
+  --audio-menu-max-height: 320px;
+
+  /* Buffering. */
+  --audio-buffering-stripe-color: rgb(0 0 0 / 0.25);
+  --audio-buffering-stripe-size: 30px;
+  --audio-buffering-stripe-speed: 2s;
+
+  /* Captions. */
+  --audio-captions-offset: 2px;
+  --audio-captions-bg: transparent;
+  --audio-cue-font-size: 14px;
+  --audio-cue-color: white;
+  --audio-cue-border: 1px solid rgb(255 255 255 / 0.1);
+  --audio-cue-bg: black;
+}

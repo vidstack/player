@@ -1,55 +1,56 @@
-import { effect, onDispose, peek, signal } from 'maverick.js';
+import { render, type TemplateResult } from 'lit-html';
+import { onDispose } from 'maverick.js';
 import { animationFrameThrottle } from 'maverick.js/std';
 
 export class SlotObserver {
-  private _roots = signal<HTMLElement[]>([]);
-  private _slots = new Set<HTMLSlotElement>();
+  readonly elements = new Set<HTMLSlotElement>();
 
-  get elements() {
-    return this._slots;
-  }
-
-  constructor(private _callback: SlotObserverCallback) {}
+  constructor(
+    protected _root: HTMLElement,
+    protected _callback: SlotObserverCallback,
+  ) {}
 
   connect() {
-    effect(this._watchRoots.bind(this));
+    this._update();
+
+    const observer = new MutationObserver(this._onMutation);
+    observer.observe(this._root, { childList: true });
+    onDispose(() => observer.disconnect());
+
     onDispose(this.disconnect.bind(this));
   }
 
   disconnect() {
-    this._roots.set([]);
-    this._slots.clear();
+    this.elements.clear();
   }
 
-  observe(...roots: HTMLElement[]) {
-    this._roots.set((r) => [...r, ...roots]);
-  }
-
-  private _watchRoots() {
-    const roots = this._roots(),
-      observer = new MutationObserver(this._onMutation);
-
-    for (const root of roots) {
-      observer.observe(root, { childList: true });
+  assign(template: Element | TemplateResult, slot: HTMLSlotElement) {
+    if (template instanceof Node) {
+      slot.textContent = '';
+      slot.append(template);
+    } else {
+      render(template, slot);
     }
 
-    this._update();
+    if (!slot.style.display) {
+      slot.style.display = 'contents';
+    }
 
-    return () => {
-      observer.disconnect();
-    };
+    const el = slot.firstElementChild;
+    if (!el) return;
+
+    const classList = slot.getAttribute('data-class');
+    if (classList) el.classList.add(...classList.split(' '));
   }
 
   private _onMutation = animationFrameThrottle(this._update.bind(this));
 
   private _update() {
-    this._slots = new Set();
-
-    for (const root of peek(this._roots)) {
-      for (const slot of root.querySelectorAll('slot')) this._slots.add(slot);
+    for (const slot of this._root.querySelectorAll('slot')) {
+      if (slot.hasAttribute('name')) this.elements.add(slot);
     }
 
-    this._callback(this._slots);
+    this._callback(this.elements);
   }
 }
 

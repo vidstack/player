@@ -1,0 +1,39 @@
+.vds-video-layout {
+  --video-brand: #f5f5f5;
+  --video-controls-color: #f5f5f5;
+  --video-focus-ring-color: rgb(78 156 246);
+  --video-focus-ring: 0 0 0 3px var(--media-focus-ring-color);
+  --video-font-family: sans-serif;
+
+  --video-bg: black;
+  --video-border-radius: 6px;
+  --video-border: 1px solid rgb(255 255 255 / 0.1);
+
+  --video-fullscreen-chapter-title-font-size: 16px;
+  --video-gesture-seek-width: 20%;
+
+  /* Buttons. */
+  --video-sm-button-size: 32px;
+  --video-sm-play-button-size: 40px;
+  --video-sm-play-button-transform: translateY(25%);
+  --video-sm-play-button-bg: rgba(0 0 0 / 0.6);
+
+  /* Sliders. */
+  --video-sm-slider-focus-track-height: 12px;
+  --video-slider-thumbnail-border: 1px solid #f5f5f5;
+  --video-slider-thumbnail-border-radius: 2px;
+  --video-volume-slider-max-width: 72px;
+
+  /* Time. */
+  --video-sm-start-duration-bg: rgba(0 0 0 / 0.64);
+  --video-sm-start-duration-padding: 3px 6px;
+  --video-sm-start-duration-color: var(--video: controls-color);
+  --video-time-bg: unset;
+  --video-fullscreen-time-font-size: 16px;
+
+  /* Captions. */
+  --video-sm-captions-offset: 48px;
+  --video-captions-offset: 78px;
+  --video-captions-transition: bottom 0.15s linear;
+  --video-lg-fullscreen-captions-offset: 54px;
+}

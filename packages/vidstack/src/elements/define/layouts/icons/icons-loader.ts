@@ -1,5 +1,6 @@
-import { render, type TemplateResult } from 'lit-html';
+import { type TemplateResult } from 'lit-html';
 import { onDispose } from 'maverick.js';
+
 import { SlotObserver } from '../slot-observer';
 
 export type IconsRecord = Record<string, Element | TemplateResult>;
@@ -7,7 +8,12 @@ export type IconsRecord = Record<string, Element | TemplateResult>;
 export abstract class IconsLoader {
   protected _icons: IconsRecord = {};
   protected _loaded = false;
-  readonly slots = new SlotObserver(this._insertIcons.bind(this));
+
+  readonly slots: SlotObserver;
+
+  constructor(protected _root: HTMLElement) {
+    this.slots = new SlotObserver(_root, this._insertIcons.bind(this));
+  }
 
   connect() {
     this.slots.connect();
@@ -23,11 +29,6 @@ export abstract class IconsLoader {
   }
 
   disconnect() {
-    this._resetSlots();
-    this.slots.disconnect();
-  }
-
-  private _resetSlots() {
     for (const { slot } of this._iterate()) {
       slot.textContent = '';
     }
@@ -48,23 +49,7 @@ export abstract class IconsLoader {
   protected _insertIcons() {
     if (!this._loaded) return;
     for (const { icon, slot } of this._iterate()) {
-      slot.textContent = '';
-
-      if (icon instanceof Node) {
-        slot.append(icon);
-      } else {
-        render(icon, slot);
-      }
-
-      if (!slot.style.display) {
-        (slot as HTMLElement).style.display = 'contents';
-      }
-
-      const iconEl = slot.firstElementChild;
-      if (!iconEl) return;
-
-      const classList = slot.getAttribute('data-class');
-      if (classList) iconEl.classList.add(...classList.split(' '));
+      this.slots.assign(icon, slot);
     }
   }
 }
