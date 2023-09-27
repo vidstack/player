@@ -3,11 +3,19 @@
   "pipeline": {
     "analyze": {
       "dependsOn": ["^types"],
-      "outputs": ["analyze.json", "vscode.html-data.json", "vue.d.ts"]
+      "outputs": ["analyze.json", "vscode.html-data.json", "vue.d.ts", "svelte.d.ts", "solid.d.ts"]
     },
     "build": {
       "dependsOn": ["^analyze", "^build", "clean"],
-      "outputs": ["cdn/**", "dist/**", "local/**", ".vercel/**", "player/styles/default/theme.css"]
+      "outputs": [
+        "cdn/**",
+        "dist/**",
+        "local/**",
+        ".vercel/**",
+        "player/styles/default/theme.css",
+        "tailwind.cjs",
+        "tailwind.d.cts"
+      ]
     },
     "build:vercel": {
       "dependsOn": ["^analyze", "^build", "clean"],

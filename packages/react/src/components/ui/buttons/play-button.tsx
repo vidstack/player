@@ -24,6 +24,7 @@ export interface PlayButtonProps extends ReactElementProps<PlayButtonInstance, H
  * @example
  * ```tsx
  * const isPaused = useMediaState('paused');
+ *
  * <PlayButton>
  *   {isPaused ? <PlayIcon /> : <PauseIcon />}
  * </PlayButton>

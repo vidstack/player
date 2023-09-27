@@ -39,9 +39,8 @@ const { pathname } = Astro.url,
           importCode = [
             `import { ${component.namespace} } from "@vidstack/react";`,
             '',
-            `type Props = ${component.namespace}.${component.propsType};`,
-            '',
             `const Component = ${component.namespace}.${component.name};`,
+            `type Props = ${component.namespace}.${component.propsType};`,
           ].join('\n');
         } else {
           importCode = `import { ${component.name}${propsType} } from "@vidstack/react";`;
@@ -128,7 +127,7 @@ const { pathname } = Astro.url,
             ].join('\n')
           : '';
 
-        const dataAttrs = component.instance?.doctags
+        const dataAttrs = [...(component.instance?.doctags || []), ...(component.doctags || [])]
           ?.filter((tag) => tag.name === 'attr' && tag.text)
           .map((tag) => tag.text!.split(/\s+-\s+/))
           .map(([name, desc]) => [<code>{name}</code>, desc]);

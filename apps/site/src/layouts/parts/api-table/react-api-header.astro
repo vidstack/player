@@ -15,15 +15,16 @@ interface Props {
   badges?: Array<string | null | undefined>;
 }
 
-const { title, slug, description, importCode, exampleCode, badges } = Astro.props;
+const { title, slug, description, importCode, exampleCode, badges } = Astro.props,
+  hasBadges = badges?.filter(Boolean).length;
 ---
 
 <div class="flex flex-col mb-4">
   {title ? <Heading title={title} {slug} level={3} /> : null}
 
   {
-    badges?.filter(Boolean).length ? (
-      <div class={clsx('flex space-x-2 items-center not-prose -mt-2')}>
+    hasBadges ? (
+      <div class={clsx('flex space-x-2 items-center not-prose -mt-2 -mb-2')}>
         <Badge color="blue">
           <code class="text-xs">{badges[0]}</code>
         </Badge>
@@ -34,6 +35,14 @@ const { title, slug, description, importCode, exampleCode, badges } = Astro.prop
         )}
       </div>
     ) : null
+  }
+
+  {
+    description && (
+      <div class={clsx('-mb-8', !hasBadges && '-mt-8')}>
+        <Fragment set:html={description} />
+      </div>
+    )
   }
 
   {
@@ -50,14 +59,6 @@ const { title, slug, description, importCode, exampleCode, badges } = Astro.prop
           )}
         </div>
       </CodeBlockWrapper>
-    )
-  }
-
-  {
-    description && (
-      <div class="-mt-8 -mb-6">
-        <Fragment set:html={description} />
-      </div>
     )
   }
 </div>

@@ -58,7 +58,8 @@ if (pathname.includes('components/')) {
           addHeading('Instance', tableHeadingLevel, fullName + '.instance');
         }
 
-        if (component.instance?.doctags?.some((tag) => tag.name === 'attr' && tag.text)) {
+        const tags = [...(component.instance?.doctags || []), ...(component.doctags || [])];
+        if (tags.some((tag) => tag.name === 'attr' && tag.text)) {
           addHeading('Data Attributes', tableHeadingLevel, fullName + '.attrs');
         }
       }

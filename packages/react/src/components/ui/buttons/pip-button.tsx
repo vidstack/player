@@ -25,6 +25,7 @@ export interface PIPButtonProps extends ReactElementProps<PIPButtonInstance, HTM
  * @example
  * ```tsx
  * const isActive = useMediaState('pictureInPicture');
+ *
  * <PIPButton>
  *   {!isActive ? <EnterIcon /> : <ExitIcon />}
  * </PIPButton>
