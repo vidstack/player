@@ -7,7 +7,8 @@ import type { Plugin } from 'vite';
 import { resolveCodeHighlights, snippetsMap, stripComments } from './code-snippets.js';
 
 export default (): Plugin => {
-  let shiki: Highlighter;
+  let shiki: Highlighter,
+    dev = false;
 
   const fileToId = new Map(),
     highlightQueryRE = /\?highlight.*/;
@@ -30,7 +31,8 @@ export default (): Plugin => {
   return {
     name: '@vidstack/highlight',
     enforce: 'pre',
-    async configResolved() {
+    async configResolved(config) {
+      dev = config.mode === 'dev';
       shiki = await getHighlighter({
         theme: 'github-light',
         themes: ['github-light', 'github-dark'],

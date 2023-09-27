@@ -11,7 +11,7 @@
     highlightedLines = resolveHighlightedLines(lines, highlights);
 
   if (import.meta.hot) {
-    import.meta.hot.on(':invalidate_code_snippet', async (payload) => {
+    import.meta.hot.on(':invalidate_code_snippet', async (payload: any) => {
       if (payload.id !== id) return;
       lineNumbers = toArray(payload.lines);
       highlightedLines = resolveHighlightedLines(payload.lines, payload.highlights);

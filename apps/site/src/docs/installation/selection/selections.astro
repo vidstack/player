@@ -58,7 +58,7 @@ const { pathname } = Astro.url,
 
         const props = {
           class:
-            'not-prose group ml-4 hocus:text-[var(--from-color)] data-[active]:text-[var(--from-color)]',
+            'not-prose group hocus:text-[var(--from-color)] data-[active]:text-[var(--from-color)]',
           role: param ? 'option' : null,
           'data-option': '',
           'data-value': id,
@@ -107,7 +107,7 @@ const { pathname } = Astro.url,
                 {title}
               </div>
             ) : (
-              <div class="flex flex-col">
+              <div class="flex flex-col justify-center">
                 <a {...props} href={`${basePath}/${id}`}>
                   {contents}
                 </a>

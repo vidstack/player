@@ -3,7 +3,7 @@
 }
 
 .docs .category + h1 {
-  @apply -mt-7;
+  @apply -mt-3;
 }
 
 .DocSearch-Button-Key {

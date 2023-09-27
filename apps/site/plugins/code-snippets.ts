@@ -61,7 +61,9 @@ export default (): Plugin => {
     handleHotUpdate({ file, server }) {
       if (snippetsRE.test(file)) {
         const mod = server.moduleGraph.getModuleById(SNIPPETS_REQ_ID);
-        if (mod) return [mod];
+        if (mod) {
+          server.moduleGraph.invalidateModule(mod);
+        }
       }
     },
   };
