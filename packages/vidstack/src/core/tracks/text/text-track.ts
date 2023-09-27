@@ -295,7 +295,7 @@ export interface TextTrackInit {
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/TextTrack/id}
    */
-  readonly id?: string;
+  id?: string;
   /**
    * URL of the text track resource. This attribute must be specified and its URL value must have
    * the same origin as the document — unless the <audio> or <video> parent element of the track
@@ -328,7 +328,7 @@ export interface TextTrackInit {
    *
    * @defaultValue false
    */
-  readonly default?: boolean;
+  default?: boolean;
   /**
    * The kind of text track this object represents. This decides how the track will be handled
    * by the player.

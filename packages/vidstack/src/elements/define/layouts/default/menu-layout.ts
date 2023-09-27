@@ -1,6 +1,7 @@
 import { html, type TemplateResult } from 'lit-html';
 import { computed, type ReadSignal } from 'maverick.js';
 import { isFunction, isString } from 'maverick.js/std';
+
 import type { RadioOption } from '../../../../components';
 import { $signal } from '../../../lit/directives/signal';
 
@@ -8,7 +9,7 @@ export function renderMenuButton({ label, icon }: { label: ReadSignal<string>; i
   return html`
     <media-menu-button class="vds-menu-button">
       <slot name="menu-arrow-left-icon" data-class="vds-menu-button-close-icon"></slot>
-      <slot name="${icon}-icon" data-class="vds-menu-button-icon"></slot>
+      <slot name="menu-${icon}-icon" data-class="vds-menu-button-icon"></slot>
       <span class="vds-menu-button-label">${$signal(label)}</span>
       <span class="vds-menu-button-hint" data-part="hint"></span>
       <slot name="menu-arrow-right-icon" data-class="vds-menu-button-open-icon"></slot>

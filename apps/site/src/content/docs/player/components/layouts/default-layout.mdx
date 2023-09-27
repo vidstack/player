@@ -2,4 +2,49 @@
 description: A guide on how to setup the default audio/video layout and available customization options.
 ---
 
+## Usage
+
+The Default Layout ships with support for audio and video. You can include both layouts at the
+same time, only one will be matched depending on the view type.
+
+::code[./usage]
+
+By default, the view type is inferred from the provider and media type. You can specify the desired
+type like so:
+
+::code[./view-type]
+
+## Size
+
+Both the audio and video layout will adapt to small containers to ensure an optimal user experience.
+You configure when the small layout is displayed by using [Player Queries][player-queries]:
+
+::code[./sm-layout]
+
+If you'd like to disable small layouts, set the query to `false` or `'never'`:
+
+::code[./disable-sm-layout]
+
+[player-queries]: /docs/player/styling/responsive-design#player-queries
+
+## Icons
+
+You can easily replace the icons used in the layouts to match the style of your application.
+
+::code[./icons]{copy=true}
+
+::code[./provide-icons]
+
+## Thumbnails
+
+...
+
+## CSS Variables
+
+...
+
+## Languages
+
+...
+
 ::component_api
