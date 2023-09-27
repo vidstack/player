@@ -9,7 +9,6 @@ import {
   type MenuPlacement,
   type TooltipPlacement,
 } from '../../../../components';
-import { useMediaContext } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
 import { renderMenuButton } from './menu-layout';
 
@@ -247,7 +246,7 @@ export function DefaultChaptersMenu({
       <media-tooltip class="vds-tooltip">
         <media-tooltip-trigger>
           <media-menu-button class="vds-menu-button vds-button">
-            <slot name="chapters-icon"></slot>
+            <slot name="menu-chapters-icon"></slot>
           </media-menu-button>
         </media-tooltip-trigger>
         <media-tooltip-content
@@ -293,7 +292,7 @@ export function DefaultSettingsMenu({
       <media-tooltip class="vds-tooltip">
         <media-tooltip-trigger>
           <media-menu-button class="vds-menu-button vds-button">
-            <slot name="settings-icon" data-class="vds-rotate-icon"></slot>
+            <slot name="menu-settings-icon" data-class="vds-rotate-icon"></slot>
           </media-menu-button>
         </media-tooltip-trigger>
         <media-tooltip-content

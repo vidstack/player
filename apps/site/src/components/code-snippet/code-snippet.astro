@@ -45,7 +45,8 @@ function findCodeSnippet(id: string, up?: boolean) {
     let jsLibPathId = `${pathId}/${jsLibDir}`,
       matches = get(codeSnippets).filter(
         (snippet) =>
-          snippet.id.startsWith(pathId) && snippet.id.replace(`/${jsLibDir}`, '').endsWith(id),
+          snippet.id.startsWith(pathId) &&
+          snippet.id.replace(`/${jsLibDir}`, '').endsWith(`/${id}`),
       );
 
     return matches.find((match) => match.id.startsWith(jsLibPathId)) ?? matches[0];
