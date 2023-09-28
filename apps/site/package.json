@@ -21,7 +21,7 @@
     "astro": "^3.1.0",
     "clsx": "^1.2.0",
     "html-entities": "^2.3.3",
-    "media-icons": "0.10.0",
+    "media-icons": "^1.0.0",
     "nprogress": "^0.2.0",
     "vidstack": "workspace:*"
   },

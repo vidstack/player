@@ -10,7 +10,7 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
-    "media-icons": "0.10.0",
+    "media-icons": "^1.0.0",
     "vidstack": "workspace:*"
   },
   "devDependencies": {
