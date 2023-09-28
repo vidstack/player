@@ -42,7 +42,7 @@
     "watch:local": "pnpm run build:types -w & rollup -c -w --config-local"
   },
   "dependencies": {
-    "media-captions": "0.0.18"
+    "media-captions": "^1.0.0"
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.4.4",

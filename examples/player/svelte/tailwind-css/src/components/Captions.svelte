@@ -16,7 +16,7 @@
     word-spacing: normal;
     contain: layout style;
 
-    &[data-dir='rtl'] :global([part='cue-display']) {
+    &[data-dir='rtl'] :global([data-part='cue-display']) {
       direction: rtl;
     }
 
@@ -35,7 +35,7 @@
 * free to ignore them and style the captions as desired, but we don't recommend it unless the
 * captions file contains no cue settings. Otherwise, you might be breaking accessibility.
 */
-  .captions :global([part='cue-display']) {
+  .captions :global([data-part='cue-display']) {
     position: absolute;
     direction: ltr;
     overflow: visible;
@@ -55,7 +55,7 @@
     min-height: min-content;
   }
 
-  .captions :global([part='cue']) {
+  .captions :global([data-part='cue']) {
     display: inline-block;
     contain: content;
     border-radius: 2px;
@@ -69,7 +69,7 @@
     text-shadow: var(--cue-text-shadow);
   }
 
-  .captions :global([part='cue-display'][data-vertical] [part='cue']) {
+  .captions :global([data-part='cue-display'][data-vertical] [data-part='cue']) {
     padding: var(--cue-padding-x) var(--cue-padding-y);
   }
 </style>

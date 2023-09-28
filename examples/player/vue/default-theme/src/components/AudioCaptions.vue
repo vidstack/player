@@ -14,7 +14,7 @@ media-captions {
   background-color: transparent;
 }
 
-media-captions :deep([part='cue']) {
+media-captions :deep([data-part='cue']) {
   color: white;
   border: rgb(255 255 255 / 0.1);
   background-color: black;

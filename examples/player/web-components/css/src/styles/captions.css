@@ -38,7 +38,7 @@ media-captions[aria-hidden='true'] {
 * free to ignore them and style the captions as desired, but we don't recommend it unless the
 * captions file contains no cue settings. Otherwise, you might be breaking accessibility.
 */
-media-captions [part='cue-display'] {
+media-captions [data-part='cue-display'] {
   position: absolute;
   direction: ltr;
   overflow: visible;
@@ -58,11 +58,11 @@ media-captions [part='cue-display'] {
   min-height: min-content;
 }
 
-media-captions[data-dir='rtl'] [part='cue-display'] {
+media-captions[data-dir='rtl'] [data-part='cue-display'] {
   direction: rtl;
 }
 
-media-captions [part='cue'] {
+media-captions [data-part='cue'] {
   display: inline-block;
   contain: content;
   border-radius: 2px;
@@ -76,7 +76,7 @@ media-captions [part='cue'] {
   text-shadow: var(--cue-text-shadow);
 }
 
-media-captions [part='cue-display'][data-vertical] [part='cue'] {
+media-captions [data-part='cue-display'][data-vertical] [data-part='cue'] {
   padding: var(--cue-padding-x) var(--cue-padding-y);
 }
 
