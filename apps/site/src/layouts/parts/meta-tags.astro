@@ -1,4 +1,7 @@
 ---
+import { currentJSLibrary } from '~/stores/libraries';
+import { get } from 'svelte/store';
+
 interface Props {
   title: string;
   description: string;
@@ -25,3 +28,6 @@ const { title, description } = Astro.props;
 <meta name="twitter:site" content="@vidstackjs" />
 <meta name="twitter:image" content={`${Astro.site}social-card-large.png`} />
 <meta name="twitter:creator" content="@vidstackjs" />
+
+<meta name="docsearch:version" content="latest" />
+<meta name="docsearch:jslib" content={`${get(currentJSLibrary)}`} />
