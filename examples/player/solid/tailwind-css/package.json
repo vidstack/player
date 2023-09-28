@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "media-icons": "0.10.0",
+    "media-icons": "^1.0.0",
     "solid-js": "^1.7.11",
     "vidstack": "workspace:*"
   },

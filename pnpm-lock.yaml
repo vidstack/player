@@ -101,8 +101,8 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       nprogress:
         specifier: ^0.2.0
         version: 0.2.0
@@ -246,8 +246,8 @@ importers:
         specifier: workspace:*
         version: link:../../../../packages/react
       media-icons:
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -305,8 +305,8 @@ importers:
         specifier: workspace:*
         version: link:../../../../packages/react
       media-icons:
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -388,8 +388,8 @@ importers:
         specifier: workspace:*
         version: link:../../../../packages/react
       media-icons:
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -428,8 +428,8 @@ importers:
   examples/player/solid/css:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       solid-js:
         specifier: ^1.7.11
         version: 1.7.12
@@ -469,8 +469,8 @@ importers:
   examples/player/solid/default-theme:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       solid-js:
         specifier: ^1.7.11
         version: 1.7.12
@@ -491,8 +491,8 @@ importers:
   examples/player/solid/tailwind-css:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       solid-js:
         specifier: ^1.7.11
         version: 1.7.12
@@ -525,8 +525,8 @@ importers:
   examples/player/svelte/css:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       vidstack:
         specifier: workspace:*
         version: link:../../../../packages/vidstack
@@ -584,8 +584,8 @@ importers:
   examples/player/svelte/default-theme:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       vidstack:
         specifier: workspace:*
         version: link:../../../../packages/vidstack
@@ -615,8 +615,8 @@ importers:
   examples/player/svelte/tailwind-css:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       vidstack:
         specifier: workspace:*
         version: link:../../../../packages/vidstack
@@ -655,8 +655,8 @@ importers:
   examples/player/vue/css:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       vidstack:
         specifier: workspace:*
         version: link:../../../../packages/vidstack
@@ -702,8 +702,8 @@ importers:
   examples/player/vue/default-theme:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       vidstack:
         specifier: workspace:*
         version: link:../../../../packages/vidstack
@@ -727,8 +727,8 @@ importers:
   examples/player/vue/tailwind-css:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       vidstack:
         specifier: workspace:*
         version: link:../../../../packages/vidstack
@@ -764,8 +764,8 @@ importers:
   examples/player/web-components/css:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       vidstack:
         specifier: workspace:*
         version: link:../../../../packages/vidstack
@@ -793,8 +793,8 @@ importers:
   examples/player/web-components/default-theme:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       vidstack:
         specifier: workspace:*
         version: link:../../../../packages/vidstack
@@ -809,8 +809,8 @@ importers:
   examples/player/web-components/tailwind-css:
     dependencies:
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       vidstack:
         specifier: workspace:*
         version: link:../../../../packages/vidstack
@@ -862,8 +862,8 @@ importers:
         specifier: 0.40.1
         version: 0.40.1
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       react:
         specifier: ^18.0.0
         version: 18.2.0
@@ -950,8 +950,8 @@ importers:
         specifier: 0.40.1
         version: 0.40.1
       media-icons:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: ^1.0.0
+        version: 1.0.0
       postcss:
         specifier: ^8.4.0
         version: 8.4.24
@@ -9555,10 +9555,10 @@ packages:
     engines: { node: '>=16' }
     dev: false
 
-  /media-icons@0.10.0:
+  /media-icons@1.0.0:
     resolution:
       {
-        integrity: sha512-M9loX7KUWsID3T8pRSN6/+MNKPEm9dNteqJk7yfo9ZaAIEYzEd07jWTVRlRmgVMKoAh1kY7funD6Qe1prrTJMQ==,
+        integrity: sha512-NpGZOUqNLz5BhvGB1CkB/ejinnsiQQCjwNMrz4X6e9PO5E+am44jo75fnxCdXSVEp445B3U3gSbwYyGR9GQV2w==,
       }
     engines: { node: '>=16' }
 
