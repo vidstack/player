@@ -1,9 +1,0 @@
-media-pip-button[data-active] .enterIcon,
-media-pip-button:not([data-active]) .exitIcon {
-  display: none;
-}
-
-media-player[data-pip] .enterTooltipText,
-media-player:not([data-pip]) .exitTooltipText {
-  display: none;
-}
