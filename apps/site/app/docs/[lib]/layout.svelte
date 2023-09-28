@@ -13,7 +13,6 @@
   import { route, useStaticData } from '@vessel-js/svelte';
   import { readable } from 'svelte/store';
 
-  import Algolia from '$lib/components/algolia/Algolia.svelte';
   import DocsLayout from '$lib/layouts/DocsLayout.svelte';
   import { installMethod, installMethods } from '$lib/stores/install-method';
   import { currentJSLibSidebar, getJSLibFromPath, jsLib } from '$lib/stores/js-lib';
@@ -31,12 +30,5 @@
 </script>
 
 <DocsLayout sidebar={jsLibSidebar}>
-  <Algolia
-    apiKey="03b81ed3b7849b33599967cec76734fe"
-    appId="JV3QY1UI79"
-    indexName="vidstack"
-    slot="search"
-  />
-
   <slot />
 </DocsLayout>

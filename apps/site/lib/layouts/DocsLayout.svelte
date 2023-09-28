@@ -1,12 +1,11 @@
 <script lang="ts">
-  import '@docsearch/css';
-  import '$lib/styles/docsearch.css';
-
-  import { markdown, route } from '@vessel-js/svelte';
   import clsx from 'clsx';
-  import { writable, type Readable } from 'svelte/store';
+
   import RightArrowIcon from '~icons/ri/arrow-right-s-line';
   import MenuUnfoldIcon from '~icons/ri/menu-unfold-fill';
+
+  import { markdown, route } from '@vessel-js/svelte';
+  import { writable, type Readable } from 'svelte/store';
 
   import { dialogManager, type CloseDialogCallback } from '$lib/actions/dialog-manager';
   import Button from '$lib/components/base/Button.svelte';
@@ -14,7 +13,6 @@
   import LibSelect from '$lib/components/docs/LibSelect.svelte';
   import { ariaBool } from '$lib/utils/aria';
   import { hideDocumentScrollbar } from '$lib/utils/scroll';
-
   import MainLayout from './MainLayout.svelte';
   import { createSidebarContext, setSidebarContext, type SidebarLinks } from './sidebar/context';
   import Sidebar from './sidebar/Sidebar.svelte';
@@ -60,10 +58,6 @@
     <div class="ml-1" slot="navbar-left">
       <LibSelect />
     </div>
-
-    <svelte:fragment slot="search">
-      <slot name="search" />
-    </svelte:fragment>
 
     <svelte:fragment slot="navbar-bottom">
       <div class="border-border 992:hidden mt-3 flex w-full items-center border-t pt-4">
