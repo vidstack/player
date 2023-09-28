@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import type { VTTCue } from 'media-captions';
+
 import { useMediaState } from '../../hooks/use-media-state';
 import { Primitive, type PrimitivePropsWithRef } from '../primitives/nodes';
 
@@ -55,6 +57,7 @@ const Text = React.forwardRef<HTMLElement, TextProps>((props, forwardRef) => {
   return (
     <Primitive.span
       {...props}
+      data-part="cue"
       dangerouslySetInnerHTML={{
         __html: activeCue?.text || '',
       }}

@@ -32,7 +32,7 @@
 * free to ignore them and style the captions as desired, but we don't recommend it unless the
 * captions file contains no cue settings. Otherwise, you might be breaking accessibility.
 */
-.captions :deep([part='cue-display']) {
+.captions :deep([data-part='cue-display']) {
   position: absolute;
   direction: ltr;
   overflow: visible;
@@ -52,11 +52,11 @@
   min-height: min-content;
 }
 
-.captions[data-dir='rtl'] :deep([part='cue-display']) {
+.captions[data-dir='rtl'] :deep([data-part='cue-display']) {
   direction: rtl;
 }
 
-.captions :deep([part='cue']) {
+.captions :deep([data-part='cue']) {
   display: inline-block;
   contain: content;
   border-radius: 2px;
@@ -70,7 +70,7 @@
   text-shadow: var(--cue-text-shadow);
 }
 
-.captions :deep([part='cue-display'][data-vertical] [part='cue']) {
+.captions :deep([data-part='cue-display'][data-vertical] [data-part='cue']) {
   padding: var(--cue-padding-x) var(--cue-padding-y);
 }
 </style>

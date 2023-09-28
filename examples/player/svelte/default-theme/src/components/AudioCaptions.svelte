@@ -12,7 +12,7 @@
     background-color: transparent;
   }
 
-  media-captions :global([part='cue']) {
+  media-captions :global([data-part='cue']) {
     color: white;
     border: rgb(255 255 255 / 0.1);
     background-color: black;

@@ -106,7 +106,7 @@ export class Captions extends Component<CaptionsProps> {
     const { renderVTTCueString } = this._lib;
     for (const cue of activeCues) {
       const cueEl = document.createElement('div');
-      cueEl.setAttribute('part', 'cue');
+      cueEl.setAttribute('data-part', 'cue');
       cueEl.innerHTML = renderVTTCueString(cue, time);
       this.el!.append(cueEl);
     }

@@ -58,7 +58,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(.vds-captions [part='cue-display']) {
+:where(.vds-captions [data-part='cue-display']) {
   position: absolute;
   direction: ltr;
   overflow: visible;
@@ -82,11 +82,11 @@
   border-radius: var(--media-cue-display-border-radius);
 }
 
-:where(.vds-captions[data-dir='rtl'] [part='cue-display']) {
+:where(.vds-captions[data-dir='rtl'] [data-part='cue-display']) {
   direction: rtl;
 }
 
-:where(.vds-captions [part='cue']) {
+:where(.vds-captions [data-part='cue']) {
   display: inline-block;
   contain: content;
   border: var(--media-cue-border, unset);
@@ -103,7 +103,7 @@
   text-shadow: var(--cue-text-shadow);
 }
 
-:where(.vds-captions [part='cue-display'][data-vertical] [part='cue']) {
+:where(.vds-captions [data-part='cue-display'][data-vertical] [data-part='cue']) {
   padding: var(--cue-padding-x) var(--cue-padding-y);
 }
 
@@ -113,7 +113,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(.vds-captions [part='region']) {
+:where(.vds-captions [data-part='region']) {
   position: absolute;
   display: inline-flex;
   flex-flow: column;
@@ -144,18 +144,18 @@
   box-sizing: border-box;
 }
 
-:where(.vds-captions [part='region'][data-active]) {
+:where(.vds-captions [data-part='region'][data-active]) {
 }
 
-:where(.vds-captions [part='region'][data-scroll='up']) {
+:where(.vds-captions [data-part='region'][data-scroll='up']) {
   justify-content: end;
 }
 
-:where(.vds-captions [part='region'][data-active][data-scroll='up']) {
+:where(.vds-captions [data-part='region'][data-active][data-scroll='up']) {
   transition: top 0.433s;
 }
 
-:where(.vds-captions [part='region'] > [part='cue-display']) {
+:where(.vds-captions [data-part='region'] > [data-part='cue-display']) {
   position: relative;
   width: auto;
   left: var(--cue-offset);
@@ -165,7 +165,7 @@
   margin-top: 2px;
 }
 
-:where(.vds-captions [part='region'] [part='cue']) {
+:where(.vds-captions [data-part='region'] [data-part='cue']) {
   position: relative;
   border-radius: 0px;
 }

@@ -253,7 +253,7 @@
   background-color: var(--audio-captions-bg, transparent);
 }
 
-:where(.vds-audio-layout .vds-captions [part='cue']) {
+:where(.vds-audio-layout .vds-captions [data-part='cue']) {
   color: var(--audio-cue-color, white);
   border: var(--audio-cue-border, 1px solid rgb(255 255 255 / 0.1));
   background-color: var(--audio-cue-bg, black);

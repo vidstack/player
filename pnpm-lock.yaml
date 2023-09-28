@@ -837,8 +837,8 @@ importers:
   packages/react:
     dependencies:
       media-captions:
-        specifier: 0.0.18
-        version: 0.0.18
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       '@maverick-js/cli':
         specifier: 0.40.1
@@ -892,8 +892,8 @@ importers:
   packages/vidstack:
     dependencies:
       media-captions:
-        specifier: 0.0.18
-        version: 0.0.18
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       '@floating-ui/dom':
         specifier: ^1.4.4
@@ -9547,10 +9547,10 @@ packages:
       }
     dev: true
 
-  /media-captions@0.0.18:
+  /media-captions@1.0.0:
     resolution:
       {
-        integrity: sha512-JW18P6FuHdyLSGwC4TQ0kF3WdNj/+wMw2cKOb8BnmY6vSJGtnwJ+vkYj+IjHOV34j3XMc70HDeB/QYKR7E7fuQ==,
+        integrity: sha512-605d9sXW+DtJBNzzfL4N6NpOIjigN+kpzS+V1QaCiNNPB7G015/peyw6wfv9iCp8GAP6R5NPyAICZKeuqWPAQQ==,
       }
     engines: { node: '>=16' }
     dev: false
