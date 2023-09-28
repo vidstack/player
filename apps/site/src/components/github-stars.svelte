@@ -13,6 +13,7 @@
 
   export let owner: string;
   export let repo: string;
+  export let flat = false;
 
   let stars = 0,
     storageKey = `vidstack:github:stars:${owner}/${repo}`,
@@ -36,30 +37,34 @@
   });
 </script>
 
-<Tooltip
-  class={clsx(
-    'group flex items-center justify-center border border-transparent rounded-md px-2 py-1.5',
-    'hocus:border-border/90 hocus:bg-elevate hocus:shadow-sm',
-    _class,
-  )}
-  href={`https://github.com/${owner}/${repo}`}
-  target="_blank"
-  rel="noreferrer"
-  aria-label="GitHub"
->
-  <svelte:fragment slot="trigger">
-    {#if stars > 0}
-      <span
-        class={clsx(
-          'mr-1 text-xs font-semibold transition-all opacity-0 w-0',
-          'group-hocus:opacity-100 group-hocus:w-auto overflow-hidden',
-        )}
-      >
-        {(stars / 1000).toFixed(1)}k
-      </span>
-    {/if}
-    <AnimatedGithubIcon class="w-6 h-6 shrink-0" skipInitial />
-  </svelte:fragment>
+{#if flat}
+  {(stars / 1000).toFixed(1)}k
+{:else}
+  <Tooltip
+    class={clsx(
+      'group flex items-center justify-center border border-transparent rounded-md px-2 py-1.5',
+      'hocus:border-border/90 hocus:bg-elevate hocus:shadow-sm',
+      _class,
+    )}
+    href={`https://github.com/${owner}/${repo}`}
+    target="_blank"
+    rel="noreferrer"
+    aria-label="GitHub"
+  >
+    <svelte:fragment slot="trigger">
+      {#if stars > 0}
+        <span
+          class={clsx(
+            'mr-1 text-xs font-semibold transition-all opacity-0 w-0',
+            'group-hocus:opacity-100 group-hocus:w-auto overflow-hidden',
+          )}
+        >
+          {(stars / 1000).toFixed(1)}k
+        </span>
+      {/if}
+      <AnimatedGithubIcon class="w-6 h-6 shrink-0" skipInitial />
+    </svelte:fragment>
 
-  <svelte:fragment slot="content">GitHub</svelte:fragment>
-</Tooltip>
+    <svelte:fragment slot="content">GitHub</svelte:fragment>
+  </Tooltip>
+{/if}

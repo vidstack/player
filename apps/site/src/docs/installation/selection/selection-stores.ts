@@ -28,7 +28,7 @@ selections.js.subscribe((lib) => {
 selections.css.subscribe((lib) => {
   lib &&
     currentCSSLibrary.set(
-      lib === 'tailwind-css' ? 'tailwind' : lib.startsWith('default') ? 'default-theme' : 'css',
+      lib === 'tailwind-css' ? 'tailwind-css' : lib.startsWith('default') ? 'default-theme' : 'css',
     );
 });
 
