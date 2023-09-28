@@ -18,15 +18,15 @@ as Web Components and React Components. The successor to [Plyr][plyr] `3.x` and 
 
 ### Quickstart
 
-- [Get Started with Web Components](https://www.vidstack.io/docs/wc/player/getting-started/installation)
-- [Get Started with React](https://www.vidstack.io/docs/player/getting-started/installation)
-- [See our Media Icons collection](https://www.vidstack.io/media-icons)
+- [Installation](https://www.vidstack.io/docs/player/getting-started/installation)
+- [Media Icons](https://www.vidstack.io/media-icons)
+- [Examples](https://github.com/vidstack/examples)
 
 ### Documentation
 
-If you'd like to try Vidstack Player Beta, you can find our documentation on our website:
+If you'd like to try Vidstack Player, you can find our documentation on our website:
 
-[Player Documentation][site-player]
+[Player Documentation][docs-player]
 
 ## Uploader
 
@@ -62,7 +62,7 @@ A special thanks to the following sponsors who are kindly supporting Vidstack:
 
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr
-[site-player]: https://www.vidstack.io/player
+[docs-player]: https://www.vidstack.io/docs/player
 [package]: https://www.npmjs.com/package/vidstack
 [package-badge]: https://img.shields.io/npm/v/vidstack?style=flat-square
 [jsdelivr]: https://www.jsdelivr.com/package/npm/vidstack
