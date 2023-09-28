@@ -1,15 +1,16 @@
 /**
  * Thanks: https://github.com/vuejs/vue-next/blob/master/scripts/release.js
  */
-import prompt from 'enquirer';
-import { execa } from 'execa';
 import fs from 'fs';
-import kleur from 'kleur';
-import minimist from 'minimist';
 import { createRequire } from 'module';
 import path from 'path';
-import semver from 'semver';
 import { fileURLToPath } from 'url';
+
+import prompt from 'enquirer';
+import { execa } from 'execa';
+import kleur from 'kleur';
+import minimist from 'minimist';
+import semver from 'semver';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -95,9 +96,6 @@ async function main() {
 
   step('Updating cross dependencies...');
   updateVersions(targetVersion);
-
-  step('Generating changelog...');
-  await run(`npm`, ['run', 'changelog']);
 
   for (const pkg of packages) {
     await publishPackage(pkg, targetVersion, runIfNotDry);
@@ -197,7 +195,7 @@ async function publishPackage(pkgName, version, runIfNotDry) {
   } else if (version.includes('rc')) {
     releaseTag = 'rc';
   } else {
-    releaseTag = 'latest';
+    releaseTag = 'next';
   }
 
   step(`Publishing ${pkgName}...`);
