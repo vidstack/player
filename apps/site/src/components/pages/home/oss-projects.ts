@@ -3,20 +3,20 @@ import type { GridContentItem } from '../../sections/grid-content.astro';
 export const openSourceProjects: GridContentItem[] = [
   {
     title: 'Player',
-    stage: 'Beta',
+    stage: 1,
     href: '/player',
     stars: { owner: 'vidstack', repo: 'player' },
     description: 'UI component library for building video and audio players for the web.',
   },
   {
     title: 'Captions',
-    stage: 'Beta',
+    stage: 1,
     href: 'https://github.com/vidstack/media-captions',
     description: 'Modern media captions parser and renderer. Supports VTT, SRT, and SSA.',
   },
   {
     title: 'Icons',
-    stage: 'Beta',
+    stage: 1,
     href: '/media-icons',
     description: 'Beautifully hand-crafted collection of media icons designed for players.',
   },
