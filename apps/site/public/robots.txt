@@ -1,2 +1,16 @@
+User-agent: Twitterbot
+Allow: /
+
+User-agent: Algolia Crawler
+Allow: /sitemap-index.xml
+
 User-agent: *
-Disallow: /
+Disallow: /sitemap-search.xml
+
+User-agent: *
+Disallow: /docs/wc/*
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.vidstack.io/sitemap-index.xml

@@ -30,7 +30,7 @@ import { rehypeOptimizeStatic } from './plugins/mdx/rehype-optimize-static';
 const isLocal = !process.env.VERCEL;
 
 export default defineConfig({
-  site: 'https://vidstack-preview.vercel.app',
+  site: 'https://vidstack.io',
   output: 'hybrid',
   adapter: isLocal ? node({ mode: 'standalone' }) : vercel({ edgeMiddleware: true }),
   vite: {
