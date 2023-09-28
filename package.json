@@ -5,8 +5,7 @@
   "type": "module",
   "workspaces": [
     "apps/*",
-    "packages/*",
-    "examples/**"
+    "packages/*"
   ],
   "scripts": {
     "build": "turbo run build types --filter=./packages/*",
