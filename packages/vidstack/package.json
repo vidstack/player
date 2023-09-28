@@ -13,15 +13,18 @@
     "node": ">=18"
   },
   "files": [
-    "*.d.ts",
+    "dom.d.ts",
+    "icons.d.ts",
+    "index.d.ts",
+    "solid.d.ts",
+    "svelte.d.ts",
+    "vue.d.ts",
     "dist/",
     "player/",
     "cdn/",
     "tailwind.*",
     "empty.vtt",
-    "vscode.html-data.json",
-    "!analyze.json.d.ts",
-    "!local.d.ts"
+    "vscode.html-data.json"
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.ts\"",
