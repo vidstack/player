@@ -16,7 +16,7 @@
   const options: Option[] = [
     ...jsLibraries.map((value) => ({ label: kebabToTitleCase(value), value, group: 'JS' })),
     ...cssLibraries.map((value) => ({
-      label: kebabToTitleCase(value.replace('css', 'CSS')),
+      label: kebabToTitleCase(value.replace('-css', '').replace('css', 'CSS')),
       value,
       group: 'CSS',
     })),

@@ -38,7 +38,9 @@ function findCodeSnippet(id: string, up?: boolean) {
     if (up) {
       pathId = pathId.split('/').slice(0, -1).join('/');
       if (id.includes('/')) {
-        pathId += '/' + id.split('/').slice(0, -1);
+        const segments = id.split('/');
+        id = segments.pop()!;
+        pathId += '/' + segments;
       }
     }
 

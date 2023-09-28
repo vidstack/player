@@ -18,9 +18,9 @@ export function getJSLibraryFromPathname(pathname?: string): JSLibrary {
   return wcPathRE.test(pathname) ? 'web-components' : 'react';
 }
 
-export type CSSLibrary = 'css' | 'tailwind' | 'default-theme';
+export type CSSLibrary = 'css' | 'tailwind-css' | 'default-theme';
 
-export const cssLibraries: CSSLibrary[] = ['css', 'tailwind', 'default-theme'];
+export const cssLibraries: CSSLibrary[] = ['css', 'tailwind-css', 'default-theme'];
 
 export const currentCSSLibrary = writable<CSSLibrary>(
   getCSSLibraryFromPathname(IS_BROWSER ? location.href : undefined),
@@ -32,9 +32,8 @@ export function getCSSLibraryFromPathname(pathname?: string): CSSLibrary {
   const url = new URL(location.href),
     param = url.searchParams.get('styling');
 
-  // Can be tailwind or tailwind-css on installation page.
   return param?.startsWith('tailwind')
-    ? 'tailwind'
+    ? 'tailwind-css'
     : // Can be default-theme or default-layout on installation page.
     param?.startsWith('default')
     ? 'default-theme'

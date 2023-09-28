@@ -5,7 +5,7 @@ export const openSourceProjects: GridContentItem[] = [
     title: 'Player',
     stage: 'Beta',
     href: '/player',
-    stars: '1.1k',
+    stars: { owner: 'vidstack', repo: 'player' },
     description: 'UI component library for building video and audio players for the web.',
   },
   {
@@ -38,14 +38,14 @@ export const openSourceProjects: GridContentItem[] = [
   {
     title: 'Plyr',
     stage: 'Archived',
-    stars: '24.2k',
+    stars: { owner: 'sampotts', repo: 'plyr' },
     href: 'https://github.com/sampotts/plyr',
     description: 'Simple, lightweight, accessible and customizable media player.',
   },
   {
     title: 'Vime',
     stage: 'Archived',
-    stars: '2.6k',
+    stars: { owner: 'vime-js', repo: 'vime' },
     href: 'https://github.com/vime-js/vime',
     description: 'Customizable, extensible, accessible and framework-agnostic media player.',
   },

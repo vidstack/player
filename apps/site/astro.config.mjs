@@ -63,7 +63,7 @@ export default defineConfig({
     mdxTable(),
     mdxComponentAPI(),
     tailwind(),
-    svelte(),
+    svelte({ prebundleSvelteLibraries: false }),
     sitemap(),
     mdx(),
   ],
