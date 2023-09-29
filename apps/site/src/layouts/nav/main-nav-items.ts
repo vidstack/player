@@ -108,7 +108,7 @@ export const mainNavItems: NavItem[] = [
       },
     ],
   },
-  { title: 'Documentation', href: '/docs' },
+  { title: 'Documentation', href: '/docs/player' },
   { title: 'Icons', href: '/media-icons' },
   {
     title: 'Releases',
