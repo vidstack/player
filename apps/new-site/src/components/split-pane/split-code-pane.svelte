@@ -94,7 +94,7 @@
   style={clsx(orientation === 'vertical' && '--code-block-gutters: 10px;')}
 >
   <!-- Top Bar -->
-  <div class="flex items-center w-full sticky top-0 left-0 border-b border-border">
+  <div class="flex items-center w-full sticky top-0 left-0 border-b border-border/90">
     <div class="flex-1"></div>
 
     <div class="relative">

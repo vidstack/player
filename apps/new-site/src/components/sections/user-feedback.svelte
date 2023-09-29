@@ -4,7 +4,7 @@
 
 <div
   {...$$restProps}
-  class={clsx('flex-col border border-border rounded-md p-4', $$restProps.class)}
+  class={clsx('flex-col border border-border/90 rounded-md p-4', $$restProps.class)}
 >
   <div class="flex items-center">
     <div class="rounded-full bg-inverse/10 p-1 mr-1.5">

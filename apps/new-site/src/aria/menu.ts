@@ -8,7 +8,7 @@ import { isKeyboardEvent, wasEnterKeyPressed } from '../utils/keyboard';
 import { hideDocumentScrollbar } from '../utils/scroll';
 import { isUndefined } from '../utils/unit';
 import { createFocusTrap } from './focus-trap';
-import { createPopper, PopperOptions } from './popper';
+import { createPopper, type PopperOptions } from './popper';
 
 export interface AriaMenuOptions extends PopperOptions {
   type?: 'menu' | 'dialog';
@@ -17,7 +17,7 @@ export interface AriaMenuOptions extends PopperOptions {
   defaultOpen?: boolean;
   hover?: boolean;
   submenu?: boolean;
-  noOutSideClick?: boolean;
+  noClickOut?: boolean;
   selectors?: {
     focus?: string[];
     close?: string[];
@@ -52,7 +52,11 @@ export function createAriaMenu(options: AriaMenuOptions) {
           return _arrowEl;
         },
       },
-      { showDelay: 0, strategy: 'fixed', noPlacement: options.portal, ...options },
+      {
+        showDelay: 0,
+        strategy: 'fixed',
+        ...options,
+      },
     ),
     _focusTrap = createFocusTrap({
       selectors: options.selectors?.focus,
@@ -63,11 +67,11 @@ export function createAriaMenu(options: AriaMenuOptions) {
 
   function onShow(event?: Event) {
     _popper.show(event, () => {
-      if (!options.noPlacement) {
+      if (options.placement !== false) {
         _openDisposal.add(_popper.watchPosition());
       }
 
-      if (!options.noOutSideClick) {
+      if (!options.noClickOut) {
         _openDisposal.add(listenEvent(document.body, 'pointerup', (e) => onChange(e, false)));
       }
 
@@ -242,7 +246,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
 
       if (options.portal) {
         document.body.append(el);
-      } else if (!options.noPlacement) {
+      } else if (options.placement !== false) {
         el.style.position = 'absolute';
       }
 
@@ -266,7 +270,7 @@ export function createAriaMenu(options: AriaMenuOptions) {
             }
           }),
         // Close when another menu is opened
-        !options.noOutSideClick &&
+        !options.noClickOut &&
           activeMenu.subscribe((current) => {
             if (current && el !== current && !el.contains(current)) {
               onChange(undefined, false);
@@ -282,7 +286,14 @@ export function createAriaMenu(options: AriaMenuOptions) {
         }
 
         if (parent) {
-          disposal.add(listenEvent(parent, 'aria-close' as any, (e) => onChange(e, false)));
+          disposal.add(
+            listenEvent(parent, 'aria-open' as any, (e) => {
+              if (el.querySelector('[data-active]')) {
+                setTimeout(() => onChange(e, true), 0);
+              }
+            }),
+            listenEvent(parent, 'aria-close' as any, (e) => onChange(e, false)),
+          );
         }
 
         if (options.defaultOpen) onChange(undefined, true);

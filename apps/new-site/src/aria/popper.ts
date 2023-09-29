@@ -4,6 +4,7 @@ import {
   computePosition,
   shift,
   type ComputePositionConfig,
+  type Placement,
 } from '@floating-ui/dom';
 import { tick } from 'svelte';
 
@@ -17,14 +18,15 @@ export interface PopperDelegate {
   onChange?(isShowing: boolean, trigger?: Event): void;
 }
 
-export interface PopperOptions extends ComputePositionConfig {
+export interface PopperOptions extends Omit<ComputePositionConfig, 'placement'> {
+  placement?: Placement | false;
   showDelay?: number;
-  noPlacement?: boolean;
 }
 
 export function createPopper(delegate: PopperDelegate, options: PopperOptions) {
   let _showTimerId = -1,
     _hideRafId = -1,
+    noPlacement = options.placement === false,
     _stopAnimationListener: (() => void) | null = null;
 
   function show(trigger?: Event, onChange?: () => void) {
@@ -89,13 +91,14 @@ export function createPopper(delegate: PopperDelegate, options: PopperOptions) {
   }
 
   function position() {
-    if (options.noPlacement || !delegate.triggerEl || !delegate.contentEl) return;
+    if (noPlacement || !delegate.triggerEl || !delegate.contentEl) return;
 
     const middleware = options.middleware || [];
     middleware.push(shift({ padding: 8 }));
 
     const position = computePosition(delegate.triggerEl, delegate.contentEl, {
       ...options,
+      placement: options.placement as Placement,
       middleware: !delegate.arrowEl
         ? middleware
         : [...middleware, arrow({ element: delegate.arrowEl })],
@@ -112,7 +115,7 @@ export function createPopper(delegate: PopperDelegate, options: PopperOptions) {
       if (delegate.arrowEl && middlewareData.arrow) {
         const { x, y } = middlewareData.arrow;
 
-        const side = options.placement!.split('-')[0],
+        const side = (options.placement as Placement).split('-')[0],
           staticSide = {
             top: 'bottom',
             right: 'left',
@@ -130,7 +133,7 @@ export function createPopper(delegate: PopperDelegate, options: PopperOptions) {
   }
 
   function watchPosition() {
-    if (options.noPlacement || !delegate.triggerEl || !delegate.contentEl) return null;
+    if (noPlacement || !delegate.triggerEl || !delegate.contentEl) return null;
     return autoUpdate(delegate.triggerEl, delegate.contentEl, position);
   }
 

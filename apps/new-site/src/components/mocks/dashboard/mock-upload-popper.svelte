@@ -30,7 +30,7 @@
       if (intervalId === -1) {
         intervalId = window.setInterval(onIntervalTick, 100);
       }
-    }, 3000);
+    }, 2000);
   }
 
   function startEncodingTimer(index: number) {
@@ -101,7 +101,7 @@
   <button
     id="mock-uploader"
     class={clsx(
-      'flex flex-col text-xs border border-border bg-elevate/90 backdrop-blur-md',
+      'flex flex-col text-xs border border-border/90 bg-elevate/90 backdrop-blur-md',
       'px-3 py-2 rounded-sm',
       expanded && 'rounded-b-none',
     )}
@@ -151,7 +151,7 @@
     class={clsx(
       'transition-[height,opacity] bg-elevate/90 backdrop-blur-md border-t-0',
       'duration-300 rounded-b-sm overflow-hidden',
-      expanded ? 'h-[190px] px-3 py-4 border border-border ease-in' : 'h-0 ease-out',
+      expanded ? 'h-[190px] px-3 py-4 border border-border/90 ease-in' : 'h-0 ease-out',
     )}
     aria-describedby="mock-uploader"
     aria-hidden={!ariaBool(expanded)}

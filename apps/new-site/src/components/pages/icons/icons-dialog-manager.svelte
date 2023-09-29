@@ -169,7 +169,7 @@
     <div class="flex flex-col items-center justify-center">
       <div
         class={clsx(
-          'flex flex-col items-center border border-border justify-center text-inverse',
+          'flex flex-col items-center border border-border/90 justify-center text-inverse',
           'w-[120px] h-[120px] rounded-sm graph-paper bg-elevate shadow-md',
         )}
       >

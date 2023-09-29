@@ -48,8 +48,7 @@ export function useARIATabs({ onSelect }: AriaTabsOptions = {}) {
   }
 
   function selectPanel(pane: HTMLElement, isSelected: boolean) {
-    if (isSelected) pane.removeAttribute('hidden');
-    else pane.setAttribute('hidden', '');
+    pane.toggleAttribute('hidden', !isSelected);
     pane.style.display = isSelected ? 'contents' : 'none';
   }
 

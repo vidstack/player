@@ -3,7 +3,7 @@
   import type { IconType } from 'media-icons';
   import { onMount } from 'svelte';
 
-  import { kebabToPascalCase, lowercaseFirstLetter } from '../../../utils/string';
+  import { lowercaseFirstLetter } from '../../../utils/string';
   import { currentIconLibrary, formatIconName, iconSearchText } from './shared';
 
   let fuzzy = new uFuzzy(),

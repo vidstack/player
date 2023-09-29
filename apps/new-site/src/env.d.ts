@@ -1,3 +1,4 @@
+/// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
 
 declare module '~icons/*' {
@@ -23,7 +24,6 @@ declare module ':code_snippets' {
     width: number;
     lines: number;
     highlights?: string;
-    framework?: 'html' | 'react';
     loader: () => Promise<CodeSnippetModule>;
   }
 

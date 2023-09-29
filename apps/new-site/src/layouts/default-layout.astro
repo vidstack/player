@@ -1,36 +1,26 @@
 ---
-import AppLayout from './app-layout.astro';
-import AnnouncementBar from './parts/announcement-bar.astro';
+import AppLayout, { type Props as AppLayoutProps } from './app-layout.astro';
+import { mainNavItems } from './nav/main-nav-items';
 import Footer from './parts/footer.astro';
-import Navbar from './parts/navbar/navbar.astro';
+import NavbarDesktop from './parts/navbar/navbar-desktop.astro';
+import NavbarMobile from './parts/navbar/navbar-mobile.astro';
 
-interface Props {
-  title: string;
-  description: string;
-  announcementBar?: boolean;
-}
+interface Props extends AppLayoutProps {}
 
-const { title, description, announcementBar = false } = Astro.props;
+const { ...appLayoutProps } = Astro.props,
+  navItems = mainNavItems,
+  announcementBar = Astro.slots.has('announcement');
 ---
 
-<AppLayout {title} {description}>
-  {
-    announcementBar && (
-      <AnnouncementBar href="#">
-        <span class="font-semibold">Player Update:</span> 1.0 is coming!
-      </AnnouncementBar>
-    )
-  }
+<AppLayout {...appLayoutProps} {announcementBar}>
+  <slot name="announcement" />
 
-  <slot name="top" />
+  <NavbarDesktop {navItems} />
+  <NavbarMobile {navItems} />
 
-  <Navbar {announcementBar} />
-
-  <main style="padding-top: var(--navbar-height);">
+  <main style="padding-top: var(--content-top);">
     <slot />
   </main>
 
   <Footer />
-
-  <slot name="bottom" />
 </AppLayout>

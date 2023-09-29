@@ -44,7 +44,7 @@
     "simple-git-hooks": "^2.8.0",
     "svelte": "^4.0.0",
     "turbo": "^1.9.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.2.2"
   },
   "simple-git-hooks": {
     "pre-commit": "npx --no-install lint-staged"
@@ -53,11 +53,11 @@
     "*": "prettier --write"
   },
   "engines": {
-    "node": ">=16",
-    "pnpm": ">=7"
+    "node": ">=18",
+    "pnpm": ">=8"
   },
   "volta": {
-    "node": "16.18.1"
+    "node": "18.17.1"
   },
-  "packageManager": "pnpm@7.2.1"
+  "packageManager": "pnpm@8.7.0"
 }

@@ -73,7 +73,8 @@ const { id, depth, items } = Astro.props;
           <div
             class={clsx(
               'rounded-sm flex items-center group-focus-visible:bg-brand/10',
-              'hover:bg-brand/10 text-soft py-1 pl-2 pr-2 cursor-pointer',
+              'text-soft/90 py-1 pl-2 pr-2 cursor-pointer border border-transparent',
+              'hocus:text-inverse hocus:bg-brand/10 hocus:border-brand/90 hocus:shadow-sm',
             )}
             data-folder
           >
@@ -90,8 +91,9 @@ const { id, depth, items } = Astro.props;
         <li
           class={clsx(
             'rounded-sm group text-sm items-center mt-0.5 py-1 text-soft',
-            'aria-selected:text-inverse cursor-pointer hocus:bg-brand/10',
-            'aria-selected:font-medium select-none',
+            'aria-selected:text-inverse cursor-pointer',
+            'aria-selected:font-medium select-none border border-transparent',
+            'hocus:border-brand/90 hocus:bg-brand/10 hocus:text-inverse hocus:shadow-sm',
             depth > 0 ? 'hidden' : 'flex',
           )}
           role="treeitem"

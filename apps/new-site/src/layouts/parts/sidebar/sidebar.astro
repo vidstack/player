@@ -1,0 +1,36 @@
+---
+import clsx from 'clsx';
+
+import type { SidebarFeatureItem, SidebarItem } from '../../nav/sidebar-items';
+import SidebarCategories from './sidebar-categories.astro';
+import SidebarItems from './sidebar-items.astro';
+import SidebarScroll from './sidebar-scroll.svelte';
+
+interface Props {
+  categories?: SidebarFeatureItem[];
+  activeCategory?: string;
+  items: SidebarItem[];
+  activeItem: SidebarItem | null;
+}
+
+const { categories, activeCategory, items, activeItem } = Astro.props;
+---
+
+<nav
+  id="main-sidebar"
+  class={clsx(
+    'scrollbar scroll-contain flex flex-col flex-1 max-w-xs min-h-full text-sm min-w-[220px] pt-2.5',
+    'hidden nav-lg:flex px-6 1460:pl-2 pb-8 overflow-auto sticky top-[var(--content-top)] left-0 flex-none',
+  )}
+>
+  {
+    categories && activeCategory && (
+      <>
+        <SidebarCategories {categories} {activeCategory} />
+      </>
+    )
+  }
+  <SidebarItems {items} {activeItem} />
+</nav>
+
+<SidebarScroll client:load />

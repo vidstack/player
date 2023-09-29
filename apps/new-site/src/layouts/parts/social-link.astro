@@ -1,5 +1,6 @@
 ---
 import clsx from 'clsx';
+
 import Tooltip from '../../components/tooltip.svelte';
 import { uppercaseFirstLetter } from '../../utils/string';
 
@@ -21,8 +22,8 @@ const href = {
 
 <Tooltip
   class={clsx(
-    'group relative flex transform-gpu items-center rounded-md border-0 px-1 py-0.5',
-    'hocus:bg-brand/10 transition-colors',
+    'group relative flex transform-gpu items-center rounded-md px-1 py-0.5 hocus:shadow-sm',
+    'border border-transparent hocus:bg-elevate hocus:border-border/90 transition-colors',
     _class,
   )}
   href={href[type]}

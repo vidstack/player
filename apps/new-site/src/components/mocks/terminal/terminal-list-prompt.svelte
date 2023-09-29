@@ -70,7 +70,7 @@
           <div
             class={clsx(
               'w-2.5 h-2.5 rounded-full border-2',
-              isSelected ? 'border-green-400 bg-green-400' : 'border-border',
+              isSelected ? 'border-green-400 bg-green-400' : 'border-border/90',
             )}
           />
           <span

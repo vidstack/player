@@ -1,0 +1,19 @@
+---
+import clsx from 'clsx';
+
+import CheckIcon from '~astro-icons/lucide/check';
+---
+
+<div class="flex items-center">
+  <div
+    class={clsx(
+      'w-6 h-6 inline-flex items-center justify-center rounded-full text-white dark:text-black',
+      'border border-green-600/20 bg-green-600 dark:bg-green-400',
+      'ring-green-400/60 ring-2 ring-offset-1 ring-offset-body mr-3 my-6',
+    )}
+  >
+    <CheckIcon class="w-4 h-4" />
+  </div>
+
+  <slot />
+</div>

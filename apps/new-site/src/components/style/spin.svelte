@@ -5,7 +5,8 @@
 
   import { visible } from '../../actions/visible';
   import { shuffleArray } from '../../utils/array';
-  import { isAstroSlot } from '../../utils/dom';
+  import { animationFrameThrottle, isAstroSlot } from '../../utils/dom';
+  import { skipFirst } from '../../utils/timing';
 
   export let duration: number;
   export let spins: number;
@@ -18,6 +19,7 @@
   let rootRef: HTMLElement,
     doorRef: HTMLElement,
     boxesRef: HTMLElement,
+    pool: HTMLElement[] = [],
     boxes: HTMLElement[] = [],
     times = 1,
     spinTimerId = -1,
@@ -29,41 +31,53 @@
     boxes = [...root.children].filter((e) => e.nodeType === 1) as HTMLElement[];
     boxesRef.textContent = '';
 
-    const pool = setup();
-    setTimeout(() => spin(pool), initialDelay);
+    setup();
+    setTimeout(() => spin(), initialDelay);
+
+    const observer = new ResizeObserver(animationFrameThrottle(skipFirst(resize)));
+    observer.observe(doorRef);
+    return () => {
+      observer.disconnect();
+    };
   });
 
   function setup() {
     if (!boxesRef) return [];
 
-    let pool = [...boxes, ...boxes, ...boxes].map((box) => box.cloneNode(true) as HTMLElement),
-      prevResult = boxesRef.firstChild as HTMLElement | null;
+    const prevResult = boxesRef.firstChild as HTMLElement | null;
+
+    pool = [...boxes, ...boxes, ...boxes].map((box) => box.cloneNode(true) as HTMLElement);
 
     if (times > 1) {
       pool = shuffleArray(pool);
     }
 
-    const boxWidth = getBoxWidth(),
-      boxHeight = getBoxHeight();
+    resize();
 
     for (let i = pool.length - 1; i >= 0; i--) {
-      const box = pool[i];
-
-      Object.assign(box.style, {
-        width: boxWidth + 'px',
-        height: boxHeight + 'px',
-        opacity: '0',
-      });
-
-      boxesRef.appendChild(box);
+      boxesRef.appendChild(pool[i]);
     }
 
     if (prevResult) {
       prevResult.style.opacity = '1';
       pool.unshift(prevResult);
     } else pool[pool.length - 1].style.opacity = '1';
+  }
 
-    return pool;
+  function resize() {
+    const boxWidth = getBoxWidth(),
+      boxHeight = getBoxHeight();
+
+    for (let i = pool.length - 1; i >= 0; i--) {
+      Object.assign(pool[i].style, {
+        width: boxWidth + 'px',
+        height: boxHeight + 'px',
+        opacity: isPaused ? '0' : '1',
+      });
+    }
+
+    const activeElement = pool[times === 1 ? pool.length - 1 : 0];
+    if (isPaused && activeElement) activeElement.style.opacity = '1';
   }
 
   function getBoxWidth() {
@@ -76,7 +90,7 @@
     return doorRef.clientHeight - blockPadding;
   }
 
-  function spin(pool: HTMLElement[]) {
+  function spin() {
     setTimeout(() => {
       for (const child of pool) {
         Object.assign(child.style, {
@@ -114,8 +128,15 @@
   }
 
   function nextSpin() {
-    if (!isVisible || times > spins) return;
-    spinTimerId = window.setTimeout(() => spin(setup()), delay);
+    if (!isVisible || times > spins) {
+      pool = [];
+      return;
+    }
+
+    spinTimerId = window.setTimeout(() => {
+      setup();
+      spin();
+    }, delay);
   }
 
   function onVisibleChange(visible: boolean) {

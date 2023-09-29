@@ -11,8 +11,10 @@
 </script>
 
 <script lang="ts">
-  import { offset } from '@floating-ui/dom';
   import clsx from 'clsx';
+
+  import { offset } from '@floating-ui/dom';
+
   import { createAriaMenu } from '../../aria/menu';
   import { createAriaRadioGroup } from '../../aria/radio-group';
   import { createAriaTooltip } from '../../aria/tooltip';
@@ -44,8 +46,9 @@
 <button
   {...$$restProps}
   class={clsx(
-    'group relative flex transform-gpu items-center rounded-md border-0 p-2 min-w-[40px] min-h-[40px]',
-    'hocus:bg-brand/10 transition-colors',
+    'group relative flex transform-gpu items-center rounded-md p-2 min-w-[40px] min-h-[40px]',
+    'border border-transparent hocus:bg-elevate hocus:border-border/90 transition-colors',
+    'hocus:shadow-sm',
     $$restProps.class,
   )}
   use:menuTrigger
@@ -58,7 +61,7 @@
 <!-- Menu -->
 <div
   class={clsx(
-    'p-2 border-border border rounded-md bg-elevate hocus:ring-0 outline-none shadow-sm',
+    'p-2 border-border/90 border rounded-md bg-elevate hocus:ring-0 outline-none shadow-sm',
     $isMenuOpen
       ? 'animate-in slide-in-from-top-2 fade-in'
       : 'animate-out fade-out slide-out-to-top-2',
@@ -71,7 +74,7 @@
       <button
         class={clsx(
           'flex items-center px-4 py-2 rounded-sm text-sm outline-none hocus:bg-brand/10',
-          $colorScheme === scheme && 'text-brand',
+          $colorScheme === scheme ? 'text-brand' : 'text-soft/90 hocus:text-inverse',
         )}
         use:radio={scheme}
       >
@@ -84,7 +87,7 @@
 
 <div
   class={clsx(
-    'z-10 rounded-md border border-border bg-elevate text-xs font-medium px-1.5 py-1 shadow-sm',
+    'z-10 rounded-md border border-border/90 bg-elevate text-xs font-medium px-1.5 py-1 shadow-sm',
     $isTooltipOpen
       ? 'animate-in fade-in slide-in-from-top-4'
       : 'animate-out fade-out slide-out-to-top-2',

@@ -1,42 +1,40 @@
 <script lang="ts">
   import clsx from 'clsx';
-  import { createAriaMenu } from '../../../../../aria/menu';
-  import type { NavSubmenu } from '../../navigation';
+
+  import type { NavSubmenu } from '../../../../nav/nav-items';
   import NavMenuItem from '../nav-menu-item.svelte';
   import NavFeatureGrid from './nav-feature-grid.svelte';
 
   export let item: NavSubmenu;
-
-  const { menu, menuTrigger, menuArrow, isMenuOpen } = createAriaMenu({
-    placement: 'right-start',
-    hover: true,
-    submenu: true,
-    showDelay: 200,
-  });
 </script>
 
 <!-- Submenu Trigger -->
 <NavMenuItem
   {item}
   {...$$restProps}
-  class={clsx('cursor-pointer', $isMenuOpen && 'bg-inverse', $$restProps.class)}
-  action={menuTrigger}
+  class={clsx(
+    'hocus:text-white hocus:dark:text-black',
+    'aria-expanded:text-white aria-expanded:dark:text-black',
+    'cursor-pointer hocus:bg-elevate aria-expanded:bg-elevate',
+    $$restProps.class,
+  )}
   as="button"
-  invertTheme={$isMenuOpen}
+  data-submenu-trigger
 />
 
 <!-- Submenu -->
 <div
   class={clsx(
-    'min-w-[300px] 1200:min-w-[600px] pl-8 pr-4 1200:pl-10 1200:pr-4 border border-border shadow-md',
+    'min-w-[300px] 1200:min-w-[600px] pl-8 pr-4 1200:pl-10 1200:pr-4 border border-border/90 shadow-md',
     'rounded-r-md bg-elevate h-full outline-none',
     'flex 1200:items-center 1200:justify-center overflow-y-scroll 1200:overflow-visible scrollbar',
-    $isMenuOpen
-      ? 'slide-in-from-left-4 fade-in animate-in duration-300'
-      : 'slide-out-to-left-2 fade-out animate-out duration-300',
+    'slide-in-from-left-4 fade-in animate-in duration-300',
+    'aria-hidden:slide-out-to-left-2 aria-hidden:fade-out aria-hidden:animate-out',
   )}
   style="display: none;"
-  use:menu
+  data-submenu
+  data-hover
+  data-placement="right-start"
 >
   {#if item.featured}
     <NavFeatureGrid items={item.items} />
@@ -53,5 +51,5 @@
     </div>
   {/if}
 
-  <div class="arrow" use:menuArrow></div>
+  <div class="arrow" data-submenu-arrow></div>
 </div>

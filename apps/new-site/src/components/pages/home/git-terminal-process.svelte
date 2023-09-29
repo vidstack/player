@@ -14,13 +14,7 @@
       type: TerminalPromptType.List,
       select: 1,
       options: ['Create New Project', "Charlie's Site (react-casts.gg)"],
-      process: [
-        'Using Vercel Blob Storage.',
-        'Using Mux Streaming Provider.',
-        'Using Vercel Postgres Analytics Outlet.',
-        'Updated Pre-Push Hook.',
-        'Git LFS Initialized.',
-      ],
+      process: ['Updated Pre-Push Hook.', 'Git LFS Initialized.'],
     },
     {
       type: TerminalPromptType.Text,
@@ -48,10 +42,10 @@
             return `Git LFS: (${files} of 2 files) ${totalUploaded.toFixed(0)} MB / 175 MB`;
           },
         },
-        'Uploaded to https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com',
+        'Uploaded to https://vidstack.io/react-casts',
       ],
     },
   ];
 </script>
 
-<MockTerminal directory="next-app" {prompts} initialDelay={3800} />
+<MockTerminal directory="next-app" {prompts} initialDelay={3400} />

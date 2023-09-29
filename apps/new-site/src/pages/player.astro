@@ -2,6 +2,7 @@
 import ConstructionIcon from '~astro-icons/lucide/construction';
 
 import DefaultLayout from '../layouts/default-layout.astro';
+import AnnouncementBar from '../layouts/parts/announcement-bar.astro';
 
 const title =
   'Vidstack Player: High-quality, accessible, and customizable media player for the web.';
@@ -9,18 +10,19 @@ const description =
   'Build and ship a production-ready player in minutes. Robust, customizable, and accessible.';
 ---
 
-<DefaultLayout {title} {description} announcementBar>
+<DefaultLayout {title} {description}>
+  <AnnouncementBar href="#" slot="announcement">
+    <span class="font-semibold">Player Update:</span> 1.0 is coming!
+  </AnnouncementBar>
+
   <div class="flex flex-col flex-1 items-center justify-center h-[var(--content-height)] px-4">
     <ConstructionIcon
-      class="w-40 h-40 1200:w-64 1200:h-64 text-inverse/50 -mt-[var(--top-bar-height)]"
+      class="w-40 h-40 1200:w-64 1200:h-64 text-inverse/50 -mt-[var(--content-top)]"
     />
 
     <h1 class="text-inverse text-center mt-4 flex flex-col items-center font-semibold 1200:text-xl">
       This page is still under construction and coming soon for our 1.0 release!
-      <a
-        class="font-medium text-brand underline mt-2 hocus:text-brand/70"
-        href="/docs/react/player"
-      >
+      <a class="font-medium text-brand underline mt-2 hocus:text-brand/70" href="/docs/player">
         Check out the docs to get started.
       </a>
     </h1>

@@ -1,7 +1,95 @@
 ---
-import '@docsearch/css';
-import '$lib/styles/docsearch.css';
-import DefaultLayout from './default-layout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+import Algolia from '../components/algolia/algolia.astro';
+import CodeFence from '../components/docs/code-fence.astro';
+import { currentJSLibrary, type JSLibrary } from '../stores/libraries';
+import { kebabToTitleCase } from '../utils/string';
+import AppLayout from './app-layout.astro';
+import type { DocsPagination } from './nav/docs-sidebar-items';
+import type { SidebarFeatureItem, SidebarItem } from './nav/sidebar-items';
+import NavbarDesktop from './parts/navbar/navbar-desktop.astro';
+import NavbarMobile from './parts/navbar/navbar-mobile.astro';
+import Pagination from './parts/pagination.astro';
+import SidebarCategories from './parts/sidebar/sidebar-categories.astro';
+import Sidebar from './parts/sidebar/sidebar.astro';
+import Toc from './parts/toc.astro';
+
+export interface Props {
+  jsLibrary: JSLibrary;
+  pageTitle: string;
+  page: CollectionEntry<'docs'>;
+  pagination: DocsPagination;
+  category?: string;
+  categories?: SidebarFeatureItem[];
+  sidebar: {
+    id: string;
+    root: string;
+    item: SidebarItem | null;
+    items: SidebarItem[];
+  };
+}
+
+const { jsLibrary, categories, category, page, pageTitle, pagination, sidebar } = Astro.props,
+  { description } = page.data,
+  { headings, Content } = await page.render();
+
+currentJSLibrary.set(jsLibrary);
+
+const isPlayerPage = page.slug.startsWith('player'),
+  titleBrand = isPlayerPage ? 'Vidstack Player' : 'Vidstack',
+  titleFramework = jsLibrary === 'react' ? '' : ` (${kebabToTitleCase(jsLibrary)})`,
+  titleCategory = category ? `${category}: ` : '',
+  title = `${titleCategory}${pageTitle} | ${titleBrand}${titleFramework}`;
 ---
 
-<!-- <DefaultLayout></DefaultLayout> -->
+<AppLayout {title} {description} theme="secondary">
+  <NavbarDesktop>
+    <Algolia slot="center" />
+  </NavbarDesktop>
+
+  <NavbarMobile navItems={sidebar.items} noSocials>
+    {
+      categories && (
+        <div class="px-6 mb-4" slot="popover-start">
+          <SidebarCategories {categories} activeCategory={sidebar.root} />
+        </div>
+      )
+    }
+
+    <div class="mr-1" slot="end">
+      <Algolia slot="end" />
+    </div>
+  </NavbarMobile>
+
+  <!-- <Breadcrumbs {category} title={pageTitle} /> -->
+
+  <div
+    class="docs flex items-stretch w-full h-screen pt-[var(--content-top)] max-w-[var(--content-max-width)] mx-auto"
+  >
+    <Sidebar
+      {categories}
+      activeCategory={sidebar.root}
+      items={sidebar.items}
+      activeItem={sidebar.item}
+    />
+
+    <main class="992:px-8 1200:px-10 flex flex-col flex-1 min-h-full pt-6 992:pt-8 px-6">
+      <div class="flex-1 markdown prose dark:prose-invert w-full max-w-[var(--article-max-width)]">
+        <p class="text-brand mb-2.5 text-[15px] font-semibold leading-6">
+          {category}
+        </p>
+
+        <h1>{pageTitle}</h1>
+        <p>{description}</p>
+
+        <Content components={{ code: CodeFence }} />
+      </div>
+
+      <Pagination prev={pagination.prev} next={pagination.next} />
+    </main>
+
+    <!-- TODO: TOC -->
+    <Toc {headings} />
+  </div>
+</AppLayout>

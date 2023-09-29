@@ -56,7 +56,7 @@
   $: if (copied) {
     setTimeout(() => {
       copied = false;
-    }, 350);
+    }, 600);
   }
 </script>
 
@@ -67,10 +67,10 @@
     'transition-opacity duration-300',
     copied
       ? clsx(
-          'text-green-600 bg-green-600/20 border-green-600',
-          'dark:text-green-400 dark:bg-green-400/20 dark:border-green-400',
+          'text-green-600 bg-green-600/20 border-green-600/10',
+          'dark:text-green-400 dark:bg-green-400/20 dark:border-green-600/10',
         )
-      : 'text-brand bg-brand/20 border-brand/20 hocus:border-brand',
+      : 'text-brand bg-brand/20 border-brand/10 hocus:border-brand/90',
     loading ? 'opacity-0' : 'opacity-100',
     _class,
   )}

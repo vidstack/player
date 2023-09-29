@@ -8,12 +8,12 @@
 
 .js-focus-visible [data-focus-visible-added]:not([data-focus]) {
   @apply outline-none ring-2;
-  --tw-ring-color: rgb(var(--color-focus));
+  --tw-ring-color: rgb(var(--color-brand) / 90%);
 }
 
 .DocSearch-Form:focus-within {
   @apply ring-2;
-  --tw-ring-color: rgb(var(--color-focus));
+  --tw-ring-color: rgb(var(--color-brand) / 90%);
 }
 
 .svg-responsive > svg {

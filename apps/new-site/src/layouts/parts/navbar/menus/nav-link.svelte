@@ -1,13 +1,22 @@
 <script lang="ts">
+  import clsx from 'clsx';
+
   import ExternalLinkIcon from '~astro-icons/lucide/external-link';
-  import type { NavLink } from '../navigation';
+
+  import type { NavLink } from '../../../nav/nav-items';
 
   export let item: NavLink;
+  export let pathname = '';
 </script>
 
 <!-- Link -->
 <a
-  class="flex items-center text-base hover:underline p-2 rounded-md"
+  class={clsx(
+    'flex items-center text-base p-2 rounded-md',
+    item.href === pathname
+      ? 'text-brand font-medium underline'
+      : 'text-soft hocus:text-inverse hocus:underline',
+  )}
   href={item.href}
   {...$$restProps}
 >

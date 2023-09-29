@@ -1,58 +1,23 @@
 <script lang="ts">
   import clsx from 'clsx';
 
-  import ChevronDownIcon from '~icons/lucide/chevron-down';
+  import type { NavMenuItems } from '../../../nav/nav-items';
 
-  import { createAriaMenu } from '../../../../aria/menu';
-  import type { NavMenuItems } from '../navigation';
-
-  export let title: string;
   export let items: NavMenuItems;
   export let grid = false;
-  export let noPlacement = false;
-
-  const { menu, menuTrigger, isMenuOpen, isMenuVisible } = createAriaMenu({
-    placement: 'bottom-start',
-    noPlacement,
-  });
 </script>
 
-<!-- Menu Trigger -->
-<button
+<div
   {...$$restProps}
   class={clsx(
-    'group relative flex transform-gpu items-center rounded-md border-0 p-2',
-    'min-w-[40px] min-h-[40px] w-full nav-lg:w-auto text-base',
+    'nav-lg:border-border/90 nav-lg:border bg-body nav-lg:bg-elevate outline-none transition rounded-md nav-lg:shadow-md',
+    grid ? 'nav-lg:grid nav-lg:grid-cols-2 nav-lg:p-2 1200:gap-x-1' : 'px-2 nav-lg:px-0',
     $$restProps.class,
   )}
-  use:menuTrigger
+  data-menu
+  style={clsx('display: none', $$restProps.style)}
 >
-  {title}
-  <ChevronDownIcon
-    class={clsx(
-      'nav-lg:ml-[3px] ml-auto transition-transform w-5 h-5 nav-lg:w-4 nav-lg:h-4 group-hocus:animate-pulse',
-      $isMenuOpen && 'rotate-180',
-    )}
-  />
-</button>
-
-<!-- Menu -->
-<div
-  class={clsx(
-    'nav-lg:border-border nav-lg:border bg-body nav-lg:bg-elevate outline-none transition rounded-md nav-lg:shadow-md',
-    grid ? 'nav-lg:grid nav-lg:grid-cols-2 nav-lg:p-2 1200:gap-x-1' : 'px-2 nav-lg:px-0',
-    $isMenuOpen
-      ? 'animate-in slide-out-to-bottom-4 fade-in duration-300 nav-lg:translate-y-1'
-      : 'animate-out fade-out slide-out-to-top-2',
-  )}
-  use:menu
-  style="display: none"
->
-  {#if $isMenuVisible}
-    {#each items as item}
-      <slot {item} />
-    {/each}
-  {/if}
-
-  <slot name="menu-bottom" />
+  {#each items as item}
+    <slot {item} />
+  {/each}
 </div>

@@ -1,15 +1,16 @@
 <script lang="ts">
-  import ArrowRightIcon from '~icons/lucide/arrow-right';
   import clsx from 'clsx';
-  import { navIcons } from '../../nav-icons';
-  import type { NavSubmenu } from '../../navigation';
+
+  import ArrowRightIcon from '~icons/lucide/arrow-right';
+
+  import type { NavSubmenu } from '../../../../nav/nav-items';
   import NavMenuItem from '../nav-menu-item.svelte';
 
   export let item: NavSubmenu;
 </script>
 
 <section>
-  <NavMenuItem {item} as="div" />
+  <NavMenuItem {item} as="div" heading />
 
   <div class="flex flex-col ml-2 mt-2">
     <ul
@@ -22,8 +23,8 @@
       {#each item.items as menuItem}
         <li class="flex flex-col">
           <h2 class="text-[13px] flex items-center">
-            {#if menuItem.icon && navIcons[menuItem.icon]}
-              <svelte:component this={navIcons[menuItem.icon]} class="mr-1.5 w-4 h-4" />
+            {#if menuItem.Icon}
+              <svelte:component this={menuItem.Icon} class="mr-1.5 w-4 h-4" />
             {/if}
             {menuItem.title}
           </h2>

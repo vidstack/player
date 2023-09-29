@@ -1,0 +1,45 @@
+---
+import clsx from 'clsx';
+
+import { isSidebarGroup, type SidebarItem } from '../../nav/sidebar-items';
+
+interface Props {
+  items: SidebarItem[];
+  activeItem: SidebarItem | null;
+  depth?: number;
+}
+
+const { items, activeItem, depth = 0 } = Astro.props;
+---
+
+{
+  items.map((item) => {
+    if (isSidebarGroup(item)) {
+      return (
+        <ul class="flex flex-col mt-6" role="group">
+          <h5 class="mb-2 font-semibold text-inverse">{item.title}</h5>
+          <Astro.self items={item.items} {activeItem} depth={depth + 1} />
+        </ul>
+      );
+    } else {
+      const link = (
+        <a
+          class={clsx(
+            'flex items-center px-2 py-1.5 rounded-md border mt-px -ml-1',
+            item === activeItem
+              ? 'bg-brand/10 border-brand/10 text-brand font-medium shadow-sm'
+              : clsx(
+                  'text-soft/90 border-transparent',
+                  'hocus:border-soft/20 hocus:bg-elevate hocus:text-inverse hocus:shadow-sm',
+                ),
+          )}
+          href={item.href}
+          data-active={item === activeItem ? '' : null}
+        >
+          {item.title}
+        </a>
+      );
+      return depth == 0 ? link : <li>{link}</li>;
+    }
+  })
+}

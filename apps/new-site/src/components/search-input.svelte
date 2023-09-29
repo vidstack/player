@@ -48,7 +48,7 @@
   <input
     class={clsx(
       'border-b-2 focus:border-brand font-base text-base placeholder:text-soft',
-      'border-border w-full p-2 pl-8 block appearance-none transition-colors duration-200',
+      'border-border/90 w-full p-2 pl-8 pr-4.5 block appearance-none transition-colors duration-200',
     )}
     type="search"
     {placeholder}
@@ -60,7 +60,7 @@
 
   <div
     class={clsx(
-      'px-2 py-px font-mono text-sm font-bold border-border bg-inverse text-inverse',
+      'px-2 py-px font-mono text-sm font-bold border-border/90 bg-inverse text-inverse',
       'flex items-center justify-center absolute right-1 top-2 rounded-sm shadow-sm',
     )}
   >

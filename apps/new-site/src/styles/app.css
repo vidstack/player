@@ -1,9 +1,8 @@
-:root,
+.light,
 .prefers-light-scheme,
 .dark .bg-inverse {
   --color-brand: 79 70 229;
   --color-secondary: 216 35 117;
-  --color-focus: 79 70 229;
   --color-soft: 68 78 94;
   --color-body: 240 240 240;
   --color-elevate: 255 255 255;
@@ -23,19 +22,43 @@
 
   --font-family-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation, Mono,
     Fira Code VF, monospace;
-
-  --announcement-bar-height: 44px;
-  --navbar-height: 4rem;
-  --navbar-border-bottom: 1px solid rgb(var(--color-border));
-  --breadcrumbs-height: 0px;
-
-  --top-bar-height: calc(var(--announcement-bar-height) + var(--navbar-height));
-
-  --content-max-width: 1440px;
-  --content-height: calc(100vh - var(--navbar-height));
 }
 
-:root.dark,
+body {
+  --article-max-width: 80ch;
+
+  --navbar-height: 4rem;
+  --navbar-top: var(--announcement-bar-height, 0px);
+
+  --content-top: calc(
+    calc(var(--announcement-bar-height, 0px) + var(--navbar-height, 0px)) +
+      var(--breadcrumb-bar-height, 0px)
+  );
+  --content-height: calc(100vh - var(--content-top));
+  --content-max-width: 1440px;
+
+  --breadcrumb-bar-top: calc(var(--navbar-height, 0px) + var(--announcement-bar-height, 0px));
+}
+
+body[data-announcement-bar] {
+  --announcement-bar-height: 2.75rem;
+}
+
+body[data-scrolled] {
+  --announcement-bar-height: 0px;
+}
+
+body[data-breadcrumb-bar] {
+  --breadcrumb-bar-height: 3rem;
+}
+
+@media screen and (min-width: 825px) {
+  body[data-breadcrumb-bar] {
+    --breadcrumb-bar-height: 0px;
+  }
+}
+
+.dark,
 .prefers-dark-scheme,
 .light .bg-inverse {
   color-scheme: dark;
@@ -44,9 +67,8 @@
   --color-soft: 150 155 166;
   --color-inverse: 245 245 245;
   --color-border: 44 44 44;
-  --color-elevate: 14 14 14;
+  --color-elevate: 16 16 16;
   --color-body: 5 5 5;
-  --color-focus: 129 140 248;
   --color-code-tag: 121 184 255;
   --color-code-fn: 179 146 240;
 }
@@ -67,4 +89,8 @@
 .dark .bg-inverse {
   color: black;
   background-color: rgb(245 245 245) !important;
+}
+
+.theme-secondary {
+  --color-brand: var(--color-secondary);
 }

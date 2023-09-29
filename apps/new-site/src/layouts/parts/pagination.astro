@@ -1,0 +1,42 @@
+---
+import Button from '../../components/button.svelte';
+import type { DocsPagination } from '../nav/docs-sidebar-items';
+
+interface Props {
+  prev?: DocsPagination['prev'];
+  next?: DocsPagination['next'];
+}
+
+const { prev, next } = Astro.props;
+---
+
+{
+  (prev || next) && (
+    <>
+      <hr class="border-border/90 mt-6" />
+
+      <section
+        class="992:text-xl flex items-center mx-1 pt-8 pb-6 text-lg font-semibold text-soft"
+        aria-label="Docs Pagination"
+      >
+        {prev && (
+          <div class="flex flex-col items-start">
+            <span class="text-inverse mb-0.5 992:mb-1 inline-block -ml-px">Previous</span>
+            <Button class="hocus:text-inverse -ml-6" flat arrow="left" href={prev.href}>
+              {prev.title}
+            </Button>
+          </div>
+        )}
+
+        {next && (
+          <div class="ml-auto flex flex-col items-end">
+            <span class="text-inverse mb-0.5 992:mb-1 inline-block -mr-px">Next</span>
+            <Button class="hocus:text-inverse -mr-6" flat arrow="right" href={next.href}>
+              {next.title}
+            </Button>
+          </div>
+        )}
+      </section>
+    </>
+  )
+}

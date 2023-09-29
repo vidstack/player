@@ -1,0 +1,20 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+---
+
+{
+  headings.length > 1 && (
+    <section
+      class="hidden 1280:flex flex-col h-full pl-10 flex-none"
+      aria-label="Table of Contents"
+    >
+      <ul class="sticky top-0 left-0 h-full pr-1.5 overflow-y-auto scrollbar scroll-contain"></ul>
+    </section>
+  )
+}

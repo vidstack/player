@@ -2,7 +2,6 @@
 import clsx from 'clsx';
 
 import FileVideoIcon from '~astro-icons/lucide/file-video-2';
-import NetworkIcon from '~astro-icons/lucide/network';
 import TerminalIcon from '~astro-icons/lucide/terminal';
 
 import Button from '../components/button.svelte';
@@ -13,7 +12,6 @@ import GradientBorder from '../components/gradient-border.svelte';
 import JoinWaitlist from '../components/join-waitlist.svelte';
 import MockCodeEditor from '../components/mocks/code-editor/mock-code-editor.astro';
 import MockDashboard from '../components/mocks/dashboard/mock-dashboard.astro';
-import ConnectSpinners from '../components/pages/home/connect-spinners.astro';
 import GitTerminalProcess from '../components/pages/home/git-terminal-process.svelte';
 import { openSourceProjects } from '../components/pages/home/oss-projects';
 import VideoPlayer from '../components/players/lazy-video-player.svelte';
@@ -34,6 +32,7 @@ import NextIcon from '../icons/logos/next-logo.svelte';
 import ReactIcon from '../icons/logos/react-logo.svelte';
 import TailwindIcon from '../icons/logos/tailwind-logo.svelte';
 import DefaultLayout from '../layouts/default-layout.astro';
+import AnnouncementBar from '../layouts/parts/announcement-bar.astro';
 import SocialLink from '../layouts/parts/social-link.astro';
 
 const title = 'Vidstack: Video Platform for Next.js.';
@@ -41,7 +40,11 @@ const description =
   'The easiest way to manage, build, and ship video/audio experiences with React & Next.js.';
 ---
 
-<DefaultLayout {title} {description} announcementBar>
+<DefaultLayout {title} {description}>
+  <AnnouncementBar href="#" slot="announcement">
+    <span class="font-semibold">Player Update:</span> 1.0 is coming!
+  </AnnouncementBar>
+
   <Style
     style="--from-color: oklch(0.61 0.19 44.84); --to-color: oklch(0.6 0.2 354.46);"
     darkStyle="--from-color: oklch(0.7 0.19 47.31); --to-color: oklch(0.66 0.21 353.93);"
@@ -63,7 +66,7 @@ const description =
 
       <Fragment slot="cta">
         <JoinWaitlist primary client:load />
-        <Button arrow href="/docs/react/player" gradient>Try Player</Button>
+        <Button arrow href="/docs/player" gradient>Try Player</Button>
       </Fragment>
 
       <Fragment slot="frameworks">
@@ -97,23 +100,20 @@ const description =
     </HeroSection>
   </Style>
 
-  <Style
+  <!-- <Style
     style="--from-color: oklch(0.67 0.19 53.25); --to-color: oklch(0.76 0.17 65.51);"
     client:load
   >
-    <FeatureSection title="Connect." subtitle="Built to integrate." align="start">
+    <FeatureSection title="" subtitle="" align="start">
       <NetworkIcon class="w-full h-full" slot="icon" />
 
-      <p slot="description">
-        We optimize your frontend media workflow using your existing services. Own your data and
-        bring your own storage, streaming provider, and analytics outlet.
-      </p>
+      <p slot="description"></p>
 
       <JoinWaitlist gradient slot="cta" client:load />
 
       <ConnectSpinners slot="content" />
     </FeatureSection>
-  </Style>
+  </Style> -->
 
   <Style style="--from-color: oklch(0.6 0.27 15.16); --to-color: oklch(0.62 0.28 352.63);">
     <FeatureSection title="Manage." subtitle="Built for video." align="start">
@@ -143,7 +143,7 @@ const description =
         the tools you know and love to build beautiful media experiences.
       </p>
 
-      <Button arrow href="/docs/react/player" gradient slot="cta">Try Player</Button>
+      <Button arrow href="/docs/player" gradient slot="cta">Try Player</Button>
 
       <MockCodeEditor
         files={[
@@ -177,7 +177,7 @@ const description =
     client:load
   >
     <FeatureSection title="Ready." subtitle="Built to ship." align="center">
-      <AnimatedPackageIcon class="w-full h-full" delay={4000} client:visible slot="icon" />
+      <AnimatedPackageIcon class="w-full h-full" delay={3000} client:visible slot="icon" />
 
       <p slot="description">
         Don't have time to build your own player? We provide high-quality, accessible, and
@@ -196,7 +196,7 @@ const description =
             class="text-[var(--from-color)] dark:text-[var(--to-color)] w-4 h-4 absolute top-2.5 left-[18px]"
           />
           <div class="translate-x-10">
-            <TypeWriter text="npm i @vidstack/react" speed={50} delay={2500} caret client:visible />
+            <TypeWriter text="npm i @vidstack/react" speed={50} delay={1200} caret client:visible />
           </div>
         </div>
         <div class="w-[242px] h-[40px] absolute top-0.5 left-0.5 bg-brand/10 rounded-full"></div>
@@ -281,7 +281,7 @@ const description =
     <FeatureSection title="Git." subtitle="Built to commit." align="center">
       <AnimatedGithubIcon
         class="dark:text-black w-[110%] h-[110%]"
-        delay={2400}
+        delay={1800}
         client:visible
         slot="icon"
       />
@@ -299,7 +299,7 @@ const description =
         </div>
 
         <div
-          class="w-px h-28 border border-dashed border-border my-8 animate-[levitate_16s_ease_infinite]"
+          class="w-px h-28 border border-dashed border-border/90 my-8 animate-[levitate_16s_ease_infinite]"
         >
         </div>
 
