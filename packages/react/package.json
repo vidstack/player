@@ -33,13 +33,13 @@
     "media-captions": "^1.0.0"
   },
   "devDependencies": {
-    "@maverick-js/cli": "0.40.1",
+    "@maverick-js/cli": "0.40.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
     "esbuild": "^0.16.17",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.40.1",
+    "maverick.js": "0.40.2",
     "media-icons": "^1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
