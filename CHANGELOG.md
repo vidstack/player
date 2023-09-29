@@ -1,6 +1,6 @@
 ## Player Release 1.0@next: Title (September 2023)
 
-Add link to release notes here.
+[See release notes](https://github.com/vidstack/vidstack/discussions/935).
 
 ## Player Release 0.6: Community Skin (June 2023)
 
