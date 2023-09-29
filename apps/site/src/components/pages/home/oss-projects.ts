@@ -5,7 +5,7 @@ export const openSourceProjects: GridContentItem[] = [
     title: 'Player',
     stage: 1,
     href: '/player',
-    stars: { owner: 'vidstack', repo: 'player' },
+    stars: { owner: 'vidstack', repo: 'vidstack' },
     description: 'UI component library for building video and audio players for the web.',
   },
   {
