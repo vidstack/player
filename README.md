@@ -34,8 +34,7 @@ If you'd like to try Vidstack Player, you can find our documentation on our webs
 > Vidstack Uploader is not available yet. Tap the watch button above to get notified of any
 > developments.
 
-Headless uploader component to send files directly up to storage (e.g., S3), or to your
-favorite streaming provider (e.g., Cloudflare Stream or Mux) to start encoding.
+Headless uploader component for sending files directly up to storage or encoding.
 
 ## Analytics
 
