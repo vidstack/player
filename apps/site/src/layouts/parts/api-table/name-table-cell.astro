@@ -22,7 +22,7 @@ const badgeColors = ['green', 'purple', 'blue'] as const;
     docs && (
       <InfoPopup class="ml-px" label={`Show ${name} description`} contain>
         {badges?.length || mdnLink ? (
-          <div class="flex space-x-2 items-center w-full">
+          <div class="flex space-x-2 items-center w-full mb-1">
             {badges?.length
               ? badges.filter(Boolean).map((badge, i) => (
                   <Badge class="text-xs" color={badgeColors[i]}>
