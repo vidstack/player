@@ -1,4 +1,4 @@
-## Player Release 1.0@next: Title (September 2023)
+## Player Release 1.0@next: Watch The Birdie! (September 2023)
 
 [See release notes](https://github.com/vidstack/vidstack/discussions/935).
 
