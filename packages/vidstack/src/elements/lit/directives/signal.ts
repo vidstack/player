@@ -39,7 +39,32 @@ class SignalDirective extends AsyncDirective {
   }
 
   protected _onValueChange() {
-    this.setValue(this._signal?.());
+    if (__DEV__) {
+      try {
+        this.setValue(this._signal?.());
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          error.message.includes('This `ChildPart` has no `parentNode`')
+        ) {
+          const svelteDynamicImportExample = [
+            "{#await import('./Player.svelte') then {default: Player}}",
+            '  <svelte:component this={Player} />',
+            '{/await}',
+          ].join('\n');
+
+          console.warn(
+            `[vidstack]: Failed to render most likely due to a hydration issue with your framework.` +
+              ` Dynamically importing the player should resolve the issue.` +
+              `\n\nSvelte Example:\n\n${svelteDynamicImportExample}`,
+          );
+        } else {
+          console.error(error);
+        }
+      }
+    } else {
+      this.setValue(this._signal?.());
+    }
   }
 }
 
