@@ -68,7 +68,7 @@ export class NativeTextRenderer implements TextRenderer {
       isSupported = track.src && track.type === 'vtt';
 
     el.id = track.id;
-    el.src = isSupported ? track.src! : 'https://cdn.jsdelivr.net/npm/vidstack@0.6.12/empty.vtt';
+    el.src = isSupported ? track.src! : 'https://cdn.jsdelivr.net/npm/vidstack@next/empty.vtt';
     el.label = track.label;
     el.kind = track.kind;
     el.default = isDefault;
