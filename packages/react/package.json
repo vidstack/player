@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/react",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
@@ -21,6 +21,8 @@
     "prebuild": "node .scripts/prebuild.js",
     "build": "pnpm prebuild && rollup -c",
     "build:types": "tsc -p tsconfig.build.json",
+    "sandbox": "node ../../.scripts/sandbox.js",
+    "sandbox:build": "vite build sandbox",
     "types": "pnpm build:types && rollup -c --config-types",
     "clean": "rimraf dist styles",
     "format": "prettier src --write --loglevel warn"
@@ -33,13 +35,14 @@
     "media-captions": "^1.0.0"
   },
   "devDependencies": {
-    "@maverick-js/cli": "0.40.2",
+    "@maverick-js/cli": "0.40.3",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
+    "@vitejs/plugin-react": "^4.1.0",
     "esbuild": "^0.16.17",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.40.2",
+    "maverick.js": "0.40.3",
     "media-icons": "^1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -48,7 +51,8 @@
     "rollup-plugin-dts": "^5.3.0",
     "rollup-plugin-esbuild": "^5.0.0",
     "typescript": "^5.2.2",
-    "vidstack": "workspace:*"
+    "vidstack": "workspace:*",
+    "vite": "^4.4.9"
   },
   "contributors": [
     "Rahim Alwer <rahim.alwer@gmail.com>"

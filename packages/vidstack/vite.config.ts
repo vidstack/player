@@ -17,7 +17,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['maverick.js', 'maverick.js/element'],
+    exclude: ['maverick.js', 'maverick.js/element', 'media-icons', 'media-captions'],
   },
   plugins: [],
   // https://vitest.dev/config

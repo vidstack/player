@@ -4,43 +4,35 @@
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <link rel="icon" type="image/png" sizes="32x32" href="/sandbox/favicon-32x32.png" />
-    <link rel="stylesheet" href="../player/styles/base.css" />
-    <link rel="stylesheet" href="../player/styles/default/buffering.css" />
-    <link rel="stylesheet" href="../player/styles/default/buttons.css" />
-    <link rel="stylesheet" href="../player/styles/default/captions.css" />
-    <link rel="stylesheet" href="../player/styles/default/controls.css" />
-    <link rel="stylesheet" href="../player/styles/default/gestures.css" />
-    <link rel="stylesheet" href="../player/styles/default/icons.css" />
-    <link rel="stylesheet" href="../player/styles/default/menus.css" />
-    <link rel="stylesheet" href="../player/styles/default/poster.css" />
-    <link rel="stylesheet" href="../player/styles/default/sliders.css" />
-    <link rel="stylesheet" href="../player/styles/default/thumbnail.css" />
-    <link rel="stylesheet" href="../player/styles/default/time.css" />
-    <link rel="stylesheet" href="../player/styles/default/tooltips.css" />
-    <link rel="stylesheet" href="../player/styles/default/layouts/audio.css" />
-    <link rel="stylesheet" href="../player/styles/default/layouts/video.css" />
+    <link rel="stylesheet" href="./styles.css" />
 
-    <script type="module">
-      import '../src/elements/bundles/player.ts';
-      import '../src/elements/bundles/player-layouts.ts';
-      import '../src/elements/bundles/player-ui.ts';
-      import '../src/elements/bundles/icons.ts';
-
-      const player = document.querySelector('media-player');
-      window.player = player;
-
-      // CODE HERE
-    </script>
+    <script src="./main.ts" type="module"></script>
   </head>
 
   <body>
-    <h1>Sandbox</h1>
+    <main>
+      <media-player title="Sprite Fight" crossorigin>
+        <media-provider>
+          <media-poster
+            class="vds-poster"
+            src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=1200"
+            alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
+          ></media-poster>
+        </media-provider>
+        <!-- Layouts -->
+        <media-audio-layout></media-audio-layout>
+        <media-video-layout
+          thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
+        ></media-video-layout>
+      </media-player>
 
-    <p style="margin-top: 24px">
-      Play with Vidstack in your browser, see the
-      <code style="font-weight: bold">`packages/vidstack/sandbox`</code>
-      directory. None of your changes will be commited (git-ignored folder).
-    </p>
+      <div class="src-buttons">
+        <button id="audio-src-button">Audio</button>
+        <button id="video-src-button">Video</button>
+        <button id="hls-src-button">HLS</button>
+      </div>
+    </main>
   </body>
 </html>
