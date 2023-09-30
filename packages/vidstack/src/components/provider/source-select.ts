@@ -13,6 +13,7 @@ import { getRequestCredentials, preconnect } from '../../utils/network';
 let warned = __DEV__ ? new Set<any>() : undefined;
 
 export class SourceSelection {
+  private _initialize = false;
   private _loaders: ReadSignal<MediaProviderLoader[]>;
 
   constructor(
@@ -30,23 +31,36 @@ export class SourceSelection {
         : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER];
     });
 
-    if (__SERVER__) {
-      const { $state } = _media;
-      $state.sources.set(normalizeSrc(_media.$props.src()));
-      for (const src of $state.sources()) {
-        const loader = this._loaders().find((loader) => loader.canPlay(src));
-        if (loader) {
-          $state.source.set(src);
-          $state.mediaType.set(loader.mediaType(src));
-          this._loader.set(loader);
-        }
-      }
-      return;
+    const { $state } = _media;
+
+    $state.sources.set(normalizeSrc(_media.$props.src()));
+
+    // Initialize.
+    for (const src of $state.sources()) {
+      const loader = this._loaders().find((loader) => loader.canPlay(src));
+      if (!loader) continue;
+
+      const mediaType = loader.mediaType(src);
+      this._media.$state.source.set(src);
+      this._media.$state.mediaType.set(mediaType);
+      this._media.$state.inferredViewType.set(mediaType);
+
+      this._loader.set(loader);
+      this._initialize = true;
+    }
+  }
+
+  connect() {
+    const loader = this._loader();
+    if (this._initialize) {
+      this._notifySourceChange(this._media.$state.source(), loader);
+      this._notifyLoaderChange(loader);
+      this._initialize = false;
     }
 
     effect(this._onSourcesChange.bind(this));
     effect(this._onSourceChange.bind(this));
-    effect(this._onPreconnect.bind(this));
+    effect(this._onConnect.bind(this));
     effect(this._onLoadSource.bind(this));
   }
 
@@ -120,36 +134,32 @@ export class SourceSelection {
       }
     }
 
-    this._notifySourceChange(currentSource, newSource, newLoader);
-    this._notifyLoaderChange(peek(this._loader), newLoader);
+    if (newSource.src !== currentSource.src || newSource.type !== currentSource.type) {
+      this._notifySourceChange(newSource, newLoader);
+    }
+
+    if (newLoader !== peek(this._loader)) {
+      this._notifyLoaderChange(newLoader);
+    }
 
     return newSource;
   }
 
-  protected _notifySourceChange(
-    currentSource: MediaSrc,
-    newSource: MediaSrc,
-    newLoader: MediaProviderLoader | null,
-  ) {
-    if (newSource.src === currentSource.src && newSource.type === currentSource.type) return;
-    this._media.delegate._dispatch('source-change', { detail: newSource });
+  protected _notifySourceChange(src: MediaSrc, loader: MediaProviderLoader | null) {
+    this._media.delegate._dispatch('source-change', { detail: src });
     this._media.delegate._dispatch('media-type-change', {
-      detail: newLoader?.mediaType(newSource) || 'unknown',
+      detail: loader?.mediaType(src) || 'unknown',
     });
   }
 
-  protected _notifyLoaderChange(
-    currentLoader: MediaProviderLoader | null,
-    newLoader: MediaProviderLoader | null,
-  ) {
-    if (newLoader === currentLoader) return;
+  protected _notifyLoaderChange(loader: MediaProviderLoader | null) {
     this._media.delegate._dispatch('provider-change', { detail: null });
-    newLoader && peek(() => newLoader!.preconnect?.(this._media));
-    this._loader.set(newLoader);
-    this._media.delegate._dispatch('provider-loader-change', { detail: newLoader });
+    loader && peek(() => loader!.preconnect?.(this._media));
+    this._loader.set(loader);
+    this._media.delegate._dispatch('provider-loader-change', { detail: loader });
   }
 
-  private _onPreconnect() {
+  private _onConnect() {
     const provider = this._media.$provider();
     if (!provider) return;
 

@@ -26,6 +26,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   });
 
   private _media!: MediaContext;
+  private _sources!: SourceSelection;
   private _domSources = signal<MediaSrc[]>([]);
   private _domTracks = signal<TextTrackInit[]>([]);
 
@@ -33,7 +34,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
   protected override onSetup() {
     this._media = useMediaContext();
-    if (__SERVER__) this._watchSources();
+    this._sources = new SourceSelection(this._domSources, this._media, this.$state.loader);
   }
 
   protected override onAttach(el: HTMLElement) {
@@ -41,7 +42,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   protected override onConnect(el: HTMLElement) {
-    this._watchSources();
+    this._sources.connect();
     new Tracks(this._domTracks, this._media);
 
     const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
@@ -62,10 +63,6 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
       resize.disconnect();
       mutation.disconnect();
     });
-  }
-
-  private _watchSources() {
-    new SourceSelection(this._domSources, this._media, this.$state.loader);
   }
 
   protected _loadRafId = -1;
