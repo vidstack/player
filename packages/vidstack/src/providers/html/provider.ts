@@ -19,6 +19,9 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
   setup(context: MediaSetupContext) {
     new HTMLMediaEvents(this, context);
     if ('audioTracks' in this.media) new NativeAudioTracks(this, context);
+
+    this.playsinline = context.$state.playsinline();
+
     onDispose(() => {
       this._media.setAttribute('src', '');
       this._media.load();
