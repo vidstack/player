@@ -161,6 +161,7 @@
 }
 
 .vds-video-layout :where(*[data-hocus], *:focus-within) + .vds-volume-slider,
+.vds-video-layout :where(*[data-hocus], *:focus-within) + * + .vds-volume-slider,
 :where(.vds-video-layout .vds-volume-slider[data-active]) {
   margin-left: 9px;
   max-width: var(--video-volume-slider-max-width, 72px);
