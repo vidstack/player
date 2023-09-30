@@ -98,19 +98,19 @@ export default defineConfig({
       })
       .reduce((current, [from, to]) => ({ ...current, [from]: to }), {}),
     // Redirect old installation links.
-    ...['', 'react/']
-      .flatMap((lib) => {
-        const slugs = ['/cdn', '/cdn/audio', '/cdn/hls', '/audio', '/hls'];
-        if (lib !== '') slugs.push('');
-        return slugs.map((slug) => `/docs/${lib}player/getting-started/installation${slug}`);
-      })
-      .reduce((current, from) => {
-        return {
-          ...current,
-          [from]: `/docs/player/getting-started/installation${
-            from.includes('/react') ? '/react' : ''
-          }`,
-        };
-      }, {}),
+    '/docs/player/getting-started/installation/audio':
+      '/docs/player/getting-started/installation/web-components?provider=audio',
+    '/docs/player/getting-started/installation/hls':
+      '/docs/player/getting-started/installation/web-components?provider=hls',
+    '/docs/player/getting-started/installation/react/audio':
+      '/docs/player/getting-started/installation/react?provider=audio',
+    '/docs/player/getting-started/installation/react/video':
+      '/docs/player/getting-started/installation/react?provider=video',
+    '/docs/player/getting-started/installation/cdn/audio':
+      '/docs/player/getting-started/installation/cdn?provider=audio',
+    '/docs/player/getting-started/installation/cdn/video':
+      '/docs/player/getting-started/installation/cdn?provider=video',
+    '/docs/player/getting-started/installation/cdn/hls':
+      '/docs/player/getting-started/installation/cdn?provider=hls',
   },
 });
