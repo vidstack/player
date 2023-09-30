@@ -7,6 +7,8 @@
 
   export let item: NavLink;
   export let pathname = '';
+
+  const isExternal = !item.href.startsWith('/');
 </script>
 
 <!-- Link -->
@@ -18,10 +20,12 @@
       : 'text-soft hocus:text-inverse hocus:underline',
   )}
   href={item.href}
+  target={isExternal ? '_blank' : null}
+  rel={isExternal ? 'noreferrer' : null}
   {...$$restProps}
 >
   {item.title}
-  {#if !item.href.startsWith('/')}
+  {#if isExternal}
     <ExternalLinkIcon class="ml-1" width={14} height={14} />
   {/if}
 </a>

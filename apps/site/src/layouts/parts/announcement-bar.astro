@@ -35,7 +35,12 @@ const { href, action = 'Learn more', type } = Astro.props;
     <slot />
   </span>
 
-  <a class="flex items-center text-brand group font-medium p-0.5 rounded-md" {href}>
+  <a
+    class="flex items-center text-brand group font-medium p-0.5 rounded-md"
+    {href}
+    target="_blank"
+    rel="noreferrer"
+  >
     {action}
     <ArrowRightIcon
       class="-translate-x-2 opacity-0 group-hocus:opacity-100 group-hocus:translate-x-px transition-all w-3.5 h-3.5"
