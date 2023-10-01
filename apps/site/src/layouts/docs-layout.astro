@@ -62,19 +62,12 @@ if (sidebar.deepMatch && !pagination.prev) {
   if (prevItem) pagination.prev = prevItem;
   if (nextItem) pagination.next = nextItem;
 }
-
-const showOldDocsLink =
-  sidebar.id.endsWith('getting-started/introduction.mdx') || /\/installation/.test(sidebar.id);
 ---
 
-<AppLayout {title} {description} theme="secondary" announcementBar={showOldDocsLink}>
-  {
-    showOldDocsLink ? (
-      <AnnouncementBar href="https://old.vidstack.io" action="Go here" type="help">
-        Looking for the old docs?
-      </AnnouncementBar>
-    ) : null
-  }
+<AppLayout {title} {description} theme="secondary" announcementBar>
+  <AnnouncementBar href="https://old.vidstack.io" action="Go here" type="help">
+    Looking for the old docs?
+  </AnnouncementBar>
 
   <NavbarDesktop>
     <Algolia slot="center" />
