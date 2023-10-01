@@ -4,8 +4,13 @@ import { DOMEvent, type InferEventDetail, type InferEventInit } from 'maverick.j
 import type { MediaContext } from '../api/media-context';
 import type { MediaEvents } from '../api/media-events';
 
+let seenAutoplayWarning = false;
+
 export class MediaPlayerDelegate {
-  constructor(private _handle: (event: Event) => void, private _media: MediaContext) {}
+  constructor(
+    private _handle: (event: Event) => void,
+    private _media: MediaContext,
+  ) {}
 
   _dispatch<Type extends keyof MediaEvents>(
     type: Type,
@@ -56,6 +61,20 @@ export class MediaPlayerDelegate {
       await player.play();
       this._dispatch('autoplay', { detail: { muted: $state.muted() } });
     } catch (error) {
+      if (__DEV__ && !seenAutoplayWarning) {
+        const muteMsg = !$state.muted()
+          ? ' Attempting with volume muted will most likely resolve the issue.'
+          : '';
+        console.warn(
+          [
+            `[vidstack]: autoplay was requested but failed most likely due to browser autoplay policies.${muteMsg}`,
+            `\nSee https://developer.chrome.com/blog/autoplay`,
+            `\nError:\n\n${error}`,
+          ].join('\n'),
+        );
+        seenAutoplayWarning = true;
+      }
+
       this._dispatch('autoplay-fail', {
         detail: {
           muted: $state.muted(),
