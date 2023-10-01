@@ -1,10 +1,10 @@
 import { html } from 'lit-html';
-import { computed, effect, onDispose } from 'maverick.js';
+import { effect, onDispose } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
 import { DefaultAudioLayout } from '../../../../components/layouts/default-layout';
-import { $signal } from '../../../lit/directives/signal';
+import { $computed } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';
 import { DefaultAudioLayoutLarge, DefaultAudioLayoutSmall } from './audio-layout';
@@ -58,7 +58,7 @@ export class MediaAudioLayoutElement
   }
 
   render() {
-    return html`${$signal(computed(this._render.bind(this)))}`;
+    return html`${$computed(this._render.bind(this))}`;
   }
 }
 

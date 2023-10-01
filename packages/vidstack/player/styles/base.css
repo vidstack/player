@@ -66,6 +66,10 @@
   touch-action: manipulation;
 }
 
+[data-media-player][data-view-type='audio'] video {
+  display: none;
+}
+
 [data-media-player][data-fullscreen] video {
   height: 100%;
 }

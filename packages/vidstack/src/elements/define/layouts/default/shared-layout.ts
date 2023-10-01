@@ -9,14 +9,15 @@ import {
   type MenuPlacement,
   type TooltipPlacement,
 } from '../../../../components';
-import { $signal } from '../../../lit/directives/signal';
+import { useMediaContext } from '../../../../core/api/media-context';
+import { $computed, $signal } from '../../../lit/directives/signal';
 import { renderMenuButton } from './menu-layout';
 
 function $i18n(
   translations: ReadSignal<DefaultLayoutTranslations | null>,
   key: keyof DefaultLayoutTranslations,
 ) {
-  return $signal(computed(() => useDefaultLayoutLang(translations, key)));
+  return $computed(() => useDefaultLayoutLang(translations, key));
 }
 
 export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
@@ -182,6 +183,17 @@ export function DefaultTimeSlider() {
   `;
 }
 
+export function DefaultLiveButton() {
+  const { live } = useMediaContext().$state;
+  return live()
+    ? html`
+    <media-live-button class="vds-live-button">
+      <span class="vds-live-button-text">LIVE</span>
+    </media-live-button
+  `
+    : null;
+}
+
 export function DefaultTimeGroup() {
   return html`
     <div class="vds-time-group">
@@ -190,6 +202,11 @@ export function DefaultTimeGroup() {
       <media-time class="vds-time" type="duration"></media-time>
     </div>
   `;
+}
+
+export function DefaultTimeInfo(): any {
+  const { live } = useMediaContext().$state;
+  return live() ? DefaultLiveButton() : DefaultTimeGroup();
 }
 
 function MenuPortal(container: HTMLElement | null, template: TemplateResult) {

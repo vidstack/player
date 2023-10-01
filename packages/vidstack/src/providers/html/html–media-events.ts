@@ -176,6 +176,7 @@ export class HTMLMediaEvents {
   }
 
   private _onStreamTypeChange() {
+    if (this._context.$state.live()) return;
     const isLive = !Number.isFinite(this._media.duration);
     this._delegate._dispatch('stream-type-change', {
       detail: isLive ? 'live' : 'on-demand',

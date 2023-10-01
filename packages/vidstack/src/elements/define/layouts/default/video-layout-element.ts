@@ -4,7 +4,7 @@ import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
 import { DefaultVideoLayout } from '../../../../components/layouts/default-layout';
-import { $signal } from '../../../lit/directives/signal';
+import { $computed, $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';
 import { DefaultLayoutIconsLoader } from './icons-loader';
@@ -58,7 +58,7 @@ export class MediaVideoLayoutElement
   }
 
   render() {
-    return html`${$signal(computed(this._render.bind(this)))}`;
+    return html`${$computed(this._render.bind(this))}`;
   }
 }
 

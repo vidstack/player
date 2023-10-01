@@ -43,6 +43,12 @@
 :where(.vds-audio-layout[data-size='sm']) {
   --media-menu-y-offset: 10px;
   --media-tooltip-y-offset: 12px;
+  --media-slider-height: 35px;
+  min-height: 86px;
+}
+
+:where([data-can-seek] .vds-audio-layout[data-size='sm']) {
+  min-height: 102px;
 }
 
 :where(.vds-audio-layout .vds-chapter-ui) {
@@ -86,6 +92,21 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Live Button
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-audio-layout .vds-live-button) {
+  margin-inline: 2px;
+}
+
+:where(.vds-audio-layout[data-size='sm'] .vds-live-button) {
+  margin-left: 6px;
+  margin-right: 10px;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Controls
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
@@ -124,7 +145,11 @@
   margin-right: 2.5px;
 }
 
-:where(.vds-audio-layout .vds-play-button) {
+:where(.vds-audio-layout[data-size='sm'] .vds-play-button) {
+  margin-right: -4px;
+}
+
+:where([data-can-seek] .vds-audio-layout .vds-play-button) {
   min-width: var(--audio-play-button-size, 43px);
   min-height: var(--audio-play-button-size, 43px);
   margin-left: -5px;
@@ -140,7 +165,7 @@
   margin-top: -12px;
 }
 
-:where(.vds-audio-layout[data-size='sm'] .vds-controls-group:last-child) {
+:where([data-can-seek] .vds-audio-layout[data-size='sm'] .vds-controls-group:last-child) {
   --media-tooltip-y-offset: 96px;
   margin-top: -6px;
   margin-bottom: 16px;

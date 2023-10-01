@@ -213,8 +213,6 @@ export class MediaStateManager extends MediaPlayerController {
     const providedViewType = this.$state.providedViewType(),
       currentViewType = providedViewType === 'unknown' ? event.detail : providedViewType;
 
-    this.el?.setAttribute('data-view-type', currentViewType);
-
     if (viewType !== currentViewType) {
       if (__SERVER__) {
         this.$state.inferredViewType.set(currentViewType);

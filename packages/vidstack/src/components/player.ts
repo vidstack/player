@@ -195,7 +195,6 @@ export class MediaPlayer
     el.setAttribute('data-media-player', '');
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'region');
-    setAttribute(el, 'data-view-type', this.$state.viewType());
 
     if (__SERVER__) this._watchTitle();
     else effect(this._watchTitle.bind(this));
@@ -208,7 +207,6 @@ export class MediaPlayer
 
   protected override onConnect(el: HTMLElement) {
     if (IS_IPHONE) setAttribute(el, 'data-iphone', '');
-    setAttribute(el, 'data-view-type', this.$state.viewType());
 
     canChangeVolume().then(this.$state.canSetVolume.set);
 

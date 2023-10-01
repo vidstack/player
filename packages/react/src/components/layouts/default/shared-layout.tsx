@@ -17,6 +17,7 @@ import { usePlayerQuery } from '../../../hooks/use-player-query';
 import type { PrimitivePropsWithRef } from '../../primitives/nodes';
 import { CaptionButton } from '../../ui/buttons/caption-button';
 import { FullscreenButton } from '../../ui/buttons/fullscreen-button';
+import { LiveButton } from '../../ui/buttons/live-button';
 import { MuteButton } from '../../ui/buttons/mute-button';
 import { PIPButton } from '../../ui/buttons/pip-button';
 import { PlayButton } from '../../ui/buttons/play-button';
@@ -141,11 +142,11 @@ export const createDefaultMediaLayout = ({
     ) => {
       const $canLoad = useMediaState('canLoad'),
         $viewType = useMediaState('viewType'),
-        isMatch = $viewType === type,
+        $streamType = useMediaState('streamType'),
+        isMatch = $viewType === type && $streamType !== 'unknown',
         isForcedLayout = typeof smallLayoutWhen === 'boolean',
         isSmallLayoutMatch = usePlayerQuery(isString(smallLayoutWhen) ? smallLayoutWhen : ''),
         isSmallLayout = isForcedLayout ? smallLayoutWhen : isSmallLayoutMatch;
-
       return (
         <div
           {...props}
@@ -427,6 +428,22 @@ DefaultChapterTitle.displayName = 'DefaultChapterTitle';
 export { DefaultChapterTitle };
 
 /* -------------------------------------------------------------------------------------------------
+ * DefaultLiveButton
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultLiveButton() {
+  const live = useMediaState('live');
+  return live ? (
+    <LiveButton className="vds-live-button">
+      <span className="vds-live-button-text">LIVE</span>
+    </LiveButton>
+  ) : null;
+}
+
+DefaultLiveButton.displayName = 'DefaultLiveButton';
+export { DefaultLiveButton };
+
+/* -------------------------------------------------------------------------------------------------
  * DefaultTimeGroup
  * -----------------------------------------------------------------------------------------------*/
 
@@ -442,6 +459,18 @@ function DefaultTimeGroup() {
 
 DefaultTimeGroup.displayName = 'DefaultTimeGroup';
 export { DefaultTimeGroup };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultTimeInfo
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultTimeInfo() {
+  const live = useMediaState('live');
+  return live ? <DefaultLiveButton /> : <DefaultTimeGroup />;
+}
+
+DefaultTimeInfo.displayName = 'DefaultTimeInfo';
+export { DefaultTimeInfo };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultChaptersMenu

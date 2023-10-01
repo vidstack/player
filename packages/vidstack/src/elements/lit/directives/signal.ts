@@ -1,6 +1,7 @@
+import type { TemplateResult } from 'lit-html';
 import { AsyncDirective, directive, PartType, type PartInfo } from 'lit-html/async-directive.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { effect, type ReadSignal, type StopEffect } from 'maverick.js';
+import { computed, effect, type ReadSignal, type StopEffect } from 'maverick.js';
 
 class SignalDirective extends AsyncDirective {
   protected _signal: ReadSignal<any> | null = null;
@@ -69,3 +70,7 @@ class SignalDirective extends AsyncDirective {
 }
 
 export const $signal = directive(SignalDirective);
+
+export function $computed(compute: () => TemplateResult | string | null) {
+  return $signal(computed(compute));
+}

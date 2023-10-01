@@ -2,7 +2,7 @@ import { html } from 'lit-html';
 import { computed } from 'maverick.js';
 
 import { useDefaultLayoutContext } from '../../../../components';
-import { $signal } from '../../../lit/directives/signal';
+import { $computed } from '../../../lit/directives/signal';
 import {
   DefaultCaptionButton,
   DefaultChaptersMenu,
@@ -11,13 +11,12 @@ import {
   DefaultPIPButton,
   DefaultPlayButton,
   DefaultSettingsMenu,
-  DefaultTimeGroup,
+  DefaultTimeInfo,
   DefaultTimeSlider,
   DefaultVolumeSlider,
 } from './shared-layout';
 
 export function DefaultVideoLayoutLarge() {
-  const { menuGroup } = useDefaultLayoutContext();
   return html`
     ${DefaultVideoGestures()}${DefaultBufferingIndicator()}
     <media-captions class="vds-captions"></media-captions>
@@ -25,7 +24,7 @@ export function DefaultVideoLayoutLarge() {
     <div class="vds-scrim"></div>
 
     <media-controls class="vds-controls">
-      ${$signal(computed(DefaultControlsGroupTop))}
+      ${$computed(DefaultControlsGroupTop)}
 
       <div class="vds-controls-spacer"></div>
 
@@ -33,14 +32,19 @@ export function DefaultVideoLayoutLarge() {
 
       <media-controls-group class="vds-controls-group">
         ${DefaultPlayButton({ tooltip: 'top start' })}
-        ${DefaultMuteButton({ tooltip: 'top' })}${DefaultVolumeSlider()}${DefaultTimeGroup()}
+        ${DefaultMuteButton({ tooltip: 'top' })}${DefaultVolumeSlider()}
+        ${$computed(DefaultTimeInfo)}
         <media-chapter-title class="vds-chapter-title"></media-chapter-title>
-        ${DefaultCaptionButton({ tooltip: 'top' })}
-        ${$signal(computed(() => (menuGroup() === 'bottom' ? DefaultVideoMenus() : null)))}
+        ${DefaultCaptionButton({ tooltip: 'top' })}${$computed(DefaultBottomMenuGroup)}
         ${DefaultPIPButton()} ${DefaultFullscreenButton({ tooltip: 'top end' })}
       </media-controls-group>
     </media-controls>
   `;
+}
+
+function DefaultBottomMenuGroup() {
+  const { menuGroup } = useDefaultLayoutContext();
+  return menuGroup() === 'bottom' ? DefaultVideoMenus() : null;
 }
 
 function DefaultControlsGroupTop() {
@@ -75,7 +79,7 @@ export function DefaultVideoLayoutSmall() {
       <div class="vds-controls-group">${DefaultPlayButton({ tooltip: 'top' })}</div>
 
       <media-controls-group class="vds-controls-group">
-        ${DefaultTimeGroup()}
+        ${$computed(DefaultTimeInfo)}
         <media-chapter-title class="vds-chapter-title"></media-chapter-title>
         <div class="vds-controls-spacer"></div>
         ${DefaultFullscreenButton({ tooltip: 'top end' })}

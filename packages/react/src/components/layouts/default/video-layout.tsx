@@ -15,7 +15,7 @@ import {
   DefaultPIPButton,
   DefaultPlayButton,
   DefaultSettingsMenu,
-  DefaultTimeGroup,
+  DefaultTimeInfo,
   DefaultTimeSlider,
   DefaultVolumeSlider,
   type DefaultMediaLayoutProps,
@@ -80,7 +80,7 @@ function DefaultVideoLayoutLarge() {
           <DefaultPlayButton tooltip="top start" />
           <DefaultMuteButton tooltip="top" />
           <DefaultVolumeSlider />
-          <DefaultTimeGroup />
+          <DefaultTimeInfo />
           <DefaultChapterTitle />
           <DefaultCaptionButton tooltip="top" />
           {menuGroup === 'bottom' && <DefaultVideoMenus />}
@@ -116,7 +116,7 @@ function DefaultVideoLayoutSmall() {
           <DefaultPlayButton tooltip="top" />
         </div>
         <Controls.Group className="vds-controls-group">
-          <DefaultTimeGroup />
+          <DefaultTimeInfo />
           <DefaultChapterTitle />
           <div className="vds-controls-spacer" />
           <DefaultFullscreenButton tooltip="top end" />

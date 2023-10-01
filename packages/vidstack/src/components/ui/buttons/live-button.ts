@@ -5,7 +5,7 @@ import { FocusVisibleController } from '../../../foundation/observers/focus-visi
 import { $ariaBool } from '../../../utils/aria';
 import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
 
-export interface LiveIndicatorProps {
+export interface LiveButtonProps {
   /**
    * Whether the button should be disabled (non-interactive). This will prevent seeking to the
    * live edge when pressed.
@@ -24,7 +24,11 @@ export interface LiveIndicatorProps {
  * @attr data-hocus - Whether button is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/live-button}
  */
-export class LiveButton extends Component<LiveIndicatorProps> {
+export class LiveButton extends Component<LiveButtonProps> {
+  static props: LiveButtonProps = {
+    disabled: false,
+  };
+
   private _media!: MediaContext;
 
   constructor() {

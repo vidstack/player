@@ -43,17 +43,17 @@
   --media-tooltip-exit-animation: vds-tooltip-exit 0.2s ease-out;
 
   /* Live Indicator. */
-  --media-live-indicator-bg: #8a8a8a;
-  --media-live-indicator-border-radius: 2px;
-  --media-live-indicator-color: #161616;
-  --media-live-indicator-edge-bg: #dc2626;
-  --media-live-indicator-edge-color: #f5f5f5;
-  --media-live-indicator-font-size: 12px;
-  --media-live-indicator-font-weight: 600;
-  --media-live-indicator-height: 40px;
-  --media-live-indicator-letter-spacing: 1.5px;
-  --media-live-indicator-padding: 1px 4px;
-  --media-live-indicator-width: 40px;
+  --media-live-button-bg: #8a8a8a;
+  --media-live-button-border-radius: 2px;
+  --media-live-button-color: #161616;
+  --media-live-button-edge-bg: #dc2626;
+  --media-live-button-edge-color: #f5f5f5;
+  --media-live-button-font-size: 12px;
+  --media-live-button-font-weight: 600;
+  --media-live-button-height: 40px;
+  --media-live-button-letter-spacing: 1.5px;
+  --media-live-button-padding: 1px 4px;
+  --media-live-button-width: 40px;
 
   /* Captions. */
   --media-captions-padding: 1%;
