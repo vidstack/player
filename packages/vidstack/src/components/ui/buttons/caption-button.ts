@@ -43,6 +43,7 @@ export class CaptionButton extends Component<CaptionButtonProps> {
   }
 
   protected override onAttach(el: HTMLElement): void {
+    el.setAttribute('data-media-tooltip', 'caption');
     setARIALabel(el, this._getLabel.bind(this));
   }
 

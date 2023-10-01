@@ -13,7 +13,10 @@ declare global {
 export class VideoPresentation {
   _mode: WebKitPresentationMode = 'inline';
 
-  constructor(protected _video: HTMLVideoElement, private _media: MediaContext) {
+  constructor(
+    protected _video: HTMLVideoElement,
+    private _media: MediaContext,
+  ) {
     listenEvent(this._video, 'webkitpresentationmodechanged', this._onModeChange.bind(this));
   }
 

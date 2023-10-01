@@ -46,6 +46,7 @@ export class PIPButton extends Component<PIPButtonProps> {
   }
 
   protected override onAttach(el: HTMLElement): void {
+    el.setAttribute('data-media-tooltip', 'pip');
     setARIALabel(el, this._getLabel.bind(this));
   }
 

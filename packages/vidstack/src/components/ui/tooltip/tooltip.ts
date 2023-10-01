@@ -64,6 +64,12 @@ export class Tooltip extends Component<TooltipProps> {
   private _attachTrigger(el: HTMLElement) {
     this._trigger.set(el);
     el.removeAttribute('aria-label');
+
+    let tooltipName = el.getAttribute('data-media-tooltip');
+    if (tooltipName) {
+      this.el?.setAttribute(`data-media-${tooltipName}-tooltip`, '');
+    }
+
     setAttribute(el, 'data-describedby', this._id);
   }
 

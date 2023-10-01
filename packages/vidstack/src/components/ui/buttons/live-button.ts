@@ -50,6 +50,7 @@ export class LiveButton extends Component<LiveIndicatorProps> {
   protected override onAttach(el: HTMLElement): void {
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'button');
+    el.setAttribute('data-media-tooltip', 'live');
   }
 
   protected override onConnect(el: HTMLElement) {

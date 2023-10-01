@@ -42,6 +42,7 @@ export class PlayButton extends Component<PlayButtonProps> {
   }
 
   protected override onAttach(el: HTMLElement): void {
+    el.setAttribute('data-media-tooltip', 'play');
     setARIALabel(el, this._getLabel.bind(this));
   }
 

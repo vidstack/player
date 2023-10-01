@@ -57,6 +57,7 @@ export class FullscreenButton extends Component<FullscreenButtonProps> {
   }
 
   protected override onAttach(el: HTMLElement): void {
+    el.setAttribute('data-media-tooltip', 'fullscreen');
     setARIALabel(el, this._getLabel.bind(this));
   }
 

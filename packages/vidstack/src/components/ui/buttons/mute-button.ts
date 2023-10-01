@@ -40,6 +40,8 @@ export class MuteButton extends Component<MuteButtonProps> {
   }
 
   protected override onAttach(el: HTMLElement): void {
+    el.setAttribute('data-media-mute-button', '');
+    el.setAttribute('data-media-tooltip', 'mute');
     setARIALabel(el, this._getLabel.bind(this));
   }
 
