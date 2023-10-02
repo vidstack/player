@@ -167,12 +167,13 @@ function define({ dev }) {
           }
         },
       },
-      dev && {
-        name: 'sandbox',
-        async closeBundle() {
-          await launchSandbox();
+      MODE_WATCH &&
+        dev && {
+          name: 'sandbox',
+          async closeBundle() {
+            await launchSandbox();
+          },
         },
-      },
     ],
   };
 }

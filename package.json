@@ -35,7 +35,7 @@
     "rimraf": "^3.0.0",
     "semver": "^7.3.0",
     "simple-git-hooks": "^2.8.0",
-    "turbo": "^1.9.0",
+    "turbo": "^1.10.14",
     "typescript": "^5.2.2"
   },
   "simple-git-hooks": {

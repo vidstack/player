@@ -55,8 +55,4 @@ ${components}`,
   );
 }
 
-async function main() {
-  await buildIcons();
-}
-
-main();
+await buildIcons();
