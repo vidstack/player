@@ -1,19 +1,6 @@
-@import '../player/styles/base.css';
-@import '../player/styles/default/buffering.css';
-@import '../player/styles/default/buttons.css';
-@import '../player/styles/default/captions.css';
-@import '../player/styles/default/chapter-title.css';
-@import '../player/styles/default/controls.css';
-@import '../player/styles/default/gestures.css';
-@import '../player/styles/default/icons.css';
-@import '../player/styles/default/menus.css';
-@import '../player/styles/default/poster.css';
-@import '../player/styles/default/sliders.css';
-@import '../player/styles/default/thumbnail.css';
-@import '../player/styles/default/time.css';
-@import '../player/styles/default/tooltips.css';
-@import '../player/styles/default/layouts/audio.css';
-@import '../player/styles/default/layouts/video.css';
+@import '../../vidstack/player/styles/default/theme.css';
+@import '../../vidstack/player/styles/default/layouts/audio.css';
+@import '../../vidstack/player/styles/default/layouts/video.css';
 
 .player {
   --brand-color: #f5f5f5;

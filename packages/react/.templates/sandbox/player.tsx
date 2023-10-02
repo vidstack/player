@@ -61,6 +61,9 @@ export function Player() {
       case 'hls':
         setSrc(`https://stream.mux.com/${muxPlaybackId}.m3u8`);
         break;
+      case 'live':
+        player.src = 'https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8';
+        break;
     }
   }
 
@@ -98,6 +101,7 @@ export function Player() {
         <button onClick={() => changeSource('audio')}>Audio</button>
         <button onClick={() => changeSource('video')}>Video</button>
         <button onClick={() => changeSource('hls')}>HLS</button>
+        <button onClick={() => changeSource('live')}>Live</button>
       </div>
     </>
   );

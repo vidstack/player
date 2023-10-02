@@ -7,19 +7,7 @@
     },
     "build": {
       "dependsOn": ["^analyze", "^build", "clean"],
-      "outputs": [
-        "cdn/**",
-        "dist/**",
-        "local/**",
-        ".vercel/**",
-        "player/styles/default/theme.css",
-        "tailwind.cjs",
-        "tailwind.d.cts"
-      ]
-    },
-    "build:vercel": {
-      "dependsOn": ["^analyze", "^build", "clean"],
-      "outputs": [".vercel/**"]
+      "outputs": ["cdn/**", "dist/**", "local/**", "player/**", "tailwind.cjs", "tailwind.d.cts"]
     },
     "clean": {
       "cache": false

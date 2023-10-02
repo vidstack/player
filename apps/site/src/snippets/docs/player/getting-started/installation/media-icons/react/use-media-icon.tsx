@@ -1,1 +1,0 @@
-<PlayIcon size={40} />;

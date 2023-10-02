@@ -1,21 +1,36 @@
 import fs from 'node:fs';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import chokidar from 'chokidar';
 import * as eslexer from 'es-module-lexer';
 import { transformSync } from 'esbuild';
+import { execa } from 'execa';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
 
-const MODE_WATCH = process.argv.includes('-w');
-const MODE_TYPES = process.argv.includes('--config-types');
-const MODE_LOCAL = process.argv.includes('--config-local');
+const MODE_WATCH = process.argv.includes('-w'),
+  MODE_TYPES = process.argv.includes('--config-types'),
+  MODE_LOCAL = process.argv.includes('--config-local');
 
-const MAIN_EXTERNAL = ['hls.js', 'media-captions', 'media-icons'];
-const LOCAL_EXTERNAL = [...MAIN_EXTERNAL, /maverick/];
+const MAIN_EXTERNAL = ['hls.js', 'media-captions', 'media-icons'],
+  LOCAL_EXTERNAL = [...MAIN_EXTERNAL, /maverick/];
 
+// Styles
 if (!MODE_TYPES || MODE_WATCH) {
-  buildDefaultTheme();
+  if (MODE_WATCH) {
+    chokidar.watch('player/styles/**').on('all', buildDefaultTheme);
+  } else {
+    buildDefaultTheme();
+  }
+}
+
+// Sandbox
+let isRunningSandbox = false;
+function launchSandbox() {
+  if (isRunningSandbox) return;
+  execa('pnpm', ['run', 'sandbox'], { stdio: 'inherit' });
+  isRunningSandbox = true;
 }
 
 // Used by other packages (e.g., `@vidstack/react`) to build without duplicate deps.
@@ -226,6 +241,14 @@ function define({ target, type, minify }) {
           return result.code;
         },
       },
+      MODE_WATCH &&
+        !isProd &&
+        !isServer && {
+          name: 'sandbox',
+          closeBundle() {
+            launchSandbox();
+          },
+        },
     ],
   };
 }

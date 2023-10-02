@@ -4,18 +4,13 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "apps/*",
     "packages/*"
   ],
   "scripts": {
     "build": "turbo run build types --filter=./packages/*",
     "build:vidstack": "turbo run build types --filter=vidstack",
     "build:react": "turbo run build types --filter=react",
-    "build:site": "turbo run build types --filter=site",
-    "build:site:vercel": "turbo run build:vercel types --filter=site",
     "clean": "turbo run clean",
-    "preview:site": "turbo run preview --filter=site",
-    "dev:site": "turbo run dev --filter=site",
     "format": "turbo run format --parallel",
     "test": "turbo run test --parallel",
     "preinstall": "npx only-allow pnpm",
@@ -36,13 +31,10 @@
     "lint-staged": "^13.0.0",
     "minimist": "^1.2.5",
     "prettier": "^3.0.0",
-    "prettier-plugin-astro": "^0.11.0",
-    "prettier-plugin-svelte": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.4.1",
     "rimraf": "^3.0.0",
     "semver": "^7.3.0",
     "simple-git-hooks": "^2.8.0",
-    "svelte": "^4.0.0",
     "turbo": "^1.9.0",
     "typescript": "^5.2.2"
   },

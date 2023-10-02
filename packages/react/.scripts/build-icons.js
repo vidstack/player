@@ -5,34 +5,22 @@ import fs from 'fs-extra';
 import { kebabToCamelCase, kebabToPascalCase } from 'maverick.js/std';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url)),
-  rootDir = path.resolve(__dirname, '..'),
-  vidstackDir = path.resolve(rootDir, 'node_modules/vidstack');
-
-async function copyStyles() {
-  const stylesDir = path.resolve(vidstackDir, 'player/styles');
-  await fs.copy(stylesDir, path.resolve(rootDir, 'player/styles'));
-}
-
-async function copyTailwind() {
-  const tailwind = path.resolve(vidstackDir, 'tailwind.cjs'),
-    tailwindDTS = path.resolve(vidstackDir, 'tailwind.d.cts');
-  await fs.copyFile(tailwind, path.resolve(rootDir, 'tailwind.cjs'));
-  await fs.copyFile(tailwindDTS, path.resolve(rootDir, 'tailwind.d.cts'));
-}
+  ROOT_DIR = path.resolve(__dirname, '..');
 
 async function buildIcons() {
-  const iconsDir = path.resolve(rootDir, 'node_modules/media-icons/raw');
-  const files = await fs.readdir(iconsDir, 'utf-8');
-  const icons = {};
-  const ignore = new Set(['.DS_Store']);
+  const ICONS_DIR = path.resolve(ROOT_DIR, 'node_modules/media-icons/raw');
+
+  const files = await fs.readdir(ICONS_DIR, 'utf-8'),
+    icons = {},
+    ignore = new Set(['.DS_Store']);
 
   for (const file of files) {
     if (ignore.has(file)) continue;
     const name = path.basename(file, path.extname(file));
-    icons[name] = await fs.readFile(path.resolve(iconsDir, file), 'utf-8');
+    icons[name] = await fs.readFile(path.resolve(ICONS_DIR, file), 'utf-8');
   }
 
-  const outFile = path.resolve(rootDir, 'src/icons.ts');
+  const outFile = path.resolve(ROOT_DIR, 'src/icons.ts');
 
   const svgPathImports = Object.keys(icons)
     .map((name) => kebabToCamelCase(name) + 'Paths')
@@ -68,7 +56,7 @@ ${components}`,
 }
 
 async function main() {
-  await Promise.all([copyStyles(), copyTailwind(), buildIcons()]);
+  await buildIcons();
 }
 
 main();

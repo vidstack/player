@@ -5,22 +5,8 @@ module.exports = {
   printWidth: 100,
   tabWidth: 2,
   plugins: [
-    require.resolve('prettier-plugin-svelte'),
-    require.resolve('./node_modules/prettier-plugin-astro'),
     require.resolve('prettier-plugin-tailwindcss'),
     require.resolve('@ianvs/prettier-plugin-sort-imports'),
-  ],
-  // Astro
-  astroAllowShorthand: false,
-  overrides: [
-    {
-      files: '*.astro',
-      options: { parser: 'astro' },
-    },
-    {
-      files: '*.svelte',
-      options: { parser: 'svelte' },
-    },
   ],
   // Sort Imports
   importOrder: [

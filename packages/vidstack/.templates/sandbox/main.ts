@@ -27,11 +27,13 @@ player.addEventListener('can-play', () => {
 
 const audioSrcButton = document.querySelector('#audio-src-button'),
   videoSrcButton = document.querySelector('#video-src-button'),
-  hlsSrcButton = document.querySelector('#hls-src-button');
+  hlsSrcButton = document.querySelector('#hls-src-button'),
+  liveSrcButton = document.querySelector('#live-src-button');
 
 audioSrcButton?.addEventListener('click', () => changeSource('audio'));
 videoSrcButton?.addEventListener('click', () => changeSource('video'));
 hlsSrcButton?.addEventListener('click', () => changeSource('hls'));
+liveSrcButton?.addEventListener('click', () => changeSource('live'));
 
 changeSource('audio');
 
@@ -46,6 +48,9 @@ function changeSource(type: string) {
       break;
     case 'hls':
       player.src = `https://stream.mux.com/${muxPlaybackId}.m3u8`;
+      break;
+    case 'live':
+      player.src = 'https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8';
       break;
   }
 }

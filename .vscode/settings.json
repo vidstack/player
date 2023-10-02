@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["astro", "crossorigin", "lucide", "plyr", "Vercel", "vime"],
+  "cSpell.words": ["crossorigin", "lucide", "plyr", "vercel", "vime"],
   "css.customData": [],
   "html.customData": ["./packages/vidstack/vscode.html-data.json"],
   "typescript.tsdk": "node_modules/typescript/lib",

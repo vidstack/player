@@ -1,6 +1,7 @@
-import { execa } from 'execa';
 import fs from 'fs';
 import path from 'path';
+
+import { execa } from 'execa';
 
 const __cwd = process.cwd();
 
@@ -37,6 +38,7 @@ async function main() {
 }
 
 main().catch((e) => {
+  if (e.exitCode === 1) return;
   console.error(e);
   process.exit(1);
 });

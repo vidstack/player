@@ -13,19 +13,22 @@
     "*.d.ts",
     "dist/",
     "player/",
-    "tailwind.*"
+    "tailwind.*",
+    "analyze.json"
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.tsx\" --framework react",
-    "dev": "pnpm prebuild && pnpm clean && pnpm run build:types && pnpm run build:types -w & rollup -c -w",
-    "prebuild": "node .scripts/prebuild.js",
-    "build": "pnpm prebuild && rollup -c",
+    "dev": "pnpm clean && pnpm build:core && pnpm build:icons && pnpm build:types && pnpm watch",
+    "build": "pnpm build:icons && rollup -c",
+    "build:core": "pnpm -F vidstack build:local && pnpm -F vidstack build:types",
+    "build:icons": "node .scripts/build-icons.js",
     "build:types": "tsc -p tsconfig.build.json",
     "sandbox": "node ../../.scripts/sandbox.js",
     "sandbox:build": "vite build sandbox",
     "types": "pnpm build:types && rollup -c --config-types",
-    "clean": "rimraf dist styles",
-    "format": "prettier src --write --loglevel warn"
+    "clean": "rimraf dist player",
+    "format": "prettier src --write --loglevel warn",
+    "watch": "pnpm run build:types -w & rollup -c -w"
   },
   "peerDependencies": {
     "@types/react": "^18.0.0",

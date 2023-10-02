@@ -41,7 +41,7 @@ $: git fetch upstream
 $: git branch --set-upstream-to=upstream/main main
 
 # Run this when we want to update our version of main.
-$: git pull
+$: git pull upstream --rebase
 ```
 
 ### Node
@@ -59,7 +59,7 @@ $: pnpm i
 $: pnpm -F vidstack install {package}
 
 # Update a dependency for a single package.
-$: pnpm -F vidstack up {package}
+$: pnpm -F react up {package}
 
 # Update a dependency for all packages.
 $: pnpm up {package}@{version} -r
@@ -74,7 +74,7 @@ $: pnpm build
 # Build single package (turbo) - see root `package.json` for more
 $: pnpm build:vidstack
 
-# Build and watch single package
+# Build and watch single package - also launches sandbox to play in
 $: pnpm -F vidstack dev
 ```
 
@@ -86,7 +86,10 @@ it.
 
 ```bash
 # Play with `vidstack` package in your browser.
-$: pnpm -F vidstack sandbox
+$: pnpm -F vidstack dev
+
+# Play with `@vidstack/react` package in your browser.
+$: pnpm -F @vidstack/react dev
 ```
 
 After running any of the commands above, you can find the sandbox directory at `packages/*/sandbox`.
@@ -111,5 +114,4 @@ contribution is appreciated more then you can imagine, and even a failed PR can 
 [turborepo]: https://turborepo.org
 [typescript]: https://www.typescriptlang.org
 [vidstack-gh]: https://github.com/vidstack/vidstack
-[vitest]: https://vitest.dev
 [web-components]: https://developer.mozilla.org/en-US/docs/Web/Web_Components
