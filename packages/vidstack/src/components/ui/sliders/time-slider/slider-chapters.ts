@@ -264,7 +264,7 @@ export class SliderChapters extends Component<SliderChaptersProps> {
       if (seenDuration) return;
 
       const { duration } = this._media.$state;
-      if (cues[cues.length - 1].endTime !== duration()) {
+      if (Math.abs(cues[cues.length - 1].endTime - duration()) > 1) {
         chapters.push(new window.VTTCue(cues[cues.length - 1].endTime, duration(), ''));
       }
 
