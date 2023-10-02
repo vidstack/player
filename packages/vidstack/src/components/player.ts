@@ -121,11 +121,8 @@ export class MediaPlayer
   private _stateMgr: MediaStateManager;
   private _requestMgr: MediaRequestManager;
 
+  @prop
   readonly canPlayQueue = new RequestQueue();
-
-  get logger() {
-    return this._media.logger;
-  }
 
   private get _provider() {
     return this._media.$provider() as AnyMediaProvider | null;
