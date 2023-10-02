@@ -251,8 +251,6 @@ export class HTMLMediaEvents {
   }
 
   private _onDurationChange(event: Event) {
-    this._onStreamTypeChange();
-
     if (this._context.$state.ended()) {
       this._updateCurrentTime(this._media.duration, event);
     }
