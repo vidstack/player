@@ -126,8 +126,10 @@
   top: calc(
     var(
       --region-top,
-      var(--overlay-height) * var(--region-viewport-anchor-y) / 100 - var(--region-height) *
-        var(--region-anchor-y) / 100
+      calc(
+        calc(calc(var(--overlay-height) * var(--region-viewport-anchor-y)) / 100) -
+          calc(var(--region-height) * calc(var(--region-anchor-y) / 100))
+      )
     )
   );
   left: var(

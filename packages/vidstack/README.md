@@ -18,7 +18,7 @@ Vidstack is [MIT licensed](./LICENSE).
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr
 [package]: https://www.npmjs.com/package/vidstack
-[package-badge]: https://img.shields.io/npm/v/vidstack?style=flat-square
+[package-badge]: https://img.shields.io/npm/v/vidstack/next?style=flat-square
 [jsdelivr]: https://www.jsdelivr.com/package/npm/vidstack
 [jsdelivr-badge]: https://data.jsdelivr.com/v1/package/npm/vidstack/badge
 [discord]: https://discord.gg/QAjfh2gZE4
