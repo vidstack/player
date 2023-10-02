@@ -259,17 +259,10 @@ export class SliderChapters extends Component<SliderChaptersProps> {
 
     chapters.push(cues[cues.length - 1]);
 
-    let seenDuration = false;
-    effect(() => {
-      if (seenDuration) return;
-
-      const { duration } = this._media.$state;
-      if (Math.abs(cues[cues.length - 1].endTime - duration()) > 1) {
-        chapters.push(new window.VTTCue(cues[cues.length - 1].endTime, duration(), ''));
-      }
-
-      seenDuration = duration() > 0;
-    });
+    // const { duration } = this._media.$state;
+    // if (Math.abs(cues[cues.length - 1].endTime - duration()) > 1) {
+    //   chapters.push(new window.VTTCue(cues[cues.length - 1].endTime, duration(), ''));
+    // }
 
     return chapters;
   }
