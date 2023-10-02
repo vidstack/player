@@ -240,6 +240,11 @@ export class SliderChapters extends Component<SliderChaptersProps> {
     const chapters: VTTCue[] = [];
 
     // Fill any time gaps where chapters are missing.
+    if (cues[0].startTime !== 0) {
+      chapters.push(new window.VTTCue(0, cues[0].startTime, ''));
+    }
+
+    // Fill any time gaps where chapters are missing.
     for (let i = 0; i < cues.length - 1; i++) {
       const currentCue = cues[i],
         nextCue = cues[i + 1];
@@ -253,6 +258,12 @@ export class SliderChapters extends Component<SliderChaptersProps> {
     }
 
     chapters.push(cues[cues.length - 1]);
+
+    const { duration } = this._media.$state;
+    if (cues[cues.length - 1].endTime !== duration()) {
+      chapters.push(new window.VTTCue(cues[cues.length - 1].endTime, duration(), ''));
+    }
+
     return chapters;
   }
 
