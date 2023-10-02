@@ -6,8 +6,8 @@
 
 :where([data-media-player]) {
   width: 100%;
-  min-width: 275px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   position: relative;
   contain: style;
   box-sizing: border-box;
@@ -62,7 +62,7 @@
   display: inline-block;
   width: 100%;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
   touch-action: manipulation;
 }
 

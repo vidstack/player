@@ -19,7 +19,9 @@ const MAIN_EXTERNAL = ['hls.js', 'media-captions', 'media-icons'],
 // Styles
 if (!MODE_TYPES || MODE_WATCH) {
   if (MODE_WATCH) {
-    chokidar.watch('player/styles/**').on('all', buildDefaultTheme);
+    chokidar.watch('player/styles/**').on('all', (_, path) => {
+      if (path !== 'player/styles/default/theme.css') buildDefaultTheme();
+    });
   } else {
     buildDefaultTheme();
   }
