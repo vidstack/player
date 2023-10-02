@@ -68,10 +68,6 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   protected override onConnect() {
-    effect(this._onControlsHideDelayChange.bind(this));
-    effect(this._onFullscreenSupportChange.bind(this));
-    effect(this._onPiPSupportChange.bind(this));
-
     const names = Object.getOwnPropertyNames(Object.getPrototypeOf(this)),
       handle = this._handleRequest.bind(this);
 
@@ -82,6 +78,10 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     }
 
     this.listen('fullscreen-change', this._onFullscreenChange.bind(this));
+
+    effect(this._onControlsHideDelayChange.bind(this));
+    effect(this._onFullscreenSupportChange.bind(this));
+    effect(this._onPiPSupportChange.bind(this));
   }
 
   private _handleRequest(event: Event) {

@@ -3,6 +3,8 @@ import * as React from 'react';
 import { useReactContext } from 'maverick.js/react';
 import { mediaContext, MediaRemoteControl } from 'vidstack/local';
 
+import { MediaPlayerInstance } from '../components/primitives/instances';
+
 /**
  * A media remote provides a simple facade for dispatching media requests to the nearest media
  * player.
@@ -15,12 +17,21 @@ import { mediaContext, MediaRemoteControl } from 'vidstack/local';
 export function useMediaRemote(
   target?: EventTarget | null | React.RefObject<EventTarget | null>,
 ): MediaRemoteControl {
-  const media = useReactContext(mediaContext)!;
-  return React.useMemo<MediaRemoteControl>(() => {
-    if (!target) return media.remote;
-    const remote = new MediaRemoteControl(__DEV__ ? media.logger : void 0);
-    remote.setPlayer(media.player);
-    remote.setTarget(target && 'current' in target ? target.current : target);
-    return remote;
-  }, [media, target]);
+  const media = useReactContext(mediaContext)!,
+    remote = React.useRef<MediaRemoteControl>();
+
+  if (!remote.current) {
+    remote.current = new MediaRemoteControl();
+  }
+
+  React.useEffect(() => {
+    const ref = target && 'current' in target ? target.current : target,
+      isPlayerRef = ref instanceof MediaPlayerInstance,
+      player = isPlayerRef ? ref : media?.player;
+
+    remote.current!.setPlayer(player ?? null);
+    remote.current!.setTarget(ref ?? null);
+  }, [media, target && 'current' in target ? target.current : target]);
+
+  return remote.current;
 }

@@ -2,7 +2,7 @@ import { Component } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 
 import type { MediaPlayer } from '../../components/player';
-import type { Logger } from '../../foundation/logger/controller';
+import { Logger } from '../../foundation/logger/controller';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../api/media-request-events';
 import { isTrackCaptionKind } from '../tracks/text/text-track';
 
@@ -18,7 +18,7 @@ export class MediaRemoteControl {
   private _player: MediaPlayer | null = null;
   private _prevTrackIndex = -1;
 
-  constructor(private _logger?: Logger) {}
+  constructor(private _logger = __DEV__ ? new Logger() : undefined) {}
 
   /**
    * Set the target from which to dispatch media requests events from. The events should bubble

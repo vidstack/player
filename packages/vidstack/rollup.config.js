@@ -244,6 +244,7 @@ function define({ target, type, minify }) {
         },
       },
       MODE_WATCH &&
+        !MODE_LOCAL &&
         !isProd &&
         !isServer && {
           name: 'sandbox',

@@ -28,7 +28,8 @@
     "types": "pnpm build:types && rollup -c --config-types",
     "clean": "rimraf dist player",
     "format": "prettier src --write --loglevel warn",
-    "watch": "pnpm run build:types -w & rollup -c -w"
+    "watch": "pnpm watch:core & pnpm run build:types -w & rollup -c -w",
+    "watch:core": "pnpm -F vidstack dev:local"
   },
   "peerDependencies": {
     "@types/react": "^18.0.0",

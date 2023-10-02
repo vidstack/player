@@ -120,7 +120,12 @@ export class MediaPlayer
   private _media: MediaContext;
   private _stateMgr: MediaStateManager;
   private _requestMgr: MediaRequestManager;
-  private _canPlayQueue = new RequestQueue();
+
+  readonly canPlayQueue = new RequestQueue();
+
+  get logger() {
+    return this._media.logger;
+  }
 
   private get _provider() {
     return this._media.$provider() as AnyMediaProvider | null;
@@ -237,6 +242,7 @@ export class MediaPlayer
   protected override onDestroy(): void {
     // @ts-expect-error
     this._media.player = null;
+    this.canPlayQueue._reset();
   }
 
   private _initState() {
@@ -286,8 +292,8 @@ export class MediaPlayer
   }
 
   private _watchCanPlay() {
-    if (this.$state.canPlay() && this._provider) this._canPlayQueue._start();
-    else this._canPlayQueue._stop();
+    if (this.$state.canPlay() && this._provider) this.canPlayQueue._start();
+    else this.canPlayQueue._stop();
   }
 
   private _onProvidedTypesChange() {
@@ -451,8 +457,8 @@ export class MediaPlayer
 
   private _queuePausedUpdate(paused: boolean) {
     if (paused) {
-      this._canPlayQueue._enqueue('paused', () => this._requestMgr._pause());
-    } else this._canPlayQueue._enqueue('paused', () => this._requestMgr._play());
+      this.canPlayQueue._enqueue('paused', () => this._requestMgr._pause());
+    } else this.canPlayQueue._enqueue('paused', () => this._requestMgr._play());
   }
 
   @prop
@@ -469,7 +475,7 @@ export class MediaPlayer
   }
 
   private _queueMutedUpdate(muted: boolean) {
-    this._canPlayQueue._enqueue('muted', () => (this._provider!.muted = muted));
+    this.canPlayQueue._enqueue('muted', () => (this._provider!.muted = muted));
   }
 
   @prop
@@ -486,7 +492,7 @@ export class MediaPlayer
   }
 
   private _queueCurrentTimeUpdate(time: number) {
-    this._canPlayQueue._enqueue('currentTime', () => {
+    this.canPlayQueue._enqueue('currentTime', () => {
       const adapter = this._provider;
       if (time !== adapter!.currentTime) {
         peek(() => {
@@ -516,7 +522,7 @@ export class MediaPlayer
 
   private _queueVolumeUpdate(volume: number) {
     const clampedVolume = clampNumber(0, volume, 1);
-    this._canPlayQueue._enqueue('volume', () => (this._provider!.volume = clampedVolume));
+    this.canPlayQueue._enqueue('volume', () => (this._provider!.volume = clampedVolume));
   }
 
   @prop
@@ -533,7 +539,7 @@ export class MediaPlayer
   }
 
   private _queuePlaysinlineUpdate(inline: boolean) {
-    this._canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
+    this.canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
   }
 
   @prop
@@ -550,7 +556,7 @@ export class MediaPlayer
   }
 
   private _queuePlaybackRateUpdate(rate: number) {
-    this._canPlayQueue._enqueue('rate', () => (this._provider!.playbackRate = rate));
+    this.canPlayQueue._enqueue('rate', () => (this._provider!.playbackRate = rate));
   }
 
   /**

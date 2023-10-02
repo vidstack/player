@@ -170,8 +170,8 @@ function define({ dev }) {
       MODE_WATCH &&
         dev && {
           name: 'sandbox',
-          async closeBundle() {
-            await launchSandbox();
+          closeBundle() {
+            launchSandbox();
           },
         },
     ],
