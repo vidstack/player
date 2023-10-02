@@ -226,12 +226,15 @@ export function DefaultChaptersMenu({
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
 }) {
-  const { translations, smQueryList, thumbnails, menuContainer, noModal, menuGroup } =
+  const { viewType } = useMediaContext().$state,
+    { translations, smQueryList, thumbnails, menuContainer, noModal, menuGroup } =
       useDefaultLayoutContext(),
     $placement = computed(() =>
       noModal() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
     ),
-    $offset = computed(() => (!smQueryList.matches && menuGroup() === 'bottom' ? 26 : 0));
+    $offset = computed(() =>
+      !smQueryList.matches && menuGroup() === 'bottom' && viewType() === 'video' ? 26 : 0,
+    );
 
   const items = html`
     <media-menu-items
@@ -287,12 +290,14 @@ export function DefaultSettingsMenu({
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
 }) {
-  const { translations, smQueryList, menuContainer, noModal, menuGroup } =
-      useDefaultLayoutContext(),
+  const { viewType } = useMediaContext().$state,
+    { translations, smQueryList, menuContainer, noModal, menuGroup } = useDefaultLayoutContext(),
     $placement = computed(() =>
       noModal() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
     ),
-    $offset = computed(() => (!smQueryList.matches && menuGroup() === 'bottom' ? 26 : 0));
+    $offset = computed(() =>
+      !smQueryList.matches && menuGroup() === 'bottom' && viewType() === 'video' ? 26 : 0,
+    );
 
   const items = html`
     <media-menu-items

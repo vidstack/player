@@ -477,14 +477,21 @@ export { DefaultTimeInfo };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
-  const { showMenuDelay, noModal, isSmallLayout, Icons } = React.useContext(DefaultLayoutContext),
+  const { showMenuDelay, noModal, isSmallLayout, Icons, menuGroup } =
+      React.useContext(DefaultLayoutContext),
     chaptersText = useDefaultLayoutLang('Chapters'),
     options = useChapterOptions(),
     disabled = !options.length,
-    { thumbnails } = React.useContext(DefaultLayoutContext);
+    { thumbnails } = React.useContext(DefaultLayoutContext),
+    $viewType = useMediaState('viewType'),
+    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0;
 
   const Content = (
-    <MenuBase.Content className="vds-chapters-menu-items vds-menu-items" placement={placement}>
+    <MenuBase.Content
+      className="vds-chapters-menu-items vds-menu-items"
+      placement={placement}
+      offset={$offset}
+    >
       <MenuBase.RadioGroup
         className="vds-chapters-radio-group vds-radio-group"
         value={options.selectedValue}
@@ -544,11 +551,18 @@ export { DefaultChaptersMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
-  const { showMenuDelay, Icons, isSmallLayout, noModal } = React.useContext(DefaultLayoutContext),
-    settingsText = useDefaultLayoutLang('Settings');
+  const { showMenuDelay, Icons, isSmallLayout, menuGroup, noModal } =
+      React.useContext(DefaultLayoutContext),
+    settingsText = useDefaultLayoutLang('Settings'),
+    $viewType = useMediaState('viewType'),
+    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0;
 
   const Content = (
-    <MenuBase.Content className="vds-settings-menu-items vds-menu-items" placement={placement}>
+    <MenuBase.Content
+      className="vds-settings-menu-items vds-menu-items"
+      placement={placement}
+      offset={$offset}
+    >
       <DefaultAudioSubmenu />
       <DefaultSpeedSubmenu />
       <DefaultQualitySubmenu />
