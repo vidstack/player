@@ -252,6 +252,7 @@
   top: unset;
   bottom: 0;
   max-height: var(--media-sm-menu-portrait-max-height, 40vh);
+  max-height: var(--media-sm-menu-portrait-max-height, 40dvh);
 }
 
 :where(.vds-menu-items:not([data-submenu]):not([data-placement])) {
@@ -262,6 +263,7 @@
 @media (orientation: landscape) and (pointer: coarse) {
   :where(.vds-menu-items:not([data-submenu]):not([data-placement])) {
     max-height: var(--media-sm-menu-landscape-max-height, min(70vh, 400px));
+    max-height: var(--media-sm-menu-landscape-max-height, min(70dvh, 400px));
   }
 }
 
