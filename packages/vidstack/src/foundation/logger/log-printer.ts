@@ -25,9 +25,10 @@ export class LogPrinter extends ViewController {
     this.listen('vds-log', (event) => {
       event.stopPropagation();
 
-      const eventTargetName = (
-        (event as { path?: Element[] }).path?.[0] ?? (event.target as Element)
-      ).tagName.toLowerCase();
+      const element =
+          (event as { path?: Element[] }).path?.[0] ??
+          (event.target instanceof ViewController ? event.target.el : (event.target as Element)),
+        eventTargetName = element?.tagName.toLowerCase() ?? 'unknown';
 
       const { level = 'warn', data } = event.detail ?? {};
 
@@ -54,6 +55,7 @@ export class LogPrinter extends ViewController {
       );
 
       if (data?.length === 1 && isGroupedLog(data[0])) {
+        if (element) data[0].logs.unshift({ label: 'Element', data: [element] });
         printGroup(level, data![0]);
       } else if (data) {
         print(level, ...data);
@@ -97,17 +99,15 @@ function printStackTrace() {
 }
 
 function printGroup(level: LogLevel, groupedLog: GroupedLog) {
-  console.groupCollapsed(groupedLog.title);
-
   for (const log of groupedLog.logs) {
     if (isGroupedLog(log)) {
+      console.groupCollapsed(groupedLog.title);
       printGroup(level, log);
+      console.groupEnd();
     } else if ('label' in log && !isUndefined(log.label)) {
       labelledPrint(log.label, ...log.data);
     } else {
       print(level, ...log.data);
     }
   }
-
-  console.groupEnd();
 }

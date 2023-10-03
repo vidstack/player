@@ -48,7 +48,7 @@ export class MediaEventsLogger extends MediaPlayerController {
 
   private _onMediaEvent(event: Event) {
     this._media.logger
-      ?.infoGroup(`📡 dispatching \`${event.type}\``)
+      ?.debugGroup(`📡 dispatching \`${event.type}\``)
       .labelledLog('Media Store', { ...this.$state })
       .labelledLog('Event', event)
       .dispatch();

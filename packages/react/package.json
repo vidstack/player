@@ -18,18 +18,18 @@
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.tsx\" --framework react",
-    "dev": "pnpm clean && pnpm build:core && pnpm build:icons && pnpm build:types && pnpm watch",
+    "dev": "pnpm clean && pnpm build:core && pnpm build:icons && pnpm watch",
     "build": "pnpm build:icons && rollup -c",
-    "build:core": "pnpm -F vidstack build:local && pnpm -F vidstack build:types",
     "build:icons": "node .scripts/build-icons.js",
     "build:types": "tsc -p tsconfig.build.json",
+    "build:core": "pnpm -F vidstack build:local && pnpm -F vidstack types",
     "sandbox": "node ../../.scripts/sandbox.js",
     "sandbox:build": "vite build sandbox",
     "types": "pnpm build:types && rollup -c --config-types",
     "clean": "rimraf dist player",
     "format": "prettier src --write --loglevel warn",
-    "watch": "pnpm watch:core & pnpm run build:types -w & rollup -c -w",
-    "watch:core": "pnpm -F vidstack dev:local"
+    "watch": "pnpm watch:types & rollup -c -w",
+    "watch:types": "pnpm run build:types -w"
   },
   "peerDependencies": {
     "@types/react": "^18.0.0",
@@ -39,14 +39,14 @@
     "media-captions": "^1.0.0"
   },
   "devDependencies": {
-    "@maverick-js/cli": "0.40.4",
+    "@maverick-js/cli": "0.40.5",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
     "@vitejs/plugin-react": "^4.1.0",
     "esbuild": "^0.16.17",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.40.4",
+    "maverick.js": "0.40.5",
     "media-icons": "^1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

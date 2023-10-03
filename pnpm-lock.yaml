@@ -69,8 +69,8 @@ importers:
         version: 1.0.0
     devDependencies:
       '@maverick-js/cli':
-        specifier: 0.40.4
-        version: 0.40.4
+        specifier: 0.40.5
+        version: 0.40.5
       '@rollup/plugin-node-resolve':
         specifier: ^15.1.0
         version: 15.1.0(rollup@3.25.1)
@@ -90,8 +90,8 @@ importers:
         specifier: ^11.0.0
         version: 11.1.1
       maverick.js:
-        specifier: 0.40.4
-        version: 0.40.4
+        specifier: 0.40.5
+        version: 0.40.5
       media-icons:
         specifier: ^1.0.0
         version: 1.0.0
@@ -133,8 +133,8 @@ importers:
         specifier: ^1.4.4
         version: 1.4.4
       '@maverick-js/cli':
-        specifier: 0.40.4
-        version: 0.40.4
+        specifier: 0.40.5
+        version: 0.40.5
       '@open-wc/semantic-dom-diff':
         specifier: ^0.19.5
         version: 0.19.9
@@ -181,8 +181,8 @@ importers:
         specifier: ^2.7.4
         version: 2.7.4
       maverick.js:
-        specifier: 0.40.4
-        version: 0.40.4
+        specifier: 0.40.5
+        version: 0.40.5
       media-icons:
         specifier: ^1.0.0
         version: 1.0.0
@@ -1677,10 +1677,10 @@ packages:
       '@lit-labs/ssr-dom-shim': 1.1.1
     dev: true
 
-  /@maverick-js/cli@0.40.4:
+  /@maverick-js/cli@0.40.5:
     resolution:
       {
-        integrity: sha512-myjjWX7K1OAnim3jwxGfi2o4x1DtovzjFDMObGws8QxkyK4ylGRFUyXnOX/i5R1XqMCveuPM849/l5JXaOctIA==,
+        integrity: sha512-h+UqDwMvEyXDKCnCFBe43rBxRLpyC5s3DV0p2xuiwbDxIKbn3Akhs+FGR8mrSQOp6ouyEv2nV18GZ8vRswhg0g==,
       }
     engines: { node: '>=16' }
     hasBin: true
@@ -2933,7 +2933,7 @@ packages:
       normalize-path: 3.0.0
       readdirp: 3.6.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /clean-stack@2.2.0:
@@ -3843,10 +3843,10 @@ packages:
       }
     dev: true
 
-  /fsevents@2.3.2:
+  /fsevents@2.3.3:
     resolution:
       {
-        integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==,
+        integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==,
       }
     engines: { node: ^8.16.0 || ^10.6.0 || >=11.0.0 }
     os: [darwin]
@@ -4885,10 +4885,10 @@ packages:
       semver: 6.3.1
     dev: true
 
-  /maverick.js@0.40.4:
+  /maverick.js@0.40.5:
     resolution:
       {
-        integrity: sha512-x7fqzUVHc+YSJ0w1SzbfHDVKLLTQbNJFQG+dMifNhv2vUn7IKeFRIFcbosbo/lBS/1fseunmUdke9mT7iwgAgw==,
+        integrity: sha512-mdLEQQo53CphYvkEd01kYDEEtuUdLUdrjInyP2DjvLCD/fd7b84ihtUa14JprJuX5/zY/Y+8xMdnvA/g5ndhow==,
       }
     engines: { node: '>=16' }
     dev: true
@@ -5832,7 +5832,7 @@ packages:
     engines: { node: '>=14.18.0', npm: '>=8.0.0' }
     hasBin: true
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /rollup@3.28.0:
@@ -5843,7 +5843,7 @@ packages:
     engines: { node: '>=14.18.0', npm: '>=8.0.0' }
     hasBin: true
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /rrweb-cssom@0.6.0:
@@ -6720,7 +6720,7 @@ packages:
       postcss: 8.4.29
       rollup: 3.25.1
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /vite@4.4.9(@types/node@16.18.34):
@@ -6759,7 +6759,7 @@ packages:
       postcss: 8.4.29
       rollup: 3.28.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /vite@4.4.9(@types/node@20.2.5):
@@ -6798,7 +6798,7 @@ packages:
       postcss: 8.4.29
       rollup: 3.28.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /vitest@0.30.1(jsdom@21.1.2):

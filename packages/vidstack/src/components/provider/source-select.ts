@@ -182,11 +182,11 @@ export class SourceSelection {
 
     try {
       isString(source.src) && preconnect(new URL(source.src).origin, 'preconnect');
-    } catch (e) {
+    } catch (error) {
       if (__DEV__) {
         this._media.logger
           ?.infoGroup(`Failed to preconnect to source: ${source.src}`)
-          .labelledLog('Error', e)
+          .labelledLog('Error', error)
           .dispatch();
       }
     }

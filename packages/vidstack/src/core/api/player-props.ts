@@ -12,7 +12,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   crossorigin: null,
   fullscreenOrientation: 'landscape',
   load: 'visible',
-  logLevel: 'silent',
+  logLevel: __DEV__ ? 'warn' : 'silent',
   loop: false,
   muted: false,
   paused: true,

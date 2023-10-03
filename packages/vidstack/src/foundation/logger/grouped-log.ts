@@ -1,5 +1,3 @@
-import { isObject } from 'maverick.js/std';
-
 import type { Logger } from './controller';
 import type { LogLevel } from './log-level';
 
@@ -41,6 +39,6 @@ export class GroupedLog {
   }
 }
 
-export function isGroupedLog(data: unknown): data is GroupedLog {
-  return isObject(data) && data[GROUPED_LOG];
+export function isGroupedLog(data: any): data is GroupedLog {
+  return !!data?.[GROUPED_LOG];
 }

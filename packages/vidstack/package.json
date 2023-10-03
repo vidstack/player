@@ -24,8 +24,7 @@
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.ts\"",
-    "dev": "pnpm clean && pnpm build:types && pnpm watch",
-    "dev:local": "pnpm watch:local",
+    "dev": "pnpm clean && pnpm watch",
     "build": "rollup -c",
     "build:local": "pnpm clean && rollup -c --config-local",
     "build:types": "tsc -p tsconfig.build.json",
@@ -38,15 +37,15 @@
     "test:watch": "vitest --watch",
     "test:server": "SERVER=true vitest --run",
     "test:server:watch": "SERVER=true vitest --watch",
-    "watch": "pnpm run build:types -w & rollup -c -w",
-    "watch:local": "pnpm run build:types -w & rollup -c -w --config-local"
+    "watch": "pnpm watch:types & rollup -c -w",
+    "watch:types": "pnpm run build:types -w"
   },
   "dependencies": {
     "media-captions": "^1.0.0"
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.4.4",
-    "@maverick-js/cli": "0.40.4",
+    "@maverick-js/cli": "0.40.5",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -62,7 +61,7 @@
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
-    "maverick.js": "0.40.4",
+    "maverick.js": "0.40.5",
     "media-icons": "^1.0.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",

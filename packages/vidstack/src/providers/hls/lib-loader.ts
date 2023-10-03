@@ -14,14 +14,14 @@ interface LoadHLSConstructorCallbacks {
 export class HLSLibLoader {
   constructor(
     private _lib: HLSLibrary,
-    private _context: MediaSetupContext,
+    private _ctx: MediaSetupContext,
     private _callback: (ctor: HLSConstructor) => void,
   ) {
     this._startLoading();
   }
 
   private async _startLoading() {
-    if (__DEV__) this._context.logger?.info('🏗️ Loading HLS Library');
+    if (__DEV__) this._ctx.logger?.info('🏗️ Loading HLS Library');
 
     const callbacks: LoadHLSConstructorCallbacks = {
       onLoadStart: this._onLoadStart.bind(this),
@@ -41,9 +41,9 @@ export class HLSLibLoader {
     // Not supported.
     if (!ctor.isSupported()) {
       const message = '[vidstack]: `hls.js` is not supported in this environment';
-      if (__DEV__) this._context.logger?.error(message);
-      this._context.player.dispatch(new DOMEvent<void>('hls-unsupported'));
-      this._context.delegate._dispatch('error', { detail: { message, code: 4 } });
+      if (__DEV__) this._ctx.logger?.error(message);
+      this._ctx.player.dispatch(new DOMEvent<void>('hls-unsupported'));
+      this._ctx.delegate._dispatch('error', { detail: { message, code: 4 } });
       return null;
     }
 
@@ -52,25 +52,25 @@ export class HLSLibLoader {
 
   private _onLoadStart() {
     if (__DEV__) {
-      this._context.logger
+      this._ctx.logger
         ?.infoGroup('Starting to load `hls.js`')
         .labelledLog('URL', this._lib)
         .dispatch();
     }
 
-    this._context.player.dispatch(new DOMEvent<void>('hls-lib-load-start'));
+    this._ctx.player.dispatch(new DOMEvent<void>('hls-lib-load-start'));
   }
 
   private _onLoaded(ctor: HLSConstructor) {
     if (__DEV__) {
-      this._context.logger
+      this._ctx.logger
         ?.infoGroup('Loaded `hls.js`')
         .labelledLog('Library', this._lib)
         .labelledLog('Constructor', ctor)
         .dispatch();
     }
 
-    this._context.player.dispatch(
+    this._ctx.player.dispatch(
       new DOMEvent<HLSConstructor>('hls-lib-loaded', {
         detail: ctor,
       }),
@@ -83,20 +83,20 @@ export class HLSLibLoader {
     const error = coerceToError(e);
 
     if (__DEV__) {
-      this._context.logger
+      this._ctx.logger
         ?.errorGroup('Failed to load `hls.js`')
         .labelledLog('Library', this._lib)
         .labelledLog('Error', e)
         .dispatch();
     }
 
-    this._context.player.dispatch(
+    this._ctx.player.dispatch(
       new DOMEvent<any>('hls-lib-load-error', {
         detail: error,
       }),
     );
 
-    this._context.delegate._dispatch('error', {
+    this._ctx.delegate._dispatch('error', {
       detail: { message: error.message, code: 4 },
     });
   }

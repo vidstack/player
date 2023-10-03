@@ -97,7 +97,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     if (peek(this._provider)) this[event.type]?.(event);
   }
 
-  async _play() {
+  async _play(requestEvent?: Event) {
     if (__SERVER__) return;
 
     const { canPlay, paused, ended, autoplaying, seekableStart } = this.$state;
@@ -112,8 +112,16 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
         provider!.currentTime = seekableStart() + 0.1;
       }
 
-      return provider!.play();
+      return await provider!.play();
     } catch (error) {
+      if (__DEV__) {
+        this._media.logger
+          ?.errorGroup('play request failed')
+          .labelledLog('Request', requestEvent)
+          .labelledLog('Error', error)
+          .dispatch();
+      }
+
       const errorEvent = this.createEvent('play-fail', { detail: coerceToError(error) });
       errorEvent.autoplay = autoplaying();
       this._stateMgr._handle(errorEvent);
@@ -278,7 +286,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       this._request._queue._enqueue('fullscreen', event);
       await this._enterFullscreen(event.detail);
     } catch (error) {
-      this._onFullscreenError(error);
+      this._onFullscreenError(error, event);
     }
   }
 
@@ -287,7 +295,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       this._request._queue._enqueue('fullscreen', event);
       await this._exitFullscreen(event.detail);
     } catch (error) {
-      this._onFullscreenError(error);
+      this._onFullscreenError(error, event);
     }
   }
 
@@ -298,10 +306,26 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       if (this._orientation.supported && !isUndefined(lockType)) {
         await this._orientation.lock(lockType);
       }
-    } catch (e) {}
+    } catch (error) {
+      if (__DEV__) {
+        this._media.logger
+          ?.errorGroup('fullscreen orientation change failed')
+          .labelledLog('Event', event)
+          .labelledLog('Error', error)
+          .dispatch();
+      }
+    }
   }
 
-  private _onFullscreenError(error: unknown) {
+  private _onFullscreenError(error: unknown, request?: Event) {
+    if (__DEV__) {
+      this._media.logger
+        ?.errorGroup('fullscreen request failed')
+        .labelledLog('Request', request)
+        .labelledLog('Error', error)
+        .dispatch();
+    }
+
     this._stateMgr._handle(
       this.createEvent('fullscreen-error', {
         detail: coerceToError(error),
@@ -314,7 +338,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       this._request._queue._enqueue('pip', event);
       await this._enterPictureInPicture();
     } catch (error) {
-      this._onPictureInPictureError(error);
+      this._onPictureInPictureError(error, event);
     }
   }
 
@@ -323,11 +347,19 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       this._request._queue._enqueue('pip', event);
       await this._exitPictureInPicture();
     } catch (error) {
-      this._onPictureInPictureError(error);
+      this._onPictureInPictureError(error, event);
     }
   }
 
-  private _onPictureInPictureError(error: unknown) {
+  private _onPictureInPictureError(error: unknown, request?: Event) {
+    if (__DEV__) {
+      this._media.logger
+        ?.errorGroup('pip request failed')
+        .labelledLog('Request', request)
+        .labelledLog('Error', error)
+        .dispatch();
+    }
+
     this._stateMgr._handle(
       this.createEvent('picture-in-picture-error', {
         detail: coerceToError(error),
@@ -341,17 +373,17 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this._request._queue._enqueue('seeked', event);
     try {
       this._seekToLiveEdge();
-    } catch (e) {
-      if (__DEV__) this._media.logger?.error('seek to live edge fail', e);
+    } catch (error) {
+      if (__DEV__) this._media.logger?.error('seek to live edge fail', error);
     }
   }
 
-  ['media-loop-request']() {
+  ['media-loop-request'](event: RE.MediaLoopRequestEvent) {
     window.requestAnimationFrame(async () => {
       try {
         this._request._looping = true;
         this._request._replaying = true;
-        await this._play();
+        await this._play(event);
       } catch (e) {
         this._request._looping = false;
         this._request._replaying = false;
@@ -364,9 +396,17 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     try {
       this._request._queue._enqueue('pause', event);
       await this._provider()!.pause();
-    } catch (e) {
+    } catch (error) {
+      if (__DEV__) {
+        this._media.logger
+          ?.errorGroup('πause request failed')
+          .labelledLog('Request', event)
+          .labelledLog('Error', error)
+          .dispatch();
+      }
+
       this._request._queue._delete('pause');
-      if (__DEV__) this._media.logger?.error('pause-fail', e);
+      if (__DEV__) this._media.logger?.error('pause-fail', error);
     }
   }
 
@@ -374,10 +414,9 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     if (!this.$state.paused()) return;
     try {
       this._request._queue._enqueue('play', event);
-      await this._provider()!.play();
+      await this._play(event);
     } catch (e) {
-      const errorEvent = this.createEvent('play-fail', { detail: coerceToError(e) });
-      this._stateMgr._handle(errorEvent);
+      // no-op
     }
   }
 

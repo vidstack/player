@@ -14,7 +14,7 @@ import type { HLSConstructor, HLSInstanceCallback } from './types';
 const toDOMEventType = (type: string) => camelToKebabCase(type);
 
 export class HLSController {
-  private _context!: MediaSetupContext;
+  private _ctx!: MediaSetupContext;
   private _instance: HLS.default | null = null;
   private _stopLiveSync: (() => void) | null = null;
 
@@ -28,7 +28,7 @@ export class HLSController {
   constructor(private _video: HTMLVideoElement) {}
 
   setup(ctor: HLSConstructor, context: MediaSetupContext) {
-    this._context = context;
+    this._ctx = context;
 
     const isLive = peek(context.$state.streamType).includes('live'),
       isLiveLowLatency = peek(context.$state.streamType).includes('ll-');
@@ -64,18 +64,18 @@ export class HLSController {
   }
 
   private _liveSync() {
-    if (!this._context.$state.live()) return;
+    if (!this._ctx.$state.live()) return;
     const raf = new RAFLoop(this._liveSyncPosition.bind(this));
     raf._start();
     return raf._stop.bind(raf);
   }
 
   private _liveSyncPosition() {
-    this._context.$state.liveSyncPosition.set(this._instance?.liveSyncPosition ?? Infinity);
+    this._ctx.$state.liveSyncPosition.set(this._instance?.liveSyncPosition ?? Infinity);
   }
 
   private _dispatchHLSEvent(eventType: string, detail: any) {
-    this._context.player?.dispatch(new DOMEvent(toDOMEventType(eventType), { detail }));
+    this._ctx.player?.dispatch(new DOMEvent(toDOMEventType(eventType), { detail }));
   }
 
   private _onTracksFound(eventType: string, data: HLS.NonNativeTextTracksData) {
@@ -105,12 +105,12 @@ export class HLSController {
       };
 
       if (nonNativeTrack.default) track.setMode('showing', event);
-      this._context.textTracks.add(track, event);
+      this._ctx.textTracks.add(track, event);
     }
   }
 
   private _onCuesParsed(eventType: string, data: HLS.CuesParsedData) {
-    const track = this._context.textTracks.getById(`hls-${data.track}`);
+    const track = this._ctx.textTracks.getById(`hls-${data.track}`);
     if (!track) return;
     const event = new DOMEvent<HLS.CuesParsedData>(eventType, { detail: data });
     for (const cue of data.cues) {
@@ -120,9 +120,9 @@ export class HLSController {
   }
 
   private _onAudioSwitch(eventType: string, data: HLS.AudioTrackSwitchedData) {
-    const track = this._context.audioTracks[data.id];
+    const track = this._ctx.audioTracks[data.id];
     if (track) {
-      this._context.audioTracks[ListSymbol._select](
+      this._ctx.audioTracks[ListSymbol._select](
         track,
         true,
         new DOMEvent(eventType, { detail: data }),
@@ -131,9 +131,9 @@ export class HLSController {
   }
 
   private _onLevelSwitched(eventType: string, data: HLS.LevelSwitchedData) {
-    const quality = this._context.qualities[data.level];
+    const quality = this._ctx.qualities[data.level];
     if (quality) {
-      this._context.qualities[ListSymbol._select](
+      this._ctx.qualities[ListSymbol._select](
         quality,
         true,
         new DOMEvent(eventType, { detail: data }),
@@ -142,12 +142,12 @@ export class HLSController {
   }
 
   private _onLevelLoaded(eventType: string, data: HLS.LevelLoadedData): void {
-    if (this._context.$state.canPlay()) return;
+    if (this._ctx.$state.canPlay()) return;
 
     const { type, live, totalduration: duration } = data.details;
     const event = new DOMEvent(eventType, { detail: data });
 
-    this._context.delegate._dispatch('stream-type-change', {
+    this._ctx.delegate._dispatch('stream-type-change', {
       detail: live
         ? type === 'EVENT' && Number.isFinite(duration)
           ? 'live:dvr'
@@ -156,16 +156,16 @@ export class HLSController {
       trigger: event,
     });
 
-    this._context.delegate._dispatch('duration-change', { detail: duration, trigger: event });
+    this._ctx.delegate._dispatch('duration-change', { detail: duration, trigger: event });
 
     const media = this._instance!.media!;
 
     if (this._instance!.currentLevel === -1) {
-      this._context.qualities[QualitySymbol._setAuto](true, event);
+      this._ctx.qualities[QualitySymbol._setAuto](true, event);
     }
 
     for (const track of this._instance!.audioTracks) {
-      this._context.audioTracks[ListSymbol._add](
+      this._ctx.audioTracks[ListSymbol._add](
         {
           id: track.id + '',
           label: track.name,
@@ -177,7 +177,7 @@ export class HLSController {
     }
 
     for (const level of this._instance!.levels) {
-      this._context.qualities[ListSymbol._add](
+      this._ctx.qualities[ListSymbol._add](
         {
           width: level.width,
           height: level.height,
@@ -193,14 +193,14 @@ export class HLSController {
 
   private _onError(eventType: string, data: HLS.ErrorData) {
     if (__DEV__) {
-      this._context.logger
+      this._ctx.logger
         ?.errorGroup(`HLS error \`${eventType}\``)
         .labelledLog('Media Element', this._instance?.media)
         .labelledLog('HLS Instance', this._instance)
         .labelledLog('Event Type', eventType)
         .labelledLog('Data', data)
-        .labelledLog('Src', peek(this._context.$state.source))
-        .labelledLog('Media Store', { ...this._context.$state })
+        .labelledLog('Src', peek(this._ctx.$state.source))
+        .labelledLog('Media Store', { ...this._ctx.$state })
         .dispatch();
     }
 
@@ -226,7 +226,7 @@ export class HLSController {
   }
 
   private _onQualityChange() {
-    const { qualities } = this._context;
+    const { qualities } = this._ctx;
     if (!this._instance || qualities.auto) return;
     this._instance[qualities.switch + 'Level'] = qualities.selectedIndex;
     /**
@@ -239,18 +239,18 @@ export class HLSController {
   }
 
   private _onAudioChange() {
-    const { audioTracks } = this._context;
+    const { audioTracks } = this._ctx;
     if (this._instance && this._instance.audioTrack !== audioTracks.selectedIndex) {
       this._instance.audioTrack = audioTracks.selectedIndex;
     }
   }
 
   _destroy() {
-    if (this._context) this._context.qualities[QualitySymbol._enableAuto] = undefined;
+    if (this._ctx) this._ctx.qualities[QualitySymbol._enableAuto] = undefined;
     this._instance?.destroy();
     this._instance = null;
     this._stopLiveSync?.();
     this._stopLiveSync = null;
-    if (__DEV__) this._context?.logger?.info('🏗️ Destroyed HLS instance');
+    if (__DEV__) this._ctx?.logger?.info('🏗️ Destroyed HLS instance');
   }
 }

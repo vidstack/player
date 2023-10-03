@@ -435,7 +435,7 @@ export class MediaRemoteControl {
 
     if (__DEV__) {
       this._logger
-        ?.infoGroup(`📨 dispatching \`${type}\``)
+        ?.debugGroup(`📨 dispatching \`${type}\``)
         .labelledLog('Target', target)
         .labelledLog('Player', this._player)
         .labelledLog('Request Event', request)
@@ -443,7 +443,11 @@ export class MediaRemoteControl {
         .dispatch();
     }
 
-    target?.dispatchEvent(request);
+    if (this._player) {
+      this._player.canPlayQueue._enqueue(type, () => target?.dispatchEvent(request));
+    } else {
+      target?.dispatchEvent(request);
+    }
   }
 
   private _noPlayerWarning(method: string) {

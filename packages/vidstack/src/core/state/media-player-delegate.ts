@@ -65,13 +65,17 @@ export class MediaPlayerDelegate {
         const muteMsg = !$state.muted()
           ? ' Attempting with volume muted will most likely resolve the issue.'
           : '';
-        console.warn(
-          [
-            `[vidstack]: autoplay was requested but failed most likely due to browser autoplay policies.${muteMsg}`,
-            `\nSee https://developer.chrome.com/blog/autoplay`,
-            `\nError:\n\n${error}`,
-          ].join('\n'),
-        );
+
+        this._media.logger
+          ?.errorGroup('autoplay request failed')
+          .labelledLog(
+            'Message',
+            `Autoplay was requested but failed most likely due to browser autoplay policies.${muteMsg}`,
+          )
+          .labelledLog('Error', error)
+          .labelledLog('See', 'https://developer.chrome.com/blog/autoplay')
+          .dispatch();
+
         seenAutoplayWarning = true;
       }
 

@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { transformSync } from 'esbuild';
-import { execa } from 'execa';
 import fs from 'fs-extra';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
@@ -23,14 +22,6 @@ const MODE_WATCH = process.argv.includes('-w'),
 // Styles.
 copyStyles();
 copyTailwind();
-
-// Sandbox
-let isRunningSandbox = false;
-function launchSandbox() {
-  if (isRunningSandbox) return;
-  execa('pnpm', ['run', 'sandbox'], { stdio: 'inherit' });
-  isRunningSandbox = true;
-}
 
 export default defineConfig(
   MODE_WATCH ? [defineTypes(), ...NPM] : MODE_TYPES ? [defineTypes()] : NPM,
@@ -167,13 +158,6 @@ function define({ dev }) {
           }
         },
       },
-      MODE_WATCH &&
-        dev && {
-          name: 'sandbox',
-          closeBundle() {
-            launchSandbox();
-          },
-        },
     ],
   };
 }

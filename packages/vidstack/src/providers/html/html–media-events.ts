@@ -22,12 +22,12 @@ export class HTMLMediaEvents {
   }
 
   private get _delegate() {
-    return this._context.delegate;
+    return this._ctx.delegate;
   }
 
   constructor(
     private _provider: HTMLMediaProvider,
-    private _context: MediaSetupContext,
+    private _ctx: MediaSetupContext,
   ) {
     this._attachInitialListeners();
     effect(this._attachTimeUpdate.bind(this));
@@ -46,19 +46,28 @@ export class HTMLMediaEvents {
    */
   private _onRAF() {
     const newTime = this._provider.currentTime;
-    if (this._context.$state.currentTime() !== newTime) this._updateCurrentTime(newTime);
+    if (this._ctx.$state.currentTime() !== newTime) this._updateCurrentTime(newTime);
   }
 
   private _attachInitialListeners() {
+    if (__DEV__) {
+      this._ctx.logger?.info('attaching initial listeners');
+    }
+
     this._attachEventListener('loadstart', this._onLoadStart);
     this._attachEventListener('abort', this._onAbort);
     this._attachEventListener('emptied', this._onEmptied);
     this._attachEventListener('error', this._onError);
-    if (__DEV__) this._context.logger?.debug('attached initial media event listeners');
+    if (__DEV__) this._ctx.logger?.debug('attached initial media event listeners');
   }
 
   private _attachLoadStartListeners() {
     if (this._attachedLoadStart) return;
+
+    if (__DEV__) {
+      this._ctx.logger?.info('attaching load start listeners');
+    }
+
     this._disposal.add(
       this._attachEventListener('loadeddata', this._onLoadedData),
       this._attachEventListener('loadedmetadata', this._onLoadedMetadata),
@@ -75,6 +84,11 @@ export class HTMLMediaEvents {
 
   private _attachCanPlayListeners() {
     if (this._attachedCanPlay) return;
+
+    if (__DEV__) {
+      this._ctx.logger?.info('attaching can play listeners');
+    }
+
     this._disposal.add(
       this._attachEventListener('pause', this._onPause),
       this._attachEventListener('playing', this._onPlaying),
@@ -105,10 +119,11 @@ export class HTMLMediaEvents {
   private _onDevEvent(event: Event) {
     if (!__DEV__) return;
 
-    this._context.logger
-      ?.debugGroup(`📺 fired \`${event.type}\``)
+    this._ctx.logger
+      ?.debugGroup(`📺 provider fired \`${event.type}\``)
+      .labelledLog('Provider', this._provider)
       .labelledLog('Event', event)
-      .labelledLog('Media Store', { ...this._context.$state })
+      .labelledLog('Media Store', { ...this._ctx.$state })
       .dispatch();
 
     this._handlers!.get(event.type)?.call(this, event);
@@ -118,7 +133,7 @@ export class HTMLMediaEvents {
     this._delegate._dispatch('time-update', {
       // Avoid errors where `currentTime` can have higher precision.
       detail: {
-        currentTime: Math.min(time, this._context.$state.seekableEnd()),
+        currentTime: Math.min(time, this._ctx.$state.seekableEnd()),
         played: this._media.played,
       },
       trigger,
@@ -162,7 +177,7 @@ export class HTMLMediaEvents {
     this._delegate._dispatch('loaded-metadata', { trigger: event });
 
     // Native HLS does not reliably fire `canplay` event.
-    if (IS_SAFARI && isHLSSrc(this._context.$state.source())) {
+    if (IS_SAFARI && isHLSSrc(this._ctx.$state.source())) {
       this._delegate._ready(this._getCanPlayDetail(), event);
     }
   }
@@ -176,7 +191,7 @@ export class HTMLMediaEvents {
   }
 
   private _onStreamTypeChange() {
-    if (this._context.$state.live()) return;
+    if (this._ctx.$state.live()) return;
     const isLive = !Number.isFinite(this._media.duration);
     this._delegate._dispatch('stream-type-change', {
       detail: isLive ? 'live' : 'on-demand',
@@ -184,7 +199,7 @@ export class HTMLMediaEvents {
   }
 
   private _onPlay(event: Event) {
-    if (!this._context.$state.canPlay) return;
+    if (!this._ctx.$state.canPlay) return;
     this._delegate._dispatch('play', { trigger: event });
   }
 
@@ -201,7 +216,7 @@ export class HTMLMediaEvents {
   }
 
   private _onCanPlayThrough(event: Event) {
-    if (this._context.$state.started()) return;
+    if (this._ctx.$state.started()) return;
     this._delegate._dispatch('can-play-through', {
       trigger: event,
       detail: this._getCanPlayDetail(),
@@ -233,7 +248,7 @@ export class HTMLMediaEvents {
     this._timeRAF._stop();
     this._updateCurrentTime(this._media.duration, event);
     this._delegate._dispatch('end', { trigger: event });
-    if (this._context.$state.loop()) {
+    if (this._ctx.$state.loop()) {
       this._onLoop();
     } else {
       this._delegate._dispatch('ended', { trigger: event });
@@ -241,7 +256,7 @@ export class HTMLMediaEvents {
   }
 
   protected _attachTimeUpdate() {
-    if (this._context.$state.paused()) {
+    if (this._ctx.$state.paused()) {
       listenEvent(this._media, 'timeupdate', this._onTimeUpdate.bind(this));
     }
   }
@@ -251,7 +266,7 @@ export class HTMLMediaEvents {
   }
 
   private _onDurationChange(event: Event) {
-    if (this._context.$state.ended()) {
+    if (this._ctx.$state.ended()) {
       this._updateCurrentTime(this._media.duration, event);
     }
 
@@ -288,7 +303,7 @@ export class HTMLMediaEvents {
       this._updateCurrentTime(this._media.duration, event);
 
       if (!this._media.ended) {
-        this._context.player.dispatch(
+        this._ctx.player.dispatch(
           new DOMEvent<void>('media-play-request', {
             trigger: event,
           }),
@@ -319,7 +334,7 @@ export class HTMLMediaEvents {
     // Forcefully hide controls to prevent flashing when looping. Calling `play()` at end
     // of media may show a flash of native controls on iOS, even if `controls` property is not set.
     if (hasCustomControls) this._media.controls = false;
-    this._context.player.dispatch(new DOMEvent<void>('media-loop-request'));
+    this._ctx.player.dispatch(new DOMEvent<void>('media-loop-request'));
   }
 
   private _onSuspend(event: Event) {

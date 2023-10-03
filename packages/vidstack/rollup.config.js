@@ -4,7 +4,6 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
 import * as eslexer from 'es-module-lexer';
 import { transformSync } from 'esbuild';
-import { execa } from 'execa';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
@@ -25,14 +24,6 @@ if (!MODE_TYPES || MODE_WATCH) {
   } else {
     buildDefaultTheme();
   }
-}
-
-// Sandbox
-let isRunningSandbox = false;
-function launchSandbox() {
-  if (isRunningSandbox) return;
-  execa('pnpm', ['run', 'sandbox'], { stdio: 'inherit' });
-  isRunningSandbox = true;
 }
 
 // Used by other packages (e.g., `@vidstack/react`) to build without duplicate deps.
@@ -243,15 +234,6 @@ function define({ target, type, minify }) {
           return result.code;
         },
       },
-      MODE_WATCH &&
-        !MODE_LOCAL &&
-        !isProd &&
-        !isServer && {
-          name: 'sandbox',
-          closeBundle() {
-            launchSandbox();
-          },
-        },
     ],
   };
 }

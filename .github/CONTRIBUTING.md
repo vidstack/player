@@ -71,11 +71,13 @@ $: pnpm up {package}@{version} -r
 # Build all packages (turbo)
 $: pnpm build
 
-# Build single package (turbo) - see root `package.json` for more
+# Build single package (turbo)
 $: pnpm build:vidstack
+$: pnpm build:react
 
-# Build and watch single package - also launches sandbox to play in
+# Build and watch single package.
 $: pnpm -F vidstack dev
+$: pnpm -F @vidstack/react dev
 ```
 
 ### Sandbox
@@ -85,11 +87,9 @@ browser. The sandbox directory is Git-ignored so you can safely do whatever you 
 it.
 
 ```bash
-# Play with `vidstack` package in your browser.
-$: pnpm -F vidstack dev
-
-# Play with `@vidstack/react` package in your browser.
-$: pnpm -F @vidstack/react dev
+# Play with package in your browser.
+$: pnpm -F vidstack sandbox
+$: pnpm -F @vidstack/react sandbox
 ```
 
 After running any of the commands above, you can find the sandbox directory at `packages/*/sandbox`.
