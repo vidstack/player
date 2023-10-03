@@ -35,12 +35,13 @@
  */
 
 [data-media-provider] {
+  display: flex;
   position: relative;
-  display: block;
   box-sizing: border-box;
 }
 
 :where([data-media-provider]) {
+  align-items: center;
   width: 100%;
 }
 

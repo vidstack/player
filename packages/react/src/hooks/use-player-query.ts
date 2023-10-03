@@ -17,6 +17,12 @@ import { PlayerQueryList } from 'vidstack/local';
  * const matches = usePlayerQuery("(width < 680) and (streamType: on-demand)");
  * ```
  *
+ * You can also use media queries:
+ *
+ * ```ts
+ * const matches = usePlayerQuery("@media (min-width: 300px)");
+ * ```
+ *
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-player-query}
  */
 export function usePlayerQuery(query: string): boolean {
