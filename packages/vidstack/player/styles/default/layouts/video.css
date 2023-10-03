@@ -435,35 +435,14 @@
 }
 
 @media (orientation: portrait) {
-  :where([data-iphone][data-fullscreen] .vds-video-layout .vds-controls-group:first-child) {
-    margin-top: 48px;
-    padding-inline: 4px;
-  }
-
-  :where([data-iphone][data-fullscreen] .vds-video-layout .vds-controls-group:nth-last-child(2)) {
-    padding-inline: 8px;
-  }
-
-  :where([data-iphone][data-fullscreen] .vds-video-layout .vds-controls-group:last-child) {
-    margin-inline: 8px;
-    margin-bottom: 52px;
-  }
-
   :where([data-fullscreen] .vds-video-layout .vds-captions) {
-    bottom: 30vh;
+    bottom: 30lvh;
+    bottom: 10dvh;
   }
 }
 
 @media (orientation: landscape) {
-  :where([data-iphone][data-fullscreen]:not([data-controls]) .vds-video-layout .vds-captions) {
-    bottom: 32px;
-  }
-
   :where([data-fullscreen] .vds-video-layout .vds-controls-group:nth-last-child(2)) {
     margin-bottom: -12px;
-  }
-
-  :where([data-iphone][data-fullscreen] .vds-video-layout .vds-controls-group:last-child) {
-    margin-bottom: 12px;
   }
 }

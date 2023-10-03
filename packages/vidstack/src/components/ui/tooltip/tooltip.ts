@@ -37,10 +37,13 @@ export class Tooltip extends Component<TooltipProps> {
       _content: this._content,
       _showDelay: showDelay,
       _listen(trigger, show, hide) {
+        listenEvent(trigger, 'touchstart', (e) => e.preventDefault());
+
         listenEvent(trigger, 'focus', show);
-        listenEvent(trigger, 'pointerenter', show);
         listenEvent(trigger, 'blur', hide);
-        listenEvent(trigger, 'pointerleave', hide);
+
+        listenEvent(trigger, 'mouseenter', show);
+        listenEvent(trigger, 'mouseleave', hide);
       },
       _onChange: this._onShowingChange.bind(this),
     });
