@@ -2,6 +2,7 @@ import { html } from 'lit-html';
 import { computed } from 'maverick.js';
 
 import { useDefaultLayoutContext } from '../../../../components';
+import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed } from '../../../lit/directives/signal';
 import {
   DefaultCaptionButton,
@@ -88,6 +89,14 @@ export function DefaultVideoLayoutSmall() {
       <media-controls-group class="vds-controls-group">${DefaultTimeSlider()}</media-controls-group>
     </media-controls>
 
+    ${$computed(StartDuration)}
+  `;
+}
+
+function StartDuration() {
+  const { duration } = useMediaContext().$state;
+  if (duration() === 0) return null;
+  return html`
     <div class="vds-start-duration">
       <media-time class="vds-time" type="duration"></media-time>
     </div>

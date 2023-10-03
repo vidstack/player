@@ -311,12 +311,13 @@
  */
 
 :where(.vds-video-layout[data-size='sm'] .vds-controls-group:nth-last-child(2)) {
-  margin-bottom: -26px;
-  z-index: 1;
+  pointer-events: none;
 }
 
 :where(.vds-video-layout[data-size='sm'] .vds-controls-group:last-child) {
-  margin-bottom: -12px;
+  z-index: 2;
+  margin-top: -6px;
+  margin-bottom: -2px;
 }
 
 :where([data-fullscreen] .vds-video-layout[data-size='sm'] .vds-controls-group:last-child) {

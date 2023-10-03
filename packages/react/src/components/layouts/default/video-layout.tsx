@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { useMediaState } from '../../../hooks/use-media-state';
 import { Captions } from '../../ui/captions';
 import * as Controls from '../../ui/controls';
 import { Gesture } from '../../ui/gesture';
@@ -125,9 +126,7 @@ function DefaultVideoLayoutSmall() {
           <DefaultTimeSlider />
         </Controls.Group>
       </Controls.Root>
-      <div className="vds-start-duration">
-        <Time className="vds-time" type="duration" />
-      </div>
+      <DefaultVideoStartDuration />
     </>
   );
 }
@@ -135,6 +134,21 @@ function DefaultVideoLayoutSmall() {
 DefaultVideoLayoutSmall.displayName = 'DefaultVideoLayoutSmall';
 export { DefaultVideoLayoutSmall };
 
+/* -------------------------------------------------------------------------------------------------
+ * DefaultVideoStartDuration
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultVideoStartDuration() {
+  const $duration = useMediaState('duration');
+  if ($duration === 0) return null;
+  return (
+    <div className="vds-start-duration">
+      <Time className="vds-time" type="duration" />
+    </div>
+  );
+}
+
+DefaultVideoStartDuration.displayName = 'DefaultVideoStartDuration';
 /* -------------------------------------------------------------------------------------------------
  * DefaultVideoGestures
  * -----------------------------------------------------------------------------------------------*/
