@@ -398,6 +398,7 @@
 
 /* center big play button inside buffering indicator. */
 :where(.vds-video-layout[data-size='sm'] .vds-buffering-indicator) {
+  --media-buffering-size: 64px;
   transform: translate(-2px, -4px);
 }
 

@@ -103,7 +103,7 @@ function StartDuration() {
   `;
 }
 
-function DefaultBufferingIndicator() {
+export function DefaultBufferingIndicator() {
   return html`
     <div class="vds-buffering-indicator">
       <svg class="vds-buffering-icon" fill="none" viewBox="0 0 120 120" aria-hidden="true">

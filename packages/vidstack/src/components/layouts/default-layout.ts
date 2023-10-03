@@ -7,8 +7,7 @@ import {
   type ReadSignal,
 } from 'maverick.js';
 
-import { PlayerQueryList, type MediaContext } from '../../core';
-import { useMediaContext } from '../../core/api/media-context';
+import { PlayerQueryList } from '../../core';
 
 export class DefaultLayout extends Component<DefaultLayoutProps> {
   static props: DefaultLayoutProps = {
@@ -21,7 +20,6 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     noModal: false,
   };
 
-  private _media!: MediaContext;
   private _whenQueryList!: PlayerQueryList;
   private _whenSmQueryList!: PlayerQueryList;
 
@@ -30,8 +28,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
 
   @prop
   get isMatch() {
-    const { streamType } = this._media.$state;
-    return this._whenQueryList.matches && streamType() !== 'unknown';
+    return this._whenQueryList.matches;
   }
 
   @prop
@@ -40,8 +37,6 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
-
     const { when, smallWhen, thumbnails, translations, menuGroup, noModal } = this.$props;
 
     this._whenQueryList = PlayerQueryList.create(when);

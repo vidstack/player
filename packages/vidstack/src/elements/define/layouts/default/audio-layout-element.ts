@@ -4,6 +4,8 @@ import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
 import { DefaultAudioLayout } from '../../../../components/layouts/default-layout';
+import type { MediaContext } from '../../../../core';
+import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';
@@ -27,7 +29,11 @@ export class MediaAudioLayoutElement
 {
   static tagName = 'media-audio-layout';
 
+  private _media!: MediaContext;
+
   protected onSetup() {
+    this._media = useMediaContext();
+
     this.classList.add('vds-audio-layout');
     this.menuContainer = createMenuContainer('vds-audio-layout');
 
@@ -50,7 +56,8 @@ export class MediaAudioLayoutElement
   }
 
   private _render() {
-    return this.isMatch
+    const { streamType } = this._media.$state;
+    return this.isMatch && streamType() !== 'unknown'
       ? this.isSmallLayout
         ? DefaultAudioLayoutSmall()
         : DefaultAudioLayoutLarge()

@@ -6,6 +6,13 @@ import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './shared
  * DefaultAudioLayout
  * -----------------------------------------------------------------------------------------------*/
 
+const MediaLayout = createDefaultMediaLayout({
+  type: 'audio',
+  smLayoutWhen: '(width < 576)',
+  SmallLayout: DefaultAudioLayoutSmall,
+  LargeLayout: DefaultAudioLayoutLarge,
+});
+
 export interface DefaultAudioLayoutProps extends DefaultMediaLayoutProps {}
 
 /**
@@ -23,12 +30,9 @@ export interface DefaultAudioLayoutProps extends DefaultMediaLayoutProps {}
  * </MediaPlayer>
  * ```
  */
-const DefaultAudioLayout = createDefaultMediaLayout({
-  type: 'audio',
-  smLayoutWhen: '(width < 576)',
-  SmallLayout: DefaultAudioLayoutSmall,
-  LargeLayout: DefaultAudioLayoutLarge,
-});
+function DefaultAudioLayout(props: DefaultAudioLayoutProps) {
+  return <MediaLayout {...props} />;
+}
 
 DefaultAudioLayout.displayName = 'DefaultAudioLayout';
 export { DefaultAudioLayout };

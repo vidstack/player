@@ -1,15 +1,21 @@
 import { html } from 'lit-html';
-import { computed, effect, onDispose } from 'maverick.js';
+import { effect, onDispose } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
 import { DefaultVideoLayout } from '../../../../components/layouts/default-layout';
-import { $computed, $signal } from '../../../lit/directives/signal';
+import type { MediaContext } from '../../../../core';
+import { useMediaContext } from '../../../../core/api/media-context';
+import { $computed } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';
 import { DefaultLayoutIconsLoader } from './icons-loader';
 import { createMenuContainer } from './shared-layout';
-import { DefaultVideoLayoutLarge, DefaultVideoLayoutSmall } from './video-layout';
+import {
+  DefaultBufferingIndicator,
+  DefaultVideoLayoutLarge,
+  DefaultVideoLayoutSmall,
+} from './video-layout';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/core-concepts/layouts/default}
@@ -27,7 +33,11 @@ export class MediaVideoLayoutElement
 {
   static tagName = 'media-video-layout';
 
+  private _media!: MediaContext;
+
   protected onSetup() {
+    this._media = useMediaContext();
+
     this.classList.add('vds-video-layout');
     this.menuContainer = createMenuContainer('vds-video-layout');
 
@@ -50,8 +60,11 @@ export class MediaVideoLayoutElement
   }
 
   private _render() {
+    const { streamType } = this._media.$state;
     return this.isMatch
-      ? this.isSmallLayout
+      ? streamType() === 'unknown'
+        ? DefaultBufferingIndicator()
+        : this.isSmallLayout
         ? DefaultVideoLayoutSmall()
         : DefaultVideoLayoutLarge()
       : null;

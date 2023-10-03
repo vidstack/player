@@ -26,6 +26,14 @@ import {
  * DefaultVideoLayout
  * -----------------------------------------------------------------------------------------------*/
 
+const MediaLayout = createDefaultMediaLayout({
+  type: 'video',
+  smLayoutWhen: '(width < 576) or (height < 380)',
+  SmallLayout: DefaultVideoLayoutSmall,
+  LargeLayout: DefaultVideoLayoutLarge,
+  UnknownStreamType: DefaultBufferingIndicator,
+});
+
 export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps {}
 
 /**
@@ -44,12 +52,9 @@ export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps {}
  * </MediaPlayer>
  * ```
  */
-const DefaultVideoLayout = createDefaultMediaLayout({
-  type: 'video',
-  smLayoutWhen: '(width < 576) or (height < 380)',
-  SmallLayout: DefaultVideoLayoutSmall,
-  LargeLayout: DefaultVideoLayoutLarge,
-});
+function DefaultVideoLayout(props: DefaultVideoLayoutProps) {
+  return <MediaLayout {...props} />;
+}
 
 DefaultVideoLayout.displayName = 'DefaultVideoLayout';
 export { DefaultVideoLayout };

@@ -114,15 +114,17 @@ export interface CreateDefaultMediaLayout {
   smLayoutWhen: string;
   SmallLayout: React.FC;
   LargeLayout: React.FC;
+  UnknownStreamType?: React.FC;
 }
 
-export const createDefaultMediaLayout = ({
+export function createDefaultMediaLayout({
   type,
   smLayoutWhen,
   SmallLayout,
   LargeLayout,
-}: CreateDefaultMediaLayout) =>
-  React.forwardRef<HTMLDivElement, DefaultMediaLayoutProps>(
+  UnknownStreamType,
+}: CreateDefaultMediaLayout) {
+  const Layout = React.forwardRef<HTMLDivElement, DefaultMediaLayoutProps>(
     (
       {
         className,
@@ -143,7 +145,7 @@ export const createDefaultMediaLayout = ({
       const $canLoad = useMediaState('canLoad'),
         $viewType = useMediaState('viewType'),
         $streamType = useMediaState('streamType'),
-        isMatch = $viewType === type && $streamType !== 'unknown',
+        isMatch = $viewType === type,
         isForcedLayout = typeof smallLayoutWhen === 'boolean',
         isSmallLayoutMatch = usePlayerQuery(isString(smallLayoutWhen) ? smallLayoutWhen : ''),
         isSmallLayout = isForcedLayout ? smallLayoutWhen : isSmallLayoutMatch;
@@ -169,7 +171,15 @@ export const createDefaultMediaLayout = ({
                 Icons: icons,
               }}
             >
-              {isSmallLayout ? <SmallLayout /> : <LargeLayout />}
+              {$streamType === 'unknown' ? (
+                UnknownStreamType ? (
+                  <UnknownStreamType />
+                ) : null
+              ) : isSmallLayout ? (
+                <SmallLayout />
+              ) : (
+                <LargeLayout />
+              )}
               {children}
             </DefaultLayoutContext.Provider>
           ) : null}
@@ -177,6 +187,10 @@ export const createDefaultMediaLayout = ({
       );
     },
   );
+
+  Layout.displayName = 'DefaultMediaLayout';
+  return Layout;
+}
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultTooltip
