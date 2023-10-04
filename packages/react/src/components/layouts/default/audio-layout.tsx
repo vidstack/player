@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { DefaultAudioLayoutLarge } from './audio-layout-large';
 import { DefaultAudioLayoutSmall } from './audio-layout-small';
 import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './shared-layout';
