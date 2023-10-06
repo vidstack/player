@@ -62,7 +62,7 @@ export function Player() {
         setSrc(`https://stream.mux.com/${muxPlaybackId}.m3u8`);
         break;
       case 'live':
-        player.src = 'https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8';
+        setSrc('https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8');
         break;
     }
   }

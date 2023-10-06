@@ -148,6 +148,8 @@ export class SliderChapters extends Component<SliderChaptersProps> {
   }
 
   private _watchFillPercent() {
+    const { liveEdge } = this._media.$state;
+
     let { fillPercent, value } = this._sliderState,
       prevActiveIndex = peek(this._activeIndex),
       currentChapter = this._cues[prevActiveIndex],
@@ -156,13 +158,18 @@ export class SliderChapters extends Component<SliderChaptersProps> {
         fillPercent(),
       );
 
-    if (currentActiveIndex > prevActiveIndex) {
+    if (liveEdge()) {
+      this._updateFillPercents(0, this._cues.length, '100%');
+    } else if (currentActiveIndex > prevActiveIndex) {
       this._updateFillPercents(prevActiveIndex, currentActiveIndex, '100%');
     } else if (currentActiveIndex < prevActiveIndex) {
       this._updateFillPercents(currentActiveIndex + 1, prevActiveIndex + 1, '0%');
     }
 
-    const percent = this._calcPercent(this._cues[currentActiveIndex], fillPercent()) + '%';
+    const percent = liveEdge()
+      ? '100%'
+      : this._calcPercent(this._cues[currentActiveIndex], fillPercent()) + '%';
+
     this._updateFillPercent(this._refs[currentActiveIndex], percent);
 
     this._activeIndex.set(currentActiveIndex);
