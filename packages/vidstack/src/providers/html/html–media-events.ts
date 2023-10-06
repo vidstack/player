@@ -212,6 +212,7 @@ export class HTMLMediaEvents {
   }
 
   private _onCanPlay(event: Event) {
+    this._onStreamTypeChange();
     this._delegate._ready(this._getCanPlayDetail(), event);
   }
 
