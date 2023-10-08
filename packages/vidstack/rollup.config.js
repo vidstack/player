@@ -263,8 +263,8 @@ function defineCDN({ dev = false, layouts = false } = {}) {
       dir: dev || !layouts ? 'cdn' : 'cdn/with-layouts',
       chunkFileNames: `chunks/vidstack-[hash].js`,
       paths: {
-        'media-icons': 'https://cdn.jsdelivr.net/npm/media-icons/dist/lazy.js',
-        'media-captions': 'https://cdn.jsdelivr.net/npm/media-captions/dist/prod.js',
+        'media-icons': 'https://cdn.jsdelivr.net/npm/media-icons@next/dist/lazy.js',
+        'media-captions': 'https://cdn.jsdelivr.net/npm/media-captions@next/dist/prod.js',
       },
       manualChunks(id) {
         if (dev) return output; // no chunks in dev
