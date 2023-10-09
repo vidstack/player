@@ -80,9 +80,10 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   protected _runLoader(target: HTMLElement | null | undefined) {
     if (!this.scope) return;
 
-    const loader = this.$state.loader();
+    const loader = this.$state.loader(),
+      { $provider } = this._media;
 
-    if (this._loader === loader && loader?.target === target) return;
+    if (this._loader === loader && loader?.target === target && peek($provider)) return;
 
     this._destroyProvider();
     this._loader = loader;
