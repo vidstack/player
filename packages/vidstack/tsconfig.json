@@ -3,9 +3,7 @@
   "compilerOptions": {
     "jsx": "preserve",
     "paths": {
-      "$test-utils": ["./src/test-utils/index.ts"],
-      "vidstack": ["./src/index.ts"],
-      "vidstack/elements": ["./src/elements/index.ts"]
+      "$test-utils": ["./src/test-utils/index.ts"]
     },
     "types": ["@types/node", "vitest/globals"]
   },

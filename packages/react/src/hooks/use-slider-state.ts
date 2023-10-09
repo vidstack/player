@@ -1,7 +1,7 @@
-import type { RefObject } from 'react';
+import * as React from 'react';
 
 import { useSignal, useSignalRecord, useStateContext } from 'maverick.js/react';
-import { sliderState, type SliderState } from 'vidstack/local';
+import { sliderState, type SliderState } from 'vidstack';
 
 import type {
   SliderInstance,
@@ -16,7 +16,7 @@ import type {
  */
 export function useSliderState<T extends keyof SliderState>(
   prop: T,
-  ref?: RefObject<SliderInstance | VolumeSliderInstance | TimeSliderInstance | null>,
+  ref?: React.RefObject<SliderInstance | VolumeSliderInstance | TimeSliderInstance | null>,
 ): SliderState[T] {
   const $state = useStateContext(sliderState);
 
@@ -37,7 +37,7 @@ export function useSliderState<T extends keyof SliderState>(
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-slider-state#store}
  */
 export function useSliderStore(
-  ref?: RefObject<SliderInstance | VolumeSliderInstance | TimeSliderInstance | null>,
+  ref?: React.RefObject<SliderInstance | VolumeSliderInstance | TimeSliderInstance | null>,
 ): Readonly<SliderState> {
   const $state = useStateContext(sliderState);
 

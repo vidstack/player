@@ -184,6 +184,15 @@ export class MediaStateManager extends MediaPlayerController {
     if (prevProvider && event.detail === null) this._resetMediaState(event);
   }
 
+  ['provider-loader-change'](event: ME.MediaProviderLoaderChangeEvent) {
+    if (__DEV__) {
+      this._media.logger
+        ?.infoGroup(`Loader change \`${event.detail?.constructor.name}\``)
+        .labelledLog('Event', event)
+        .dispatch();
+    }
+  }
+
   ['autoplay'](event: ME.MediaAutoplayEvent) {
     appendTriggerEvent(event, this._trackedEvents.get('play'));
     appendTriggerEvent(event, this._trackedEvents.get('can-play'));

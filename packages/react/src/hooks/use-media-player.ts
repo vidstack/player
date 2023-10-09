@@ -1,5 +1,5 @@
 import { useReactContext } from 'maverick.js/react';
-import { mediaContext } from 'vidstack/local';
+import { mediaContext } from 'vidstack';
 
 import type { MediaPlayerInstance } from '../components/primitives/instances';
 

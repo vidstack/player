@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useReactContext } from 'maverick.js/react';
-import { mediaContext, MediaRemoteControl } from 'vidstack/local';
+import { mediaContext, MediaRemoteControl } from 'vidstack';
 
 import { MediaPlayerInstance } from '../components/primitives/instances';
 

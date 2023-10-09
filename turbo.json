@@ -2,18 +2,17 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "analyze": {
-      "dependsOn": ["^types"],
       "outputs": ["analyze.json", "vscode.html-data.json", "vue.d.ts", "svelte.d.ts", "solid.d.ts"]
     },
     "build": {
-      "dependsOn": ["^analyze", "^build", "clean"],
-      "outputs": ["cdn/**", "dist/**", "local/**", "player/**", "tailwind.cjs", "tailwind.d.cts"]
+      "dependsOn": ["clean"],
+      "outputs": ["cdn/**", "dist/**", "player/**", "tailwind.*"]
     },
     "clean": {
       "cache": false
     },
     "types": {
-      "dependsOn": ["^types", "clean"],
+      "dependsOn": ["clean"],
       "outputs": ["dist/types/**", "*.d.ts"]
     },
     "format": {

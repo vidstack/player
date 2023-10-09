@@ -5,7 +5,7 @@ import {
   isTrackCaptionKind,
   type DefaultLayoutTranslations,
   type TooltipPlacement,
-} from 'vidstack/local';
+} from 'vidstack';
 
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';

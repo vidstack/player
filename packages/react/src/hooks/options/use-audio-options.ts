@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useReactContext, useSignal } from 'maverick.js/react';
-import { mediaContext, type AudioTrack } from 'vidstack/local';
+import { mediaContext, type AudioTrack } from 'vidstack';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-audio-options}

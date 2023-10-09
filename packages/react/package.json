@@ -18,11 +18,10 @@
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.tsx\" --framework react",
-    "dev": "pnpm clean && pnpm build:core && pnpm build:icons && pnpm build:types && pnpm watch",
+    "dev": "pnpm clean && pnpm build:icons && pnpm build:types && pnpm watch",
     "build": "pnpm build:icons && rollup -c",
     "build:icons": "node .scripts/build-icons.js",
     "build:types": "tsc -p tsconfig.build.json",
-    "build:core": "pnpm -F vidstack build:local && pnpm -F vidstack types",
     "sandbox": "node ../../.scripts/sandbox.js",
     "sandbox:build": "vite build sandbox",
     "types": "pnpm build:types && rollup -c --config-types",

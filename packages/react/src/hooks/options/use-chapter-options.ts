@@ -3,7 +3,7 @@ import * as React from 'react';
 import { effect, type StopEffect } from 'maverick.js';
 import { useReactContext } from 'maverick.js/react';
 import type { VTTCue } from 'media-captions';
-import { formatSpokenTime, formatTime, mediaContext } from 'vidstack/local';
+import { formatSpokenTime, formatTime, mediaContext } from 'vidstack';
 
 import { useActiveTextCues } from '../use-active-text-cues';
 import { useActiveTextTrack } from '../use-active-text-track';

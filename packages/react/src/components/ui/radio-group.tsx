@@ -2,7 +2,7 @@
  * RadioGroup
  * -----------------------------------------------------------------------------------------------*/
 
-import React from 'react';
+import * as React from 'react';
 
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
 

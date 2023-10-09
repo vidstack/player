@@ -3,9 +3,10 @@
   "compilerOptions": {
     "jsx": "preserve",
     "paths": {
+      "vidstack": ["../vidstack/src"],
       "@vidstack/react": ["./src/index.ts"]
     },
-    "types": ["@types/node"]
+    "types": ["@types/node", "../vidstack/dom.d.ts"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

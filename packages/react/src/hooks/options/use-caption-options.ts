@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { useReactContext, useSignal } from 'maverick.js/react';
 import { isString } from 'maverick.js/std';
-import { isTrackCaptionKind, mediaContext, type TextTrack } from 'vidstack/local';
+import { isTrackCaptionKind, mediaContext, type TextTrack } from 'vidstack';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-caption-options}

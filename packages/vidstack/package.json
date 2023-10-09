@@ -26,10 +26,9 @@
     "analyze": "maverick analyze \"src/**/*.ts\"",
     "dev": "pnpm clean && pnpm build:types && pnpm watch",
     "build": "rollup -c",
-    "build:local": "pnpm clean && rollup -c --config-local",
     "build:types": "tsc -p tsconfig.build.json",
     "types": "pnpm build:types && rollup -c --config-types",
-    "clean": "rimraf dist cdn local",
+    "clean": "rimraf dist cdn",
     "format": "prettier src --write --loglevel warn",
     "sandbox": "node ../../.scripts/sandbox.js",
     "sandbox:build": "vite build sandbox",
@@ -99,12 +98,6 @@
       "node": "./dist/server/vidstack.js",
       "development": "./dist/dev/vidstack.js",
       "default": "./dist/prod/vidstack.js"
-    },
-    "./local": {
-      "types": "./local.d.ts",
-      "node": "./local/server/vidstack.js",
-      "development": "./local/dev/vidstack.js",
-      "default": "./local/prod/vidstack.js"
     },
     "./elements": {
       "types": "./elements.d.ts",

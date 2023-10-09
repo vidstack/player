@@ -20,4 +20,4 @@ export const textTracks = [
     language: 'en-US',
     default: true,
   },
-];
+] as const;

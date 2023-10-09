@@ -1,4 +1,4 @@
-export * from 'vidstack/local';
+export * from 'vidstack';
 export * from './components/primitives/instances';
 
 // Core

@@ -3,7 +3,7 @@ dist-*/
 sandbox/
 
 .tsbuildinfo
-tsconfig.tsbuildinfo
+tsconfig.build.tsbuildinfo
 tsup.config.bundled_*
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*

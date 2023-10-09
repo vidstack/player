@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 
 import { useReactContext } from 'maverick.js/react';
-import { mediaContext, TextTrack, type TextTrackInit } from 'vidstack/local';
+import { mediaContext, TextTrack, type TextTrackInit } from 'vidstack';
 
 /**
  * Creates a new `TextTrack` object and adds it to the player.

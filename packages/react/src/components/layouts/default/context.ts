@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import type { DefaultLayoutTranslations } from 'vidstack/local';
+import type { DefaultLayoutTranslations } from 'vidstack';
 
 import type { DefaultLayoutIcons } from './icons';
 

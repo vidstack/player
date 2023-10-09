@@ -3,7 +3,7 @@ import * as React from 'react';
 import { scoped, signal } from 'maverick.js';
 import { useReactScope, useSignal } from 'maverick.js/react';
 import type { VTTCue } from 'media-captions';
-import { findActiveCue, ThumbnailsLoader } from 'vidstack/local';
+import { findActiveCue, ThumbnailsLoader } from 'vidstack';
 
 export interface ThumbnailData {
   url: string;

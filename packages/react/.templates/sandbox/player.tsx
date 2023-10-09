@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import * as React from 'react';
 
 import {
   isHLSProvider,
@@ -20,10 +20,10 @@ import {
 import { textTracks } from './tracks';
 
 export function Player() {
-  let player = useRef<MediaPlayerInstance>(null),
-    [src, setSrc] = useState('');
+  let player = React.useRef<MediaPlayerInstance>(null),
+    [src, setSrc] = React.useState('');
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Initialize src.
     changeSource('audio');
 

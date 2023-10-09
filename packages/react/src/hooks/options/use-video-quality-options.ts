@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { useReactContext, useSignal } from 'maverick.js/react';
 import { isString } from 'maverick.js/std';
-import { mediaContext, type VideoQuality } from 'vidstack/local';
+import { mediaContext, type VideoQuality } from 'vidstack';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-video-quality-options}

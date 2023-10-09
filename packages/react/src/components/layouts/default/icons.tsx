@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { PropsWithoutRef, SVGProps } from 'react';
 
 import arrowLeftPaths from 'media-icons/dist/icons/arrow-left.js';
 import chaptersIconPaths from 'media-icons/dist/icons/chapters.js';
@@ -73,7 +72,8 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
   },
 };
 
-export interface DefaultLayoutIconProps extends PropsWithoutRef<SVGProps<SVGSVGElement>> {}
+export interface DefaultLayoutIconProps
+  extends React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> {}
 
 export interface DefaultLayoutIcon {
   (props: DefaultLayoutIconProps): React.ReactNode;

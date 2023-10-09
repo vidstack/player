@@ -9,7 +9,7 @@ import {
   type ReactElementProps,
 } from 'maverick.js/react';
 import { VTTCue } from 'media-captions';
-import { mediaState } from 'vidstack/local';
+import { mediaState } from 'vidstack';
 
 import {
   SliderChaptersInstance,

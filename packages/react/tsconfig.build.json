@@ -3,7 +3,10 @@
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "types",
-    "paths": {}
+    "paths": {
+      "vidstack": ["../vidstack/src"]
+    }
   },
-  "exclude": ["src/**/*.test.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "../vidstack/src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts", "../vidstack/src/**/*.test.ts"]
 }

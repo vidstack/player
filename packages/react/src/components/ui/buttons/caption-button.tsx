@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
 
-import { CaptionButtonInstance, MuteButtonInstance } from '../../primitives/instances';
+import { CaptionButtonInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 
 /* -------------------------------------------------------------------------------------------------
@@ -12,7 +12,7 @@ import { Primitive } from '../../primitives/nodes';
 const CaptionButtonBridge = createReactComponent(CaptionButtonInstance);
 
 export interface CaptionButtonProps
-  extends ReactElementProps<MuteButtonInstance, HTMLButtonElement> {
+  extends ReactElementProps<CaptionButtonInstance, HTMLButtonElement> {
   asChild?: boolean;
   children?: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;

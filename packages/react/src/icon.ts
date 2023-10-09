@@ -1,15 +1,8 @@
-import {
-  createElement,
-  forwardRef,
-  type ForwardRefExoticComponent,
-  type PropsWithoutRef,
-  type RefAttributes,
-  type SVGProps,
-} from 'react';
+import * as React from 'react';
 
 export interface IconProps
-  extends PropsWithoutRef<SVGProps<SVGSVGElement>>,
-    RefAttributes<SVGElement | SVGSVGElement> {
+  extends React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>,
+    React.RefAttributes<SVGElement | SVGSVGElement> {
   /**
    * The horizontal (width) and vertical (height) length of the underlying `<svg>` element.
    *
@@ -22,11 +15,11 @@ export interface IconProps
   paths?: string;
 }
 
-export interface IconComponent extends ForwardRefExoticComponent<IconProps> {}
+export interface IconComponent extends React.ForwardRefExoticComponent<IconProps> {}
 
-const Icon: IconComponent = /* #__PURE__*/ forwardRef((props, ref) => {
+const Icon: IconComponent = /* #__PURE__*/ React.forwardRef((props, ref) => {
   const { width, height, size = null, paths, ...restProps } = props;
-  return createElement('svg', {
+  return React.createElement('svg', {
     ...restProps,
     width: width ?? size,
     height: height ?? size,

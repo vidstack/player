@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { createReactComponent, type ReactElementProps } from 'maverick.js/react';
 
 import { SliderValueInstance } from '../../primitives/instances';

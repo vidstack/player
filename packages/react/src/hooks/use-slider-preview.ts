@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { effect, signal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
-import { updateSliderPreviewPlacement, type SliderOrientation } from 'vidstack/local';
+import { updateSliderPreviewPlacement, type SliderOrientation } from 'vidstack';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-slider-preview}

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { scoped } from 'maverick.js';
 import { useReactScope } from 'maverick.js/react';
 import { listenEvent } from 'maverick.js/std';
-import { PlayerQueryList } from 'vidstack/local';
+import { PlayerQueryList } from 'vidstack';
 
 /**
  * Creates a new `PlayerQueryList` object that can then be used to determine if the

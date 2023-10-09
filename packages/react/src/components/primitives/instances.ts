@@ -34,7 +34,7 @@ import {
   TooltipContent,
   TooltipTrigger,
   VolumeSlider,
-} from 'vidstack/local';
+} from 'vidstack';
 
 // Core
 export class MediaPlayerInstance extends MediaPlayer {}
