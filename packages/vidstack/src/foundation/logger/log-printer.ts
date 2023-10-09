@@ -1,4 +1,5 @@
 import { onDispose, ViewController } from 'maverick.js';
+import type { MaverickElement } from 'maverick.js/element';
 import { isString, isUndefined } from 'maverick.js/std';
 
 import { getLogColor, saveLogColor } from './colors';
@@ -28,7 +29,12 @@ export class LogPrinter extends ViewController {
       const element =
           (event as { path?: Element[] }).path?.[0] ??
           (event.target instanceof ViewController ? event.target.el : (event.target as Element)),
-        eventTargetName = element?.tagName.toLowerCase() ?? 'unknown';
+        eventTargetName =
+          (element as MaverickElement as any)?.$$COMPONENT_NAME
+            ?.replace(/^_/, '')
+            .replace(/Instance$/, '') ??
+          element?.tagName.toLowerCase() ??
+          'unknown';
 
       const { level = 'warn', data } = event.detail ?? {};
 

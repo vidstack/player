@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.ts\"",
-    "dev": "pnpm clean && pnpm watch",
+    "dev": "pnpm clean && pnpm build:types && pnpm watch",
     "build": "rollup -c",
     "build:local": "pnpm clean && rollup -c --config-local",
     "build:types": "tsc -p tsconfig.build.json",
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.4.4",
-    "@maverick-js/cli": "0.40.5",
+    "@maverick-js/cli": "0.40.7",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -61,7 +61,7 @@
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
-    "maverick.js": "0.40.5",
+    "maverick.js": "0.40.7",
     "media-icons": "^1.0.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",

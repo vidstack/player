@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.tsx\" --framework react",
-    "dev": "pnpm clean && pnpm build:core && pnpm build:icons && pnpm watch",
+    "dev": "pnpm clean && pnpm build:core && pnpm build:icons && pnpm build:types && pnpm watch",
     "build": "pnpm build:icons && rollup -c",
     "build:icons": "node .scripts/build-icons.js",
     "build:types": "tsc -p tsconfig.build.json",
@@ -39,14 +39,14 @@
     "media-captions": "^1.0.0"
   },
   "devDependencies": {
-    "@maverick-js/cli": "0.40.5",
+    "@maverick-js/cli": "0.40.7",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
     "@vitejs/plugin-react": "^4.1.0",
     "esbuild": "^0.16.17",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.40.5",
+    "maverick.js": "0.40.7",
     "media-icons": "^1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

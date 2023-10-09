@@ -41,7 +41,7 @@ export class MediaPlayerDelegate {
 
     if (__DEV__) {
       logger
-        ?.infoGroup('-~-~-~-~-~-~-~-~- ✅ MEDIA READY -~-~-~-~-~-~-~-~-')
+        ?.infoGroup('-~-~-~-~-~-~- ✅ MEDIA READY -~-~-~-~-~-~-')
         .labelledLog('Media Store', { ...$state })
         .labelledLog('Trigger Event', trigger)
         .dispatch();
