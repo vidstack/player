@@ -140,17 +140,17 @@ export function autoPlacement(
   setStyle(el, 'visibility', !trigger ? 'hidden' : null);
   if (!trigger) return;
 
-  const negate = (v: string) => (placement.includes('top') ? `calc(-1 * ${v})` : v);
+  const negateY = (y: string) => (placement.includes('top') ? `calc(-1 * ${y})` : y);
 
   return autoUpdate(trigger, el, () => {
     computePosition(trigger, el, { placement: floatingPlacement, ...options }).then(({ x, y }) => {
       Object.assign(el.style, {
-        top: `calc(${y + 'px'} + ${negate(
+        top: `calc(${y + 'px'} + ${negateY(
           yOffset ? yOffset + 'px' : `var(--${offsetVarName}-y-offset, 0px)`,
         )})`,
-        left: `calc(${x + 'px'} + ${negate(
-          xOffset ? xOffset + 'px' : `var(--${offsetVarName}-x-offset, 0px)`,
-        )})`,
+        left: `calc(${x + 'px'} + ${
+          xOffset ? xOffset + 'px' : `var(--${offsetVarName}-x-offset, 0px)`
+        }`,
       });
     });
   });
