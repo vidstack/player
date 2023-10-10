@@ -23,7 +23,7 @@
     "@types/node": "^16.0.0",
     "chokidar": "^3.5.0",
     "enquirer": "^2.3.0",
-    "esbuild": "^0.16.0",
+    "esbuild": "^0.19.4",
     "execa": "^6.0.0",
     "fs-extra": "^11.0.0",
     "globby": "^13.0.0",

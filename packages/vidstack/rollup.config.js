@@ -9,7 +9,8 @@ import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
 
 const MODE_WATCH = process.argv.includes('-w'),
-  MODE_TYPES = process.argv.includes('--config-types');
+  MODE_TYPES = process.argv.includes('--config-types'),
+  MODE_CDN = process.argv.includes('--config-cdn');
 
 const EXTERNAL_PACKAGES = ['hls.js', 'media-captions', 'media-icons'],
   NPM_BUNDLES = [define({ type: 'server' }), define({ type: 'dev' }), define({ type: 'prod' })],
@@ -28,7 +29,9 @@ if (!MODE_TYPES) {
 }
 
 export default defineConfig(
-  MODE_WATCH
+  MODE_CDN
+    ? CDN_BUNDLES
+    : MODE_WATCH
     ? [...NPM_BUNDLES, ...TYPES_BUNDLES]
     : MODE_TYPES
     ? TYPES_BUNDLES
@@ -133,18 +136,6 @@ function define({ target, type, minify }) {
           ? ['production', 'default']
           : ['development', 'production', 'default'],
       }),
-      esbuildPlugin({
-        tsconfig: 'tsconfig.build.json',
-        target: target ?? (isServer ? 'node18' : 'esnext'),
-        platform: isServer ? 'node' : 'browser',
-        minify: minify,
-        legalComments: 'none',
-        define: {
-          __DEV__: !isProd && !isServer ? 'true' : 'false',
-          __SERVER__: isServer ? 'true' : 'false',
-          __TEST__: 'false',
-        },
-      }),
       isServer && {
         name: 'server-bundle',
         async transform(code, id) {
@@ -179,6 +170,18 @@ function define({ target, type, minify }) {
           return result.code;
         },
       },
+      esbuildPlugin({
+        tsconfig: 'tsconfig.build.json',
+        target: target ?? (isServer ? 'node18' : 'esnext'),
+        platform: isServer ? 'node' : 'browser',
+        minify: minify,
+        legalComments: 'none',
+        define: {
+          __DEV__: !isProd && !isServer ? 'true' : 'false',
+          __SERVER__: isServer ? 'true' : 'false',
+          __TEST__: 'false',
+        },
+      }),
     ],
   };
 }

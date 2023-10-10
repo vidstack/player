@@ -1,7 +1,6 @@
 import { onDispose } from 'maverick.js';
 
 import type { MediaContext } from '../../core/api/media-context';
-import { TextTrackSymbol } from '../../core/tracks/text/symbols';
 import {
   canPlayHLSNatively,
   canUsePictureInPicture,
@@ -66,9 +65,9 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
       new NativeHLSTextTracks(this.video, context);
     }
 
-    context.textRenderers[TextTrackSymbol._attachVideo](this.video);
+    context.textRenderers._attachVideo(this.video);
     onDispose(() => {
-      context.textRenderers[TextTrackSymbol._attachVideo](null);
+      context.textRenderers._attachVideo(null);
     });
 
     if (this.type === 'video') context.delegate._dispatch('provider-setup', { detail: this });

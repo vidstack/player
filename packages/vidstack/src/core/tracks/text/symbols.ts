@@ -1,5 +1,4 @@
-const ATTACH_VIDEO = Symbol(__DEV__ ? 'ATTACH_VIDEO' : 0),
-  CROSSORIGIN = Symbol(__DEV__ ? 'TEXT_TRACK_CROSSORIGIN' : 0),
+const CROSSORIGIN = Symbol(__DEV__ ? 'TEXT_TRACK_CROSSORIGIN' : 0),
   READY_STATE = Symbol(__DEV__ ? 'TEXT_TRACK_READY_STATE' : 0),
   UPDATE_ACTIVE_CUES = Symbol(__DEV__ ? 'TEXT_TRACK_UPDATE_ACTIVE_CUES' : 0),
   CAN_LOAD = Symbol(__DEV__ ? 'TEXT_TRACK_CAN_LOAD' : 0),
@@ -8,7 +7,6 @@ const ATTACH_VIDEO = Symbol(__DEV__ ? 'ATTACH_VIDEO' : 0),
   NATIVE_HLS = Symbol(__DEV__ ? 'TEXT_TRACK_NATIVE_HLS' : 0);
 
 export const TextTrackSymbol = {
-  _attachVideo: ATTACH_VIDEO,
   _crossorigin: CROSSORIGIN,
   _readyState: READY_STATE,
   _updateActiveCues: UPDATE_ACTIVE_CUES,
