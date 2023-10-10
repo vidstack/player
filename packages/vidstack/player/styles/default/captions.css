@@ -27,7 +27,7 @@
   word-break: break-word;
 }
 
-@container (width >= 980px) {
+@media screen and (min-width: 980px) {
   :where([data-fullscreen] .vds-captions) {
     --cue-font-size: var(
       --media-lg-fullscreen-cue-font-size,
@@ -36,7 +36,7 @@
   }
 }
 
-@container (width < 600px) and (orientation: portrait) {
+@media screen and (max-width: 599px) and (orientation: portrait) {
   :where([data-fullscreen] .vds-captions) {
     --cue-font-size: 18px;
   }

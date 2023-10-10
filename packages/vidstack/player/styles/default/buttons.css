@@ -37,7 +37,7 @@
   height: var(--media-fullscreen-button-size, 42px);
 }
 
-@container (width < 600px) {
+@media screen and (max-width: 599px) {
   :where([data-fullscreen] .vds-button) {
     width: var(--media-sm-fullscreen-button-size, 42px);
     height: var(--media-sm-fullscreen-button-size, 42px);

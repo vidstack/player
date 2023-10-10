@@ -212,7 +212,7 @@
   transition: var(--video-captions-transition, bottom 0.15s linear);
 }
 
-@container (width >= 980px) {
+@media (min-width: 980px) {
   :where([data-fullscreen] .vds-video-layout .vds-captions) {
     bottom: var(--video-lg-fullscreen-captions-offset, 54px);
   }
