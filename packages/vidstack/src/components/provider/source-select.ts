@@ -1,4 +1,12 @@
-import { computed, effect, peek, tick, type ReadSignal, type WriteSignal } from 'maverick.js';
+import {
+  computed,
+  effect,
+  peek,
+  tick,
+  untrack,
+  type ReadSignal,
+  type WriteSignal,
+} from 'maverick.js';
 import { isArray, isString } from 'maverick.js/std';
 
 import type { MediaContext, MediaPlayerProps, MediaSrc } from '../../core';
@@ -11,6 +19,8 @@ import {
 import { getRequestCredentials, preconnect } from '../../utils/network';
 
 let warned = __DEV__ ? new Set<any>() : undefined;
+
+const SETUP = Symbol(__DEV__ ? 'SETUP' : 0);
 
 export class SourceSelection {
   private _initialize = false;
@@ -134,7 +144,7 @@ export class SourceSelection {
       }
     }
 
-    if (newSource.src !== currentSource.src || newSource.type !== currentSource.type) {
+    if (!isSameSrc(currentSource, newSource)) {
       this._notifySourceChange(newSource, newLoader);
     }
 
@@ -161,10 +171,11 @@ export class SourceSelection {
 
   private _onConnect() {
     const provider = this._media.$provider();
-    if (!provider) return;
+    if (!provider || provider[SETUP]) return;
 
     if (this._media.$state.canLoad()) {
-      peek(() => provider.setup(this._media));
+      untrack(() => provider.setup(this._media));
+      provider[SETUP] = true;
       return;
     }
 
@@ -174,6 +185,10 @@ export class SourceSelection {
   private _onLoadSource() {
     const provider = this._media.$provider(),
       source = this._media.$state.source();
+
+    if (isSameSrc(provider?.currentSrc, source)) {
+      return;
+    }
 
     if (this._media.$state.canLoad()) {
       peek(() => provider?.loadSource(source, peek(this._media.$state.preload)));
@@ -200,4 +215,8 @@ function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
       type: type ?? (!isString(src) || src.startsWith('blob:') ? 'video/object' : '?'),
     }),
   );
+}
+
+export function isSameSrc(a: MediaSrc | undefined | null, b: MediaSrc | undefined | null) {
+  return a?.src === b?.src && a?.type === b?.type;
 }

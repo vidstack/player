@@ -26,6 +26,7 @@ export interface MediaProviderAdapter
     'paused' | 'muted' | 'currentTime' | 'volume' | 'playsinline' | 'playbackRate'
   > {
   readonly type: string;
+  readonly currentSrc: MediaSrc | null;
   readonly fullscreen?: MediaFullscreenAdapter;
   readonly pictureInPicture?: MediaPictureInPictureAdapter;
   readonly canLiveSync?: boolean;

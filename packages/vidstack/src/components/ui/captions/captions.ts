@@ -1,4 +1,4 @@
-import { Component, effect, onDispose, peek, scoped } from 'maverick.js';
+import { Component, effect, peek, scoped } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 import type { CaptionsRenderer } from 'media-captions';
 
@@ -44,6 +44,11 @@ export class Captions extends Component<CaptionsProps> {
   }
 
   protected override onConnect(el: HTMLElement) {
+    if (this._renderer) {
+      effect(this._watchViewType.bind(this));
+      return;
+    }
+
     import('media-captions').then((lib) => {
       if (!this.connectScope) return;
       scoped(() => {
@@ -52,12 +57,11 @@ export class Captions extends Component<CaptionsProps> {
         this._renderer = new CaptionsRenderer(el);
         this._textRenderer = new CaptionsTextRenderer(this._renderer);
         effect(this._watchViewType.bind(this));
-        onDispose(this._onDisconnect.bind(this));
       }, this.connectScope);
     });
   }
 
-  private _onDisconnect() {
+  protected override onDestroy() {
     if (this._textRenderer) {
       this._textRenderer.detach();
       this._media.textRenderers.remove(this._textRenderer);

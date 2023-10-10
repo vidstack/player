@@ -35,6 +35,8 @@ export class HTMLMediaEvents {
   }
 
   private _onDispose() {
+    this._attachedLoadStart = false;
+    this._attachedCanPlay = false;
     this._timeRAF._stop();
     this._disposal.empty();
   }

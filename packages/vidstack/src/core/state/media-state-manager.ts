@@ -53,6 +53,11 @@ export class MediaStateManager extends MediaPlayerController {
     this._addAudioTrackListeners();
     this.listen('fullscreen-change', this['fullscreen-change'].bind(this));
     this.listen('fullscreen-error', this['fullscreen-error'].bind(this));
+    if (!this._media.$state.paused()) {
+      requestAnimationFrame(() => {
+        this._media.$provider()?.play();
+      });
+    }
   }
 
   _handle(event: Event) {

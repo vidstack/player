@@ -32,6 +32,9 @@ export class MediaAudioLayoutElement
   private _media!: MediaContext;
 
   protected onSetup() {
+    // Avoid memory leaks if `keepAlive` is true. The DOM will re-render regardless.
+    this.forwardKeepAlive = false;
+
     this._media = useMediaContext();
 
     this.classList.add('vds-audio-layout');

@@ -1,4 +1,3 @@
-import { onDispose } from 'maverick.js';
 import { isString, setAttribute } from 'maverick.js/std';
 
 import type { MediaSrc } from '../../core/api/types';
@@ -14,18 +13,14 @@ import { NativeAudioTracks } from './native-audio-tracks';
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement}
  */
 export class HTMLMediaProvider implements MediaProviderAdapter {
+  private _currentSrc: MediaSrc | null = null;
+
   constructor(protected _media: HTMLMediaElement) {}
 
   setup(context: MediaSetupContext) {
     new HTMLMediaEvents(this, context);
     if ('audioTracks' in this.media) new NativeAudioTracks(this, context);
-
     this.playsinline = context.$state.playsinline();
-
-    onDispose(() => {
-      this._media.setAttribute('src', '');
-      this._media.load();
-    });
   }
 
   get type() {
@@ -34,6 +29,10 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
 
   get media() {
     return this._media;
+  }
+
+  get currentSrc() {
+    return this._currentSrc;
   }
 
   get paused() {
@@ -88,7 +87,7 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     return this._media.pause();
   }
 
-  async loadSource({ src }: MediaSrc, preload) {
+  async loadSource({ src, type }: MediaSrc, preload) {
     this._media.preload = preload;
 
     if (isMediaStream(src)) {
@@ -99,5 +98,6 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     }
 
     this._media.load();
+    this._currentSrc = { src, type };
   }
 }
