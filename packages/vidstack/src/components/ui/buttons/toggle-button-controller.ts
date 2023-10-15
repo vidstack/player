@@ -68,6 +68,6 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
     }
 
     event.preventDefault();
-    (this._delegate._onPress ?? this._onPressed)(event);
+    (this._delegate._onPress ?? this._onPressed).call(this, event);
   }
 }
