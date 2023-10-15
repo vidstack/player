@@ -32,7 +32,7 @@ make pull requests from the forked branch.
 
 ```bash
 # Add the original repository as a "remote" called "upstream".
-$: git remote add upstream git@github.com:vidstack/vidstack.git
+$: git remote add upstream git@github.com:vidstack/player.git
 
 # Fetch the git information from the remote.
 $: git fetch upstream
@@ -113,5 +113,5 @@ contribution is appreciated more then you can imagine, and even a failed PR can 
 [semantic-commit-style]: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
 [turborepo]: https://turborepo.org
 [typescript]: https://www.typescriptlang.org
-[vidstack-gh]: https://github.com/vidstack/vidstack
+[vidstack-gh]: https://github.com/vidstack/player
 [web-components]: https://developer.mozilla.org/en-US/docs/Web/Web_Components

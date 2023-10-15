@@ -87,11 +87,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/vidstack/vidstack.git",
+    "url": "https://github.com/vidstack/player.git",
     "directory": "packages/vidstack"
   },
   "bugs": {
-    "url": "https://github.com/vidstack/vidstack/issues"
+    "url": "https://github.com/vidstack/player/issues"
   },
   "jsdelivr": "./cdn/with-layouts/vidstack.js",
   "exports": {
