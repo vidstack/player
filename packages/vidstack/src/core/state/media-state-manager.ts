@@ -1,6 +1,7 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
-import { appendTriggerEvent, listenEvent } from 'maverick.js/std';
+import { onDispose } from 'maverick.js';
+import { appendTriggerEvent, DOMEvent, listenEvent } from 'maverick.js/std';
 
 import { ListSymbol } from '../../foundation/list/symbols';
 import type { MediaContext } from '../api/media-context';
@@ -53,11 +54,8 @@ export class MediaStateManager extends MediaPlayerController {
     this._addAudioTrackListeners();
     this.listen('fullscreen-change', this['fullscreen-change'].bind(this));
     this.listen('fullscreen-error', this['fullscreen-error'].bind(this));
-    if (!this._media.$state.paused()) {
-      requestAnimationFrame(() => {
-        this._media.$provider()?.play();
-      });
-    }
+    this._resumePlaybackOnConnect();
+    onDispose(this._pausePlaybackOnDisconnect.bind(this));
   }
 
   _handle(event: Event) {
@@ -68,6 +66,27 @@ export class MediaStateManager extends MediaPlayerController {
       if (TRACKED_EVENT.has(type)) this._trackedEvents.set(type, event as ME.MediaEvent);
       this.dispatch(event);
     }
+  }
+
+  private _isPlayingOnDisconnect = false;
+  private _resumePlaybackOnConnect() {
+    if (!this._isPlayingOnDisconnect) return;
+
+    if (this._media.$provider()?.paused) {
+      requestAnimationFrame(() => {
+        if (!this.scope) return;
+        this._media.remote.play(new DOMEvent<void>('dom-connect'));
+      });
+    }
+
+    this._isPlayingOnDisconnect = false;
+  }
+
+  private _pausePlaybackOnDisconnect() {
+    // It might already be set in `pause` handler.
+    if (this._isPlayingOnDisconnect) return;
+    this._isPlayingOnDisconnect = !this._media.$state.paused();
+    this._media.$provider()?.pause();
   }
 
   private _resetTracking() {
@@ -431,6 +450,10 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['pause'](event: ME.MediaPauseEvent) {
+    if (!this.el?.isConnected) {
+      this._isPlayingOnDisconnect = true;
+    }
+
     if (this._request._looping) {
       event.stopImmediatePropagation();
       return;
