@@ -1,5 +1,6 @@
 import { Component, effect, peek } from 'maverick.js';
 import {
+  DOMEvent,
   isMouseEvent,
   isPointerEvent,
   isTouchEvent,
@@ -14,7 +15,7 @@ import { useMediaContext, type MediaContext } from '../../core/api/media-context
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/media/gesture}
  */
-export class Gesture extends Component<GestureProps> {
+export class Gesture extends Component<GestureProps, {}, GestureEvents> {
   static props: GestureProps = {
     event: undefined,
     action: undefined,
@@ -149,6 +150,14 @@ export class Gesture extends Component<GestureProps> {
   private _performAction(action: string | undefined, trigger: Event) {
     if (!action) return;
 
+    const willTriggerEvent = new DOMEvent<string>('will-trigger', {
+      detail: action,
+      cancelable: true,
+    });
+
+    this.dispatchEvent(willTriggerEvent);
+    if (willTriggerEvent.defaultPrevented) return;
+
     const [method, value] = action.replace(/:([a-z])/, '-$1').split(':');
 
     if (action.includes(':fullscreen')) {
@@ -158,6 +167,8 @@ export class Gesture extends Component<GestureProps> {
     } else {
       this._media.remote[kebabToCamelCase(method)](trigger);
     }
+
+    this.dispatch('trigger', { detail: action as GestureAction });
   }
 }
 
@@ -190,3 +201,28 @@ export type GestureAction =
   | 'pause'
   | `seek:${number}`
   | `toggle:${'paused' | 'muted' | 'fullscreen' | 'controls'}`;
+
+export interface GestureEvents {
+  'will-trigger': GestureWillTriggerEvent;
+  trigger: GestureTriggerEvent;
+}
+
+export interface GestureEvent<Detail = unknown> extends DOMEvent<Detail> {
+  target: Gesture;
+}
+
+/**
+ * This event will fire before the gesture action is triggered. Calling `event.preventDefault()`
+ * will stop the action from being triggered.
+ *
+ * @detail action
+ * @cancelable
+ */
+export interface GestureWillTriggerEvent extends GestureEvent<GestureAction> {}
+
+/**
+ * This event will fire after the gesture action has been triggered.
+ *
+ * @detail action
+ */
+export interface GestureTriggerEvent extends GestureEvent<GestureAction> {}
