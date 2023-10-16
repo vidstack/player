@@ -1,5 +1,6 @@
 import { effect } from 'maverick.js';
 import { isKeyboardEvent, listenEvent } from 'maverick.js/std';
+
 import { MediaPlayerController } from './api/player-controller';
 
 export class MediaControls extends MediaPlayerController {
@@ -128,6 +129,7 @@ export class MediaControls extends MediaPlayerController {
     }
 
     this._idleTimer = window.setTimeout(() => {
+      if (!this.scope) return;
       this._onChange(visible && !this._pausedTracking, trigger);
     }, delay);
   }

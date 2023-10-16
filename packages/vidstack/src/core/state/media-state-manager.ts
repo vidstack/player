@@ -61,6 +61,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   _handle(event: Event) {
+    if (!this.scope) return;
     const type = event.type as keyof ME.MediaEvents;
     this[event.type]?.(event);
     if (!__SERVER__) {
