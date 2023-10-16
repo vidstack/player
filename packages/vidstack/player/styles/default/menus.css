@@ -298,26 +298,27 @@
 :where(.vds-menu-items) :where([role='menuitem'], [role='menuitemradio']) {
   -webkit-tap-highlight-color: transparent;
   user-select: none;
-  color: var(--media-menu-item-color, #f5f5f5);
   display: flex;
   align-items: center;
   justify-content: left;
   width: 100%;
   appearance: none;
   border: var(--media-menu-item-border, 0);
-  background-color: var(--media-menu-item-bg, transparent);
-  padding: var(--media-menu-item-padding, 10px);
   border-radius: var(--media-menu-item-border-radius, 2px);
   box-sizing: border-box;
 }
 
-:where(.vds-menu-items)
-  :where(
-    [role='menuitem']:focus-visible,
-    [role='menuitemradio']:focus-visible,
-    [role='menuitem'][data-focus],
-    [role='menuitemradio'][data-focus]
-  ) {
+.vds-menu-items [role='menuitem'],
+.vds-menu-items [role='menuitemradio'] {
+  color: var(--media-menu-item-color, #f5f5f5);
+  background-color: var(--media-menu-item-bg, transparent);
+  padding: var(--media-menu-item-padding, 10px);
+}
+
+.vds-menu-items [role='menuitem']:focus-visible,
+.vds-menu-items [role='menuitemradio']:focus-visible,
+.vds-menu-items [role='menuitem'][data-focus],
+.vds-menu-items [role='menuitemradio'][data-focus] {
   cursor: pointer;
   background-color: var(--media-menu-item-hover-bg, rgb(245 245 245 / 0.08));
 }
@@ -328,7 +329,8 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  :where(.vds-menu-items) :where([role='menuitem']:hover, [role='menuitemradio']:hover) {
+  .vds-menu-items [role='menuitem']:hover,
+  .vds-menu-items [role='menuitemradio']:hover {
     cursor: pointer;
     background-color: var(--media-menu-item-hover-bg, rgb(245 245 245 / 0.08));
   }
@@ -354,6 +356,9 @@
   width: 100%;
   z-index: 10;
   backdrop-filter: blur(4px);
+}
+
+.vds-menu-button[role='menuitem'][aria-expanded='true'] {
   background-color: var(--media-menu-top-bar-bg, rgb(10 10 10 / 0.6));
 }
 
