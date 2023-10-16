@@ -598,6 +598,6 @@
   flex-basis: 100%;
 }
 
-:where(.vds-menu[data-keyboard]) .vds-chapters-radio-group:focus-within {
+:where(.vds-menu-items[data-keyboard]) .vds-chapters-radio-group:focus-within {
   padding: var(--media-chapters-focus-padding, 4px);
 }
