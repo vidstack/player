@@ -13,7 +13,7 @@
     },
     "types": {
       "dependsOn": ["clean"],
-      "outputs": ["dist/types/**", "*.d.ts"]
+      "outputs": ["dist/types/**", "*.d.ts", "player/**/*.d.ts"]
     },
     "format": {
       "inputs": ["src/**"]
