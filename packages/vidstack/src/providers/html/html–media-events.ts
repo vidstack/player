@@ -165,7 +165,6 @@ export class HTMLMediaEvents {
   }
 
   private _onLoadedMetadata(event: Event) {
-    this._onStreamTypeChange();
     this._attachCanPlayListeners();
 
     // Sync volume state before metadata.
@@ -192,14 +191,6 @@ export class HTMLMediaEvents {
     };
   }
 
-  private _onStreamTypeChange() {
-    if (this._ctx.$state.live()) return;
-    const isLive = !Number.isFinite(this._media.duration);
-    this._delegate._dispatch('stream-type-change', {
-      detail: isLive ? 'live' : 'on-demand',
-    });
-  }
-
   private _onPlay(event: Event) {
     if (!this._ctx.$state.canPlay) return;
     this._delegate._dispatch('play', { trigger: event });
@@ -214,7 +205,6 @@ export class HTMLMediaEvents {
   }
 
   private _onCanPlay(event: Event) {
-    this._onStreamTypeChange();
     this._delegate._ready(this._getCanPlayDetail(), event);
   }
 

@@ -1,6 +1,7 @@
 import { effect, onDispose, peek, signal, type ReadSignal } from 'maverick.js';
 import { noop } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
+
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { getRequestCredentials } from '../../../utils/network';
 
@@ -73,6 +74,7 @@ export class ThumbnailsLoader {
     }
 
     return () => {
+      controller.abort();
       this.$cues.set([]);
     };
   }

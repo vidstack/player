@@ -144,12 +144,12 @@ export class HLSController {
   private _onLevelLoaded(eventType: string, data: HLS.LevelLoadedData): void {
     if (this._ctx.$state.canPlay()) return;
 
-    const { type, live, totalduration: duration } = data.details;
+    const { type, live, totalduration: duration, targetduration } = data.details;
     const event = new DOMEvent(eventType, { detail: data });
 
     this._ctx.delegate._dispatch('stream-type-change', {
       detail: live
-        ? type === 'EVENT' && Number.isFinite(duration)
+        ? type === 'EVENT' && Number.isFinite(duration) && targetduration >= 10
           ? 'live:dvr'
           : 'live'
         : 'on-demand',

@@ -203,10 +203,20 @@ export class MediaStateManager extends MediaPlayerController {
   ['provider-change'](event: ME.MediaProviderChangeEvent) {
     const prevProvider = this._media.$provider(),
       newProvider = event.detail;
+
     if (prevProvider?.type === newProvider?.type) return;
+
     prevProvider?.destroy?.();
     this._media.$provider.set(event.detail);
+
     if (prevProvider && event.detail === null) this._resetMediaState(event);
+
+    this['stream-type-change'](
+      this.createEvent('stream-type-change', {
+        detail: 'unknown',
+        trigger: event,
+      }),
+    );
   }
 
   ['provider-loader-change'](event: ME.MediaProviderLoaderChangeEvent) {

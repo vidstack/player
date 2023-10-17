@@ -1,7 +1,5 @@
-import { isString } from 'maverick.js/std';
-
 import type { MediaSrc } from '../../core';
-import { HLS_VIDEO_EXTENSIONS, HLS_VIDEO_TYPES } from '../../utils/mime';
+import { isHLSSrc } from '../../utils/mime';
 import { preconnect } from '../../utils/network';
 import { isHLSSupported } from '../../utils/support';
 import type { MediaProviderLoader } from '../types';
@@ -18,12 +16,8 @@ export class HLSProviderLoader
     preconnect('https://cdn.jsdelivr.net', 'preconnect');
   }
 
-  override canPlay({ src, type }: MediaSrc) {
-    return (
-      HLSProviderLoader.supported &&
-      isString(src) &&
-      (HLS_VIDEO_EXTENSIONS.test(src) || HLS_VIDEO_TYPES.has(type))
-    );
+  override canPlay(src: MediaSrc) {
+    return HLSProviderLoader.supported && isHLSSrc(src);
   }
 
   override async load(context) {

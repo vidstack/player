@@ -7,7 +7,7 @@ import {
   type ReadSignal,
   type WriteSignal,
 } from 'maverick.js';
-import { isArray, isString } from 'maverick.js/std';
+import { isArray, isString, noop } from 'maverick.js/std';
 
 import type { MediaContext, MediaPlayerProps, MediaSrc } from '../../core';
 import {
@@ -16,7 +16,10 @@ import {
   VideoProviderLoader,
   type MediaProviderLoader,
 } from '../../providers';
+import { resolveStreamTypeFromHLSManifest } from '../../utils/hls';
+import { isHLSSrc } from '../../utils/mime';
 import { getRequestCredentials, preconnect } from '../../utils/network';
+import { isHLSSupported } from '../../utils/support';
 
 let warned = __DEV__ ? new Set<any>() : undefined;
 
@@ -184,15 +187,39 @@ export class SourceSelection {
 
   private _onLoadSource() {
     const provider = this._media.$provider(),
-      source = this._media.$state.source();
+      source = this._media.$state.source(),
+      crossorigin = peek(this._media.$state.crossorigin);
 
     if (isSameSrc(provider?.currentSrc, source)) {
       return;
     }
 
     if (this._media.$state.canLoad()) {
+      const abort = new AbortController();
+
+      if (isHLSSrc(source)) {
+        // Determined using `HLSProvider` if `hls.js` supported.
+        if (!isHLSSupported()) {
+          resolveStreamTypeFromHLSManifest(source.src as string, {
+            credentials: getRequestCredentials(crossorigin),
+            signal: abort.signal,
+          })
+            .then((streamType) => {
+              this._media.delegate._dispatch('stream-type-change', {
+                detail: streamType,
+              });
+            })
+            .catch(noop);
+        }
+      } else {
+        this._media.delegate._dispatch('stream-type-change', {
+          detail: 'on-demand',
+        });
+      }
+
       peek(() => provider?.loadSource(source, peek(this._media.$state.preload)));
-      return;
+
+      return () => abort.abort();
     }
 
     try {
