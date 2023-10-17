@@ -81,6 +81,7 @@ export class HTMLMediaEvents {
       this._attachEventListener('stalled', this._onStalled),
       this._attachEventListener('suspend', this._onSuspend),
     );
+
     this._attachedLoadStart = true;
   }
 

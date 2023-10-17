@@ -1,4 +1,4 @@
-import { onDispose } from 'maverick.js';
+import { createScope, onDispose } from 'maverick.js';
 import { isString, setAttribute } from 'maverick.js/std';
 
 import type { MediaSrc } from '../../core/api/types';
@@ -14,6 +14,8 @@ import { NativeAudioTracks } from './native-audio-tracks';
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement}
  */
 export class HTMLMediaProvider implements MediaProviderAdapter {
+  readonly scope = createScope();
+
   protected _currentSrc: MediaSrc | null = null;
 
   constructor(protected _media: HTMLMediaElement) {}

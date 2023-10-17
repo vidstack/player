@@ -2,8 +2,8 @@ import {
   computed,
   effect,
   peek,
+  scoped,
   tick,
-  untrack,
   type ReadSignal,
   type WriteSignal,
 } from 'maverick.js';
@@ -177,7 +177,7 @@ export class SourceSelection {
     if (!provider || provider[SETUP]) return;
 
     if (this._media.$state.canLoad()) {
-      untrack(() => provider.setup(this._media));
+      scoped(() => provider.setup(this._media), provider.scope);
       provider[SETUP] = true;
       return;
     }

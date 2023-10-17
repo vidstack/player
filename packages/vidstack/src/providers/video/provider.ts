@@ -1,4 +1,4 @@
-import { onDispose } from 'maverick.js';
+import { onDispose, scoped } from 'maverick.js';
 
 import type { MediaContext } from '../../core/api/media-context';
 import {
@@ -49,13 +49,15 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
 
   constructor(video: HTMLVideoElement, context: MediaContext) {
     super(video);
-    if (canUseVideoPresentation(video)) {
-      const presentation = new VideoPresentation(video, context);
-      this.fullscreen = new FullscreenPresentationAdapter(presentation);
-      this.pictureInPicture = new PIPPresentationAdapter(presentation);
-    } else if (canUsePictureInPicture(video)) {
-      this.pictureInPicture = new VideoPictureInPicture(video, context);
-    }
+    scoped(() => {
+      if (canUseVideoPresentation(video)) {
+        const presentation = new VideoPresentation(video, context);
+        this.fullscreen = new FullscreenPresentationAdapter(presentation);
+        this.pictureInPicture = new PIPPresentationAdapter(presentation);
+      } else if (canUsePictureInPicture(video)) {
+        this.pictureInPicture = new VideoPictureInPicture(video, context);
+      }
+    }, this.scope);
   }
 
   override setup(context: MediaSetupContext): void {

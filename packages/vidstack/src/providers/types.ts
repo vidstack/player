@@ -1,3 +1,5 @@
+import type { Scope } from 'maverick.js';
+
 import type { MediaPlayer } from '../components/player';
 import type { MediaContext } from '../core/api/media-context';
 import type { MediaState } from '../core/api/player-state';
@@ -25,6 +27,7 @@ export interface MediaProviderAdapter
     MediaState,
     'paused' | 'muted' | 'currentTime' | 'volume' | 'playsinline' | 'playbackRate'
   > {
+  readonly scope: Scope;
   readonly type: string;
   readonly currentSrc: MediaSrc | null;
   readonly fullscreen?: MediaFullscreenAdapter;
