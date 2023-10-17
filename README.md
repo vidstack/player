@@ -1,4 +1,4 @@
-# Vidstack
+# Vidstack Player
 
 [![package-badge]][package]
 [![discord-badge]][discord]
