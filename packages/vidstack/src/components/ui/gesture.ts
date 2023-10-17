@@ -153,6 +153,7 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
     const willTriggerEvent = new DOMEvent<string>('will-trigger', {
       detail: action,
       cancelable: true,
+      trigger,
     });
 
     this.dispatchEvent(willTriggerEvent);
@@ -168,7 +169,10 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
       this._media.remote[kebabToCamelCase(method)](trigger);
     }
 
-    this.dispatch('trigger', { detail: action as GestureAction });
+    this.dispatch('trigger', {
+      detail: action as GestureAction,
+      trigger,
+    });
   }
 }
 
