@@ -26,8 +26,8 @@ export class SliderValue extends Component<SliderValueProps> {
     type: 'current',
     format: null,
     showHours: false,
-    padHours: false,
-    padMinutes: false,
+    padHours: null,
+    padMinutes: null,
     decimalPlaces: 2,
   };
 
@@ -87,8 +87,8 @@ export interface SliderValueProps {
    */
   padHours: boolean | null;
   /**
-   * Whether the minutes unit should be padded with zeroes to a length of 2. Only available if
-   * the `format` attribute is set to `time`.
+   * Whether the minutes unit should be padded with zeroes to a length of 2. Setting this to `null`
+   * will pad minutes when hours is >=1. Only available if the `format` attribute is set to `time`.
    *
    * @example `5:22 -> 05:22`
    */

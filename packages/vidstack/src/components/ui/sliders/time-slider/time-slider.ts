@@ -250,12 +250,7 @@ export class TimeSlider extends Component<
       { live, duration } = this._media.$state,
       value = live() ? time - duration() : time;
     return Number.isFinite(time)
-      ? `${value < 0 ? '-' : ''}${formatTime(
-          Math.abs(value),
-          padHours,
-          isNull(padMinutes) ? Math.abs(value) >= 3600 : padMinutes,
-          showHours,
-        )}`
+      ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), padHours, padMinutes, showHours)}`
       : 'LIVE';
   }
 }

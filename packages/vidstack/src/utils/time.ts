@@ -4,6 +4,8 @@
  * @see https://github.snooguts.net/david-furfero/reddit-media-player/blob/main/src/lib/formatTime/index.ts
  */
 
+import { isNull } from 'maverick.js/std';
+
 /**
  * Casts a number to a string and pads it to match the given `expectedLength`.
  *
@@ -63,14 +65,17 @@ export function parseTime(duration: number): ParsedTime {
  */
 export function formatTime(
   duration: number,
-  shouldPadHours: boolean | null = false,
-  shouldPadMinutes: boolean | null = false,
+  shouldPadHours: boolean | null = null,
+  shouldPadMinutes: boolean | null = null,
   shouldAlwaysShowHours = false,
 ): string {
-  const { hours, minutes, seconds } = parseTime(duration);
-  const paddedHours = shouldPadHours ? padNumberWithZeroes(hours, 2) : hours;
-  const paddedMinutes = shouldPadMinutes ? padNumberWithZeroes(minutes, 2) : minutes;
-  const paddedSeconds = padNumberWithZeroes(seconds, 2);
+  const { hours, minutes, seconds } = parseTime(duration),
+    paddedHours = shouldPadHours ? padNumberWithZeroes(hours, 2) : hours,
+    paddedMinutes =
+      shouldPadMinutes || (isNull(shouldPadMinutes) && duration >= 3600)
+        ? padNumberWithZeroes(minutes, 2)
+        : minutes,
+    paddedSeconds = padNumberWithZeroes(seconds, 2);
 
   if (hours > 0 || shouldAlwaysShowHours) {
     return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;

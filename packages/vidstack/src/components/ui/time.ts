@@ -53,12 +53,7 @@ export class Time extends Component<TimeProps, TimeState> {
     }
 
     const time = remainder() ? Math.max(0, duration - seconds) : seconds,
-      formattedTime = formatTime(
-        time,
-        padHours(),
-        isNull(padMinutes()) ? time >= 3600 : padMinutes(),
-        showHours(),
-      );
+      formattedTime = formatTime(time, padHours(), padMinutes(), showHours());
 
     this.$state.timeText.set(formattedTime);
   }

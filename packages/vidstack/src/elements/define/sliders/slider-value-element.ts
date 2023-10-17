@@ -1,7 +1,7 @@
 import { effect } from 'maverick.js';
-import { Host } from 'maverick.js/element';
+import { BOOLEAN, Host, type Attributes } from 'maverick.js/element';
 
-import { SliderValue } from '../../../components';
+import { SliderValue, type SliderValueProps } from '../../../components';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/slider-value}
@@ -28,6 +28,12 @@ import { SliderValue } from '../../../components';
  */
 export class MediaSliderValueElement extends Host(HTMLElement, SliderValue) {
   static tagName = 'media-slider-value';
+
+  static override attrs: Attributes<SliderValueProps> = {
+    padMinutes: {
+      converter: BOOLEAN,
+    },
+  };
 
   protected onConnect() {
     effect(() => {

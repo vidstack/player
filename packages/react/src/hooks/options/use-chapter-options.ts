@@ -26,7 +26,7 @@ export function useChapterOptions(): ChapterOptions {
             cue,
             label: cue.text,
             value: i + '',
-            startTimeText: formatTime(cue.startTime, false, cue.startTime >= 3600),
+            startTimeText: formatTime(cue.startTime, false),
             durationText: formatSpokenTime(cue.endTime - cue.startTime),
             get selected() {
               return cue === track.activeCues[0];

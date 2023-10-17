@@ -86,7 +86,7 @@ export class ChaptersRadioGroup extends Component<
       cue,
       value: i + '',
       label: cue.text,
-      startTime: formatTime(cue.startTime, false, cue.startTime >= 3600),
+      startTime: formatTime(cue.startTime, false),
       duration: formatSpokenTime(cue.endTime - cue.startTime),
     }));
   }
