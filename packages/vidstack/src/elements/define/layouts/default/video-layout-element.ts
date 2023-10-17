@@ -18,7 +18,7 @@ import {
 } from './video-layout';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/wc/player/core-concepts/layouts/default}
+ * @docs {@link https://www.vidstack.io/docs/player/components/layouts/default-layout}
  * @example
  * ```html
  * <media-player>
