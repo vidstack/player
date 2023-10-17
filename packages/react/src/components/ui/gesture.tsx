@@ -9,7 +9,9 @@ import { Primitive } from '../primitives/nodes';
  * Gesture
  * -----------------------------------------------------------------------------------------------*/
 
-const GestureBridge = createReactComponent(GestureInstance);
+const GestureBridge = createReactComponent(GestureInstance, {
+  events: ['onWillTrigger', 'onTrigger'],
+});
 
 export interface GestureProps extends ReactElementProps<GestureInstance> {
   asChild?: boolean;
