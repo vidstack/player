@@ -3,7 +3,7 @@ import { Host } from 'maverick.js/element';
 import { Gesture } from '../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/media/gesture}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/gesture}
  * @example
  * ```html
  * <media-player>

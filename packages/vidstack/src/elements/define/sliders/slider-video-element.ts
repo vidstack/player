@@ -11,7 +11,7 @@ const videoTemplate = /* #__PURE__*/ createTemplate(
 );
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-video}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/slider-video}
  * @example
  * ```html
  * <media-time-slider>

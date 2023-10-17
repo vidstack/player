@@ -3,7 +3,7 @@ import { Host } from 'maverick.js/element';
 import { VolumeSlider } from '../../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/sliders/volume-slider}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/volume-slider}
  * @example
  * ```html
  * <media-volume-slider>

@@ -1,9 +1,10 @@
 import { Host, type Attributes } from 'maverick.js/element';
 import { isString } from 'maverick.js/std';
+
 import { MenuPortal, type MenuPortalProps } from '../../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu#portal}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/menu#portal}
  * @example
  * ```html
  * <media-menu>

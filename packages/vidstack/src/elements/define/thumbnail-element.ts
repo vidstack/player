@@ -11,7 +11,7 @@ const imgTemplate = /* #__PURE__*/ createTemplate(
 );
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/display/thumbnail}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/thumbnail}
  * @example
  * ```html
  * <media-player>

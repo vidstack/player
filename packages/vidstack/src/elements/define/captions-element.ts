@@ -3,7 +3,7 @@ import { Host } from 'maverick.js/element';
 import { Captions } from '../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/display/captions}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/captions}
  * @example
  * ```html
  * <media-captions></media-captions>

@@ -3,7 +3,7 @@ import { Host } from 'maverick.js/element';
 import { ControlsGroup } from '../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/media/controls}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/controls}
  * @example
  * ```html
  * <media-player>

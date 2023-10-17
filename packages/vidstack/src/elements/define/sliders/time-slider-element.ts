@@ -3,7 +3,7 @@ import { Host } from 'maverick.js/element';
 import { TimeSlider } from '../../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/sliders/time-slider}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/time-slider}
  * @example
  * ```html
  * <media-time-slider>

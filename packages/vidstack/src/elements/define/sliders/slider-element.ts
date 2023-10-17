@@ -3,7 +3,7 @@ import { Host } from 'maverick.js/element';
 import { Slider } from '../../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/slider}
  * @example
  * ```html
  * <media-slider min="0" max="100" value="50" aria-label="...">

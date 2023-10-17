@@ -5,7 +5,7 @@ import { MediaPlayer } from '../../components';
 import type { MediaPlayerProps } from '../../core/api/player-props';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/media/player}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/core/player}
  * @example
  * ```html
  * <media-player src="...">

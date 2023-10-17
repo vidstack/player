@@ -6,7 +6,7 @@ import { cloneTemplate, requestScopedAnimationFrame } from '../../../utils/dom';
 
 /**
  * @part chapter-title - Contains the current chapter title.
- * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-chapters}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/slider-chapters}
  * @example
  * ```html
  * <media-time-slider>

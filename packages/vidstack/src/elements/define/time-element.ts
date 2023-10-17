@@ -4,7 +4,7 @@ import { Host } from 'maverick.js/element';
 import { Time } from '../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/display/time}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/time}
  * @example
  * ```html
  * <media-time type="current"></media-time>

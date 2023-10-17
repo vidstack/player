@@ -4,7 +4,7 @@ import { Host } from 'maverick.js/element';
 import { SliderValue } from '../../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-value}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/slider-value}
  * @example
  * ```html
  * <media-time-slider>

@@ -3,7 +3,7 @@ import { Host } from 'maverick.js/element';
 import { Tooltip } from '../../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/tooltip}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/tooltip}
  * @example
  * ```html
  * <media-tooltip>

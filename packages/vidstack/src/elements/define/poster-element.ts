@@ -6,7 +6,7 @@ import { Poster } from '../../components';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/media/poster}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/poster}
  * @example
  * ```html
  * <media-player>

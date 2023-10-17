@@ -12,7 +12,7 @@ const svgTemplate = /* #__PURE__*/ createTemplate(
  * [media icons catalog](https://www.vidstack.io/media-icons) to preview them all. Do note, the
  * icon `type` can be dynamically changed.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/display/icons}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/icons}
  * @example
  * ```html
  * <media-icon type="play"></media-icon>

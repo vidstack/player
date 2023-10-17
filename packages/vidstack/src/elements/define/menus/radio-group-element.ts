@@ -3,7 +3,7 @@ import { Host } from 'maverick.js/element';
 import { RadioGroup } from '../../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/radio-group}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/radio-group}
  * @example
  * ```html
  * <media-radio-group value="720">

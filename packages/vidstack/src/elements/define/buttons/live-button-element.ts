@@ -3,7 +3,7 @@ import { Host } from 'maverick.js/element';
 import { LiveButton } from '../../../components';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/buttons/live-button}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/buttons/live-button}
  * @example
  * ```html
  * <media-live-button>

@@ -5,7 +5,7 @@ import { renderMenuItemsTemplate } from './_template';
 
 /**
  * @part label - Contains the speed option label.
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/playback-rate-menu}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/playback-rate-menu}
  * @example
  * ```html
  * <media-menu>

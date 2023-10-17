@@ -8,7 +8,7 @@ import { useMediaContext } from '../../core/api/media-context';
 class ChapterTitle extends Component {}
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/display/chapter-title}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/chapter-title}
  * @example
  * ```html
  * <media-chapter-title></media-chapter-title>

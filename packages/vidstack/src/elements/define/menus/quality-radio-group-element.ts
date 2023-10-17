@@ -7,7 +7,7 @@ import { renderMenuItemsTemplate } from './_template';
 /**
  * @part label - Contains the quality option label.
  * @part bitrate - Contains the quality option bitrate.
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/quality-menu}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/quality-menu}
  * @example
  * ```html
  * <media-menu>

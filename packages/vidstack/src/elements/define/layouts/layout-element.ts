@@ -1,5 +1,6 @@
 import { Component, effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
+
 import { PlayerQueryList } from '../../../core';
 
 class MediaLayout extends Component<{ when: string }> {
@@ -9,7 +10,7 @@ class MediaLayout extends Component<{ when: string }> {
 }
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/layouts#custom}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/layouts#custom}
  * @example
  * ```html
  * <media-layout when="(view-type: video)">
