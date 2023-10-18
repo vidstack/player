@@ -36,7 +36,12 @@ export class VolumeSlider extends Component<
   SliderEvents,
   SliderCSSVars
 > {
-  static props: VolumeSliderProps = SliderController.props;
+  static props: VolumeSliderProps = {
+    ...SliderController.props,
+    keyStep: 5,
+    shiftKeyMultiplier: 2,
+  };
+
   static state = sliderState;
 
   private _media!: MediaContext;

@@ -1,5 +1,5 @@
 import { effect, peek, signal } from 'maverick.js';
-import { DOMEvent, isKeyboardClick, listenEvent } from 'maverick.js/std';
+import { isKeyboardClick, listenEvent } from 'maverick.js/std';
 
 import { isHTMLMediaElement } from '../../providers/type-check';
 import type { MediaContext } from '../api/media-context';
@@ -80,7 +80,7 @@ export class MediaKeyboardController extends MediaPlayerController {
       event.preventDefault();
       event.stopPropagation();
       if (this._timeSlider) {
-        this._forwardTimeKeyboardEvent(event);
+        this._forwardTimeKeyboardEvent(event, method === 'seekForward');
         this._timeSlider = null;
       } else {
         this._media.remote.seek(this._seekTotal!, event);
@@ -90,7 +90,13 @@ export class MediaKeyboardController extends MediaPlayerController {
 
     if (method?.startsWith('volume')) {
       const volumeSlider = this.el!.querySelector('[data-media-volume-slider]');
-      volumeSlider?.dispatchEvent(new DOMEvent<void>('keyup', { trigger: event }));
+      volumeSlider?.dispatchEvent(
+        new KeyboardEvent('keyup', {
+          key: method === 'volumeUp' ? 'Up' : 'Down',
+          shiftKey: event.shiftKey,
+          trigger: event,
+        } as KeyboardEventInit),
+      );
     }
   }
 
@@ -124,13 +130,19 @@ export class MediaKeyboardController extends MediaPlayerController {
     switch (method) {
       case 'seekForward':
       case 'seekBackward':
-        this._seeking(event, method);
+        this._seeking(event, method, method === 'seekForward');
         break;
       case 'volumeUp':
       case 'volumeDown':
         const volumeSlider = this.el!.querySelector('[data-media-volume-slider]');
         if (volumeSlider) {
-          volumeSlider.dispatchEvent(new DOMEvent<void>('keydown', { trigger: event }));
+          volumeSlider.dispatchEvent(
+            new KeyboardEvent('keydown', {
+              key: method === 'volumeUp' ? 'Up' : 'Down',
+              shiftKey: event.shiftKey,
+              trigger: event,
+            } as KeyboardEventInit),
+          );
         } else {
           const value = event.shiftKey ? 0.1 : 0.05;
           this._media.remote.changeVolume(
@@ -187,15 +199,21 @@ export class MediaKeyboardController extends MediaPlayerController {
   }
 
   private _timeSlider: Element | null = null;
-  private _forwardTimeKeyboardEvent(event: KeyboardEvent) {
-    this._timeSlider?.dispatchEvent(new DOMEvent<void>(event.type, { trigger: event }));
+  private _forwardTimeKeyboardEvent(event: KeyboardEvent, forward: boolean) {
+    this._timeSlider?.dispatchEvent(
+      new KeyboardEvent(event.type, {
+        key: !forward ? 'Left' : 'Right',
+        shiftKey: event.shiftKey,
+        trigger: event,
+      } as KeyboardEventInit),
+    );
   }
 
-  private _seeking(event: KeyboardEvent, type: string) {
+  private _seeking(event: KeyboardEvent, type: string, forward: boolean) {
     if (!this.$state.canSeek()) return;
     if (!this._timeSlider) this._timeSlider = this.el!.querySelector('[data-media-time-slider]');
     if (this._timeSlider) {
-      this._forwardTimeKeyboardEvent(event);
+      this._forwardTimeKeyboardEvent(event, forward);
     } else {
       this._media.remote.seeking(this._calcSeekAmount(event, type), event);
     }

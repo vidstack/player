@@ -268,7 +268,7 @@ export class SliderEventsController extends ViewController<
     }
 
     const value = this._getKeyValue(event);
-    if (!value) return;
+    if (isUndefined(value)) return;
 
     const repeat = key === this._lastDownKey;
     if (!this.$state.dragging() && repeat) this._onStartDragging(value, event);
@@ -302,7 +302,7 @@ export class SliderEventsController extends ViewController<
     if (!isValidKey) return;
 
     const { shiftKeyMultiplier } = this.$props;
-    const { value } = this.$state,
+    const { value, min, max } = this.$state,
       step = this._delegate._getStep(),
       keyStep = this._delegate._getKeyStep();
 
@@ -311,7 +311,7 @@ export class SliderEventsController extends ViewController<
       diff = modifiedStep * direction,
       steps = (value() + diff) / step;
 
-    return Number((step * steps).toFixed(3));
+    return Math.max(min(), Math.min(max(), Number((step * steps).toFixed(3))));
   }
 
   // -------------------------------------------------------------------------------------------

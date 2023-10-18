@@ -42,6 +42,9 @@ export class TimeSlider extends Component<
 > {
   static props: TimeSliderProps = {
     ...SliderController.props,
+    step: 0.1,
+    keyStep: 5,
+    shiftKeyMultiplier: 2,
     pauseWhileDragging: false,
     seekingRequestThrottle: 100,
   };
