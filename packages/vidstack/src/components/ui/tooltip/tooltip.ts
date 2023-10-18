@@ -37,7 +37,9 @@ export class Tooltip extends Component<TooltipProps> {
       _content: this._content,
       _showDelay: showDelay,
       _listen(trigger, show, hide) {
-        listenEvent(trigger, 'touchstart', (e) => e.preventDefault());
+        listenEvent(trigger, 'touchstart', (e) => e.preventDefault(), {
+          passive: false,
+        });
 
         listenEvent(trigger, 'focus', show);
         listenEvent(trigger, 'blur', hide);

@@ -54,7 +54,10 @@ export class SliderEventsController extends ViewController<
   SliderState,
   SliderEvents
 > {
-  constructor(private _delegate: SliderEventDelegate, private _media: MediaContext) {
+  constructor(
+    private _delegate: SliderEventDelegate,
+    private _media: MediaContext,
+  ) {
     super();
   }
 
@@ -67,8 +70,12 @@ export class SliderEventsController extends ViewController<
       ) as HTMLElement | null;
       if (provider) {
         this._provider = provider;
-        listenEvent(provider, 'touchstart', this._onTouchStart.bind(this));
-        listenEvent(provider, 'touchmove', this._onTouchMove.bind(this));
+        listenEvent(provider, 'touchstart', this._onTouchStart.bind(this), {
+          passive: true,
+        });
+        listenEvent(provider, 'touchmove', this._onTouchMove.bind(this), {
+          passive: true,
+        });
       }
     }
   }
