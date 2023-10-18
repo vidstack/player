@@ -1,5 +1,5 @@
 import { Component, effect } from 'maverick.js';
-import { DOMEvent, setStyle } from 'maverick.js/std';
+import { DOMEvent, setAttribute, setStyle } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { setAttributeIfEmpty } from '../../utils/dom';
@@ -40,12 +40,24 @@ export class Controls extends Component<ControlsProps, {}, ControlsEvents> {
       this.dispatch('change', { detail: this._isShowing() });
     });
 
+    effect(this._hideControls.bind(this));
+
     effect(() => {
       const isFullscreen = fullscreen();
       for (const side of ['top', 'right', 'bottom', 'left']) {
         setStyle(el, `padding-${side}`, isFullscreen && `env(safe-area-inset-${side})`);
       }
     });
+  }
+
+  private _hideControls() {
+    if (!this.el) return;
+
+    const { controls } = this._media.$state,
+      isHidden = controls() || this._media.$iosControls();
+
+    setAttribute(this.el, 'aria-hidden', isHidden ? 'true' : null);
+    setStyle(this.el, 'display', isHidden ? 'none' : null);
   }
 
   private _watchHideDelay() {
