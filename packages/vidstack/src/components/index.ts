@@ -68,6 +68,6 @@ export {
   type DefaultLayoutTranslations,
   type DefaultLayoutContext,
   defaultLayoutContext,
-  useDefaultLayoutLang,
+  getDefaultLayoutLang,
   useDefaultLayoutContext,
 } from './layouts/default-layout';

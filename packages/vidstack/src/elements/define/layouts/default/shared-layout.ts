@@ -3,8 +3,8 @@ import { computed, type ReadSignal } from 'maverick.js';
 import { isFunction, unwrap } from 'maverick.js/std';
 
 import {
+  getDefaultLayoutLang,
   useDefaultLayoutContext,
-  useDefaultLayoutLang,
   type DefaultLayoutTranslations,
   type MenuPlacement,
   type TooltipPlacement,
@@ -17,15 +17,17 @@ function $i18n(
   translations: ReadSignal<DefaultLayoutTranslations | null>,
   key: keyof DefaultLayoutTranslations,
 ) {
-  return $computed(() => useDefaultLayoutLang(translations, key));
+  return $computed(() => getDefaultLayoutLang(translations, key));
 }
 
 export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
-  const { translations } = useDefaultLayoutContext();
+  const { translations } = useDefaultLayoutContext(),
+    { paused } = useMediaContext().$state,
+    $label = $computed(() => getDefaultLayoutLang(translations, paused() ? 'Play' : 'Pause'));
   return html`
     <media-tooltip class="vds-play-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-play-button class="vds-play-button vds-button">
+        <media-play-button class="vds-play-button vds-button" aria-label=${$label}>
           <slot name="play-icon" data-class="vds-play-icon"></slot>
           <slot name="pause-icon" data-class="vds-pause-icon"></slot>
           <slot name="replay-icon" data-class="vds-replay-icon"></slot>
@@ -40,11 +42,13 @@ export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
 }
 
 export function DefaultMuteButton({ tooltip }: { tooltip: TooltipPlacement }) {
-  const { translations } = useDefaultLayoutContext();
+  const { translations } = useDefaultLayoutContext(),
+    { muted } = useMediaContext().$state,
+    $label = $computed(() => getDefaultLayoutLang(translations, muted() ? 'Unmute' : 'Unmute'));
   return html`
     <media-tooltip class="vds-mute-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-mute-button class="vds-mute-button vds-button">
+        <media-mute-button class="vds-mute-button vds-button" aria-label=${$label}>
           <slot name="mute-icon" data-class="vds-mute-icon"></slot>
           <slot name="volume-low-icon" data-class="vds-volume-low-icon"></slot>
           <slot name="volume-high-icon" data-class="vds-volume-high-icon"></slot>
@@ -59,11 +63,18 @@ export function DefaultMuteButton({ tooltip }: { tooltip: TooltipPlacement }) {
 }
 
 export function DefaultCaptionButton({ tooltip }: { tooltip: TooltipPlacement }) {
-  const { translations } = useDefaultLayoutContext();
+  const { translations } = useDefaultLayoutContext(),
+    { textTrack } = useMediaContext().$state,
+    $label = $computed(() =>
+      getDefaultLayoutLang(
+        translations,
+        textTrack() ? 'Closed-Captions Off' : 'Closed-Captions On',
+      ),
+    );
   return html`
     <media-tooltip class="vds-caption-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-caption-button class="vds-caption-button vds-button">
+        <media-caption-button class="vds-caption-button vds-button" aria-label=${$label}>
           <slot name="cc-on-icon" data-class="vds-cc-on-icon"></slot>
           <slot name="cc-off-icon" data-class="vds-cc-off-icon"></slot>
         </media-caption-button>
@@ -77,11 +88,15 @@ export function DefaultCaptionButton({ tooltip }: { tooltip: TooltipPlacement })
 }
 
 export function DefaultPIPButton() {
-  const { translations } = useDefaultLayoutContext();
+  const { translations } = useDefaultLayoutContext(),
+    { pictureInPicture } = useMediaContext().$state,
+    $label = $computed(() =>
+      getDefaultLayoutLang(translations, pictureInPicture() ? 'Exit PiP' : 'Enter PiP'),
+    );
   return html`
     <media-tooltip class="vds-pip-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-pip-button class="vds-pip-button vds-button">
+        <media-pip-button class="vds-pip-button vds-button" aria-label=${$label}>
           <slot name="pip-enter-icon" data-class="vds-pip-enter-icon"></slot>
           <slot name="pip-exit-icon" data-class="vds-pip-exit-icon"></slot>
         </media-pip-button>
@@ -95,11 +110,15 @@ export function DefaultPIPButton() {
 }
 
 export function DefaultFullscreenButton({ tooltip }: { tooltip: TooltipPlacement }) {
-  const { translations } = useDefaultLayoutContext();
+  const { translations } = useDefaultLayoutContext(),
+    { fullscreen } = useMediaContext().$state,
+    $label = $computed(() =>
+      getDefaultLayoutLang(translations, fullscreen() ? 'Exit Fullscreen' : 'Enter Fullscreen'),
+    );
   return html`
     <media-tooltip class="vds-fullscreen-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-fullscreen-button class="vds-fullscreen-button vds-button">
+        <media-fullscreen-button class="vds-fullscreen-button vds-button" aria-label=${$label}>
           <slot name="fs-enter-icon" data-class="vds-fs-enter-icon"></slot>
           <slot name="fs-exit-icon" data-class="vds-fs-exit-icon"></slot>
         </media-fullscreen-button>
@@ -119,26 +138,34 @@ export function DefaultSeekButton({
   seconds: number;
   tooltip: TooltipPlacement;
 }) {
-  const { translations } = useDefaultLayoutContext();
+  const { translations } = useDefaultLayoutContext(),
+    seekText = seconds >= 0 ? 'Seek Forward' : 'Seek Backward',
+    $label = $i18n(translations, seekText);
   return html`
     <media-tooltip class="vds-seek-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-seek-button class="vds-seek-button vds-button" seconds=${seconds}>
+        <media-seek-button
+          class="vds-seek-button vds-button"
+          seconds=${seconds}
+          aria-label=${$label}
+        >
           ${seconds >= 0
             ? html`<slot name="seek-forward-icon"></slot>`
             : html`<slot name="seek-backward-icon"></slot>`}
         </media-seek-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
-        ${$i18n(translations, seconds >= 0 ? 'Seek Forward' : 'Seek Backward')}
+        ${$i18n(translations, seekText)}
       </media-tooltip-content>
     </media-tooltip>
   `;
 }
 
 export function DefaultVolumeSlider() {
+  const { translations } = useDefaultLayoutContext(),
+    $label = $i18n(translations, 'Volume');
   return html`
-    <media-volume-slider class="vds-volume-slider vds-slider">
+    <media-volume-slider class="vds-volume-slider vds-slider" aria-label=${$label}>
       <div class="vds-slider-track"></div>
       <div class="vds-slider-track-fill vds-slider-track"></div>
       <media-slider-preview class="vds-slider-preview" no-clamp>
@@ -154,9 +181,10 @@ export function DefaultVolumeSlider() {
 }
 
 export function DefaultTimeSlider() {
-  const { smQueryList, thumbnails } = useDefaultLayoutContext();
+  const { smQueryList, thumbnails, translations } = useDefaultLayoutContext(),
+    $label = $i18n(translations, 'Seek');
   return html`
-    <media-time-slider class="vds-time-slider vds-slider">
+    <media-time-slider class="vds-time-slider vds-slider" aria-label=${$label}>
       <media-slider-chapters class="vds-slider-chapters" ?disabled=${$signal(smQueryList.$matches)}>
         <template>
           <div class="vds-slider-chapter">
@@ -184,11 +212,14 @@ export function DefaultTimeSlider() {
 }
 
 export function DefaultLiveButton() {
-  const { live } = useMediaContext().$state;
+  const { translations } = useDefaultLayoutContext(),
+    { live } = useMediaContext().$state,
+    $label = $i18n(translations, 'Skip To Live'),
+    $liveText = $i18n(translations, 'LIVE');
   return live()
     ? html`
-    <media-live-button class="vds-live-button">
-      <span class="vds-live-button-text">LIVE</span>
+    <media-live-button class="vds-live-button" aria-label=${$label}>
+      <span class="vds-live-button-text">${$liveText}</span>
     </media-live-button
   `
     : null;
@@ -265,7 +296,10 @@ export function DefaultChaptersMenu({
     <media-menu class="vds-chapters-menu vds-menu">
       <media-tooltip class="vds-tooltip">
         <media-tooltip-trigger>
-          <media-menu-button class="vds-menu-button vds-button">
+          <media-menu-button
+            class="vds-menu-button vds-button"
+            aria-label=${$i18n(translations, 'Chapters')}
+          >
             <slot name="menu-chapters-icon"></slot>
           </media-menu-button>
         </media-tooltip-trigger>
@@ -313,7 +347,10 @@ export function DefaultSettingsMenu({
     <media-menu class="vds-settings-menu vds-menu">
       <media-tooltip class="vds-tooltip">
         <media-tooltip-trigger>
-          <media-menu-button class="vds-menu-button vds-button">
+          <media-menu-button
+            class="vds-menu-button vds-button"
+            aria-label=${$i18n(translations, 'Settings')}
+          >
             <slot name="menu-settings-icon" data-class="vds-rotate-icon"></slot>
           </media-menu-button>
         </media-tooltip-trigger>
@@ -335,7 +372,7 @@ function DefaultAudioSubmenu() {
     <!-- Audio Menu -->
     <media-menu class="vds-audio-menu vds-menu">
       ${renderMenuButton({
-        label: () => useDefaultLayoutLang(translations, 'Audio'),
+        label: () => getDefaultLayoutLang(translations, 'Audio'),
         icon: 'menu-audio',
       })}
       <media-menu-items class="vds-menu-items">
@@ -361,7 +398,7 @@ function DefaultSpeedSubmenu() {
     <!-- Speed Menu -->
     <media-menu class="vds-speed-menu vds-menu">
       ${renderMenuButton({
-        label: () => useDefaultLayoutLang(translations, 'Speed'),
+        label: () => getDefaultLayoutLang(translations, 'Speed'),
         icon: 'menu-speed',
       })}
       <media-menu-items class="vds-menu-items">
@@ -387,7 +424,7 @@ function DefaultQualitySubmenu() {
     <!-- Quality Menu -->
     <media-menu class="vds-quality-menu vds-menu">
       ${renderMenuButton({
-        label: () => useDefaultLayoutLang(translations, 'Quality'),
+        label: () => getDefaultLayoutLang(translations, 'Quality'),
         icon: 'menu-quality',
       })}
       <media-menu-items class="vds-menu-items">
@@ -414,7 +451,7 @@ function DefaultCaptionsSubmenu() {
     <!-- Captions Menu -->
     <media-menu class="vds-captions-menu vds-menu">
       ${renderMenuButton({
-        label: () => useDefaultLayoutLang(translations, 'Captions'),
+        label: () => getDefaultLayoutLang(translations, 'Captions'),
         icon: 'menu-captions',
       })}
       <media-menu-items class="vds-menu-items">

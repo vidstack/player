@@ -143,31 +143,35 @@ export interface DefaultLayoutContext {
 }
 
 export interface DefaultLayoutTranslations {
+  'Closed-Captions Off': string;
+  'Closed-Captions On': string;
+  'Enter Fullscreen': string;
+  'Enter PiP': string;
+  'Exit Fullscreen': string;
+  'Exit PiP': string;
+  'Seek Backward': string;
+  'Seek Forward': string;
   Audio: string;
   Auto: string;
   Captions: string;
   Chapters: string;
   Default: string;
+  LIVE: string;
   Mute: string;
   Normal: string;
   Off: string;
   Pause: string;
   Play: string;
-  Speed: string;
   Quality: string;
+  Seek: string;
   Settings: string;
+  'Skip To Live': string;
+  Speed: string;
   Unmute: string;
-  'Seek Forward': string;
-  'Seek Backward': string;
-  'Closed-Captions On': string;
-  'Closed-Captions Off': string;
-  'Enter Fullscreen': string;
-  'Exit Fullscreen': string;
-  'Enter PiP': string;
-  'Exit PiP': string;
+  Volume: string;
 }
 
-export function useDefaultLayoutLang(
+export function getDefaultLayoutLang(
   translations: ReadSignal<DefaultLayoutTranslations | null>,
   word: keyof DefaultLayoutTranslations,
 ) {

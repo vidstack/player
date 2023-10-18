@@ -60,7 +60,7 @@ export class VolumeSlider extends Component<
 
   protected override onAttach(el: HTMLElement) {
     el.setAttribute('data-media-volume-slider', '');
-    setAttributeIfEmpty(el, 'aria-label', 'Media volume');
+    setAttributeIfEmpty(el, 'aria-label', 'Volume');
 
     const { canSetVolume } = this._media.$state;
     this.setAttributes({

@@ -226,10 +226,11 @@ function DefaultPlayButton({ tooltip }: DefaultMediaButtonProps) {
     playText = useDefaultLayoutLang('Play'),
     pauseText = useDefaultLayoutLang('Pause'),
     paused = useMediaState('paused'),
-    ended = useMediaState('ended');
+    ended = useMediaState('ended'),
+    label = paused ? playText : pauseText;
   return (
     <DefaultTooltip content={paused ? playText : pauseText} placement={tooltip}>
-      <PlayButton className="vds-play-button vds-button">
+      <PlayButton className="vds-play-button vds-button" aria-label={label}>
         {ended ? (
           <Icons.PlayButton.Replay className="vds-icon" />
         ) : paused ? (
@@ -254,10 +255,11 @@ function DefaultMuteButton({ tooltip }: DefaultMediaButtonProps) {
     muteText = useDefaultLayoutLang('Mute'),
     unmuteText = useDefaultLayoutLang('Unmute'),
     muted = useMediaState('muted'),
-    volume = useMediaState('volume');
+    volume = useMediaState('volume'),
+    label = muted ? unmuteText : muteText;
   return (
     <DefaultTooltip content={muted ? unmuteText : muteText} placement={tooltip}>
-      <MuteButton className="vds-mute-button vds-button">
+      <MuteButton className="vds-mute-button vds-button" aria-label={label}>
         {muted || volume == 0 ? (
           <Icons.MuteButton.Mute className="vds-icon" />
         ) : volume < 0.5 ? (
@@ -282,10 +284,11 @@ function DefaultCaptionButton({ tooltip }: DefaultMediaButtonProps) {
     onText = useDefaultLayoutLang('Closed-Captions On'),
     offText = useDefaultLayoutLang('Closed-Captions Off'),
     track = useMediaState('textTrack'),
-    isOn = track && isTrackCaptionKind(track);
+    isOn = track && isTrackCaptionKind(track),
+    label = track ? offText : onText;
   return (
     <DefaultTooltip content={isOn ? onText : offText} placement={tooltip}>
-      <CaptionButton className="vds-caption-button vds-button">
+      <CaptionButton className="vds-caption-button vds-button" aria-label={label}>
         {isOn ? (
           <Icons.CaptionButton.On className="vds-icon" />
         ) : (
@@ -307,10 +310,11 @@ function DefaultPIPButton({ tooltip }: DefaultMediaButtonProps) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     enterText = useDefaultLayoutLang('Enter PiP'),
     exitText = useDefaultLayoutLang('Exit PiP'),
-    pip = useMediaState('pictureInPicture');
+    pip = useMediaState('pictureInPicture'),
+    label = pip ? exitText : enterText;
   return (
     <DefaultTooltip content={pip ? exitText : enterText} placement={tooltip}>
-      <PIPButton className="vds-pip-button vds-button">
+      <PIPButton className="vds-pip-button vds-button" aria-label={label}>
         {pip ? (
           <Icons.PIPButton.Exit className="vds-icon" />
         ) : (
@@ -332,10 +336,11 @@ function DefaultFullscreenButton({ tooltip }: DefaultMediaButtonProps) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     enterText = useDefaultLayoutLang('Enter Fullscreen'),
     exitText = useDefaultLayoutLang('Exit Fullscreen'),
-    fullscreen = useMediaState('fullscreen');
+    fullscreen = useMediaState('fullscreen'),
+    label = fullscreen ? exitText : enterText;
   return (
     <DefaultTooltip content={fullscreen ? exitText : enterText} placement={tooltip}>
-      <FullscreenButton className="vds-fullscreen-button vds-button">
+      <FullscreenButton className="vds-fullscreen-button vds-button" aria-label={label}>
         {fullscreen ? (
           <Icons.FullscreenButton.Exit className="vds-icon" />
         ) : (
@@ -356,10 +361,11 @@ export { DefaultFullscreenButton };
 function DefaultSeekButton({ seconds, tooltip }: DefaultMediaButtonProps & { seconds: number }) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     seekForwardText = useDefaultLayoutLang('Seek Forward'),
-    seekBackwardText = useDefaultLayoutLang('Seek Backward');
+    seekBackwardText = useDefaultLayoutLang('Seek Backward'),
+    label = seconds >= 0 ? seekForwardText : seekBackwardText;
   return (
-    <DefaultTooltip content={seconds >= 0 ? seekForwardText : seekBackwardText} placement={tooltip}>
-      <SeekButton className="vds-seek-button vds-button" seconds={seconds}>
+    <DefaultTooltip content={label} placement={tooltip}>
+      <SeekButton className="vds-seek-button vds-button" seconds={seconds} aria-label={label}>
         {seconds >= 0 ? (
           <Icons.SeekButton.Forward className="vds-icon" />
         ) : (
@@ -378,8 +384,9 @@ export { DefaultSeekButton };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVolumeSlider() {
+  const label = useDefaultLayoutLang('Volume');
   return (
-    <VolumeSliderBase.Root className="vds-volume-slider vds-slider">
+    <VolumeSliderBase.Root className="vds-volume-slider vds-slider" aria-label={label}>
       <VolumeSliderBase.Track className="vds-slider-track" />
       <VolumeSliderBase.TrackFill className="vds-slider-track-fill vds-slider-track" />
       <VolumeSliderBase.Thumb className="vds-slider-thumb" />
@@ -398,9 +405,10 @@ export { DefaultVolumeSlider };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTimeSlider() {
-  const { thumbnails, isSmallLayout } = React.useContext(DefaultLayoutContext);
+  const { thumbnails, isSmallLayout } = React.useContext(DefaultLayoutContext),
+    label = useDefaultLayoutLang('Seek');
   return (
-    <TimeSliderBase.Root className="vds-time-slider vds-slider">
+    <TimeSliderBase.Root className="vds-time-slider vds-slider" aria-label={label}>
       <TimeSliderBase.Chapters className="vds-slider-chapters" disabled={isSmallLayout}>
         {(cues, forwardRef) =>
           cues.map((cue) => (
@@ -446,10 +454,12 @@ export { DefaultChapterTitle };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultLiveButton() {
-  const live = useMediaState('live');
+  const live = useMediaState('live'),
+    label = useDefaultLayoutLang('Skip To Live'),
+    liveText = useDefaultLayoutLang('LIVE');
   return live ? (
-    <LiveButton className="vds-live-button">
-      <span className="vds-live-button-text">LIVE</span>
+    <LiveButton className="vds-live-button" aria-label={label}>
+      <span className="vds-live-button-text">{liveText}</span>
     </LiveButton>
   ) : null;
 }
@@ -538,7 +548,11 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
   return (
     <MenuBase.Root className="vds-chapters-menu vds-menu" showDelay={showMenuDelay}>
       <DefaultTooltip content={chaptersText} placement={tooltip}>
-        <MenuBase.Button className="vds-menu-button vds-button" disabled={disabled}>
+        <MenuBase.Button
+          className="vds-menu-button vds-button"
+          disabled={disabled}
+          aria-label={chaptersText}
+        >
           <Icons.Menu.Chapters className="vds-icon" />
         </MenuBase.Button>
       </DefaultTooltip>
@@ -587,7 +601,7 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMe
   return (
     <MenuBase.Root className="vds-settings-menu vds-menu" showDelay={showMenuDelay}>
       <DefaultTooltip content={settingsText} placement={tooltip}>
-        <MenuBase.Button className="vds-menu-button vds-button">
+        <MenuBase.Button className="vds-menu-button vds-button" aria-label={settingsText}>
           <Icons.Menu.Settings className="vds-icon vds-rotate-icon" />
         </MenuBase.Button>
       </DefaultTooltip>

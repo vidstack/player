@@ -91,7 +91,7 @@ export class TimeSlider extends Component<
 
   protected override onAttach(el: HTMLElement) {
     el.setAttribute('data-media-time-slider', '');
-    setAttributeIfEmpty(el, 'aria-label', 'Media time');
+    setAttributeIfEmpty(el, 'aria-label', 'Seek');
   }
 
   protected override onConnect(el: HTMLElement) {
