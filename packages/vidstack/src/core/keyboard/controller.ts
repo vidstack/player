@@ -16,6 +16,8 @@ export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {
   seekForward: 'l L ArrowRight',
   volumeUp: 'ArrowUp',
   volumeDown: 'ArrowDown',
+  speedUp: '>',
+  slowDown: '<',
 };
 
 const MODIFIER_KEYS = new Set(['Shift', 'Alt', 'Meta', 'Control']),
@@ -153,6 +155,14 @@ export class MediaKeyboardController extends MediaPlayerController {
         break;
       case 'toggleFullscreen':
         this._media.remote.toggleFullscreen('prefer-media', event);
+        break;
+      case 'speedUp':
+      case 'slowDown':
+        const playbackRate = this.$state.playbackRate();
+        this._media.remote.changePlaybackRate(
+          Math.max(0.25, Math.min(2, playbackRate + (method === 'speedUp' ? 0.25 : -0.25))),
+          event,
+        );
         break;
       default:
         this._media.remote[method]?.(event);

@@ -8,6 +8,8 @@ export interface MediaKeyShortcuts {
   toggleCaptions?: string | null;
   seekBackward?: string | null;
   seekForward?: string | null;
+  speedUp?: string | null;
+  slowDown?: string | null;
   volumeUp?: string | null;
   volumeDown?: string | null;
 }
