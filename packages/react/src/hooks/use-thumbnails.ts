@@ -43,7 +43,7 @@ export function useThumbnails(src: string): ThumbnailData[] {
       }
 
       return items;
-    }, $cues);
+    }, [$cues]);
 
   if (__DEV__ && !scope) {
     console.warn(
