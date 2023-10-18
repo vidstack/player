@@ -12,8 +12,8 @@ export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {
   toggleFullscreen: 'f',
   togglePictureInPicture: 'i',
   toggleCaptions: 'c',
-  seekBackward: 'ArrowLeft',
-  seekForward: 'ArrowRight',
+  seekBackward: 'j J ArrowLeft',
+  seekForward: 'l L ArrowRight',
   volumeUp: 'ArrowUp',
   volumeDown: 'ArrowDown',
 };
