@@ -53,7 +53,9 @@ export class SliderController extends ViewController<
     this.$state.focused = focus.focused.bind(focus);
 
     if (!hasProvidedContext(sliderValueFormatContext)) {
-      provideContext(sliderValueFormatContext);
+      provideContext(sliderValueFormatContext, {
+        default: 'value',
+      });
     }
 
     provideContext(sliderContext, {

@@ -228,7 +228,7 @@ ChapterTitle.displayName = 'SliderChapterTitle';
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
   return (
-    <SliderValueBridge type="pointer" format="time" {...(props as Omit<ValueProps, 'ref'>)}>
+    <SliderValueBridge {...(props as Omit<ValueProps, 'ref'>)}>
       {(props, instance) => {
         const $text = useSignal(() => instance.getValueText(), instance);
         return (

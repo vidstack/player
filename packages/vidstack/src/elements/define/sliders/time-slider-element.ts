@@ -18,7 +18,7 @@ import { TimeSlider } from '../../../components';
  * <media-time-slider>
  *   <!-- ... -->
  *   <media-slider-preview>
- *     <media-slider-value type="pointer" format="time"></media-slider-value>
+ *     <media-slider-value></media-slider-value>
  *   <media-slider-preview>
  * </media-time-slider>
  * ```

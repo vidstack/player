@@ -9,7 +9,7 @@ import { SliderValue, type SliderValueProps } from '../../../components';
  * ```html
  * <media-time-slider>
  *   <media-slider-preview>
- *     <media-slider-value type="pointer" format="time"></media-slider-value>
+ *     <media-slider-value></media-slider-value>
  *   </media-slider-preview>
  * </media-time-slider>
  * ```
@@ -19,11 +19,11 @@ import { SliderValue, type SliderValueProps } from '../../../components';
  * ```
  * @example
  * ```html
- * <media-slider-value format="time" show-hours pad-hours></media-slider-value>
+ * <media-slider-value show-hours pad-hours></media-slider-value>
  * ```
  * @example
  * ```html
- * <media-slider-value format="percent" decimal-places="2"></media-slider-value>
+ * <media-slider-value decimal-places="2"></media-slider-value>
  * ```
  */
 export class MediaSliderValueElement extends Host(HTMLElement, SliderValue) {

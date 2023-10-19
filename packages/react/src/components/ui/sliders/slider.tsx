@@ -201,7 +201,7 @@ export interface ValueProps extends SliderValueProps {}
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
   return (
-    <SliderValueBridge type="pointer" {...(props as Omit<ValueProps, 'ref'>)}>
+    <SliderValueBridge {...(props as Omit<ValueProps, 'ref'>)}>
       {(props, instance) => {
         const $text = useSignal(() => instance.getValueText(), instance);
         return (

@@ -23,7 +23,7 @@ import { sliderValueFormatContext } from './slider/format';
  */
 export class SliderValue extends Component<SliderValueProps> {
   static props: SliderValueProps = {
-    type: 'current',
+    type: 'pointer',
     format: null,
     showHours: false,
     padHours: null,
@@ -46,16 +46,17 @@ export class SliderValue extends Component<SliderValueProps> {
    */
   @method
   getValueText() {
-    const { type, format, decimalPlaces, padHours, padMinutes, showHours } = this.$props;
-    const { value: sliderValue, pointerValue, min, max } = this._slider;
+    const { type, format, decimalPlaces, padHours, padMinutes, showHours } = this.$props,
+      { value: sliderValue, pointerValue, min, max } = this._slider,
+      _format = format() ?? this._format.default;
 
     const value = type() === 'current' ? sliderValue() : pointerValue();
 
-    if (format() === 'percent') {
+    if (_format === 'percent') {
       const range = max() - min();
       const percent = (value / range) * 100;
       return (this._format.percent ?? round)(percent, decimalPlaces()) + '﹪';
-    } else if (format() === 'time') {
+    } else if (_format === 'time') {
       return (this._format.time ?? formatTime)(value, padHours(), padMinutes(), showHours());
     } else {
       return this._format.value?.(value) ?? value.toFixed(2);
@@ -69,9 +70,10 @@ export interface SliderValueProps {
    */
   type: 'current' | 'pointer';
   /**
-   * Determines how the value is formatted.
+   * Determines how the value is formatted. By default it will use the most appropriate formatting,
+   * for the time slider that's time, and for volume percent.
    */
-  format: 'percent' | 'time' | null;
+  format: 'value' | 'percent' | 'time' | null;
   /**
    * Whether the time should always show the hours unit, even if the time is less than
    * 1 hour. Only available if the `format` attribute is set to `time`.

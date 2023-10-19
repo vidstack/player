@@ -76,6 +76,7 @@ export class TimeSlider extends Component<
     this._media = useMediaContext();
 
     provideContext(sliderValueFormatContext, {
+      default: 'time',
       value: this._formatValue.bind(this),
       time: this._formatTime.bind(this),
     });

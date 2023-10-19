@@ -18,7 +18,7 @@ import { VolumeSlider } from '../../../components';
  * <media-volume-slider>
  *   <!-- ... -->
  *   <media-slider-preview>
- *     <media-slider-value type="pointer" format="percent"></media-slider-value>
+ *     <media-slider-value></media-slider-value>
  *   </media-slider-preview>
  * </media-volume-slider>
  * ```

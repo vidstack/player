@@ -1,5 +1,5 @@
 import throttle from 'just-throttle';
-import { Component, effect } from 'maverick.js';
+import { Component, effect, provideContext } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { $ariaBool } from '../../../utils/aria';
@@ -12,6 +12,7 @@ import type {
   SliderValueChangeEvent,
 } from './slider/api/events';
 import { sliderState, type SliderState } from './slider/api/state';
+import { sliderValueFormatContext } from './slider/format';
 import { SliderController, type SliderControllerProps } from './slider/slider-controller';
 
 export interface VolumeSliderProps extends SliderControllerProps {}
@@ -48,6 +49,10 @@ export class VolumeSlider extends Component<
 
   protected override onSetup(): void {
     this._media = useMediaContext();
+
+    provideContext(sliderValueFormatContext, {
+      default: 'percent',
+    });
 
     new SliderController({
       _getStep: this.$props.step,
