@@ -129,10 +129,9 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   }
 
   private _onResolveThumbnail() {
-    const { src } = this.$props,
-      { coords, activeCue } = this.$state,
+    const { activeCue } = this.$state,
       cue = activeCue(),
-      baseURL = peek(src);
+      baseURL = peek(this.$props.src);
 
     if (!baseURL || !cue) {
       this.$state.src.set('');
@@ -140,25 +139,20 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
       return;
     }
 
-    const [_src, _coords = ''] = (cue.text || '').split('#');
-    coords.set(this._resolveThumbnailCoords(_coords));
+    const [src, coords = ''] = (cue.text || '').split('#');
+    this.$state.coords.set(this._resolveThumbnailCoords(coords));
 
-    if (!peek(coords)) {
+    if (!peek(this.$state.coords)) {
       this._resetStyles();
       return;
     }
 
-    this.$state.src.set(this._resolveThumbnailSrc(baseURL, _src));
+    this.$state.src.set(this._resolveThumbnailSrc(src, baseURL));
     this._requestResize();
   }
 
-  private _resolveThumbnailSrc(baseURL: string, src: string) {
-    return !/https?:/.test(src)
-      ? `${baseURL.split('/').slice(0, -1).join('/')}${src.replace(/^\/?/, '/')}`.replace(
-          /^\/\//,
-          '/',
-        )
-      : src;
+  private _resolveThumbnailSrc(src: string, baseURL: string) {
+    return /^https?:/.test(src) ? src : new URL(src, baseURL).href;
   }
 
   private _resolveThumbnailCoords(coords: string) {
