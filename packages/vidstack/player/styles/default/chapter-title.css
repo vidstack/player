@@ -8,6 +8,7 @@
   flex: 1 1 0%;
   padding-inline: 8px;
   overflow: hidden;
+  text-align: start;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
