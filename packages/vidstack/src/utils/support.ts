@@ -107,8 +107,6 @@ export function getSourceBuffer(): typeof SourceBuffer | undefined {
   return __SERVER__ ? undefined : window?.SourceBuffer ?? window?.WebKitSourceBuffer;
 }
 
-let _isHLSSupported: boolean | null = null;
-
 /**
  * Whether `hls.js` is supported in this environment.
  *
@@ -116,8 +114,6 @@ let _isHLSSupported: boolean | null = null;
  */
 export function isHLSSupported(): boolean {
   if (__SERVER__) return false;
-
-  if (_isHLSSupported !== null) return _isHLSSupported;
 
   const MediaSource = getMediaSource();
 
@@ -138,5 +134,5 @@ export function isHLSSupported(): boolean {
       isFunction(SourceBuffer.prototype.appendBuffer) &&
       isFunction(SourceBuffer.prototype.remove));
 
-  return (_isHLSSupported = !!isTypeSupported && !!isSourceBufferValid);
+  return !!isTypeSupported && !!isSourceBufferValid;
 }
