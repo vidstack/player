@@ -31,12 +31,14 @@ other members:
 - [See GitHub Discussions][discussions]
 - [Join Discord Server][discord]
 
-## Sponsors ❤️
+## Thanks ❤️
 
-A special thanks to the following sponsors who are kindly supporting Vidstack:
+A special thanks to the following organizations who are kindly supporting Vidstack with sponsored
+accounts:
 
-- [Mux](https://www.mux.com/)
-- [Vercel](https://vercel.com/)
+- Testing with [BrowserStack](https://www.browserstack.com).
+- Hosting with [Vercel](https://vercel.com).
+- Streaming with [Mux](https://www.mux.com).
 
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr
