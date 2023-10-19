@@ -8,7 +8,12 @@ export function resolveStreamTypeFromHLSManifest(
     .then((res) => res.text())
     .then((manifest) => {
       const renditionURI = resolveHLSRenditionURI(manifest);
-      if (renditionURI) return resolveStreamTypeFromHLSManifest(renditionURI, requestInit);
+      if (renditionURI) {
+        return resolveStreamTypeFromHLSManifest(
+          /^https?:/.test(renditionURI) ? renditionURI : new URL(renditionURI, manifestSrc).href,
+          requestInit,
+        );
+      }
 
       const streamType = /EXT-X-PLAYLIST-TYPE:\s*VOD/.test(manifest) ? 'on-demand' : 'live';
 
