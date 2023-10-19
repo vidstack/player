@@ -138,25 +138,34 @@ export interface MediaPlayerProps
   keyTarget: MediaKeyTarget;
   /**
    * Extends global media player keyboard shortcuts. The shortcuts can be specified as a
-   * space-separated list of combinations (e.g., `p Control+Space`), see the provided doc link
-   * for more information.
+   * space-separated list of combinations (e.g., `p Control+Space`), array, or callbacks. See the
+   * provided doc link for more information.
    *
    * Do note, if `aria-keyshortcuts` is specified on a component then it will take precedence
    * over the respective value set here.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-keyshortcuts}
    * @example
-   * ```js
-   * keyShortcuts = {
-   *   togglePaused: 'k Space',
-   *   toggleMuted: 'm',
-   *   toggleFullscreen: 'f',
-   *   togglePictureInPicture: 'i',
-   *   toggleCaptions: 'c',
-   *   seekBackward: 'ArrowLeft',
-   *   seekForward: 'ArrowRight',
-   *   volumeUp: 'ArrowUp',
-   *   volumeDown: 'ArrowDown',
+   * ```ts
+   * player.keyShortcuts = {
+   *  // Space-separated list.
+   *  togglePaused: 'k Space',
+   *  toggleMuted: 'm',
+   *  toggleFullscreen: 'f',
+   *  togglePictureInPicture: 'i',
+   *  toggleCaptions: 'c',
+   *  // Array.
+   *  seekBackward: ['j', 'J', 'ArrowLeft'],
+   *  seekForward: ['l', 'L', 'ArrowRight'],
+   *  volumeUp: 'ArrowUp',
+   *  volumeDown: 'ArrowDown',
+   *  speedUp: '>',
+   *  slowDown: '<',
+   *  // Callback.
+   *  fooBar: {
+   *    keys: ['k', 'Space'],
+   *    callback(event) {}
+   *   },
    * }
    * ```
    */

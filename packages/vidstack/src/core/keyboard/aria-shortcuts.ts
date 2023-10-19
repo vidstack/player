@@ -1,4 +1,5 @@
 import { onDispose, ViewController } from 'maverick.js';
+import { isArray, isString } from 'maverick.js/std';
 
 import { useMediaContext } from '../api/media-context';
 import type { MediaKeyShortcut } from './types';
@@ -25,6 +26,13 @@ export class ARIAKeyShortcuts extends ViewController {
     }
 
     const shortcuts = $props.keyShortcuts()[this._shortcut];
-    if (shortcuts) el.setAttribute('aria-keyshortcuts', shortcuts);
+    if (shortcuts) {
+      const keys = isArray(shortcuts)
+        ? shortcuts.join(' ')
+        : isString(shortcuts)
+        ? shortcuts
+        : shortcuts?.keys;
+      el.setAttribute('aria-keyshortcuts', isArray(keys) ? keys.join(' ') : keys);
+    }
   }
 }

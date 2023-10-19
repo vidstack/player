@@ -1,17 +1,23 @@
 export type MediaKeyTarget = 'document' | 'player';
 
 export interface MediaKeyShortcuts {
-  togglePaused?: string | null;
-  toggleMuted?: string | null;
-  toggleFullscreen?: string | null;
-  togglePictureInPicture?: string | null;
-  toggleCaptions?: string | null;
-  seekBackward?: string | null;
-  seekForward?: string | null;
-  speedUp?: string | null;
-  slowDown?: string | null;
-  volumeUp?: string | null;
-  volumeDown?: string | null;
+  [keys: string]: MediaKeyShortcut | undefined;
+  togglePaused?: MediaKeyShortcut;
+  toggleMuted?: MediaKeyShortcut;
+  toggleFullscreen?: MediaKeyShortcut;
+  togglePictureInPicture?: MediaKeyShortcut;
+  toggleCaptions?: MediaKeyShortcut;
+  seekBackward?: MediaKeyShortcut;
+  seekForward?: MediaKeyShortcut;
+  speedUp?: MediaKeyShortcut;
+  slowDown?: MediaKeyShortcut;
+  volumeUp?: MediaKeyShortcut;
+  volumeDown?: MediaKeyShortcut;
 }
 
-export type MediaKeyShortcut = keyof MediaKeyShortcuts;
+export type MediaKeyShortcut = MediaKeysCallback | string | string[] | null;
+
+export interface MediaKeysCallback {
+  keys: string | string[];
+  callback(event: KeyboardEvent): void;
+}

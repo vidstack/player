@@ -1,10 +1,10 @@
 import { effect, peek, signal } from 'maverick.js';
-import { isKeyboardClick, listenEvent } from 'maverick.js/std';
+import { isArray, isKeyboardClick, isString, listenEvent } from 'maverick.js/std';
 
 import { isHTMLMediaElement } from '../../providers/type-check';
 import type { MediaContext } from '../api/media-context';
 import { MediaPlayerController } from '../api/player-controller';
-import type { MediaKeyShortcuts } from './types';
+import type { MediaKeyShortcut, MediaKeyShortcuts } from './types';
 
 export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {
   togglePaused: 'k Space',
@@ -64,19 +64,24 @@ export class MediaKeyboardController extends MediaPlayerController {
   }
 
   private _onKeyUp(event: KeyboardEvent) {
-    const focused = document.activeElement,
-      sliderFocused = focused?.classList.contains('vds-slider');
+    const focusedEl = document.activeElement,
+      isSliderFocused = focusedEl?.classList.contains('vds-slider');
 
     if (
       !event.key ||
       !this.$state.canSeek() ||
-      sliderFocused ||
-      focused?.matches(IGNORE_SELECTORS)
+      isSliderFocused ||
+      focusedEl?.matches(IGNORE_SELECTORS)
     ) {
       return;
     }
 
-    const method = this._getMatchingMethod(event);
+    let { method, value } = this._getMatchingMethod(event);
+
+    if (!isString(value) && !isArray(value)) {
+      value?.callback(event);
+      return;
+    }
 
     if (method?.startsWith('seek')) {
       event.preventDefault();
@@ -105,26 +110,31 @@ export class MediaKeyboardController extends MediaPlayerController {
   private _onKeyDown(event: KeyboardEvent) {
     if (!event.key || MODIFIER_KEYS.has(event.key)) return;
 
-    const focused = document.activeElement;
+    const focusedEl = document.activeElement;
 
     if (
-      focused?.matches(IGNORE_SELECTORS) ||
-      (isKeyboardClick(event) && focused?.matches(BUTTON_SELECTORS))
+      focusedEl?.matches(IGNORE_SELECTORS) ||
+      (isKeyboardClick(event) && focusedEl?.matches(BUTTON_SELECTORS))
     ) {
       return;
     }
 
-    const sliderFocused = focused?.classList.contains('vds-slider'),
-      method = this._getMatchingMethod(event);
+    let isSliderFocused = focusedEl?.classList.contains('vds-slider'),
+      { method, value } = this._getMatchingMethod(event);
 
-    if (!method && !event.metaKey && /[0-9]/.test(event.key) && !sliderFocused) {
+    if (!isString(value) && !isArray(value)) {
+      value?.callback(event);
+      return;
+    }
+
+    if (!method && !event.metaKey && /[0-9]/.test(event.key) && !isSliderFocused) {
       event.preventDefault();
       event.stopPropagation();
       this._media.remote.seek((this.$state.duration() / 10) * Number(event.key), event);
       return;
     }
 
-    if (!method || (/volume|seek/.test(method) && sliderFocused)) return;
+    if (!method || (/volume|seek/.test(method) && isSliderFocused)) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -181,18 +191,25 @@ export class MediaKeyboardController extends MediaPlayerController {
       ...this._media.ariaKeys,
     };
 
-    return Object.keys(keyShortcuts).find((method) =>
-      keyShortcuts[method].split(' ').some((keys) =>
-        replaceSymbolKeys(keys)
+    const method = Object.keys(keyShortcuts).find((method) => {
+      const value = keyShortcuts[method as keyof typeof keyShortcuts],
+        keys = isArray(value) ? value.join(' ') : isString(value) ? value : value?.keys;
+      return (isArray(keys) ? keys : keys?.split(' '))?.some((keys) => {
+        return replaceSymbolKeys(keys)
           .replace(/Control/g, 'Ctrl')
           .split('+')
           .every((key) =>
             MODIFIER_KEYS.has(key)
               ? event[key.toLowerCase() + 'Key']
               : event.key === key.replace('Space', ' '),
-          ),
-      ),
-    ) as keyof MediaKeyShortcuts | undefined;
+          );
+      });
+    });
+
+    return {
+      method,
+      value: method ? keyShortcuts[method] : null,
+    };
   }
 
   private _seekTotal: number | undefined;
