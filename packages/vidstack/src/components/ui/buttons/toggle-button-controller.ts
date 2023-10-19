@@ -1,7 +1,7 @@
 import { isWriteSignal, ViewController, type ReadSignal } from 'maverick.js';
 import { ariaBool } from 'maverick.js/std';
 
-import { ARIAKeyShortcuts, type MediaKeyShortcut } from '../../../core';
+import { ARIAKeyShortcuts } from '../../../core';
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
 
@@ -14,7 +14,7 @@ export interface ToggleButtonControllerProps {
 
 export interface ToggleButtonDelegate {
   _isPressed: ReadSignal<boolean>;
-  _keyShortcut?: MediaKeyShortcut;
+  _keyShortcut?: string;
   _onPress?(event: Event): void;
 }
 

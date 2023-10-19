@@ -4,7 +4,7 @@ import { isArray, isKeyboardClick, isString, listenEvent } from 'maverick.js/std
 import { isHTMLMediaElement } from '../../providers/type-check';
 import type { MediaContext } from '../api/media-context';
 import { MediaPlayerController } from '../api/player-controller';
-import type { MediaKeyShortcut, MediaKeyShortcuts } from './types';
+import type { MediaKeyShortcuts } from './types';
 
 export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {
   togglePaused: 'k Space',

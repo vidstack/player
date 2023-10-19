@@ -2,10 +2,9 @@ import { onDispose, ViewController } from 'maverick.js';
 import { isArray, isString } from 'maverick.js/std';
 
 import { useMediaContext } from '../api/media-context';
-import type { MediaKeyShortcut } from './types';
 
 export class ARIAKeyShortcuts extends ViewController {
-  constructor(private _shortcut: MediaKeyShortcut) {
+  constructor(private _shortcut: string) {
     super();
   }
 
