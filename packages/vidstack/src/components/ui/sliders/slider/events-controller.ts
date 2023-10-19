@@ -242,15 +242,9 @@ export class SliderEventsController extends ViewController<
   // -------------------------------------------------------------------------------------------
 
   private _lastDownKey!: string;
-  private _onKeyDown(event: DOMEvent<void> | KeyboardEvent) {
-    if (isDOMEvent(event)) {
-      const trigger = event.trigger;
-      if (isKeyboardEvent(trigger)) event = trigger;
-      else return;
-    }
-
-    const { key } = event;
-    const { min, max } = this.$state;
+  private _onKeyDown(event: KeyboardEvent) {
+    const { key } = event,
+      { min, max } = this.$state;
 
     let newValue: number | undefined;
     if (key === 'Home' || key === 'PageUp') {
@@ -279,17 +273,12 @@ export class SliderEventsController extends ViewController<
     this._lastDownKey = key;
   }
 
-  private _onKeyUp(event: DOMEvent<void> | KeyboardEvent) {
-    if (isDOMEvent(event)) {
-      const trigger = event.trigger;
-      if (isKeyboardEvent(trigger)) event = trigger;
-      else return;
-    }
-
+  private _onKeyUp(event: KeyboardEvent) {
     this._lastDownKey = '';
 
     const { dragging, value } = this.$state;
     if (!dragging()) return;
+
     const newValue = this._getKeyValue(event) ?? value();
     this._updatePointerValue(newValue);
     this._onStopDragging(newValue, event);
@@ -300,6 +289,8 @@ export class SliderEventsController extends ViewController<
       isValidKey = Object.keys(SliderKeyDirection).includes(key);
 
     if (!isValidKey) return;
+
+    event.preventDefault();
 
     const { shiftKeyMultiplier } = this.$props;
     const { value, min, max } = this.$state,

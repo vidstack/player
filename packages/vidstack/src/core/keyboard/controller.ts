@@ -180,7 +180,7 @@ export class MediaKeyboardController extends MediaPlayerController {
   }
 
   private _onPreventVideoKeys(event: KeyboardEvent) {
-    if (isHTMLMediaElement(event.target) && this._getMatchingMethod(event)) {
+    if (isHTMLMediaElement(event.target) && this._getMatchingMethod(event).method) {
       event.preventDefault();
     }
   }
