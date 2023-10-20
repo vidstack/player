@@ -4,7 +4,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where([data-media-player]) {
+[data-media-player] {
   width: 100%;
   display: inline-flex;
   align-items: center;
@@ -19,7 +19,7 @@
   outline: none;
 }
 
-:where([data-media-player][data-view-type='video']:not([data-controls])) {
+[data-media-player][data-view-type='video']:not([data-controls]) {
   pointer-events: auto;
   cursor: none;
 }
@@ -38,19 +38,16 @@
   display: flex;
   position: relative;
   box-sizing: border-box;
-}
-
-:where([data-media-provider]) {
   align-items: center;
   width: 100%;
 }
 
-:where([data-media-player]:not([data-view-type='audio']) [data-media-provider]),
-:where([data-media-player][data-fullscreen] [data-media-provider]) {
+[data-media-player]:not([data-view-type='audio']) [data-media-provider],
+[data-media-player][data-fullscreen] [data-media-provider] {
   height: 100%;
 }
 
-:where([data-media-player][data-view-type='audio'] [data-media-provider]) {
+[data-media-player][data-view-type='audio'] [data-media-provider] {
   display: contents;
   background-color: unset;
 }
