@@ -291,6 +291,7 @@ export class SliderEventsController extends ViewController<
     if (!isValidKey) return;
 
     event.preventDefault();
+    event.stopPropagation();
 
     const { shiftKeyMultiplier } = this.$props;
     const { value, min, max } = this.$state,

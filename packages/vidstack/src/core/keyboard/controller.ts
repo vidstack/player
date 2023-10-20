@@ -64,15 +64,9 @@ export class MediaKeyboardController extends MediaPlayerController {
   }
 
   private _onKeyUp(event: KeyboardEvent) {
-    const focusedEl = document.activeElement,
-      isSliderFocused = focusedEl?.classList.contains('vds-slider');
+    const focusedEl = document.activeElement;
 
-    if (
-      !event.key ||
-      !this.$state.canSeek() ||
-      isSliderFocused ||
-      focusedEl?.matches(IGNORE_SELECTORS)
-    ) {
+    if (!event.key || !this.$state.canSeek() || focusedEl?.matches(IGNORE_SELECTORS)) {
       return;
     }
 
@@ -119,22 +113,21 @@ export class MediaKeyboardController extends MediaPlayerController {
       return;
     }
 
-    let isSliderFocused = focusedEl?.classList.contains('vds-slider'),
-      { method, value } = this._getMatchingMethod(event);
+    let { method, value } = this._getMatchingMethod(event);
 
     if (!isString(value) && !isArray(value)) {
       value?.callback(event);
       return;
     }
 
-    if (!method && !event.metaKey && /[0-9]/.test(event.key) && !isSliderFocused) {
+    if (!method && !event.metaKey && /[0-9]/.test(event.key)) {
       event.preventDefault();
       event.stopPropagation();
       this._media.remote.seek((this.$state.duration() / 10) * Number(event.key), event);
       return;
     }
 
-    if (!method || (/volume|seek/.test(method) && isSliderFocused)) return;
+    if (!method) return;
 
     event.preventDefault();
     event.stopPropagation();
