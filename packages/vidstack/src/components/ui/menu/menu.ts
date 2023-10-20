@@ -246,7 +246,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
     this._focus._attachMenu(el);
     this._updateMenuItemsHidden(false);
-    requestAnimationFrame(this._onResize.bind(this));
+
+    if (!__SERVER__) {
+      requestAnimationFrame(this._onResize.bind(this));
+    }
   }
 
   private _attachObserver(observer: MenuObserver) {
