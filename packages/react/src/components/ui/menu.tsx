@@ -90,7 +90,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <ButtonBridge {...(props as Omit<ButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button type="button" {...props} ref={composeRefs(props.ref, forwardRef)}>
             {children}
           </Primitive.button>
         )}
