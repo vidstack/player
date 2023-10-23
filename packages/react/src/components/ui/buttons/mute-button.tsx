@@ -42,7 +42,7 @@ const MuteButton = React.forwardRef<HTMLButtonElement, MuteButtonProps>(
     return (
       <MuteButtonBridge {...(props as Omit<MuteButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button type="button" {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
             {children}
           </Primitive.button>
         )}

@@ -43,6 +43,7 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
   protected override onAttach(el: HTMLElement) {
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'button');
+    setAttributeIfEmpty(el, 'type', 'button');
   }
 
   protected override onConnect(el: HTMLElement) {

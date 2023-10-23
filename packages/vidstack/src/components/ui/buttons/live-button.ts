@@ -54,6 +54,7 @@ export class LiveButton extends Component<LiveButtonProps> {
   protected override onAttach(el: HTMLElement): void {
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'button');
+    setAttributeIfEmpty(el, 'type', 'button');
     el.setAttribute('data-media-tooltip', 'live');
   }
 

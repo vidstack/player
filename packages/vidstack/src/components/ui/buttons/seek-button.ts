@@ -57,6 +57,7 @@ export class SeekButton extends Component<SeekButtonProps> {
   protected override onAttach(el: HTMLElement) {
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'button');
+    setAttributeIfEmpty(el, 'type', 'button');
     el.setAttribute('data-media-tooltip', 'seek');
     setARIALabel(el, this._getLabel.bind(this));
   }
