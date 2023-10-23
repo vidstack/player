@@ -38,14 +38,14 @@
     "media-captions": "^1.0.0"
   },
   "devDependencies": {
-    "@maverick-js/cli": "0.40.8",
+    "@maverick-js/cli": "0.40.9",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
     "@vitejs/plugin-react": "^4.1.0",
     "esbuild": "^0.19.4",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.40.8",
+    "maverick.js": "0.40.9",
     "media-icons": "^1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
