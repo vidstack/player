@@ -74,7 +74,7 @@ export class SliderEventsController extends ViewController<
           passive: true,
         });
         listenEvent(provider, 'touchmove', this._onTouchMove.bind(this), {
-          passive: true,
+          passive: false,
         });
       }
     }
