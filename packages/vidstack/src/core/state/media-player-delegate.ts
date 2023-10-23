@@ -48,18 +48,27 @@ export class MediaPlayerDelegate {
     }
 
     if ($state.canPlay() && $state.autoplay() && !$state.started()) {
-      await this._attemptAutoplay();
+      await this._attemptAutoplay(trigger);
     }
   }
 
-  private async _attemptAutoplay() {
+  private async _attemptAutoplay(trigger?: Event) {
     const { player, $state } = this._media;
 
     $state.autoplaying.set(true);
 
+    const attemptEvent = new DOMEvent('autoplay-attempt', {
+      detail: { muted: $state.muted() },
+      trigger,
+    });
+
     try {
-      await player.play();
-      this._dispatch('autoplay', { detail: { muted: $state.muted() } });
+      await player.play(attemptEvent);
+
+      this._dispatch('autoplay', {
+        detail: { muted: $state.muted() },
+        trigger: attemptEvent,
+      });
     } catch (error) {
       if (__DEV__ && !seenAutoplayWarning) {
         const muteMsg = !$state.muted()
@@ -72,6 +81,7 @@ export class MediaPlayerDelegate {
             'Message',
             `Autoplay was requested but failed most likely due to browser autoplay policies.${muteMsg}`,
           )
+          .labelledLog('Trigger Event', trigger)
           .labelledLog('Error', error)
           .labelledLog('See', 'https://developer.chrome.com/blog/autoplay')
           .dispatch();
@@ -84,6 +94,7 @@ export class MediaPlayerDelegate {
           muted: $state.muted(),
           error: error as Error,
         },
+        trigger: attemptEvent,
       });
     } finally {
       $state.autoplaying.set(false);

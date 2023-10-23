@@ -378,7 +378,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['play'](event: ME.MediaPlayEvent) {
-    const { paused, autoplayError, ended, autoplaying } = this.$state;
+    const { paused, autoplayError, ended, autoplaying, playsinline, pointer } = this.$state;
 
     event.autoplay = autoplaying();
 
@@ -397,6 +397,10 @@ export class MediaStateManager extends MediaPlayerController {
       this._request._replaying = false;
       ended.set(false);
       this._handle(this.createEvent('replay', { trigger: event }));
+    }
+
+    if (!playsinline() && pointer() === 'coarse') {
+      this._media.remote.enterFullscreen('prefer-media', event);
     }
   }
 

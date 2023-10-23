@@ -564,8 +564,8 @@ export class MediaPlayer
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play}
    */
   @method
-  async play() {
-    return this._requestMgr._play();
+  async play(trigger?: Event) {
+    return this._requestMgr._play(trigger);
   }
 
   /**
@@ -575,8 +575,8 @@ export class MediaPlayer
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause}
    */
   @method
-  async pause() {
-    return this._requestMgr._pause();
+  async pause(trigger?: Event) {
+    return this._requestMgr._pause(trigger);
   }
 
   /**
@@ -586,8 +586,8 @@ export class MediaPlayer
    * @see {@link https://vidstack.io/docs/player/core-concepts/fullscreen}
    */
   @method
-  async enterFullscreen(target?: MediaFullscreenRequestTarget) {
-    return this._requestMgr._enterFullscreen(target);
+  async enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
+    return this._requestMgr._enterFullscreen(target, trigger);
   }
 
   /**
@@ -597,8 +597,8 @@ export class MediaPlayer
    * @see {@link https://vidstack.io/docs/player/core-concepts/fullscreen}
    */
   @method
-  async exitFullscreen(target?: MediaFullscreenRequestTarget) {
-    return this._requestMgr._exitFullscreen(target);
+  async exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
+    return this._requestMgr._exitFullscreen(target, trigger);
   }
 
   /**
@@ -609,8 +609,8 @@ export class MediaPlayer
    * @see {@link https://vidstack.io/docs/player/core-concepts/picture-in-picture}
    */
   @method
-  enterPictureInPicture() {
-    return this._requestMgr._enterPictureInPicture();
+  enterPictureInPicture(trigger?: Event) {
+    return this._requestMgr._enterPictureInPicture(trigger);
   }
 
   /**
@@ -620,8 +620,8 @@ export class MediaPlayer
    * @see {@link https://vidstack.io/docs/player/core-concepts/picture-in-picture}
    */
   @method
-  exitPictureInPicture() {
-    return this._requestMgr._exitPictureInPicture();
+  exitPictureInPicture(trigger?: Event) {
+    return this._requestMgr._exitPictureInPicture(trigger);
   }
 
   /**
@@ -631,8 +631,8 @@ export class MediaPlayer
    * @see {@link https://vidstack.io/docs/player/core-concepts/live#live-edge}
    */
   @method
-  seekToLiveEdge(): void {
-    this._requestMgr._seekToLiveEdge();
+  seekToLiveEdge(trigger?: Event): void {
+    this._requestMgr._seekToLiveEdge(trigger);
   }
 
   /**
@@ -642,8 +642,8 @@ export class MediaPlayer
    * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
    */
   @method
-  startLoading(): void {
-    this._media.delegate._dispatch('can-load');
+  startLoading(trigger?: Event): void {
+    this._media.delegate._dispatch('can-load', { trigger });
   }
 
   /**
