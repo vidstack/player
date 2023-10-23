@@ -79,7 +79,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     this.listen('fullscreen-change', this._onFullscreenChange.bind(this));
 
-    effect(this._onControlsHideDelayChange.bind(this));
+    effect(this._onControlsDelayChange.bind(this));
     effect(this._onFullscreenSupportChange.bind(this));
     effect(this._onPiPSupportChange.bind(this));
   }
@@ -325,7 +325,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     );
   }
 
-  private _onControlsHideDelayChange() {
+  private _onControlsDelayChange() {
     this._controls.defaultDelay = this.$props.controlsDelay();
   }
 

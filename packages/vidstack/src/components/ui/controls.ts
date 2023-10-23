@@ -63,7 +63,9 @@ export class Controls extends Component<ControlsProps, {}, ControlsEvents> {
   private _watchHideDelay() {
     const { controls } = this._media.player,
       { hideDelay } = this.$props;
-    controls.defaultDelay = hideDelay();
+
+    // Use controls delay prop on player if this is the default value.
+    controls.defaultDelay = hideDelay() === 2000 ? this._media.$props.controlsDelay() : hideDelay();
   }
 
   private _isShowing() {
