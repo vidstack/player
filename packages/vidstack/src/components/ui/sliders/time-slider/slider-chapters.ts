@@ -191,8 +191,8 @@ export class SliderChapters extends Component<SliderChaptersProps> {
     for (let i = start; i < end; i++) this._updateFillPercent(this._refs[i], percent);
   }
 
-  private _updateFillPercent(ref: HTMLElement, percent: string) {
-    ref.style.setProperty('--chapter-fill', percent);
+  private _updateFillPercent(ref: HTMLElement | null, percent: string) {
+    ref && ref.style.setProperty('--chapter-fill', percent);
   }
 
   private _findActiveChapterIndex(startIndex: number, percent: number) {
@@ -214,7 +214,7 @@ export class SliderChapters extends Component<SliderChaptersProps> {
     let percent: number;
     for (let i = this._bufferedIndex; i < this._refs.length; i++) {
       percent = this._calcPercent(this._cues[i], bufferedPercent);
-      this._refs[i].style.setProperty('--chapter-progress', percent + '%');
+      this._refs[i]?.style.setProperty('--chapter-progress', percent + '%');
       if (percent < 100) {
         this._bufferedIndex = i;
         break;
