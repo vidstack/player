@@ -113,6 +113,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (trigger?.type !== 'media-play-request') {
       this.dispatchEvent(requestEvent);
+      return;
     }
 
     this._request._queue._enqueue('play', requestEvent);
@@ -163,6 +164,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (trigger?.type !== 'media-pause-request') {
       this.dispatchEvent(requestEvent);
+      return;
     }
 
     this._request._queue._enqueue('pause', requestEvent);
@@ -221,6 +223,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (trigger?.type !== 'media-enter-fullscreen-request') {
       this.dispatchEvent(requestEvent);
+      return;
     }
 
     this._request._queue._enqueue('fullscreen', requestEvent);
@@ -253,6 +256,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (trigger?.type !== 'media-exit-fullscreen-request') {
       this.dispatchEvent(requestEvent);
+      return;
     }
 
     try {
@@ -286,6 +290,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (trigger?.type !== 'media-enter-pip-request') {
       this.dispatchEvent(requestEvent);
+      return;
     }
 
     this._request._queue._enqueue('pip', requestEvent);
@@ -309,6 +314,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (trigger?.type !== 'media-exit-pip-request') {
       this.dispatchEvent(requestEvent);
+      return;
     }
 
     this._request._queue._enqueue('pip', requestEvent);

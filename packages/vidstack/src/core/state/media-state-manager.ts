@@ -223,14 +223,10 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['autoplay'](event: ME.MediaAutoplayEvent) {
-    appendTriggerEvent(event, this._trackedEvents.get('play'));
-    appendTriggerEvent(event, this._trackedEvents.get('can-play'));
     this.$state.autoplayError.set(undefined);
   }
 
   ['autoplay-fail'](event: ME.MediaAutoplayFailEvent) {
-    appendTriggerEvent(event, this._trackedEvents.get('play-fail'));
-    appendTriggerEvent(event, this._trackedEvents.get('can-play'));
     this.$state.autoplayError.set(event.detail);
     this._resetTracking();
   }
@@ -378,7 +374,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['play'](event: ME.MediaPlayEvent) {
-    const { paused, autoplayError, ended, autoplaying, playsinline, pointer } = this.$state;
+    const { paused, autoplayError, ended, autoplaying, playsinline, pointer, muted } = this.$state;
 
     event.autoplay = autoplaying();
 
@@ -389,9 +385,21 @@ export class MediaStateManager extends MediaPlayerController {
 
     appendTriggerEvent(event, this._trackedEvents.get('waiting'));
     this._satisfyRequest('play', event);
+    this._trackedEvents.set('play', event);
 
     paused.set(false);
     autoplayError.set(undefined);
+
+    if (autoplaying()) {
+      this._handle(
+        this.createEvent('autoplay', {
+          detail: { muted: muted() },
+          trigger: event,
+        }),
+      );
+
+      autoplaying.set(false);
+    }
 
     if (ended() || this._request._replaying) {
       this._request._replaying = false;
@@ -405,6 +413,8 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['play-fail'](event: ME.MediaPlayFailEvent) {
+    const { muted, autoplaying } = this.$state;
+
     appendTriggerEvent(event, this._trackedEvents.get('play'));
     this._satisfyRequest('play', event);
 
@@ -413,6 +423,21 @@ export class MediaStateManager extends MediaPlayerController {
     playing.set(false);
 
     this._resetTracking();
+    this._trackedEvents.set('play-fail', event);
+
+    if (autoplaying()) {
+      this._handle(
+        this.createEvent('autoplay-fail', {
+          detail: {
+            muted: muted(),
+            error: event.detail,
+          },
+          trigger: event,
+        }),
+      );
+
+      autoplaying.set(false);
+    }
   }
 
   ['playing'](event: ME.MediaPlayingEvent) {

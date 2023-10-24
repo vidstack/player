@@ -57,18 +57,10 @@ export class MediaPlayerDelegate {
 
     $state.autoplaying.set(true);
 
-    const attemptEvent = new DOMEvent('autoplay-attempt', {
-      detail: { muted: $state.muted() },
-      trigger,
-    });
+    const attemptEvent = new DOMEvent<void>('autoplay-attempt', { trigger });
 
     try {
       await player.play(attemptEvent);
-
-      this._dispatch('autoplay', {
-        detail: { muted: $state.muted() },
-        trigger: attemptEvent,
-      });
     } catch (error) {
       if (__DEV__ && !seenAutoplayWarning) {
         const muteMsg = !$state.muted()
@@ -88,16 +80,6 @@ export class MediaPlayerDelegate {
 
         seenAutoplayWarning = true;
       }
-
-      this._dispatch('autoplay-fail', {
-        detail: {
-          muted: $state.muted(),
-          error: error as Error,
-        },
-        trigger: attemptEvent,
-      });
-    } finally {
-      $state.autoplaying.set(false);
     }
   }
 }
