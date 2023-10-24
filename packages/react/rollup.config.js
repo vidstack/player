@@ -151,7 +151,7 @@ function define({ dev }) {
       }),
       esbuildPlugin({
         tsconfig: 'tsconfig.build.json',
-        target: 'esnext',
+        target: 'es2021',
         platform: 'browser',
         define: {
           __DEV__: dev ? 'true' : 'false',
