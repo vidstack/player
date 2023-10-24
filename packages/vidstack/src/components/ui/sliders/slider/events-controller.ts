@@ -81,22 +81,30 @@ export class SliderEventsController extends ViewController<
   }
 
   private _provider: HTMLElement | null = null;
-  private _touchX: number | null = null;
+  private _touch: Touch | null = null;
   private _touchStartValue: number | null = null;
   private _onTouchStart(event: TouchEvent) {
-    this._touchX = event.touches[0].clientX;
+    this._touch = event.touches[0];
   }
 
   private _onTouchMove(event: TouchEvent) {
-    if (isNull(this._touchX)) return;
+    if (isNull(this._touch)) return;
+
+    const touch = event.touches[0],
+      xDiff = touch.clientX - this._touch.clientX,
+      yDiff = touch.clientY - this._touch.clientY,
+      isDragging = this.$state.dragging();
+
+    if (!isDragging && Math.abs(yDiff) > 20) {
+      return;
+    }
 
     event.preventDefault();
-    if (this.$state.dragging()) return;
 
-    const diff = event.touches[0].clientX - this._touchX;
+    if (isDragging) return;
 
-    if (Math.abs(diff) > 20) {
-      this._touchX = event.touches[0].clientX;
+    if (Math.abs(xDiff) > 20) {
+      this._touch = touch;
       this._touchStartValue = this.$state.value();
       this._onStartDragging(this._touchStartValue, event);
     }
@@ -163,9 +171,9 @@ export class SliderEventsController extends ViewController<
       const { bottom: trackBottom, height: trackHeight } = rect;
       thumbPositionRate = (trackBottom - event.clientY) / trackHeight;
     } else {
-      if (this._touchX && isNumber(this._touchStartValue)) {
+      if (this._touch && isNumber(this._touchStartValue)) {
         const { width } = this._provider!.getBoundingClientRect(),
-          rate = (event.clientX - this._touchX) / width,
+          rate = (event.clientX - this._touch.clientX) / width,
           range = max() - min(),
           diff = range * Math.abs(rate);
         thumbPositionRate =
@@ -233,7 +241,7 @@ export class SliderEventsController extends ViewController<
     const event = this.createEvent('drag-end', { detail: value, trigger });
     this.dispatch(event);
     this._delegate._onDragEnd?.(event);
-    this._touchX = null;
+    this._touch = null;
     this._touchStartValue = null;
   }
 

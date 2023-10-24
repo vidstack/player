@@ -352,7 +352,8 @@
     .vds-time,
     .vds-chapter-title,
     .vds-time-divider,
-    .vds-captions
+    .vds-captions,
+    .vds-live-button
   ) {
   opacity: 0;
 }
