@@ -36,7 +36,7 @@ const PIPButton = React.forwardRef<HTMLButtonElement, PIPButtonProps>(
     return (
       <PIPButtonBridge {...(props as Omit<PIPButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button type="button" {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
             {children}
           </Primitive.button>
         )}

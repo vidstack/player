@@ -35,7 +35,7 @@ const ToggleButton = React.forwardRef<HTMLButtonElement, ToggleButtonProps>(
     return (
       <ToggleButtonBridge {...(props as Omit<ToggleButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button type="button" {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
             {children}
           </Primitive.button>
         )}

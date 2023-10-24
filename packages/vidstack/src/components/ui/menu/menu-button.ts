@@ -2,7 +2,7 @@ import { Component, effect, prop, useContext } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
-import { onPress } from '../../../utils/dom';
+import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
 import { menuContext, type MenuContext } from './menu-context';
 
 /**
@@ -38,6 +38,7 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
   protected override onAttach(el: HTMLElement) {
     this._menu._attachMenuButton(this);
     effect(this._watchDisabled.bind(this));
+    setAttributeIfEmpty(el, 'type', 'button');
   }
 
   protected override onConnect(el: HTMLElement) {

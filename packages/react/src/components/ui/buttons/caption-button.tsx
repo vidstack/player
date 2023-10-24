@@ -37,7 +37,7 @@ const CaptionButton = React.forwardRef<HTMLButtonElement, CaptionButtonProps>(
     return (
       <CaptionButtonBridge {...(props as Omit<CaptionButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button type="button" {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
             {children}
           </Primitive.button>
         )}
