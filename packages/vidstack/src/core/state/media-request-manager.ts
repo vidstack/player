@@ -104,19 +104,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (!peek(paused)) return;
 
-    const requestEvent =
-      trigger?.type === 'media-play-request'
-        ? (trigger as RE.MediaPlayRequestEvent)
-        : this.createEvent('media-play-request', {
-            trigger,
-          });
-
     if (trigger?.type !== 'media-play-request') {
-      this.dispatchEvent(requestEvent);
+      this.dispatchEvent(this.createEvent('media-play-request', { trigger }));
       return;
     }
 
-    this._request._queue._enqueue('play', requestEvent);
+    this._request._queue._enqueue('play', trigger as RE.MediaPlayRequestEvent);
 
     try {
       const provider = peek(this._provider);
@@ -155,19 +148,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (peek(paused)) return;
 
-    const requestEvent =
-      trigger?.type === 'media-pause-request'
-        ? (trigger as RE.MediaPauseRequestEvent)
-        : this.createEvent('media-pause-request', {
-            trigger,
-          });
-
     if (trigger?.type !== 'media-pause-request') {
-      this.dispatchEvent(requestEvent);
+      this.dispatchEvent(this.createEvent('media-pause-request', { trigger }));
       return;
     }
 
-    this._request._queue._enqueue('pause', requestEvent);
+    this._request._queue._enqueue('pause', trigger as RE.MediaPauseRequestEvent);
 
     const provider = peek(this._provider);
     throwIfNotReadyForPlayback(provider, peek(canPlay));
@@ -213,20 +199,17 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       await this._exitPictureInPicture(trigger);
     }
 
-    const requestEvent =
-      trigger?.type === 'media-enter-fullscreen-request'
-        ? (trigger as RE.MediaEnterFullscreenRequestEvent)
-        : this.createEvent('media-enter-fullscreen-request', {
-            detail: target,
-            trigger,
-          });
-
     if (trigger?.type !== 'media-enter-fullscreen-request') {
-      this.dispatchEvent(requestEvent);
+      this.dispatchEvent(
+        this.createEvent('media-enter-fullscreen-request', {
+          detail: target,
+          trigger,
+        }),
+      );
       return;
     }
 
-    this._request._queue._enqueue('fullscreen', requestEvent);
+    this._request._queue._enqueue('fullscreen', trigger as RE.MediaEnterFullscreenRequestEvent);
 
     return adapter!.enter();
   }
@@ -246,21 +229,19 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (this._orientation.locked) await this._orientation.unlock();
 
-    const requestEvent =
-      trigger?.type === 'media-exit-fullscreen-request'
-        ? (trigger as RE.MediaExitFullscreenRequestEvent)
-        : this.createEvent('media-exit-fullscreen-request', {
-            detail: target,
-            trigger,
-          });
-
     if (trigger?.type !== 'media-exit-fullscreen-request') {
-      this.dispatchEvent(requestEvent);
+      this.dispatchEvent(
+        this.createEvent('media-exit-fullscreen-request', {
+          detail: target,
+          trigger,
+        }),
+      );
+
       return;
     }
 
     try {
-      this._request._queue._enqueue('fullscreen', requestEvent);
+      this._request._queue._enqueue('fullscreen', trigger as RE.MediaExitFullscreenRequestEvent);
 
       const result = await adapter!.exit();
 
@@ -281,19 +262,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (this.$state.pictureInPicture()) return;
 
-    const requestEvent =
-      trigger?.type === 'media-enter-pip-request'
-        ? (trigger as RE.MediaEnterPIPRequestEvent)
-        : this.createEvent('media-enter-pip-request', {
-            trigger,
-          });
-
     if (trigger?.type !== 'media-enter-pip-request') {
-      this.dispatchEvent(requestEvent);
+      this.dispatchEvent(this.createEvent('media-enter-pip-request', { trigger }));
       return;
     }
 
-    this._request._queue._enqueue('pip', requestEvent);
+    this._request._queue._enqueue('pip', trigger as RE.MediaEnterPIPRequestEvent);
 
     return await this._provider()!.pictureInPicture!.enter();
   }
@@ -305,19 +279,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (!this.$state.pictureInPicture()) return;
 
-    const requestEvent =
-      trigger?.type === 'media-exit-pip-request'
-        ? (trigger as RE.MediaExitPIPRequestEvent)
-        : this.createEvent('media-exit-pip-request', {
-            trigger,
-          });
-
     if (trigger?.type !== 'media-exit-pip-request') {
-      this.dispatchEvent(requestEvent);
+      this.dispatchEvent(this.createEvent('media-exit-pip-request', { trigger }));
       return;
     }
 
-    this._request._queue._enqueue('pip', requestEvent);
+    this._request._queue._enqueue('pip', trigger as RE.MediaExitPIPRequestEvent);
 
     return await this._provider()!.pictureInPicture!.exit();
   }
