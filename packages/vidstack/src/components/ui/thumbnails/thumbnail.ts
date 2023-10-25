@@ -129,9 +129,13 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   }
 
   private _onResolveThumbnail() {
-    const { activeCue } = this.$state,
+    let { activeCue } = this.$state,
       cue = activeCue(),
       baseURL = peek(this.$props.src);
+
+    if (!/^https?:/.test(baseURL)) {
+      baseURL = location.href;
+    }
 
     if (!baseURL || !cue) {
       this.$state.src.set('');

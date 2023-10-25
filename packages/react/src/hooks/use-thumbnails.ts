@@ -27,13 +27,14 @@ export function useThumbnails(src: string): ThumbnailData[] {
     loader = React.useMemo(() => scoped(() => ThumbnailsLoader.create($src), scope)!, []),
     $cues = useSignal(loader.$cues),
     data = React.useMemo(() => {
-      const items: ThumbnailData[] = [];
+      const items: ThumbnailData[] = [],
+        baseURL = /^https?:/.test(src) || __SERVER__ ? src : location.href;
 
       for (const cue of $cues) {
         const [url, dataText = ''] = (cue.text || '').split('#'),
           data = resolveThumbnailData(dataText);
         items.push({
-          url: resolveThumbnailSrc(src, url),
+          url: resolveThumbnailSrc(url, baseURL),
           cue,
           x: data.x ?? -1,
           y: data.y ?? -1,
@@ -75,13 +76,8 @@ export function useActiveThumbnail(
   }, [thumbnails, cues, time]);
 }
 
-function resolveThumbnailSrc(baseURL: string, src: string) {
-  return !/https?:/.test(src)
-    ? `${baseURL.split('/').slice(0, -1).join('/')}${src.replace(/^\/?/, '/')}`.replace(
-        /^\/\//,
-        '/',
-      )
-    : src;
+function resolveThumbnailSrc(src: string, baseURL: string) {
+  return /^https?:/.test(src) ? src : new URL(src, baseURL).href;
 }
 
 const propNames = {
