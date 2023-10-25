@@ -19,7 +19,7 @@ export const mediaState = new State<MediaState>({
   audioTracks: [],
   audioTrack: null,
   autoplay: false,
-  autoplayError: undefined,
+  autoplayError: null,
   buffered: new TimeRange(),
   duration: 0,
   canLoad: false,
@@ -32,7 +32,7 @@ export const mediaState = new State<MediaState>({
   poster: '',
   currentTime: 0,
   ended: false,
-  error: undefined,
+  error: null,
   fullscreen: false,
   loop: false,
   logLevel: __DEV__ ? 'warn' : 'silent',
@@ -203,9 +203,9 @@ export interface MediaState {
    * Set to an error when autoplay has failed to begin playback. This can be used to determine
    * when to show a recovery UI in the event autoplay fails.
    *
-   * @defaultValue undefined
+   * @defaultValue null
    */
-  autoplayError: { muted: boolean; error: Error } | undefined;
+  autoplayError: { muted: boolean; error: Error } | null;
   /**
    * Returns a `TimeRanges` object that indicates the ranges of the media source that the
    * browser has buffered (if any) at the moment the buffered property is accessed. This is usually
@@ -325,10 +325,10 @@ export interface MediaState {
    * Contains the most recent media error or undefined if there's been none. You can listen for
    * `error` event updates and examine this object to debug further.
    *
-   * @defaultValue undefined
+   * @defaultValue null
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error}
    */
-  error: MediaErrorDetail | undefined;
+  error: MediaErrorDetail | null;
   /**
    * Whether the player is currently in fullscreen mode.
    *

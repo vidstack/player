@@ -223,7 +223,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['autoplay'](event: ME.MediaAutoplayEvent) {
-    this.$state.autoplayError.set(undefined);
+    this.$state.autoplayError.set(null);
   }
 
   ['autoplay-fail'](event: ME.MediaAutoplayFailEvent) {
@@ -388,7 +388,7 @@ export class MediaStateManager extends MediaPlayerController {
     this._trackedEvents.set('play', event);
 
     paused.set(false);
-    autoplayError.set(undefined);
+    autoplayError.set(null);
 
     if (autoplaying()) {
       this._handle(
