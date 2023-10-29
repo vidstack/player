@@ -146,11 +146,6 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     const [src, coords = ''] = (cue.text || '').split('#');
     this.$state.coords.set(this._resolveThumbnailCoords(coords));
 
-    if (!peek(this.$state.coords)) {
-      this._resetStyles();
-      return;
-    }
-
     this.$state.src.set(this._resolveThumbnailSrc(src, baseURL));
     this._requestResize();
   }
@@ -179,9 +174,10 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     const img = this.$state.img(),
       coords = this.$state.coords();
 
-    if (!img || !coords || !this.el) return;
+    if (!img || !this.el) return;
 
-    const { w, h, x, y } = coords,
+    const w = coords?.w ?? img.naturalWidth,
+      h = coords?.h ?? img.naturalHeight,
       { maxWidth, maxHeight, minWidth, minHeight } = getComputedStyle(this.el),
       minRatio = Math.max(parseInt(minWidth) / w, parseInt(minHeight) / h),
       maxRatio = Math.min(parseInt(maxWidth) / w, parseInt(maxHeight) / h),
@@ -191,7 +187,11 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     this._style(this.el!, '--thumbnail-height', `${h * scale}px`);
     this._style(img, 'width', `${img.naturalWidth * scale}px`);
     this._style(img, 'height', `${img.naturalHeight * scale}px`);
-    this._style(img, 'transform', `translate(-${x * scale}px, -${y * scale}px)`);
+    this._style(
+      img,
+      'transform',
+      coords ? `translate(-${coords.x * scale}px, -${coords.y * scale}px)` : '',
+    );
     this._style(img, 'max-width', 'none');
   }
 
