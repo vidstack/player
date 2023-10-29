@@ -32,6 +32,10 @@ export class RadioGroup extends Component<RadioGroupProps, {}, RadioGroupEvents>
     return this._controller.value;
   }
 
+  set value(newValue) {
+    this._controller.value = newValue;
+  }
+
   constructor() {
     super();
     this._controller = new RadioGroupController();
