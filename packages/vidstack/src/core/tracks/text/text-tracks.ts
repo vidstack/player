@@ -55,7 +55,10 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   }
 
   clear(trigger?: Event) {
-    for (const track of this._items) this.remove(track, trigger);
+    for (const track of [...this._items]) {
+      this.remove(track, trigger);
+    }
+
     return this;
   }
 
