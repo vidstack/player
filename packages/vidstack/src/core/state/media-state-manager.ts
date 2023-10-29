@@ -345,10 +345,10 @@ export class MediaStateManager extends MediaPlayerController {
 
   protected _onCanPlayDetail(detail: ME.MediaCanPlayDetail) {
     const { seekable, seekableEnd, buffered, duration, canPlay } = this.$state;
-    seekable.set(detail.seekable);
-    buffered.set(detail.buffered);
-    duration.set(seekableEnd);
     canPlay.set(true);
+    buffered.set(detail.buffered);
+    seekable.set(detail.seekable);
+    duration.set(seekableEnd());
   }
 
   ['duration-change'](event: ME.MediaDurationChangeEvent) {
