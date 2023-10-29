@@ -531,6 +531,7 @@ export class MediaPlayer
 
   set playsinline(inline) {
     this._queuePlaysinlineUpdate(inline);
+    this.$state.playsinline.set(inline);
   }
 
   @prop
