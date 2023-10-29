@@ -7,6 +7,7 @@ import {
   listenEvent,
   unwrap,
 } from 'maverick.js/std';
+
 import { useMediaContext } from './api/media-context';
 import { mediaState, type MediaState, type MediaStore } from './api/player-state';
 
@@ -79,7 +80,7 @@ export class PlayerQueryList extends EventsTarget<PlayerQueryListEvents> {
       playerQueries = queryList.filter((q) => !q.startsWith('@media'));
 
     if (mediaQueries.length) {
-      const mediaQuery = window.matchMedia(mediaQueries),
+      const mediaQuery = window.matchMedia(mediaQueries.replace(/@media\s/g, '')),
         onChange = () => void this._mediaMatches.set(mediaQuery.matches);
       onChange();
       listenEvent(mediaQuery, 'change', onChange);
