@@ -162,7 +162,7 @@
 }
 
 :where(.vds-audio-layout[data-size='sm'] .vds-controls-group:nth-child(3)) {
-  margin-top: -12px;
+  margin-top: -4px;
 }
 
 :where([data-can-seek] .vds-audio-layout[data-size='sm'] .vds-controls-group:last-child) {
