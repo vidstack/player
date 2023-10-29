@@ -533,6 +533,15 @@ export class MediaPlayer
     this._queuePlaysinlineUpdate(inline);
   }
 
+  @prop
+  get playsInline() {
+    return this.playsinline;
+  }
+
+  set playsInline(inline) {
+    this.playsinline = inline;
+  }
+
   private _watchPlaysinline() {
     this._queuePlaysinlineUpdate(this.$props.playsinline());
   }
