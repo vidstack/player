@@ -369,8 +369,8 @@ export class MediaPlayer
 
   private _isIOSControls() {
     const { controls, playsinline, started, fullscreen } = this.$state;
-
     return (
+      IS_IPHONE &&
       !canFullscreen() &&
       this.$state.mediaType() === 'video' &&
       ((controls() && !playsinline()) || (!playsinline() && started()) || fullscreen())
