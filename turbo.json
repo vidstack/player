@@ -5,7 +5,7 @@
       "outputs": ["analyze.json", "vscode.html-data.json", "vue.d.ts", "svelte.d.ts", "solid.d.ts"]
     },
     "build": {
-      "dependsOn": ["clean"],
+      "dependsOn": ["clean", "^build"],
       "outputs": ["cdn/**", "dist/**", "player/**", "tailwind.*"]
     },
     "clean": {
