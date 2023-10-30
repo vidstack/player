@@ -1,8 +1,8 @@
 import { effect, onDispose, peek, signal, type ReadSignal } from 'maverick.js';
-import { noop } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import { parseJSONCaptionsFile } from '../../../core/tracks/text/text-track';
 import { getRequestCredentials } from '../../../utils/network';
 
 const cache = new Map<string, VTTCue[]>(),
@@ -12,9 +12,9 @@ const cache = new Map<string, VTTCue[]>(),
 export class ThumbnailsLoader {
   readonly $cues = signal<VTTCue[]>([]);
 
-  static create(src: ReadSignal<string>) {
+  static create($src: ReadSignal<string>) {
     const media = useMediaContext();
-    return new ThumbnailsLoader(src, media);
+    return new ThumbnailsLoader($src, media);
   }
 
   constructor(
@@ -52,24 +52,30 @@ export class ThumbnailsLoader {
       this.$cues.set(cache.get(src)!);
     } else if (!pending.has(src)) {
       pending.add(src);
-      import('media-captions').then(({ parseResponse }) => {
-        parseResponse(
-          fetch(src, {
-            signal: controller.signal,
-            credentials: getRequestCredentials(crossorigin()),
-          }),
-        )
-          .then(({ cues }) => {
-            this.$cues.set(cues);
+      import('media-captions').then(async ({ parseResponse }) => {
+        try {
+          const response = await fetch(src, {
+              signal: controller.signal,
+              credentials: getRequestCredentials(crossorigin()),
+            }),
+            isJSON = response.headers.get('content-type') === 'application/json';
 
-            for (const t of registry) {
-              if (peek(t.$src) === src) t.$cues.set(cues);
+          if (isJSON) {
+            try {
+              const { cues } = parseJSONCaptionsFile(await response.text(), window.VTTCue);
+              this._updateCues(src, cues);
+            } catch (e) {
+              // no-op
             }
 
-            cache.set(src, cues);
-            pending.delete(src);
-          })
-          .catch(noop);
+            return;
+          }
+
+          const { cues } = await parseResponse(response);
+          this._updateCues(src, cues);
+        } catch (e) {
+          // no-op
+        }
       });
     }
 
@@ -77,5 +83,16 @@ export class ThumbnailsLoader {
       controller.abort();
       this.$cues.set([]);
     };
+  }
+
+  private _updateCues(currentSrc: string, cues: VTTCue[]) {
+    this.$cues.set(cues);
+
+    for (const t of registry) {
+      if (peek(t.$src) === currentSrc) t.$cues.set(cues);
+    }
+
+    cache.set(currentSrc, cues);
+    pending.delete(currentSrc);
   }
 }

@@ -1,4 +1,4 @@
-import { DOMEvent, EventsTarget, isNumber } from 'maverick.js/std';
+import { DOMEvent, EventsTarget, isArray, isNumber } from 'maverick.js/std';
 import type {
   CaptionsFileFormat,
   CaptionsParserFactory,
@@ -264,17 +264,9 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
   private _parseJSON(json, VTTCue, VTTRegion) {
     try {
-      json = JSON.parse(json);
-
-      if (json.regions) {
-        this._regions = json.regions.map((json) => Object.assign(new VTTRegion(), json));
-      }
-
-      if (json.cues) {
-        this._cues = json.cues
-          .filter((json) => isNumber(json.startTime) && isNumber(json.endTime))
-          .map((json) => Object.assign(new VTTCue(0, 0, ''), json));
-      }
+      const { regions, cues } = parseJSONCaptionsFile(json, VTTCue, VTTRegion);
+      this._regions = regions;
+      this._cues = cues;
     } catch (error) {
       if (__DEV__) {
         console.error(`[vidstack] failed to parse JSON captions at: \`${this.src}\`\n\n`, error);
@@ -404,4 +396,23 @@ export interface TextTrackModeChangeEvent extends TextTrackEvent<TextTrack> {}
 const captionRE = /captions|subtitles/;
 export function isTrackCaptionKind(track: TextTrack): boolean {
   return captionRE.test(track.kind);
+}
+
+export function parseJSONCaptionsFile(json: string, Cue: typeof VTTCue, Region?: typeof VTTRegion) {
+  const content = JSON.parse(json);
+
+  let regions: VTTRegion[] = [],
+    cues: VTTCue[] = [];
+
+  if (content.regions && Region) {
+    regions = content.regions.map((region) => Object.assign(new Region(), region));
+  }
+
+  if (content.cues || isArray(content)) {
+    cues = (isArray(content) ? content : content.cues)
+      .filter((content) => isNumber(content.startTime) && isNumber(content.endTime))
+      .map((cue) => Object.assign(new Cue(0, 0, ''), cue));
+  }
+
+  return { regions, cues };
 }
