@@ -8,9 +8,10 @@ import {
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import { VTTCue } from 'media-captions';
+import type { VTTCue } from 'media-captions';
 import { mediaState } from 'vidstack';
 
+import { createVTTCue } from '../../../utils';
 import {
   SliderChaptersInstance,
   SliderThumbnailInstance,
@@ -141,7 +142,7 @@ function ChapterTracks({ instance, children }: ChapterTracksProps) {
     { $chapters } = React.useContext(TimeSliderContext);
 
   if (!emptyCue.current) {
-    emptyCue.current = new VTTCue(0, 0, '');
+    emptyCue.current = createVTTCue();
   }
 
   React.useEffect(() => {

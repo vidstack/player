@@ -14,7 +14,7 @@ import {
   type Scope,
 } from 'maverick.js';
 import { animationFrameThrottle } from 'maverick.js/std';
-import { VTTCue } from 'media-captions';
+import type { VTTCue } from 'media-captions';
 
 import { observeActiveTextTrack } from '../../../../core';
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';

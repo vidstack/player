@@ -35,7 +35,7 @@
     "react": "^18.0.0"
   },
   "dependencies": {
-    "media-captions": "^1.0.0"
+    "media-captions": "^1.0.1"
   },
   "devDependencies": {
     "@maverick-js/cli": "0.40.9",

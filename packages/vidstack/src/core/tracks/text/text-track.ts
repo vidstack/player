@@ -1,10 +1,10 @@
 import { DOMEvent, EventsTarget, isNumber } from 'maverick.js/std';
-import {
-  type CaptionsFileFormat,
-  type CaptionsParserFactory,
-  type VTTCue,
-  type VTTHeaderMetadata,
-  type VTTRegion,
+import type {
+  CaptionsFileFormat,
+  CaptionsParserFactory,
+  VTTCue,
+  VTTHeaderMetadata,
+  VTTRegion,
 } from 'media-captions';
 
 import { getRequestCredentials } from '../../../utils/network';

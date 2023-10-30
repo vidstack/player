@@ -1,6 +1,6 @@
 import throttle from 'just-throttle';
 import { Component, effect, peek, provideContext, signal, useContext } from 'maverick.js';
-import { isNull, setAttribute } from 'maverick.js/std';
+import { setAttribute } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';

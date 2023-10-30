@@ -12,7 +12,8 @@ const MODE_WATCH = process.argv.includes('-w'),
   MODE_TYPES = process.argv.includes('--config-types'),
   MODE_CDN = process.argv.includes('--config-cdn');
 
-const EXTERNAL_PACKAGES = ['hls.js', 'media-captions', 'media-icons'],
+const NPM_EXTERNAL_PACKAGES = ['hls.js', 'media-captions', 'media-icons'],
+  CDN_EXTERNAL_PACKAGES = ['media-captions', 'media-icons'],
   NPM_BUNDLES = [define({ type: 'server' }), define({ type: 'dev' }), define({ type: 'prod' })],
   CDN_BUNDLES = [defineCDN({ dev: true }), defineCDN(), defineCDN({ layouts: true })],
   TYPES_BUNDLES = [defineTypes()];
@@ -64,7 +65,7 @@ function defineTypes() {
         }
       },
     },
-    external: EXTERNAL_PACKAGES,
+    external: NPM_EXTERNAL_PACKAGES,
     plugins: [dts({ respectExternal: true })],
   };
 }
@@ -117,7 +118,7 @@ function define({ target, type, minify }) {
     maxParallelFileOps: shouldMangle ? 1 : 20,
     treeshake: true,
     preserveEntrySignatures: 'strict',
-    external: EXTERNAL_PACKAGES,
+    external: NPM_EXTERNAL_PACKAGES,
     output: {
       format: 'esm',
       dir: `dist/${type.replace('local-', '')}`,
@@ -220,7 +221,7 @@ function defineCDN({ dev = false, layouts = false } = {}) {
         return null;
       },
     },
-    external: ['media-icons', 'media-captions'],
+    external: CDN_EXTERNAL_PACKAGES,
   };
 }
 
