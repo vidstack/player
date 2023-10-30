@@ -5,6 +5,17 @@ import { mediaState, type MediaState } from 'vidstack';
 
 import { MediaPlayerInstance } from '../components/primitives/instances';
 
+const mediaStateRecord = MediaPlayerInstance.state.record,
+  initialMediaStore = Object.keys(mediaStateRecord).reduce(
+    (store, prop) => ({
+      ...store,
+      [prop]() {
+        return mediaStateRecord[prop];
+      },
+    }),
+    {},
+  );
+
 /**
  * This hook is used to subscribe to a specific media state.
  *
@@ -23,13 +34,8 @@ export function useMediaState<T extends keyof MediaState>(
     );
   }
 
-  return useSignal((ref?.current?.$state || $state)[prop]);
+  return useSignal((ref?.current?.$state || $state || initialMediaStore)[prop]);
 }
-
-const mediaStateRecord = MediaPlayerInstance.state.record,
-  initialStore = new Proxy(mediaStateRecord, {
-    get: (_, prop) => () => mediaStateRecord[prop],
-  });
 
 /**
  * This hook is used to subscribe to the current media state on the nearest parent player.
@@ -48,5 +54,5 @@ export function useMediaStore(
     );
   }
 
-  return useSignalRecord(ref?.current ? ref.current.$state : $state || initialStore);
+  return useSignalRecord(ref?.current ? ref.current.$state : $state || initialMediaStore);
 }
