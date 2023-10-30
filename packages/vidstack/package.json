@@ -1,6 +1,6 @@
 {
   "name": "vidstack",
-  "version": "1.4.9",
+  "version": "1.5.0",
   "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
