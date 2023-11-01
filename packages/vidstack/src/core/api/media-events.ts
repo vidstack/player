@@ -514,7 +514,9 @@ export interface MediaSuspendEvent extends MediaEvent<void> {}
 /**
  * Fired when a screen orientation change is requested on or by the media.
  */
-export interface MediaOrientationChangeEvent extends ScreenOrientationChangeEvent {}
+export interface MediaOrientationChangeEvent extends ScreenOrientationChangeEvent {
+  request?: RE.MediaOrientationLockRequestEvent | RE.MediaOrientationUnlockRequestEvent;
+}
 
 /**
  * Fired when media playback starts again after being in an `ended` state. This is fired

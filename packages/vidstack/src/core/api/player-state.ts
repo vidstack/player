@@ -1,6 +1,7 @@
 import { State, tick, type Store } from 'maverick.js';
 
 import type { LogLevel } from '../../foundation/logger/log-level';
+import { canOrientScreen } from '../../utils/support';
 import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
 import type { AudioTrack } from '../tracks/audio-tracks';
@@ -24,6 +25,7 @@ export const mediaState = new State<MediaState>({
   duration: 0,
   canLoad: false,
   canFullscreen: false,
+  canOrientScreen: canOrientScreen(),
   canPictureInPicture: false,
   canPlay: false,
   controls: false,
@@ -242,7 +244,7 @@ export interface MediaState {
    */
   duration: number;
   /**
-   * Whether the native browser fullscreen API is available, or the current provider can
+   * Whether the native browser Fullscreen API is available, or the current provider can
    * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
    * only that it can be attempted.
    *
@@ -250,6 +252,12 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API}
    */
   canFullscreen: boolean;
+  /**
+   * Whether the native Screen Orientation API and required methods (lock/unlock) are available.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Screen_Orientation_API}
+   */
+  canOrientScreen: boolean;
   /**
    * Whether picture-in-picture mode is supported by the current media provider.
    *

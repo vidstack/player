@@ -1,6 +1,7 @@
 import { Component } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 
+import type { ScreenOrientationLockType } from '../..';
 import type { MediaPlayer } from '../../components/player';
 import { Logger } from '../../foundation/logger/controller';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../api/media-request-events';
@@ -9,7 +10,7 @@ import { isTrackCaptionKind } from '../tracks/text/text-track';
 /**
  * A simple facade for dispatching media requests to the nearest media player element.
  *
- * @docs {@link https://www.vidstack.io/docs/player/core-concepts/state#media-remote}
+ * @docs {@link https://www.vidstack.io/docs/player/core-concepts/state#remote-control}
  * @docs {@link https://www.vidstack.io/docs/player/core-concepts/state#updating}
  *
  */
@@ -107,7 +108,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to enter fullscreen.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#media-remote}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#remote-control}
    */
   enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     this._dispatchRequest('media-enter-fullscreen-request', trigger, target);
@@ -116,16 +117,34 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to exit fullscreen.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#media-remote}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#remote-control}
    */
   exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     this._dispatchRequest('media-exit-fullscreen-request', trigger, target);
   }
 
   /**
+   * Dispatch a request to lock the screen orientation.
+   *
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/screen-orientation#remote-control}
+   */
+  lockScreenOrientation(lockType: ScreenOrientationLockType, trigger?: Event) {
+    this._dispatchRequest('media-orientation-lock-request', trigger, lockType);
+  }
+
+  /**
+   * Dispatch a request to unlock the screen orientation.
+   *
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/screen-orientation#remote-control}
+   */
+  unlockScreenOrientation(trigger?: Event) {
+    this._dispatchRequest('media-orientation-unlock-request', trigger);
+  }
+
+  /**
    * Dispatch a request to enter picture-in-picture mode.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#media-remote}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#remote-control}
    */
   enterPictureInPicture(trigger?: Event) {
     this._dispatchRequest('media-enter-pip-request', trigger);
@@ -134,7 +153,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to exit picture-in-picture mode.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#media-remote}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#remote-control}
    */
   exitPictureInPicture(trigger?: Event) {
     this._dispatchRequest('media-exit-pip-request', trigger);
@@ -319,7 +338,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to toggle the media fullscreen state.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#media-remote}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#remote-control}
    */
   toggleFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     const player = this.getPlayer(trigger?.target);
@@ -336,7 +355,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to toggle the media picture-in-picture mode.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#media-remote}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#remote-control}
    */
   togglePictureInPicture(trigger?: Event) {
     const player = this.getPlayer(trigger?.target);

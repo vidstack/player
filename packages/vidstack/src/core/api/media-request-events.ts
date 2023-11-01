@@ -1,5 +1,7 @@
 import type { DOMEvent } from 'maverick.js/std';
 
+import type { ScreenOrientationLockType } from '../..';
+
 export interface MediaRequestEvents {
   'media-audio-track-change-request': MediaAudioTrackChangeRequestEvent;
   'media-enter-fullscreen-request': MediaEnterFullscreenRequestEvent;
@@ -8,6 +10,8 @@ export interface MediaRequestEvents {
   'media-exit-pip-request': MediaExitPIPRequestEvent;
   'media-live-edge-request': MediaLiveEdgeRequestEvent;
   'media-loop-request': MediaLoopRequestEvent;
+  'media-orientation-lock-request': MediaOrientationLockRequestEvent;
+  'media-orientation-unlock-request': MediaOrientationUnlockRequestEvent;
   'media-mute-request': MediaMuteRequestEvent;
   'media-pause-request': MediaPauseRequestEvent;
   'media-pause-controls-request': MediaPauseControlsRequestEvent;
@@ -223,3 +227,19 @@ export interface MediaHidePosterRequestEvent extends DOMEvent<void> {}
  * @composed
  */
 export interface MediaLoopRequestEvent extends DOMEvent<void> {}
+
+/**
+ * Fired when requesting the screen orientation to be locked to a certain type.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaOrientationLockRequestEvent extends DOMEvent<ScreenOrientationLockType> {}
+
+/**
+ * Fired when requesting the screen orientation to be unlocked.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaOrientationUnlockRequestEvent extends DOMEvent<void> {}

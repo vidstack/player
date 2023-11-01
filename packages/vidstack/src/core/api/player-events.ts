@@ -2,7 +2,6 @@ import type { DOMEvent } from 'maverick.js/std';
 
 import type { MediaPlayer } from '../../components';
 import type { LoggerEvents } from '../../foundation/logger/events';
-import type { ScreenOrientationEvents } from '../../foundation/orientation/events';
 import type { HLSProviderEvents } from '../../providers/hls/events';
 import type { VideoPresentationEvents } from '../../providers/video/presentation/events';
 import type { MediaEvents } from './media-events';
@@ -12,7 +11,6 @@ export interface MediaPlayerEvents
   extends MediaEvents,
     MediaRequestEvents,
     MediaUserEvents,
-    ScreenOrientationEvents,
     LoggerEvents,
     VideoPresentationEvents,
     HLSProviderEvents {

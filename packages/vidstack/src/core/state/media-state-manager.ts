@@ -46,14 +46,15 @@ export class MediaStateManager extends MediaPlayerController {
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('aria-busy', 'true');
+    this.listen('fullscreen-change', this['fullscreen-change'].bind(this));
+    this.listen('fullscreen-error', this['fullscreen-error'].bind(this));
+    this.listen('orientation-change', this['orientation-change'].bind(this));
   }
 
   protected override onConnect(el: HTMLElement) {
     this._addTextTrackListeners();
     this._addQualityListeners();
     this._addAudioTrackListeners();
-    this.listen('fullscreen-change', this['fullscreen-change'].bind(this));
-    this.listen('fullscreen-error', this['fullscreen-error'].bind(this));
     this._resumePlaybackOnConnect();
     onDispose(this._pausePlaybackOnDisconnect.bind(this));
   }
@@ -620,6 +621,10 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['fullscreen-error'](event: ME.MediaFullscreenErrorEvent) {
     this._satisfyRequest('fullscreen', event);
+  }
+
+  ['orientation-change'](event: ME.MediaOrientationChangeEvent) {
+    this._satisfyRequest('orientation', event);
   }
 
   ['picture-in-picture-change'](event: ME.MediaPIPChangeEvent) {

@@ -1,5 +1,5 @@
 import { effect, peek, type ReadSignal } from 'maverick.js';
-import { DOMEvent, isUndefined } from 'maverick.js/std';
+import { isUndefined } from 'maverick.js/std';
 
 import {
   FullscreenController,
@@ -31,6 +31,7 @@ export interface MediaRequestQueueRecord {
   rate: RE.MediaRateChangeRequestEvent;
   volume: RE.MediaVolumeChangeRequestEvent | RE.MediaMuteRequestEvent | RE.MediaUnmuteRequestEvent;
   fullscreen: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
+  orientation: RE.MediaOrientationLockRequestEvent | RE.MediaOrientationUnlockRequestEvent;
   seeked: RE.MediaSeekRequestEvent | RE.MediaLiveEdgeRequestEvent;
   seeking: RE.MediaSeekingRequestEvent;
   textTrack: RE.MediaTextTrackChangeRequestEvent;
@@ -67,6 +68,10 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this._orientation = new ScreenOrientationController();
   }
 
+  protected override onAttach(): void {
+    this.listen('fullscreen-change', this._onFullscreenChange.bind(this));
+  }
+
   protected override onConnect() {
     const names = Object.getOwnPropertyNames(Object.getPrototypeOf(this)),
       handle = this._handleRequest.bind(this);
@@ -76,8 +81,6 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
         this.listen(name as keyof RE.MediaRequestEvents, handle);
       }
     }
-
-    this.listen('fullscreen-change', this._onFullscreenChange.bind(this));
 
     effect(this._onControlsDelayChange.bind(this));
     effect(this._onFullscreenSupportChange.bind(this));
@@ -183,12 +186,8 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     trigger?: Event,
   ) {
     if (__SERVER__) return;
-    const provider = peek(this._provider);
 
-    const adapter =
-      (target === 'prefer-media' && this._fullscreen.supported) || target === 'media'
-        ? this._fullscreen
-        : provider?.fullscreen;
+    const adapter = this._getFullscreenAdapter(target);
 
     throwIfFullscreenNotSupported(target, adapter);
 
@@ -216,18 +215,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
   async _exitFullscreen(target: RE.MediaFullscreenRequestTarget = 'prefer-media', trigger?: Event) {
     if (__SERVER__) return;
-    const provider = peek(this._provider);
 
-    const adapter =
-      (target === 'prefer-media' && this._fullscreen.supported) || target === 'media'
-        ? this._fullscreen
-        : provider?.fullscreen;
+    const adapter = this._getFullscreenAdapter(target);
 
     throwIfFullscreenNotSupported(target, adapter);
 
     if (!adapter!.active) return;
-
-    if (this._orientation.locked) await this._orientation.unlock();
 
     if (trigger?.type !== 'media-exit-fullscreen-request') {
       this.dispatchEvent(
@@ -253,6 +246,13 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     } finally {
       this._wasPIPActive = false;
     }
+  }
+
+  private _getFullscreenAdapter(target: RE.MediaFullscreenRequestTarget) {
+    const provider = peek(this._provider);
+    return (target === 'prefer-media' && this._fullscreen.supported) || target === 'media'
+      ? this._fullscreen
+      : provider?.fullscreen;
   }
 
   async _enterPictureInPicture(trigger?: Event) {
@@ -365,21 +365,21 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   private async _onFullscreenChange(event: MediaFullscreenChangeEvent) {
-    if (!event.detail) return;
-    try {
-      const lockType = peek(this.$props.fullscreenOrientation);
+    const lockType = peek(this.$props.fullscreenOrientation),
+      isFullscreen = event.detail;
 
-      if (this._orientation.supported && !isUndefined(lockType)) {
-        await this._orientation.lock(lockType);
-      }
-    } catch (error) {
-      if (__DEV__) {
-        this._media.logger
-          ?.errorGroup('fullscreen orientation change failed')
-          .labelledLog('Event', event)
-          .labelledLog('Error', error)
-          .dispatch();
-      }
+    if (isUndefined(lockType) || !this._orientation.supported) return;
+
+    if (isFullscreen) {
+      if (this._orientation.locked) return;
+      this.dispatch('media-orientation-lock-request', {
+        detail: lockType,
+        trigger: event,
+      });
+    } else if (this._orientation.locked) {
+      this.dispatch('media-orientation-unlock-request', {
+        trigger: event,
+      });
     }
   }
 
@@ -397,6 +397,38 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
         detail: coerceToError(error),
       }),
     );
+  }
+
+  async ['media-orientation-lock-request'](event: RE.MediaOrientationLockRequestEvent) {
+    try {
+      this._request._queue._enqueue('orientation', event);
+      await this._orientation.lock(event.detail);
+    } catch (error) {
+      this._request._queue._delete('orientation');
+      if (__DEV__) {
+        this._media.logger
+          ?.errorGroup('failed to lock screen orientation')
+          .labelledLog('Request Event', event)
+          .labelledLog('Error', error)
+          .dispatch();
+      }
+    }
+  }
+
+  async ['media-orientation-unlock-request'](event: RE.MediaOrientationUnlockRequestEvent) {
+    try {
+      this._request._queue._enqueue('orientation', event);
+      await this._orientation.unlock();
+    } catch (error) {
+      this._request._queue._delete('orientation');
+      if (__DEV__) {
+        this._media.logger
+          ?.errorGroup('failed to unlock screen orientation')
+          .labelledLog('Request Event', event)
+          .labelledLog('Error', error)
+          .dispatch();
+      }
+    }
   }
 
   async ['media-enter-pip-request'](event: RE.MediaEnterPIPRequestEvent) {
