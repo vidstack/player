@@ -94,7 +94,7 @@ declare global {
  * @attr data-loop - Media is set to replay on end.
  * @attr data-media-type - Current media type (audio/video).
  * @attr data-muted - Whether volume is muted (0).
- * @attr data-orientation - Current screen orientation (horizontal/vertical).
+ * @attr data-orientation - Current screen orientation (landscape/portrait).
  * @attr data-paused - Whether playback is paused.
  * @attr data-pip - Picture-in-picture mode is active.
  * @attr data-playing - Playback is active.
