@@ -13,7 +13,13 @@
     },
     "types": {
       "dependsOn": ["clean"],
-      "outputs": ["dist/types/**", "*.d.ts", "player/**/*.d.ts"]
+      "outputs": [
+        "*.d.ts",
+        "types/**",
+        "dist/types/**",
+        "player/**/*.d.ts",
+        "tsconfig.build.tsbuildinfo"
+      ]
     },
     "format": {
       "inputs": ["src/**"]
