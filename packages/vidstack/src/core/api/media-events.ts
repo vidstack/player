@@ -123,21 +123,26 @@ export interface MediaAudioTrackChangeEvent extends MediaEvent<AudioTrack | null
  */
 export interface MediaAutoplayChangeEvent extends MediaEvent<boolean> {}
 
+export interface MediaAutoplayFailEventDetail {
+  muted: boolean;
+  error: Error;
+}
+
 /**
  * Fired when an autoplay attempt has failed. The event detail contains the error that
  * had occurred on the last autoplay attempt which caused it to fail.
  */
-export interface MediaAutoplayFailEvent
-  extends MediaEvent<{
-    muted: boolean;
-    error: Error;
-  }> {}
+export interface MediaAutoplayFailEvent extends MediaEvent<MediaAutoplayFailEventDetail> {}
+
+export interface MediaAutoplayEventDetail {
+  muted: boolean;
+}
 
 /**
  * Fired when an autoplay attempt has successfully been made (ie: media playback has automatically
  * started). The event detail whether media is `muted` before any attempts are made.
  */
-export interface MediaAutoplayEvent extends MediaEvent<{ muted: boolean }> {}
+export interface MediaAutoplayEvent extends MediaEvent<MediaAutoplayEventDetail> {}
 
 /**
  * Fired when the provider can begin loading media. This depends on the type of `loading`
@@ -373,17 +378,18 @@ export interface MediaPlaysinlineChangeEvent extends MediaEvent<boolean> {}
  */
 export interface MediaPosterChangeEvent extends MediaEvent<string> {}
 
+export interface MediaProgressEventDetail {
+  buffered: TimeRanges;
+  seekable: TimeRanges;
+}
+
 /**
  * Fired periodically as the browser loads a resource.
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event}
  * @detail progress
  */
-export interface MediaProgressEvent
-  extends MediaEvent<{
-    buffered: TimeRanges;
-    seekable: TimeRanges;
-  }> {}
+export interface MediaProgressEvent extends MediaEvent<MediaProgressEventDetail> {}
 
 /**
  * Fired when the new media provider loader has been selected and rendered. This will be `null` if
@@ -518,17 +524,18 @@ export interface MediaReplayEvent extends MediaEvent<void> {
   request?: RE.MediaPlayRequestEvent;
 }
 
+export interface MediaTimeUpdateEventDetail {
+  currentTime: number;
+  played: TimeRanges;
+}
+
 /**
  * Fired when the `currentTime` property value changes due to media playback or the
  * user seeking.
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event}
  */
-export interface MediaTimeUpdateEvent
-  extends MediaEvent<{
-    currentTime: number;
-    played: TimeRanges;
-  }> {}
+export interface MediaTimeUpdateEvent extends MediaEvent<MediaTimeUpdateEventDetail> {}
 
 /**
  * Fired when the `streamType` property changes value. The event detail contains the type of
