@@ -1,3 +1,9 @@
+## [0.6.14](https://github.com/vidstack/player/compare/v0.6.13...v0.6.14) (2023-11-02)
+
+### Bug Fixes
+
+- scss missing selector error ([#990](https://github.com/vidstack/player/issues/990)) ([5e5e49f](https://github.com/vidstack/player/commit/5e5e49f5eeefcd7896b2296b86a627d2c98b2543))
+
 ## [0.6.13](https://github.com/vidstack/player/compare/v0.6.12...v0.6.13) (2023-06-16)
 
 ### Bug Fixes
