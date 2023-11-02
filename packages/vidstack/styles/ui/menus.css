@@ -309,7 +309,7 @@
 }
 
 :where(media-menu [role='menuitem'][aria-hidden='true']),
-:where(media-menu [role='menuitem'][aria-expanded='true'] [slot='open-icon'], ) {
+:where(media-menu [role='menuitem'][aria-expanded='true'] [slot='open-icon'] ) {
   display: none !important;
 }
 
