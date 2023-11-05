@@ -259,7 +259,7 @@ export class MediaRemoteControl {
   }
 
   /**
-   * Dispatch a request to resume idle tracking on controls. Refer to for more information.
+   * Dispatch a request to resume idle tracking on controls.
    */
   resumeControls(trigger?: Event) {
     this._dispatchRequest('media-resume-controls-request', trigger);
