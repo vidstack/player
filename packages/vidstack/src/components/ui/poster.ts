@@ -1,5 +1,5 @@
 import { Component, effect, State } from 'maverick.js';
-import { isNull, listenEvent } from 'maverick.js/std';
+import { isNull, listenEvent, setAttribute } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { preconnect } from '../../utils/network';
@@ -93,8 +93,11 @@ export class Poster extends Component<PosterProps, PosterState> {
 
   private _watchHidden() {
     const { src } = this.$props,
+      { $iosControls } = this._media,
       { poster } = this._media.$state;
-    this.$state.hidden.set(this._hasError() || !(src() || poster()));
+
+    this.el && setAttribute(this.el, 'display', $iosControls() ? 'none' : null);
+    this.$state.hidden.set(this._hasError() || !(src() || poster()) || $iosControls());
   }
 
   private _isLoading() {
@@ -116,6 +119,12 @@ export class Poster extends Component<PosterProps, PosterState> {
 
     // Either src set on this poster component, or defined on the player.
     const _poster = _src() || poster();
+
+    if (poster() !== _poster) {
+      this._media.delegate._dispatch('poster-change', {
+        detail: _poster,
+      });
+    }
 
     src.set(canLoad() && _poster.length ? _poster : null);
   }

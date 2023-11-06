@@ -74,9 +74,9 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
   return $mediaType
     ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {
         ...props,
-        controls: $controls || $iosControls,
+        controls: $controls || $iosControls ? '' : null,
         crossOrigin: typeof $crossorigin === 'boolean' ? '' : $crossorigin,
-        poster: $mediaType === 'video' && $controls && $poster ? $poster : null,
+        poster: $mediaType === 'video' && ($controls || $iosControls) && $poster ? $poster : null,
         preload: 'none',
         'aria-hidden': 'true',
         suppressHydrationWarning: true,

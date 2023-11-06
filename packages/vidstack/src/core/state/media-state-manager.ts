@@ -644,4 +644,8 @@ export class MediaStateManager extends MediaPlayerController {
   ['picture-in-picture-error'](event: ME.MediaPIPErrorEvent) {
     this._satisfyRequest('pip', event);
   }
+
+  ['poster-change'](event: ME.MediaPosterChangeEvent) {
+    this.$state.poster.set(event.detail);
+  }
 }
