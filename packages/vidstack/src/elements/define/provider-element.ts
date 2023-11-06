@@ -77,10 +77,11 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
         : document.createElement('video');
 
     const { controls, crossorigin, poster } = this._media.$state,
+      { $iosControls } = this._media,
       $poster = computed(() => (poster() && controls() ? poster() : null));
 
     effect(() => {
-      setAttribute(video, 'controls', controls());
+      setAttribute(video, 'controls', controls() || $iosControls());
       setAttribute(video, 'crossorigin', crossorigin());
       setAttribute(video, 'poster', $poster());
     });
