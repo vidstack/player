@@ -89,13 +89,13 @@ export class TextRenderers {
     // See `native-hls-text-tracks.ts` for discovery.
     if (this._nativeDisplay || currentTrack?.[TextTrackSymbol._nativeHLS]) {
       this._customRenderer?.changeTrack(null);
-      this._nativeRenderer!.setDisplay(true);
-      this._nativeRenderer!.changeTrack(currentTrack);
+      this._nativeRenderer?.setDisplay(true);
+      this._nativeRenderer?.changeTrack(currentTrack);
       return;
     }
 
-    this._nativeRenderer!.setDisplay(false);
-    this._nativeRenderer!.changeTrack(null);
+    this._nativeRenderer?.setDisplay(false);
+    this._nativeRenderer?.changeTrack(null);
 
     if (!currentTrack) {
       this._customRenderer?.changeTrack(null);
