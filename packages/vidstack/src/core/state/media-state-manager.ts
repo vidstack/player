@@ -453,7 +453,17 @@ export class MediaStateManager extends MediaPlayerController {
 
     setTimeout(() => this._resetTracking(), 0);
 
-    const { paused, playing, seeking, ended } = this.$state;
+    const {
+      paused,
+      playing,
+      live,
+      liveSyncPosition,
+      seekableEnd,
+      started,
+      currentTime,
+      seeking,
+      ended,
+    } = this.$state;
 
     paused.set(false);
     playing.set(true);
@@ -466,18 +476,17 @@ export class MediaStateManager extends MediaPlayerController {
       return;
     }
 
+    if (live() && !started() && currentTime() === 0) {
+      const end = liveSyncPosition() ?? seekableEnd() - 2;
+      if (Number.isFinite(end)) this._media.$provider()!.currentTime = end;
+    }
+
     this['started'](event);
   }
 
   ['started'](event: Event) {
-    const { started, live, liveSyncPosition, seekableEnd } = this.$state;
-
+    const { started } = this.$state;
     if (!started()) {
-      if (live()) {
-        const end = liveSyncPosition() ?? seekableEnd() - 2;
-        if (Number.isFinite(end)) this._media.$provider()!.currentTime = end;
-      }
-
       started.set(true);
       this._handle(this.createEvent('started', { trigger: event }));
     }
