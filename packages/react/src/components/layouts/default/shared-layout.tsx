@@ -405,11 +405,12 @@ export { DefaultVolumeSlider };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTimeSlider() {
-  const { thumbnails, isSmallLayout } = React.useContext(DefaultLayoutContext),
+  const width = useMediaState('width'),
+    { thumbnails } = React.useContext(DefaultLayoutContext),
     label = useDefaultLayoutLang('Seek');
   return (
     <TimeSliderBase.Root className="vds-time-slider vds-slider" aria-label={label}>
-      <TimeSliderBase.Chapters className="vds-slider-chapters" disabled={isSmallLayout}>
+      <TimeSliderBase.Chapters className="vds-slider-chapters" disabled={width < 768}>
         {(cues, forwardRef) =>
           cues.map((cue) => (
             <div className="vds-slider-chapter" key={cue.startTime} ref={forwardRef}>
