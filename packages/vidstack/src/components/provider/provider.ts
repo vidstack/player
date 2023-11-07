@@ -93,8 +93,20 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
     loader.load(this._media).then((provider) => {
       if (!this.scope) return;
+
       // The src/loader might've changed by the time we load the provider.
       if (peek(this.$state.loader) !== loader) return;
+
+      // Initialize some props.
+      if (provider) {
+        peek(() => {
+          const { muted, volume, playsinline } = this._media.$state;
+          provider.muted = muted();
+          provider.volume = volume();
+          provider.playsinline = playsinline();
+        });
+      }
+
       this._media.delegate._dispatch('provider-change', {
         detail: provider,
       });
