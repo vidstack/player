@@ -308,8 +308,11 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['abort'](event: ME.MediaAbortEvent) {
-    appendTriggerEvent(event, this._trackedEvents.get('source-change'));
-    appendTriggerEvent(event, this._trackedEvents.get('can-load'));
+    const sourceChangeEvent = this._trackedEvents.get('source-change');
+    appendTriggerEvent(event, sourceChangeEvent);
+    if (!sourceChangeEvent?.trigger) {
+      appendTriggerEvent(event, this._trackedEvents.get('can-load'));
+    }
   }
 
   ['load-start'](event: ME.MediaLoadStartEvent) {
