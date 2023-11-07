@@ -11,6 +11,7 @@ import {
 } from 'maverick.js/std';
 
 import type { MediaContext } from '../../../../core';
+import { isTouchPinchEvent } from '../../../../utils/dom';
 import { IS_SAFARI } from '../../../../utils/support';
 import type {
   SliderDragEndEvent,
@@ -88,7 +89,7 @@ export class SliderEventsController extends ViewController<
   }
 
   private _onTouchMove(event: TouchEvent) {
-    if (isNull(this._touch)) return;
+    if (isNull(this._touch) || isTouchPinchEvent(event)) return;
 
     const touch = event.touches[0],
       xDiff = touch.clientX - this._touch.clientX,
@@ -98,8 +99,6 @@ export class SliderEventsController extends ViewController<
     if (!isDragging && Math.abs(yDiff) > 20) {
       return;
     }
-
-    event.preventDefault();
 
     if (isDragging) return;
 

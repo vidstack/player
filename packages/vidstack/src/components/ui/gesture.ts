@@ -9,6 +9,7 @@ import {
 } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
+import { isTouchPinchEvent } from '../../utils/dom';
 
 /**
  * This component enables actions to be performed on the media based on user gestures.
@@ -54,10 +55,18 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
       eventType = eventType.split(/^dbl/)[1] as keyof HTMLElementEventMap;
     }
 
+    if (eventType === 'pointerup' || eventType === 'pointerdown') {
+      const pointer = this._media.$state.pointer();
+      if (pointer === 'coarse') {
+        eventType = eventType === 'pointerup' ? 'touchend' : 'touchstart';
+      }
+    }
+
     listenEvent(
       this._provider,
       eventType as keyof HTMLElementEventMap,
       this._acceptEvent.bind(this),
+      { passive: false },
     );
   }
 
@@ -66,8 +75,10 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
 
   private _acceptEvent(event: Event) {
     if (
-      !this._inBounds(event) ||
-      (isPointerEvent(event) && (event.button !== 0 || this._media.activeMenu))
+      (isPointerEvent(event) && (event.button !== 0 || this._media.activeMenu)) ||
+      (isTouchEvent(event) && this._media.activeMenu) ||
+      isTouchPinchEvent(event) ||
+      !this._inBounds(event)
     ) {
       return;
     }
@@ -76,7 +87,9 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
     event.MEDIA_GESTURE = true;
     event.preventDefault();
 
-    const isDblEvent = peek(this.$props.event)?.startsWith('dbl');
+    const eventType = peek(this.$props.event),
+      isDblEvent = eventType?.startsWith('dbl');
+
     if (!isDblEvent) {
       if (this._presses === 0) {
         setTimeout(() => {
@@ -116,7 +129,7 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
     if (!this.el) return false;
 
     if (isPointerEvent(event) || isMouseEvent(event) || isTouchEvent(event)) {
-      const touch = isTouchEvent(event) ? event.touches[0] : undefined;
+      const touch = isTouchEvent(event) ? event.changedTouches[0] ?? event.touches[0] : undefined;
 
       const clientX = touch?.clientX ?? (event as MouseEvent).clientX;
       const clientY = touch?.clientY ?? (event as MouseEvent).clientY;

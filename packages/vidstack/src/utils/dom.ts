@@ -5,7 +5,13 @@ import {
   type Placement,
 } from '@floating-ui/dom';
 import { effect, getScope, onDispose, scoped } from 'maverick.js';
-import { isKeyboardClick, listenEvent, setAttribute, setStyle } from 'maverick.js/std';
+import {
+  isKeyboardClick,
+  isTouchEvent,
+  listenEvent,
+  setAttribute,
+  setStyle,
+} from 'maverick.js/std';
 
 export function setAttributeIfEmpty(target: Element, name: string, value: string) {
   if (!target.hasAttribute(name)) target.setAttribute(name, value);
@@ -50,6 +56,10 @@ export function onPress(
   listenEvent(target, 'keydown', (event) => {
     if (isKeyboardClick(event)) handler(event);
   });
+}
+
+export function isTouchPinchEvent(event: Event) {
+  return isTouchEvent(event) && (event.touches.length > 1 || event.changedTouches.length > 1);
 }
 
 export function requestScopedAnimationFrame(callback: () => void) {
