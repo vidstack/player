@@ -26,7 +26,8 @@
     "clean": "rimraf dist player",
     "format": "prettier src --write --loglevel warn",
     "watch": "pnpm watch:types & rollup -c -w",
-    "watch:types": "pnpm run build:types -w"
+    "watch:types": "pnpm run build:types -w",
+    "postyalcpublish": "pnpm clean"
   },
   "peerDependencies": {
     "@types/react": "^18.0.0",
