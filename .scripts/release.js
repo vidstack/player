@@ -6,10 +6,10 @@ import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import prompt from 'enquirer';
 import { execa } from 'execa';
 import kleur from 'kleur';
 import minimist from 'minimist';
+import prompts from 'prompts';
 import semver from 'semver';
 
 const require = createRequire(import.meta.url);
@@ -56,7 +56,7 @@ async function main() {
 
   if (!targetVersion) {
     const { release } = /** @type {{ release: string }} */ (
-      await prompt.prompt({
+      await prompts({
         type: 'select',
         name: 'release',
         message: 'Select release type',
@@ -66,7 +66,7 @@ async function main() {
 
     if (release === 'custom') {
       targetVersion = /** @type {{ version: string }} */ (
-        await prompt.prompt({
+        await prompts({
           type: 'input',
           name: 'version',
           message: 'Input custom version',
@@ -83,7 +83,7 @@ async function main() {
   }
 
   const { yes } = /** @type {{ yes: boolean }} */ (
-    await prompt.prompt({
+    await prompts({
       type: 'confirm',
       name: 'yes',
       message: `Releasing v${targetVersion}. Confirm?`,
