@@ -26,6 +26,7 @@ const mediaAttributes = [
   'seeking',
   'started',
   'waiting',
+  'ios-controls',
 ];
 
 module.exports = createPlugin.withOptions(function (options) {

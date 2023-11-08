@@ -1,11 +1,10 @@
 import { Component, method, onDispose, peek, signal, State, tick } from 'maverick.js';
-import { animationFrameThrottle, listenEvent, setStyle } from 'maverick.js/std';
+import { animationFrameThrottle, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
 import type { MediaSrc, TextTrackInit } from '../../core';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import type { MediaProviderLoader } from '../../providers';
-import { IS_SAFARI } from '../../utils/support';
 import { SourceSelection } from './source-select';
 import { Tracks } from './tracks';
 
@@ -51,11 +50,6 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     const mutation = new MutationObserver(this._onMutation.bind(this));
     mutation.observe(el, { attributes: true, childList: true });
 
-    if (IS_SAFARI) {
-      // Prevent delay on pointer/click events.
-      listenEvent(el, 'touchstart', (e) => e.preventDefault(), { passive: false });
-    }
-
     this._onResize();
     this._onMutation();
 
@@ -93,8 +87,20 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
     loader.load(this._media).then((provider) => {
       if (!this.scope) return;
+
       // The src/loader might've changed by the time we load the provider.
       if (peek(this.$state.loader) !== loader) return;
+
+      // Initialize some props.
+      if (provider) {
+        peek(() => {
+          const { muted, volume, playsinline } = this._media.$state;
+          provider.muted = muted();
+          provider.volume = volume();
+          provider.playsinline = playsinline();
+        });
+      }
+
       this._media.delegate._dispatch('provider-change', {
         detail: provider,
       });

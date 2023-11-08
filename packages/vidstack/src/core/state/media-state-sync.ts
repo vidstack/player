@@ -1,4 +1,5 @@
 import { effect } from 'maverick.js';
+
 import { MediaPlayerController } from '../api/player-controller';
 
 /**

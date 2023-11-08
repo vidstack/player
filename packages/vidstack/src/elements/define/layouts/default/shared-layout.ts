@@ -177,11 +177,12 @@ export function DefaultVolumeSlider() {
 }
 
 export function DefaultTimeSlider() {
-  const { smQueryList, thumbnails, translations } = useDefaultLayoutContext(),
+  const { width } = useMediaContext().$state,
+    { thumbnails, translations } = useDefaultLayoutContext(),
     $label = $i18n(translations, 'Seek');
   return html`
     <media-time-slider class="vds-time-slider vds-slider" aria-label=${$label}>
-      <media-slider-chapters class="vds-slider-chapters" ?disabled=${$signal(smQueryList.$matches)}>
+      <media-slider-chapters class="vds-slider-chapters" ?disabled=${$signal(() => width() < 768)}>
         <template>
           <div class="vds-slider-chapter">
             <div class="vds-slider-track"></div>

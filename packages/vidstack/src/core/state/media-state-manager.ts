@@ -308,8 +308,11 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['abort'](event: ME.MediaAbortEvent) {
-    appendTriggerEvent(event, this._trackedEvents.get('source-change'));
-    appendTriggerEvent(event, this._trackedEvents.get('can-load'));
+    const sourceChangeEvent = this._trackedEvents.get('source-change');
+    appendTriggerEvent(event, sourceChangeEvent);
+    if (!sourceChangeEvent?.trigger) {
+      appendTriggerEvent(event, this._trackedEvents.get('can-load'));
+    }
   }
 
   ['load-start'](event: ME.MediaLoadStartEvent) {
@@ -453,7 +456,17 @@ export class MediaStateManager extends MediaPlayerController {
 
     setTimeout(() => this._resetTracking(), 0);
 
-    const { paused, playing, seeking, ended } = this.$state;
+    const {
+      paused,
+      playing,
+      live,
+      liveSyncPosition,
+      seekableEnd,
+      started,
+      currentTime,
+      seeking,
+      ended,
+    } = this.$state;
 
     paused.set(false);
     playing.set(true);
@@ -466,18 +479,17 @@ export class MediaStateManager extends MediaPlayerController {
       return;
     }
 
+    if (live() && !started() && currentTime() === 0) {
+      const end = liveSyncPosition() ?? seekableEnd() - 2;
+      if (Number.isFinite(end)) this._media.$provider()!.currentTime = end;
+    }
+
     this['started'](event);
   }
 
   ['started'](event: Event) {
-    const { started, live, liveSyncPosition, seekableEnd } = this.$state;
-
+    const { started } = this.$state;
     if (!started()) {
-      if (live()) {
-        const end = liveSyncPosition() ?? seekableEnd() - 2;
-        if (Number.isFinite(end)) this._media.$provider()!.currentTime = end;
-      }
-
       started.set(true);
       this._handle(this.createEvent('started', { trigger: event }));
     }
@@ -634,5 +646,9 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['picture-in-picture-error'](event: ME.MediaPIPErrorEvent) {
     this._satisfyRequest('pip', event);
+  }
+
+  ['poster-change'](event: ME.MediaPosterChangeEvent) {
+    this.$state.poster.set(event.detail);
   }
 }

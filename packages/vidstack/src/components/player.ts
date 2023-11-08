@@ -368,12 +368,12 @@ export class MediaPlayer
   }
 
   private _isIOSControls() {
-    const { controls, playsinline, started, fullscreen } = this.$state;
+    const { playsinline, fullscreen } = this.$state;
     return (
       IS_IPHONE &&
       !canFullscreen() &&
       this.$state.mediaType() === 'video' &&
-      ((controls() && !playsinline()) || (!playsinline() && started()) || fullscreen())
+      (!playsinline() || fullscreen())
     );
   }
 
@@ -525,33 +525,6 @@ export class MediaPlayer
   }
 
   @prop
-  get playsinline() {
-    return this._provider?.playsinline ?? false;
-  }
-
-  set playsinline(inline) {
-    this._queuePlaysinlineUpdate(inline);
-    this.$state.playsinline.set(inline);
-  }
-
-  @prop
-  get playsInline() {
-    return this.playsinline;
-  }
-
-  set playsInline(inline) {
-    this.playsinline = inline;
-  }
-
-  private _watchPlaysinline() {
-    this._queuePlaysinlineUpdate(this.$props.playsinline());
-  }
-
-  private _queuePlaysinlineUpdate(inline: boolean) {
-    this.canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
-  }
-
-  @prop
   get playbackRate() {
     return this._provider?.playbackRate ?? 1;
   }
@@ -566,6 +539,14 @@ export class MediaPlayer
 
   private _queuePlaybackRateUpdate(rate: number) {
     this.canPlayQueue._enqueue('rate', () => (this._provider!.playbackRate = rate));
+  }
+
+  private _watchPlaysinline() {
+    this._queuePlaysinlineUpdate(this.$props.playsinline());
+  }
+
+  private _queuePlaysinlineUpdate(inline: boolean) {
+    this.canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
   }
 
   /**

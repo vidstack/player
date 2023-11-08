@@ -149,7 +149,9 @@ export interface MediaAutoplayEvent extends MediaEvent<MediaAutoplayEventDetail>
  * that has been configured. The `eager` strategy will be immediate, and `lazy` once the provider
  * has entered the viewport.
  */
-export interface MediaCanLoadEvent extends MediaEvent<void> {}
+export interface MediaCanLoadEvent extends MediaEvent<void> {
+  request?: RE.MediaStartLoadingRequestEvent;
+}
 
 /**
  * Fired when the user agent can play the media, but estimates that **not enough** data has been

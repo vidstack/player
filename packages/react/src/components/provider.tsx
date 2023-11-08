@@ -2,11 +2,12 @@ import * as React from 'react';
 
 import {
   createReactComponent,
+  useReactContext,
   useSignal,
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import { mediaState } from 'vidstack';
+import { mediaContext, mediaState } from 'vidstack';
 
 import { MediaProviderInstance } from './primitives/instances';
 
@@ -62,7 +63,9 @@ interface MediaOutletProps extends React.HTMLAttributes<HTMLMediaElement> {
 function MediaOutlet({ provider, ...props }: MediaOutletProps) {
   const { controls, crossorigin, poster } = useStateContext(mediaState),
     { loader } = provider.$state,
+    { $iosControls: iosControls } = useReactContext(mediaContext)!,
     $controls = useSignal(controls),
+    $iosControls = useSignal(iosControls),
     $crossorigin = useSignal(crossorigin),
     $poster = useSignal(poster),
     $loader = useSignal(loader),
@@ -71,9 +74,9 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
   return $mediaType
     ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {
         ...props,
-        controls: $controls,
+        controls: $controls || $iosControls ? '' : null,
         crossOrigin: typeof $crossorigin === 'boolean' ? '' : $crossorigin,
-        poster: $mediaType === 'video' && $controls && $poster ? $poster : null,
+        poster: $mediaType === 'video' && ($controls || $iosControls) && $poster ? $poster : null,
         preload: 'none',
         'aria-hidden': 'true',
         suppressHydrationWarning: true,

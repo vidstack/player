@@ -1,6 +1,7 @@
 import { effect } from 'maverick.js';
-import { isKeyboardEvent, listenEvent } from 'maverick.js/std';
+import { isKeyboardEvent, isTouchEvent, listenEvent } from 'maverick.js/std';
 
+import { isTouchPinchEvent } from '../utils/dom';
 import { MediaPlayerController } from './api/player-controller';
 
 export class MediaControls extends MediaPlayerController {
@@ -76,12 +77,17 @@ export class MediaControls extends MediaPlayerController {
     if (paused() || (autoplayError() && !started())) return;
 
     const onStopIdle = this._onStopIdle.bind(this);
-    for (const eventType of ['pointerup', 'keydown'] as const) {
-      listenEvent(this.el!, eventType, onStopIdle);
-    }
 
     effect(() => {
-      if (this.$state.pointer() === 'fine') {
+      const pointer = this.$state.pointer(),
+        isTouch = pointer === 'coarse',
+        events = [isTouch ? 'touchend' : 'pointerup', 'keydown'] as const;
+
+      for (const eventType of events) {
+        listenEvent(this.el!, eventType, onStopIdle, { passive: false });
+      }
+
+      if (!isTouch) {
         listenEvent(this.el!, 'pointermove', onStopIdle);
       }
     });
@@ -102,8 +108,14 @@ export class MediaControls extends MediaPlayerController {
   }
 
   private _onStopIdle(event: Event) {
-    // @ts-expect-error
-    if (event.MEDIA_GESTURE || this._pausedTracking) return;
+    if (
+      // @ts-expect-error
+      event.MEDIA_GESTURE ||
+      this._pausedTracking ||
+      isTouchPinchEvent(event)
+    ) {
+      return;
+    }
 
     if (isKeyboardEvent(event)) {
       if (event.key === 'Escape') {
