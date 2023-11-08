@@ -22,8 +22,6 @@
     "build": "pnpm build:icons && rollup -c",
     "build:icons": "node .scripts/build-icons.js",
     "build:types": "tsc -p tsconfig.build.json",
-    "sandbox": "node ../../.scripts/sandbox.js",
-    "sandbox:build": "vite build sandbox",
     "types": "pnpm build:icons && pnpm build:types && rollup -c --config-types",
     "clean": "rimraf dist player",
     "format": "prettier src --write --loglevel warn",
