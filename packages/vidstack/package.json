@@ -37,7 +37,8 @@
     "test:server:watch": "SERVER=true vitest --watch",
     "watch": "pnpm watch:types & rollup -c -w",
     "watch:cdn": "pnpm run build:cdn -w",
-    "watch:types": "pnpm run build:types -w"
+    "watch:types": "pnpm run build:types -w",
+    "postyalcpublish": "pnpm clean"
   },
   "dependencies": {
     "media-captions": "^1.0.1"
