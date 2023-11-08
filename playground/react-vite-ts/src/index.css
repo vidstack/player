@@ -1,0 +1,27 @@
+/*************************************************************************************************
+ * Document
+ *************************************************************************************************/
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main {
+  width: 100%;
+  max-width: 980px;
+  margin-inline: auto;
+}

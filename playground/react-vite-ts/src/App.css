@@ -1,0 +1,76 @@
+@import 'vidstack/player/styles/base.css';
+@import 'vidstack/player/styles/default/buffering.css';
+@import 'vidstack/player/styles/default/buttons.css';
+@import 'vidstack/player/styles/default/captions.css';
+@import 'vidstack/player/styles/default/chapter-title.css';
+@import 'vidstack/player/styles/default/controls.css';
+@import 'vidstack/player/styles/default/gestures.css';
+@import 'vidstack/player/styles/default/icons.css';
+@import 'vidstack/player/styles/default/menus.css';
+@import 'vidstack/player/styles/default/poster.css';
+@import 'vidstack/player/styles/default/sliders.css';
+@import 'vidstack/player/styles/default/thumbnail.css';
+@import 'vidstack/player/styles/default/time.css';
+@import 'vidstack/player/styles/default/tooltips.css';
+@import 'vidstack/player/styles/default/layouts/audio.css';
+@import 'vidstack/player/styles/default/layouts/video.css';
+
+/*************************************************************************************************
+ * Player
+ *************************************************************************************************/
+
+media-player {
+  --brand-color: #f5f5f5;
+  --focus-color: #4e9cf6;
+
+  --audio-brand: var(--brand-color);
+  --audio-focus-ring-color: var(--focus-color);
+  --audio-border-radius: 2px;
+
+  --video-brand: var(--brand-color);
+  --video-focus-ring-color: var(--focus-color);
+  --video-border-radius: 2px;
+
+  /* 👉 https://vidstack.io/docs/player/components/layouts/default#css-variables for more. */
+}
+
+media-player[data-view-type='video'] {
+  aspect-ratio: 16 /9;
+}
+
+/*************************************************************************************************
+ * Document
+ *************************************************************************************************/
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main {
+  width: 100%;
+  max-width: 980px;
+  margin-inline: auto;
+}
+
+.src-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 40px;
+  margin-inline: auto;
+  max-width: 300px;
+}
