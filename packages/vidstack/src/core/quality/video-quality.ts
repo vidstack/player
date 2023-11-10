@@ -23,7 +23,7 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
    *
    * - `load`: Set quality level for next loaded fragment.
    *
-   * @see {@link https://vidstack.io/docs/player/core-concepts/quality#switch}
+   * @see {@link https://www.vidstack.io/docs/player/api/video-quality#switch}
    * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#quality-switch-control-api}
    */
   switch: 'current' | 'next' | 'load' = 'current';
