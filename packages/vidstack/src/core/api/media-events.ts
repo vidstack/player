@@ -162,6 +162,7 @@ export interface MediaCanLoadEvent extends MediaEvent<void> {
 export interface MediaCanPlayEvent extends MediaEvent<MediaCanPlayDetail> {}
 
 export interface MediaCanPlayDetail {
+  provider: MediaProviderAdapter;
   duration: number;
   buffered: TimeRanges;
   seekable: TimeRanges;
