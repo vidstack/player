@@ -36,7 +36,13 @@ export class MediaPlayerDelegate {
 
     if (peek($state.canPlay)) return;
 
-    this._dispatch('can-play', { detail: info, trigger });
+    this._dispatch('can-play', {
+      detail: {
+        ...info,
+        provider: peek(this._media.$provider)!,
+      },
+      trigger,
+    });
     tick();
 
     if (__DEV__) {
