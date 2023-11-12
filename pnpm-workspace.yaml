@@ -1,2 +1,6 @@
 packages:
   - 'packages/*'
+  # Playground list:
+  # pnpm -F web-components
+  # pnpm -F react-vite-ts
+  - 'packages/playground/*'
