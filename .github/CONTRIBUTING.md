@@ -80,20 +80,23 @@ $: pnpm -F vidstack dev
 $: pnpm -F @vidstack/react dev
 ```
 
-### Sandbox
+### Playground
 
-A sandbox is a Vite development environment that enables you to play with a package right in your
-browser. The sandbox directory is Git-ignored so you can safely do whatever you like inside of
-it.
+Playground directory consists of different enviornments that enables you to test against Vidstack packages.
 
 ```bash
-# Play with package in your browser.
-$: pnpm -F vidstack sandbox
-$: pnpm -F @vidstack/react sandbox
+# Initialize Vidstack packages in development mode (parallel), triggering automatic rebuilding upon any modification
+$: pnpm run packages:dev
+
+# Launch one of the playground environments
+$: pnpm run -F web-components dev
+$: pnpm run -F react-vite-ts dev
 ```
 
-After running any of the commands above, you can find the sandbox directory at `packages/*/sandbox`.
-You can delete the directory and re-run the sandbox command to reset it.
+After running the commands above, two things are happening.
+
+1. Vidstack package changes are watched and rebuilt.
+2. Playground enviornment HMR watches Vidstack and exchanges node module changes without a full reload.
 
 ## ✍️ Committing
 
