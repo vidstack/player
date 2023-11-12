@@ -19,7 +19,9 @@ const isDryRun = args.dry;
 const skippedPackages = [];
 const currentVersion = require('../package.json').version;
 const packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages'));
-const packages = packagesDir.filter((pkg) => !pkg.startsWith('.'));
+
+// Filter out playground entirely
+const packages = packagesDir.filter((pkg) => !pkg.startsWith('.') && pkg !== 'playground');
 const preId =
   args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)?.[0]);
 const versionIncrements = [
