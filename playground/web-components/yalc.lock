@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "vidstack": {
-      "signature": "5da5b399169063b108eef7b2224c23e7",
-      "file": true
-    }
-  }
-}
