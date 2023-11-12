@@ -1,6 +1,5 @@
 dist/
 dist-*/
-sandbox/
 
 .tsbuildinfo
 tsconfig.build.tsbuildinfo
@@ -22,7 +21,6 @@ packages/*/dist/
 packages/*/cdn/
 packages/*/elements/
 packages/*/types/
-packages/*/sandbox/
 packages/*/stats.html
 
 packages/vidstack/index.d.ts
