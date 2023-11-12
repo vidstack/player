@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run analyze build types --filter=./packages/*",
+    "build": "turbo run analyze build types --filter=./packages/* --filter=!./packages/playground/*",
     "build:vidstack": "turbo run analyze build types --filter=vidstack",
     "build:react": "turbo run analyze build types --filter=react",
     "clean": "turbo run clean",
