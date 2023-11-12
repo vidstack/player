@@ -17,9 +17,7 @@
     "release": "pnpm build && node .scripts/release.js",
     "release:dry": "pnpm run release --dry",
     "validate": "turbo run build format test",
-    "yalc:all": "pnpm build && for d in packages/*/; do echo $d; cd $d; yalc publish --push --replace --sig --changed; cd '../../'; done",
-    "playground:prepare": "tsx .cli/playground-prepare.ts",
-    "playground:dev": "tsx .cli/playground-dev.ts"
+    "packages:dev": "for d in packages/*/; do if [ $(basename $d) != 'playground' ]; then (echo $d && (cd $d && pnpm run dev)) & fi; done"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
