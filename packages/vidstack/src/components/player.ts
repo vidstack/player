@@ -323,6 +323,10 @@ export class MediaPlayer
         const { error } = this.$state;
         return !!error();
       },
+      'data-autoplay-error': function (this: MediaPlayer) {
+        const { autoplayError } = this.$state;
+        return !!autoplayError();
+      },
     };
 
     const alias = {

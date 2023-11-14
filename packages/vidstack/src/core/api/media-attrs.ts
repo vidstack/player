@@ -4,7 +4,6 @@ export const MEDIA_ATTRIBUTES = Symbol(__DEV__ ? 'MEDIA_ATTRIBUTES' : 0);
 
 export const mediaAttributes: (keyof MediaState)[] = [
   'autoplay',
-  'autoplayError',
   'canFullscreen',
   'canPictureInPicture',
   'canLoad',
