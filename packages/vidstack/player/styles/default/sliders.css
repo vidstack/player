@@ -263,7 +263,6 @@
   top: unset;
   bottom: var(--slider-fill);
   left: 50%;
-  width: 100%;
   will-change: bottom;
   transform: translate(-50%, 50%) translateZ(0);
 }
