@@ -42,6 +42,7 @@ export class Slider extends Component<SliderProps, SliderState, SliderEvents, Sl
   }
 
   protected override onSetup() {
+    effect(this._watchValue.bind(this));
     effect(this._watchMinMax.bind(this));
   }
 
@@ -62,6 +63,11 @@ export class Slider extends Component<SliderProps, SliderState, SliderEvents, Sl
   // -------------------------------------------------------------------------------------------
   // Watch
   // -------------------------------------------------------------------------------------------
+
+  private _watchValue() {
+    const { value } = this.$props;
+    this.$state.value.set(value());
+  }
 
   private _watchMinMax() {
     const { min, max } = this.$props;
