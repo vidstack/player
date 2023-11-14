@@ -39,9 +39,10 @@ export class TooltipTrigger extends Component {
   }
 
   private _getButton() {
+    const candidate = this.el!.firstElementChild;
     return (
-      this.el!.firstElementChild?.getAttribute('role') === 'button'
-        ? this.el!.firstElementChild
+      candidate?.localName === 'button' || candidate?.getAttribute('role') === 'button'
+        ? candidate
         : this.el!
     ) as HTMLElement | null;
   }
