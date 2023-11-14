@@ -160,7 +160,7 @@ export function autoPlacement(
         )})`,
         left: `calc(${x + 'px'} + ${
           xOffset ? xOffset + 'px' : `var(--${offsetVarName}-x-offset, 0px)`
-        }`,
+        })`,
       });
     });
   });
