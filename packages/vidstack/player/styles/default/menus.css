@@ -414,6 +414,7 @@
 
 :where(.vds-menu-items [role='menuitem'][aria-expanded='true'] .vds-menu-button-close-icon) {
   display: inline !important;
+  margin-left: calc(-1 * var(--media-menu-padding, 10px) / 2);
 }
 
 /*
