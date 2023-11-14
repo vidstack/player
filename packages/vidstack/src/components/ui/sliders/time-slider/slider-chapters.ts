@@ -29,7 +29,7 @@ import { TimeSlider } from './time-slider';
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-chapters}
  */
-export class SliderChapters extends Component<SliderChaptersProps> {
+export class SliderChapters extends Component<SliderChaptersProps, {}, SliderChaptersCSSVars> {
   static props: SliderChaptersProps = {
     disabled: false,
   };
@@ -322,4 +322,15 @@ export interface SliderChaptersProps {
    * Whether chapters should be disabled.
    */
   disabled: boolean;
+}
+
+export interface SliderChaptersCSSVars {
+  /**
+   * The percentage of the chapter that is filled.
+   */
+  readonly 'chapter-fill': string;
+  /**
+   * The percentage of the chapter that has been buffered.
+   */
+  readonly 'chapter-progress': string;
 }
