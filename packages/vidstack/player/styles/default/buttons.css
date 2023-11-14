@@ -119,6 +119,10 @@
   transition: color 0.3s ease;
 }
 
+:where(.vds-live-button[data-focus] .vds-live-button-text) {
+  box-shadow: var(--media-focus-ring);
+}
+
 :where(.vds-live-button[data-edge]) {
   cursor: unset;
 }

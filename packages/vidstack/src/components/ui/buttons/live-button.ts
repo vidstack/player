@@ -46,7 +46,7 @@ export class LiveButton extends Component<LiveButtonProps> {
     this.setAttributes({
       'data-edge': liveEdge,
       'data-hidden': isHidden,
-      'aria-disabled': $ariaBool(disabled),
+      'aria-disabled': $ariaBool(() => disabled() || liveEdge()),
       'aria-hidden': $ariaBool(isHidden),
     });
   }

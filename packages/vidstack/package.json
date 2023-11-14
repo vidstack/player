@@ -31,7 +31,7 @@
     "types": "pnpm build:types && rollup -c --config-types",
     "clean": "rimraf dist cdn",
     "format": "prettier src --write --loglevel warn",
-    "sandbox": "node ../../.scripts/sandbox.js",
+    "sandbox": "node ../../.scripts/sandbox.js & node rollup.config.js -w",
     "sandbox:build": "vite build sandbox",
     "test": "vitest --run",
     "test:watch": "vitest --watch",
