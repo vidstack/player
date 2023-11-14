@@ -451,6 +451,8 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     for (const child of children) {
       if (child instanceof HTMLElement && child.style.display === 'contents') {
         children.push(...child.children);
+      } else if (child.nodeType === 3) {
+        height += parseInt(window.getComputedStyle(child).fontSize, 10);
       } else {
         height += (child as HTMLElement).offsetHeight || 0;
       }
