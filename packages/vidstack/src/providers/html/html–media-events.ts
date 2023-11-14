@@ -1,4 +1,4 @@
-import { effect, onDispose } from 'maverick.js';
+import { effect, onDispose, peek } from 'maverick.js';
 import { DOMEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
 
 import type { MediaCanPlayDetail } from '../../core/api/media-events';
@@ -186,6 +186,7 @@ export class HTMLMediaEvents {
 
   private _getCanPlayDetail(): MediaCanPlayDetail {
     return {
+      provider: peek(this._ctx.$provider)!,
       duration: this._media.duration,
       buffered: this._media.buffered,
       seekable: this._media.seekable,
