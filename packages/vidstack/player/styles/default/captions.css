@@ -114,6 +114,13 @@
  */
 
 :where(.vds-captions [data-part='region']) {
+  --anchor-x-percent: calc(var(--region-anchor-x) / 100);
+  --anchor-x: calc(var(--region-width) * var(--anchor-x-percent));
+  --anchor-y-percent: calc(var(--region-anchor-y) / 100);
+  --anchor-y: calc(var(--region-height) * var(--anchor-y-percent));
+  --vp-anchor-x: calc(var(--region-viewport-anchor-x) * 1%);
+  --vp-anchor-y-percent: calc(var(--region-viewport-anchor-y) / 100);
+  --vp-anchor-y: calc(var(--overlay-height) * var(--vp-anchor-y-percent));
   position: absolute;
   display: inline-flex;
   flex-flow: column;
@@ -123,22 +130,8 @@
   min-height: 0px;
   max-height: var(--region-height);
   writing-mode: horizontal-tb;
-  top: calc(
-    var(
-      --region-top,
-      calc(
-        calc(calc(var(--overlay-height) * var(--region-viewport-anchor-y)) / 100) -
-          calc(var(--region-height) * calc(var(--region-anchor-y) / 100))
-      )
-    )
-  );
-  left: var(
-    --region-left,
-    calc(
-      calc(var(--region-viewport-anchor-x) * 1%) -
-        calc(var(--region-width) * var(--region-anchor-x) / 100)
-    )
-  );
+  top: var(--region-top, calc(var(--vp-anchor-y) - var(--anchor-y)));
+  left: var(--region-left, calc(var(--vp-anchor-x) - var(--anchor-x)));
   right: var(--region-right);
   bottom: var(--region-bottom);
   overflow: hidden;
