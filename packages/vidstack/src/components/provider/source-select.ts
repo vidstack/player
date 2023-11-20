@@ -73,7 +73,7 @@ export class SourceSelection {
 
     effect(this._onSourcesChange.bind(this));
     effect(this._onSourceChange.bind(this));
-    effect(this._onConnect.bind(this));
+    effect(this._onSetup.bind(this));
     effect(this._onLoadSource.bind(this));
   }
 
@@ -172,7 +172,7 @@ export class SourceSelection {
     this._media.delegate._dispatch('provider-loader-change', { detail: loader });
   }
 
-  private _onConnect() {
+  private _onSetup() {
     const provider = this._media.$provider();
     if (!provider || provider[SETUP]) return;
 

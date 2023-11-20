@@ -23,7 +23,8 @@
 }
 
 :where([data-view-type='video']:not([data-fullscreen]))
-  :where([data-media-provider], video, media-poster) {
+  :where([data-media-provider], video, .vds-poster) {
+  background-color: var(--video-bg, black);
   border-radius: var(--video-border-radius, 6px);
   overflow: hidden;
 }

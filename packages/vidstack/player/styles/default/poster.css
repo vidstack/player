@@ -18,6 +18,7 @@
   pointer-events: none;
   box-sizing: border-box;
   transition: opacity 0.2s ease-out;
+  background-color: var(--media-poster-bg, black);
 }
 
 :where(.vds-poster img) {
