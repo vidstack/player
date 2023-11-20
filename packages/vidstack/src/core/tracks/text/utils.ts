@@ -1,6 +1,7 @@
 import type { Dispose } from 'maverick.js';
 import { isString, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
+
 import type { TextTrack } from './text-track';
 import type { TextTrackList } from './text-tracks';
 
@@ -33,6 +34,7 @@ export function observeActiveTextTrack(
 
     if (!track) {
       onChange(null);
+      currentTrack = null;
       return;
     }
 
