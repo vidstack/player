@@ -51,6 +51,6 @@ export function getRequestCredentials(crossorigin?: string | null): RequestCrede
   return crossorigin === 'use-credentials'
     ? 'include'
     : isString(crossorigin)
-    ? 'same-origin'
-    : undefined;
+      ? 'same-origin'
+      : undefined;
 }
