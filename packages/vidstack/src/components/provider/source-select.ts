@@ -23,7 +23,8 @@ import { isHLSSupported } from '../../utils/support';
 
 let warned = __DEV__ ? new Set<any>() : undefined;
 
-const SETUP = Symbol(__DEV__ ? 'SETUP' : 0);
+const SETUP = Symbol(__DEV__ ? 'SETUP' : 0),
+  sourceTypes = new Map<string, string>();
 
 export class SourceSelection {
   private _initialize = false;
@@ -45,7 +46,6 @@ export class SourceSelection {
     });
 
     const { $state } = _media;
-
     $state.sources.set(normalizeSrc(_media.$props.src()));
 
     // Initialize.
@@ -118,6 +118,7 @@ export class SourceSelection {
               })
                 .then((res) => {
                   source.type = res.headers.get('content-type') || '??';
+                  sourceTypes.set(source.src as string, source.type);
                   return source;
                 })
                 .catch(() => source)
@@ -239,7 +240,10 @@ function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
   return (isArray(src) ? src : [!isString(src) && 'src' in src ? src : { src }]).map(
     ({ src, type }) => ({
       src,
-      type: type ?? (!isString(src) || src.startsWith('blob:') ? 'video/object' : '?'),
+      type:
+        type ??
+        (isString(src) ? sourceTypes.get(src) : null) ??
+        (!isString(src) || src.startsWith('blob:') ? 'video/object' : '?'),
     }),
   );
 }

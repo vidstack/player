@@ -1,6 +1,6 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
-import { onDispose } from 'maverick.js';
+import { onDispose, peek } from 'maverick.js';
 import { appendTriggerEvent, DOMEvent, listenEvent } from 'maverick.js/std';
 
 import { ListSymbol } from '../../foundation/list/symbols';
@@ -242,10 +242,10 @@ export class MediaStateManager extends MediaPlayerController {
   ['media-type-change'](event: ME.MediaTypeChangeEvent) {
     appendTriggerEvent(event, this._trackedEvents.get('source-change'));
 
-    const viewType = this.$state.viewType();
+    const viewType = peek(this.$state.viewType);
     this.$state.mediaType.set(event.detail);
 
-    const providedViewType = this.$state.providedViewType(),
+    const providedViewType = peek(this.$state.providedViewType),
       currentViewType = providedViewType === 'unknown' ? event.detail : providedViewType;
 
     if (viewType !== currentViewType) {
