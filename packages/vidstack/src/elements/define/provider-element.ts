@@ -19,7 +19,8 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
   static tagName = 'media-provider';
 
   private _media!: MediaContext;
-  private _mediaElement: HTMLMediaElement | null = null;
+  private _target: HTMLElement | null = null;
+  private _blocker: HTMLElement | null = null;
 
   protected onSetup(): void {
     this._media = useMediaContext();
@@ -27,36 +28,67 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
   }
 
   protected onDestroy(): void {
-    this._mediaElement?.remove();
-    this._mediaElement = null;
+    this._blocker?.remove();
+    this._blocker = null;
+    this._target?.remove();
+    this._target = null;
   }
 
   protected onConnect(): void {
     effect(() => {
-      const loader = this.$state.loader();
+      const loader = this.$state.loader(),
+        isYouTubeEmbed = loader?.canPlay({ src: '', type: 'video/youtube' }),
+        isVimeoEmbed = loader?.canPlay({ src: '', type: 'video/vimeo' }),
+        isEmbed = isYouTubeEmbed || isVimeoEmbed;
 
-      const media = loader
-        ? loader.mediaType() === 'audio'
-          ? this._createAudio()
-          : this._createVideo()
+      const target = loader
+        ? isEmbed
+          ? this._createIFrame()
+          : loader.mediaType() === 'audio'
+            ? this._createAudio()
+            : this._createVideo()
         : null;
 
-      if (this._mediaElement !== media) {
-        const parent = this._mediaElement?.parentElement ?? this;
-        this._mediaElement?.remove();
-        this._mediaElement = media;
-        if (media) parent.prepend(media);
+      if (this._target !== target) {
+        const parent = this._target?.parentElement ?? this;
+
+        this._target?.remove();
+        this._target = target;
+        if (target) parent.prepend(target);
+
+        if (isEmbed && target) {
+          effect(() => {
+            const { controls } = this._media.$state;
+
+            if (controls()) {
+              this._blocker?.remove();
+              this._blocker = null;
+            } else {
+              this._blocker = this.querySelector('.vds-blocker') ?? document.createElement('div');
+              this._blocker.classList.add('vds-blocker');
+              target.after(this._blocker);
+            }
+
+            setAttribute(target, 'data-no-controls', !controls());
+          });
+        }
       }
 
-      this.load(media);
+      if (isYouTubeEmbed) target?.classList.add('vds-youtube');
+      else if (isVimeoEmbed) target?.classList.add('vds-vimeo');
+
+      if (!isEmbed) {
+        this._blocker?.remove();
+        this._blocker = null;
+      }
+
+      this.load(target);
     });
   }
 
   private _createAudio() {
     const audio =
-      this._mediaElement instanceof HTMLAudioElement
-        ? this._mediaElement
-        : document.createElement('audio');
+      this._target instanceof HTMLAudioElement ? this._target : document.createElement('audio');
 
     setAttribute(audio, 'preload', 'none');
     setAttribute(audio, 'aria-hidden', 'true');
@@ -72,9 +104,7 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
 
   private _createVideo() {
     const video =
-      this._mediaElement instanceof HTMLVideoElement
-        ? this._mediaElement
-        : document.createElement('video');
+      this._target instanceof HTMLVideoElement ? this._target : document.createElement('video');
 
     const { controls, crossorigin, poster } = this._media.$state,
       { $iosControls } = this._media,
@@ -88,6 +118,12 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
     });
 
     return video;
+  }
+
+  private _createIFrame() {
+    return this._target instanceof HTMLIFrameElement
+      ? this._target
+      : document.createElement('iframe');
   }
 }
 

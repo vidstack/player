@@ -98,13 +98,13 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
     preconnect(this._library);
   }
 
-  override setup(context: MediaSetupContext) {
-    super.setup(context);
-    new HLSLibLoader(this._library, context, (ctor) => {
+  override setup(ctx: MediaSetupContext) {
+    super.setup(ctx);
+    new HLSLibLoader(this._library, ctx, (ctor) => {
       this._ctor = ctor;
-      this._controller.setup(ctor, context);
-      context.delegate._dispatch('provider-setup', { detail: this });
-      const src = peek(context.$state.source);
+      this._controller.setup(ctor, ctx);
+      ctx.delegate._notify('provider-setup', this);
+      const src = peek(ctx.$state.source);
       if (src) this.loadSource(src);
     });
   }

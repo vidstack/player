@@ -27,11 +27,11 @@ export class HLSController {
 
   constructor(private _video: HTMLVideoElement) {}
 
-  setup(ctor: HLSConstructor, context: MediaSetupContext) {
-    this._ctx = context;
+  setup(ctor: HLSConstructor, ctx: MediaSetupContext) {
+    this._ctx = ctx;
 
-    const isLive = peek(context.$state.streamType).includes('live'),
-      isLiveLowLatency = peek(context.$state.streamType).includes('ll-');
+    const isLive = peek(ctx.$state.streamType).includes('live'),
+      isLiveLowLatency = peek(ctx.$state.streamType).includes('ll-');
 
     this._instance = new ctor({
       lowLatencyMode: isLiveLowLatency,
@@ -46,7 +46,7 @@ export class HLSController {
     this._instance.on(ctor.Events.ERROR, this._onError.bind(this));
     for (const callback of this._callbacks) callback(this._instance);
 
-    context.player.dispatch(new DOMEvent('hls-instance', { detail: this._instance }));
+    ctx.player.dispatch(new DOMEvent('hls-instance', { detail: this._instance }));
 
     this._instance.attachMedia(this._video);
     this._instance.on(ctor.Events.AUDIO_TRACK_SWITCHED, this._onAudioSwitch.bind(this));
@@ -55,10 +55,10 @@ export class HLSController {
     this._instance.on(ctor.Events.NON_NATIVE_TEXT_TRACKS_FOUND, this._onTracksFound.bind(this));
     this._instance.on(ctor.Events.CUES_PARSED, this._onCuesParsed.bind(this));
 
-    context.qualities[QualitySymbol._enableAuto] = this._enableAutoQuality.bind(this);
+    ctx.qualities[QualitySymbol._enableAuto] = this._enableAutoQuality.bind(this);
 
-    listenEvent(context.qualities, 'change', this._onQualityChange.bind(this));
-    listenEvent(context.audioTracks, 'change', this._onAudioChange.bind(this));
+    listenEvent(ctx.qualities, 'change', this._onQualityChange.bind(this));
+    listenEvent(ctx.audioTracks, 'change', this._onAudioChange.bind(this));
 
     this._stopLiveSync = effect(this._liveSync.bind(this));
   }
@@ -147,16 +147,17 @@ export class HLSController {
     const { type, live, totalduration: duration, targetduration } = data.details;
     const event = new DOMEvent(eventType, { detail: data });
 
-    this._ctx.delegate._dispatch('stream-type-change', {
-      detail: live
+    this._ctx.delegate._notify(
+      'stream-type-change',
+      live
         ? type === 'EVENT' && Number.isFinite(duration) && targetduration >= 10
           ? 'live:dvr'
           : 'live'
         : 'on-demand',
-      trigger: event,
-    });
+      event,
+    );
 
-    this._ctx.delegate._dispatch('duration-change', { detail: duration, trigger: event });
+    this._ctx.delegate._notify('duration-change', duration, event);
 
     const media = this._instance!.media!;
 

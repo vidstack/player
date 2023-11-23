@@ -20,10 +20,10 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
 
   constructor(protected _media: HTMLMediaElement) {}
 
-  setup(context: MediaSetupContext) {
-    new HTMLMediaEvents(this, context);
+  setup(ctx: MediaSetupContext) {
+    new HTMLMediaEvents(this, ctx);
 
-    if ('audioTracks' in this.media) new NativeAudioTracks(this, context);
+    if ('audioTracks' in this.media) new NativeAudioTracks(this, ctx);
 
     onDispose(() => {
       // Dispose of media.

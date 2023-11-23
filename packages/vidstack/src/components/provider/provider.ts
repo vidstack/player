@@ -101,9 +101,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
         });
       }
 
-      this._media.delegate._dispatch('provider-change', {
-        detail: provider,
-      });
+      this._media.delegate._notify('provider-change', provider);
     });
   }
 
@@ -113,7 +111,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   private _destroyProvider() {
-    this._media.delegate._dispatch('provider-change', { detail: null });
+    this._media.delegate._notify('provider-change', null);
   }
 
   private _onResize() {

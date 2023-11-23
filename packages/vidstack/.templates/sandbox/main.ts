@@ -28,12 +28,14 @@ player.addEventListener('can-play', () => {
 const audioSrcButton = document.querySelector('#audio-src-button'),
   videoSrcButton = document.querySelector('#video-src-button'),
   hlsSrcButton = document.querySelector('#hls-src-button'),
-  liveSrcButton = document.querySelector('#live-src-button');
+  liveSrcButton = document.querySelector('#live-src-button'),
+  youtubeSrcButton = document.querySelector('#youtube-src-button');
 
 audioSrcButton?.addEventListener('click', () => changeSource('audio'));
 videoSrcButton?.addEventListener('click', () => changeSource('video'));
 hlsSrcButton?.addEventListener('click', () => changeSource('hls'));
 liveSrcButton?.addEventListener('click', () => changeSource('live'));
+youtubeSrcButton?.addEventListener('click', () => changeSource('youtube'));
 
 changeSource('audio');
 
@@ -51,6 +53,9 @@ function changeSource(type: string) {
       break;
     case 'live':
       player.src = 'https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8';
+      break;
+    case 'youtube':
+      player.src = 'youtube/_cMxraX_5RE';
       break;
   }
 }

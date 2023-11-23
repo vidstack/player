@@ -40,6 +40,7 @@
   box-sizing: border-box;
   align-items: center;
   width: 100%;
+  aspect-ratio: inherit;
 }
 
 [data-media-player]:not([data-view-type='audio']) [data-media-provider],
@@ -56,20 +57,42 @@
   width: 100%;
 }
 
-[data-media-provider] video {
+[data-media-provider] video,
+[data-media-provider] iframe {
   display: inline-block;
   width: 100%;
   height: auto;
   object-fit: contain;
   touch-action: manipulation;
+  aspect-ratio: inherit;
 }
 
-[data-media-player][data-view-type='audio'] video {
+[data-media-player][data-view-type='audio'] video,
+[data-media-player][data-view-type='audio'] iframe {
   display: none;
 }
 
-[data-media-player][data-fullscreen] video {
+[data-media-player][data-fullscreen] video,
+[data-media-player][data-fullscreen] iframe {
   height: 100%;
+}
+
+iframe.vds-youtube[data-no-controls] {
+  height: 1000%;
+}
+
+.vds-blocker {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: inherit;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+[data-ended] .vds-blocker {
+  background-color: black;
 }
 
 .vds-icon:focus {

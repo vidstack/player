@@ -18,8 +18,8 @@ export interface MediaProviderLoader<Provider extends MediaProviderAdapter = Med
   target: HTMLElement | null;
   canPlay(src: MediaSrc): boolean;
   mediaType(src?: MediaSrc): MediaType;
-  preconnect?(context: MediaContext): void;
-  load(context: MediaContext): Promise<Provider>;
+  preconnect?(ctx: MediaContext): void;
+  load(ctx: MediaContext): Promise<Provider>;
 }
 
 export interface MediaProviderAdapter
@@ -33,8 +33,8 @@ export interface MediaProviderAdapter
   readonly fullscreen?: MediaFullscreenAdapter;
   readonly pictureInPicture?: MediaPictureInPictureAdapter;
   readonly canLiveSync?: boolean;
-  preconnect?(context: MediaContext): void;
-  setup(context: MediaSetupContext): void;
+  preconnect?(ctx: MediaContext): void;
+  setup(ctx: MediaSetupContext): void;
   destroy?(): void;
   play(): Promise<void>;
   pause(): Promise<void>;

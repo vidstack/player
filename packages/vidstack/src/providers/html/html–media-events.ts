@@ -21,8 +21,8 @@ export class HTMLMediaEvents {
     return this._provider.media;
   }
 
-  private get _delegate() {
-    return this._ctx.delegate;
+  private get _notify() {
+    return this._ctx.delegate._notify;
   }
 
   constructor(
@@ -133,14 +133,13 @@ export class HTMLMediaEvents {
   }
 
   private _updateCurrentTime(time: number, trigger?: Event) {
-    this._delegate._dispatch('time-update', {
+    const detail = {
       // Avoid errors where `currentTime` can have higher precision.
-      detail: {
-        currentTime: Math.min(time, this._ctx.$state.seekableEnd()),
-        played: this._media.played,
-      },
-      trigger,
-    });
+      currentTime: Math.min(time, this._ctx.$state.seekableEnd()),
+      played: this._media.played,
+    };
+
+    this._notify('time-update', detail, trigger);
   }
 
   private _onLoadStart(event: Event) {
@@ -150,37 +149,39 @@ export class HTMLMediaEvents {
     }
 
     this._attachLoadStartListeners();
-    this._delegate._dispatch('load-start', { trigger: event });
+    this._notify('load-start', undefined, event);
   }
 
   private _onAbort(event: Event) {
-    this._delegate._dispatch('abort', { trigger: event });
+    this._notify('abort', undefined, event);
   }
 
   private _onEmptied() {
-    this._delegate._dispatch('emptied', { trigger: event });
+    this._notify('emptied', undefined, event);
   }
 
   private _onLoadedData(event: Event) {
-    this._delegate._dispatch('loaded-data', { trigger: event });
+    this._notify('loaded-data', undefined, event);
   }
 
   private _onLoadedMetadata(event: Event) {
     this._attachCanPlayListeners();
 
     // Sync volume state before metadata.
-    this._delegate._dispatch('volume-change', {
-      detail: {
+    this._notify(
+      'volume-change',
+      {
         volume: this._media.volume,
         muted: this._media.muted,
       },
-    });
+      event,
+    );
 
-    this._delegate._dispatch('loaded-metadata', { trigger: event });
+    this._notify('loaded-metadata', undefined, event);
 
     // Native HLS does not reliably fire `canplay` event.
     if (IS_SAFARI && isHLSSrc(this._ctx.$state.source())) {
-      this._delegate._ready(this._getCanPlayDetail(), event);
+      this._ctx.delegate._ready(this._getCanPlayDetail(), event);
     }
   }
 
@@ -195,7 +196,7 @@ export class HTMLMediaEvents {
 
   private _onPlay(event: Event) {
     if (!this._ctx.$state.canPlay) return;
-    this._delegate._dispatch('play', { trigger: event });
+    this._notify('play', undefined, event);
   }
 
   private _onPause(event: Event) {
@@ -203,50 +204,47 @@ export class HTMLMediaEvents {
     if (this._media.readyState === 1 && !this._waiting) return;
     this._waiting = false;
     this._timeRAF._stop();
-    this._delegate._dispatch('pause', { trigger: event });
+    this._notify('pause', undefined, event);
   }
 
   private _onCanPlay(event: Event) {
-    this._delegate._ready(this._getCanPlayDetail(), event);
+    this._ctx.delegate._ready(this._getCanPlayDetail(), event);
   }
 
   private _onCanPlayThrough(event: Event) {
     if (this._ctx.$state.started()) return;
-    this._delegate._dispatch('can-play-through', {
-      trigger: event,
-      detail: this._getCanPlayDetail(),
-    });
+    this._notify('can-play-through', this._getCanPlayDetail(), event);
   }
 
   private _onPlaying(event: Event) {
     this._waiting = false;
-    this._delegate._dispatch('playing', { trigger: event });
+    this._notify('playing', undefined, event);
     this._timeRAF._start();
   }
 
   private _onStalled(event: Event) {
-    this._delegate._dispatch('stalled', { trigger: event });
+    this._notify('stalled', undefined, event);
     if (this._media.readyState < 3) {
       this._waiting = true;
-      this._delegate._dispatch('waiting', { trigger: event });
+      this._notify('waiting', undefined, event);
     }
   }
 
   private _onWaiting(event: Event) {
     if (this._media.readyState < 3) {
       this._waiting = true;
-      this._delegate._dispatch('waiting', { trigger: event });
+      this._notify('waiting', undefined, event);
     }
   }
 
   private _onEnded(event: Event) {
     this._timeRAF._stop();
     this._updateCurrentTime(this._media.duration, event);
-    this._delegate._dispatch('end', { trigger: event });
+    this._notify('end', undefined, event);
     if (this._ctx.$state.loop()) {
       this._onLoop();
     } else {
-      this._delegate._dispatch('ended', { trigger: event });
+      this._notify('ended', undefined, event);
     }
   }
 
@@ -265,29 +263,22 @@ export class HTMLMediaEvents {
       this._updateCurrentTime(this._media.duration, event);
     }
 
-    this._delegate._dispatch('duration-change', {
-      detail: this._media.duration,
-      trigger: event,
-    });
+    this._notify('duration-change', this._media.duration, event);
   }
 
   private _onVolumeChange(event: Event) {
-    this._delegate._dispatch('volume-change', {
-      detail: {
-        volume: this._media.volume,
-        muted: this._media.muted,
-      },
-      trigger: event,
-    });
+    const detail = {
+      volume: this._media.volume,
+      muted: this._media.muted,
+    };
+
+    this._notify('volume-change', detail, event);
   }
 
   private _onSeeked(event: Event) {
     this._updateCurrentTime(this._media.currentTime, event);
 
-    this._delegate._dispatch('seeked', {
-      detail: this._media.currentTime,
-      trigger: event,
-    });
+    this._notify('seeked', this._media.currentTime, event);
 
     // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
     if (
@@ -308,20 +299,16 @@ export class HTMLMediaEvents {
   }
 
   private _onSeeking(event: Event) {
-    this._delegate._dispatch('seeking', {
-      detail: this._media.currentTime,
-      trigger: event,
-    });
+    this._notify('seeking', this._media.currentTime, event);
   }
 
   private _onProgress(event: Event) {
-    this._delegate._dispatch('progress', {
-      detail: {
-        buffered: this._media.buffered,
-        seekable: this._media.seekable,
-      },
-      trigger: event,
-    });
+    const detail = {
+      buffered: this._media.buffered,
+      seekable: this._media.seekable,
+    };
+
+    this._notify('progress', detail, event);
   }
 
   private _onLoop() {
@@ -333,26 +320,23 @@ export class HTMLMediaEvents {
   }
 
   private _onSuspend(event: Event) {
-    this._delegate._dispatch('suspend', { trigger: event });
+    this._notify('suspend', undefined, event);
   }
 
   private _onRateChange(event: Event) {
-    this._delegate._dispatch('rate-change', {
-      detail: this._media.playbackRate,
-      trigger: event,
-    });
+    this._notify('rate-change', this._media.playbackRate, event);
   }
 
   private _onError(event: Event) {
     const error = this._media.error;
     if (!error) return;
-    this._delegate._dispatch('error', {
-      detail: {
-        message: error.message,
-        code: error.code as MediaErrorCode,
-        mediaError: error,
-      },
-      trigger: event,
-    });
+
+    const detail = {
+      message: error.message,
+      code: error.code as MediaErrorCode,
+      mediaError: error,
+    };
+
+    this._notify('error', detail, event);
   }
 }

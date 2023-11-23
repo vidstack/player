@@ -21,9 +21,9 @@ export class AudioProvider extends HTMLMediaProvider implements MediaProviderAda
     return 'audio';
   }
 
-  override setup(context: MediaSetupContext): void {
-    super.setup(context);
-    if (this.type === 'audio') context.delegate._dispatch('provider-setup', { detail: this });
+  override setup(ctx: MediaSetupContext): void {
+    super.setup(ctx);
+    if (this.type === 'audio') ctx.delegate._notify('provider-setup', this);
   }
 
   /**

@@ -1,5 +1,5 @@
 import { effect } from 'maverick.js';
-import { isKeyboardEvent, isTouchEvent, listenEvent } from 'maverick.js/std';
+import { isKeyboardEvent, listenEvent } from 'maverick.js/std';
 
 import { isTouchPinchEvent } from '../utils/dom';
 import { MediaPlayerController } from './api/player-controller';

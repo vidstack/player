@@ -47,32 +47,32 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
   fullscreen?: MediaFullscreenAdapter;
   pictureInPicture?: MediaPictureInPictureAdapter;
 
-  constructor(video: HTMLVideoElement, context: MediaContext) {
+  constructor(video: HTMLVideoElement, ctx: MediaContext) {
     super(video);
     scoped(() => {
       if (canUseVideoPresentation(video)) {
-        const presentation = new VideoPresentation(video, context);
+        const presentation = new VideoPresentation(video, ctx);
         this.fullscreen = new FullscreenPresentationAdapter(presentation);
         this.pictureInPicture = new PIPPresentationAdapter(presentation);
       } else if (canUsePictureInPicture(video)) {
-        this.pictureInPicture = new VideoPictureInPicture(video, context);
+        this.pictureInPicture = new VideoPictureInPicture(video, ctx);
       }
     }, this.scope);
   }
 
-  override setup(context: MediaSetupContext): void {
-    super.setup(context);
+  override setup(ctx: MediaSetupContext): void {
+    super.setup(ctx);
 
     if (canPlayHLSNatively(this.video)) {
-      new NativeHLSTextTracks(this.video, context);
+      new NativeHLSTextTracks(this.video, ctx);
     }
 
-    context.textRenderers._attachVideo(this.video);
+    ctx.textRenderers._attachVideo(this.video);
     onDispose(() => {
-      context.textRenderers._attachVideo(null);
+      ctx.textRenderers._attachVideo(null);
     });
 
-    if (this.type === 'video') context.delegate._dispatch('provider-setup', { detail: this });
+    if (this.type === 'video') ctx.delegate._notify('provider-setup', this);
   }
 
   /**

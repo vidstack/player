@@ -131,7 +131,6 @@ export class MediaPlayer
   constructor() {
     super();
 
-    this._initState();
     new MediaStateSync();
 
     const context = {
@@ -183,7 +182,6 @@ export class MediaPlayer
 
   protected override onSetup(): void {
     this._setupMediaAttributes();
-
     effect(this._watchCanPlay.bind(this));
     effect(this._watchMuted.bind(this));
     effect(this._watchPaused.bind(this));
@@ -242,43 +240,23 @@ export class MediaPlayer
     this.canPlayQueue._reset();
   }
 
-  private _initState() {
-    const providedProps = {
-      viewType: 'providedViewType',
-      streamType: 'providedStreamType',
-    };
-
-    for (const prop of Object.keys(this.$props)) {
-      this.$state[providedProps[prop] ?? prop]?.set(this.$props[prop]());
-    }
-
-    if (__SERVER__) this._onProvidedTypesChange();
-    else effect(this._onProvidedTypesChange.bind(this));
-
-    this.$state.muted.set(this.$props.muted() || this.$props.volume() === 0);
-  }
-
   private _watchTitle() {
-    const { title } = this.$props,
-      { live, viewType } = this.$state,
+    const { title, providedTitle, live, viewType } = this.$state,
       isLive = live(),
       type = uppercaseFirstChar(viewType()),
       typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media';
 
-    const newTitle = title();
-    if (newTitle) {
-      this.el?.setAttribute('data-title', newTitle);
-      this.el?.removeAttribute('title');
-    }
+    this.el?.setAttribute('data-title', providedTitle());
 
-    const currentTitle = this.el?.getAttribute('data-title') || '';
-    this.$state.title.set(currentTitle);
+    const currentTitle = title();
 
     setAttribute(
       this.el!,
       'aria-label',
       currentTitle ? `${typeText} - ${currentTitle}` : typeText + ' Player',
     );
+
+    this.el?.removeAttribute('title');
   }
 
   private _watchOrientation() {
@@ -291,11 +269,6 @@ export class MediaPlayer
   private _watchCanPlay() {
     if (this.$state.canPlay() && this._provider) this.canPlayQueue._start();
     else this.canPlayQueue._stop();
-  }
-
-  private _onProvidedTypesChange() {
-    this.$state.providedViewType.set(this.$props.viewType());
-    this.$state.providedStreamType.set(this.$props.streamType());
   }
 
   private _setupMediaAttributes() {
@@ -640,7 +613,7 @@ export class MediaPlayer
    */
   @method
   startLoading(trigger?: Event): void {
-    this._media.delegate._dispatch('can-load', { trigger });
+    this._media.delegate._notify('can-load', undefined, trigger);
   }
 
   /**

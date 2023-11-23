@@ -21,6 +21,10 @@ media-player {
   /* 👉 https://vidstack.io/docs/player/components/layouts/default#css-variables for more. */
 }
 
+media-player[data-view-type='audio'] .vds-poster {
+  display: none;
+}
+
 media-player[data-view-type='video'] {
   aspect-ratio: 16 /9;
 }

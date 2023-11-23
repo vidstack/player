@@ -50,7 +50,7 @@ export class VideoPresentation {
 
     (['fullscreen', 'picture-in-picture'] as const).forEach((type) => {
       if (this._mode === type || prevMode === type) {
-        this._media.delegate._dispatch(`${type}-change`, {
+        this._media.delegate._notify(`${type}-change`, {
           detail: this._mode === type,
           trigger: event,
         });

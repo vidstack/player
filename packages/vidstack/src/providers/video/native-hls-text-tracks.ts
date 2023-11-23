@@ -9,7 +9,10 @@ import type { MediaSetupContext } from '../types';
  * Safari will load text tracks that were embedded in the HLS playlist.
  */
 export class NativeHLSTextTracks {
-  constructor(private _video: HTMLVideoElement, private _context: MediaSetupContext) {
+  constructor(
+    private _video: HTMLVideoElement,
+    private _ctx: MediaSetupContext,
+  ) {
     _video.textTracks.onaddtrack = this._onAddTrack.bind(this);
     onDispose(this._onDispose.bind(this));
   }
@@ -44,13 +47,13 @@ export class NativeHLSTextTracks {
     onCueChange(event);
     nativeTrack.oncuechange = onCueChange;
 
-    this._context.textTracks.add(track, event);
+    this._ctx.textTracks.add(track, event);
     track.setMode(nativeTrack.mode, event);
   }
 
   private _onDispose() {
     this._video.textTracks.onaddtrack = null;
-    for (const track of this._context.textTracks) {
+    for (const track of this._ctx.textTracks) {
       const nativeTrack = track[TextTrackSymbol._native]?.track as TextTrack | undefined;
       if (nativeTrack?.oncuechange) nativeTrack.oncuechange = null;
     }

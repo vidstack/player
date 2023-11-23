@@ -43,7 +43,7 @@ export class HLSLibLoader {
       const message = '[vidstack]: `hls.js` is not supported in this environment';
       if (__DEV__) this._ctx.logger?.error(message);
       this._ctx.player.dispatch(new DOMEvent<void>('hls-unsupported'));
-      this._ctx.delegate._dispatch('error', { detail: { message, code: 4 } });
+      this._ctx.delegate._notify('error', { message, code: 4 });
       return null;
     }
 
@@ -96,9 +96,7 @@ export class HLSLibLoader {
       }),
     );
 
-    this._ctx.delegate._dispatch('error', {
-      detail: { message: error.message, code: 4 },
-    });
+    this._ctx.delegate._notify('error', { message: error.message, code: 4 });
   }
 }
 

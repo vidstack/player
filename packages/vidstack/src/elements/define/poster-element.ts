@@ -36,7 +36,11 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
     effect(() => {
       setAttribute(this._img, 'src', src());
       setAttribute(this._img, 'alt', alt());
-      setAttribute(this._img, 'crossorigin', crossorigin());
+      setAttribute(
+        this._img,
+        'crossorigin',
+        /ytimg\.com|vimeo/.test(src() || '') ? null : crossorigin(),
+      );
     });
   }
 }

@@ -1,7 +1,7 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
 import { onDispose, peek } from 'maverick.js';
-import { appendTriggerEvent, DOMEvent, listenEvent } from 'maverick.js/std';
+import { DOMEvent, listenEvent } from 'maverick.js/std';
 
 import { ListSymbol } from '../../foundation/list/symbols';
 import type { MediaContext } from '../api/media-context';
@@ -102,7 +102,7 @@ export class MediaStateManager extends MediaPlayerController {
   private _satisfyRequest<T extends keyof MediaRequestQueueRecord>(request: T, event: any) {
     this._request._queue._serve(request, (requestEvent) => {
       event.request = requestEvent;
-      appendTriggerEvent(event, requestEvent);
+      event.triggers.add(requestEvent);
     });
   }
 
@@ -240,7 +240,8 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['media-type-change'](event: ME.MediaTypeChangeEvent) {
-    appendTriggerEvent(event, this._trackedEvents.get('source-change'));
+    const sourceChangeEvent = this._trackedEvents.get('source-change');
+    if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);
 
     const viewType = peek(this.$state.viewType);
     this.$state.mediaType.set(event.detail);
@@ -268,8 +269,10 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['stream-type-change'](event: ME.MediaStreamTypeChangeEvent) {
+    const sourceChangeEvent = this._trackedEvents.get('source-change');
+    if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);
+
     const { streamType, inferredStreamType } = this.$state;
-    appendTriggerEvent(event, this._trackedEvents.get('source-change'));
     inferredStreamType.set(event.detail);
     (event as any).detail = streamType();
   }
@@ -284,7 +287,8 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['source-change'](event: ME.MediaSourceChangeEvent) {
-    appendTriggerEvent(event, this._trackedEvents.get('sources-change'));
+    const sourcesChangeEvent = this._trackedEvents.get('sources-change');
+    if (sourcesChangeEvent) event.triggers.add(sourcesChangeEvent);
 
     this._resetMediaState(event);
     this._trackedEvents.set(event.type, event);
@@ -309,34 +313,38 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['abort'](event: ME.MediaAbortEvent) {
     const sourceChangeEvent = this._trackedEvents.get('source-change');
-    appendTriggerEvent(event, sourceChangeEvent);
-    if (!sourceChangeEvent?.trigger) {
-      appendTriggerEvent(event, this._trackedEvents.get('can-load'));
+    if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);
+
+    const canLoadEvent = this._trackedEvents.get('can-load');
+    if (canLoadEvent && !event.triggers.hasType('can-load')) {
+      event.triggers.add(canLoadEvent);
     }
   }
 
   ['load-start'](event: ME.MediaLoadStartEvent) {
-    appendTriggerEvent(event, this._trackedEvents.get('source-change'));
+    const sourceChangeEvent = this._trackedEvents.get('source-change');
+    if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);
   }
 
   ['error'](event: ME.MediaErrorEvent) {
     this.$state.error.set(event.detail);
-    appendTriggerEvent(event, this._trackedEvents.get('abort'));
+    const abortEvent = this._trackedEvents.get('abort');
+    if (abortEvent) event.triggers.add(abortEvent);
   }
 
   ['loaded-metadata'](event: ME.MediaLoadedMetadataEvent) {
-    appendTriggerEvent(event, this._trackedEvents.get('load-start'));
+    const loadStartEvent = this._trackedEvents.get('load-start');
+    if (loadStartEvent) event.triggers.add(loadStartEvent);
   }
 
   ['loaded-data'](event: ME.MediaLoadedDataEvent) {
-    appendTriggerEvent(event, this._trackedEvents.get('load-start'));
+    const loadStartEvent = this._trackedEvents.get('load-start');
+    if (loadStartEvent) event.triggers.add(loadStartEvent);
   }
 
   ['can-play'](event: ME.MediaCanPlayEvent) {
-    // Avoid infinite chain - `hls.js` will not fire `canplay` event.
-    if (event.trigger?.type !== 'loadedmetadata') {
-      appendTriggerEvent(event, this._trackedEvents.get('loaded-metadata'));
-    }
+    const loadedMetadata = this._trackedEvents.get('loaded-metadata');
+    if (loadedMetadata) event.triggers.add(loadedMetadata);
 
     this._onCanPlayDetail(event.detail);
     this.el?.setAttribute('aria-busy', 'false');
@@ -344,7 +352,9 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['can-play-through'](event: ME.MediaCanPlayThroughEvent) {
     this._onCanPlayDetail(event.detail);
-    appendTriggerEvent(event, this._trackedEvents.get('can-play'));
+
+    const canPlay = this._trackedEvents.get('can-play');
+    if (canPlay) event.triggers.add(canPlay);
   }
 
   protected _onCanPlayDetail(detail: ME.MediaCanPlayDetail) {
@@ -387,7 +397,9 @@ export class MediaStateManager extends MediaPlayerController {
       return;
     }
 
-    appendTriggerEvent(event, this._trackedEvents.get('waiting'));
+    const waitingEvent = this._trackedEvents.get('waiting');
+    if (waitingEvent) event.triggers.add(waitingEvent);
+
     this._satisfyRequest('play', event);
     this._trackedEvents.set('play', event);
 
@@ -419,7 +431,9 @@ export class MediaStateManager extends MediaPlayerController {
   ['play-fail'](event: ME.MediaPlayFailEvent) {
     const { muted, autoplaying } = this.$state;
 
-    appendTriggerEvent(event, this._trackedEvents.get('play'));
+    const playEvent = this._trackedEvents.get('play');
+    if (playEvent) event.triggers.add(playEvent);
+
     this._satisfyRequest('play', event);
 
     const { paused, playing } = this.$state;
@@ -445,14 +459,11 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['playing'](event: ME.MediaPlayingEvent) {
-    const playEvent = this._trackedEvents.get('play');
+    const playEvent = this._trackedEvents.get('play'),
+      seekedEvent = this._trackedEvents.get('seeked');
 
-    if (playEvent) {
-      appendTriggerEvent(event, this._trackedEvents.get('waiting'));
-      appendTriggerEvent(event, playEvent);
-    } else {
-      appendTriggerEvent(event, this._trackedEvents.get('seeked'));
-    }
+    if (playEvent) event.triggers.add(playEvent);
+    else if (seekedEvent) event.triggers.add(seekedEvent);
 
     setTimeout(() => this._resetTracking(), 0);
 
@@ -505,7 +516,9 @@ export class MediaStateManager extends MediaPlayerController {
       return;
     }
 
-    appendTriggerEvent(event, this._trackedEvents.get('seeked'));
+    const seekedEvent = this._trackedEvents.get('seeked');
+    if (seekedEvent) event.triggers.add(seekedEvent);
+
     this._satisfyRequest('pause', event);
 
     const { paused, playing, seeking } = this.$state;
@@ -559,10 +572,11 @@ export class MediaStateManager extends MediaPlayerController {
       event.stopImmediatePropagation();
     } else if (seeking()) {
       const waitingEvent = this._trackedEvents.get('waiting');
-      appendTriggerEvent(event, waitingEvent);
+      if (waitingEvent) event.triggers.add(waitingEvent);
 
-      if (waitingEvent?.trigger?.type !== 'seeking') {
-        appendTriggerEvent(event, this._trackedEvents.get('seeking'));
+      const seekingEvent = this._trackedEvents.get('seeking');
+      if (seekingEvent && !event.triggers.hasType('seeking')) {
+        event.triggers.add(seekingEvent);
       }
 
       if (paused()) this._stopWaiting();
@@ -575,8 +589,8 @@ export class MediaStateManager extends MediaPlayerController {
       this._satisfyRequest('seeked', event);
 
       // Only start if user initiated.
-      const origin = event.originEvent;
-      if (origin && origin.isTrusted && !/seek/.test(origin.type)) {
+      const origin = seekingEvent?.originEvent;
+      if (origin?.isTrusted && !/seek/.test(origin.type)) {
         this['started'](event);
       }
     }
@@ -648,7 +662,15 @@ export class MediaStateManager extends MediaPlayerController {
     this._satisfyRequest('pip', event);
   }
 
+  ['title-change'](event: ME.MediaPosterChangeEvent) {
+    // Fired in media-state-sync by effect.
+    event.stopImmediatePropagation();
+    this.$state.inferredTitle.set(event.detail);
+  }
+
   ['poster-change'](event: ME.MediaPosterChangeEvent) {
-    this.$state.poster.set(event.detail);
+    // Fired in media-state-sync by effect.
+    event.stopImmediatePropagation();
+    this.$state.inferredPoster.set(event.detail);
   }
 }

@@ -64,6 +64,9 @@ export function Player() {
       case 'live':
         setSrc('https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8');
         break;
+      case 'youtube':
+        setSrc('youtube/_cMxraX_5RE');
+        break;
     }
   }
 
@@ -102,6 +105,7 @@ export function Player() {
         <button onClick={() => changeSource('video')}>Video</button>
         <button onClick={() => changeSource('hls')}>HLS</button>
         <button onClick={() => changeSource('live')}>Live</button>
+        <button onClick={() => changeSource('youtube')}>YouTube</button>
       </div>
     </>
   );

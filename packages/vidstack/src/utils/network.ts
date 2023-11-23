@@ -1,5 +1,15 @@
 import { deferredPromise, isNull, isString, type DeferredPromise } from 'maverick.js/std';
 
+export function appendParamsToURL(baseUrl: string, params: Record<string, any>) {
+  const searchParams = new URLSearchParams();
+
+  for (const key of Object.keys(params)) {
+    searchParams.set(key, params[key] + '');
+  }
+
+  return baseUrl + '?' + searchParams.toString();
+}
+
 export function preconnect(
   url: string,
   rel: 'preconnect' | 'prefetch' | 'preload' = 'preconnect',

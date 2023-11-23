@@ -31,7 +31,6 @@ export const mediaState = new State<MediaState>({
   controls: false,
   controlsVisible: false,
   crossorigin: null,
-  poster: '',
   currentTime: 0,
   ended: false,
   error: null,
@@ -57,11 +56,16 @@ export const mediaState = new State<MediaState>({
   source: { src: '', type: '' },
   sources: [],
   started: false,
-  title: '',
   textTracks: [],
   textTrack: null,
   volume: 1,
   waiting: false,
+  get title() {
+    return this.providedTitle || this.inferredTitle;
+  },
+  get poster() {
+    return this.providedPoster || this.inferredPoster;
+  },
   get viewType() {
     return this.providedViewType !== 'unknown' ? this.providedViewType : this.inferredViewType;
   },
@@ -132,6 +136,10 @@ export const mediaState = new State<MediaState>({
 
   // ~~ internal props ~~
   autoplaying: false,
+  providedTitle: '',
+  inferredTitle: '',
+  providedPoster: '',
+  inferredPoster: '',
   inferredViewType: 'unknown',
   providedViewType: 'unknown',
   providedStreamType: 'unknown',
@@ -159,7 +167,7 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'pictureInPicture',
   'playsinline',
   'pointer',
-  'poster',
+  'providedPoster',
   'preload',
   'providedStreamType',
   'inferredViewType',
@@ -168,7 +176,7 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'sources',
   'textTrack',
   'textTracks',
-  'title',
+  'providedTitle',
   'volume',
   'width',
 ]);
@@ -673,6 +681,14 @@ export interface MediaState {
 
   /* @internal */
   autoplaying: boolean;
+  /* @internal */
+  providedTitle: string;
+  /* @internal */
+  inferredTitle: string;
+  /* @internal */
+  providedPoster: string;
+  /* @internal */
+  inferredPoster: string;
   /* @internal */
   inferredViewType: MediaViewType;
   /* @internal */

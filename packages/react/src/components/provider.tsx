@@ -69,22 +69,39 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
     $crossorigin = useSignal(crossorigin),
     $poster = useSignal(poster),
     $loader = useSignal(loader),
-    $mediaType = $loader?.mediaType();
+    $mediaType = $loader?.mediaType(),
+    isYouTubeEmbed = $loader?.canPlay({ src: '', type: 'video/youtube' }),
+    isVimeoEmbed = $loader?.canPlay({ src: '', type: 'video/vimeo' }),
+    isEmbed = isYouTubeEmbed || isVimeoEmbed;
 
-  return $mediaType
-    ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {
-        ...props,
-        controls: $controls || $iosControls ? '' : null,
-        crossOrigin: typeof $crossorigin === 'boolean' ? '' : $crossorigin,
-        poster: $mediaType === 'video' && ($controls || $iosControls) && $poster ? $poster : null,
-        preload: 'none',
-        'aria-hidden': 'true',
-        suppressHydrationWarning: true,
-        ref(el: HTMLElement) {
-          provider.load(el);
-        },
-      })
-    : null;
+  return isEmbed
+    ? React.createElement(
+        React.Fragment,
+        null,
+        React.createElement('iframe', {
+          className: isYouTubeEmbed ? 'vds-youtube' : 'vds-vimeo',
+          suppressHydrationWarning: true,
+          'data-no-controls': !$controls ? '' : undefined,
+          ref(el: HTMLElement) {
+            provider.load(el);
+          },
+        }),
+        !$controls ? React.createElement('div', { className: 'vds-blocker' }) : null,
+      )
+    : $mediaType
+      ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {
+          ...props,
+          controls: $controls || $iosControls ? '' : null,
+          crossOrigin: typeof $crossorigin === 'boolean' ? '' : $crossorigin,
+          poster: $mediaType === 'video' && ($controls || $iosControls) && $poster ? $poster : null,
+          preload: 'none',
+          'aria-hidden': 'true',
+          suppressHydrationWarning: true,
+          ref(el: HTMLElement) {
+            provider.load(el);
+          },
+        })
+      : null;
 }
 
 MediaOutlet.displayName = 'MediaOutlet';

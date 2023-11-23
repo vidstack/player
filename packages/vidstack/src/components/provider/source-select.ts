@@ -14,6 +14,7 @@ import {
   AudioProviderLoader,
   HLSProviderLoader,
   VideoProviderLoader,
+  YouTubeProviderLoader,
   type MediaProviderLoader,
 } from '../../providers';
 import { resolveStreamTypeFromHLSManifest } from '../../utils/hls';
@@ -30,6 +31,10 @@ export class SourceSelection {
   private _initialize = false;
   private _loaders: ReadSignal<MediaProviderLoader[]>;
 
+  private get _notify() {
+    return this._media.delegate._notify;
+  }
+
   constructor(
     private _domSources: ReadSignal<MediaSrc[]>,
     private _media: MediaContext,
@@ -37,12 +42,13 @@ export class SourceSelection {
   ) {
     const HLS_LOADER = new HLSProviderLoader(),
       VIDEO_LOADER = new VideoProviderLoader(),
-      AUDIO_LOADER = new AudioProviderLoader();
+      AUDIO_LOADER = new AudioProviderLoader(),
+      YOUTUBE_LOADER = new YouTubeProviderLoader();
 
     this._loaders = computed<MediaProviderLoader[]>(() => {
       return _media.$props.preferNativeHLS()
-        ? [VIDEO_LOADER, AUDIO_LOADER, HLS_LOADER]
-        : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER];
+        ? [VIDEO_LOADER, AUDIO_LOADER, HLS_LOADER, YOUTUBE_LOADER]
+        : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER, YOUTUBE_LOADER];
     });
 
     const { $state } = _media;
@@ -78,9 +84,10 @@ export class SourceSelection {
   }
 
   private _onSourcesChange() {
-    this._media.delegate._dispatch('sources-change', {
-      detail: [...normalizeSrc(this._media.$props.src()), ...this._domSources()],
-    });
+    this._notify('sources-change', [
+      ...normalizeSrc(this._media.$props.src()),
+      ...this._domSources(),
+    ]);
   }
 
   private _onSourceChange() {
@@ -160,17 +167,15 @@ export class SourceSelection {
   }
 
   protected _notifySourceChange(src: MediaSrc, loader: MediaProviderLoader | null) {
-    this._media.delegate._dispatch('source-change', { detail: src });
-    this._media.delegate._dispatch('media-type-change', {
-      detail: loader?.mediaType(src) || 'unknown',
-    });
+    this._notify('source-change', src);
+    this._notify('media-type-change', loader?.mediaType(src) || 'unknown');
   }
 
   protected _notifyLoaderChange(loader: MediaProviderLoader | null) {
-    this._media.delegate._dispatch('provider-change', { detail: null });
+    this._notify('provider-change', null);
     loader && peek(() => loader!.preconnect?.(this._media));
     this._loader.set(loader);
-    this._media.delegate._dispatch('provider-loader-change', { detail: loader });
+    this._notify('provider-loader-change', loader);
   }
 
   private _onSetup() {
@@ -206,16 +211,12 @@ export class SourceSelection {
             signal: abort.signal,
           })
             .then((streamType) => {
-              this._media.delegate._dispatch('stream-type-change', {
-                detail: streamType,
-              });
+              this._notify('stream-type-change', streamType);
             })
             .catch(noop);
         }
       } else {
-        this._media.delegate._dispatch('stream-type-change', {
-          detail: 'on-demand',
-        });
+        this._notify('stream-type-change', 'on-demand');
       }
 
       peek(() => provider?.loadSource(source, peek(this._media.$state.preload)));
@@ -243,7 +244,13 @@ function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
       type:
         type ??
         (isString(src) ? sourceTypes.get(src) : null) ??
-        (!isString(src) || src.startsWith('blob:') ? 'video/object' : '?'),
+        (!isString(src) || src.startsWith('blob:')
+          ? 'video/object'
+          : src.includes('youtube')
+            ? 'video/youtube'
+            : src.includes('vimeo')
+              ? 'video/vimeo'
+              : '?'),
     }),
   );
 }

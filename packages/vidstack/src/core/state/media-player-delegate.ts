@@ -1,5 +1,5 @@
 import { peek, tick } from 'maverick.js';
-import { DOMEvent, type InferEventDetail, type InferEventInit } from 'maverick.js/std';
+import { DOMEvent, type InferEventDetail } from 'maverick.js/std';
 
 import type { MediaContext } from '../api/media-context';
 import type { MediaEvents } from '../api/media-events';
@@ -12,18 +12,23 @@ export class MediaPlayerDelegate {
     private _media: MediaContext,
   ) {}
 
-  _dispatch<Type extends keyof MediaEvents>(
+  _notify = <Type extends keyof MediaEvents>(
     type: Type,
     ...init: InferEventDetail<MediaEvents[Type]> extends void | undefined | never
-      ? [init?: Partial<InferEventInit<MediaEvents[Type]>>]
-      : [init: InferEventInit<MediaEvents[Type]>]
-  ) {
+      ? [detail?: never, trigger?: Event]
+      : [detail: InferEventDetail<MediaEvents[Type]>, trigger?: Event]
+  ) => {
     if (__SERVER__) return;
-    this._handle(new DOMEvent<any>(type, init?.[0]));
-  }
+    this._handle(
+      new DOMEvent<any>(type, {
+        detail: init?.[0],
+        trigger: init?.[1],
+      }),
+    );
+  };
 
   async _ready(
-    info: {
+    info?: {
       duration: number;
       seekable: TimeRanges;
       buffered: TimeRanges;
@@ -36,13 +41,15 @@ export class MediaPlayerDelegate {
 
     if (peek($state.canPlay)) return;
 
-    this._dispatch('can-play', {
-      detail: {
-        ...info,
-        provider: peek(this._media.$provider)!,
-      },
-      trigger,
-    });
+    const detail = {
+      duration: info?.duration ?? peek($state.duration),
+      seekable: info?.seekable ?? peek($state.seekable),
+      buffered: info?.buffered ?? peek($state.buffered),
+      provider: peek(this._media.$provider)!,
+    };
+
+    this._notify('can-play', detail, trigger);
+
     tick();
 
     if (__DEV__) {

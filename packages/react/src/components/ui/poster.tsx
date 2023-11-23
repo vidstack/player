@@ -78,7 +78,9 @@ const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
         {...props}
         src={$src || undefined}
         alt={$alt || undefined}
-        crossOrigin={$crossorigin as '' | undefined}
+        crossOrigin={
+          /ytimg\.com|vimeo/.test($src || '') ? undefined : ($crossorigin as '' | undefined)
+        }
         ref={composeRefs(img.set as any, forwardRef)}
       >
         {children}

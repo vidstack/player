@@ -18,6 +18,9 @@
 
   width: 100%;
 }
+.player[data-view-type='audio'] .vds-poster {
+  display: none;
+}
 
 .player[data-view-type='video'] {
   aspect-ratio: 16 /9;

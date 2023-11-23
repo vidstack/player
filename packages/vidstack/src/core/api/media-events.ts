@@ -60,6 +60,7 @@ export interface MediaEvents {
   'source-change': MediaSourceChangeEvent;
   'sources-change': MediaSourcesChangeEvent;
   'time-update': MediaTimeUpdateEvent;
+  'title-change': MediaTitleChangeEvent;
   'stream-type-change': MediaStreamTypeChangeEvent;
   'text-tracks-change': MediaTextTracksChangeEvent;
   'text-track-change': MediaTextTrackChangeEvent;
@@ -541,6 +542,13 @@ export interface MediaTimeUpdateEventDetail {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event}
  */
 export interface MediaTimeUpdateEvent extends MediaEvent<MediaTimeUpdateEventDetail> {}
+
+/**
+ * Fired when the provided or inferred media title has changed.
+ *
+ * @detail title
+ */
+export interface MediaTitleChangeEvent extends MediaEvent<string> {}
 
 /**
  * Fired when the `streamType` property changes value. The event detail contains the type of
