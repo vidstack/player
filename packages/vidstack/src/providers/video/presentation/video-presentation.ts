@@ -29,7 +29,7 @@ export class VideoPresentation {
     this._video.webkitSetPresentationMode!(mode);
   }
 
-  private _onModeChange() {
+  private _onModeChange(event: Event) {
     const prevMode = this._mode;
     this._mode = this._video.webkitPresentationMode!;
 
@@ -50,10 +50,7 @@ export class VideoPresentation {
 
     (['fullscreen', 'picture-in-picture'] as const).forEach((type) => {
       if (this._mode === type || prevMode === type) {
-        this._media.delegate._notify(`${type}-change`, {
-          detail: this._mode === type,
-          trigger: event,
-        });
+        this._media.delegate._notify(`${type}-change`, this._mode === type, event);
       }
     });
   }

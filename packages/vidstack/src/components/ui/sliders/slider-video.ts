@@ -154,7 +154,7 @@ export interface SliderVideoEvents {
 export interface SliderVideoCanPlayEvent extends DOMEvent<void> {
   target: SliderVideo;
   /** The `canplay` media event. */
-  trigger?: Event;
+  readonly trigger: Event;
 }
 
 /**
@@ -169,5 +169,5 @@ export interface SliderVideoCanPlayEvent extends DOMEvent<void> {
 export interface SliderVideoErrorEvent extends DOMEvent<void> {
   target: SliderVideo;
   /** The `error` media event. */
-  trigger: Event;
+  readonly trigger: Event;
 }
