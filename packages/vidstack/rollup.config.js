@@ -33,10 +33,10 @@ export default defineConfig(
   MODE_CDN
     ? CDN_BUNDLES
     : MODE_WATCH
-    ? [...NPM_BUNDLES, ...TYPES_BUNDLES]
-    : MODE_TYPES
-    ? TYPES_BUNDLES
-    : [...NPM_BUNDLES, ...CDN_BUNDLES],
+      ? [...NPM_BUNDLES, ...TYPES_BUNDLES]
+      : MODE_TYPES
+        ? TYPES_BUNDLES
+        : [...NPM_BUNDLES, ...CDN_BUNDLES],
 );
 
 /**
@@ -105,6 +105,7 @@ function define({ target, type, minify }) {
       [`providers/vidstack-audio`]: 'src/providers/audio/provider.ts',
       [`providers/vidstack-video`]: 'src/providers/video/provider.ts',
       [`providers/vidstack-hls`]: 'src/providers/hls/provider.ts',
+      [`providers/vidstack-youtube`]: 'src/providers/youtube/provider.ts',
     };
 
     input['define/vidstack-audio-layout'] =
@@ -134,8 +135,8 @@ function define({ target, type, minify }) {
         exportConditions: isServer
           ? ['node', 'default', 'development']
           : isProd
-          ? ['production', 'default']
-          : ['development', 'production', 'default'],
+            ? ['production', 'default']
+            : ['development', 'production', 'default'],
       }),
       isServer && {
         name: 'server-bundle',
@@ -206,6 +207,7 @@ function defineCDN({ dev = false, layouts = false } = {}) {
       [`providers/vidstack-audio`]: 'src/providers/audio/provider.ts',
       [`providers/vidstack-video`]: 'src/providers/video/provider.ts',
       [`providers/vidstack-hls`]: 'src/providers/hls/provider.ts',
+      [`providers/vidstack-youtube`]: 'src/providers/youtube/provider.ts',
     },
     output: {
       format: 'esm',

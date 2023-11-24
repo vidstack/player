@@ -161,7 +161,6 @@ export class YouTubeProvider
 
   override setup(ctx: MediaSetupContext) {
     this._ctx = ctx;
-    ctx.qualities[ListSymbol._setReadonly](true);
     super.setup(ctx);
     effect(this._watchVideoId.bind(this));
     effect(this._watchPoster.bind(this));
