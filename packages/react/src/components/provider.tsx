@@ -81,12 +81,14 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
         React.createElement('iframe', {
           className: isYouTubeEmbed ? 'vds-youtube' : 'vds-vimeo',
           suppressHydrationWarning: true,
-          'data-no-controls': !$controls ? '' : undefined,
+          'data-no-controls': !$controls || $iosControls ? '' : undefined,
           ref(el: HTMLElement) {
             provider.load(el);
           },
         }),
-        !$controls ? React.createElement('div', { className: 'vds-blocker' }) : null,
+        !$controls && !$iosControls
+          ? React.createElement('div', { className: 'vds-blocker' })
+          : null,
       )
     : $mediaType
       ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {

@@ -275,18 +275,20 @@ export class YouTubeProvider
 
   protected _buildParams(): YouTubeParams {
     const { keyDisabled } = this._ctx.$props,
-      { controls, muted, playsinline } = this._ctx.$state;
+      { $iosControls } = this._ctx,
+      { controls, muted, playsinline } = this._ctx.$state,
+      showControls = controls() || $iosControls();
     return {
       autoplay: 0,
       cc_lang_pref: this.language,
-      cc_load_policy: controls() ? 1 : undefined,
+      cc_load_policy: showControls ? 1 : undefined,
       color: this.color,
-      controls: controls() ? 1 : 0,
-      disablekb: !controls() || keyDisabled() ? 1 : 0,
+      controls: showControls ? 1 : 0,
+      disablekb: !showControls || keyDisabled() ? 1 : 0,
       enablejsapi: 1,
       fs: 1,
       hl: this.language,
-      iv_load_policy: controls() ? 1 : 3,
+      iv_load_policy: showControls ? 1 : 3,
       mute: muted() ? 1 : 0,
       playsinline: playsinline() ? 1 : 0,
     };

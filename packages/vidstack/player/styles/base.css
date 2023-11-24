@@ -67,13 +67,16 @@
   aspect-ratio: inherit;
 }
 
+[data-media-provider] iframe {
+  height: 100%;
+}
+
 [data-media-player][data-view-type='audio'] video,
 [data-media-player][data-view-type='audio'] iframe {
   display: none;
 }
 
-[data-media-player][data-fullscreen] video,
-[data-media-player][data-fullscreen] iframe {
+[data-media-player][data-fullscreen] video {
   height: 100%;
 }
 

@@ -58,9 +58,11 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
 
         if (isEmbed && target) {
           effect(() => {
-            const { controls } = this._media.$state;
+            const { $iosControls } = this._media,
+              { controls } = this._media.$state,
+              showControls = controls() || $iosControls();
 
-            if (controls()) {
+            if (showControls) {
               this._blocker?.remove();
               this._blocker = null;
             } else {
@@ -69,7 +71,7 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
               target.after(this._blocker);
             }
 
-            setAttribute(target, 'data-no-controls', !controls());
+            setAttribute(target, 'data-no-controls', !showControls);
           });
         }
       }
