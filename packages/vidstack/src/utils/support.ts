@@ -79,10 +79,11 @@ export function canUsePictureInPicture(video: HTMLVideoElement): boolean {
  *
  * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode}
  */
-export function canUseVideoPresentation(video: HTMLVideoElement): boolean {
+export function canUseVideoPresentation(video: HTMLVideoElement | null): boolean {
   if (__SERVER__) return false;
   return (
-    isFunction(video.webkitSupportsPresentationMode) && isFunction(video.webkitSetPresentationMode)
+    isFunction(video?.webkitSupportsPresentationMode) &&
+    isFunction(video?.webkitSetPresentationMode)
   );
 }
 
