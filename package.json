@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
-    "@types/node": "^16.0.0",
+    "@types/node": "^18.0.0",
     "chokidar": "^3.5.0",
     "enquirer": "^2.3.0",
     "esbuild": "^0.19.4",
@@ -36,7 +36,7 @@
     "semver": "^7.3.0",
     "simple-git-hooks": "^2.8.0",
     "turbo": "^1.10.14",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.0"
   },
   "simple-git-hooks": {
     "pre-commit": "npx --no-install lint-staged"
