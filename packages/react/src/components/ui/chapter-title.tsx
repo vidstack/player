@@ -24,12 +24,13 @@ export interface ChapterTitleProps extends PrimitivePropsWithRef<'span'> {}
 const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
   ({ children, ...props }, forwardRef) => {
     const $started = useMediaState('started'),
-      $title = useMediaState('title'),
-      track = useActiveTextTrack('chapters'),
-      cues = useActiveTextCues(track);
+      $mainTitle = useMediaState('title'),
+      $track = useActiveTextTrack('chapters'),
+      $cues = useActiveTextCues($track),
+      $chapterTitle = $cues[0]?.text || '';
     return (
       <Primitive.span {...props} ref={forwardRef as any}>
-        {$started ? cues[0]?.text || $title : $title}
+        {$started ? $chapterTitle || $mainTitle : $mainTitle || $chapterTitle}
         {children}
       </Primitive.span>
     );
