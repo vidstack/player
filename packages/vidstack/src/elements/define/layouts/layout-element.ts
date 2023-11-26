@@ -51,7 +51,7 @@ export class MediaLayoutElement extends Host(HTMLElement, MediaLayout) {
     }
 
     if (isTemplate) {
-      this.append(root.cloneNode(true));
+      this.append((root as HTMLTemplateElement).content.cloneNode(true));
     } else if (isHTMLElement) {
       root.style.display = '';
     }
