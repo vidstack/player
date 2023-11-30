@@ -722,7 +722,9 @@ function DefaultSpeedSubmenu() {
   const { Icons } = React.useContext(DefaultLayoutContext),
     label = useDefaultLayoutLang('Speed'),
     normalText = useDefaultLayoutLang('Normal'),
-    options = usePlaybackRateOptions(),
+    options = usePlaybackRateOptions({
+      normalLabel: normalText,
+    }),
     hint = options.selectedValue === '1' ? normalText : options.selectedValue + 'x';
   return (
     <MenuBase.Root className="vds-speed-menu vds-menu">
