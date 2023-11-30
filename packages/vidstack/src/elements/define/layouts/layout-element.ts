@@ -40,9 +40,8 @@ export class MediaLayoutElement extends Host(HTMLElement, MediaLayout) {
 
     if (!this.query.matches) {
       if (isTemplate) {
-        for (const el of this.children) {
-          if (el.localName !== 'template') el.remove();
-        }
+        this.textContent = '';
+        this.appendChild(root);
       } else if (isHTMLElement) {
         root.style.display = 'none';
       }
