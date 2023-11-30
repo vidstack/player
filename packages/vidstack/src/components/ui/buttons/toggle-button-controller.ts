@@ -48,6 +48,11 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
 
   protected override onConnect(el: HTMLElement) {
     onPress(el, this._onMaybePress.bind(this));
+
+    // Prevent these events too when toggle is disabled.
+    for (const type of ['click', 'touchstart'] as const) {
+      this.listen(type, this._onInteraction.bind(this));
+    }
   }
 
   protected _isARIAPressed() {
@@ -64,11 +69,19 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
     const disabled = this.$props.disabled() || this.el!.hasAttribute('data-disabled');
 
     if (disabled) {
+      event.preventDefault();
       event.stopImmediatePropagation();
       return;
     }
 
     event.preventDefault();
     (this._delegate._onPress ?? this._onPressed).call(this, event);
+  }
+
+  protected _onInteraction(event: Event) {
+    if (this.$props.disabled()) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 }
