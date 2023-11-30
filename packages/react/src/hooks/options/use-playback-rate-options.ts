@@ -12,13 +12,14 @@ export function usePlaybackRateOptions({
   rates = DEFAULT_RATES,
 }: UsePlaybackRateOptions = {}): PlaybackRateOptions {
   const media = useReactContext(mediaContext)!,
-    { playbackRate } = media.$state;
+    { playbackRate, canSetPlaybackRate } = media.$state;
 
   useSignal(playbackRate);
+  useSignal(canSetPlaybackRate);
 
   return React.useMemo(() => {
     const options = rates.map<PlaybackRateOption>((opt) => {
-      const label = typeof opt === 'number' ? opt + '' : opt.label,
+      const label = typeof opt === 'number' ? opt + 'x' : opt.label,
         rate = typeof opt === 'number' ? opt : opt.rate;
       return {
         label,
@@ -35,7 +36,7 @@ export function usePlaybackRateOptions({
 
     Object.defineProperty(options, 'disabled', {
       get() {
-        return !options.length;
+        return !canSetPlaybackRate() || !options.length;
       },
     });
 

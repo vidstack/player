@@ -1,5 +1,5 @@
 /**
- * @see https://developers.google.com/youtube/iframe_api_reference#onStateChange
+ * @see {@link https://developers.google.com/youtube/iframe_api_reference#onStateChange}
  */
 export const enum YouTubePlayerState {
   Unstarted = -1,

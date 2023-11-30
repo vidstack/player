@@ -95,9 +95,9 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
       if (provider) {
         peek(() => {
           const { muted, volume, playsinline } = this._media.$state;
-          provider.muted = muted();
-          provider.volume = volume();
-          provider.playsinline = playsinline();
+          provider.setMuted(muted());
+          provider.setVolume(volume());
+          provider.setPlaysinline?.(playsinline());
         });
       }
 

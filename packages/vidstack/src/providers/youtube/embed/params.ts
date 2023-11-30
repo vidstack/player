@@ -1,7 +1,7 @@
 /**
  * YouTube Player Parameters.
  *
- * @see https://developers.google.com/youtube/player_parameters
+ * @see {@link https://developers.google.com/youtube/player_parameters}
  */
 export interface YouTubeParams {
   /**

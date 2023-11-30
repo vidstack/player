@@ -180,6 +180,7 @@ export class HLSController {
     for (const level of this._instance!.levels) {
       this._ctx.qualities[ListSymbol._add](
         {
+          id: (level.id ?? level.height + 'p') + '',
           width: level.width,
           height: level.height,
           codec: level.codecSet,

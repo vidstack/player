@@ -50,6 +50,7 @@ export const mediaState = new State<MediaState>({
   quality: null,
   autoQuality: false,
   canSetQuality: true,
+  canSetPlaybackRate: true,
   canSetVolume: false,
   seekable: new TimeRange(),
   seeking: false,
@@ -157,26 +158,26 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'crossorigin',
   'fullscreen',
   'height',
+  'inferredViewType',
   'logLevel',
   'loop',
   'mediaHeight',
-  'mediaWidth',
   'mediaType',
+  'mediaWidth',
   'muted',
   'orientation',
   'pictureInPicture',
   'playsinline',
   'pointer',
-  'providedPoster',
   'preload',
+  'providedPoster',
   'providedStreamType',
-  'inferredViewType',
+  'providedTitle',
   'providedViewType',
   'source',
   'sources',
   'textTrack',
   'textTracks',
-  'providedTitle',
   'volume',
   'width',
 ]);
@@ -533,10 +534,15 @@ export interface MediaState {
   audioTrack: AudioTrack | null;
   /**
    * Whether the current video quality list is read-only, meaning quality selections can only
-   * be set internally by the media provider. This will only be `true` when working with particular
+   * be set internally by the media provider. This will only be `false` when working with particular
    * third-party embeds such as YouTube.
    */
   canSetQuality: boolean;
+  /**
+   * Whether the current playback rate can be set. This will only be `false` when working with
+   * particular third-party embeds such as Vimeo (only available to pro/business accounts).
+   */
+  canSetPlaybackRate: boolean;
   /**
    * Whether the current volume can be changed. This depends on the current provider and browser
    * environment. It will generally be `false` on mobile devices as it's set by system controls.

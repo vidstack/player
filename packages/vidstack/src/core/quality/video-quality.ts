@@ -72,6 +72,7 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
 }
 
 export interface VideoQuality extends SelectListItem {
+  readonly id: string;
   readonly width: number;
   readonly height: number;
   readonly bitrate: number;

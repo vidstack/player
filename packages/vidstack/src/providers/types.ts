@@ -8,11 +8,15 @@ import type { FullscreenAdapter } from '../foundation/fullscreen/controller';
 import type { AudioProvider } from './audio/provider';
 import type { HLSProvider } from './hls/provider';
 import type { VideoProvider } from './video/provider';
+import type { VimeoProvider } from './vimeo/provider';
+import type { YouTubeProvider } from './youtube/provider';
 
 export type AnyMediaProvider =
   | ({ type: 'audio' } & AudioProvider)
   | ({ type: 'video' } & VideoProvider)
-  | ({ type: 'hls' } & HLSProvider);
+  | ({ type: 'hls' } & HLSProvider)
+  | ({ type: 'youtube' } & YouTubeProvider)
+  | ({ type: 'vimeo' } & VimeoProvider);
 
 export interface MediaProviderLoader<Provider extends MediaProviderAdapter = MediaProviderAdapter> {
   target: HTMLElement | null;
@@ -23,9 +27,13 @@ export interface MediaProviderLoader<Provider extends MediaProviderAdapter = Med
 }
 
 export interface MediaProviderAdapter
-  extends Pick<
-    MediaState,
-    'paused' | 'muted' | 'currentTime' | 'volume' | 'playsinline' | 'playbackRate'
+  extends Readonly<
+    Partial<
+      Pick<
+        MediaState,
+        'paused' | 'muted' | 'currentTime' | 'volume' | 'playsinline' | 'playbackRate'
+      >
+    >
   > {
   readonly scope: Scope;
   readonly type: string;
@@ -38,6 +46,11 @@ export interface MediaProviderAdapter
   destroy?(): void;
   play(): Promise<void>;
   pause(): Promise<void>;
+  setMuted(muted: boolean): void;
+  setCurrentTime(time: number): void;
+  setVolume(volume: number): void;
+  setPlaysinline?(inline: boolean): void;
+  setPlaybackRate?(rate: number): void;
   loadSource(src: MediaSrc, preload: MediaState['preload']): Promise<void>;
 }
 

@@ -44,47 +44,7 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     return this._currentSrc;
   }
 
-  get paused() {
-    return this._media.paused;
-  }
-
-  get muted() {
-    return this._media.muted;
-  }
-
-  set muted(muted) {
-    this._media.muted = muted;
-  }
-
-  get volume() {
-    return this._media.volume;
-  }
-
-  set volume(volume) {
-    this._media.volume = volume;
-  }
-
-  get currentTime() {
-    return this._media.currentTime;
-  }
-
-  set currentTime(time) {
-    this._media.currentTime = time;
-  }
-
-  get playsinline() {
-    return this._media.hasAttribute('playsinline');
-  }
-
-  set playsinline(playsinline) {
-    setAttribute(this._media, 'playsinline', playsinline);
-  }
-
-  get playbackRate() {
-    return this._media.playbackRate;
-  }
-
-  set playbackRate(rate) {
+  setPlaybackRate(rate: number) {
     this._media.playbackRate = rate;
   }
 
@@ -94,6 +54,22 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
 
   async pause() {
     return this._media.pause();
+  }
+
+  setMuted(muted: boolean) {
+    this._media.muted = muted;
+  }
+
+  setVolume(volume: number) {
+    this._media.volume = volume;
+  }
+
+  setCurrentTime(time: number) {
+    this._media.currentTime = time;
+  }
+
+  setPlaysinline(playsinline: boolean) {
+    setAttribute(this._media, 'playsinline', playsinline);
   }
 
   async loadSource({ src, type }: MediaSrc, preload?: HTMLMediaElement['preload']) {

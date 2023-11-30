@@ -80,7 +80,7 @@ export class QualityRadioGroup extends Component<
     return [
       { value: 'auto', label: autoLabel },
       ...this._sortedQualities().map((quality) => {
-        const rate = `${round(quality.bitrate / 1000000, 2)} Mbps`;
+        const rate = quality.bitrate >= 0 ? `${round(quality.bitrate / 1000000, 2)} Mbps` : null;
         return {
           quality,
           label: quality.height + 'p',
@@ -100,12 +100,13 @@ export class QualityRadioGroup extends Component<
       { autoQuality, quality } = this._media.$state,
       qualityText = quality() ? quality()!.height + 'p' : '';
 
-    this._menu?._hint.set(!autoQuality() ? qualityText : autoLabel() + ` (${qualityText})`);
+    this._menu?._hint.set(
+      !autoQuality() ? qualityText : autoLabel() + (qualityText ? ` (${qualityText})` : ''),
+    );
   }
 
   private _watchControllerDisabled() {
-    const { qualities } = this._media.$state;
-    this._menu?._disable(qualities().length === 0);
+    this._menu?._disable(this.disabled);
   }
 
   private _onValueChange(value: string, trigger?: Event) {

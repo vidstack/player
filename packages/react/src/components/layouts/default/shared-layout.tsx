@@ -1,8 +1,11 @@
 import * as React from 'react';
 
+import { computed } from 'maverick.js';
+import { useReactContext, useSignal } from 'maverick.js/react';
 import { isString } from 'maverick.js/std';
 import {
   isTrackCaptionKind,
+  mediaContext,
   type DefaultLayoutTranslations,
   type TooltipPlacement,
 } from 'vidstack';
@@ -580,11 +583,29 @@ export { DefaultChaptersMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
-  const { showMenuDelay, Icons, isSmallLayout, menuGroup, noModal } =
+  const { $state } = useReactContext(mediaContext)!,
+    { showMenuDelay, Icons, isSmallLayout, menuGroup, noModal } =
       React.useContext(DefaultLayoutContext),
     settingsText = useDefaultLayoutLang('Settings'),
     $viewType = useMediaState('viewType'),
-    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0;
+    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
+    // Create as a computed signal to avoid unnecessary re-rendering.
+    $$hasMenuItems = React.useMemo(
+      () =>
+        computed(() => {
+          const { canSetPlaybackRate, canSetQuality, qualities, audioTracks, textTracks } = $state;
+          return (
+            canSetPlaybackRate() ||
+            (canSetQuality() && qualities().length) ||
+            audioTracks().length ||
+            textTracks().filter(isTrackCaptionKind).length
+          );
+        }),
+      [],
+    ),
+    $hasMenuItems = useSignal($$hasMenuItems);
+
+  if (!$hasMenuItems) return null;
 
   const Content = (
     <MenuBase.Content

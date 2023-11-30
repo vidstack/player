@@ -15,7 +15,7 @@ export class HTMLMediaEvents {
   private _waiting = false;
   private _attachedLoadStart = false;
   private _attachedCanPlay = false;
-  private _timeRAF = new RAFLoop(this._onRAF.bind(this));
+  private _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
 
   private get _media() {
     return this._provider.media;
@@ -46,8 +46,8 @@ export class HTMLMediaEvents {
    * bar (or whatever else is synced to the currentTime) moves in a choppy fashion. This helps
    * resolve that by retrieving time updates in a request animation frame loop.
    */
-  private _onRAF() {
-    const newTime = this._provider.currentTime;
+  private _onAnimationFrame() {
+    const newTime = this._media.currentTime;
     if (this._ctx.$state.currentTime() !== newTime) this._updateCurrentTime(newTime);
   }
 
@@ -242,9 +242,10 @@ export class HTMLMediaEvents {
     this._updateCurrentTime(this._media.duration, event);
     this._notify('end', undefined, event);
     if (this._ctx.$state.loop()) {
-      this._onLoop();
-    } else {
-      this._notify('ended', undefined, event);
+      const hasCustomControls = isNil(this._media.controls);
+      // Forcefully hide controls to prevent flashing when looping. Calling `play()` at end
+      // of media may show a flash of native controls on iOS, even if `controls` property is not set.
+      if (hasCustomControls) this._media.controls = false;
     }
   }
 
@@ -309,14 +310,6 @@ export class HTMLMediaEvents {
     };
 
     this._notify('progress', detail, event);
-  }
-
-  private _onLoop() {
-    const hasCustomControls = isNil(this._media.controls);
-    // Forcefully hide controls to prevent flashing when looping. Calling `play()` at end
-    // of media may show a flash of native controls on iOS, even if `controls` property is not set.
-    if (hasCustomControls) this._media.controls = false;
-    this._ctx.player.dispatch(new DOMEvent<void>('media-loop-request'));
   }
 
   private _onSuspend(event: Event) {

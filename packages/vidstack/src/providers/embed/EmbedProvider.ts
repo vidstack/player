@@ -12,10 +12,28 @@ export abstract class EmbedProvider<Message> {
   protected abstract _onMessage(message: Message, event: MessageEvent): void;
   protected abstract _onLoad(): void;
 
+  /**
+   * Defines which referrer is sent when fetching the resource.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/referrerPolicy}
+   */
+  referrerPolicy: ReferrerPolicy | null = null;
+
+  get iframe() {
+    return this._iframe;
+  }
+
   constructor(protected readonly _iframe: HTMLIFrameElement) {
     _iframe.setAttribute('frameBorder', '0');
-    _iframe.setAttribute('allowfullscreen', '');
-    _iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture;');
+
+    _iframe.setAttribute(
+      'allow',
+      'autoplay; fullscreen; encrypted-media; picture-in-picture; accelerometer; gyroscope',
+    );
+
+    if (this.referrerPolicy !== null) {
+      _iframe.setAttribute('referrerpolicy', this.referrerPolicy);
+    }
   }
 
   setup(ctx: MediaSetupContext) {

@@ -12,12 +12,13 @@ export function useVideoQualityOptions({
   sort = 'descending',
 }: UseVideoQualityOptions = {}): VideoQualityOptions {
   const media = useReactContext(mediaContext)!,
-    { qualities, quality, autoQuality } = media.$state,
+    { qualities, quality, autoQuality, canSetQuality } = media.$state,
     $qualities = useSignal(qualities);
 
   // Trigger updates.
   useSignal(quality);
   useSignal(autoQuality);
+  useSignal(canSetQuality);
 
   return React.useMemo(() => {
     const options = [...$qualities]
@@ -27,7 +28,8 @@ export function useVideoQualityOptions({
           quality: _quality,
           label: _quality.height + 'p',
           value: getQualityValue(_quality),
-          bitrateText: `${(_quality.bitrate / 1000000).toFixed(2)} Mbps`,
+          bitrateText:
+            _quality.bitrate >= 0 ? `${(_quality.bitrate / 1000000).toFixed(2)} Mbps` : null,
           get selected() {
             return _quality === quality();
           },
@@ -61,7 +63,7 @@ export function useVideoQualityOptions({
 
     Object.defineProperty(options, 'disabled', {
       get() {
-        return !$qualities.length;
+        return !canSetQuality() || !$qualities.length;
       },
     });
 

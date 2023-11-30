@@ -57,7 +57,7 @@ import { LogPrinter } from '../foundation/logger/log-printer';
 import { FocusVisibleController } from '../foundation/observers/focus-visible';
 import { ScreenOrientationController } from '../foundation/orientation/controller';
 import { RequestQueue } from '../foundation/queue/request-queue';
-import type { AnyMediaProvider } from '../providers';
+import type { AnyMediaProvider, MediaProviderAdapter } from '../providers';
 import { setAttributeIfEmpty } from '../utils/dom';
 import { clampNumber } from '../utils/number';
 import { canChangeVolume, IS_IPHONE } from '../utils/support';
@@ -420,7 +420,7 @@ export class MediaPlayer
 
   @prop
   get paused() {
-    return this._provider?.paused ?? true;
+    return peek(this.$state.paused);
   }
 
   set paused(paused) {
@@ -439,7 +439,7 @@ export class MediaPlayer
 
   @prop
   get muted() {
-    return this._provider?.muted ?? false;
+    return peek(this.$state.muted);
   }
 
   set muted(muted) {
@@ -451,12 +451,12 @@ export class MediaPlayer
   }
 
   private _queueMutedUpdate(muted: boolean) {
-    this.canPlayQueue._enqueue('muted', () => (this._provider!.muted = muted));
+    this.canPlayQueue._enqueue('muted', () => this._provider!.setMuted(muted));
   }
 
   @prop
   get currentTime() {
-    return this._provider?.currentTime ?? 0;
+    return peek(this.$state.currentTime);
   }
 
   set currentTime(time) {
@@ -470,14 +470,14 @@ export class MediaPlayer
   private _queueCurrentTimeUpdate(time: number) {
     this.canPlayQueue._enqueue('currentTime', () => {
       const adapter = this._provider;
-      if (time !== adapter!.currentTime) {
+      if (time !== peek(this.$state.currentTime)) {
         peek(() => {
           const boundTime = Math.min(
             Math.max(this.$state.seekableStart() + 0.1, time),
             this.$state.seekableEnd() - 0.1,
           );
 
-          if (Number.isFinite(boundTime)) adapter!.currentTime = boundTime;
+          if (Number.isFinite(boundTime)) adapter!.setCurrentTime(boundTime);
         });
       }
     });
@@ -485,7 +485,7 @@ export class MediaPlayer
 
   @prop
   get volume() {
-    return this._provider?.volume ?? 1;
+    return peek(this.$state.volume);
   }
 
   set volume(volume) {
@@ -498,12 +498,12 @@ export class MediaPlayer
 
   private _queueVolumeUpdate(volume: number) {
     const clampedVolume = clampNumber(0, volume, 1);
-    this.canPlayQueue._enqueue('volume', () => (this._provider!.volume = clampedVolume));
+    this.canPlayQueue._enqueue('volume', () => this._provider!.setVolume(clampedVolume));
   }
 
   @prop
   get playbackRate() {
-    return this._provider?.playbackRate ?? 1;
+    return peek(this.$state.playbackRate);
   }
 
   set playbackRate(rate) {
@@ -515,7 +515,7 @@ export class MediaPlayer
   }
 
   private _queuePlaybackRateUpdate(rate: number) {
-    this.canPlayQueue._enqueue('rate', () => (this._provider!.playbackRate = rate));
+    this.canPlayQueue._enqueue('rate', () => this._provider!.setPlaybackRate?.(rate));
   }
 
   private _watchPlaysinline() {
@@ -523,7 +523,10 @@ export class MediaPlayer
   }
 
   private _queuePlaysinlineUpdate(inline: boolean) {
-    this.canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
+    this.canPlayQueue._enqueue(
+      'playsinline',
+      () => (this._provider as MediaProviderAdapter).setPlaysinline?.(inline),
+    );
   }
 
   /**

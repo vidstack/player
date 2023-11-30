@@ -1,6 +1,6 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
-import { onDispose, peek } from 'maverick.js';
+import { onDispose } from 'maverick.js';
 import { DOMEvent, listenEvent } from 'maverick.js/std';
 
 import { ListSymbol } from '../../foundation/list/symbols';
@@ -243,10 +243,10 @@ export class MediaStateManager extends MediaPlayerController {
     const sourceChangeEvent = this._trackedEvents.get('source-change');
     if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);
 
-    const viewType = peek(this.$state.viewType);
+    const viewType = this.$state.viewType();
     this.$state.mediaType.set(event.detail);
 
-    const providedViewType = peek(this.$state.providedViewType),
+    const providedViewType = this.$state.providedViewType(),
       currentViewType = providedViewType === 'unknown' ? event.detail : providedViewType;
 
     if (viewType !== currentViewType) {
@@ -406,7 +406,7 @@ export class MediaStateManager extends MediaPlayerController {
     paused.set(false);
     autoplayError.set(null);
 
-    if (autoplaying()) {
+    if (event.autoplay) {
       this._handle(
         this.createEvent('autoplay', {
           detail: { muted: muted() },
@@ -443,7 +443,7 @@ export class MediaStateManager extends MediaPlayerController {
     this._resetTracking();
     this._trackedEvents.set('play-fail', event);
 
-    if (autoplaying()) {
+    if (event.autoplay) {
       this._handle(
         this.createEvent('autoplay-fail', {
           detail: {
@@ -492,7 +492,7 @@ export class MediaStateManager extends MediaPlayerController {
 
     if (live() && !started() && currentTime() === 0) {
       const end = liveSyncPosition() ?? seekableEnd() - 2;
-      if (Number.isFinite(end)) this._media.$provider()!.currentTime = end;
+      if (Number.isFinite(end)) this._media.$provider()!.setCurrentTime(end);
     }
 
     this['started'](event);
@@ -521,10 +521,9 @@ export class MediaStateManager extends MediaPlayerController {
 
     this._satisfyRequest('pause', event);
 
-    const { paused, playing, seeking } = this.$state;
+    const { paused, playing } = this.$state;
     paused.set(true);
     playing.set(false);
-    seeking.set(false);
 
     this._resetTracking();
   }
@@ -620,19 +619,44 @@ export class MediaStateManager extends MediaPlayerController {
     this._firingWaiting = false;
   }, 300);
 
-  ['ended'](event: ME.MediaEndedEvent) {
-    if (this._request._looping) {
-      event.stopImmediatePropagation();
+  ['end'](event: ME.MediaEndEvent) {
+    const { loop } = this.$state;
+
+    if (loop()) {
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          this.dispatch('media-loop-request', {
+            trigger: event,
+          });
+        });
+      }, 0);
+
       return;
     }
 
-    const { paused, playing, seeking, ended } = this.$state;
-    paused.set(true);
-    playing.set(false);
-    seeking.set(false);
-    ended.set(true);
+    this._onEnded(event);
+  }
 
+  private _onEnded(event: Event) {
+    const { paused, seeking, ended, duration } = this.$state;
+
+    if (!paused()) {
+      this.dispatch('pause', { trigger: event });
+    }
+
+    if (seeking()) {
+      this.dispatch('seeked', {
+        detail: duration(),
+        trigger: event,
+      });
+    }
+
+    ended.set(true);
     this._resetTracking();
+
+    this.dispatch('ended', {
+      trigger: event,
+    });
   }
 
   private _stopWaiting() {

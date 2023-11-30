@@ -47,18 +47,21 @@ export class SelectList<
   }
 
   /* @internal */
-  [ListSymbol._select](item: Item, selected: boolean, trigger?: Event) {
-    if (selected === item[SELECTED]) return;
+  [ListSymbol._select](item: Item | undefined, selected: boolean, trigger?: Event) {
+    if (selected === item?.[SELECTED]) return;
 
     const prev = this.selected;
-    item[SELECTED] = selected;
+    if (item) item[SELECTED] = selected;
 
     const changed = !selected ? prev === item : prev !== item;
     if (changed) {
       if (prev) prev[SELECTED] = false;
       this.dispatchEvent(
         new DOMEvent<SelectListChangeEventDetail<Item>>('change', {
-          detail: { prev, current: this.selected! },
+          detail: {
+            prev,
+            current: this.selected,
+          },
           trigger,
         }),
       );
@@ -79,5 +82,5 @@ export interface SelectListChangeEvent<Item extends SelectListItem>
 
 export interface SelectListChangeEventDetail<Item extends SelectListItem> {
   prev: Item | null;
-  current: Item;
+  current: Item | null;
 }

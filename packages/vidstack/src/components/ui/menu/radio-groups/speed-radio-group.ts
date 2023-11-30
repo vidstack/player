@@ -26,6 +26,13 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
     return this._controller.value;
   }
 
+  @prop
+  get disabled() {
+    const { rates } = this.$props,
+      { canSetPlaybackRate } = this._media.$state;
+    return !canSetPlaybackRate() || rates().length === 0;
+  }
+
   constructor() {
     super();
     this._controller = new RadioGroupController();
@@ -41,9 +48,8 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
 
   protected override onConnect(el: HTMLElement) {
     effect(this._watchValue.bind(this));
-    // TODO: when we add embeds we'll need to manage disabling.
-    // effect(this._watchControllerDisabled.bind(this));
     effect(this._watchHintText.bind(this));
+    effect(this._watchControllerDisabled.bind(this));
   }
 
   @method
@@ -66,12 +72,17 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
     this._menu?._hint.set(rate === 1 ? normalLabel() : rate + '×');
   }
 
+  private _watchControllerDisabled() {
+    this._menu?._disable(this.disabled);
+  }
+
   private _getValue() {
     const { playbackRate } = this._media.$state;
     return playbackRate() + '';
   }
 
   private _onValueChange(value: string, trigger?: Event) {
+    if (this.disabled) return;
     const rate = +value;
     this._media.remote.changePlaybackRate(rate, trigger);
     this.dispatch('change', { detail: rate, trigger });

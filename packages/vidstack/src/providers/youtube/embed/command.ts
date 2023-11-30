@@ -1,5 +1,5 @@
 /**
- * @see https://developers.google.com/youtube/iframe_api_reference#Playback_controls
+ * @see {@link https://developers.google.com/youtube/iframe_api_reference#Playback_controls}
  */
 export const enum YouTubeCommand {
   Play = 'playVideo',

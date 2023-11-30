@@ -14,6 +14,7 @@ import {
   AudioProviderLoader,
   HLSProviderLoader,
   VideoProviderLoader,
+  VimeoProviderLoader,
   YouTubeProviderLoader,
   type MediaProviderLoader,
 } from '../../providers';
@@ -43,12 +44,14 @@ export class SourceSelection {
     const HLS_LOADER = new HLSProviderLoader(),
       VIDEO_LOADER = new VideoProviderLoader(),
       AUDIO_LOADER = new AudioProviderLoader(),
-      YOUTUBE_LOADER = new YouTubeProviderLoader();
+      YOUTUBE_LOADER = new YouTubeProviderLoader(),
+      VIMEO_LOADER = new VimeoProviderLoader(),
+      EMBED_LOADERS = [YOUTUBE_LOADER, VIMEO_LOADER];
 
     this._loaders = computed<MediaProviderLoader[]>(() => {
       return _media.$props.preferNativeHLS()
-        ? [VIDEO_LOADER, AUDIO_LOADER, HLS_LOADER, YOUTUBE_LOADER]
-        : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER, YOUTUBE_LOADER];
+        ? [VIDEO_LOADER, AUDIO_LOADER, HLS_LOADER, ...EMBED_LOADERS]
+        : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER, ...EMBED_LOADERS];
     });
 
     const { $state } = _media;

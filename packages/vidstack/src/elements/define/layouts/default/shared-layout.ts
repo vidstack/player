@@ -2,6 +2,7 @@ import { html, type TemplateResult } from 'lit-html';
 import { computed, type ReadSignal } from 'maverick.js';
 import { isFunction, unwrap } from 'maverick.js/std';
 
+import { isTrackCaptionKind } from '../../../..';
 import {
   getDefaultLayoutLang,
   useDefaultLayoutContext,
@@ -317,13 +318,21 @@ export function DefaultSettingsMenu({
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
 }) {
-  const { viewType } = useMediaContext().$state,
+  const { viewType, canSetPlaybackRate, canSetQuality, qualities, audioTracks, textTracks } =
+      useMediaContext().$state,
     { translations, smQueryList, menuContainer, noModal, menuGroup } = useDefaultLayoutContext(),
     $placement = computed(() =>
       noModal() ? unwrap(placement) : !smQueryList.matches ? unwrap(placement) : null,
     ),
     $offset = computed(() =>
       !smQueryList.matches && menuGroup() === 'bottom' && viewType() === 'video' ? 26 : 0,
+    ),
+    $hasMenuItems = computed(
+      () =>
+        canSetPlaybackRate() ||
+        (canSetQuality() && qualities().length) ||
+        audioTracks().length ||
+        textTracks().filter(isTrackCaptionKind).length,
     );
 
   const items = html`
@@ -336,7 +345,7 @@ export function DefaultSettingsMenu({
     </media-menu-items>
   `;
 
-  return html`
+  const menu = html`
     <media-menu class="vds-settings-menu vds-menu">
       <media-tooltip class="vds-tooltip">
         <media-tooltip-trigger>
@@ -357,6 +366,8 @@ export function DefaultSettingsMenu({
       ${portal ? MenuPortal(menuContainer, items) : items}
     </media-menu>
   `;
+
+  return $computed(() => ($hasMenuItems() ? menu : null)) as any;
 }
 
 function DefaultAudioSubmenu() {
