@@ -451,7 +451,9 @@ export class MediaPlayer
   }
 
   private _queueMutedUpdate(muted: boolean) {
-    this.canPlayQueue._enqueue('muted', () => this._provider!.setMuted(muted));
+    this.canPlayQueue._enqueue('muted', () => {
+      if (this._provider) this._provider.setMuted(muted);
+    });
   }
 
   @prop
@@ -469,17 +471,17 @@ export class MediaPlayer
 
   private _queueCurrentTimeUpdate(time: number) {
     this.canPlayQueue._enqueue('currentTime', () => {
-      const adapter = this._provider;
-      if (time !== peek(this.$state.currentTime)) {
-        peek(() => {
-          const boundTime = Math.min(
-            Math.max(this.$state.seekableStart() + 0.1, time),
-            this.$state.seekableEnd() - 0.1,
-          );
+      if (time === peek(this.$state.currentTime)) return;
+      peek(() => {
+        if (!this._provider) return;
 
-          if (Number.isFinite(boundTime)) adapter!.setCurrentTime(boundTime);
-        });
-      }
+        const boundTime = Math.min(
+          Math.max(this.$state.seekableStart() + 0.1, time),
+          this.$state.seekableEnd() - 0.1,
+        );
+
+        if (Number.isFinite(boundTime)) this._provider.setCurrentTime(boundTime);
+      });
     });
   }
 
@@ -498,7 +500,9 @@ export class MediaPlayer
 
   private _queueVolumeUpdate(volume: number) {
     const clampedVolume = clampNumber(0, volume, 1);
-    this.canPlayQueue._enqueue('volume', () => this._provider!.setVolume(clampedVolume));
+    this.canPlayQueue._enqueue('volume', () => {
+      if (this._provider) this._provider.setVolume(clampedVolume);
+    });
   }
 
   @prop
@@ -515,7 +519,9 @@ export class MediaPlayer
   }
 
   private _queuePlaybackRateUpdate(rate: number) {
-    this.canPlayQueue._enqueue('rate', () => this._provider!.setPlaybackRate?.(rate));
+    this.canPlayQueue._enqueue('rate', () => {
+      if (this._provider) this._provider.setPlaybackRate?.(rate);
+    });
   }
 
   private _watchPlaysinline() {
@@ -523,10 +529,9 @@ export class MediaPlayer
   }
 
   private _queuePlaysinlineUpdate(inline: boolean) {
-    this.canPlayQueue._enqueue(
-      'playsinline',
-      () => (this._provider as MediaProviderAdapter).setPlaysinline?.(inline),
-    );
+    this.canPlayQueue._enqueue('playsinline', () => {
+      if (this._provider) (this._provider as MediaProviderAdapter).setPlaysinline?.(inline);
+    });
   }
 
   /**
