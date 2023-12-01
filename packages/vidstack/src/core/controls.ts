@@ -1,5 +1,5 @@
-import { effect } from 'maverick.js';
-import { isKeyboardEvent, listenEvent } from 'maverick.js/std';
+import { effect, signal } from 'maverick.js';
+import { isKeyboardEvent } from 'maverick.js/std';
 
 import { isTouchPinchEvent } from '../utils/dom';
 import { MediaPlayerController } from './api/player-controller';
@@ -7,6 +7,8 @@ import { MediaPlayerController } from './api/player-controller';
 export class MediaControls extends MediaPlayerController {
   private _idleTimer = -2;
   private _pausedTracking = false;
+  private _hideOnMouseLeave = signal(false);
+  private _isMouseOutside = signal(false);
   private _focusedItem: HTMLElement | null = null;
 
   /**
@@ -16,6 +18,21 @@ export class MediaControls extends MediaPlayerController {
    * @defaultValue 2000
    */
   defaultDelay = 2000;
+
+  /**
+   * Whether controls visibility should be toggled when the mouse enters and leaves the player
+   * container.
+   *
+   * @defaultValue false
+   */
+  get hideOnMouseLeave() {
+    const { hideControlsOnMouseLeave } = this.$props;
+    return this._hideOnMouseLeave() || hideControlsOnMouseLeave();
+  }
+
+  set hideOnMouseLeave(hide) {
+    this._hideOnMouseLeave.set(hide);
+  }
 
   /**
    * Whether media controls are currently visible.
@@ -60,6 +77,7 @@ export class MediaControls extends MediaPlayerController {
   }
 
   protected override onConnect() {
+    effect(this._watchMouse.bind(this));
     effect(this._watchPaused.bind(this));
 
     const onPlay = this._onPlay.bind(this),
@@ -70,6 +88,24 @@ export class MediaControls extends MediaPlayerController {
 
     this.listen('pause', onPause);
     this.listen('autoplay-fail', onPause);
+  }
+
+  private _watchMouse() {
+    const { started, pointer, paused } = this.$state;
+    if (!started() || pointer() !== 'fine') return;
+
+    const shouldHideOnMouseLeave = this.hideOnMouseLeave;
+
+    if (!shouldHideOnMouseLeave || !this._isMouseOutside()) {
+      effect(() => {
+        if (!paused()) this.listen('pointermove', this._onStopIdle.bind(this));
+      });
+    }
+
+    if (shouldHideOnMouseLeave) {
+      this.listen('mouseenter', this._onMouseEnter.bind(this));
+      this.listen('mouseleave', this._onMouseLeave.bind(this));
+    }
   }
 
   private _watchPaused() {
@@ -84,22 +120,29 @@ export class MediaControls extends MediaPlayerController {
         events = [isTouch ? 'touchend' : 'pointerup', 'keydown'] as const;
 
       for (const eventType of events) {
-        listenEvent(this.el!, eventType, onStopIdle, { passive: false });
-      }
-
-      if (!isTouch) {
-        listenEvent(this.el!, 'pointermove', onStopIdle);
+        this.listen(eventType, onStopIdle, { passive: false });
       }
     });
   }
 
   private _onPlay(event: Event) {
     this.show(0, event);
-    this.hide(this.defaultDelay, event);
+    this.hide(undefined, event);
   }
 
   private _onPause(event: Event) {
     this.show(0, event);
+  }
+
+  private _onMouseEnter(event: Event) {
+    this._isMouseOutside.set(false);
+    this.show(0, event);
+    this.hide(undefined, event);
+  }
+
+  private _onMouseLeave(event: Event) {
+    this._isMouseOutside.set(true);
+    this.hide(0, event);
   }
 
   private _clearIdleTimer() {

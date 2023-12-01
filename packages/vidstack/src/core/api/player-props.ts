@@ -24,6 +24,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   src: '',
   title: '',
   controlsDelay: 2000,
+  hideControlsOnMouseLeave: false,
   viewType: 'unknown',
   streamType: 'unknown',
   volume: 1,
@@ -100,6 +101,11 @@ export interface MediaPlayerProps
    * activity to indicate an idle state and hide controls.
    */
   controlsDelay: number;
+  /**
+   * Whether controls visibility should be toggled when the mouse enters and leaves the player
+   * container.
+   */
+  hideControlsOnMouseLeave: boolean;
   /**
    * This method will indicate the orientation to lock the screen to when in fullscreen mode and
    * the Screen Orientation API is available.
