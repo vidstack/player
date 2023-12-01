@@ -240,13 +240,17 @@ export class MediaPlayer
     this.canPlayQueue._reset();
   }
 
+  private _skipTitleUpdate = false;
   private _watchTitle() {
-    const { title, providedTitle, live, viewType } = this.$state,
+    if (this._skipTitleUpdate) {
+      this._skipTitleUpdate = false;
+      return;
+    }
+
+    const { title, live, viewType } = this.$state,
       isLive = live(),
       type = uppercaseFirstChar(viewType()),
       typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media';
-
-    this.el?.setAttribute('data-title', providedTitle());
 
     const currentTitle = title();
 
@@ -255,6 +259,11 @@ export class MediaPlayer
       'aria-label',
       currentTitle ? `${typeText} - ${currentTitle}` : typeText + ' Player',
     );
+
+    // Title attribute is removed to prevent popover interfering with user hovering over player.
+    if (!__SERVER__ && this.el && customElements.get(this.el.localName)) {
+      this._skipTitleUpdate = true;
+    }
 
     this.el?.removeAttribute('title');
   }
@@ -376,6 +385,19 @@ export class MediaPlayer
    */
   @prop
   readonly orientation: ScreenOrientationController;
+
+  /**
+   * The title of the current media.
+   */
+  @prop
+  get title() {
+    return peek(this.$state.providedTitle);
+  }
+
+  set title(newTitle) {
+    if (this._skipTitleUpdate) return;
+    this.$state.providedTitle.set(newTitle);
+  }
 
   /**
    * A list of all `VideoQuality` objects representing the set of available video renditions.

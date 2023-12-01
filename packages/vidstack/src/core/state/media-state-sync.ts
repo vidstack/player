@@ -47,10 +47,7 @@ export class MediaStateSync extends MediaPlayerController {
     this.$state.providedPoster.set(poster());
     this.$state.providedStreamType.set(streamType());
     this.$state.providedViewType.set(viewType());
-    this.$state.providedTitle.set(
-      // Title attribute is removed to prevent popover interfering with user hovering over player.
-      this.el?.getAttribute('data-title') || title(),
-    );
+    this.$state.providedTitle.set(title());
   }
 
   private _watchLogLevel() {

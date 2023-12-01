@@ -22,6 +22,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   preload: 'metadata',
   preferNativeHLS: false,
   src: '',
+  title: '',
   controlsDelay: 2000,
   viewType: 'unknown',
   streamType: 'unknown',
@@ -31,7 +32,6 @@ export const mediaPlayerProps: MediaPlayerProps = {
   keyDisabled: false,
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
-  title: '',
 };
 
 export interface MediaStateAccessors
@@ -56,9 +56,9 @@ export interface MediaPlayerProps
     | 'poster'
     | 'preload'
     | 'playbackRate'
-    | 'title'
     | 'viewType'
     | 'volume'
+    | 'title'
     // live
     | 'streamType'
     | 'liveEdgeTolerance'
