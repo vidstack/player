@@ -14,6 +14,10 @@
   user-select: none;
 }
 
+:where([data-media-player]) {
+  aspect-ratio: 16 / 9;
+}
+
 [data-media-player]:focus,
 [data-media-player]:focus-visible {
   outline: none;
