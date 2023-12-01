@@ -1,6 +1,1 @@
-export const enum YouTubeEvent {
-  InitialDelivery = 'initialDelivery',
-  Ready = 'onReady',
-  InfoDelivery = 'infoDelivery',
-  ApiInfoDelivery = 'apiInfoDelivery',
-}
+export type YouTubeEvent = 'initialDelivery' | 'onReady' | 'infoDelivery' | 'apiInfoDelivery';

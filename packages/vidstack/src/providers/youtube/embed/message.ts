@@ -1,6 +1,6 @@
 import type { YouTubeEvent } from './event';
 import type { YouTubePlaybackQuality } from './quality';
-import type { YouTubePlayerState } from './state';
+import type { YouTubePlayerStateValue } from './state';
 
 export interface YouTubeVideoData {
   author: string;
@@ -39,7 +39,7 @@ export interface YouTubeMessageInfo {
   muted?: boolean;
   playbackQuality?: YouTubePlaybackQuality;
   playbackRate?: number;
-  playerState?: YouTubePlayerState;
+  playerState?: YouTubePlayerStateValue;
   progressState?: YouTubeProgressState;
 }
 

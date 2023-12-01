@@ -1,22 +1,21 @@
 /**
  * @see {@link https://developers.google.com/youtube/iframe_api_reference#Playback_controls}
  */
-export const enum YouTubeCommand {
-  Play = 'playVideo',
-  Pause = 'pauseVideo',
-  Seek = 'seekTo',
-  Mute = 'mute',
-  Unmute = 'unMute',
-  SetVolume = 'setVolume',
-  SetPlaybackRate = 'setPlaybackRate',
-}
+export type YouTubeCommand =
+  | 'playVideo'
+  | 'pauseVideo'
+  | 'seekTo'
+  | 'mute'
+  | 'unMute'
+  | 'setVolume'
+  | 'setPlaybackRate';
 
 export interface YouTubeCommandArg {
-  [YouTubeCommand.Play]: void;
-  [YouTubeCommand.Pause]: void;
-  [YouTubeCommand.Seek]: number;
-  [YouTubeCommand.Mute]: void;
-  [YouTubeCommand.Unmute]: void;
-  [YouTubeCommand.SetVolume]: number;
-  [YouTubeCommand.SetPlaybackRate]: number;
+  playVideo: void;
+  pauseVideo: void;
+  seekTo: number;
+  mute: void;
+  unMute: void;
+  setVolume: number;
+  setPlaybackRate: number;
 }

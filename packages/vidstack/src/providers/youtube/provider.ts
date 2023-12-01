@@ -1,22 +1,15 @@
 import { createScope, effect, peek, signal } from 'maverick.js';
-import {
-  deferredPromise,
-  isBoolean,
-  isNumber,
-  isObject,
-  isString,
-  type DeferredPromise,
-} from 'maverick.js/std';
+import { isBoolean, isNumber, isObject, isString, type DeferredPromise } from 'maverick.js/std';
 
 import { TimeRange, type MediaSrc } from '../../core';
 import { preconnect } from '../../utils/network';
 import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
 import type { MediaProviderAdapter, MediaSetupContext } from '../types';
-import { YouTubeCommand, type YouTubeCommandArg } from './embed/command';
+import type { YouTubeCommandArg } from './embed/command';
 import type { YouTubeMessage } from './embed/message';
 import type { YouTubeParams } from './embed/params';
-import { YouTubePlayerState } from './embed/state';
+import { YouTubePlayerState, type YouTubePlayerStateValue } from './embed/state';
 
 /**
  * This provider enables loading videos uploaded to YouTube (youtube.com) via embeds.
@@ -42,7 +35,7 @@ export class YouTubeProvider
 
   protected _ctx!: MediaSetupContext;
   protected _videoId = signal('');
-  protected _state = -1;
+  protected _state: YouTubePlayerStateValue = -1;
   protected _seekingTimer = -1;
   protected _played = 0;
   protected _playedRange = new TimeRange(0, 0);
@@ -124,7 +117,7 @@ export class YouTubeProvider
         if (paused()) return 'Timed out.';
       });
 
-      this._remote(YouTubeCommand.Play);
+      this._remote('playVideo');
     }
 
     return this._playPromise.promise;
@@ -140,27 +133,27 @@ export class YouTubeProvider
         if (!paused()) 'Timed out.';
       });
 
-      this._remote(YouTubeCommand.Pause);
+      this._remote('pauseVideo');
     }
 
     return this._pausePromise.promise;
   }
 
   setMuted(muted: boolean) {
-    if (muted) this._remote(YouTubeCommand.Mute);
-    else this._remote(YouTubeCommand.Unmute);
+    if (muted) this._remote('mute');
+    else this._remote('unMute');
   }
 
   setCurrentTime(time: number) {
-    this._remote(YouTubeCommand.Seek, time);
+    this._remote('seekTo', time);
   }
 
   setVolume(volume: number) {
-    this._remote(YouTubeCommand.SetVolume, volume * 100);
+    this._remote('setVolume', volume * 100);
   }
 
   setPlaybackRate(rate: number) {
-    this._remote(YouTubeCommand.SetPlaybackRate, rate);
+    this._remote('setPlaybackRate', rate);
   }
 
   async loadSource(src: MediaSrc) {
@@ -289,7 +282,7 @@ export class YouTubeProvider
 
   protected _onTimeUpdate(time: number, trigger: Event) {
     const { duration, currentTime } = this._ctx.$state,
-      boundTime = this._state === YouTubePlayerState.Ended ? duration() : time,
+      boundTime = this._state === YouTubePlayerState._Ended ? duration() : time,
       detail = {
         currentTime: boundTime,
         played:
@@ -346,10 +339,10 @@ export class YouTubeProvider
     this._notify('end', undefined, trigger);
   }
 
-  protected _onStateChange(state: YouTubePlayerState, trigger: Event) {
+  protected _onStateChange(state: YouTubePlayerStateValue, trigger: Event) {
     const { paused } = this._ctx.$state,
-      isPlaying = state === YouTubePlayerState.Playing,
-      isBuffering = state === YouTubePlayerState.Buffering;
+      isPlaying = state === YouTubePlayerState._Playing,
+      isBuffering = state === YouTubePlayerState._Buffering;
 
     if (isBuffering) this._notify('waiting', undefined, trigger);
 
@@ -361,16 +354,16 @@ export class YouTubeProvider
     }
 
     switch (state) {
-      case YouTubePlayerState.Cued:
+      case YouTubePlayerState._Cued:
         this._onReady(trigger);
         break;
-      case YouTubePlayerState.Playing:
+      case YouTubePlayerState._Playing:
         this._notify('playing', undefined, trigger);
         break;
-      case YouTubePlayerState.Paused:
+      case YouTubePlayerState._Paused:
         this._onPause(trigger);
         break;
-      case YouTubePlayerState.Ended:
+      case YouTubePlayerState._Ended:
         this._onEnded(trigger);
         break;
     }

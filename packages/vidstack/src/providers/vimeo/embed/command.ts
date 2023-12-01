@@ -1,116 +1,115 @@
-import { VimeoEvent } from './event';
+import type { VimeoEvent } from './event';
 import type { VimeoChapter, VimeoQuality, VimeoTextTrack } from './misc';
 
 /**
  * @see https://github.com/vimeo/player.js#methods
  */
-export const enum VimeoCommand {
-  AddEventListener = 'addEventListener',
-  DisableTextTrack = 'disableTextTrack',
-  EnableTextTrack = 'enableTextTrack',
-  ExitFullscreen = 'exitFullscreen',
-  ExitPictureInPicture = 'exitPictureInPicture',
-  GetBuffered = 'getBuffered',
-  GetCuePoints = 'getCuePoints',
-  GetChapters = 'getChapters',
-  GetCurrentTime = 'getCurrentTime',
-  GetDuration = 'getDuration',
-  GetFullscreen = 'getFullscreen',
-  GetPictureInPicture = 'getPictureInPicture',
-  GetPlayed = 'getPlayed',
-  GetQualities = 'getQualities',
-  GetQuality = 'getQuality',
-  GetSeekable = 'getSeekable',
-  GetSeeking = 'getSeeking',
-  GetTextTracks = 'getTextTracks',
-  GetVideoTitle = 'getVideoTitle',
-  HideOverlay = '_hideOverlay',
-  Pause = 'pause',
-  Play = 'play',
-  RequestFullscreen = 'requestFullscreen',
-  RequestPictureInPicture = 'requestPictureInPicture',
-  SeekTo = 'seekTo',
-  SetMuted = 'setMuted',
-  SetPlaybackRate = 'setPlaybackRate',
-  SetQuality = 'setQuality',
-  SetVolume = 'setVolume',
-  ShowOverlay = '_showOverlay',
-  Destroy = 'destroy',
-  LoadVideo = 'loadVideo',
-  Unload = 'unload',
-}
+export type VimeoCommand =
+  | 'addEventListener'
+  | 'disableTextTrack'
+  | 'enableTextTrack'
+  | 'exitFullscreen'
+  | 'exitPictureInPicture'
+  | 'getBuffered'
+  | 'getCuePoints'
+  | 'getChapters'
+  | 'getCurrentTime'
+  | 'getDuration'
+  | 'getFullscreen'
+  | 'getPictureInPicture'
+  | 'getPlayed'
+  | 'getQualities'
+  | 'getQuality'
+  | 'getSeekable'
+  | 'getSeeking'
+  | 'getTextTracks'
+  | 'getVideoTitle'
+  | '_hideOverlay'
+  | 'pause'
+  | 'play'
+  | 'requestFullscreen'
+  | 'requestPictureInPicture'
+  | 'seekTo'
+  | 'setMuted'
+  | 'setPlaybackRate'
+  | 'setQuality'
+  | 'setVolume'
+  | '_showOverlay'
+  | 'destroy'
+  | 'loadVideo'
+  | 'unload';
 
 export interface VimeoCommandArg {
-  [VimeoCommand.Play]: void;
-  [VimeoCommand.Pause]: void;
-  [VimeoCommand.SetMuted]: boolean;
-  [VimeoCommand.SetVolume]: number;
-  [VimeoCommand.GetDuration]: void;
-  [VimeoCommand.GetChapters]: void;
-  [VimeoCommand.GetCurrentTime]: void;
-  [VimeoCommand.SeekTo]: number;
-  [VimeoCommand.SetPlaybackRate]: number;
-  [VimeoCommand.AddEventListener]: VimeoEvent;
-  [VimeoCommand.GetCuePoints]: void;
-  [VimeoCommand.GetVideoTitle]: string;
-  [VimeoCommand.GetTextTracks]: void;
-  [VimeoCommand.EnableTextTrack]: {
+  play: void;
+  pause: void;
+  setMuted: boolean;
+  setVolume: number;
+  getDuration: void;
+  getChapters: void;
+  getCurrentTime: void;
+  seekTo: number;
+  setPlaybackRate: number;
+  addEventListener: VimeoEvent;
+  getCuePoints: void;
+  getVideoTitle: string;
+  getTextTracks: void;
+  enableTextTrack: {
     language: string;
     kind: string;
   };
-  [VimeoCommand.DisableTextTrack]: string;
-  [VimeoCommand.SetQuality]: string;
-  [VimeoCommand.ShowOverlay]: void;
-  [VimeoCommand.HideOverlay]: void;
-  [VimeoCommand.GetBuffered]: void;
-  [VimeoCommand.RequestFullscreen]: void;
-  [VimeoCommand.ExitFullscreen]: void;
-  [VimeoCommand.RequestPictureInPicture]: void;
-  [VimeoCommand.ExitPictureInPicture]: void;
-  [VimeoCommand.GetQuality]: void;
-  [VimeoCommand.GetQualities]: void;
-  [VimeoCommand.GetPlayed]: void;
-  [VimeoCommand.GetSeekable]: void;
-  [VimeoCommand.GetSeeking]: void;
-  [VimeoCommand.GetFullscreen]: void;
-  [VimeoCommand.GetPictureInPicture]: void;
-  [VimeoCommand.Destroy]: void;
-  [VimeoCommand.LoadVideo]: number;
-  [VimeoCommand.Unload]: void;
+  disableTextTrack: string;
+  setQuality: string;
+  _showOverlay: void;
+  _hideOverlay: void;
+  getBuffered: void;
+  requestFullscreen: void;
+  exitFullscreen: void;
+  requestPictureInPicture: void;
+  exitPictureInPicture: void;
+  getQuality: void;
+  getQualities: void;
+  getPlayed: void;
+  getSeekable: void;
+  getSeeking: void;
+  getFullscreen: void;
+  getPictureInPicture: void;
+  destroy: void;
+  loadVideo: number;
+  unload: void;
 }
 
 export interface VimeoCommandData {
-  [VimeoCommand.Play]: void;
-  [VimeoCommand.Pause]: void;
-  [VimeoCommand.SetMuted]: void;
-  [VimeoCommand.SetVolume]: void;
-  [VimeoCommand.GetDuration]: number;
-  [VimeoCommand.GetChapters]: VimeoChapter[];
-  [VimeoCommand.GetCurrentTime]: number;
-  [VimeoCommand.SeekTo]: void;
-  [VimeoCommand.SetPlaybackRate]: void;
-  [VimeoCommand.AddEventListener]: void;
-  [VimeoCommand.GetCuePoints]: void;
-  [VimeoCommand.GetVideoTitle]: string;
-  [VimeoCommand.GetTextTracks]: VimeoTextTrack[];
-  [VimeoCommand.EnableTextTrack]: void;
-  [VimeoCommand.DisableTextTrack]: void;
-  [VimeoCommand.SetQuality]: void;
-  [VimeoCommand.ShowOverlay]: void;
-  [VimeoCommand.HideOverlay]: void;
-  [VimeoCommand.GetBuffered]: number;
-  [VimeoCommand.RequestFullscreen]: void;
-  [VimeoCommand.ExitFullscreen]: void;
-  [VimeoCommand.RequestPictureInPicture]: void;
-  [VimeoCommand.ExitPictureInPicture]: void;
-  [VimeoCommand.GetQuality]: string;
-  [VimeoCommand.GetQualities]: VimeoQuality[];
-  [VimeoCommand.GetPlayed]: number[];
-  [VimeoCommand.GetSeekable]: number[];
-  [VimeoCommand.GetSeeking]: boolean;
-  [VimeoCommand.GetFullscreen]: boolean;
-  [VimeoCommand.GetPictureInPicture]: boolean;
-  [VimeoCommand.Destroy]: void;
-  [VimeoCommand.LoadVideo]: void;
-  [VimeoCommand.Unload]: void;
+  play: void;
+  pause: void;
+  setMuted: void;
+  setVolume: void;
+  getDuration: number;
+  getChapters: VimeoChapter[];
+  getCurrentTime: number;
+  seekTo: void;
+  setPlaybackRate: void;
+  addEventListener: void;
+  getCuePoints: void;
+  getVideoTitle: string;
+  getTextTracks: VimeoTextTrack[];
+  enableTextTrack: void;
+  disableTextTrack: void;
+  setQuality: void;
+  showOverlay: void;
+  hideOverlay: void;
+  getBuffered: number;
+  requestFullscreen: void;
+  exitFullscreen: void;
+  requestPictureInPicture: void;
+  exitPictureInPicture: void;
+  getQuality: string;
+  getQualities: VimeoQuality[];
+  getPlayed: number[];
+  getSeekable: number[];
+  getSeeking: boolean;
+  getFullscreen: boolean;
+  getPictureInPicture: boolean;
+  destroy: void;
+  loadVideo: void;
+  unload: void;
 }

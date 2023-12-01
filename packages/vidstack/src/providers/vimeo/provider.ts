@@ -9,11 +9,11 @@ import { preconnect } from '../../utils/network';
 import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
 import type { MediaSetupContext } from '../types';
-import { VimeoCommand, type VimeoCommandArg, type VimeoCommandData } from './embed/command';
+import type { VimeoCommandArg, VimeoCommandData } from './embed/command';
 import {
-  VimeoEvent,
-  vimeoEvents,
+  trackedVimeoEvents,
   type VimeoErrorPayload,
+  type VimeoEvent,
   type VimeoEventPayload,
 } from './embed/event';
 import type { VimeoMessage } from './embed/message';
@@ -123,12 +123,12 @@ export class VimeoProvider
     // listenEvent(this._ctx.textTracks, 'mode-change', () => {
     //   const track = this._ctx.textTracks.selected;
     //   if (track && track.mode === 'showing' && isTrackCaptionKind(track)) {
-    //     this._remote(VimeoCommand.EnableTextTrack, {
+    //     this._remote('enableTextTrack', {
     //       language: track.language,
     //       kind: track.kind,
     //     });
     //   } else {
-    //     this._remote(VimeoCommand.DisableTextTrack);
+    //     this._remote('disableTextTrack');
     //   }
     // });
 
@@ -137,7 +137,7 @@ export class VimeoProvider
 
   destroy() {
     this._reset();
-    this._remote(VimeoCommand.Destroy);
+    this._remote('destroy');
   }
 
   async play() {
@@ -150,7 +150,7 @@ export class VimeoProvider
         if (paused()) return 'Timed out.';
       });
 
-      this._remote(VimeoCommand.Play);
+      this._remote('play');
     }
 
     return this._playPromise.promise;
@@ -166,26 +166,26 @@ export class VimeoProvider
         if (!paused()) return 'Timed out.';
       });
 
-      this._remote(VimeoCommand.Pause);
+      this._remote('pause');
     }
 
     return this._pausePromise.promise;
   }
 
   setMuted(muted) {
-    this._remote(VimeoCommand.SetMuted, muted);
+    this._remote('setMuted', muted);
   }
 
   setCurrentTime(time) {
-    this._remote(VimeoCommand.SeekTo, time);
+    this._remote('seekTo', time);
   }
 
   setVolume(volume) {
-    this._remote(VimeoCommand.SetVolume, volume);
+    this._remote('setVolume', volume);
   }
 
   setPlaybackRate(rate) {
-    this._remote(VimeoCommand.SetPlaybackRate, rate);
+    this._remote('setPlaybackRate', rate);
   }
 
   async loadSource(src: MediaSrc) {
@@ -283,7 +283,7 @@ export class VimeoProvider
       return listenEvent(qualities, 'change', () => {
         if (qualities.auto) return;
         const id = qualities.selected?.id;
-        if (id) this._remote(VimeoCommand.SetQuality, id);
+        if (id) this._remote('setQuality', id);
       });
     }
   }
@@ -313,7 +313,7 @@ export class VimeoProvider
   }
 
   protected _onAnimationFrame() {
-    this._remote(VimeoCommand.GetCurrentTime);
+    this._remote('getCurrentTime');
   }
 
   protected _onTimeUpdate(time: number, trigger: Event) {
@@ -373,16 +373,16 @@ export class VimeoProvider
           showControls = controls() || $iosControls();
 
         if (!showControls) {
-          this._remote(VimeoCommand.HideOverlay);
+          this._remote('_hideOverlay');
         }
 
-        this._remote(VimeoCommand.GetQualities);
+        this._remote('getQualities');
 
         // We can't control visibility of vimeo captions whilst getting complete info on cues.
-        // this._remote(VimeoCommand.GetTextTracks);
+        // this._remote('getTextTracks');
 
         // TODO: need a test video to implement.
-        // this._remote(VimeoCommand.GetChapters);
+        // this._remote('getChapters');
       })
       .catch((e) => {
         if (videoId !== this._videoId()) return;
@@ -393,30 +393,30 @@ export class VimeoProvider
       });
   }
 
-  protected _onMethod<T extends VimeoCommand>(
+  protected _onMethod<T extends keyof VimeoCommandData>(
     method: T,
     data: VimeoCommandData[T],
     trigger: Event,
   ) {
     switch (method) {
-      case VimeoCommand.GetCurrentTime:
+      case 'getCurrentTime':
         // Why isn't this narrowing type?
         this._onTimeUpdate(data as number, trigger);
         break;
-      // case VimeoCommand.GetTextTracks:
+      // case 'getTextTracks':
       //   this._onTextTracksChange(data as VimeoTextTrack[], trigger);
       //   break;
-      case VimeoCommand.GetChapters:
+      case 'getChapters':
         break;
-      case VimeoCommand.GetQualities:
+      case 'getQualities':
         this._onQualitiesChange(data as VimeoQuality[], trigger);
         break;
     }
   }
 
   protected _attachListeners() {
-    for (const type of vimeoEvents) {
-      this._remote(VimeoCommand.AddEventListener, type as VimeoEvent);
+    for (const type of trackedVimeoEvents) {
+      this._remote('addEventListener', type as VimeoEvent);
     }
   }
 
@@ -509,7 +509,7 @@ export class VimeoProvider
   protected _onQualitiesChange(qualities: VimeoQuality[], trigger: Event) {
     this._ctx.qualities[QualitySymbol._enableAuto] = qualities.some((q) => q.id === 'auto')
       ? () => {
-          this._remote(VimeoCommand.SetQuality, 'auto');
+          this._remote('setQuality', 'auto');
         }
       : undefined;
 
@@ -557,68 +557,68 @@ export class VimeoProvider
     trigger: Event,
   ) {
     switch (event) {
-      case VimeoEvent.Ready:
+      case 'ready':
         this._attachListeners();
         break;
-      case VimeoEvent.Loaded:
+      case 'loaded':
         this._onReady(trigger);
         break;
-      case VimeoEvent.Play:
+      case 'play':
         this._onPlay(trigger);
         break;
-      case VimeoEvent.PlayProgress:
+      case 'playprogress':
         this._onPlayProgress(trigger);
         break;
-      case VimeoEvent.Pause:
+      case 'pause':
         this._onPause(trigger);
         break;
-      case VimeoEvent.LoadProgress:
+      case 'loadprogress':
         this._onLoadProgress(payload.seconds, trigger);
         break;
-      case VimeoEvent.Waiting:
+      case 'waiting':
         this._onWaiting(trigger);
         break;
-      case VimeoEvent.BufferStart:
+      case 'bufferstart':
         this._onBufferStart(trigger);
         break;
-      case VimeoEvent.BufferEnd:
+      case 'bufferend':
         this._onBufferEnd(trigger);
         break;
-      case VimeoEvent.VolumeChange:
+      case 'volumechange':
         this._onVolumeChange(payload.volume, trigger);
         break;
-      case VimeoEvent.DurationChange:
+      case 'durationchange':
         this._seekableRange = new TimeRange(0, payload.duration);
         this._notify('duration-change', payload.duration, trigger);
         break;
-      case VimeoEvent.PlaybackRateChange:
+      case 'playbackratechange':
         this._notify('rate-change', payload.playbackRate, trigger);
         break;
-      case VimeoEvent.QualityChange:
+      case 'qualitychange':
         this._onQualityChange(payload, trigger);
         break;
-      case VimeoEvent.FullscreenChange:
+      case 'fullscreenchange':
         this._notify('fullscreen-change', payload.fullscreen, trigger);
         break;
-      case VimeoEvent.EnterPictureInPicture:
+      case 'enterpictureinpicture':
         this._notify('picture-in-picture-change', true, trigger);
         break;
-      case VimeoEvent.LeavePictureInPicture:
+      case 'leavepictureinpicture':
         this._notify('picture-in-picture-change', false, trigger);
         break;
-      case VimeoEvent.Ended:
+      case 'ended':
         this._notify('end', undefined, trigger);
         break;
-      case VimeoEvent.Error:
+      case 'error':
         this._onError(payload, trigger);
         break;
-      case VimeoEvent.Seeked:
+      case 'seeked':
         this._onSeeked(payload.seconds, trigger);
         break;
-      // case VimeoEvent.TextTrackChange:
+      // case 'texttrackchange':
       //   this._onTextTrackChange(payload, trigger);
       //   break;
-      // case VimeoEvent.CueChange:
+      // case 'cuechange':
       //   this._onCueChange(payload, trigger);
       //   break;
     }

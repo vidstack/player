@@ -1,34 +1,33 @@
-export const enum YouTubePlaybackQuality {
-  Unknown = 'unknown',
-  Tiny = 'tiny',
-  Small = 'small',
-  Medium = 'medium',
-  Large = 'large',
-  Hd720 = 'hd720',
-  Hd1080 = 'hd1080',
-  Highres = 'highres',
-  Max = 'max',
-}
+export type YouTubePlaybackQuality =
+  | 'unknown'
+  | 'tiny'
+  | 'small'
+  | 'medium'
+  | 'large'
+  | 'hd720'
+  | 'hd1080'
+  | 'highres'
+  | 'max';
 
 export function mapYouTubePlaybackQuality(quality: YouTubePlaybackQuality) {
   switch (quality) {
-    case YouTubePlaybackQuality.Unknown:
+    case 'unknown':
       return undefined;
-    case YouTubePlaybackQuality.Tiny:
+    case 'tiny':
       return 144;
-    case YouTubePlaybackQuality.Small:
+    case 'small':
       return 240;
-    case YouTubePlaybackQuality.Medium:
+    case 'medium':
       return 360;
-    case YouTubePlaybackQuality.Large:
+    case 'large':
       return 480;
-    case YouTubePlaybackQuality.Hd720:
+    case 'hd720':
       return 720;
-    case YouTubePlaybackQuality.Hd1080:
+    case 'hd1080':
       return 1080;
-    case YouTubePlaybackQuality.Highres:
+    case 'highres':
       return 1440;
-    case YouTubePlaybackQuality.Max:
+    case 'max':
       return 2160;
     default:
       return undefined;

@@ -1,7 +1,7 @@
 /**
  * @see {@link https://github.com/vimeo/player.js#events}
  */
-export const vimeoEvents = [
+export const trackedVimeoEvents: VimeoEvent[] = [
   'bufferend',
   'bufferstart',
   // 'cuechange',
@@ -44,34 +44,35 @@ export const vimeoEvents = [
   // 'livestreamonline',
 ];
 
-export const enum VimeoEvent {
-  BufferEnd = 'bufferend',
-  BufferStart = 'bufferstart',
-  CueChange = 'cuechange',
-  DurationChange = 'durationchange',
-  Ended = 'ended',
-  EnterPictureInPicture = 'enterpictureinpicture',
-  Error = 'error',
-  FullscreenChange = 'fullscreenchange',
-  LeavePictureInPicture = 'leavepictureinpicture',
-  Loaded = 'loaded',
-  LoadedData = 'loadeddata',
-  LoadedMetadata = 'loadedmetadata',
-  LoadProgress = 'loadProgress',
-  LoadStart = 'loadstart',
-  Pause = 'pause',
-  Play = 'play',
-  PlaybackRateChange = 'playbackratechange',
-  PlayProgress = 'playProgress',
-  Progress = 'progress',
-  QualityChange = 'qualitychange',
-  Ready = 'ready',
-  Seeked = 'seek',
-  Seeking = 'seeking',
-  TextTrackChange = 'texttrackchange',
-  VolumeChange = 'volumechange',
-  Waiting = 'waiting',
-}
+export type VimeoEvent =
+  | 'bufferend'
+  | 'bufferstart'
+  | 'cuechange'
+  | 'durationchange'
+  | 'ended'
+  | 'enterpictureinpicture'
+  | 'error'
+  | 'fullscreenchange'
+  | 'leavepictureinpicture'
+  | 'loaded'
+  | 'loadeddata'
+  | 'loadedmetadata'
+  | 'loadProgress'
+  | 'loadstart'
+  | 'pause'
+  | 'play'
+  | 'playbackratechange'
+  | 'playprogress'
+  | 'progress'
+  | 'qualitychange'
+  | 'ready'
+  | 'seek'
+  | 'seeked'
+  | 'seeking'
+  | 'texttrackchange'
+  | 'volumechange'
+  | 'waiting'
+  | 'timeupdate';
 
 export interface VimeoProgressPayload {
   seconds: number;
@@ -92,29 +93,29 @@ export interface VimeoErrorPayload {
 }
 
 export interface VimeoEventPayload {
-  [VimeoEvent.Play]: VimeoPlayPayload;
-  [VimeoEvent.Pause]: void;
-  [VimeoEvent.Ready]: void;
-  [VimeoEvent.PlayProgress]: VimeoProgressPayload;
-  [VimeoEvent.LoadProgress]: VimeoProgressPayload;
-  [VimeoEvent.BufferStart]: void;
-  [VimeoEvent.BufferEnd]: void;
-  [VimeoEvent.Loaded]: { id: number };
-  [VimeoEvent.Ended]: void;
-  [VimeoEvent.Seeking]: void;
-  [VimeoEvent.Seeked]: void;
-  [VimeoEvent.CueChange]: void;
-  [VimeoEvent.FullscreenChange]: { fullscreen: boolean };
-  [VimeoEvent.VolumeChange]: { volume: number };
-  [VimeoEvent.DurationChange]: { duration: number };
-  [VimeoEvent.PlaybackRateChange]: { playbackRate: number };
-  [VimeoEvent.TextTrackChange]: void;
-  [VimeoEvent.Error]: any;
-  [VimeoEvent.LoadedData]: any;
-  [VimeoEvent.LoadStart]: any;
-  [VimeoEvent.LoadedMetadata]: any;
-  [VimeoEvent.EnterPictureInPicture]: void;
-  [VimeoEvent.LeavePictureInPicture]: void;
-  [VimeoEvent.QualityChange]: any;
-  [VimeoEvent.Waiting]: void;
+  play: VimeoPlayPayload;
+  pause: void;
+  ready: void;
+  playprogress: VimeoProgressPayload;
+  loadprogress: VimeoProgressPayload;
+  bufferstart: void;
+  bufferend: void;
+  loaded: { id: number };
+  ended: void;
+  seeking: void;
+  seeked: void;
+  cuechange: void;
+  fullscreenchange: { fullscreen: boolean };
+  volumechange: { volume: number };
+  durationchange: { duration: number };
+  playbackratechange: { playbackRate: number };
+  texttrackchange: void;
+  error: any;
+  loadeddata: any;
+  loadstart: any;
+  loadedmetadata: any;
+  enterpictureinpicture: void;
+  leavepictureinpicture: void;
+  qualitychange: any;
+  waiting: void;
 }
