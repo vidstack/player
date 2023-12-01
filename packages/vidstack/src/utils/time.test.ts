@@ -68,13 +68,13 @@ describe(formatTime.name, function () {
   });
 
   it('formats hours correctly if seconds >= 3600', function () {
-    expect(formatTime(3600)).to.equal('1:0:00');
+    expect(formatTime(3600)).to.equal('1:00:00');
     expect(formatTime(5025)).to.equal('1:23:45');
     expect(formatTime(45296)).to.equal('12:34:56');
   });
 
   it('it should pad hours if `shouldPadHours` is true', function () {
-    expect(formatTime(3600, true)).to.equal('01:0:00');
+    expect(formatTime(3600, true)).to.equal('01:00:00');
   });
 
   it('it should display hours if `shouldAlwaysShowHours` is true', function () {

@@ -30,14 +30,14 @@ const mediaAttributes = [
 ];
 
 module.exports = createPlugin.withOptions(function (options) {
-  const playerId = options?.webComponents ? 'media-player' : 'div',
+  const selector = options?.selector ?? (options?.webComponents ? 'media-player' : 'div'),
     prefixOpt = options?.prefix ?? options?.mediaPrefix,
     prefix = prefixOpt ? `${prefixOpt}-` : 'media-';
 
   return function ({ addVariant }) {
     mediaAttributes.forEach((name) => {
-      addVariant(`${prefix}${name}`, `${playerId}[data-${name}] &`);
-      addVariant(`not-${prefix}${name}`, `${playerId}:not([data-${name}]) &`);
+      addVariant(`${prefix}${name}`, `${selector}[data-${name}] &`);
+      addVariant(`not-${prefix}${name}`, `${selector}:not([data-${name}]) &`);
     });
   };
 });
