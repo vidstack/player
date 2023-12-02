@@ -78,18 +78,30 @@ export type {
 export { ChapterTitle, type ChapterTitleProps } from './components/ui/chapter-title';
 export { type GestureProps, Gesture } from './components/ui/gesture';
 export { Captions, type CaptionsProps } from './components/ui/captions';
+export { type PosterProps, Poster } from './components/ui/poster';
+export { type TimeProps, Time } from './components/ui/time';
+
+// Caption
 export * as Caption from './components/ui/caption';
 export type {
   RootProps as CaptionProps,
   TextProps as CaptionTextProps,
 } from './components/ui/caption';
-export { type PosterProps, Poster } from './components/ui/poster';
-export { type TimeProps, Time } from './components/ui/time';
+
+// Thumbnail
 export * as Thumbnail from './components/ui/thumbnail';
 export type {
   RootProps as ThumbnailProps,
   ImgProps as ThumbnailImgProps,
 } from './components/ui/thumbnail';
+
+// Spinner
+export * as Spinner from './components/ui/spinner';
+export type {
+  RootProps as SpinnerProps,
+  TrackProps as SpinnerTrackProps,
+  TrackFillProps as SpinnerTrackFillProps,
+} from './components/ui/spinner';
 
 // Hooks
 export * from './hooks/use-state';

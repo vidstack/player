@@ -106,17 +106,7 @@ function StartDuration() {
 export function DefaultBufferingIndicator() {
   return html`
     <div class="vds-buffering-indicator">
-      <svg class="vds-buffering-icon" fill="none" viewBox="0 0 120 120" aria-hidden="true">
-        <circle class="vds-buffering-track" cx="60" cy="60" r="54" stroke="currentColor"></circle>
-        <circle
-          class="vds-buffering-track-fill"
-          cx="60"
-          cy="60"
-          r="54"
-          stroke="currentColor"
-          pathLength="100"
-        ></circle>
-      </svg>
+      <media-spinner class="vds-buffering-spinner"></media-spinner>
     </div>
   `;
 }

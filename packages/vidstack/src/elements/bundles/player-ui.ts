@@ -35,6 +35,7 @@ import { MediaSliderValueElement } from '../define/sliders/slider-value-element'
 import { MediaSliderVideoElement } from '../define/sliders/slider-video-element';
 import { MediaTimeSliderElement } from '../define/sliders/time-slider-element';
 import { MediaVolumeSliderElement } from '../define/sliders/volume-slider-element';
+import { MediaSpinnerElement } from '../define/spinner-element';
 import { MediaThumbnailElement } from '../define/thumbnail-element';
 import { MediaTimeElement } from '../define/time-element';
 import { MediaTooltipContentElement } from '../define/tooltips/tooltip-content-element';
@@ -86,3 +87,4 @@ defineCustomElement(MediaCaptionsElement);
 defineCustomElement(MediaLiveButtonElement);
 defineCustomElement(MediaTimeElement);
 defineCustomElement(MediaChapterTitleElement);
+defineCustomElement(MediaSpinnerElement);
