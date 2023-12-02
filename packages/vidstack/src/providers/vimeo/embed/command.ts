@@ -95,8 +95,8 @@ export interface VimeoCommandData {
   enableTextTrack: void;
   disableTextTrack: void;
   setQuality: void;
-  showOverlay: void;
-  hideOverlay: void;
+  _showOverlay: void;
+  _hideOverlay: void;
   getBuffered: number;
   requestFullscreen: void;
   exitFullscreen: void;
