@@ -14,7 +14,7 @@
   user-select: none;
 }
 
-:where([data-media-player]) {
+:where([data-media-player][data-view-type='video']) {
   aspect-ratio: 16 / 9;
 }
 
