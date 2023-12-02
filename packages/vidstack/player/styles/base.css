@@ -23,7 +23,7 @@
   outline: none;
 }
 
-[data-media-player][data-view-type='video']:not([data-controls]) {
+[data-media-player][data-view-type='video'][data-started]:not([data-controls]) {
   pointer-events: auto;
   cursor: none;
 }
