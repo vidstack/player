@@ -4,6 +4,7 @@ import type { MediaPlayer } from '../../components';
 import type { LoggerEvents } from '../../foundation/logger/events';
 import type { HLSProviderEvents } from '../../providers/hls/events';
 import type { VideoPresentationEvents } from '../../providers/video/presentation/events';
+import type { AdEvents } from '../ads/controller';
 import type { MediaEvents } from './media-events';
 import type { MediaRequestEvents } from './media-request-events';
 
@@ -13,6 +14,7 @@ export interface MediaPlayerEvents
     MediaUserEvents,
     LoggerEvents,
     VideoPresentationEvents,
+    AdEvents,
     HLSProviderEvents {
   'media-player-connect': MediaPlayerConnectEvent;
   /* @internal */

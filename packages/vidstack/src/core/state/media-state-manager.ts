@@ -378,7 +378,8 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['play'](event: ME.MediaPlayEvent) {
-    const { paused, autoplayError, ended, autoplaying, playsinline, pointer, muted } = this.$state;
+    const { paused, autoplayError, ended, autoplaying, playsinline, pointer, muted, adStarted } =
+      this.$state;
 
     event.autoplay = autoplaying();
 
@@ -405,7 +406,7 @@ export class MediaStateManager extends MediaPlayerController {
       autoplaying.set(false);
     }
 
-    if (ended() || this._request._replaying) {
+    if ((!adStarted() && ended()) || this._request._replaying) {
       this._request._replaying = false;
       ended.set(false);
       this._handle(this.createEvent('replay', { trigger: event }));
@@ -496,6 +497,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['pause'](event: ME.MediaPauseEvent) {
+    console.log('media-state-manager pause');
     if (!this.el?.isConnected) {
       this._isPlayingOnDisconnect = true;
     }
@@ -509,6 +511,7 @@ export class MediaStateManager extends MediaPlayerController {
     this._satisfyRequest('pause', event);
 
     const { paused, playing, seeking } = this.$state;
+    console.log('media-state-manager pause');
     paused.set(true);
     playing.set(false);
     seeking.set(false);
@@ -605,6 +608,14 @@ export class MediaStateManager extends MediaPlayerController {
     this._waitingTrigger = undefined;
     this._firingWaiting = false;
   }, 300);
+
+  ['ad-ended'](event: ME.AdEndedEvent) {
+    const { paused, playing, seeking, adStarted } = this.$state;
+    paused.set(true);
+    playing.set(false);
+    seeking.set(false);
+    adStarted.set(false);
+  }
 
   ['ended'](event: ME.MediaEndedEvent) {
     if (this._request._looping) {

@@ -15,6 +15,7 @@ import type { ElementAttributesRecord } from 'maverick.js/element';
 import {
   animationFrameThrottle,
   camelToKebabCase,
+  isString,
   listenEvent,
   setAttribute,
   setStyle,
@@ -40,6 +41,9 @@ import {
   type MediaStateAccessors,
   type MediaStore,
 } from '../core';
+import { AdsController } from '../core/ads/controller';
+import { ImaSdkLoader } from '../core/ads/lib-loader';
+import type { ImaSdk } from '../core/ads/types';
 import { MEDIA_ATTRIBUTES, mediaAttributes } from '../core/api/media-attrs';
 import { mediaContext, type MediaContext } from '../core/api/media-context';
 import { mediaPlayerProps } from '../core/api/player-props';
@@ -142,6 +146,7 @@ export class MediaPlayer
       $provider: signal<MediaProvider | null>(null),
       $props: this.$props,
       $state: this.$state as MediaStore,
+      $ads: signal<AdsController | null>(null),
     } as unknown as MediaContext;
 
     if (__DEV__) {
@@ -179,6 +184,11 @@ export class MediaPlayer
     );
 
     new MediaLoadController(this.startLoading.bind(this));
+
+    if (!this.ads && isString(this.$props.adsUrl()) && this.$props.viewType() !== 'audio') {
+      this.ads = new AdsController(context);
+      this._media.$ads.set(this.ads);
+    }
   }
 
   protected override onSetup(): void {
@@ -552,6 +562,12 @@ export class MediaPlayer
   private _queuePlaysinlineUpdate(inline: boolean) {
     this.canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
   }
+
+  /**
+   * Controls advertising playback.
+   */
+  @prop
+  ads: AdsController | undefined;
 
   /**
    * Begins/resumes playback of the media. If this method is called programmatically before the

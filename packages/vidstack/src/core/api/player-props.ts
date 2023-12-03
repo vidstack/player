@@ -32,6 +32,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
   title: '',
+  adsUrl: '',
 };
 
 export interface MediaStateAccessors
@@ -63,6 +64,8 @@ export interface MediaPlayerProps
     | 'streamType'
     | 'liveEdgeTolerance'
     | 'minLiveDVRWindow'
+    // ads
+    | 'adsUrl'
   > {
   /**
    * Defines how the media element handles cross-origin requests, thereby enabling the

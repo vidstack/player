@@ -64,6 +64,9 @@ importers:
 
   packages/react:
     dependencies:
+      '@alugha/ima':
+        specifier: ^2.2.1
+        version: 2.2.1
       media-captions:
         specifier: ^1.0.1
         version: 1.0.1
@@ -125,6 +128,9 @@ importers:
 
   packages/vidstack:
     dependencies:
+      '@alugha/ima':
+        specifier: ^2.2.1
+        version: 2.2.1
       media-captions:
         specifier: ^1.0.1
         version: 1.0.1
@@ -240,6 +246,13 @@ packages:
       }
     engines: { node: '>=10' }
     dev: true
+
+  /@alugha/ima@2.2.1:
+    resolution:
+      {
+        integrity: sha512-mbBygFrnmk7Ov0GPOkuzfsjzK9mzA0VgGfemsx/RUyo6VBs0vlyFqXihNATVsjXDUqi6BwO7cHVnNK+B8Glf9w==,
+      }
+    dev: false
 
   /@ampproject/remapping@2.2.1:
     resolution:

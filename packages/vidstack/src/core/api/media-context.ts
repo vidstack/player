@@ -10,6 +10,7 @@ import {
 import type { MediaPlayer } from '../../components/player';
 import type { Logger } from '../../foundation/logger/controller';
 import type { MediaProviderAdapter } from '../../providers/types';
+import type { AdsController } from '../ads/controller';
 import type { MediaKeyShortcuts } from '../keyboard/types';
 import type { VideoQualityList } from '../quality/video-quality';
 import type { MediaPlayerDelegate } from '../state/media-player-delegate';
@@ -31,6 +32,7 @@ export interface MediaContext {
   textRenderers: TextRenderers;
   ariaKeys: MediaKeyShortcuts;
   logger?: Logger;
+  $ads: WriteSignal<AdsController | null>;
   $provider: WriteSignal<MediaProviderAdapter | null>;
   $iosControls: ReadSignal<boolean>;
   $props: ReadSignalRecord<MediaPlayerProps>;
