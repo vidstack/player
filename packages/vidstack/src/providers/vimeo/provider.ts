@@ -403,6 +403,9 @@ export class VimeoProvider
         // Why isn't this narrowing type?
         this._onTimeUpdate(data as number, trigger);
         break;
+      case 'setMuted':
+        this._onVolumeChange(peek(this._ctx.$state.volume), data as boolean, trigger);
+        break;
       // case 'getTextTracks':
       //   this._onTextTracksChange(data as VimeoTextTrack[], trigger);
       //   break;
@@ -467,12 +470,8 @@ export class VimeoProvider
     this._notify('waiting', undefined, trigger);
   }
 
-  protected _onVolumeChange(volume: number, trigger: Event) {
-    const detail = {
-      volume,
-      muted: volume === 0,
-    };
-
+  protected _onVolumeChange(volume: number, muted: boolean, trigger: Event) {
+    const detail = { volume, muted };
     this._notify('volume-change', detail, trigger);
   }
 
@@ -585,7 +584,7 @@ export class VimeoProvider
         this._onBufferEnd(trigger);
         break;
       case 'volumechange':
-        this._onVolumeChange(payload.volume, trigger);
+        this._onVolumeChange(payload.volume, peek(this._ctx.$state.muted), trigger);
         break;
       case 'durationchange':
         this._seekableRange = new TimeRange(0, payload.duration);

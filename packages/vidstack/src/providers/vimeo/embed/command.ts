@@ -81,7 +81,7 @@ export interface VimeoCommandArg {
 export interface VimeoCommandData {
   play: void;
   pause: void;
-  setMuted: void;
+  setMuted: boolean;
   setVolume: void;
   getDuration: number;
   getChapters: VimeoChapter[];
