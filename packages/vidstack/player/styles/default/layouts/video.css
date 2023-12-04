@@ -375,7 +375,7 @@
   --media-button-hover-transform: translateY(25%);
   border-radius: 100%;
   pointer-events: auto;
-  margin-bottom: 2.5%;
+  margin-bottom: 2px;
   width: var(--video-sm-play-button-size, 40px);
   height: var(--video-sm-play-button-size, 40px);
   transform: var(--video-sm-play-button-transform, translateY(25%));

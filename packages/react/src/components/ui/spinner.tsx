@@ -9,6 +9,8 @@ export interface RootProps
     React.RefAttributes<SVGElement | SVGSVGElement> {
   /**
    * The horizontal (width) and vertical (height) length of the spinner.
+   *
+   * @defaultValue 96
    */
   size?: number;
 }
@@ -24,7 +26,7 @@ export interface RootProps
  * ```
  */
 const Root = React.forwardRef<SVGElement | SVGSVGElement, RootProps>(
-  ({ size, children, ...props }: RootProps, forwardRef) => {
+  ({ size = 96, children, ...props }: RootProps, forwardRef) => {
     return (
       <svg
         width={size}
@@ -51,7 +53,7 @@ export interface TrackProps
     React.RefAttributes<SVGCircleElement> {}
 
 const Track = React.forwardRef<SVGCircleElement, TrackProps>(
-  ({ width, children, ...props }, ref) => (
+  ({ width = 8, children, ...props }, ref) => (
     <circle
       cx="60"
       cy="60"
@@ -81,7 +83,7 @@ export interface TrackFillProps
 }
 
 const TrackFill = React.forwardRef<SVGCircleElement, TrackFillProps>(
-  ({ width, fillPercent = 50, children, ...props }, ref) => (
+  ({ width = 8, fillPercent = 50, children, ...props }, ref) => (
     <circle
       cx="60"
       cy="60"
