@@ -17,6 +17,7 @@ import { usePlaybackRateOptions } from '../../../hooks/options/use-playback-rate
 import { useVideoQualityOptions } from '../../../hooks/options/use-video-quality-options';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { usePlayerQuery } from '../../../hooks/use-player-query';
+import { isRemotionSource } from '../../../providers/remotion/type-check';
 import type { PrimitivePropsWithRef } from '../../primitives/nodes';
 import { CaptionButton } from '../../ui/buttons/caption-button';
 import { FullscreenButton } from '../../ui/buttons/fullscreen-button';
@@ -407,8 +408,13 @@ export { DefaultVolumeSlider };
  * DefaultTimeSlider
  * -----------------------------------------------------------------------------------------------*/
 
+const RemotionSliderThumbnail = React.lazy(
+  () => import('../../../providers/remotion/ui/slider-thumbnail'),
+);
+
 function DefaultTimeSlider() {
-  const width = useMediaState('width'),
+  const $src = useMediaState('currentSrc'),
+    width = useMediaState('width'),
     { thumbnails } = React.useContext(DefaultLayoutContext),
     label = useDefaultLayoutLang('Seek');
   return (
@@ -426,12 +432,16 @@ function DefaultTimeSlider() {
       </TimeSliderBase.Chapters>
       <TimeSliderBase.Thumb className="vds-slider-thumb" />
       <TimeSliderBase.Preview className="vds-slider-preview">
-        <TimeSliderBase.Thumbnail.Root
-          src={thumbnails}
-          className="vds-slider-thumbnail vds-thumbnail"
-        >
-          <TimeSliderBase.Thumbnail.Img />
-        </TimeSliderBase.Thumbnail.Root>
+        {thumbnails ? (
+          <TimeSliderBase.Thumbnail.Root
+            src={thumbnails}
+            className="vds-slider-thumbnail vds-thumbnail"
+          >
+            <TimeSliderBase.Thumbnail.Img />
+          </TimeSliderBase.Thumbnail.Root>
+        ) : isRemotionSource($src) ? (
+          <RemotionSliderThumbnail className="vds-slider-thumbnail vds-thumbnail" />
+        ) : null}
         <TimeSliderBase.ChapterTitle className="vds-slider-chapter-title" />
         <TimeSliderBase.Value className="vds-slider-value" />
       </TimeSliderBase.Preview>
@@ -504,6 +514,8 @@ export { DefaultTimeInfo };
  * DefaultChaptersMenu
  * -----------------------------------------------------------------------------------------------*/
 
+const RemotionThumbnail = React.lazy(() => import('../../../providers/remotion/ui/thumbnail'));
+
 function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
   const { showMenuDelay, noModal, isSmallLayout, Icons, menuGroup } =
       React.useContext(DefaultLayoutContext),
@@ -511,6 +523,7 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
     options = useChapterOptions(),
     disabled = !options.length,
     { thumbnails } = React.useContext(DefaultLayoutContext),
+    $src = useMediaState('currentSrc'),
     $viewType = useMediaState('viewType'),
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0;
 
@@ -534,9 +547,13 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
               onSelect={select}
               ref={setProgressVar}
             >
-              <ThumbnailBase.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
-                <ThumbnailBase.Img />
-              </ThumbnailBase.Root>
+              {thumbnails ? (
+                <ThumbnailBase.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
+                  <ThumbnailBase.Img />
+                </ThumbnailBase.Root>
+              ) : isRemotionSource($src) ? (
+                <RemotionThumbnail className="vds-thumbnail" frame={cue.startTime * $src.fps!} />
+              ) : null}
               <div className="vds-chapter-radio-content">
                 <span className="vds-chapter-radio-label">{label}</span>
                 <span className="vds-chapter-radio-start-time">{startTimeText}</span>

@@ -42,6 +42,8 @@ export class VimeoProvider
   extends EmbedProvider<VimeoMessage>
   implements Pick<VimeoParams, 'title' | 'byline' | 'portrait' | 'color'>
 {
+  protected readonly $$PROVIDER_TYPE = 'VIMEO';
+
   protected static _videoIdRE =
     /(?:https:\/\/)?(?:player\.)?vimeo(?:\.com)?\/(?:video\/)?(\d+)(?:\?hash=(.*))?/;
   protected static _infoCache = new Map<string, VimeoVideoInfo>();
@@ -58,10 +60,9 @@ export class VimeoProvider
   protected _videoId = signal('');
   protected _pro = signal(false);
   protected _hash: string | null = null;
-  protected _currentSrc: MediaSrc | null = null;
+  protected _currentSrc: MediaSrc<string> | null = null;
   protected _currentCue: VTTCue | null = null;
   protected _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
-  protected readonly $$PROVIDER_TYPE = 'VIMEO';
 
   protected get _notify() {
     return this._ctx.delegate._notify;
@@ -80,10 +81,10 @@ export class VimeoProvider
   color = '00ADEF';
 
   get type() {
-    return 'video';
+    return 'vimeo';
   }
 
-  get currentSrc() {
+  get currentSrc(): MediaSrc<string> | null {
     return this._currentSrc;
   }
 
@@ -203,7 +204,7 @@ export class VimeoProvider
     this._videoId.set(videoId ?? '');
     this._hash = hash ?? null;
 
-    this._currentSrc = src;
+    this._currentSrc = src as MediaSrc<string>;
   }
 
   protected _watchVideoId() {
@@ -326,7 +327,7 @@ export class VimeoProvider
         played:
           this._played >= time
             ? this._playedRange
-            : (this._playedRange = new TimeRange(0, this._played)),
+            : (this._playedRange = new TimeRange(0, (this._played = time))),
       };
 
     this._notify('time-update', detail, trigger);

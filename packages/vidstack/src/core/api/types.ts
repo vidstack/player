@@ -54,7 +54,7 @@ export interface MediaErrorDetail {
 
 export type MediaResource = string | MediaStream | MediaSource | Blob;
 
-export type MediaSrc = {
-  src: MediaResource;
+export interface MediaSrc<T = unknown> {
+  src: T;
   type: string;
-};
+}

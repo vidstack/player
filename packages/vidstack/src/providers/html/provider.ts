@@ -1,7 +1,7 @@
 import { createScope, onDispose } from 'maverick.js';
 import { isString, setAttribute } from 'maverick.js/std';
 
-import type { MediaSrc } from '../../core/api/types';
+import type { MediaResource, MediaSrc } from '../../core/api/types';
 import { isMediaStream } from '../../utils/mime';
 import type { MediaProviderAdapter, MediaSetupContext } from '../types';
 import { HTMLMediaEvents } from './html–media-events';
@@ -16,7 +16,7 @@ import { NativeAudioTracks } from './native-audio-tracks';
 export class HTMLMediaProvider implements MediaProviderAdapter {
   readonly scope = createScope();
 
-  protected _currentSrc: MediaSrc | null = null;
+  protected _currentSrc: MediaSrc<MediaResource> | null = null;
 
   constructor(protected _media: HTMLMediaElement) {}
 
@@ -79,10 +79,14 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
       this._media.srcObject = src;
     } else {
       this._media.srcObject = null;
-      this._media.src = isString(src) ? src : window.URL.createObjectURL(src);
+      this._media.src = isString(src) ? src : window.URL.createObjectURL(src as MediaSource | Blob);
     }
 
     this._media.load();
-    this._currentSrc = { src, type };
+
+    this._currentSrc = {
+      src: src as MediaResource,
+      type,
+    };
   }
 }

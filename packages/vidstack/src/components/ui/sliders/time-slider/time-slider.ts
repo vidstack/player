@@ -229,7 +229,7 @@ export class TimeSlider extends Component<
 
   private _percentToTime(percent: number) {
     const { duration } = this._media.$state;
-    return Math.round((percent / 100) * duration());
+    return round((percent / 100) * duration(), 5);
   }
 
   private _timeToPercent(time: number) {

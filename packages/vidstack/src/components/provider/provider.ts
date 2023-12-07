@@ -8,7 +8,10 @@ import type { MediaProviderLoader } from '../../providers';
 import { SourceSelection } from './source-select';
 import { Tracks } from './tracks';
 
-export interface MediaProviderProps {}
+export interface MediaProviderProps {
+  /** @internal */
+  loaders: MediaProviderLoader[];
+}
 
 export interface MediaProviderState {
   loader: MediaProviderLoader | null;
@@ -20,6 +23,10 @@ export interface MediaProviderState {
  * @docs {@link https://www.vidstack.io/docs/player/components/media/provider}
  */
 export class MediaProvider extends Component<MediaProviderProps, MediaProviderState> {
+  static props: MediaProviderProps = {
+    loaders: [],
+  };
+
   static state = new State<MediaProviderState>({
     loader: null,
   });
@@ -33,7 +40,12 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
   protected override onSetup() {
     this._media = useMediaContext();
-    this._sources = new SourceSelection(this._domSources, this._media, this.$state.loader);
+    this._sources = new SourceSelection(
+      this._domSources,
+      this._media,
+      this.$state.loader,
+      this.$props.loaders(),
+    );
   }
 
   protected override onAttach(el: HTMLElement) {

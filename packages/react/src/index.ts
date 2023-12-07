@@ -2,6 +2,7 @@ export * from 'vidstack';
 export * from './components/primitives/instances';
 
 // Core
+export type { PlayerSrc } from './source';
 export { type MediaPlayerProps, MediaPlayer } from './components/player';
 export { type MediaProviderProps, MediaProvider } from './components/provider';
 export { type IconProps, Icon, type IconComponent } from './icon';

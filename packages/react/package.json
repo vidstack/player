@@ -49,6 +49,7 @@
     "media-icons": "^1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "remotion": "^4.0.76",
     "rimraf": "^3.0.0",
     "rollup": "^4.0.0",
     "rollup-plugin-dts": "^6.0.0",
@@ -77,6 +78,11 @@
     "./icons": {
       "types": "./icons.d.ts",
       "default": "./dist/prod/vidstack-icons.js"
+    },
+    "./player/remotion": {
+      "types": "./player/remotion.d.ts",
+      "development": "./dist/dev/player/vidstack-remotion.js",
+      "default": "./dist/prod/player/vidstack-remotion.js"
     },
     "./player/layouts/default": {
       "types": "./player/layouts/default.d.ts",

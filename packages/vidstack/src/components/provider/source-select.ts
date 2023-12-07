@@ -3,6 +3,7 @@ import {
   effect,
   peek,
   scoped,
+  signal,
   tick,
   type ReadSignal,
   type WriteSignal,
@@ -25,8 +26,7 @@ import { isHLSSupported } from '../../utils/support';
 
 let warned = __DEV__ ? new Set<any>() : undefined;
 
-const SETUP = Symbol(__DEV__ ? 'SETUP' : 0),
-  sourceTypes = new Map<string, string>();
+const sourceTypes = new Map<string, string>();
 
 export class SourceSelection {
   private _initialize = false;
@@ -40,6 +40,7 @@ export class SourceSelection {
     private _domSources: ReadSignal<MediaSrc[]>,
     private _media: MediaContext,
     private _loader: WriteSignal<MediaProviderLoader | null>,
+    customLoaders: MediaProviderLoader[] = [],
   ) {
     const HLS_LOADER = new HLSProviderLoader(),
       VIDEO_LOADER = new VideoProviderLoader(),
@@ -50,8 +51,8 @@ export class SourceSelection {
 
     this._loaders = computed<MediaProviderLoader[]>(() => {
       return _media.$props.preferNativeHLS()
-        ? [VIDEO_LOADER, AUDIO_LOADER, HLS_LOADER, ...EMBED_LOADERS]
-        : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER, ...EMBED_LOADERS];
+        ? [VIDEO_LOADER, AUDIO_LOADER, HLS_LOADER, ...EMBED_LOADERS, ...customLoaders]
+        : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER, ...EMBED_LOADERS, ...customLoaders];
     });
 
     const { $state } = _media;
@@ -175,6 +176,7 @@ export class SourceSelection {
   }
 
   protected _notifyLoaderChange(loader: MediaProviderLoader | null) {
+    this._media.$providerSetup.set(false);
     this._notify('provider-change', null);
     loader && peek(() => loader!.preconnect?.(this._media));
     this._loader.set(loader);
@@ -183,11 +185,11 @@ export class SourceSelection {
 
   private _onSetup() {
     const provider = this._media.$provider();
-    if (!provider || provider[SETUP]) return;
+    if (!provider || peek(this._media.$providerSetup)) return;
 
     if (this._media.$state.canLoad()) {
       scoped(() => provider.setup(this._media), provider.scope);
-      provider[SETUP] = true;
+      this._media.$providerSetup.set(true);
       return;
     }
 
@@ -195,6 +197,8 @@ export class SourceSelection {
   }
 
   private _onLoadSource() {
+    if (!this._media.$providerSetup()) return;
+
     const provider = this._media.$provider(),
       source = this._media.$state.source(),
       crossorigin = peek(this._media.$state.crossorigin);
@@ -242,7 +246,7 @@ export class SourceSelection {
 
 function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
   return (isArray(src) ? src : [!isString(src) && 'src' in src ? src : { src }]).map(
-    ({ src, type }) => ({
+    ({ src, type, ...props }) => ({
       src,
       type:
         type ??
@@ -254,6 +258,7 @@ function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
             : src.includes('vimeo')
               ? 'video/vimeo'
               : '?'),
+      ...props,
     }),
   );
 }

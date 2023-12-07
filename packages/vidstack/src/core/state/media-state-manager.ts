@@ -567,6 +567,7 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['seeked'](event: ME.MediaSeekedEvent) {
     const { seeking, currentTime, paused, duration, ended } = this.$state;
+
     if (this._request._seeking) {
       seeking.set(true);
       event.stopImmediatePropagation();
@@ -575,7 +576,7 @@ export class MediaStateManager extends MediaPlayerController {
       if (waitingEvent) event.triggers.add(waitingEvent);
 
       const seekingEvent = this._trackedEvents.get('seeking');
-      if (seekingEvent && !event.triggers.hasType('seeking')) {
+      if (seekingEvent && !event.triggers.has(seekingEvent)) {
         event.triggers.add(seekingEvent);
       }
 
@@ -589,7 +590,7 @@ export class MediaStateManager extends MediaPlayerController {
       this._satisfyRequest('seeked', event);
 
       // Only start if user initiated.
-      const origin = seekingEvent?.originEvent;
+      const origin = event?.originEvent;
       if (origin?.isTrusted && !/seek/.test(origin.type)) {
         this['started'](event);
       }

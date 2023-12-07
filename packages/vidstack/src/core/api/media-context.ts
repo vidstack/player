@@ -32,6 +32,7 @@ export interface MediaContext {
   ariaKeys: MediaKeyShortcuts;
   logger?: Logger;
   $provider: WriteSignal<MediaProviderAdapter | null>;
+  $providerSetup: WriteSignal<boolean>;
   $iosControls: ReadSignal<boolean>;
   $props: ReadSignalRecord<MediaPlayerProps>;
   $state: PlayerStore;

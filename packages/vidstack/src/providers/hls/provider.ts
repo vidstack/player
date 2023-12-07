@@ -113,7 +113,7 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
     if (!isString(src.src)) return;
     this._media.preload = preload || '';
     this._controller.instance?.loadSource(src.src);
-    this._currentSrc = src;
+    this._currentSrc = src as MediaSrc<string>;
   }
 
   /**

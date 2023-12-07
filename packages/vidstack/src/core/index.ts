@@ -5,7 +5,7 @@ export * from './api/player-state';
 export * from './api/player-events';
 export * from './time-ranges';
 export { type MediaContext, mediaContext } from './api/media-context';
-export type { MediaPlayerProps, MediaStateAccessors } from './api/player-props';
+export type { MediaPlayerProps, MediaStateAccessors, PlayerSrc } from './api/player-props';
 export type { MediaPlayerEvents } from './api/player-events';
 export { MediaRemoteControl } from './state/remote-control';
 export { MediaControls } from './controls';

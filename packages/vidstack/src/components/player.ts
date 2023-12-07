@@ -139,6 +139,7 @@ export class MediaPlayer
       qualities: new VideoQualityList(),
       audioTracks: new AudioTrackList(),
       $provider: signal<MediaProvider | null>(null),
+      $providerSetup: signal(false),
       $props: this.$props,
       $state: this.$state as MediaStore,
     } as unknown as MediaContext;

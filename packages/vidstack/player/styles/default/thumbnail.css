@@ -5,6 +5,9 @@
  */
 
 :where(.vds-thumbnail) {
+  --aspect-ratio: calc(var(--media-thumbnail-aspect-ratio, 16 / 9));
+  --min-width: var(--media-thumbnail-min-width, 140px);
+  --max-width: var(--media-thumbnail-max-width, 180px);
   display: block;
   width: var(--thumbnail-width);
   height: var(--thumbnail-height);
@@ -12,10 +15,10 @@
   contain: strict;
   overflow: hidden;
   box-sizing: border-box;
-  min-width: var(--media-thumbnail-min-width, 120px);
-  min-height: var(--media-thumbnail-min-height, 80px);
-  max-width: var(--media-thumbnail-max-width, 180px);
-  max-height: var(--media-thumbnail-max-height, 160px);
+  min-width: var(--min-width);
+  min-height: var(--media-thumbnail-min-height, calc(var(--min-width) / var(--aspect-ratio)));
+  max-width: var(--max-width);
+  max-height: var(--media-thumbnail-max-height, calc(var(--max-width) / var(--aspect-ratio)));
 }
 
 .vds-thumbnail {

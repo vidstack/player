@@ -25,7 +25,7 @@ const EXTERNAL_PACKAGES = [
     'media-icons',
     'media-captions',
     'hls.js',
-    /@radix-ui/,
+    /^remotion/,
   ],
   NPM_BUNDLES = [define({ dev: true }), define({ dev: false })],
   TYPES_BUNDLES = [defineTypes()];
@@ -56,6 +56,7 @@ function defineTypes() {
     input: {
       index: 'types/react/src/index.d.ts',
       icons: 'types/react/src/icons.d.ts',
+      'player/remotion': 'types/react/src/providers/remotion/index.d.ts',
       'player/layouts/default': 'types/react/src/components/layouts/default/index.d.ts',
     },
     output: {
@@ -99,6 +100,7 @@ function define({ dev }) {
 
   let input = {
     vidstack: 'src/index.ts',
+    'player/vidstack-remotion': 'src/providers/remotion/index.ts',
     'player/vidstack-default-layout': 'src/components/layouts/default/index.ts',
     'player/vidstack-default-components': 'src/components/layouts/default/ui.ts',
     'player/vidstack-default-icons': 'src/components/layouts/default/icons.tsx',

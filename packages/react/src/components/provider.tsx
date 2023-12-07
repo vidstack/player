@@ -9,6 +9,8 @@ import {
 } from 'maverick.js/react';
 import { mediaContext, mediaState } from 'vidstack';
 
+import { RemotionProviderLoader } from '../providers/remotion/loader';
+import { isRemotionProvider } from '../providers/remotion/type-check';
 import { MediaProviderInstance } from './primitives/instances';
 
 /* -------------------------------------------------------------------------------------------------
@@ -36,8 +38,10 @@ export interface MediaProviderProps extends ReactElementProps<MediaProviderInsta
  */
 const MediaProvider = React.forwardRef<MediaProviderInstance, MediaProviderProps>(
   ({ children, mediaProps, ...props }, forwardRef) => {
+    const reactLoaders = React.useMemo(() => [new RemotionProviderLoader()], []);
+
     return (
-      <MediaProviderBridge {...props} ref={forwardRef}>
+      <MediaProviderBridge {...props} loaders={reactLoaders} ref={forwardRef}>
         {(props, instance) => (
           <div {...props}>
             <MediaOutlet {...mediaProps} provider={instance} />
@@ -60,19 +64,47 @@ interface MediaOutletProps extends React.HTMLAttributes<HTMLMediaElement> {
   provider: MediaProviderInstance;
 }
 
+const YOUTUBE_TYPE = { src: '', type: 'video/youtube' },
+  VIMEO_TYPE = { src: '', type: 'video/vimeo' },
+  REMOTION_TYPE = { src: '', type: 'video/remotion' };
+
 function MediaOutlet({ provider, ...props }: MediaOutletProps) {
   const { controls, crossorigin, poster } = useStateContext(mediaState),
     { loader } = provider.$state,
-    { $iosControls: iosControls } = useReactContext(mediaContext)!,
+    {
+      $iosControls: $$iosControls,
+      $provider: $$provider,
+      $providerSetup: $$providerSetup,
+    } = useReactContext(mediaContext)!,
     $controls = useSignal(controls),
-    $iosControls = useSignal(iosControls),
+    $iosControls = useSignal($$iosControls),
+    $nativeControls = $controls || $iosControls,
     $crossorigin = useSignal(crossorigin),
     $poster = useSignal(poster),
     $loader = useSignal(loader),
+    $provider = useSignal($$provider),
+    $providerSetup = useSignal($$providerSetup),
     $mediaType = $loader?.mediaType(),
-    isYouTubeEmbed = $loader?.canPlay({ src: '', type: 'video/youtube' }),
-    isVimeoEmbed = $loader?.canPlay({ src: '', type: 'video/vimeo' }),
+    isYouTubeEmbed = $loader?.canPlay(YOUTUBE_TYPE),
+    isVimeoEmbed = $loader?.canPlay(VIMEO_TYPE),
     isEmbed = isYouTubeEmbed || isVimeoEmbed;
+
+  if ($loader?.canPlay(REMOTION_TYPE)) {
+    return (
+      <div data-remotion-canvas>
+        <div
+          data-remotion-container
+          ref={(el) => {
+            provider.load(el);
+          }}
+        >
+          {isRemotionProvider($provider) && $providerSetup
+            ? React.createElement($provider.render)
+            : null}
+        </div>
+      </div>
+    );
+  }
 
   return isEmbed
     ? React.createElement(
@@ -81,21 +113,19 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
         React.createElement('iframe', {
           className: isYouTubeEmbed ? 'vds-youtube' : 'vds-vimeo',
           suppressHydrationWarning: true,
-          'data-no-controls': !$controls || $iosControls ? '' : undefined,
+          'data-no-controls': !$nativeControls ? '' : undefined,
           ref(el: HTMLElement) {
             provider.load(el);
           },
         }),
-        !$controls && !$iosControls
-          ? React.createElement('div', { className: 'vds-blocker' })
-          : null,
+        !$nativeControls ? React.createElement('div', { className: 'vds-blocker' }) : null,
       )
     : $mediaType
       ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {
           ...props,
-          controls: $controls || $iosControls ? '' : null,
+          controls: $nativeControls ? '' : null,
           crossOrigin: typeof $crossorigin === 'boolean' ? '' : $crossorigin,
-          poster: $mediaType === 'video' && ($controls || $iosControls) && $poster ? $poster : null,
+          poster: $mediaType === 'video' && $nativeControls && $poster ? $poster : null,
           preload: 'none',
           'aria-hidden': 'true',
           suppressHydrationWarning: true,

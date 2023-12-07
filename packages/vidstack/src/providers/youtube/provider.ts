@@ -27,6 +27,8 @@ export class YouTubeProvider
   extends EmbedProvider<YouTubeMessage>
   implements MediaProviderAdapter, Pick<YouTubeParams, 'color' | 'start' | 'end'>
 {
+  protected readonly $$PROVIDER_TYPE = 'YOUTUBE';
+
   protected static _videoIdRE =
     /(?:youtu\.be|youtube|youtube\.com|youtube-nocookie\.com)\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|)((?:\w|-){11})/;
   protected static _posterCache = new Map<string, string>();
@@ -39,10 +41,9 @@ export class YouTubeProvider
   protected _seekingTimer = -1;
   protected _played = 0;
   protected _playedRange = new TimeRange(0, 0);
-  protected _currentSrc: MediaSrc | null = null;
+  protected _currentSrc: MediaSrc<string> | null = null;
   protected _playPromise: DeferredPromise<void, string> | null = null;
   protected _pausePromise: DeferredPromise<void, string> | null = null;
-  protected readonly $$PROVIDER_TYPE = 'YOUTUBE';
 
   protected get _notify() {
     return this._ctx.delegate._notify;
@@ -70,12 +71,12 @@ export class YouTubeProvider
    */
   cookies = false;
 
-  get currentSrc() {
+  get currentSrc(): MediaSrc<string> | null {
     return this._currentSrc;
   }
 
   get type() {
-    return 'video';
+    return 'youtube';
   }
 
   get videoId() {
@@ -166,7 +167,7 @@ export class YouTubeProvider
     const videoId = src.src.match(YouTubeProvider._videoIdRE)?.[1];
     this._videoId.set(videoId ?? '');
 
-    this._currentSrc = src;
+    this._currentSrc = src as MediaSrc<string>;
   }
 
   protected override _getOrigin() {
@@ -288,7 +289,7 @@ export class YouTubeProvider
         played:
           this._played >= boundTime
             ? this._playedRange
-            : (this._playedRange = new TimeRange(0, this._played)),
+            : (this._playedRange = new TimeRange(0, (this._played = time))),
       };
 
     this._notify('time-update', detail, trigger);

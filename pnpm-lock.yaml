@@ -101,6 +101,9 @@ importers:
       react-dom:
         specifier: ^18.0.0
         version: 18.2.0(react@18.2.0)
+      remotion:
+        specifier: ^4.0.76
+        version: 4.0.76(react-dom@18.2.0)(react@18.2.0)
       rimraf:
         specifier: ^3.0.0
         version: 3.0.2
@@ -4844,6 +4847,19 @@ packages:
     engines: { node: '>=8.10.0' }
     dependencies:
       picomatch: 2.3.1
+    dev: true
+
+  /remotion@4.0.76(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-V4aqAzJb1TlBdaRPu95wCkXJ4DGhJ1ZEypol5351OkFhhLBQjroSeOJEOMBDgBzcHeBbUrXnneQcbpuUf1qyEg==,
+      }
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: true
 
   /require-directory@2.1.1:

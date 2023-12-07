@@ -38,7 +38,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
 export interface MediaStateAccessors
   extends Pick<MediaState, 'paused' | 'muted' | 'volume' | 'currentTime' | 'playbackRate'> {}
 
-export type MediaSrc =
+export type PlayerSrc =
   | MediaResource
   | { src: MediaResource; type?: string }
   | { src: MediaResource; type?: string }[];
@@ -79,7 +79,7 @@ export interface MediaPlayerProps
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject}
    */
-  src: MediaSrc;
+  src: PlayerSrc;
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
    * and `debug`.
