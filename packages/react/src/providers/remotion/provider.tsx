@@ -99,7 +99,7 @@ export class RemotionProvider implements MediaProviderAdapter {
     const elements = this._mediaElements();
 
     for (const tag of elements) {
-      if (tag.readyState < 3 && tag.networkState === 2) {
+      if (tag.currentSrc && tag.readyState < 4) {
         this._waitFor(tag);
         listenEvent(tag, 'canplay', this._stopWaitingFor.bind(this, tag));
       }

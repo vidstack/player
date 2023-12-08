@@ -38,8 +38,8 @@ export interface MediaProviderProps
  * ```
  */
 const MediaProvider = React.forwardRef<MediaProviderInstance, MediaProviderProps>(
-  ({ loaders, children, mediaProps, ...props }, forwardRef) => {
-    const reactLoaders = React.useMemo(() => loaders?.map((Loader) => new Loader()), [loaders]);
+  ({ loaders = [], children, mediaProps, ...props }, forwardRef) => {
+    const reactLoaders = React.useMemo(() => loaders.map((Loader) => new Loader()), loaders);
 
     return (
       <MediaProviderBridge {...props} loaders={reactLoaders} ref={forwardRef}>
