@@ -3,11 +3,22 @@ import * as React from 'react';
 import { useSignal, useSignalRecord, useStateContext } from 'maverick.js/react';
 import { sliderState, type SliderState } from 'vidstack';
 
-import type {
+import {
   SliderInstance,
-  TimeSliderInstance,
-  VolumeSliderInstance,
+  type TimeSliderInstance,
+  type VolumeSliderInstance,
 } from '../components/primitives/instances';
+
+const sliderStateRecord = SliderInstance.state.record,
+  initialSliderStore = Object.keys(sliderStateRecord).reduce(
+    (store, prop) => ({
+      ...store,
+      [prop]() {
+        return sliderStateRecord[prop];
+      },
+    }),
+    {},
+  );
 
 /**
  * This hook is used to subscribe to a specific slider state.
@@ -27,7 +38,7 @@ export function useSliderState<T extends keyof SliderState>(
     );
   }
 
-  return useSignal((ref?.current?.$state || $state)[prop]);
+  return useSignal((ref?.current?.$state || $state || initialSliderStore)[prop]);
 }
 
 /**
@@ -48,5 +59,5 @@ export function useSliderStore(
     );
   }
 
-  return useSignalRecord(ref?.current?.$state || $state);
+  return useSignalRecord(ref?.current ? ref.current.$state : $state || initialSliderStore);
 }
