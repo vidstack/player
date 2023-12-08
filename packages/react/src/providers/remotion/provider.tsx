@@ -116,6 +116,7 @@ export class RemotionProvider implements MediaProviderAdapter {
 
   protected _onFrameChange(frame: number) {
     const { inFrame, fps } = this._src()!,
+      { seeking } = this._ctx.$state,
       time = Math.max(0, frame - inFrame!) / fps!;
 
     this._frame.set((record) => ({
@@ -127,6 +128,11 @@ export class RemotionProvider implements MediaProviderAdapter {
       currentTime: time,
       played: this._getPlayedRange(time),
     });
+
+    if (seeking()) {
+      tick();
+      this._notify('seeked', time);
+    }
   }
 
   protected _onFrameEnd() {
