@@ -1,5 +1,11 @@
 import { createScope, effect, peek, signal } from 'maverick.js';
-import { deferredPromise, isString, listenEvent, type DeferredPromise } from 'maverick.js/std';
+import {
+  deferredPromise,
+  isArray,
+  isString,
+  listenEvent,
+  type DeferredPromise,
+} from 'maverick.js/std';
 
 import { TimeRange, type MediaSrc } from '../../core';
 import { QualitySymbol } from '../../core/quality/symbols';
@@ -319,7 +325,13 @@ export class VimeoProvider
   }
 
   protected _onTimeUpdate(time: number, trigger: Event) {
-    const { currentTime, paused, bufferedEnd } = this._ctx.$state;
+    const { currentTime, paused, seeking, bufferedEnd } = this._ctx.$state;
+
+    if (seeking() && paused()) {
+      this._remote('getBuffered');
+      if (bufferedEnd() > time) this._notify('seeked', time, trigger);
+    }
+
     if (currentTime() === time) return;
 
     const prevTime = currentTime(),
@@ -336,6 +348,7 @@ export class VimeoProvider
     // This is how we detect `seeking` early.
     if (Math.abs(prevTime - time) > 1.5) {
       this._notify('seeking', time, trigger);
+
       if (!paused() && bufferedEnd() < time) {
         this._notify('waiting', undefined, trigger);
       }
@@ -403,6 +416,11 @@ export class VimeoProvider
       case 'getCurrentTime':
         // Why isn't this narrowing type?
         this._onTimeUpdate(data as number, trigger);
+        break;
+      case 'getBuffered':
+        if (isArray(data) && data.length) {
+          this._onLoadProgress(data[data.length - 1][1] as number, trigger);
+        }
         break;
       case 'setMuted':
         this._onVolumeChange(peek(this._ctx.$state.volume), data as boolean, trigger);
