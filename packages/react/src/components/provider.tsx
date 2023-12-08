@@ -7,9 +7,8 @@ import {
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import { mediaContext, mediaState } from 'vidstack';
+import { mediaContext, mediaState, type MediaProviderLoader } from 'vidstack';
 
-import { RemotionProviderLoader } from '../providers/remotion/loader';
 import { isRemotionProvider } from '../providers/remotion/type-check';
 import { MediaProviderInstance } from './primitives/instances';
 
@@ -19,7 +18,9 @@ import { MediaProviderInstance } from './primitives/instances';
 
 const MediaProviderBridge = createReactComponent(MediaProviderInstance);
 
-export interface MediaProviderProps extends ReactElementProps<MediaProviderInstance> {
+export interface MediaProviderProps
+  extends Omit<ReactElementProps<MediaProviderInstance>, 'loaders'> {
+  loaders?: Array<{ new (): MediaProviderLoader }>;
   mediaProps?: React.HTMLAttributes<HTMLMediaElement>;
   children?: React.ReactNode;
   ref?: React.Ref<MediaProviderInstance>;
@@ -37,8 +38,8 @@ export interface MediaProviderProps extends ReactElementProps<MediaProviderInsta
  * ```
  */
 const MediaProvider = React.forwardRef<MediaProviderInstance, MediaProviderProps>(
-  ({ children, mediaProps, ...props }, forwardRef) => {
-    const reactLoaders = React.useMemo(() => [new RemotionProviderLoader()], []);
+  ({ loaders, children, mediaProps, ...props }, forwardRef) => {
+    const reactLoaders = React.useMemo(() => loaders?.map((Loader) => new Loader()), [loaders]);
 
     return (
       <MediaProviderBridge {...props} loaders={reactLoaders} ref={forwardRef}>

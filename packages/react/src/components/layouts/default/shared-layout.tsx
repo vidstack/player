@@ -33,6 +33,7 @@ import * as VolumeSliderBase from '../../ui/sliders/volume-slider';
 import * as ThumbnailBase from '../../ui/thumbnail';
 import { Time } from '../../ui/time';
 import * as TooltipBase from '../../ui/tooltip';
+import { RemotionSliderThumbnail, RemotionThumbnail } from '../remotion-ui';
 import { DefaultLayoutContext, useDefaultLayoutLang } from './context';
 import type { DefaultLayoutIcon, DefaultLayoutIcons } from './icons';
 
@@ -408,15 +409,12 @@ export { DefaultVolumeSlider };
  * DefaultTimeSlider
  * -----------------------------------------------------------------------------------------------*/
 
-const RemotionSliderThumbnail = React.lazy(
-  () => import('../../../providers/remotion/ui/slider-thumbnail'),
-);
-
 function DefaultTimeSlider() {
   const $src = useMediaState('currentSrc'),
     width = useMediaState('width'),
     { thumbnails } = React.useContext(DefaultLayoutContext),
-    label = useDefaultLayoutLang('Seek');
+    label = useDefaultLayoutLang('Seek'),
+    $RemotionSliderThumbnail = useSignal(RemotionSliderThumbnail);
   return (
     <TimeSliderBase.Root className="vds-time-slider vds-slider" aria-label={label}>
       <TimeSliderBase.Chapters className="vds-slider-chapters" disabled={width < 768}>
@@ -439,8 +437,8 @@ function DefaultTimeSlider() {
           >
             <TimeSliderBase.Thumbnail.Img />
           </TimeSliderBase.Thumbnail.Root>
-        ) : isRemotionSource($src) ? (
-          <RemotionSliderThumbnail className="vds-slider-thumbnail vds-thumbnail" />
+        ) : $RemotionSliderThumbnail && isRemotionSource($src) ? (
+          <$RemotionSliderThumbnail className="vds-slider-thumbnail vds-thumbnail" />
         ) : null}
         <TimeSliderBase.ChapterTitle className="vds-slider-chapter-title" />
         <TimeSliderBase.Value className="vds-slider-value" />
@@ -514,8 +512,6 @@ export { DefaultTimeInfo };
  * DefaultChaptersMenu
  * -----------------------------------------------------------------------------------------------*/
 
-const RemotionThumbnail = React.lazy(() => import('../../../providers/remotion/ui/thumbnail'));
-
 function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
   const { showMenuDelay, noModal, isSmallLayout, Icons, menuGroup } =
       React.useContext(DefaultLayoutContext),
@@ -525,7 +521,8 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
     { thumbnails } = React.useContext(DefaultLayoutContext),
     $src = useMediaState('currentSrc'),
     $viewType = useMediaState('viewType'),
-    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0;
+    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
+    $RemotionThumbnail = useSignal(RemotionThumbnail);
 
   const Content = (
     <MenuBase.Content
@@ -551,8 +548,8 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
                 <ThumbnailBase.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
                   <ThumbnailBase.Img />
                 </ThumbnailBase.Root>
-              ) : isRemotionSource($src) ? (
-                <RemotionThumbnail className="vds-thumbnail" frame={cue.startTime * $src.fps!} />
+              ) : $RemotionThumbnail && isRemotionSource($src) ? (
+                <$RemotionThumbnail className="vds-thumbnail" frame={cue.startTime * $src.fps!} />
               ) : null}
               <div className="vds-chapter-radio-content">
                 <span className="vds-chapter-radio-label">{label}</span>
