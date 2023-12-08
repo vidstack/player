@@ -60,6 +60,15 @@ export class MediaPlayerDelegate {
         .dispatch();
     }
 
+    const provider = peek(this._media.$provider),
+      { muted, volume, playsinline } = this._media.$state;
+
+    if (provider) {
+      provider.setVolume(peek(volume));
+      provider.setMuted(peek(muted));
+      provider.setPlaysinline?.(peek(playsinline));
+    }
+
     if ($state.canPlay() && $state.autoplay() && !$state.started()) {
       await this._attemptAutoplay(trigger);
     }

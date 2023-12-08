@@ -55,6 +55,7 @@ export abstract class EmbedProvider<Message> {
   }
 
   protected _postMessage(message: any, target?: string) {
+    if (__SERVER__) return;
     this._iframe.contentWindow?.postMessage(JSON.stringify(message), target ?? '*');
   }
 

@@ -167,16 +167,6 @@ export class HTMLMediaEvents {
   private _onLoadedMetadata(event: Event) {
     this._attachCanPlayListeners();
 
-    // Sync volume state before metadata.
-    this._notify(
-      'volume-change',
-      {
-        volume: this._media.volume,
-        muted: this._media.muted,
-      },
-      event,
-    );
-
     this._notify('loaded-metadata', undefined, event);
 
     // Native HLS does not reliably fire `canplay` event.

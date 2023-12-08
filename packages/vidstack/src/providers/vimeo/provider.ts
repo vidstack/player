@@ -183,6 +183,8 @@ export class VimeoProvider
 
   setVolume(volume) {
     this._remote('setVolume', volume);
+    // Always update muted after volume because setting volume resets muted state.
+    this._remote('setMuted', peek(this._ctx.$state.muted));
   }
 
   setPlaybackRate(rate) {
@@ -296,7 +298,7 @@ export class VimeoProvider
   protected override _buildParams(): VimeoParams {
     const { $iosControls } = this._ctx,
       { keyDisabled } = this._ctx.$props,
-      { controls, muted, playsinline } = this._ctx.$state,
+      { controls, playsinline } = this._ctx.$state,
       showControls = controls() || $iosControls();
     return {
       title: this.title,
@@ -307,7 +309,6 @@ export class VimeoProvider
       h: this.hash,
       keyboard: showControls && !keyDisabled(),
       transparent: true,
-      muted: muted(),
       playsinline: playsinline(),
       dnt: !this.cookies,
     };
@@ -352,7 +353,10 @@ export class VimeoProvider
       .then((info) => {
         if (!info) return;
 
-        const { title, poster, duration, pro } = info;
+        const { title, poster, duration, pro } = info,
+          { $iosControls } = this._ctx,
+          { controls } = this._ctx.$state,
+          showControls = controls() || $iosControls();
 
         this._timeRAF._start();
         this._pro.set(pro);
@@ -368,10 +372,6 @@ export class VimeoProvider
         };
 
         this._ctx.delegate._ready(detail, trigger);
-
-        const { $iosControls } = this._ctx,
-          { controls } = this._ctx.$state,
-          showControls = controls() || $iosControls();
 
         if (!showControls) {
           this._remote('_hideOverlay');
