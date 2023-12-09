@@ -60,6 +60,7 @@ export class HTMLMediaEvents {
     this._attachEventListener('abort', this._onAbort);
     this._attachEventListener('emptied', this._onEmptied);
     this._attachEventListener('error', this._onError);
+    this._attachEventListener('volumechange', this._onVolumeChange);
     if (__DEV__) this._ctx.logger?.debug('attached initial media event listeners');
   }
 
@@ -99,7 +100,6 @@ export class HTMLMediaEvents {
       this._attachEventListener('seeked', this._onSeeked),
       this._attachEventListener('seeking', this._onSeeking),
       this._attachEventListener('ended', this._onEnded),
-      this._attachEventListener('volumechange', this._onVolumeChange),
       this._attachEventListener('waiting', this._onWaiting),
     );
     this._attachedCanPlay = true;

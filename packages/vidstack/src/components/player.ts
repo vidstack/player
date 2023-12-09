@@ -10,6 +10,7 @@ import {
   provideContext,
   scoped,
   signal,
+  type WriteSignalRecord,
 } from 'maverick.js';
 import type { ElementAttributesRecord } from 'maverick.js/element';
 import {
@@ -466,7 +467,8 @@ export class MediaPlayer
   }
 
   set muted(muted) {
-    this._queueMutedUpdate(muted);
+    const $props = this.$props as unknown as WriteSignalRecord<any>;
+    $props.muted.set(muted);
   }
 
   private _watchMuted() {
@@ -514,7 +516,8 @@ export class MediaPlayer
   }
 
   set volume(volume) {
-    this._queueVolumeUpdate(volume);
+    const $props = this.$props as unknown as WriteSignalRecord<any>;
+    $props.volume.set(volume);
   }
 
   private _watchVolume() {

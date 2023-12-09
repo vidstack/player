@@ -61,7 +61,7 @@ export class MediaPlayerDelegate {
     }
 
     const provider = peek(this._media.$provider),
-      { muted, volume, playsinline } = this._media.$state;
+      { muted, volume, playsinline } = this._media.$props;
 
     if (provider) {
       provider.setVolume(peek(volume));
