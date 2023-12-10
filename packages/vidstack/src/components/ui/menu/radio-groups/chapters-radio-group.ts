@@ -8,7 +8,7 @@ import {
   signal,
   useContext,
 } from 'maverick.js';
-import { DOMEvent, isNumber, setStyle } from 'maverick.js/std';
+import { DOMEvent, isNumber, listenEvent, setStyle } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
@@ -41,6 +41,7 @@ export class ChaptersRadioGroup extends Component<
 
   private _index = signal(0);
   private _track = signal<TextTrack | null>(null);
+  private _cues = signal<readonly VTTCue[]>([]);
 
   @prop
   get value() {
@@ -49,8 +50,7 @@ export class ChaptersRadioGroup extends Component<
 
   @prop
   get disabled() {
-    const track = this._track();
-    return !track || !track.cues.length;
+    return !this._cues()?.length;
   }
 
   constructor() {
@@ -80,9 +80,7 @@ export class ChaptersRadioGroup extends Component<
 
   @method
   getOptions(): ChaptersRadioOption[] {
-    const track = this._track();
-    if (!track) return [];
-    return track.cues.map((cue, i) => ({
+    return this._cues().map((cue, i) => ({
       cue,
       value: i + '',
       label: cue.text,
@@ -99,7 +97,27 @@ export class ChaptersRadioGroup extends Component<
     effect(this._watchValue.bind(this));
     effect(this._watchCurrentTime.bind(this));
     effect(this._watchControllerDisabled.bind(this));
+    effect(this._watchTrack.bind(this));
     observeActiveTextTrack(this._media.textTracks, 'chapters', this._track.set);
+  }
+
+  protected _watchTrack() {
+    const track = this._track();
+    if (!track) return;
+
+    const onCuesChange = this._onCuesChange.bind(this, track);
+
+    onCuesChange();
+    listenEvent(track, 'add-cue', onCuesChange);
+    listenEvent(track, 'remove-cue', onCuesChange);
+
+    return () => {
+      this._cues.set([]);
+    };
+  }
+
+  protected _onCuesChange(track: TextTrack) {
+    this._cues.set([...track.cues]);
   }
 
   private _watchValue() {

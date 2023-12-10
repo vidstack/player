@@ -619,5 +619,6 @@
   "_watchVolume": "Gd",
   "_watchWaiting": "Bk",
   "_whenQueryList": "ne",
-  "_whenSmQueryList": "Mc"
+  "_whenSmQueryList": "Mc",
+  "_watchTrack": "Hk"
 }

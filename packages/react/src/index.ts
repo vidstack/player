@@ -114,6 +114,7 @@ export * from './hooks/use-media-state';
 export * from './hooks/use-thumbnails';
 export * from './hooks/use-slider-state';
 export * from './hooks/use-slider-preview';
+export * from './hooks/use-text-cues';
 export * from './hooks/use-active-text-cues';
 export * from './hooks/use-active-text-track';
 export * from './hooks/create-text-track';

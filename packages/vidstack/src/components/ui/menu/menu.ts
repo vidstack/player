@@ -12,6 +12,7 @@ import {
   useContext,
 } from 'maverick.js';
 import {
+  animationFrameThrottle,
   ariaBool,
   DOMEvent,
   isKeyboardEvent,
@@ -159,6 +160,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   protected override onConnect(el: HTMLElement) {
     effect(this._watchExpanded.bind(this));
     if (this.isSubmenu) this._parentMenu?._addSubmenu(this);
+
     requestAnimationFrame(() => {
       this._onResize();
     });
@@ -248,7 +250,13 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._updateMenuItemsHidden(false);
 
     if (!__SERVER__) {
-      requestAnimationFrame(this._onResize.bind(this));
+      const onResize = animationFrameThrottle(this._onResize.bind(this)),
+        mutations = new MutationObserver(onResize);
+
+      onResize();
+
+      mutations.observe(el, { childList: true, subtree: true });
+      onDispose(() => mutations.disconnect());
     }
   }
 

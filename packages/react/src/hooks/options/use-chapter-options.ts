@@ -7,19 +7,21 @@ import { formatSpokenTime, formatTime, mediaContext } from 'vidstack';
 
 import { useActiveTextCues } from '../use-active-text-cues';
 import { useActiveTextTrack } from '../use-active-text-track';
+import { useTextCues } from '../use-text-cues';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-chapter-options}
  */
 export function useChapterOptions(): ChapterOptions {
   const media = useReactContext(mediaContext)!,
-    track = useActiveTextTrack('chapters');
+    track = useActiveTextTrack('chapters'),
+    cues = useTextCues(track);
 
   useActiveTextCues(track);
 
   return React.useMemo(() => {
     const options = track
-      ? track.cues.map<ChapterOption>((cue, i) => {
+      ? cues.map<ChapterOption>((cue, i) => {
           let currentRef: HTMLElement | null = null,
             stopProgressEffect: StopEffect | undefined;
           return {
@@ -67,7 +69,7 @@ export function useChapterOptions(): ChapterOptions {
     });
 
     return options as ChapterOptions;
-  }, [track]);
+  }, [cues]);
 }
 
 export type ChapterOptions = ChapterOption[] & {
