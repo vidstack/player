@@ -1,6 +1,7 @@
 import { isString } from 'maverick.js/std';
 
-import type { MediaContext, MediaSrc, MediaType } from '../../core';
+import type { MediaSrc, MediaType } from '../../core';
+import type { MediaContext } from '../../core/api/media-context';
 import { isHLSSrc, VIDEO_EXTENSIONS, VIDEO_TYPES } from '../../utils/mime';
 import { canPlayHLSNatively } from '../../utils/support';
 import type { MediaProviderLoader } from '../types';

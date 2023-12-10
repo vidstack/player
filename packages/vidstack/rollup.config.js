@@ -1,9 +1,10 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
 import * as eslexer from 'es-module-lexer';
-import { transformSync } from 'esbuild';
+import { build, transformSync } from 'esbuild';
+import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
@@ -18,14 +19,19 @@ const NPM_EXTERNAL_PACKAGES = ['hls.js', 'media-captions', 'media-icons'],
   CDN_BUNDLES = [defineCDN({ dev: true }), defineCDN(), defineCDN({ layouts: true })],
   TYPES_BUNDLES = [defineTypes()];
 
+/** @type {Record<string, string | false>} */
+const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
+
 // Styles
 if (!MODE_TYPES) {
   if (MODE_WATCH) {
-    chokidar.watch('player/styles/**').on('all', (_, path) => {
-      if (path !== 'player/styles/default/theme.css') buildDefaultTheme();
+    chokidar.watch('player/styles/**').on('all', async (_, path) => {
+      if (path !== 'player/styles/default/theme.css') {
+        await buildDefaultTheme();
+      }
     });
   } else {
-    buildDefaultTheme();
+    await buildDefaultTheme();
   }
 }
 
@@ -94,9 +100,7 @@ function define({ target, type, minify }) {
     },
     isProd = type === 'prod',
     isServer = type === 'server',
-    shouldMangle = type === 'prod',
-    /** @type {Record<string, string | false>} */
-    mangleCache = {};
+    shouldMangle = type === 'prod';
 
   if (!isServer) {
     input = {
@@ -161,14 +165,9 @@ function define({ target, type, minify }) {
             target: 'esnext',
             minify: false,
             mangleProps: /^_/,
-            mangleCache,
+            mangleCache: MANGLE_CACHE,
             loader: 'tsx',
           });
-
-          mangleCache = {
-            ...mangleCache,
-            ...result.mangleCache,
-          };
 
           return result.code;
         },
@@ -229,15 +228,51 @@ function defineCDN({ dev = false, layouts = false } = {}) {
   };
 }
 
-function buildDefaultTheme() {
+async function buildDefaultTheme() {
   // CSS merge.
-  let defaultStyles = fs.readFileSync('player/styles/base.css', 'utf-8');
+  let defaultStyles = await fs.readFile('player/styles/base.css', 'utf-8');
 
   const themeDir = 'player/styles/default';
-  for (const file of fs.readdirSync(themeDir, 'utf-8')) {
+  for (const file of await fs.readdir(themeDir, 'utf-8')) {
     if (file === 'theme.css' || file === 'layouts') continue;
-    defaultStyles += '\n' + fs.readFileSync(`${themeDir}/${file}`, 'utf-8');
+    defaultStyles += '\n' + (await fs.readFile(`${themeDir}/${file}`, 'utf-8'));
   }
 
-  fs.writeFileSync('player/styles/default/theme.css', defaultStyles);
+  await fs.writeFile('player/styles/default/theme.css', defaultStyles);
+}
+
+export async function buildMangleCache() {
+  let mangleCache = JSON.parse(await fs.readFile('mangle.json', 'utf-8'));
+
+  const result = await build({
+    entryPoints: globbySync('src/**', {
+      ignoreFiles: ['*.test'],
+    }),
+    target: 'esnext',
+    bundle: true,
+    minify: false,
+    mangleProps: /^_/,
+    reserveProps: /^__/,
+    mangleCache,
+    write: false,
+    outdir: 'dist-esbuild',
+    plugins: [
+      {
+        name: 'externalize',
+        setup(build) {
+          let filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
+          build.onResolve({ filter }, (args) => ({ path: args.path, external: true }));
+        },
+      },
+    ],
+  });
+
+  mangleCache = {
+    ...mangleCache,
+    ...result.mangleCache,
+  };
+
+  await fs.writeFile('mangle.json', JSON.stringify(mangleCache, null, 2));
+
+  return mangleCache;
 }

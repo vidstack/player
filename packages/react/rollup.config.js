@@ -3,8 +3,9 @@ import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
-import { transformSync } from 'esbuild';
+import { build, transformSync } from 'esbuild';
 import fs from 'fs-extra';
+import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
@@ -29,6 +30,9 @@ const EXTERNAL_PACKAGES = [
   ],
   NPM_BUNDLES = [define({ dev: true }), define({ dev: false })],
   TYPES_BUNDLES = [defineTypes()];
+
+/** @type {Record<string, string | false>} */
+const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
 
 // Styles
 if (!MODE_TYPES) {
@@ -94,9 +98,7 @@ function defineTypes() {
  * @returns {import('rollup').RollupOptions}
  */
 function define({ dev }) {
-  let alias = dev ? 'dev' : 'prod',
-    /** @type {Record<string, string | false>} */
-    mangleCache = {};
+  let alias = dev ? 'dev' : 'prod';
 
   let input = {
     vidstack: 'src/index.ts',
@@ -167,14 +169,9 @@ function define({ dev }) {
             minify: false,
             mangleProps: /^_/,
             reserveProps: /^__/,
-            mangleCache,
+            mangleCache: MANGLE_CACHE,
             loader: 'tsx',
           });
-
-          mangleCache = {
-            ...mangleCache,
-            ...result.mangleCache,
-          };
 
           return result.code;
         },
@@ -229,4 +226,42 @@ function buildDefaultTheme() {
   }
 
   fs.writeFileSync('player/styles/default/theme.css', defaultStyles);
+}
+
+export async function buildMangleCache() {
+  let mangleCache = JSON.parse(await fs.readFile('mangle.json', 'utf-8'));
+
+  const result = await build({
+    entryPoints: globbySync('src/**', {
+      ignoreFiles: ['*.test'],
+    }),
+    target: 'esnext',
+    bundle: true,
+    minify: false,
+    mangleProps: /^_/,
+    reserveProps: /^__/,
+    mangleCache,
+    write: false,
+    outdir: 'dist-esbuild',
+    plugins: [
+      {
+        name: 'externalize',
+        setup(build) {
+          let filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
+          build.onResolve({ filter }, (args) =>
+            args.path === 'vidstack' ? undefined : { path: args.path, external: true },
+          );
+        },
+      },
+    ],
+  });
+
+  mangleCache = {
+    ...mangleCache,
+    ...result.mangleCache,
+  };
+
+  await fs.writeFile('mangle.json', JSON.stringify(mangleCache, null, 2));
+
+  return mangleCache;
 }
