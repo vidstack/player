@@ -14,14 +14,17 @@ const errorStyle: React.CSSProperties = __DEV__
     }
   : {};
 
-export class ErrorBoundary extends React.Component<
-  {
-    children: React.ReactNode;
-    fallback?: (error: Error) => React.ReactNode;
-    onError: (error: Error) => void;
-  },
-  { hasError: Error | null }
-> {
+export interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  fallback?: (error: Error) => React.ReactNode;
+  onError?: (error: Error) => void;
+}
+
+interface ErrorBoundaryState {
+  hasError: Error | null;
+}
+
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   static displayName = 'ErrorBoundary';
 
   override state: { hasError: Error | null } = { hasError: null };
@@ -31,7 +34,7 @@ export class ErrorBoundary extends React.Component<
   }
 
   override componentDidCatch(error: Error) {
-    this.props.onError(error);
+    this.props.onError?.(error);
   }
 
   override render() {

@@ -17,7 +17,7 @@
     "analyze.json"
   ],
   "scripts": {
-    "analyze": "maverick analyze \"src/**/*.tsx\" --framework react",
+    "analyze": "maverick analyze \"src/**/*.tsx\" --framework react --project tsconfig.build.json",
     "dev": "pnpm clean && pnpm build:icons && pnpm build:types && pnpm watch",
     "build": "pnpm build:icons && rollup -c",
     "build:icons": "node .scripts/build-icons.js",

@@ -99,18 +99,21 @@ export class RemotionProvider implements MediaProviderAdapter {
     const elements = this._mediaElements();
 
     for (const tag of elements) {
+      const onWait = this._onWaitFor.bind(this, tag),
+        onStopWaiting = this._onStopWaitingFor.bind(this, tag);
+
       if (tag.currentSrc && tag.readyState < 4) {
-        this._waitFor(tag);
-        listenEvent(tag, 'canplay', this._stopWaitingFor.bind(this, tag));
+        this._onWaitFor(tag);
+        listenEvent(tag, 'canplay', onStopWaiting);
       }
 
-      listenEvent(tag, 'waiting', this._waitFor.bind(this, tag));
-      listenEvent(tag, 'playing', this._stopWaitingFor.bind(this, tag));
+      listenEvent(tag, 'waiting', onWait);
+      listenEvent(tag, 'playing', onStopWaiting);
     }
 
     // User might have seeked to a new position, old media elements are removed.
     for (const el of this._bufferingElements) {
-      if (!elements.includes(el)) this._stopWaitingFor(el);
+      if (!elements.includes(el)) this._onStopWaitingFor(el);
     }
   }
 
@@ -415,7 +418,7 @@ export class RemotionProvider implements MediaProviderAdapter {
     }
   }
 
-  protected _waitFor(el: HTMLMediaElement) {
+  protected _onWaitFor(el: HTMLMediaElement) {
     this._bufferingElements.add(el);
     this._waiting.set(true);
     if (!this._waitingPromise) {
@@ -423,7 +426,7 @@ export class RemotionProvider implements MediaProviderAdapter {
     }
   }
 
-  protected _stopWaitingFor(el: HTMLMediaElement) {
+  protected _onStopWaitingFor(el: HTMLMediaElement) {
     this._bufferingElements.delete(el);
 
     // There's still elements we're waiting on.
