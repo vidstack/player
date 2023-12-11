@@ -7,7 +7,7 @@ export interface RemotionPosterProps extends RemotionThumbnailProps {}
 
 /**
  * @attr data-visible - Whether poster should be shown.
- * @docs {@link https://www.vidstack.io/docs/player/components/remotion/poster}
+ * @docs {@link https://www.vidstack.io/docs/player/components/remotion/remotion-poster}
  * @example
  * ```tsx
  * <MediaPlayer>

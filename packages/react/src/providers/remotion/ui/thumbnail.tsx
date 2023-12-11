@@ -38,7 +38,7 @@ export interface RemotionThumbnailProps
 }
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/remotion/thumbnail}
+ * @docs {@link https://www.vidstack.io/docs/player/components/remotion/remotion-thumbnail}
  * @example
  * ```tsx
  * <RemotionThumbnail frame={100} />

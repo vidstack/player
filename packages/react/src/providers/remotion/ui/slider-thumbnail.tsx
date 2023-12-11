@@ -8,7 +8,7 @@ import RemotionThumbnail, { type RemotionThumbnailProps } from './thumbnail';
 export interface RemotionSliderThumbnailProps extends Omit<RemotionThumbnailProps, 'frame'> {}
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/remotion/slider-thumbnail}
+ * @docs {@link https://www.vidstack.io/docs/player/components/remotion/remotion-slider-thumbnail}
  * @example
  * ```tsx
  * <TimeSlider.Root>
