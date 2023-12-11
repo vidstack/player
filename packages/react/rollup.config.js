@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
-import { build, transformSync } from 'esbuild';
+import { build } from 'esbuild';
 import fs from 'fs-extra';
 import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
@@ -12,6 +12,9 @@ import esbuildPlugin from 'rollup-plugin-esbuild';
 
 const MODE_WATCH = process.argv.includes('-w'),
   MODE_TYPES = process.argv.includes('--config-types');
+
+/** @type {Record<string, string | false>} */
+const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
 
 const DIRNAME = path.dirname(fileURLToPath(import.meta.url)),
   ROOT_DIR = path.resolve(DIRNAME, '.'),
@@ -30,9 +33,6 @@ const EXTERNAL_PACKAGES = [
   ],
   NPM_BUNDLES = [define({ dev: true }), define({ dev: false })],
   TYPES_BUNDLES = [defineTypes()];
-
-/** @type {Record<string, string | false>} */
-const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
 
 // Styles
 if (!MODE_TYPES) {
@@ -157,25 +157,13 @@ function define({ dev }) {
         tsconfig: 'tsconfig.build.json',
         target: 'es2021',
         platform: 'browser',
+        mangleProps: !dev ? /^_/ : undefined,
+        mangleCache: !dev ? MANGLE_CACHE : undefined,
+        reserveProps: !dev ? /^__/ : undefined,
         define: {
           __DEV__: dev ? 'true' : 'false',
         },
       }),
-      !dev && {
-        name: 'mangle',
-        transform(code) {
-          const result = transformSync(code, {
-            target: 'esnext',
-            minify: false,
-            mangleProps: /^_/,
-            reserveProps: /^__/,
-            mangleCache: MANGLE_CACHE,
-            loader: 'tsx',
-          });
-
-          return result.code;
-        },
-      },
       {
         name: 'rsc-directives',
         resolveId(id) {

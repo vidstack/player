@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
 import * as eslexer from 'es-module-lexer';
-import { build, transformSync } from 'esbuild';
+import { build } from 'esbuild';
 import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
@@ -13,14 +13,14 @@ const MODE_WATCH = process.argv.includes('-w'),
   MODE_TYPES = process.argv.includes('--config-types'),
   MODE_CDN = process.argv.includes('--config-cdn');
 
+/** @type {Record<string, string | false>} */
+const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
+
 const NPM_EXTERNAL_PACKAGES = ['hls.js', 'media-captions', 'media-icons'],
   CDN_EXTERNAL_PACKAGES = ['media-captions', 'media-icons'],
   NPM_BUNDLES = [define({ type: 'server' }), define({ type: 'dev' }), define({ type: 'prod' })],
   CDN_BUNDLES = [defineCDN({ dev: true }), defineCDN(), defineCDN({ layouts: true })],
   TYPES_BUNDLES = [defineTypes()];
-
-/** @type {Record<string, string | false>} */
-const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
 
 // Styles
 if (!MODE_TYPES) {
@@ -121,7 +121,6 @@ function define({ target, type, minify }) {
 
   return {
     input,
-    maxParallelFileOps: shouldMangle ? 1 : 20,
     treeshake: true,
     preserveEntrySignatures: 'strict',
     external: NPM_EXTERNAL_PACKAGES,
@@ -158,26 +157,15 @@ function define({ target, type, minify }) {
           }
         },
       },
-      shouldMangle && {
-        name: 'mangle',
-        transform(code) {
-          const result = transformSync(code, {
-            target: 'esnext',
-            minify: false,
-            mangleProps: /^_/,
-            mangleCache: MANGLE_CACHE,
-            loader: 'tsx',
-          });
-
-          return result.code;
-        },
-      },
       esbuildPlugin({
         tsconfig: 'tsconfig.build.json',
         target: target ?? (isServer ? 'node18' : 'esnext'),
         platform: isServer ? 'node' : 'browser',
         minify: minify,
         legalComments: 'none',
+        mangleProps: shouldMangle ? /^_/ : undefined,
+        mangleCache: shouldMangle ? MANGLE_CACHE : undefined,
+        reserveProps: shouldMangle ? /^__/ : undefined,
         define: {
           __DEV__: !isProd && !isServer ? 'true' : 'false',
           __SERVER__: isServer ? 'true' : 'false',
