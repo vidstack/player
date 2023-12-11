@@ -3,7 +3,7 @@ import * as React from 'react';
 import { noop } from 'maverick.js/std';
 import { Internals, random, type TimelineContextValue } from 'remotion';
 
-import type { PrimitivePropsWithRef } from '../../../components/primitives/nodes';
+import { Primitive, type PrimitivePropsWithRef } from '../../../components/primitives/nodes';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { RemotionLayoutEngine } from '../layout-engine';
 import { isRemotionSource } from '../type-check';
@@ -114,7 +114,7 @@ const RemotionThumbnail = React.forwardRef<HTMLElement, RemotionThumbnailProps>(
         setMediaVolume={volume}
         numberOfSharedAudioTags={0}
       >
-        <div {...props} ref={ref as any} data-remotion-thumbnail>
+        <Primitive.div {...props} ref={ref as any} data-remotion-thumbnail>
           <div data-remotion-canvas>
             <div
               data-remotion-container
@@ -130,7 +130,7 @@ const RemotionThumbnail = React.forwardRef<HTMLElement, RemotionThumbnailProps>(
               />
             </div>
           </div>
-        </div>
+        </Primitive.div>
       </RemotionContextProvider>
     );
   },
