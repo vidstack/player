@@ -1,4 +1,5 @@
 import { DOMEvent, EventsTarget, isString, listenEvent } from 'maverick.js/std';
+
 import { TextTrackSymbol } from '../symbols';
 import type { TextTrack } from '../text-track';
 import type { TextRenderer } from './text-renderer';
@@ -15,14 +16,17 @@ export class LibASSTextRenderer implements TextRenderer {
     public config?: LibASSConfig,
   ) {}
 
-  canRender(track: TextTrack): boolean {
+  canRender(track: TextTrack, video: HTMLVideoElement | null): boolean {
     return (
+      !!video &&
       !!track.src &&
       ((isString(track.type) && this._typeRE.test(track.type)) || this._typeRE.test(track.src))
     );
   }
 
-  attach(video: HTMLVideoElement) {
+  attach(video: HTMLVideoElement | null) {
+    if (!video) return;
+
     this.loader().then(async (mod) => {
       this._instance = new mod.default({
         ...this.config,

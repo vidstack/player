@@ -10,13 +10,13 @@ export class NativeTextRenderer implements TextRenderer {
   private _track: VdsTextTrack | null = null;
   private _tracks = new Set<VdsTextTrack>();
 
-  canRender() {
-    return true;
+  canRender(_, video: HTMLVideoElement | null) {
+    return !!video;
   }
 
-  attach(video: HTMLVideoElement) {
+  attach(video: HTMLVideoElement | null) {
     this._video = video;
-    video.textTracks.onchange = this._onChange.bind(this);
+    if (video) video.textTracks.onchange = this._onChange.bind(this);
   }
 
   addTrack(track: VdsTextTrack): void {
