@@ -69,8 +69,8 @@ importers:
         version: 1.0.2
     devDependencies:
       '@maverick-js/cli':
-        specifier: 0.41.0
-        version: 0.41.0
+        specifier: 0.41.1
+        version: 0.41.1
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.0
         version: 15.2.3(rollup@4.7.0)
@@ -90,8 +90,8 @@ importers:
         specifier: ^11.0.0
         version: 11.2.0
       maverick.js:
-        specifier: 0.41.0
-        version: 0.41.0
+        specifier: 0.41.1
+        version: 0.41.1
       media-icons:
         specifier: ^1.0.0
         version: 1.0.0
@@ -136,8 +136,8 @@ importers:
         specifier: ^1.4.4
         version: 1.5.3
       '@maverick-js/cli':
-        specifier: 0.41.0
-        version: 0.41.0
+        specifier: 0.41.1
+        version: 0.41.1
       '@open-wc/semantic-dom-diff':
         specifier: ^0.20.0
         version: 0.20.1
@@ -184,8 +184,8 @@ importers:
         specifier: ^2.7.4
         version: 2.8.0
       maverick.js:
-        specifier: 0.41.0
-        version: 0.41.0
+        specifier: 0.41.1
+        version: 0.41.1
       media-icons:
         specifier: ^1.0.0
         version: 1.0.0
@@ -924,10 +924,10 @@ packages:
       '@lit-labs/ssr-dom-shim': 1.1.2
     dev: true
 
-  /@maverick-js/cli@0.41.0:
+  /@maverick-js/cli@0.41.1:
     resolution:
       {
-        integrity: sha512-0ewK3O1gwWkIicfmxWUnC54rSX8G7wz8Z1sxfpNDLwo7qtdr6zChxEpwJpveGcPdHk368RdRaat2YGBlA2BQTQ==,
+        integrity: sha512-vBsO58lD60+ywMJG9NjHx19+xJnQC+grFtMdC7Ykqk38hVlLzvXknDv7BuvjOMUCwi+56+DxPAHmDTLOCVErtA==,
       }
     engines: { node: '>=16' }
     hasBin: true
@@ -4140,10 +4140,10 @@ packages:
       semver: 7.5.4
     dev: true
 
-  /maverick.js@0.41.0:
+  /maverick.js@0.41.1:
     resolution:
       {
-        integrity: sha512-LFGiwBUEa23GoSt2JBH+qP1EHEVeAAC/DbC2Zs4bhMSwf67ZxSHezt4GIhLnUJAcJ7C8PQXnoIs5D9Wil8Dmxg==,
+        integrity: sha512-0nmbOo1ZegPONUNOPCH3/UULQ1voAkRq+h3f4AFmvpoOWZOXPB/Fy95gBU1yw4Qcp2aMa1r+JZhp6Swu3hhziA==,
       }
     engines: { node: '>=16' }
     dev: true
