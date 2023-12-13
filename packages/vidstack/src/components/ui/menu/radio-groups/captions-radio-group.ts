@@ -67,7 +67,7 @@ export class CaptionsRadioGroup extends Component<
         .map((track) => ({
           track,
           label: track.label,
-          value: track.label.toLowerCase(),
+          value: this._getTrackValue(track),
         })),
     ];
   }
@@ -93,7 +93,7 @@ export class CaptionsRadioGroup extends Component<
     const { textTrack } = this._media.$state,
       track = textTrack();
     return track && isTrackCaptionKind(track) && track.mode === 'showing'
-      ? track.label.toLowerCase()
+      ? this._getTrackValue(track)
       : 'off';
   }
 
@@ -114,13 +114,17 @@ export class CaptionsRadioGroup extends Component<
 
     const index = this._media.textTracks
       .toArray()
-      .findIndex((track) => track.label.toLowerCase() === value);
+      .findIndex((track) => this._getTrackValue(track) === value);
 
     if (index >= 0) {
       const track = this._media.textTracks[index]!;
       this._media.remote.changeTextTrackMode(index, 'showing', trigger);
       this.dispatch('change', { detail: track, trigger });
     }
+  }
+
+  private _getTrackValue(track: TextTrack) {
+    return track.id + ':' + track.kind + '-' + track.label.toLowerCase();
   }
 }
 

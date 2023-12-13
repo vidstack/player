@@ -89,5 +89,5 @@ export interface CaptionOption {
 }
 
 function getTrackValue(track: TextTrack) {
-  return track.label.toLowerCase();
+  return track.id + ':' + track.kind + '-' + track.label.toLowerCase();
 }

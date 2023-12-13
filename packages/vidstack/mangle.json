@@ -614,5 +614,6 @@
   "_watchTrack": "tk",
   "_$provider": "uk",
   "_providerQueue": "vk",
-  "_watchProvider": "wk"
+  "_watchProvider": "wk",
+  "_getTrackValue": "xk"
 }
