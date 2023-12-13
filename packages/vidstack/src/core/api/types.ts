@@ -49,6 +49,7 @@ export type MediaErrorCode = 1 | 2 | 3 | 4;
 export interface MediaErrorDetail {
   message: string;
   code: MediaErrorCode;
+  error?: Error;
   mediaError?: MediaError;
 }
 

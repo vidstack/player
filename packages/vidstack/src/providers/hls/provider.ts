@@ -112,7 +112,7 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
   override async loadSource(src: MediaSrc, preload?: HTMLMediaElement['preload']) {
     if (!isString(src.src)) return;
     this._media.preload = preload || '';
-    this._controller.instance?.loadSource(src.src);
+    this._controller._loadSource(src);
     this._currentSrc = src as MediaSrc<string>;
   }
 

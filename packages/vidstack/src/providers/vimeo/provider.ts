@@ -11,6 +11,7 @@ import { TimeRange, type MediaSrc } from '../../core';
 import { QualitySymbol } from '../../core/quality/symbols';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
+import { coerceToError } from '../../utils/error';
 import { preconnect } from '../../utils/network';
 import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
@@ -272,6 +273,7 @@ export class VimeoProvider
         this._notify('error', {
           message: `Failed to fetch vimeo video info from \`${oembedSrc}\`.`,
           code: 1,
+          error: coerceToError(e),
         });
       });
 
@@ -401,8 +403,9 @@ export class VimeoProvider
       .catch((e) => {
         if (videoId !== this._videoId()) return;
         this._notify('error', {
-          message: `Failed to fetch oembed data: ${e}`,
+          message: `Failed to fetch oembed data`,
           code: 2,
+          error: coerceToError(e),
         });
       });
   }

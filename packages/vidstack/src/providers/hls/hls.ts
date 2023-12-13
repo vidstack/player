@@ -1,7 +1,8 @@
 import type * as HLS from 'hls.js';
 import { effect, peek } from 'maverick.js';
-import { camelToKebabCase, DOMEvent, listenEvent } from 'maverick.js/std';
+import { camelToKebabCase, DOMEvent, isString, listenEvent } from 'maverick.js/std';
 
+import type { MediaSrc } from '../../core/api/types';
 import { QualitySymbol } from '../../core/quality/symbols';
 import { TextTrackSymbol } from '../../core/tracks/text/symbols';
 import { TextTrack } from '../../core/tracks/text/text-track';
@@ -49,6 +50,7 @@ export class HLSController {
     ctx.player.dispatch(new DOMEvent('hls-instance', { detail: this._instance }));
 
     this._instance.attachMedia(this._video);
+    this._instance.on(ctor.Events.FRAG_LOADING, this._onFragLoading.bind(this));
     this._instance.on(ctor.Events.AUDIO_TRACK_SWITCHED, this._onAudioSwitch.bind(this));
     this._instance.on(ctor.Events.LEVEL_SWITCHED, this._onLevelSwitched.bind(this));
     this._instance.on(ctor.Events.LEVEL_LOADED, this._onLevelLoaded.bind(this));
@@ -209,18 +211,48 @@ export class HLSController {
     if (data.fatal) {
       switch (data.type) {
         case 'networkError':
-          this._instance?.startLoad();
+          this._onNetworkError(data.error);
           break;
         case 'mediaError':
           this._instance?.recoverMediaError();
           break;
         default:
-          // We can't recover here - better course of action?
-          this._instance?.destroy();
-          this._instance = null;
+          this._onFatalError(data.error);
           break;
       }
     }
+  }
+
+  private _onFragLoading() {
+    if (this._retryLoadingTimer >= 0) this._clearRetryTimer();
+  }
+
+  private _retryLoadingTimer = -1;
+  private _onNetworkError(error: Error) {
+    this._clearRetryTimer();
+
+    this._instance?.startLoad();
+
+    this._retryLoadingTimer = window.setTimeout(() => {
+      this._retryLoadingTimer = -1;
+      this._onFatalError(error);
+    }, 5000);
+  }
+
+  private _clearRetryTimer() {
+    clearTimeout(this._retryLoadingTimer);
+    this._retryLoadingTimer = -1;
+  }
+
+  private _onFatalError(error: Error) {
+    // We can't recover here - better course of action?
+    this._instance?.destroy();
+    this._instance = null;
+    this._ctx.delegate._notify('error', {
+      message: error.message,
+      code: 1,
+      error: error,
+    });
   }
 
   private _enableAutoQuality() {
@@ -247,7 +279,14 @@ export class HLSController {
     }
   }
 
+  _loadSource(src: MediaSrc) {
+    if (!isString(src.src)) return;
+    this._clearRetryTimer();
+    this._instance?.loadSource(src.src);
+  }
+
   _destroy() {
+    this._clearRetryTimer();
     if (this._ctx) this._ctx.qualities[QualitySymbol._enableAuto] = undefined;
     this._instance?.destroy();
     this._instance = null;

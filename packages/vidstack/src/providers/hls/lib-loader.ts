@@ -96,7 +96,11 @@ export class HLSLibLoader {
       }),
     );
 
-    this._ctx.delegate._notify('error', { message: error.message, code: 4 });
+    this._ctx.delegate._notify('error', {
+      message: error.message,
+      code: 4,
+      error,
+    });
   }
 }
 
