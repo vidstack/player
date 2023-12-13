@@ -611,5 +611,8 @@
   "_watchVolume": "Fd",
   "_whenQueryList": "me",
   "_whenSmQueryList": "Lc",
-  "_watchTrack": "tk"
+  "_watchTrack": "tk",
+  "_$provider": "uk",
+  "_providerQueue": "vk",
+  "_watchProvider": "wk"
 }

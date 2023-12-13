@@ -15,3 +15,4 @@ globals.d.ts
 .gitkeep
 .prettierignore
 
+mangle.json

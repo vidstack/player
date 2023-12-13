@@ -249,7 +249,7 @@ export async function buildMangleCache() {
     ...result.mangleCache,
   };
 
-  await fs.writeFile('mangle.json', JSON.stringify(mangleCache, null, 2));
+  await fs.writeFile('mangle.json', JSON.stringify(mangleCache, null, 2) + '\n');
 
   return mangleCache;
 }
