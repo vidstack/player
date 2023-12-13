@@ -623,5 +623,12 @@
   "_watchTrack": "Hk",
   "_$provider": "Ik",
   "_providerQueue": "Jk",
-  "_watchProvider": "Kk"
+  "_watchProvider": "Kk",
+  "_clearRetryTimer": "Mk",
+  "_getTrackValue": "Nk",
+  "_loadSource": "Rk",
+  "_onFatalError": "Ok",
+  "_onFragLoading": "Pk",
+  "_onNetworkError": "Qk",
+  "_retryLoadingTimer": "Lk"
 }

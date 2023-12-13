@@ -615,5 +615,11 @@
   "_$provider": "uk",
   "_providerQueue": "vk",
   "_watchProvider": "wk",
-  "_getTrackValue": "xk"
+  "_getTrackValue": "xk",
+  "_clearRetryTimer": "zk",
+  "_loadSource": "Dk",
+  "_onFatalError": "Ak",
+  "_onFragLoading": "Bk",
+  "_onNetworkError": "Ck",
+  "_retryLoadingTimer": "yk"
 }
