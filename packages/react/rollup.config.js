@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
-import { build } from 'esbuild';
+import { build, transform as esbuildTransform } from 'esbuild';
 import fs from 'fs-extra';
 import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
@@ -164,6 +164,17 @@ function define({ dev }) {
           __DEV__: dev ? 'true' : 'false',
         },
       }),
+      {
+        name: 'target-syntax',
+        transform(code, id) {
+          if (/node_modules.*?\.js/.test(id)) {
+            return esbuildTransform(code, {
+              target: 'es2021',
+              platform: 'browser',
+            }).then((t) => t.code);
+          }
+        },
+      },
       {
         name: 'rsc-directives',
         resolveId(id) {
