@@ -108,9 +108,6 @@ async function main() {
   step('Updating lockfile...');
   await run(`pnpm`, ['install']);
 
-  step('Generating changelog...');
-  await run('pnpm', ['changelog']);
-
   const { stdout } = await run('git', ['diff'], { stdio: 'pipe' });
   if (stdout) {
     step('Committing changes...');
@@ -122,10 +119,15 @@ async function main() {
     console.log('No changes to commit.');
   }
 
-  step('Pushing to GitHub...');
-
   const tag = `v${targetVersion}${isNext ? '-next' : ''}`;
   await runIfNotDry('git', ['tag', tag]);
+
+  step('Generating changelog...');
+  await run('pnpm', ['changelog']);
+  await runIfNotDry('git', ['add', '-A']);
+  await runIfNotDry('git', ['commit', '-m', 'chore: update changelog']);
+
+  step('Pushing to GitHub...');
   await runIfNotDry('git', ['push', 'upstream', `refs/tags/${tag}`]);
   await runIfNotDry('git', ['push', 'upstream', 'main']);
 
