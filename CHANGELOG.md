@@ -571,10 +571,6 @@ All notable changes to this project will be documented in this file.
 - slider chapters are being built multiple times on init ([93f27a2](93f27a2305ef8e0d1d703070f500b73da373d129))
 - `useMediaRemote` throws on init ([57c8d07](57c8d076159d326be33be52729630386d8d3088e))
 
-## [1.1.1-next](https://github.com/vidstack/player/releases/tag/v1.1.1-next) (2023-10-02)
-
-### Docs
-
 ## [1.1.0-next](https://github.com/vidstack/player/releases/tag/v1.1.0-next) (2023-10-01)
 
 ### Bug Fixes
@@ -606,12 +602,6 @@ All notable changes to this project will be documented in this file.
 
 - initialize sources correctly during ssr ([ee688f8](ee688f8077597d0fa560ac675334f0752ac89480))
 
-### Docs
-
-#### Player
-
-- update cdn script to full path ([e5965ac](e5965ace721b4cacf35d9dd11def1acffb7ad37e))
-
 ## [1.0.3-next](https://github.com/vidstack/player/releases/tag/v1.0.3-next) (2023-09-30)
 
 ### Bug Fixes
@@ -636,5 +626,3 @@ All notable changes to this project will be documented in this file.
 #### React
 
 - add rsc support and split up default ui audio/video ([4e390ac](4e390ac91b75996447ccce90f7ce94322937740e))
-
-### Docs
