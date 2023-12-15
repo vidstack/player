@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### Bug Fixes
+
+#### Player
+
+- vimeo playing and progress events not fired ([a3fceac](https://github.com/vidstack/player/commit/a3fceacd46f953bb921abae527015719ce28a2c4))
+
+#### Player (React)
+
+- unexpected token `{` in iOS<17 ([5720ce3](https://github.com/vidstack/player/commit/5720ce369b868bdaf5ebbcd718b5e26e4069fa25))
+
 ## [1.9.7-next](https://github.com/vidstack/player/releases/tag/v1.9.7-next) (2023-12-13)
 
 ### Bug Fixes
