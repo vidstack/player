@@ -15,6 +15,8 @@ export const trackedVimeoEvents: VimeoEvent[] = [
   // 'loadeddata',
   // 'loadedmetadata',
   // 'loadstart',
+  'playProgress',
+  'loadProgress',
   'pause',
   'play',
   'playbackratechange',
@@ -62,7 +64,7 @@ export type VimeoEvent =
   | 'pause'
   | 'play'
   | 'playbackratechange'
-  | 'playprogress'
+  | 'playProgress'
   | 'progress'
   | 'qualitychange'
   | 'ready'
@@ -96,8 +98,8 @@ export interface VimeoEventPayload {
   play: VimeoPlayPayload;
   pause: void;
   ready: void;
-  playprogress: VimeoProgressPayload;
-  loadprogress: VimeoProgressPayload;
+  playProgress: VimeoProgressPayload;
+  loadProgress: VimeoProgressPayload;
   bufferstart: void;
   bufferend: void;
   loaded: { id: number };

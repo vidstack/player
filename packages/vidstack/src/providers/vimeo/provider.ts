@@ -587,13 +587,13 @@ export class VimeoProvider
       case 'play':
         this._onPlay(trigger);
         break;
-      case 'playprogress':
+      case 'playProgress':
         this._onPlayProgress(trigger);
         break;
       case 'pause':
         this._onPause(trigger);
         break;
-      case 'loadprogress':
+      case 'loadProgress':
         this._onLoadProgress(payload.seconds, trigger);
         break;
       case 'waiting':
