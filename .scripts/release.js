@@ -12,22 +12,23 @@ import kleur from 'kleur';
 import minimist from 'minimist';
 import semver from 'semver';
 
-const require = createRequire(import.meta.url);
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const args = minimist(process.argv.slice(2));
-const isDryRun = args.dry;
-const skippedPackages = [];
-const currentVersion = require('../package.json').version;
-const packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages'));
-const packages = packagesDir.filter((pkg) => !pkg.startsWith('.'));
-const preId =
-  args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)?.[0]);
-const versionIncrements = [
-  'patch',
-  'minor',
-  'major',
-  ...(preId ? ['prepatch', 'preminor', 'premajor', 'prerelease'] : []),
-];
+const require = createRequire(import.meta.url),
+  __dirname = path.dirname(fileURLToPath(import.meta.url)),
+  args = minimist(process.argv.slice(2)),
+  isDryRun = args.dry,
+  isNext = args.next,
+  skippedPackages = [],
+  currentVersion = require('../package.json').version,
+  packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages')),
+  packages = packagesDir.filter((pkg) => !pkg.startsWith('.')),
+  preId =
+    args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)?.[0]),
+  versionIncrements = [
+    'patch',
+    'minor',
+    'major',
+    ...(preId ? ['prepatch', 'preminor', 'premajor', 'prerelease'] : []),
+  ];
 
 function inc(i) {
   return semver.inc(currentVersion, i, preId);
@@ -86,7 +87,7 @@ async function main() {
     await prompt.prompt({
       type: 'confirm',
       name: 'yes',
-      message: `Releasing v${targetVersion}. Confirm?`,
+      message: `Releasing v${targetVersion}${isNext ? '-next' : ''}. Confirm?`,
     })
   );
 
@@ -107,18 +108,25 @@ async function main() {
   step('Updating lockfile...');
   await run(`pnpm`, ['install']);
 
+  step('Generating changelog...');
+  await run('pnpm', ['changelog']);
+
   const { stdout } = await run('git', ['diff'], { stdio: 'pipe' });
   if (stdout) {
     step('Committing changes...');
+
+    const commit = `chore(release): v${targetVersion}${isNext ? '-next' : ''}`;
     await runIfNotDry('git', ['add', '-A']);
-    await runIfNotDry('git', ['commit', '-m', `chore(release): v${targetVersion}`]);
+    await runIfNotDry('git', ['commit', '-m', commit]);
   } else {
     console.log('No changes to commit.');
   }
 
   step('Pushing to GitHub...');
-  await runIfNotDry('git', ['tag', `v${targetVersion}`]);
-  await runIfNotDry('git', ['push', 'upstream', `refs/tags/v${targetVersion}`]);
+
+  const tag = `v${targetVersion}${isNext ? '-next' : ''}`;
+  await runIfNotDry('git', ['tag', tag]);
+  await runIfNotDry('git', ['push', 'upstream', `refs/tags/${tag}`]);
   await runIfNotDry('git', ['push', 'upstream', 'main']);
 
   if (isDryRun) {
@@ -195,7 +203,7 @@ async function publishPackage(pkgName, version, runIfNotDry) {
   } else if (version.includes('rc')) {
     releaseTag = 'rc';
   } else {
-    releaseTag = 'next';
+    releaseTag = isNext ? 'next' : 'latest';
   }
 
   step(`Publishing ${pkgName}...`);

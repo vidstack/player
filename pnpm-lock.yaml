@@ -28,6 +28,9 @@ importers:
       fs-extra:
         specifier: ^11.0.0
         version: 11.2.0
+      git-cliff:
+        specifier: ^1.4.0
+        version: 1.4.0
       globby:
         specifier: ^13.0.0
         version: 13.2.2
@@ -3151,6 +3154,87 @@ packages:
       }
     dependencies:
       resolve-pkg-maps: 1.0.0
+    dev: true
+
+  /git-cliff-darwin-arm64@1.4.0:
+    resolution:
+      {
+        integrity: sha512-QCCvi+gIP+2KXWBzCccIDF2GCNbpm9RND7HbDmU79uKP9Qp070ZSYxlqifph6bUxFFw7dRwlVHiKxyUADwnxSQ==,
+      }
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /git-cliff-darwin-x64@1.4.0:
+    resolution:
+      {
+        integrity: sha512-9b+y3vC4J4G3X9ndNj0s8YiKV1IBux7yU5mDMZhcUA7g9gveoPo+eZZLyPl6+KHxoOE7GCgfHFIhhC+zwh/oWQ==,
+      }
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /git-cliff-linux-arm64@1.4.0:
+    resolution:
+      {
+        integrity: sha512-caUW7eIkAXZKjzFgQKMlFia+9zkgjPPtnzXeZwkXjtDaSACbzqss+AvaxZUEVy+xfj14+RHOFTn6WCpQJ1NbGw==,
+      }
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /git-cliff-linux-x64@1.4.0:
+    resolution:
+      {
+        integrity: sha512-9HNuziC2ZsM1z1xrq+pRfFiH3LSdEwK1QyW/vngJP/f4GlO5Zm3tBX4n7Y+8yLUcyYMezKsR+rPF9MRmIswpgQ==,
+      }
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /git-cliff-windows-arm64@1.4.0:
+    resolution:
+      {
+        integrity: sha512-J0E/74+xowQfuLHHIB3KP6eFp+V39nhPVuAgNLnrLY28Yvqn8AGKCidQStisfjMS2Ot/a7yKFv1JwW/bR0lQjA==,
+      }
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /git-cliff-windows-x64@1.4.0:
+    resolution:
+      {
+        integrity: sha512-w/mOm00QEuu4VPkmJsyaSlaJtjo6kgvb9v7n81eZSj3SnpTRQzNXTjB1JzKavgqnJ6JnAQiypRmPwC1FsCyiFA==,
+      }
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /git-cliff@1.4.0:
+    resolution:
+      {
+        integrity: sha512-BLHYp/BD5jfOoPA3B6Ht1s1rJxtPcpmgyjQFZSFP53AdjVyfI2kwk7aVmxEfd1RQsBHRBVfPyJ+PNVghsfo3Yg==,
+      }
+    hasBin: true
+    optionalDependencies:
+      git-cliff-darwin-arm64: 1.4.0
+      git-cliff-darwin-x64: 1.4.0
+      git-cliff-linux-arm64: 1.4.0
+      git-cliff-linux-x64: 1.4.0
+      git-cliff-windows-arm64: 1.4.0
+      git-cliff-windows-x64: 1.4.0
     dev: true
 
   /glob-parent@5.1.2:
