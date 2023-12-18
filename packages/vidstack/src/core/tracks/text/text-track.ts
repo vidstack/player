@@ -1,4 +1,4 @@
-import { DOMEvent, EventsTarget, isArray, isNumber } from 'maverick.js/std';
+import { DOMEvent, EventsTarget, isArray, isNumber, isString } from 'maverick.js/std';
 import type {
   CaptionsFileFormat,
   CaptionsParserFactory,
@@ -19,13 +19,24 @@ import { isCueActive } from './utils';
  */
 export type TextTrackReadyState = 0 | 1 | 2 | 3;
 
+export interface VTTCueInit
+  extends Omit<Partial<VTTCue>, 'startTime' | 'endTime' | 'text'>,
+    Pick<VTTCue, 'startTime' | 'endTime' | 'text'> {}
+
+export interface VTTRegionInit extends Omit<Partial<VTTRegion>, 'id'>, Pick<VTTRegion, 'id'> {}
+
+export interface VTTJSONContent {
+  cues?: VTTCueInit;
+  regions?: VTTRegionInit;
+}
+
 export class TextTrack extends EventsTarget<TextTrackEvents> {
   static createId(track: TextTrack | TextTrackInit) {
     return `id::${track.type}-${track.kind}-${track.src ?? track.label}`;
   }
 
   readonly src?: string;
-  readonly content?: string;
+  readonly content?: TextTrackInit['content'];
   readonly type?: 'json' | CaptionsFileFormat | CaptionsParserFactory;
   readonly encoding?: string;
 
@@ -105,7 +116,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
     if (!__SERVER__ && init.content) {
       import('media-captions').then(({ parseText, VTTCue, VTTRegion }) => {
-        if (init.type === 'json') {
+        if (!isString(init.content) || init.type === 'json') {
           this._parseJSON(init.content!, VTTCue, VTTRegion);
           if (this.readyState !== 3) this._readyState();
         } else {
@@ -263,7 +274,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     this.dispatchEvent(new DOMEvent('error', { detail: error }));
   }
 
-  private _parseJSON(json, VTTCue, VTTRegion) {
+  private _parseJSON(json: string | VTTJSONContent, VTTCue, VTTRegion) {
     try {
       const { regions, cues } = parseJSONCaptionsFile(json, VTTCue, VTTRegion);
       this._regions = regions;
@@ -298,7 +309,7 @@ export interface TextTrackInit {
   /**
    * Used to directly pass in text track file contents.
    */
-  readonly content?: string;
+  readonly content?: string | VTTJSONContent;
   /**
    * The captions file format to be parsed or a custom parser factory (functions that returns a
    * captions parser). Supported types include: 'vtt', 'srt', 'ssa', 'ass', and 'json'.
@@ -399,8 +410,12 @@ export function isTrackCaptionKind(track: TextTrack): boolean {
   return captionRE.test(track.kind);
 }
 
-export function parseJSONCaptionsFile(json: string, Cue: typeof VTTCue, Region?: typeof VTTRegion) {
-  const content = JSON.parse(json);
+export function parseJSONCaptionsFile(
+  json: string | VTTJSONContent,
+  Cue: typeof VTTCue,
+  Region?: typeof VTTRegion,
+) {
+  const content = isString(json) ? JSON.parse(json) : json;
 
   let regions: VTTRegion[] = [],
     cues: VTTCue[] = [];
