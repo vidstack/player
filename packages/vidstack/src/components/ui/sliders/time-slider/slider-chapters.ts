@@ -263,10 +263,10 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
 
     chapters.push(cues[cues.length - 1]);
 
-    // const { duration } = this._media.$state;
-    // if (Math.abs(cues[cues.length - 1].endTime - duration()) > 1) {
-    //   chapters.push(new window.VTTCue(cues[cues.length - 1].endTime, duration(), ''));
-    // }
+    const { duration } = this._media.$state;
+    if (duration() >= 0 && Math.abs(cues[cues.length - 1].endTime - duration()) > 1) {
+      chapters.push(new window.VTTCue(cues[cues.length - 1].endTime, duration(), ''));
+    }
 
     return chapters;
   }
@@ -285,6 +285,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
       onCuesChange();
       onDispose(listenEvent(track, 'add-cue', onCuesChange));
       onDispose(listenEvent(track, 'remove-cue', onCuesChange));
+      effect(this._watchMediaDuration.bind(this));
     }
 
     this._titleRef = this._findChapterTitleRef();
@@ -296,6 +297,11 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
         this._titleRef = null;
       }
     };
+  }
+
+  private _watchMediaDuration() {
+    this._media.$state.duration();
+    this._onCuesChange();
   }
 
   private _onCuesChange = debounce(
