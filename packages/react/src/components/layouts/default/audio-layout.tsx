@@ -1,8 +1,9 @@
 import * as React from 'react';
 
-import { DefaultAudioLayoutLarge } from './audio-layout-large';
-import { DefaultAudioLayoutSmall } from './audio-layout-small';
+import { DefaultAudioLargeLayout } from './audio-layout-large';
+import { DefaultAudioSmallLayout } from './audio-layout-small';
 import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './shared-layout';
+import type { DefaultAudioLayoutSlots } from './slots';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAudioLayout
@@ -11,11 +12,11 @@ import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './shared
 const MediaLayout = createDefaultMediaLayout({
   type: 'audio',
   smLayoutWhen: '(width < 576)',
-  SmallLayout: DefaultAudioLayoutSmall,
-  LargeLayout: DefaultAudioLayoutLarge,
+  SmallLayout: DefaultAudioSmallLayout,
+  LargeLayout: DefaultAudioLargeLayout,
 });
 
-export interface DefaultAudioLayoutProps extends DefaultMediaLayoutProps {}
+export interface DefaultAudioLayoutProps extends DefaultMediaLayoutProps<DefaultAudioLayoutSlots> {}
 
 /**
  * The audio layout is our production-ready UI that's displayed when the media view type is set to

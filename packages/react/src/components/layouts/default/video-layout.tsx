@@ -22,6 +22,13 @@ import {
   DefaultVolumeSlider,
   type DefaultMediaLayoutProps,
 } from './shared-layout';
+import {
+  slot,
+  useDefaultVideoLayoutSlots,
+  type DefaultLayoutMenuSlotName,
+  type DefaultVideoLayoutSlots,
+  type Slots,
+} from './slots';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultVideoLayout
@@ -30,12 +37,12 @@ import {
 const MediaLayout = createDefaultMediaLayout({
   type: 'video',
   smLayoutWhen: '(width < 576) or (height < 380)',
-  SmallLayout: DefaultVideoLayoutSmall,
-  LargeLayout: DefaultVideoLayoutLarge,
+  SmallLayout: DefaultVideoSmallLayout,
+  LargeLayout: DefaultVideoLargeLayout,
   UnknownStreamType: DefaultBufferingIndicator,
 });
 
-export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps {}
+export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps<DefaultVideoLayoutSlots> {}
 
 /**
  * The video layout is our production-ready UI that's displayed when the media view type is set to
@@ -61,84 +68,86 @@ DefaultVideoLayout.displayName = 'DefaultVideoLayout';
 export { DefaultVideoLayout };
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultVideoLayoutLarge
+ * DefaultVideoLargeLayout
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultVideoLayoutLarge() {
-  const { menuGroup } = React.useContext(DefaultLayoutContext);
+function DefaultVideoLargeLayout() {
+  const { menuGroup } = React.useContext(DefaultLayoutContext),
+    slots = useDefaultVideoLayoutSlots()?.largeLayout;
   return (
     <>
       <DefaultVideoGestures />
-      <DefaultBufferingIndicator />
-      <Captions className="vds-captions" />
+      {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
+      {slot(slots, 'captions', <Captions className="vds-captions" />)}
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
           <div className="vds-controls-spacer" />
-          {menuGroup === 'top' && <DefaultVideoMenus />}
+          {menuGroup === 'top' && <DefaultVideoMenus slots={slots} />}
         </Controls.Group>
 
         <div className="vds-controls-spacer" />
 
         <Controls.Group className="vds-controls-group">
-          <DefaultTimeSlider />
+          {slot(slots, 'timeSlider', <DefaultTimeSlider />)}
         </Controls.Group>
 
         <Controls.Group className="vds-controls-group">
-          <DefaultPlayButton tooltip="top start" />
-          <DefaultMuteButton tooltip="top" />
-          <DefaultVolumeSlider />
-          <DefaultTimeInfo />
-          <DefaultChapterTitle />
-          <DefaultCaptionButton tooltip="top" />
-          {menuGroup === 'bottom' && <DefaultVideoMenus />}
-          <DefaultPIPButton tooltip="top" />
-          <DefaultFullscreenButton tooltip="top end" />
+          {slot(slots, 'playButton', <DefaultPlayButton tooltip="top start" />)}
+          {slot(slots, 'muteButton', <DefaultMuteButton tooltip="top" />)}
+          {slot(slots, 'volumeSlider', <DefaultVolumeSlider />)}
+          <DefaultTimeInfo slots={slots} />
+          {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}
+          {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top" />)}
+          {menuGroup === 'bottom' && <DefaultVideoMenus slots={slots} />}
+          {slot(slots, 'pipButton', <DefaultPIPButton tooltip="top" />)}
+          {slot(slots, 'fullscreenButton', <DefaultFullscreenButton tooltip="top end" />)}
         </Controls.Group>
       </Controls.Root>
     </>
   );
 }
 
-DefaultVideoLayoutLarge.displayName = 'DefaultVideoLayoutLarge';
-export { DefaultVideoLayoutLarge };
+DefaultVideoLargeLayout.displayName = 'DefaultVideoLargeLayout';
+export { DefaultVideoLargeLayout };
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultVideoLayoutSmall
+ * DefaultVideoSmallLayout
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultVideoLayoutSmall() {
+function DefaultVideoSmallLayout() {
+  const slots = useDefaultVideoLayoutSlots()?.smallLayout;
   return (
     <>
       <DefaultVideoGestures />
-      <DefaultBufferingIndicator />
-      <Captions className="vds-captions" />
+      {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
+      {slot(slots, 'captions', <Captions className="vds-captions" />)}
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
           <div className="vds-controls-spacer" />
-          <DefaultCaptionButton tooltip="bottom" />
-          <DefaultVideoMenus />
-          <DefaultMuteButton tooltip="bottom end" />
+          {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="bottom" />)}
+          <DefaultVideoMenus slots={slots} />
+          {slot(slots, 'muteButton', <DefaultMuteButton tooltip="bottom end" />)}
         </Controls.Group>
         <div className="vds-controls-group">
-          <DefaultPlayButton tooltip="top" />
+          {slot(slots, 'playButton', <DefaultPlayButton tooltip="top" />)}
         </div>
         <Controls.Group className="vds-controls-group">
-          <DefaultTimeInfo />
-          <DefaultChapterTitle />
+          <DefaultTimeInfo slots={slots} />
+          {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}
           <div className="vds-controls-spacer" />
-          <DefaultFullscreenButton tooltip="top end" />
+          {slot(slots, 'fullscreenButton', <DefaultFullscreenButton tooltip="top end" />)}
         </Controls.Group>
         <Controls.Group className="vds-controls-group">
-          <DefaultTimeSlider />
+          {slot(slots, 'timeSlider', <DefaultTimeSlider />)}
         </Controls.Group>
       </Controls.Root>
-      <DefaultVideoStartDuration />
+      {slot(slots, 'startDuration', <DefaultVideoStartDuration />)}
     </>
   );
 }
 
-DefaultVideoLayoutSmall.displayName = 'DefaultVideoLayoutSmall';
-export { DefaultVideoLayoutSmall };
+DefaultVideoSmallLayout.displayName = 'DefaultVideoSmallLayout';
+export { DefaultVideoSmallLayout };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultVideoStartDuration
@@ -196,7 +205,7 @@ export { DefaultBufferingIndicator };
  * DefaultVideoMenus
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultVideoMenus() {
+function DefaultVideoMenus({ slots }: { slots?: Slots<DefaultLayoutMenuSlotName> }) {
   const { isSmallLayout, noModal, menuGroup } = React.useContext(DefaultLayoutContext),
     side = menuGroup === 'top' || isSmallLayout ? 'bottom' : ('top' as const),
     tooltip = `${side} end` as const,
@@ -207,8 +216,25 @@ function DefaultVideoMenus() {
         : null;
   return (
     <>
-      <DefaultChaptersMenu tooltip={tooltip} placement={placement} portalClass="vds-video-layout" />
-      <DefaultSettingsMenu tooltip={tooltip} placement={placement} portalClass="vds-video-layout" />
+      {slot(
+        slots,
+        'chaptersMenu',
+        <DefaultChaptersMenu
+          tooltip={tooltip}
+          placement={placement}
+          portalClass="vds-video-layout"
+        />,
+      )}
+      {slot(
+        slots,
+        'settingsMenu',
+        <DefaultSettingsMenu
+          tooltip={tooltip}
+          placement={placement}
+          portalClass="vds-video-layout"
+          slots={slots}
+        />,
+      )}
     </>
   );
 }

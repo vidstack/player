@@ -14,27 +14,25 @@ import {
   DefaultSeekButton,
   DefaultTimeSlider,
 } from './shared-layout';
+import { slot, useDefaultAudioLayoutSlots } from './slots';
 
-/* -------------------------------------------------------------------------------------------------
- * DefaultAudioLayoutSmall
- * -----------------------------------------------------------------------------------------------*/
-
-function DefaultAudioLayoutSmall() {
+function DefaultAudioSmallLayout() {
+  const slots = useDefaultAudioLayoutSlots()?.smallLayout;
   return (
     <>
-      <Captions className="vds-captions" />
+      {slot(slots, 'captions', <Captions className="vds-captions" />)}
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
-          <DefaultLivePlayButton />
-          <DefaultMuteButton tooltip="top start" />
-          <DefaultLiveButton />
-          <DefaultChapterTitle />
-          <DefaultCaptionButton tooltip="top center" />
-          <DefaultAudioMenus />
+          {slot(slots, 'livePlayButton', <DefaultLivePlayButton />)}
+          {slot(slots, 'muteButton', <DefaultMuteButton tooltip="top start" />)}
+          {slot(slots, 'liveButton', <DefaultLiveButton />)}
+          {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}
+          {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top center" />)}
+          <DefaultAudioMenus slots={slots} />
         </Controls.Group>
 
         <Controls.Group className="vds-controls-group">
-          <DefaultTimeSlider />
+          {slot(slots, 'timeSlider', <DefaultTimeSlider />)}
         </Controls.Group>
 
         <DefaultTimeControlsGroup />
@@ -44,8 +42,8 @@ function DefaultAudioLayoutSmall() {
   );
 }
 
-DefaultAudioLayoutSmall.displayName = 'DefaultAudioLayoutSmall';
-export { DefaultAudioLayoutSmall };
+DefaultAudioSmallLayout.displayName = 'DefaultAudioSmallLayout';
+export { DefaultAudioSmallLayout };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultLivePlayButton
@@ -64,12 +62,13 @@ DefaultLivePlayButton.displayName = 'DefaultLivePlayButton';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTimeControlsGroup() {
-  const live = useMediaState('live');
+  const live = useMediaState('live'),
+    slots = useDefaultAudioLayoutSlots()?.smallLayout;
   return !live ? (
     <Controls.Group className="vds-controls-group">
-      <Time className="vds-time" type="current" />
+      {slot(slots, 'currentTime', <Time className="vds-time" type="current" />)}
       <div className="vds-controls-spacer" />
-      <Time className="vds-time" type="duration" />
+      {slot(slots, 'endTime', <Time className="vds-time" type="duration" />)}
     </Controls.Group>
   ) : null;
 }
@@ -81,13 +80,14 @@ DefaultTimeControlsGroup.displayName = 'DefaultTimeControlsGroup';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultBottomControlsGroup() {
-  const canSeek = useMediaState('canSeek');
+  const canSeek = useMediaState('canSeek'),
+    slots = useDefaultAudioLayoutSlots()?.smallLayout;
   return canSeek ? (
     <Controls.Group className="vds-controls-group">
       <div className="vds-controls-spacer" />
-      <DefaultSeekButton seconds={-10} tooltip="top center" />
-      <DefaultPlayButton tooltip="top center" />
-      <DefaultSeekButton seconds={10} tooltip="top center" />
+      {slot(slots, 'seekBackwardButton', <DefaultSeekButton seconds={-10} tooltip="top center" />)}
+      {slot(slots, 'playButton', <DefaultPlayButton tooltip="top center" />)}
+      {slot(slots, 'seekForwardButton', <DefaultSeekButton seconds={10} tooltip="top center" />)}
       <div className="vds-controls-spacer" />
     </Controls.Group>
   ) : null;

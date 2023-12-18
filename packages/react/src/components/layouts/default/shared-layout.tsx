@@ -36,6 +36,7 @@ import * as TooltipBase from '../../ui/tooltip';
 import { RemotionSliderThumbnail, RemotionThumbnail } from '../remotion-ui';
 import { DefaultLayoutContext, useDefaultLayoutLang } from './context';
 import type { DefaultLayoutIcon, DefaultLayoutIcons } from './icons';
+import { slot, type DefaultLayoutMenuSlotName, type Slots } from './slots';
 
 /* -------------------------------------------------------------------------------------------------
  * Types
@@ -49,13 +50,14 @@ interface DefaultMediaMenuProps {
   tooltip: TooltipBase.ContentProps['placement'];
   placement: MenuBase.ContentProps['placement'];
   portalClass?: string;
+  slots?: Slots<DefaultLayoutMenuSlotName>;
 }
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultMediaLayout
  * -----------------------------------------------------------------------------------------------*/
 
-export interface DefaultMediaLayoutProps extends PrimitivePropsWithRef<'div'> {
+export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitivePropsWithRef<'div'> {
   children?: React.ReactNode;
   /**
    * The icons to be rendered and displayed inside the layout.
@@ -112,6 +114,10 @@ export interface DefaultMediaLayoutProps extends PrimitivePropsWithRef<'div'> {
    * @defaultValue false
    */
   noModal?: boolean;
+  /**
+   * Provide additional content to be inserted in specific positions.
+   */
+  slots?: Slots;
 }
 
 export interface CreateDefaultMediaLayout {
@@ -142,6 +148,7 @@ export function createDefaultMediaLayout({
         noModal = false,
         menuGroup = 'bottom',
         hideQualityBitrate = false,
+        slots,
         children,
         ...props
       },
@@ -173,6 +180,7 @@ export function createDefaultMediaLayout({
                 hideQualityBitrate,
                 noModal,
                 menuGroup,
+                slots,
                 Icons: icons,
               }}
             >
@@ -483,12 +491,18 @@ export { DefaultLiveButton };
  * DefaultTimeGroup
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTimeGroup() {
+interface DefaultTimeGroupSlots {
+  currentTime?: React.ReactNode;
+  timeSeparator?: React.ReactNode;
+  endTime?: React.ReactNode;
+}
+
+function DefaultTimeGroup({ slots }: { slots?: DefaultTimeGroupSlots }) {
   return (
     <div className="vds-time-group">
-      <Time className="vds-time" type="current" />
-      <div className="vds-time-divider">/</div>
-      <Time className="vds-time" type="duration" />
+      {slot(slots, 'currentTime', <Time className="vds-time" type="current" />)}
+      {slot(slots, 'timeSeparator', <div className="vds-time-divider">/</div>)}
+      {slot(slots, 'endTime', <Time className="vds-time" type="duration" />)}
     </div>
   );
 }
@@ -500,9 +514,17 @@ export { DefaultTimeGroup };
  * DefaultTimeInfo
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTimeInfo() {
+interface DefaultTimeInfoSlots extends DefaultTimeGroupSlots {
+  liveButton?: React.ReactNode;
+}
+
+function DefaultTimeInfo({ slots }: { slots?: DefaultTimeInfoSlots }) {
   const live = useMediaState('live');
-  return live ? <DefaultLiveButton /> : <DefaultTimeGroup />;
+  return live ? (
+    slot(slots, 'liveButton', <DefaultLiveButton />)
+  ) : (
+    <DefaultTimeGroup slots={slots} />
+  );
 }
 
 DefaultTimeInfo.displayName = 'DefaultTimeInfo';
@@ -596,7 +618,7 @@ export { DefaultChaptersMenu };
  * DefaultSettingsMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
+function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: DefaultMediaMenuProps) {
   const { $state } = useReactContext(mediaContext)!,
     { showMenuDelay, Icons, isSmallLayout, menuGroup, noModal } =
       React.useContext(DefaultLayoutContext),
@@ -627,10 +649,12 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass }: DefaultMediaMe
       placement={placement}
       offset={$offset}
     >
+      {slot(slots, 'settingsMenuStartItems', null)}
       <DefaultAudioSubmenu />
       <DefaultSpeedSubmenu />
       <DefaultQualitySubmenu />
       <DefaultCaptionSubmenu />
+      {slot(slots, 'settingsMenuEndItems', null)}
     </MenuBase.Content>
   );
 

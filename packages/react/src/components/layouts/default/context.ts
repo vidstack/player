@@ -17,6 +17,7 @@ interface DefaultLayoutContext {
   menuGroup: 'top' | 'bottom';
   noModal: boolean;
   Icons: DefaultLayoutIcons;
+  slots?: unknown;
 }
 
 export function useDefaultLayoutLang(word: keyof DefaultLayoutTranslations) {

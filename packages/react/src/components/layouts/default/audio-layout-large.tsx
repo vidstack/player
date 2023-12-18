@@ -13,34 +13,40 @@ import {
   DefaultTimeSlider,
   DefaultVolumeSlider,
 } from './shared-layout';
+import { slot, useDefaultAudioLayoutSlots } from './slots';
 
-/* -------------------------------------------------------------------------------------------------
- * DefaultAudioLayoutLarge
- * -----------------------------------------------------------------------------------------------*/
-
-function DefaultAudioLayoutLarge() {
+function DefaultAudioLargeLayout() {
+  const slots = useDefaultAudioLayoutSlots()?.largeLayout;
   return (
     <>
       <Captions className="vds-captions" />
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
-          <DefaultTimeSlider />
+          {slot(slots, 'timeSlider', <DefaultTimeSlider />)}
         </Controls.Group>
         <Controls.Group className="vds-controls-group">
-          <DefaultSeekButton seconds={-10} tooltip="top start" />
-          <DefaultPlayButton tooltip="top center" />
-          <DefaultSeekButton seconds={10} tooltip="top center" />
-          <DefaultTimeInfo />
-          <DefaultChapterTitle />
-          <DefaultMuteButton tooltip="top center" />
-          <DefaultVolumeSlider />
-          <DefaultCaptionButton tooltip="top center" />
-          <DefaultAudioMenus />
+          {slot(
+            slots,
+            'seekBackwardButton',
+            <DefaultSeekButton seconds={-10} tooltip="top start" />,
+          )}
+          {slot(slots, 'playButton', <DefaultPlayButton tooltip="top center" />)}
+          {slot(
+            slots,
+            'seekForwardButton',
+            <DefaultSeekButton seconds={10} tooltip="top center" />,
+          )}
+          <DefaultTimeInfo slots={slots} />
+          {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}
+          {slot(slots, 'muteButton', <DefaultMuteButton tooltip="top center" />)}
+          {slot(slots, 'volumeSlider', <DefaultVolumeSlider />)}
+          {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top center" />)}
+          <DefaultAudioMenus slots={slots} />
         </Controls.Group>
       </Controls.Root>
     </>
   );
 }
 
-DefaultAudioLayoutLarge.displayName = 'DefaultAudioLayoutLarge';
-export { DefaultAudioLayoutLarge };
+DefaultAudioLargeLayout.displayName = 'DefaultAudioLargeLayout';
+export { DefaultAudioLargeLayout };
