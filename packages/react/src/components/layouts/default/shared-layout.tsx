@@ -555,7 +555,7 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
       <MenuBase.RadioGroup
         className="vds-chapters-radio-group vds-radio-group"
         value={options.selectedValue}
-        data-thumbnails={!!thumbnails}
+        data-thumbnails={thumbnails ? '' : null}
       >
         {options.map(
           ({ cue, label, value, startTimeText, durationText, select, setProgressVar }) => (
