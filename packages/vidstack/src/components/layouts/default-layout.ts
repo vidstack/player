@@ -18,7 +18,10 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     translations: null,
     menuGroup: 'bottom',
     noModal: false,
+    sliderChaptersMinWidth: 600,
   };
+
+  // slider-chapters-min-width
 
   private _whenQueryList!: PlayerQueryList;
   private _whenSmQueryList!: PlayerQueryList;
@@ -37,7 +40,15 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
   }
 
   protected override onSetup(): void {
-    const { when, smallWhen, thumbnails, translations, menuGroup, noModal } = this.$props;
+    const {
+      when,
+      smallWhen,
+      thumbnails,
+      translations,
+      menuGroup,
+      noModal,
+      sliderChaptersMinWidth,
+    } = this.$props;
 
     this._whenQueryList = PlayerQueryList.create(when);
     this._whenSmQueryList = PlayerQueryList.create(smallWhen);
@@ -54,6 +65,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       translations,
       menuGroup,
       noModal,
+      sliderChaptersMinWidth,
       get menuContainer() {
         return self.menuContainer;
       },
@@ -131,6 +143,10 @@ export interface DefaultLayoutProps {
    * enabled by default as it provides a better user experience for touch devices.
    */
   noModal: boolean;
+  /**
+   * The minimum width to start displaying slider chapters when available.
+   */
+  sliderChaptersMinWidth: number;
 }
 
 export interface DefaultLayoutContext {
@@ -139,6 +155,7 @@ export interface DefaultLayoutContext {
   translations: ReadSignal<DefaultLayoutTranslations | null>;
   noModal: ReadSignal<DefaultLayoutProps['noModal']>;
   menuGroup: ReadSignal<DefaultLayoutProps['menuGroup']>;
+  sliderChaptersMinWidth: ReadSignal<DefaultLayoutProps['sliderChaptersMinWidth']>;
   menuContainer: HTMLElement | null;
 }
 

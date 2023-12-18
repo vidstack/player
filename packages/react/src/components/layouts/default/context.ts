@@ -18,6 +18,7 @@ interface DefaultLayoutContext {
   noModal: boolean;
   Icons: DefaultLayoutIcons;
   slots?: unknown;
+  sliderChaptersMinWidth: number;
 }
 
 export function useDefaultLayoutLang(word: keyof DefaultLayoutTranslations) {

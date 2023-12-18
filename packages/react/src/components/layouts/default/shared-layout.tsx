@@ -118,6 +118,12 @@ export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitiveProps
    * Provide additional content to be inserted in specific positions.
    */
   slots?: Slots;
+  /**
+   * The minimum width to start displaying slider chapters when available.
+   *
+   * @defaultValue 600
+   */
+  sliderChaptersMinWidth?: number;
 }
 
 export interface CreateDefaultMediaLayout {
@@ -148,6 +154,7 @@ export function createDefaultMediaLayout({
         noModal = false,
         menuGroup = 'bottom',
         hideQualityBitrate = false,
+        sliderChaptersMinWidth = 600,
         slots,
         children,
         ...props
@@ -181,6 +188,7 @@ export function createDefaultMediaLayout({
                 noModal,
                 menuGroup,
                 slots,
+                sliderChaptersMinWidth,
                 Icons: icons,
               }}
             >
@@ -420,12 +428,15 @@ export { DefaultVolumeSlider };
 function DefaultTimeSlider() {
   const $src = useMediaState('currentSrc'),
     width = useMediaState('width'),
-    { thumbnails } = React.useContext(DefaultLayoutContext),
+    { thumbnails, sliderChaptersMinWidth } = React.useContext(DefaultLayoutContext),
     label = useDefaultLayoutLang('Seek'),
     $RemotionSliderThumbnail = useSignal(RemotionSliderThumbnail);
   return (
     <TimeSliderBase.Root className="vds-time-slider vds-slider" aria-label={label}>
-      <TimeSliderBase.Chapters className="vds-slider-chapters" disabled={width < 768}>
+      <TimeSliderBase.Chapters
+        className="vds-slider-chapters"
+        disabled={width < sliderChaptersMinWidth}
+      >
         {(cues, forwardRef) =>
           cues.map((cue) => (
             <div className="vds-slider-chapter" key={cue.startTime} ref={forwardRef}>

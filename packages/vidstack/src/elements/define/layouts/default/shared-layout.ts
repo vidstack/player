@@ -179,11 +179,14 @@ export function DefaultVolumeSlider() {
 
 export function DefaultTimeSlider() {
   const { width } = useMediaContext().$state,
-    { thumbnails, translations } = useDefaultLayoutContext(),
+    { thumbnails, translations, sliderChaptersMinWidth } = useDefaultLayoutContext(),
     $label = $i18n(translations, 'Seek');
   return html`
     <media-time-slider class="vds-time-slider vds-slider" aria-label=${$label}>
-      <media-slider-chapters class="vds-slider-chapters" ?disabled=${$signal(() => width() < 768)}>
+      <media-slider-chapters
+        class="vds-slider-chapters"
+        ?disabled=${$signal(() => width() < sliderChaptersMinWidth())}
+      >
         <template>
           <div class="vds-slider-chapter">
             <div class="vds-slider-track"></div>
