@@ -107,6 +107,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
       import('media-captions').then(({ parseText, VTTCue, VTTRegion }) => {
         if (init.type === 'json') {
           this._parseJSON(init.content!, VTTCue, VTTRegion);
+          if (this.readyState !== 3) this._readyState();
         } else {
           parseText(init.content!, { type: init.type as 'vtt' }).then(({ cues, regions }) => {
             this._cues = cues;
