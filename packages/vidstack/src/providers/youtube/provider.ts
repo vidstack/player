@@ -39,6 +39,7 @@ export class YouTubeProvider
   protected _videoId = signal('');
   protected _state: YouTubePlayerStateValue = -1;
   protected _seekingTimer = -1;
+  protected _pausedSeeking = false;
   protected _played = 0;
   protected _playedRange = new TimeRange(0, 0);
   protected _currentSrc: MediaSrc<string> | null = null;
@@ -110,7 +111,6 @@ export class YouTubeProvider
 
   async play() {
     const { paused } = this._ctx.$state;
-    if (!peek(paused)) return;
 
     if (!this._playPromise) {
       this._playPromise = timedPromise<void, string>(() => {
@@ -126,7 +126,6 @@ export class YouTubeProvider
 
   async pause() {
     const { paused } = this._ctx.$state;
-    if (peek(paused)) return;
 
     if (!this._pausePromise) {
       this._pausePromise = timedPromise<void, string>(() => {
@@ -146,7 +145,9 @@ export class YouTubeProvider
   }
 
   setCurrentTime(time: number) {
+    this._pausedSeeking = this._ctx.$state.paused();
     this._remote('seekTo', time);
+    this._notify('seeking', time);
   }
 
   setVolume(volume: number) {
@@ -282,8 +283,9 @@ export class YouTubeProvider
   }
 
   protected _onTimeUpdate(time: number, trigger: Event) {
-    const { duration, currentTime } = this._ctx.$state,
-      boundTime = this._state === YouTubePlayerState._Ended ? duration() : time,
+    const { duration, realCurrentTime } = this._ctx.$state,
+      hasEnded = this._state === YouTubePlayerState._Ended,
+      boundTime = hasEnded ? duration() : time,
       detail = {
         currentTime: boundTime,
         played:
@@ -295,7 +297,7 @@ export class YouTubeProvider
     this._notify('time-update', detail, trigger);
 
     // // This is the only way to detect `seeking`.
-    if (Math.abs(boundTime - currentTime()) > 1) {
+    if (!hasEnded && Math.abs(boundTime - realCurrentTime()) > 1) {
       this._notify('seeking', boundTime, trigger);
     }
   }
@@ -308,26 +310,26 @@ export class YouTubeProvider
 
     this._notify('progress', detail, trigger);
 
-    const { seeking, currentTime } = this._ctx.$state;
+    const { seeking, realCurrentTime } = this._ctx.$state;
 
     /**
      * This is the only way to detect `seeked`. Unfortunately while the player is `paused` `seeking`
      * and `seeked` will fire at the same time, there are no updates in-between -_-. We need an
      * artificial delay between the two events.
      */
-    if (seeking() && buffered > currentTime()) {
+    if (seeking() && buffered > realCurrentTime()) {
       this._onSeeked(trigger);
     }
   }
 
   protected _onSeeked(trigger: Event) {
-    const { paused, currentTime } = this._ctx.$state;
+    const { paused, realCurrentTime } = this._ctx.$state;
 
     window.clearTimeout(this._seekingTimer);
 
     this._seekingTimer = window.setTimeout(
       () => {
-        this._notify('seeked', currentTime(), trigger);
+        this._notify('seeked', realCurrentTime(), trigger);
         this._seekingTimer = -1;
       },
       paused() ? 100 : 0,
@@ -341,14 +343,32 @@ export class YouTubeProvider
   }
 
   protected _onStateChange(state: YouTubePlayerStateValue, trigger: Event) {
-    const { paused } = this._ctx.$state,
+    const { started, paused, seeking } = this._ctx.$state,
       isPlaying = state === YouTubePlayerState._Playing,
-      isBuffering = state === YouTubePlayerState._Buffering;
+      isBuffering = state === YouTubePlayerState._Buffering,
+      isPlay = (paused() || this._playPromise) && (isBuffering || isPlaying);
 
     if (isBuffering) this._notify('waiting', undefined, trigger);
 
+    if (seeking() && isPlaying) {
+      this._onSeeked(trigger);
+    }
+
+    // Embed incorrectly plays on initial seek operation.
+    if (!started() && isPlay && this._pausedSeeking) {
+      this._playPromise?.reject('invalid internal play operation');
+      this._playPromise = null;
+
+      if (isPlaying) {
+        this.pause();
+        this._pausedSeeking = false;
+      }
+
+      return;
+    }
+
     // Attempt to detect `play` events early.
-    if (paused() && (isBuffering || isPlaying)) {
+    if (isPlay) {
       this._playPromise?.resolve();
       this._playPromise = null;
       this._notify('play', undefined, trigger);
@@ -375,7 +395,7 @@ export class YouTubeProvider
   protected override _onMessage({ info }: YouTubeMessage, event: MessageEvent) {
     if (!info) return;
 
-    const { title, duration, playbackRate } = this._ctx.$state;
+    const { title, intrinsicDuration: duration, playbackRate } = this._ctx.$state;
 
     if (isObject(info.videoData) && info.videoData.title !== title()) {
       this._notify('title-change', info.videoData.title, event);
@@ -431,5 +451,6 @@ export class YouTubeProvider
     this._playedRange = new TimeRange(0, 0);
     this._playPromise = null;
     this._pausePromise = null;
+    this._pausedSeeking = false;
   }
 }
