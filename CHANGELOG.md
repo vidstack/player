@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### Bug Fixes
+
+#### Player
+
+- call ready state on text track with content only ([d3aad91](https://github.com/vidstack/player/commit/d3aad91abf67141034bf67d3b1906e9aa750fc54))
+- fill last slider chapter gap based on duration difference ([32ed5d5](https://github.com/vidstack/player/commit/32ed5d55e95690e281849c17db83cc69ca0f2912))
+- youtube should fire seeking and not play on initial seek ([5f11163](https://github.com/vidstack/player/commit/5f11163e48b451d2a3b1fa4291408a083d09c99e))
+- vimeo should fire seeking ([298be0c](https://github.com/vidstack/player/commit/298be0c3bd30eb0d2e917ef60be6359d4ccacf4d))
+- remotion provider should fire seeking ([5c4c359](https://github.com/vidstack/player/commit/5c4c3590b2f2f9f6ba2e25e8299da8b242cf18ed))
+- improve looping behaviour ([23fd34f](https://github.com/vidstack/player/commit/23fd34ff9559feea418362321294c5acb27c01ee))
+
+#### Player (React)
+
+- default chapters menu should use compact layout when no thumbnails ([809098e](https://github.com/vidstack/player/commit/809098ec9ab2d6a68f4fb74d98b982f9a94b249f))
+
+### Features
+
+#### Player
+
+- new `sliderChaptersMinWidth` layouts prop ([441c54e](https://github.com/vidstack/player/commit/441c54e08f4c9e02b97c1d274801493e5dc7aca3))
+- allow json to be passed directly to track `content` prop ([f20e904](https://github.com/vidstack/player/commit/f20e904311b99714a325d0ede1a57b7432379e50))
+- new `clipStartTime` and `clipEndTime` player props ([f190651](https://github.com/vidstack/player/commit/f1906515ccd103c0ef6e40d6bb11317fc45d8e53))
+
+#### Player (React)
+
+- default layout slots ([209d400](https://github.com/vidstack/player/commit/209d40034784f4a8c43729e8ff4efc1730484f59))
+
 ## [1.9.8-next](https://github.com/vidstack/player/releases/tag/v1.9.8-next) (2023-12-15)
 
 ### Bug Fixes
