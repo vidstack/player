@@ -235,10 +235,6 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._content.set(el);
     onDispose(() => this._content.set(null));
 
-    if (!this.isSubmenu) {
-      this._stopClickPropagation(el);
-    }
-
     const watchAttrs = () => {
       setAttribute(el, 'data-open', this._expanded());
     };
@@ -369,6 +365,9 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   }
 
   private _onWindowPointerUp(event: Event) {
+    const isTargetNode = event.target instanceof Node;
+    if (!isTargetNode || this._content()?.contains(event.target)) return;
+
     // A little delay so submenu closing doesn't jump menu size when closing.
     if (this.isSubmenu) return setTimeout(this.close.bind(this, event), 800);
     else this.close(event);
