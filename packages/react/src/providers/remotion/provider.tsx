@@ -144,8 +144,7 @@ export class RemotionProvider implements MediaProviderAdapter {
   }
 
   async play() {
-    const { paused, ended } = this._ctx.$state;
-    if (!peek(paused)) return;
+    const { ended } = this._ctx.$state;
 
     if (peek(ended)) {
       this._setFrame({ [REMOTION_PROVIDER_ID]: 0 });
@@ -174,7 +173,6 @@ export class RemotionProvider implements MediaProviderAdapter {
 
   async pause() {
     const { paused } = this._ctx.$state;
-    if (peek(paused)) return;
     this._playbackEngine?.stop();
     this._notify('pause');
   }
@@ -200,6 +198,7 @@ export class RemotionProvider implements MediaProviderAdapter {
       frame = time * fps!;
 
     this._setFrame({ [REMOTION_PROVIDER_ID]: frame });
+    this._notify('seeking', time);
   }
 
   setVolume(value: React.SetStateAction<number>) {
