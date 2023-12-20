@@ -626,5 +626,7 @@
   "_watchMediaDuration": "Fk",
   "_resetPlaybackIfNeeded": "Gk",
   "_getEndTime": "Hk",
-  "_appendMediaFragment": "Ik"
+  "_appendMediaFragment": "Ik",
+  "_clipEnded": "Kk",
+  "_pausedSeeking": "Jk"
 }

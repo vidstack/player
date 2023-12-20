@@ -29,7 +29,6 @@ class SignalDirective extends AsyncDirective {
   }
 
   override disconnected() {
-    if (!this._isAttr) this.setValue(null);
     this._stop?.();
     this._stop = null;
   }
