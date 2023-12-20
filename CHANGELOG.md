@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 - new `sliderChaptersMinWidth` layouts prop ([441c54e](https://github.com/vidstack/player/commit/441c54e08f4c9e02b97c1d274801493e5dc7aca3))
 - allow json to be passed directly to track `content` prop ([f20e904](https://github.com/vidstack/player/commit/f20e904311b99714a325d0ede1a57b7432379e50))
 - new `clipStartTime` and `clipEndTime` player props ([f190651](https://github.com/vidstack/player/commit/f1906515ccd103c0ef6e40d6bb11317fc45d8e53))
+- new `disabled` prop on gesture component ([0a1cc02](https://github.com/vidstack/player/commit/0a1cc022595f994f2113c0639284b2de7f25eb0e))
+- new `posterLoad` player prop ([ea2a9e7](https://github.com/vidstack/player/commit/ea2a9e76d71067e864e660b78c620650ddc3cdd9))
 
 #### Player (React)
 
@@ -28,10 +30,12 @@ All notable changes to this project will be documented in this file.
 - improve looping behaviour ([23fd34f](https://github.com/vidstack/player/commit/23fd34ff9559feea418362321294c5acb27c01ee))
 - accessibility warning on iframes ([51e3697](https://github.com/vidstack/player/commit/51e3697e98124dcfcadbd392c26d581658fc06be))
 - switching src on cdn throwing ([5565724](https://github.com/vidstack/player/commit/55657244097d7579d512687845b22398bcd9f054))
+- include tooltip left/right default theme styles ([80ad732](https://github.com/vidstack/player/commit/80ad732f6f301ab307f3c9067de6cf0ed4186340))
 
 #### Player (React)
 
 - default chapters menu should use compact layout when no thumbnails ([809098e](https://github.com/vidstack/player/commit/809098ec9ab2d6a68f4fb74d98b982f9a94b249f))
+- click callbacks not working in menus ([fcb938f](https://github.com/vidstack/player/commit/fcb938fa420f871d2fb833a65e1b66f12da94f44))
 
 ## [1.9.8-next](https://github.com/vidstack/player/releases/tag/v1.9.8-next) (2023-12-15)
 
