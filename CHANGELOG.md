@@ -4,22 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
-### Bug Fixes
-
-#### Player
-
-- call ready state on text track with content only ([d3aad91](https://github.com/vidstack/player/commit/d3aad91abf67141034bf67d3b1906e9aa750fc54))
-- fill last slider chapter gap based on duration difference ([32ed5d5](https://github.com/vidstack/player/commit/32ed5d55e95690e281849c17db83cc69ca0f2912))
-- youtube should fire seeking and not play on initial seek ([5f11163](https://github.com/vidstack/player/commit/5f11163e48b451d2a3b1fa4291408a083d09c99e))
-- vimeo should fire seeking ([298be0c](https://github.com/vidstack/player/commit/298be0c3bd30eb0d2e917ef60be6359d4ccacf4d))
-- remotion provider should fire seeking ([5c4c359](https://github.com/vidstack/player/commit/5c4c3590b2f2f9f6ba2e25e8299da8b242cf18ed))
-- improve looping behaviour ([23fd34f](https://github.com/vidstack/player/commit/23fd34ff9559feea418362321294c5acb27c01ee))
-
-#### Player (React)
-
-- default chapters menu should use compact layout when no thumbnails ([809098e](https://github.com/vidstack/player/commit/809098ec9ab2d6a68f4fb74d98b982f9a94b249f))
-
-### Features
+### ✨ Features
 
 #### Player
 
@@ -31,9 +16,26 @@ All notable changes to this project will be documented in this file.
 
 - default layout slots ([209d400](https://github.com/vidstack/player/commit/209d40034784f4a8c43729e8ff4efc1730484f59))
 
+### 🐛 Bug Fixes
+
+#### Player
+
+- call ready state on text track with content only ([d3aad91](https://github.com/vidstack/player/commit/d3aad91abf67141034bf67d3b1906e9aa750fc54))
+- fill last slider chapter gap based on duration difference ([32ed5d5](https://github.com/vidstack/player/commit/32ed5d55e95690e281849c17db83cc69ca0f2912))
+- youtube should fire seeking and not play on initial seek ([5f11163](https://github.com/vidstack/player/commit/5f11163e48b451d2a3b1fa4291408a083d09c99e))
+- vimeo should fire seeking ([298be0c](https://github.com/vidstack/player/commit/298be0c3bd30eb0d2e917ef60be6359d4ccacf4d))
+- remotion provider should fire seeking ([5c4c359](https://github.com/vidstack/player/commit/5c4c3590b2f2f9f6ba2e25e8299da8b242cf18ed))
+- improve looping behaviour ([23fd34f](https://github.com/vidstack/player/commit/23fd34ff9559feea418362321294c5acb27c01ee))
+- accessibility warning on iframes ([51e3697](https://github.com/vidstack/player/commit/51e3697e98124dcfcadbd392c26d581658fc06be))
+- switching src on cdn throwing ([5565724](https://github.com/vidstack/player/commit/55657244097d7579d512687845b22398bcd9f054))
+
+#### Player (React)
+
+- default chapters menu should use compact layout when no thumbnails ([809098e](https://github.com/vidstack/player/commit/809098ec9ab2d6a68f4fb74d98b982f9a94b249f))
+
 ## [1.9.8-next](https://github.com/vidstack/player/releases/tag/v1.9.8-next) (2023-12-15)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -45,7 +47,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.7-next](https://github.com/vidstack/player/releases/tag/v1.9.7-next) (2023-12-13)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -59,7 +61,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.6-next](https://github.com/vidstack/player/releases/tag/v1.9.6-next) (2023-12-12)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -67,7 +69,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.5-next](https://github.com/vidstack/player/releases/tag/v1.9.5-next) (2023-12-12)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -80,7 +82,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.4-next](https://github.com/vidstack/player/releases/tag/v1.9.4-next) (2023-12-11)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -88,23 +90,23 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.3-next](https://github.com/vidstack/player/releases/tag/v1.9.3-next) (2023-12-10)
 
-### Bug Fixes
-
-#### Player
-
-- use mangle cache for deterministic chunks ([48b8324](https://github.com/vidstack/player/commit/48b8324a8b814006a108fb8d48f6c1d4a6504bfb))
-- chapters menu should update on cue changes ([574a0a3](https://github.com/vidstack/player/commit/574a0a326ef16c57a97702e39aef91b7b3d62c15))
-
-### Styling
+### 🎨 Styling
 
 #### Player (React)
 
 - refactor player callbacks ([8524a6d](https://github.com/vidstack/player/commit/8524a6d41aa3436cf50bf364513144595c9e5a03))
 - refactor remotion provider ([ccbbff3](https://github.com/vidstack/player/commit/ccbbff3bc52294ed97b60097be1c82205b1f76f9))
 
+### 🐛 Bug Fixes
+
+#### Player
+
+- use mangle cache for deterministic chunks ([48b8324](https://github.com/vidstack/player/commit/48b8324a8b814006a108fb8d48f6c1d4a6504bfb))
+- chapters menu should update on cue changes ([574a0a3](https://github.com/vidstack/player/commit/574a0a326ef16c57a97702e39aef91b7b3d62c15))
+
 ## [1.9.2-next](https://github.com/vidstack/player/releases/tag/v1.9.2-next) (2023-12-09)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -116,7 +118,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.1-next](https://github.com/vidstack/player/releases/tag/v1.9.1-next) (2023-12-08)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -129,7 +131,13 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.0-next](https://github.com/vidstack/player/releases/tag/v1.9.0-next) (2023-12-08)
 
-### Bug Fixes
+### ✨ Features
+
+#### Player (React)
+
+- remotion provider ([955d1ec](https://github.com/vidstack/player/commit/955d1ecd8aac175ebee4e3634ed71e53f6e15241))
+
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -139,15 +147,9 @@ All notable changes to this project will be documented in this file.
 
 - use slider hooks throwing on setup ([6088de7](https://github.com/vidstack/player/commit/6088de7471d204757a6c69f00c23019a6591ed4a))
 
-### Features
-
-#### Player (React)
-
-- remotion provider ([955d1ec](https://github.com/vidstack/player/commit/955d1ecd8aac175ebee4e3634ed71e53f6e15241))
-
 ## [1.8.3-next](https://github.com/vidstack/player/releases/tag/v1.8.3-next) (2023-12-04)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -155,7 +157,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.8.2-next](https://github.com/vidstack/player/releases/tag/v1.8.2-next) (2023-12-04)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -163,7 +165,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.8.1-next](https://github.com/vidstack/player/releases/tag/v1.8.1-next) (2023-12-02)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -171,7 +173,16 @@ All notable changes to this project will be documented in this file.
 
 ## [1.8.0-next](https://github.com/vidstack/player/releases/tag/v1.8.0-next) (2023-12-02)
 
-### Bug Fixes
+### ✨ Features
+
+#### Player
+
+- new `hideControlsOnMouseLeave` player prop ([a481351](https://github.com/vidstack/player/commit/a481351524e5b79707f039de328a9ca9d428a865))
+- new `selector` tailwind plugin option ([e051bd2](https://github.com/vidstack/player/commit/e051bd271c5ad13f28a898d61baec8c4f99ee255))
+- new spinner component ([e0b0ab1](https://github.com/vidstack/player/commit/e0b0ab1424c8a61e9a687b731a52eac20eea460a))
+- expose `hideOnMouseLeave` prop on controls component ([7eeabdd](https://github.com/vidstack/player/commit/7eeabddbd28f7e114a57ebea7d2a627adc8ad430))
+
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -181,18 +192,15 @@ All notable changes to this project will be documented in this file.
 - title not updating after init ([1c82248](https://github.com/vidstack/player/commit/1c8224831789935ec562b9db1c630dffe85f33b9))
 - cursor should not dissapear while starting ([273d30b](https://github.com/vidstack/player/commit/273d30be296223f9cba7cd3e9709b3400443ba25))
 
-### Features
+## [1.7.0-next](https://github.com/vidstack/player/releases/tag/v1.7.0-next) (2023-11-30)
+
+### ✨ Features
 
 #### Player
 
-- new `hideControlsOnMouseLeave` player prop ([a481351](https://github.com/vidstack/player/commit/a481351524e5b79707f039de328a9ca9d428a865))
-- new `selector` tailwind plugin option ([e051bd2](https://github.com/vidstack/player/commit/e051bd271c5ad13f28a898d61baec8c4f99ee255))
-- new spinner component ([e0b0ab1](https://github.com/vidstack/player/commit/e0b0ab1424c8a61e9a687b731a52eac20eea460a))
-- expose `hideOnMouseLeave` prop on controls component ([7eeabdd](https://github.com/vidstack/player/commit/7eeabddbd28f7e114a57ebea7d2a627adc8ad430))
+- vimeo provider ([42d0730](https://github.com/vidstack/player/commit/42d07302bd435c89eb7b1456e5b00883c2d33c7c))
 
-## [1.7.0-next](https://github.com/vidstack/player/releases/tag/v1.7.0-next) (2023-11-30)
-
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -204,15 +212,9 @@ All notable changes to this project will be documented in this file.
 - speed normal label not using translations ([1b72abc](https://github.com/vidstack/player/commit/1b72abccf04e114d63142d423e515d0e8fa23daa))
 - updating current time on page transitions throws ([ed8b646](https://github.com/vidstack/player/commit/ed8b64694f2b5a74518ca2d82467a763feefbb2d))
 
-### Features
-
-#### Player
-
-- vimeo provider ([42d0730](https://github.com/vidstack/player/commit/42d07302bd435c89eb7b1456e5b00883c2d33c7c))
-
 ## [1.6.2-next](https://github.com/vidstack/player/releases/tag/v1.6.2-next) (2023-11-26)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -222,7 +224,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.6.1-next](https://github.com/vidstack/player/releases/tag/v1.6.1-next) (2023-11-24)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -230,7 +232,13 @@ All notable changes to this project will be documented in this file.
 
 ## [1.6.0-next](https://github.com/vidstack/player/releases/tag/v1.6.0-next) (2023-11-24)
 
-### Bug Fixes
+### ✨ Features
+
+#### Player
+
+- youtube provider ([024a797](https://github.com/vidstack/player/commit/024a797c7e66c00bba65465909b97995ee3f25b9))
+
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -238,15 +246,9 @@ All notable changes to this project will be documented in this file.
 - use native controls for youtube on ios safari ([23cd9a9](https://github.com/vidstack/player/commit/23cd9a9bfd5266a36d607604114a15f3e845a9fb))
 - resolve a few event type trigger issues ([fc19c33](https://github.com/vidstack/player/commit/fc19c33169025e1e853b9e87b244e9c3dc49486d))
 
-### Features
-
-#### Player
-
-- youtube provider ([024a797](https://github.com/vidstack/player/commit/024a797c7e66c00bba65465909b97995ee3f25b9))
-
 ## [1.5.7-next](https://github.com/vidstack/player/releases/tag/v1.5.7-next) (2023-11-21)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -259,7 +261,13 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.6-next](https://github.com/vidstack/player/releases/tag/v1.5.6-next) (2023-11-14)
 
-### Bug Fixes
+### ✨ Features
+
+#### Player
+
+- include provider in can play event detail ([15a70d3](https://github.com/vidstack/player/commit/15a70d3e0e944d21c086c9823693dda35638f138))
+
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -275,15 +283,9 @@ All notable changes to this project will be documented in this file.
 - autoplay error data attr should be boolean ([d2e1eeb](https://github.com/vidstack/player/commit/d2e1eeb4b3e63869e571720d5ee9e0552bb151f5))
 - slider value attr not updating state ([b7164cc](https://github.com/vidstack/player/commit/b7164cc170848da760f717ea93f198865f78e56c))
 
-### Features
-
-#### Player
-
-- include provider in can play event detail ([15a70d3](https://github.com/vidstack/player/commit/15a70d3e0e944d21c086c9823693dda35638f138))
-
 ## [1.5.5-next](https://github.com/vidstack/player/releases/tag/v1.5.5-next) (2023-11-07)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -291,7 +293,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.4-next](https://github.com/vidstack/player/releases/tag/v1.5.4-next) (2023-11-07)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -300,7 +302,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.3-next](https://github.com/vidstack/player/releases/tag/v1.5.3-next) (2023-11-07)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -309,7 +311,13 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.2-next](https://github.com/vidstack/player/releases/tag/v1.5.2-next) (2023-11-06)
 
-### Bug Fixes
+### ✨ Features
+
+#### Player
+
+- expose `ios-controls` in tailwind ([ae56f15](https://github.com/vidstack/player/commit/ae56f15d5d467aca2789f1affbdc97d6c348a7fa))
+
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -320,48 +328,42 @@ All notable changes to this project will be documented in this file.
 - show slider chapters on larger mobile landscape ([7c0416a](https://github.com/vidstack/player/commit/7c0416a05ecdeacbb157813a35b88bac093b0713))
 - use native poster if not playsinline on ios safari ([5009ddf](https://github.com/vidstack/player/commit/5009ddf6002ceb20809ccdb9fc34dc8f45708f14))
 
-### Features
-
-#### Player
-
-- expose `ios-controls` in tailwind ([ae56f15](https://github.com/vidstack/player/commit/ae56f15d5d467aca2789f1affbdc97d6c348a7fa))
-
 ## [1.5.1-next](https://github.com/vidstack/player/releases/tag/v1.5.1-next) (2023-11-01)
 
-### Bug Fixes
-
-#### Player
-
-- add missing media event details ([e79ad85](https://github.com/vidstack/player/commit/e79ad8524a8507f897c5e6acb7b38b4375e8568b))
-
-### Features
+### ✨ Features
 
 #### Player
 
 - add orientation request events ([2ebd688](https://github.com/vidstack/player/commit/2ebd6884efc0b8c3c3c2a941dedb0acfc3d26fb2))
 
+### 🐛 Bug Fixes
+
+#### Player
+
+- add missing media event details ([e79ad85](https://github.com/vidstack/player/commit/e79ad8524a8507f897c5e6acb7b38b4375e8568b))
+
 ## [1.5.0-next](https://github.com/vidstack/player/releases/tag/v1.5.0-next) (2023-10-30)
 
-### Bug Fixes
+### ✨ Features
+
+#### Player
+
+- thumbnails now support json ([16bdd0d](https://github.com/vidstack/player/commit/16bdd0db85cfe4969519de473da70be7e8c6ff6e))
+
+### 🐛 Bug Fixes
 
 #### Player (React)
 
 - `useMediaState` throwing when given player ref ([18789bc](https://github.com/vidstack/player/commit/18789bce7aff44d3701e58a07411b9749982da40))
 - `media-captions` should be safe to use on server ([b986bf8](https://github.com/vidstack/player/commit/b986bf864ee1c468dda93a827c99d71cc4b8890d))
 
-### Features
-
-#### Player
-
-- thumbnails now support json ([16bdd0d](https://github.com/vidstack/player/commit/16bdd0db85cfe4969519de473da70be7e8c6ff6e))
-
 ## [1.4.9-next](https://github.com/vidstack/player/releases/tag/v1.4.9-next) (2023-10-29)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 ## [1.4.8-next](https://github.com/vidstack/player/releases/tag/v1.4.8-next) (2023-10-29)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -377,7 +379,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.7-next](https://github.com/vidstack/player/releases/tag/v1.4.7-next) (2023-10-25)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -387,7 +389,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.6-next](https://github.com/vidstack/player/releases/tag/v1.4.6-next) (2023-10-24)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -401,7 +403,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.5-next](https://github.com/vidstack/player/releases/tag/v1.4.5-next) (2023-10-23)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -417,7 +419,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.4-next](https://github.com/vidstack/player/releases/tag/v1.4.4-next) (2023-10-20)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -427,22 +429,22 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.2-next](https://github.com/vidstack/player/releases/tag/v1.4.2-next) (2023-10-19)
 
-### Bug Fixes
+### ✨ Features
+
+#### Player
+
+- media key callbacks ([cc559bc](https://github.com/vidstack/player/commit/cc559bc3661a3b4921345fb41187ce16bea0916c))
+
+### 🐛 Bug Fixes
 
 #### Player
 
 - better slider value defaults ([9dc50fe](https://github.com/vidstack/player/commit/9dc50fef887c771d6918575025819f21a574c1c1))
 - prevent page scroll when interacting with sliders via keyboard ([f2c6454](https://github.com/vidstack/player/commit/f2c645498492cf0670d590bf49ae95c7cbff7029))
 
-### Features
-
-#### Player
-
-- media key callbacks ([cc559bc](https://github.com/vidstack/player/commit/cc559bc3661a3b4921345fb41187ce16bea0916c))
-
 ## [1.4.1-next](https://github.com/vidstack/player/releases/tag/v1.4.1-next) (2023-10-19)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -454,7 +456,14 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.0-next](https://github.com/vidstack/player/releases/tag/v1.4.0-next) (2023-10-18)
 
-### Bug Fixes
+### ✨ Features
+
+#### Player
+
+- add j/l to global seek keys ([d87cb18](https://github.com/vidstack/player/commit/d87cb18c099a463569eb13807a59424be47466b8))
+- new speed up and slow down keyboard shortcuts ([b1c26c5](https://github.com/vidstack/player/commit/b1c26c5b167a69f5707e98716b2c1dac8970c629))
+
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -467,16 +476,9 @@ All notable changes to this project will be documented in this file.
 
 - `useThumbnails` memo error ([09b41f6](https://github.com/vidstack/player/commit/09b41f674e7264664b9fbbaeed42ff531a70a0be))
 
-### Features
-
-#### Player
-
-- add j/l to global seek keys ([d87cb18](https://github.com/vidstack/player/commit/d87cb18c099a463569eb13807a59424be47466b8))
-- new speed up and slow down keyboard shortcuts ([b1c26c5](https://github.com/vidstack/player/commit/b1c26c5b167a69f5707e98716b2c1dac8970c629))
-
 ## [1.3.0-next](https://github.com/vidstack/player/releases/tag/v1.3.0-next) (2023-10-17)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -486,7 +488,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.2-next](https://github.com/vidstack/player/releases/tag/v1.2.2-next) (2023-10-17)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -499,7 +501,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.1-next](https://github.com/vidstack/player/releases/tag/v1.2.1-next) (2023-10-17)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -507,7 +509,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.0-next](https://github.com/vidstack/player/releases/tag/v1.2.0-next) (2023-10-16)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -521,7 +523,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.10-next](https://github.com/vidstack/player/releases/tag/v1.1.10-next) (2023-10-10)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -532,7 +534,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.9-next](https://github.com/vidstack/player/releases/tag/v1.1.9-next) (2023-10-09)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -550,7 +552,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.8-next](https://github.com/vidstack/player/releases/tag/v1.1.8-next) (2023-10-06)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -563,7 +565,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.7-next](https://github.com/vidstack/player/releases/tag/v1.1.7-next) (2023-10-04)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player (React)
 
@@ -571,7 +573,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.5-next](https://github.com/vidstack/player/releases/tag/v1.1.5-next) (2023-10-03)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -584,7 +586,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.4-next](https://github.com/vidstack/player/releases/tag/v1.1.4-next) (2023-10-02)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -592,7 +594,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.3-next](https://github.com/vidstack/player/releases/tag/v1.1.3-next) (2023-10-02)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -600,7 +602,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.2-next](https://github.com/vidstack/player/releases/tag/v1.1.2-next) (2023-10-02)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -614,21 +616,21 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.0-next](https://github.com/vidstack/player/releases/tag/v1.1.0-next) (2023-10-01)
 
-### Bug Fixes
-
-#### Player
-
-- do not show volume slider when play button is interacted with ([757841d](https://github.com/vidstack/player/commit/757841da3efae66939c588042d9d278d598a8ccf))
-
-### Features
+### ✨ Features
 
 #### Player
 
 - add live stream support to default layout ([622d812](https://github.com/vidstack/player/commit/622d812c921fa6f20d9386f04a98a52df3d676e2))
 
+### 🐛 Bug Fixes
+
+#### Player
+
+- do not show volume slider when play button is interacted with ([757841d](https://github.com/vidstack/player/commit/757841da3efae66939c588042d9d278d598a8ccf))
+
 ## [1.0.5-next](https://github.com/vidstack/player/releases/tag/v1.0.5-next) (2023-10-01)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -637,7 +639,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.4-next](https://github.com/vidstack/player/releases/tag/v1.0.4-next) (2023-09-30)
 
-### Bug Fixes
+### 🐛 Bug Fixes
 
 #### Player (React)
 
@@ -645,7 +647,13 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.3-next](https://github.com/vidstack/player/releases/tag/v1.0.3-next) (2023-09-30)
 
-### Bug Fixes
+### ✨ Features
+
+#### React
+
+- add rsc support and split up default ui audio/video ([4e390ac](https://github.com/vidstack/player/commit/4e390ac91b75996447ccce90f7ce94322937740e))
+
+### 🐛 Bug Fixes
 
 #### Player
 
@@ -661,9 +669,3 @@ All notable changes to this project will be documented in this file.
 #### React
 
 - small layout tweaks and fixes ([716e22c](https://github.com/vidstack/player/commit/716e22c936319c744fb7347573e2b8ba9c748d5c))
-
-### Features
-
-#### React
-
-- add rsc support and split up default ui audio/video ([4e390ac](https://github.com/vidstack/player/commit/4e390ac91b75996447ccce90f7ce94322937740e))

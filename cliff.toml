@@ -30,11 +30,11 @@ filter_unconventional = true
 split_commits = false
 commit_preprocessors = []
 commit_parsers = [
-  { message = "^feat", group = "Features" },
-  { message = "^fix", group = "Bug Fixes" },
-  { message = "^perf", group = "Performance" },
+  { message = "^feat", group = "✨ Features" },
+  { message = "^fix", group = "🐛 Bug Fixes" },
+  { message = "^perf", group = "🏎️ Performance" },
   { message = "^refactor", group = "Refactor" },
-  { message = "^style", group = "Styling" },
+  { message = "^style", group = "🎨 Styling" },
   { message = "^test", group = "Testing" },
   { message = "^chore", skip = true },
   { message = "^docs", skip = true },
