@@ -60,6 +60,18 @@
   --exit-transform: translateY(-12px) scale(0.8);
 }
 
+/* Left */
+:where(.vds-tooltip-content[data-placement~='left']) {
+  --enter-transform: translateX(0) scale(1);
+  --exit-transform: translateX(12px) scale(0.8);
+}
+
+/* Right */
+:where(.vds-tooltip-content[data-placement~='right']) {
+  --enter-transform: translateX(0) scale(1);
+  --exit-transform: translateX(-12px) scale(0.8);
+}
+
 @keyframes vds-tooltip-enter {
   from {
     opacity: 0;
