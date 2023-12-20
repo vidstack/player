@@ -16,11 +16,14 @@ import { NativeAudioTracks } from './native-audio-tracks';
 export class HTMLMediaProvider implements MediaProviderAdapter {
   readonly scope = createScope();
 
+  protected _ctx!: MediaSetupContext;
   protected _currentSrc: MediaSrc<MediaResource> | null = null;
 
   constructor(protected _media: HTMLMediaElement) {}
 
   setup(ctx: MediaSetupContext) {
+    this._ctx = ctx;
+
     new HTMLMediaEvents(this, ctx);
 
     if ('audioTracks' in this.media) new NativeAudioTracks(this, ctx);
@@ -79,7 +82,9 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
       this._media.srcObject = src;
     } else {
       this._media.srcObject = null;
-      this._media.src = isString(src) ? src : window.URL.createObjectURL(src as MediaSource | Blob);
+      this._media.src = isString(src)
+        ? this._appendMediaFragment(src)
+        : window.URL.createObjectURL(src as MediaSource | Blob);
     }
 
     this._media.load();
@@ -88,5 +93,21 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
       src: src as MediaResource,
       type,
     };
+  }
+
+  private _appendMediaFragment(src: string) {
+    const { clipStartTime, clipEndTime } = this._ctx.$state,
+      startTime = clipStartTime(),
+      endTime = clipEndTime();
+
+    if (startTime > 0 && endTime > 0) {
+      return `${src}#t=${startTime},${endTime}`;
+    } else if (startTime > 0) {
+      return `${src}#t=${startTime}`;
+    } else if (endTime > 0) {
+      return `${src}#t=0,${endTime}`;
+    }
+
+    return src;
   }
 }

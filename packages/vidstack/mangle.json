@@ -621,5 +621,10 @@
   "_onFatalError": "Ak",
   "_onFragLoading": "Bk",
   "_onNetworkError": "Ck",
-  "_retryLoadingTimer": "yk"
+  "_retryLoadingTimer": "yk",
+  "_watchClipTimes": "Ek",
+  "_watchMediaDuration": "Fk",
+  "_resetPlaybackIfNeeded": "Gk",
+  "_getEndTime": "Hk",
+  "_appendMediaFragment": "Ik"
 }

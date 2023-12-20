@@ -496,13 +496,16 @@ export class MediaPlayer
 
   private _queueCurrentTimeUpdate(time: number) {
     this.canPlayQueue._enqueue('currentTime', () => {
-      if (time === peek(this.$state.currentTime)) return;
+      const { currentTime, clipStartTime, seekableStart, seekableEnd } = this.$state;
+
+      if (time === peek(currentTime)) return;
+
       peek(() => {
         if (!this._provider) return;
 
         const boundTime = Math.min(
-          Math.max(this.$state.seekableStart() + 0.1, time),
-          this.$state.seekableEnd() - 0.1,
+          Math.max(seekableStart() + 0.1, time + clipStartTime()),
+          seekableEnd() - 0.1,
         );
 
         if (Number.isFinite(boundTime)) this._provider.setCurrentTime(boundTime);

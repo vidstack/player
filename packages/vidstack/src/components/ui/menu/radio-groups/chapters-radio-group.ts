@@ -80,12 +80,17 @@ export class ChaptersRadioGroup extends Component<
 
   @method
   getOptions(): ChaptersRadioOption[] {
+    const { clipStartTime, clipEndTime } = this._media.$state,
+      startTime = clipStartTime(),
+      endTime = clipEndTime() || Infinity;
     return this._cues().map((cue, i) => ({
       cue,
       value: i + '',
       label: cue.text,
-      startTime: formatTime(cue.startTime, false),
-      duration: formatSpokenTime(cue.endTime - cue.startTime),
+      startTime: formatTime(Math.max(0, cue.startTime - startTime), false),
+      duration: formatSpokenTime(
+        Math.min(endTime, cue.endTime) - Math.max(startTime, cue.startTime),
+      ),
     }));
   }
 
@@ -117,7 +122,12 @@ export class ChaptersRadioGroup extends Component<
   }
 
   protected _onCuesChange(track: TextTrack) {
-    this._cues.set([...track.cues]);
+    const { clipStartTime, clipEndTime } = this._media.$state,
+      startTime = clipStartTime(),
+      endTime = clipEndTime() || Infinity;
+    this._cues.set(
+      [...track.cues].filter((cue) => cue.startTime <= endTime && cue.endTime >= startTime),
+    );
   }
 
   private _watchValue() {
@@ -134,16 +144,21 @@ export class ChaptersRadioGroup extends Component<
       return;
     }
 
-    const { currentTime } = this._media.$state,
-      time = currentTime(),
-      activeCueIndex = track.cues.findIndex((cue) => isCueActive(cue, time));
+    const { realCurrentTime, clipStartTime, clipEndTime } = this._media.$state,
+      startTime = clipStartTime(),
+      endTime = clipEndTime() || Infinity,
+      time = realCurrentTime(),
+      activeCueIndex = this._cues().findIndex((cue) => isCueActive(cue, time));
 
     this._index.set(activeCueIndex);
 
     if (activeCueIndex >= 0) {
-      const cue = track.cues[activeCueIndex],
+      const cue = this._cues()[activeCueIndex],
         radio = this.el!.querySelector(`[aria-checked='true']`),
-        playedPercent = ((time - cue.startTime) / (cue.endTime - cue.startTime)) * 100;
+        cueStartTime = Math.max(startTime, cue.startTime),
+        duration = Math.min(endTime, cue.endTime) - cueStartTime,
+        playedPercent = (Math.max(0, time - cueStartTime) / duration) * 100;
+
       radio && setStyle(radio as HTMLElement, '--progress', round(playedPercent, 3) + '%');
     }
   }
@@ -160,11 +175,12 @@ export class ChaptersRadioGroup extends Component<
     if (this.disabled || !trigger) return;
 
     const index = +value,
-      cues = this._track()?.cues;
+      cues = this._cues(),
+      { clipStartTime } = this._media.$state;
 
     if (isNumber(index) && cues?.[index]) {
       this._index.set(index);
-      this._media.remote.seek(cues[index].startTime, trigger);
+      this._media.remote.seek(cues[index].startTime - clipStartTime(), trigger);
       this.dispatch('change', { detail: cues[index], trigger });
     }
   }

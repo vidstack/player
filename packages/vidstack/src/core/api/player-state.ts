@@ -22,16 +22,16 @@ export const mediaState = new State<MediaState>({
   autoplay: false,
   autoplayError: null,
   buffered: new TimeRange(),
-  duration: 0,
   canLoad: false,
   canFullscreen: false,
   canOrientScreen: canOrientScreen(),
   canPictureInPicture: false,
   canPlay: false,
+  clipStartTime: 0,
+  clipEndTime: 0,
   controls: false,
   controlsVisible: false,
   crossorigin: null,
-  currentTime: 0,
   ended: false,
   error: null,
   fullscreen: false,
@@ -61,6 +61,18 @@ export const mediaState = new State<MediaState>({
   textTrack: null,
   volume: 1,
   waiting: false,
+  realCurrentTime: 0,
+  get currentTime() {
+    return this.clipStartTime > 0
+      ? Math.max(0, Math.min(this.realCurrentTime - this.clipStartTime, this.duration))
+      : this.realCurrentTime;
+  },
+  intrinsicDuration: 0,
+  get duration() {
+    return this.clipEndTime > 0
+      ? this.clipEndTime - this.clipStartTime
+      : Math.max(0, this.intrinsicDuration - this.clipStartTime);
+  },
   get title() {
     return this.providedTitle || this.inferredTitle;
   },
@@ -79,16 +91,22 @@ export const mediaState = new State<MediaState>({
     return this.source;
   },
   get bufferedStart() {
-    return getTimeRangesStart(this.buffered) ?? 0;
+    const start = getTimeRangesStart(this.buffered) ?? 0;
+    return Math.max(0, start - this.clipStartTime);
   },
   get bufferedEnd() {
-    return getTimeRangesEnd(this.buffered) ?? 0;
+    const end = getTimeRangesEnd(this.buffered) ?? 0;
+    return Math.min(this.duration, Math.max(0, end - this.clipStartTime));
   },
   get seekableStart() {
-    return getTimeRangesStart(this.seekable) ?? 0;
+    const start = getTimeRangesStart(this.seekable) ?? 0;
+    return Math.max(0, start - this.clipStartTime);
   },
   get seekableEnd() {
-    return this.canPlay ? getTimeRangesEnd(this.seekable) ?? Infinity : 0;
+    const end = this.canPlay ? getTimeRangesEnd(this.seekable) ?? Infinity : 0;
+    return this.clipEndTime > 0
+      ? Math.min(this.clipEndTime, Math.max(0, end - this.clipStartTime))
+      : end;
   },
   get seekableWindow() {
     return Math.max(0, this.seekableEnd - this.seekableStart);
@@ -116,7 +134,7 @@ export const mediaState = new State<MediaState>({
     );
   },
   get live() {
-    return this.streamType.includes('live') || !Number.isFinite(this.duration);
+    return this.streamType.includes('live') || !Number.isFinite(this.intrinsicDuration);
   },
   get liveEdgeStart() {
     return this.live && Number.isFinite(this.seekableEnd)
@@ -180,6 +198,8 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'textTracks',
   'volume',
   'width',
+  'clipStartTime',
+  'clipEndTime',
 ]);
 
 /**
@@ -296,6 +316,18 @@ export interface MediaState {
    * @defaultValue true
    */
   readonly canSeek: boolean;
+  /**
+   * Limit playback to only play _after_ a certain time. Playback will being from this time.
+   *
+   * @defaultValue 0
+   */
+  clipStartTime: number;
+  /**
+   * Limit playback to only play _before_ a certain time. Playback will end at this time.
+   *
+   * @defaultValue 0
+   */
+  clipEndTime: number;
   /**
    * Indicates whether a user interface should be shown for controlling the resource. Set this to
    * `false` when you want to provide your own custom controls, and `true` if you want the current
@@ -691,8 +723,12 @@ export interface MediaState {
   providedTitle: string;
   /* @internal */
   inferredTitle: string;
+  /* @internal - Unclipped current time. */
+  realCurrentTime: number;
   /* @internal */
   providedPoster: string;
+  /* @internal */
+  intrinsicDuration: number;
   /* @internal */
   inferredPoster: string;
   /* @internal */

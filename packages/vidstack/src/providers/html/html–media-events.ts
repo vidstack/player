@@ -48,7 +48,7 @@ export class HTMLMediaEvents {
    */
   private _onAnimationFrame() {
     const newTime = this._media.currentTime;
-    if (this._ctx.$state.currentTime() !== newTime) this._updateCurrentTime(newTime);
+    if (this._ctx.$state.realCurrentTime() !== newTime) this._updateCurrentTime(newTime);
   }
 
   private _attachInitialListeners() {

@@ -1,5 +1,6 @@
 import { effect } from 'maverick.js';
 
+import type { MediaPlayerProps } from '..';
 import { MediaPlayerController } from '../api/player-controller';
 
 /**
@@ -20,6 +21,7 @@ export class MediaStateSync extends MediaPlayerController {
     effect(this._watchControls.bind(this));
     effect(this._watchCrossOrigin.bind(this));
     effect(this._watchPlaysinline.bind(this));
+    effect(this._watchClipTimes.bind(this));
     effect(this._watchLiveTolerance.bind(this));
     effect(this._watchLive.bind(this));
     effect(this._watchLiveEdge.bind(this));
@@ -33,7 +35,15 @@ export class MediaStateSync extends MediaPlayerController {
       viewType: 'providedViewType',
     };
 
-    for (const prop of Object.keys(this.$props)) {
+    const skip = new Set<keyof MediaPlayerProps>([
+      'currentTime',
+      'paused',
+      'playbackRate',
+      'volume',
+    ]);
+
+    for (const prop of Object.keys(this.$props) as (keyof MediaPlayerProps)[]) {
+      if (skip.has(prop)) continue;
       this.$state[providedProps[prop] ?? prop]?.set(this.$props[prop]());
     }
 
@@ -91,6 +101,12 @@ export class MediaStateSync extends MediaPlayerController {
     const playsinline = this.$props.playsinline();
     this.$state.playsinline.set(playsinline);
     this.dispatch('playsinline-change', { detail: playsinline });
+  }
+
+  private _watchClipTimes() {
+    const { clipStartTime, clipEndTime } = this.$props;
+    this.$state.clipStartTime.set(clipStartTime());
+    this.$state.clipEndTime.set(clipEndTime());
   }
 
   private _watchLive() {

@@ -103,8 +103,8 @@ export class Captions extends Component<CaptionsProps> {
   private _onCueChange() {
     this.el!.textContent = '';
 
-    const { currentTime, textTrack } = this._media.$state,
-      time = peek(currentTime),
+    const { realCurrentTime, textTrack } = this._media.$state,
+      time = peek(realCurrentTime),
       activeCues = peek(textTrack)!.activeCues;
 
     const { renderVTTCueString } = this._lib;
@@ -117,9 +117,9 @@ export class Captions extends Component<CaptionsProps> {
   }
 
   private _onUpdateTimedNodes() {
-    const { currentTime } = this._media.$state,
+    const { realCurrentTime } = this._media.$state,
       { updateTimedVTTCueNodes } = this._lib;
-    updateTimedVTTCueNodes(this.el!, currentTime());
+    updateTimedVTTCueNodes(this.el!, realCurrentTime());
   }
 
   private _setupVideoView() {
@@ -139,7 +139,7 @@ export class Captions extends Component<CaptionsProps> {
 
   private _watchMediaTime() {
     if (this._isHidden()) return;
-    const { currentTime } = this._media.$state;
-    this._renderer.currentTime = currentTime();
+    const { realCurrentTime } = this._media.$state;
+    this._renderer.currentTime = realCurrentTime();
   }
 }

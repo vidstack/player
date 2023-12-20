@@ -22,7 +22,7 @@ export class SliderThumbnail extends Thumbnail {
   }
 
   protected override _getTime() {
-    const { duration } = this._media.$state;
-    return this._slider.pointerRate() * duration();
+    const { duration, clipStartTime } = this._media.$state;
+    return clipStartTime() + this._slider.pointerRate() * duration();
   }
 }

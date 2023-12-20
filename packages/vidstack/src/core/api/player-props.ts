@@ -7,6 +7,8 @@ import type { MediaLoadingStrategy, MediaResource } from './types';
 
 export const mediaPlayerProps: MediaPlayerProps = {
   autoplay: false,
+  clipStartTime: 0,
+  clipEndTime: 0,
   controls: false,
   currentTime: 0,
   crossorigin: null,
@@ -48,6 +50,8 @@ export interface MediaPlayerProps
   extends Pick<
     MediaState,
     | 'autoplay'
+    | 'clipStartTime'
+    | 'clipEndTime'
     | 'controls'
     | 'currentTime'
     | 'loop'

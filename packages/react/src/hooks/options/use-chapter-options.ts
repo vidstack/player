@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { effect, type StopEffect } from 'maverick.js';
-import { useReactContext } from 'maverick.js/react';
+import { useReactContext, useSignal } from 'maverick.js/react';
 import type { VTTCue } from 'media-captions';
 import { formatSpokenTime, formatTime, mediaContext } from 'vidstack';
 
@@ -15,50 +15,58 @@ import { useTextCues } from '../use-text-cues';
 export function useChapterOptions(): ChapterOptions {
   const media = useReactContext(mediaContext)!,
     track = useActiveTextTrack('chapters'),
-    cues = useTextCues(track);
+    cues = useTextCues(track),
+    $startTime = useSignal(media.$state.clipStartTime),
+    $endTime = useSignal(media.$state.clipEndTime) || Infinity;
 
   useActiveTextCues(track);
 
   return React.useMemo(() => {
     const options = track
-      ? cues.map<ChapterOption>((cue, i) => {
-          let currentRef: HTMLElement | null = null,
-            stopProgressEffect: StopEffect | undefined;
-          return {
-            cue,
-            label: cue.text,
-            value: i + '',
-            startTimeText: formatTime(cue.startTime, false),
-            durationText: formatSpokenTime(cue.endTime - cue.startTime),
-            get selected() {
-              return cue === track.activeCues[0];
-            },
-            setProgressVar(ref) {
-              if (!ref || cue !== track.activeCues[0]) {
+      ? cues
+          .filter((cue) => cue.startTime <= $endTime && cue.endTime >= $startTime)
+          .map<ChapterOption>((cue, i) => {
+            let currentRef: HTMLElement | null = null,
+              stopProgressEffect: StopEffect | undefined;
+            return {
+              cue,
+              label: cue.text,
+              value: i + '',
+              startTimeText: formatTime(Math.max(0, cue.startTime - $startTime), false),
+              durationText: formatSpokenTime(
+                Math.min($endTime, cue.endTime) - Math.max($startTime, cue.startTime),
+              ),
+              get selected() {
+                return cue === track.activeCues[0];
+              },
+              setProgressVar(ref) {
+                if (!ref || cue !== track.activeCues[0]) {
+                  stopProgressEffect?.();
+                  stopProgressEffect = undefined;
+                  ref?.style.setProperty('--progress', '0%');
+                  currentRef = null;
+                  return;
+                }
+
+                if (currentRef === ref) return;
+                currentRef = ref;
+
                 stopProgressEffect?.();
-                stopProgressEffect = undefined;
-                ref?.style.setProperty('--progress', '0%');
-                currentRef = null;
-                return;
-              }
+                stopProgressEffect = effect(() => {
+                  const { realCurrentTime } = media.$state,
+                    time = realCurrentTime(),
+                    cueStartTime = Math.max($startTime, cue.startTime),
+                    duration = Math.min($endTime, cue.endTime) - cueStartTime,
+                    progress = (Math.max(0, time - cueStartTime) / duration) * 100;
 
-              if (currentRef === ref) return;
-              currentRef = ref;
-
-              stopProgressEffect?.();
-              stopProgressEffect = effect(() => {
-                const { currentTime } = media.$state,
-                  time = currentTime(),
-                  progress =
-                    Math.min((time - cue.startTime) / (cue.endTime - cue.startTime), 1) * 100;
-                ref.style.setProperty('--progress', progress.toFixed(3) + '%');
-              });
-            },
-            select(trigger) {
-              media.remote.seek(cue.startTime, trigger);
-            },
-          };
-        })
+                  ref.style.setProperty('--progress', progress.toFixed(3) + '%');
+                });
+              },
+              select(trigger) {
+                media.remote.seek(cue.startTime - $startTime, trigger);
+              },
+            };
+          })
       : [];
 
     Object.defineProperty(options, 'selectedValue', {
@@ -69,7 +77,7 @@ export function useChapterOptions(): ChapterOptions {
     });
 
     return options as ChapterOptions;
-  }, [cues]);
+  }, [cues, $startTime, $endTime]);
 }
 
 export type ChapterOptions = ChapterOption[] & {

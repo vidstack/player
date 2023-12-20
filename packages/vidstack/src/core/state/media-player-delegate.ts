@@ -61,12 +61,13 @@ export class MediaPlayerDelegate {
     }
 
     const provider = peek(this._media.$provider),
-      { muted, volume, playsinline } = this._media.$props;
+      { muted, volume, playsinline, clipStartTime } = this._media.$props;
 
     if (provider) {
       provider.setVolume(peek(volume));
       provider.setMuted(peek(muted));
       provider.setPlaysinline?.(peek(playsinline));
+      if (peek(clipStartTime) > 0) provider.setCurrentTime(peek(clipStartTime));
     }
 
     if ($state.canPlay() && $state.autoplay() && !$state.started()) {
