@@ -105,6 +105,7 @@ export interface VimeoEventPayload {
   loaded: { id: number };
   ended: void;
   seeking: void;
+  seek: void;
   seeked: void;
   cuechange: void;
   fullscreenchange: { fullscreen: boolean };

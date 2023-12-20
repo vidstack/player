@@ -150,7 +150,6 @@ export class VimeoProvider
 
   async play() {
     const { paused } = this._ctx.$state;
-    if (!peek(paused)) return;
 
     if (!this._playPromise) {
       this._playPromise = timedPromise<void, string>(() => {
@@ -166,7 +165,6 @@ export class VimeoProvider
 
   async pause() {
     const { paused } = this._ctx.$state;
-    if (peek(paused)) return;
 
     if (!this._pausePromise) {
       this._pausePromise = timedPromise<void, string>(() => {
@@ -186,6 +184,7 @@ export class VimeoProvider
 
   setCurrentTime(time) {
     this._remote('seekTo', time);
+    this._notify('seeking', time);
   }
 
   setVolume(volume) {
@@ -327,16 +326,11 @@ export class VimeoProvider
   }
 
   protected _onTimeUpdate(time: number, trigger: Event) {
-    const { currentTime, paused, seeking, bufferedEnd } = this._ctx.$state;
+    const { realCurrentTime, paused, bufferedEnd } = this._ctx.$state;
 
-    if (seeking() && paused()) {
-      this._remote('getBuffered');
-      if (bufferedEnd() > time) this._notify('seeked', time, trigger);
-    }
+    if (realCurrentTime() === time) return;
 
-    if (currentTime() === time) return;
-
-    const prevTime = currentTime(),
+    const prevTime = realCurrentTime(),
       detail = {
         currentTime: time,
         played:
@@ -373,7 +367,6 @@ export class VimeoProvider
           { controls } = this._ctx.$state,
           showControls = controls() || $iosControls();
 
-        this._timeRAF._start();
         this._pro.set(pro);
         this._seekableRange = new TimeRange(0, duration);
         this._notify('poster-change', poster, trigger);
@@ -446,12 +439,14 @@ export class VimeoProvider
   }
 
   protected _onPause(trigger: Event) {
+    this._timeRAF._stop();
     this._notify('pause', undefined, trigger);
     this._pausePromise?.resolve();
     this._pausePromise = null;
   }
 
   protected _onPlay(trigger: Event) {
+    this._timeRAF._start();
     this._notify('play', undefined, trigger);
     this._playPromise?.resolve();
     this._playPromise = null;
@@ -633,6 +628,7 @@ export class VimeoProvider
       case 'error':
         this._onError(payload, trigger);
         break;
+      case 'seek':
       case 'seeked':
         this._onSeeked(payload.seconds, trigger);
         break;
