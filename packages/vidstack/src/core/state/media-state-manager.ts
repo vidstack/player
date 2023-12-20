@@ -241,6 +241,12 @@ export class MediaStateManager extends MediaPlayerController {
     this._media.textTracks[TextTrackSymbol._canLoad]();
   }
 
+  ['can-load-poster'](event: ME.MediaCanLoadEvent) {
+    this.$state.canLoadPoster.set(true);
+    this._trackedEvents.set('can-load-poster', event);
+    this._satisfyRequest('posterLoad', event);
+  }
+
   ['media-type-change'](event: ME.MediaTypeChangeEvent) {
     const sourceChangeEvent = this._trackedEvents.get('source-change');
     if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);

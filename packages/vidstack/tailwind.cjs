@@ -8,6 +8,7 @@ const mediaAttributes = [
   'can-fullscreen',
   'can-pip',
   'can-load',
+  'can-load-poster',
   'can-play',
   'can-seek',
   'ended',

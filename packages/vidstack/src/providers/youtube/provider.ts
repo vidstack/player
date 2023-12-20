@@ -1,5 +1,12 @@
-import { createScope, effect, peek, signal } from 'maverick.js';
-import { isBoolean, isNumber, isObject, isString, type DeferredPromise } from 'maverick.js/std';
+import { createScope, effect, signal } from 'maverick.js';
+import {
+  isBoolean,
+  isNumber,
+  isObject,
+  isString,
+  noop,
+  type DeferredPromise,
+} from 'maverick.js/std';
 
 import { TimeRange, type MediaSrc } from '../../core';
 import { preconnect } from '../../utils/network';
@@ -10,6 +17,7 @@ import type { YouTubeCommandArg } from './embed/command';
 import type { YouTubeMessage } from './embed/message';
 import type { YouTubeParams } from './embed/params';
 import { YouTubePlayerState, type YouTubePlayerStateValue } from './embed/state';
+import { resolveYouTubeVideoId } from './utils';
 
 /**
  * This provider enables loading videos uploaded to YouTube (youtube.com) via embeds.
@@ -28,10 +36,6 @@ export class YouTubeProvider
   implements MediaProviderAdapter, Pick<YouTubeParams, 'color' | 'start' | 'end'>
 {
   protected readonly $$PROVIDER_TYPE = 'YOUTUBE';
-
-  protected static _videoIdRE =
-    /(?:youtu\.be|youtube|youtube\.com|youtube-nocookie\.com)\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|)((?:\w|-){11})/;
-  protected static _posterCache = new Map<string, string>();
 
   readonly scope = createScope();
 
@@ -85,27 +89,13 @@ export class YouTubeProvider
   }
 
   preconnect() {
-    const connections = [
-      this._getOrigin(),
-      // Botguard script.
-      'https://www.google.com',
-      // Poster.
-      'https://i.ytimg.com',
-      // Ads.
-      'https://googleads.g.doubleclick.net',
-      'https://static.doubleclick.net',
-    ];
-
-    for (const url of connections) {
-      preconnect(url, 'preconnect');
-    }
+    preconnect(this._getOrigin(), 'preconnect');
   }
 
   override setup(ctx: MediaSetupContext) {
     this._ctx = ctx;
     super.setup(ctx);
     effect(this._watchVideoId.bind(this));
-    effect(this._watchPoster.bind(this));
     this._notify('provider-setup', this);
   }
 
@@ -165,7 +155,7 @@ export class YouTubeProvider
       return;
     }
 
-    const videoId = src.src.match(YouTubeProvider._videoIdRE)?.[1];
+    const videoId = resolveYouTubeVideoId(src.src);
     this._videoId.set(videoId ?? '');
 
     this._currentSrc = src as MediaSrc<string>;
@@ -186,56 +176,6 @@ export class YouTubeProvider
     }
 
     this._src.set(`${this._getOrigin()}/embed/${videoId}`);
-  }
-
-  protected _watchPoster() {
-    const videoId = this._videoId(),
-      cache = YouTubeProvider._posterCache;
-
-    if (!videoId) return;
-
-    if (cache.has(videoId)) {
-      const url = cache.get(videoId)!;
-      this._notify('poster-change', url);
-      return;
-    }
-
-    const abort = new AbortController();
-    this._findPoster(videoId, abort);
-
-    return () => {
-      abort.abort();
-    };
-  }
-
-  private async _findPoster(videoId: string, abort: AbortController) {
-    try {
-      const sizes = ['maxresdefault', 'sddefault', 'hqdefault'];
-      for (const size of sizes) {
-        for (const webp of [true, false]) {
-          const url = this._resolvePosterURL(videoId, size, webp),
-            response = await fetch(url, {
-              mode: 'no-cors',
-              signal: abort.signal,
-            });
-
-          if (response.status < 400) {
-            YouTubeProvider._posterCache.set(videoId, url);
-            this._notify('poster-change', url);
-            return;
-          }
-        }
-      }
-    } catch (e) {
-      // no-op
-    }
-
-    this._notify('poster-change', '');
-  }
-
-  protected _resolvePosterURL(videoId: string, size: string, webp: boolean) {
-    const type = webp ? 'webp' : 'jpg';
-    return `https://i.ytimg.com/${webp ? 'vi_webp' : 'vi'}/${videoId}/${size}.${type}`;
   }
 
   protected override _buildParams(): YouTubeParams {

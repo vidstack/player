@@ -7,6 +7,7 @@ export const mediaAttributes: (keyof MediaState)[] = [
   'canFullscreen',
   'canPictureInPicture',
   'canLoad',
+  'canLoadPoster',
   'canPlay',
   'canSeek',
   'ended',

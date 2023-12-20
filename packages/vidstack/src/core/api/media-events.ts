@@ -32,6 +32,7 @@ export interface MediaEvents {
   'autoplay-change': MediaAutoplayChangeEvent;
   'autoplay-fail': MediaAutoplayFailEvent;
   'can-load': MediaCanLoadEvent;
+  'can-load-poster': MediaCanLoadPosterEvent;
   'can-play-through': MediaCanPlayThroughEvent;
   'can-play': MediaCanPlayEvent;
   'controls-change': MediaControlsChangeEvent;
@@ -146,12 +147,23 @@ export interface MediaAutoplayEventDetail {
 export interface MediaAutoplayEvent extends MediaEvent<MediaAutoplayEventDetail> {}
 
 /**
- * Fired when the provider can begin loading media. This depends on the type of `loading`
- * that has been configured. The `eager` strategy will be immediate, and `lazy` once the provider
- * has entered the viewport.
+ * Fired when the player can begin loading the current provider and media. This depends on the
+ * `load` player prop.
+ *
+ *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
  */
 export interface MediaCanLoadEvent extends MediaEvent<void> {
   request?: RE.MediaStartLoadingRequestEvent;
+}
+
+/**
+ * Fired when the player can begin loading the poster image. This depends on the `posterLoad`
+ * player prop.
+ *
+ *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+ */
+export interface MediaCanLoadPosterEvent extends MediaEvent<void> {
+  request?: RE.MediaPosterStartLoadingRequestEvent;
 }
 
 /**

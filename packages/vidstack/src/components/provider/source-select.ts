@@ -3,7 +3,6 @@ import {
   effect,
   peek,
   scoped,
-  signal,
   tick,
   type ReadSignal,
   type WriteSignal,
@@ -85,6 +84,7 @@ export class SourceSelection {
     effect(this._onSourceChange.bind(this));
     effect(this._onSetup.bind(this));
     effect(this._onLoadSource.bind(this));
+    effect(this._onLoadPoster.bind(this));
   }
 
   private _onSourcesChange() {
@@ -241,6 +241,28 @@ export class SourceSelection {
           .dispatch();
       }
     }
+  }
+
+  private _onLoadPoster() {
+    const loader = this._loader(),
+      { source, canLoadPoster } = this._media.$state;
+
+    if (!loader || !loader.loadPoster || !source() || !canLoadPoster()) return;
+
+    const abort = new AbortController();
+
+    loader
+      .loadPoster(source(), this._media, abort)
+      .then((url) => {
+        this._notify('poster-change', url || '');
+      })
+      .catch(() => {
+        this._notify('poster-change', '');
+      });
+
+    return () => {
+      abort.abort();
+    };
   }
 }
 

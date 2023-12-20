@@ -24,6 +24,7 @@ export interface MediaProviderLoader<Provider extends MediaProviderAdapter = Med
   mediaType(src?: MediaSrc): MediaType;
   preconnect?(ctx: MediaContext): void;
   load(ctx: MediaContext): Promise<Provider>;
+  loadPoster?(src: MediaSrc, ctx: MediaContext, abort: AbortController): Promise<string | null>;
 }
 
 export interface MediaProviderAdapter

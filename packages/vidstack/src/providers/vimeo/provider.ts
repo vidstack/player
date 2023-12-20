@@ -26,6 +26,7 @@ import {
 import type { VimeoMessage } from './embed/message';
 import type { VimeoOEmbedData, VimeoQuality, VimeoVideoInfo } from './embed/misc';
 import type { VimeoParams } from './embed/params';
+import { getVimeoVideoInfo, resolveVimeoVideoId } from './utils';
 
 /**
  * This provider enables loading videos uploaded to Vimeo (https://vimeo.com) via embeds.
@@ -50,10 +51,6 @@ export class VimeoProvider
   implements Pick<VimeoParams, 'title' | 'byline' | 'portrait' | 'color'>
 {
   protected readonly $$PROVIDER_TYPE = 'VIMEO';
-
-  protected static _videoIdRE =
-    /(?:https:\/\/)?(?:player\.)?vimeo(?:\.com)?\/(?:video\/)?(\d+)(?:\?hash=(.*))?/;
-  protected static _infoCache = new Map<string, VimeoVideoInfo>();
 
   readonly scope = createScope();
 
@@ -108,16 +105,7 @@ export class VimeoProvider
   }
 
   preconnect() {
-    const connections = [
-      this._getOrigin(),
-      'https://i.vimeocdn.com',
-      'https://f.vimeocdn.com',
-      'https://fresnel.vimeocdn.com',
-    ];
-
-    for (const url of connections) {
-      preconnect(url, 'preconnect');
-    }
+    preconnect(this._getOrigin(), 'preconnect');
   }
 
   override setup(ctx: MediaSetupContext) {
@@ -205,10 +193,7 @@ export class VimeoProvider
       return;
     }
 
-    const matches = src.src.match(VimeoProvider._videoIdRE),
-      videoId = matches?.[1],
-      hash = matches?.[2];
-
+    const { videoId, hash } = resolveVimeoVideoId(src.src);
     this._videoId.set(videoId ?? '');
     this._hash = hash ?? null;
 
@@ -229,48 +214,23 @@ export class VimeoProvider
   }
 
   protected _watchVideoInfo() {
-    const src = this._src(),
-      videoId = this._videoId(),
-      cache = VimeoProvider._infoCache,
-      info = cache.get(videoId);
+    const videoId = this._videoId();
 
     if (!videoId) return;
 
-    const promise = deferredPromise<VimeoVideoInfo, void>();
-    this._videoInfoPromise = promise;
-
-    if (info) {
-      promise.resolve(info);
-      return;
-    }
-
-    const oembedSrc = `https://vimeo.com/api/oembed.json?url=${src}`,
+    const promise = deferredPromise<VimeoVideoInfo, void>(),
       abort = new AbortController();
 
-    window
-      .fetch(oembedSrc, {
-        mode: 'cors',
-        signal: abort.signal,
-      })
-      .then((response) => response.json())
-      .then((data: VimeoOEmbedData) => {
-        const thumnailRegex = /vimeocdn.com\/video\/(.*)?_/,
-          thumbnailId = data?.thumbnail_url?.match(thumnailRegex)?.[1],
-          poster = thumbnailId ? `https://i.vimeocdn.com/video/${thumbnailId}_1920x1080.webp` : '',
-          info = {
-            title: data?.title ?? '',
-            duration: data?.duration ?? 0,
-            poster,
-            pro: data.account_type !== 'basic',
-          };
+    this._videoInfoPromise = promise;
 
-        cache.set(videoId, info);
+    getVimeoVideoInfo(videoId, abort)
+      .then((info) => {
         promise.resolve(info);
       })
       .catch((e) => {
         promise.reject();
         this._notify('error', {
-          message: `Failed to fetch vimeo video info from \`${oembedSrc}\`.`,
+          message: `Failed to fetch vimeo video info for id \`${videoId}\`.`,
           code: 1,
           error: coerceToError(e),
         });

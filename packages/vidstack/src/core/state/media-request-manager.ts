@@ -567,6 +567,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this._stateMgr._handle(this.createEvent('can-load'));
   }
 
+  ['media-poster-start-loading'](event: RE.MediaPosterStartLoadingRequestEvent) {
+    if (this.$state.canLoadPoster()) return;
+    this._request._queue._enqueue('posterLoad', event);
+    this._stateMgr._handle(this.createEvent('can-load-poster'));
+  }
+
   ['media-text-track-change-request'](event: RE.MediaTextTrackChangeRequestEvent) {
     const { index, mode } = event.detail,
       track = this._media.textTracks[index];
@@ -650,6 +656,7 @@ export class MediaRequestContext {
 export interface MediaRequestQueueRecord {
   audioTrack: RE.MediaAudioTrackChangeRequestEvent;
   load: RE.MediaStartLoadingRequestEvent;
+  posterLoad: RE.MediaPosterStartLoadingRequestEvent;
   play: RE.MediaPlayRequestEvent;
   pause: RE.MediaPauseRequestEvent;
   rate: RE.MediaRateChangeRequestEvent;

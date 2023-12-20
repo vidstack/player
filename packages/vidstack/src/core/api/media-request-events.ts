@@ -1,6 +1,6 @@
 import type { DOMEvent } from 'maverick.js/std';
 
-import type { ScreenOrientationLockType } from '../..';
+import type { ScreenOrientationLockType } from '../../foundation/orientation/types';
 
 export interface MediaRequestEvents {
   'media-audio-track-change-request': MediaAudioTrackChangeRequestEvent;
@@ -22,19 +22,29 @@ export interface MediaRequestEvents {
   'media-seek-request': MediaSeekRequestEvent;
   'media-seeking-request': MediaSeekingRequestEvent;
   'media-start-loading': MediaStartLoadingRequestEvent;
+  'media-poster-start-loading': MediaPosterStartLoadingRequestEvent;
   'media-text-track-change-request': MediaTextTrackChangeRequestEvent;
   'media-unmute-request': MediaUnmuteRequestEvent;
   'media-volume-change-request': MediaVolumeChangeRequestEvent;
 }
 
 /**
- * Fired when requesting media to begin loading. This will only take effect if the `loading`
- * strategy on the provider is set to `custom`.
+ * Fired when requesting media to begin loading. This will only take effect if the `load`
+ * strategy on the player is set to `custom`.
  *
  * @bubbles
  * @composed
  */
 export interface MediaStartLoadingRequestEvent extends DOMEvent<void> {}
+
+/**
+ * Fired when requesting the media poster to begin loading. This will only take effect if the
+ * `posterLoad` strategy on the player is set to `custom`.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaPosterStartLoadingRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting to change the `mode` on a text track at the given index in the

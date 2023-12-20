@@ -2,11 +2,24 @@ import { isString } from 'maverick.js/std';
 
 import type { MediaSrc, MediaType } from '../../core';
 import type { MediaContext } from '../../core/api/media-context';
+import { preconnect } from '../../utils/network';
 import type { MediaProviderLoader } from '../types';
 import type { VimeoProvider } from './provider';
 
 export class VimeoProviderLoader implements MediaProviderLoader<VimeoProvider> {
   target!: HTMLIFrameElement;
+
+  preconnect(): void {
+    const connections = [
+      'https://i.vimeocdn.com',
+      'https://f.vimeocdn.com',
+      'https://fresnel.vimeocdn.com',
+    ];
+
+    for (const url of connections) {
+      preconnect(url, 'preconnect');
+    }
+  }
 
   canPlay(src: MediaSrc): boolean {
     return isString(src.src) && src.type === 'video/vimeo';
@@ -28,5 +41,22 @@ export class VimeoProviderLoader implements MediaProviderLoader<VimeoProvider> {
     }
 
     return new (await import('./provider')).VimeoProvider(this.target);
+  }
+
+  async loadPoster(
+    src: MediaSrc,
+    ctx: MediaContext,
+    abort: AbortController,
+  ): Promise<string | null> {
+    const { resolveVimeoVideoId, getVimeoVideoInfo } = await import('./utils');
+
+    if (!isString(src.src)) return null;
+
+    const { videoId } = resolveVimeoVideoId(src.src);
+    if (videoId) {
+      return getVimeoVideoInfo(videoId, abort).then((info) => info.poster);
+    }
+
+    return null;
   }
 }

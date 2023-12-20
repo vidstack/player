@@ -23,6 +23,7 @@ export const mediaState = new State<MediaState>({
   autoplayError: null,
   buffered: new TimeRange(),
   canLoad: false,
+  canLoadPoster: false,
   canFullscreen: false,
   canOrientScreen: canOrientScreen(),
   canPictureInPicture: false,
@@ -170,6 +171,7 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'autoplay',
   'canFullscreen',
   'canLoad',
+  'canLoadPoster',
   'canPictureInPicture',
   'canSetVolume',
   'controls',
@@ -295,11 +297,18 @@ export interface MediaState {
    */
   canPictureInPicture: boolean;
   /**
-   * Whether media is allowed to begin loading. This depends on the `loading` configuration.
-   * If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will become `true`
-   * once the media has entered the viewport.
+   * Whether media is allowed to begin loading. This depends on the `load` player prop.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
    */
   canLoad: boolean;
+  /**
+   * Whether the media poster is allowed to begin loading. This depends on the `posterLoad`
+   * player prop.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   */
+  canLoadPoster: boolean;
   /**
    * Whether the user agent can play the media, but estimates that **not enough** data has been
    * loaded to play the media up to its end without having to stop for further buffering of

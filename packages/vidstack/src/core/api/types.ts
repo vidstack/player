@@ -27,6 +27,13 @@ export type MediaViewType = 'unknown' | 'audio' | 'video';
 export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
 
 /**
+ * Indicates the type of strategy that should be used to initiate the poster loading process.
+ *
+ * @docs {@see https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+ */
+export type MediaPosterLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
+
+/**
  * A number which represents the general type of error that occurred.
  *
  * - *Abort Error Code (1):* The fetching of the associated resource was aborted by the user's

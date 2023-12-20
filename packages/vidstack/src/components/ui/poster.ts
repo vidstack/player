@@ -77,18 +77,18 @@ export class Poster extends Component<PosterProps, PosterState> {
   }
 
   protected override onConnect(el: HTMLElement) {
-    const { canLoad, poster } = this._media.$state;
-
-    window.requestAnimationFrame(() => {
-      if (!canLoad()) preconnect(poster());
-    });
-
+    effect(this._onPreconnect.bind(this));
     effect(this._onLoadStart.bind(this));
   }
 
   private _hasError() {
     const { error } = this.$state;
     return !isNull(error());
+  }
+
+  private _onPreconnect() {
+    const { canLoadPoster, poster } = this._media.$state;
+    if (!canLoadPoster() && poster()) preconnect(poster(), 'preconnect');
   }
 
   private _watchHidden() {
@@ -113,7 +113,7 @@ export class Poster extends Component<PosterProps, PosterState> {
   }
 
   private _watchImgSrc() {
-    const { canLoad, poster: defaultPoster } = this._media.$state;
+    const { canLoadPoster, poster: defaultPoster } = this._media.$state;
 
     // Either src set on this poster component, or defined on the player.
     const src = this.$props.src(),
@@ -123,7 +123,7 @@ export class Poster extends Component<PosterProps, PosterState> {
       this._media.$state.providedPoster.set(src);
     }
 
-    this.$state.src.set(canLoad() && poster.length ? poster : null);
+    this.$state.src.set(canLoadPoster() && poster.length ? poster : null);
   }
 
   private _watchImgAlt() {
@@ -133,8 +133,8 @@ export class Poster extends Component<PosterProps, PosterState> {
 
   private _onLoadStart() {
     const { loading, error } = this.$state,
-      { canLoad, poster } = this._media.$state;
-    loading.set(canLoad() && !!poster());
+      { canLoadPoster, poster } = this._media.$state;
+    loading.set(canLoadPoster() && !!poster());
     error.set(null);
   }
 

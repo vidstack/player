@@ -179,7 +179,8 @@ export class MediaPlayer
       context,
     );
 
-    new MediaLoadController(this.startLoading.bind(this));
+    new MediaLoadController('load', this.startLoading.bind(this));
+    new MediaLoadController('posterLoad', this.startLoadingPoster.bind(this));
   }
 
   protected override onSetup(): void {
@@ -300,8 +301,8 @@ export class MediaPlayer
         return this.controls.showing;
       },
       'data-buffering': function (this: MediaPlayer) {
-        const { canPlay, waiting } = this.$state;
-        return !canPlay() || waiting();
+        const { canLoad, canPlay, waiting } = this.$state;
+        return canLoad() && (!canPlay() || waiting());
       },
       'data-error': function (this: MediaPlayer) {
         const { error } = this.$state;
@@ -651,6 +652,16 @@ export class MediaPlayer
   @method
   startLoading(trigger?: Event): void {
     this._media.delegate._notify('can-load', undefined, trigger);
+  }
+
+  /**
+   * Called when the poster image can begin loading. Calling it more than once has no effect.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   */
+  @method
+  startLoadingPoster(trigger?: Event) {
+    this._media.delegate._notify('can-load-poster', undefined, trigger);
   }
 
   /**

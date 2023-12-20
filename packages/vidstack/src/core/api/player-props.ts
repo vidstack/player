@@ -3,7 +3,7 @@ import type { ScreenOrientationLockType } from '../../foundation/orientation/typ
 import { MEDIA_KEY_SHORTCUTS } from '../keyboard/controller';
 import type { MediaKeyShortcuts, MediaKeyTarget } from '../keyboard/types';
 import type { MediaState } from './player-state';
-import type { MediaLoadingStrategy, MediaResource } from './types';
+import type { MediaLoadingStrategy, MediaPosterLoadingStrategy, MediaResource } from './types';
 
 export const mediaPlayerProps: MediaPlayerProps = {
   autoplay: false,
@@ -14,6 +14,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   crossorigin: null,
   fullscreenOrientation: 'landscape',
   load: 'visible',
+  posterLoad: 'visible',
   logLevel: __DEV__ ? 'warn' : 'silent',
   loop: false,
   muted: false,
@@ -100,6 +101,17 @@ export interface MediaPlayerProps
    *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
    */
   load: MediaLoadingStrategy;
+  /**
+   * Indicates when the player can begin loading the poster.
+   *
+   * - `eager`: poster will be loaded immediately.
+   * - `idle`: poster will be loaded after the page has loaded and `requestIdleCallback` is fired.
+   * - `visible`: poster will delay loading until the provider has entered the viewport.
+   * - `custom`: poster will wait for the `startLoadingPoster()` method or `media-poster-start-loading` event.
+   *
+   *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   */
+  posterLoad: MediaPosterLoadingStrategy;
   /**
    * The default amount of delay in milliseconds while media playback is progressing without user
    * activity to indicate an idle state and hide controls.
