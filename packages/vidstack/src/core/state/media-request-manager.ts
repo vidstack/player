@@ -1,5 +1,5 @@
 import { effect, peek, type ReadSignal } from 'maverick.js';
-import { isUndefined } from 'maverick.js/std';
+import { DOMEvent, isUndefined } from 'maverick.js/std';
 
 import {
   FullscreenController,
@@ -103,9 +103,9 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   async _play(trigger?: Event) {
     if (__SERVER__) return;
 
-    const { canPlay, paused, ended, autoplaying, seekableStart } = this.$state;
+    const { canPlay, paused, autoplaying } = this.$state;
 
-    if (!peek(paused)) return;
+    if (!peek(paused) && !this._request._looping) return;
 
     if (trigger?.type === 'media-play-request') {
       this._request._queue._enqueue('play', trigger as RE.MediaPlayRequestEvent);
@@ -114,11 +114,6 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     try {
       const provider = peek(this._$provider);
       throwIfNotReadyForPlayback(provider, peek(canPlay));
-
-      if (peek(ended)) {
-        provider!.setCurrentTime(seekableStart() + 0.1);
-      }
-
       return await provider!.play();
     } catch (error) {
       if (__DEV__) {
@@ -171,7 +166,8 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     const provider = peek(this._$provider);
     throwIfNotReadyForPlayback(provider, peek(canPlay));
 
-    provider!.setCurrentTime(liveSyncPosition() ?? seekableEnd() - 2);
+    const end = seekableEnd() - 2;
+    provider!.setCurrentTime(Math.min(end, liveSyncPosition() ?? end));
   }
 
   private _wasPIPActive = false;
@@ -452,7 +448,6 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       await this._play(event);
     } catch (e) {
       this._request._looping = false;
-      this._request._replaying = false;
     }
   }
 
@@ -537,14 +532,18 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   ['media-seek-request'](event: RE.MediaSeekRequestEvent) {
-    const { seekableStart, seekableEnd, ended, canSeek, live, userBehindLiveEdge } = this.$state;
+    const { seekableStart, seekableEnd, ended, canSeek, live, userBehindLiveEdge, clipStartTime } =
+      this.$state;
 
     if (ended()) this._request._replaying = true;
 
     this._request._seeking = false;
     this._request._queue._delete('seeking');
 
-    const boundTime = Math.min(Math.max(seekableStart() + 0.1, event.detail), seekableEnd() - 0.1);
+    const boundTime = Math.min(
+      Math.max(seekableStart() + 0.1, event.detail + clipStartTime()),
+      seekableEnd() - 0.1,
+    );
 
     if (!Number.isFinite(boundTime) || !canSeek()) return;
 

@@ -1,6 +1,6 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
-import { onDispose } from 'maverick.js';
+import { onDispose, peek } from 'maverick.js';
 import { DOMEvent, listenEvent } from 'maverick.js/std';
 
 import { ListSymbol } from '../../foundation/list/symbols';
@@ -34,6 +34,7 @@ import { TRACKED_EVENT } from './tracked-media-events';
 export class MediaStateManager extends MediaPlayerController {
   private readonly _trackedEvents = new Map<string, ME.MediaEvent>();
 
+  private _clipEnded = false;
   private _firingWaiting = false;
   private _waitingTrigger: Event | undefined;
 
@@ -92,6 +93,7 @@ export class MediaStateManager extends MediaPlayerController {
 
   private _resetTracking() {
     this._stopWaiting();
+    this._clipEnded = false;
     this._request._replaying = false;
     this._request._looping = false;
     this._firingWaiting = false;
@@ -358,28 +360,28 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   protected _onCanPlayDetail(detail: ME.MediaCanPlayDetail) {
-    const { seekable, seekableEnd, buffered, duration, canPlay } = this.$state;
+    const { seekable, seekableEnd, buffered, intrinsicDuration, canPlay } = this.$state;
     canPlay.set(true);
     buffered.set(detail.buffered);
     seekable.set(detail.seekable);
-    duration.set(seekableEnd());
+    intrinsicDuration.set(seekableEnd());
   }
 
   ['duration-change'](event: ME.MediaDurationChangeEvent) {
-    const { live, duration } = this.$state,
+    const { live, intrinsicDuration } = this.$state,
       time = event.detail;
-    if (!live()) duration.set(!Number.isNaN(time) ? time : 0);
+    if (!live()) intrinsicDuration.set(!Number.isNaN(time) ? time : 0);
   }
 
   ['progress'](event: ME.MediaProgressEvent) {
-    const { buffered, seekable, live, duration, seekableEnd } = this.$state,
+    const { buffered, seekable, live, intrinsicDuration, seekableEnd } = this.$state,
       detail = event.detail;
 
     buffered.set(detail.buffered);
     seekable.set(detail.seekable);
 
     if (live()) {
-      duration.set(seekableEnd);
+      intrinsicDuration.set(seekableEnd);
       this.dispatch('duration-change', {
         detail: seekableEnd(),
         trigger: event,
@@ -391,12 +393,14 @@ export class MediaStateManager extends MediaPlayerController {
     const { paused, autoplayError, ended, autoplaying, playsinline, pointer, muted, viewType } =
       this.$state;
 
-    event.autoplay = autoplaying();
+    this._resetPlaybackIfNeeded();
 
-    if (this._request._looping || !paused()) {
+    if (!paused() && !this._request._looping) {
       event.stopImmediatePropagation();
       return;
     }
+
+    event.autoplay = autoplaying();
 
     const waitingEvent = this._trackedEvents.get('waiting');
     if (waitingEvent) event.triggers.add(waitingEvent);
@@ -427,6 +431,33 @@ export class MediaStateManager extends MediaPlayerController {
     if (!playsinline() && viewType() === 'video' && pointer() === 'coarse') {
       this._media.remote.enterFullscreen('prefer-media', event);
     }
+
+    if (this._request._looping) {
+      event.stopImmediatePropagation();
+    }
+  }
+
+  private _resetPlaybackIfNeeded(trigger?: Event) {
+    const provider = peek(this._media.$provider);
+    if (!provider) return;
+
+    const { ended, seekableStart, clipStartTime, clipEndTime, realCurrentTime, duration } =
+      this.$state;
+
+    const shouldReset =
+      realCurrentTime() < clipStartTime() ||
+      (clipEndTime() > 0 && realCurrentTime() >= clipEndTime()) ||
+      Math.abs(realCurrentTime() - duration()) < 0.1 ||
+      ended();
+
+    if (shouldReset) {
+      this.dispatch('media-seek-request', {
+        detail: (clipStartTime() > 0 ? 0 : seekableStart()) + 0.1,
+        trigger,
+      });
+    }
+
+    return shouldReset;
   }
 
   ['play-fail'](event: ME.MediaPlayFailEvent) {
@@ -512,33 +543,52 @@ export class MediaStateManager extends MediaPlayerController {
       this._isPlayingOnDisconnect = true;
     }
 
+    this._satisfyRequest('pause', event);
+
+    const seekedEvent = this._trackedEvents.get('seeked');
+    if (seekedEvent) event.triggers.add(seekedEvent);
+
+    if (this._clipEnded) {
+      event.stopImmediatePropagation();
+      this._handle(this.createEvent('end', { trigger: event }));
+      this._clipEnded = false;
+      return;
+    }
+
     if (this._request._looping) {
       event.stopImmediatePropagation();
       return;
     }
 
-    const seekedEvent = this._trackedEvents.get('seeked');
-    if (seekedEvent) event.triggers.add(seekedEvent);
-
-    this._satisfyRequest('pause', event);
+    this._resetTracking();
 
     const { paused, playing } = this.$state;
     paused.set(true);
     playing.set(false);
-
-    this._resetTracking();
   }
 
   ['time-update'](event: ME.MediaTimeUpdateEvent) {
-    const { currentTime, played, waiting } = this.$state,
+    if (this._request._looping) {
+      event.stopImmediatePropagation();
+      return;
+    }
+
+    const { realCurrentTime, played, waiting, clipEndTime, loop } = this.$state,
+      endTime = clipEndTime(),
       detail = event.detail;
 
-    currentTime.set(detail.currentTime);
+    realCurrentTime.set(detail.currentTime);
     played.set(detail.played);
     waiting.set(false);
 
     for (const track of this._media.textTracks) {
       track[TextTrackSymbol._updateActiveCues](detail.currentTime, event);
+    }
+
+    if (endTime > 0 && detail.currentTime >= endTime) {
+      if (loop()) this._request._looping = true;
+      this._clipEnded = true;
+      this.dispatch('media-pause-request', { trigger: event });
     }
   }
 
@@ -552,9 +602,9 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['seeking'] = throttle(
     (event: ME.MediaSeekingEvent) => {
-      const { seeking, currentTime, paused } = this.$state;
+      const { seeking, realCurrentTime, paused } = this.$state;
       seeking.set(true);
-      currentTime.set(event.detail);
+      realCurrentTime.set(event.detail);
       this._satisfyRequest('seeking', event);
       if (paused()) {
         this._waitingTrigger = event;
@@ -566,7 +616,7 @@ export class MediaStateManager extends MediaPlayerController {
   );
 
   ['seeked'](event: ME.MediaSeekedEvent) {
-    const { seeking, currentTime, paused, duration, ended } = this.$state;
+    const { seeking, realCurrentTime, paused, duration, ended } = this.$state;
 
     if (this._request._seeking) {
       seeking.set(true);
@@ -586,7 +636,7 @@ export class MediaStateManager extends MediaPlayerController {
 
       if (event.detail !== duration()) ended.set(false);
 
-      currentTime.set(event.detail);
+      realCurrentTime.set(event.detail);
       this._satisfyRequest('seeked', event);
 
       // Only start if user initiated.
@@ -621,17 +671,15 @@ export class MediaStateManager extends MediaPlayerController {
     this._firingWaiting = false;
   }, 300);
 
-  ['end'](event: ME.MediaEndEvent) {
+  ['end'](event: Event) {
     const { loop } = this.$state;
 
     if (loop()) {
       setTimeout(() => {
         requestAnimationFrame(() => {
-          this.dispatch('media-loop-request', {
-            trigger: event,
-          });
+          this.dispatch('media-loop-request', { trigger: event });
         });
-      }, 0);
+      }, 10);
 
       return;
     }
