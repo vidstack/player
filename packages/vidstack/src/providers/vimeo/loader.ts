@@ -54,7 +54,7 @@ export class VimeoProviderLoader implements MediaProviderLoader<VimeoProvider> {
 
     const { videoId } = resolveVimeoVideoId(src.src);
     if (videoId) {
-      return getVimeoVideoInfo(videoId, abort).then((info) => info.poster);
+      return getVimeoVideoInfo(videoId, abort).then((info) => (info ? info.poster : null));
     }
 
     return null;
