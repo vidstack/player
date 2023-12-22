@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 - new `clipStartTime` and `clipEndTime` player props ([f190651](https://github.com/vidstack/player/commit/f1906515ccd103c0ef6e40d6bb11317fc45d8e53))
 - new `disabled` prop on gesture component ([0a1cc02](https://github.com/vidstack/player/commit/0a1cc022595f994f2113c0639284b2de7f25eb0e))
 - new `posterLoad` player prop ([ea2a9e7](https://github.com/vidstack/player/commit/ea2a9e76d71067e864e660b78c620650ddc3cdd9))
+- new `load="play"` player option ([1b7389c](https://github.com/vidstack/player/commit/1b7389c6d11da5eb0c964b0e540e68af9db026d6))
+- new `storageKey` player prop ([b397859](https://github.com/vidstack/player/commit/b3978594384945e759f02ee6ac2bc59a6265fa0d))
 
 #### Player (React)
 
