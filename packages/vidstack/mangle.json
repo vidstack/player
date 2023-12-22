@@ -628,5 +628,10 @@
   "_getEndTime": "Hk",
   "_appendMediaFragment": "Ik",
   "_clipEnded": "Kk",
-  "_pausedSeeking": "Jk"
+  "_pausedSeeking": "Jk",
+  "_attachLoadPlayListener": "Mk",
+  "_handleLoadPlayStrategy": "Lk",
+  "_onLoadPoster": "Ok",
+  "_onPreconnect": "Pk",
+  "_saveTime": "Nk"
 }

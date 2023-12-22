@@ -9,6 +9,7 @@ export type { MediaPlayerProps, MediaStateAccessors, PlayerSrc } from './api/pla
 export type { MediaPlayerEvents } from './api/player-events';
 export { MediaRemoteControl } from './state/remote-control';
 export { MediaControls } from './controls';
+export type { MediaStorage } from './storage';
 export * from './tracks/text/render/text-renderer';
 export * from './tracks/text/render/libass-text-renderer';
 export * from './tracks/text/text-track';

@@ -51,6 +51,7 @@ import { MediaPlayerDelegate } from '../core/state/media-player-delegate';
 import { MediaRequestContext, MediaRequestManager } from '../core/state/media-request-manager';
 import { MediaStateManager } from '../core/state/media-state-manager';
 import { MediaStateSync } from '../core/state/media-state-sync';
+import { MediaStorage } from '../core/storage';
 import { TextTrackSymbol } from '../core/tracks/text/symbols';
 import { canFullscreen } from '../foundation/fullscreen/controller';
 import { Logger } from '../foundation/logger/controller';
@@ -134,11 +135,15 @@ export class MediaPlayer
 
     new MediaStateSync();
 
+    const mediaStorageKey = computed(this._computeMediaKey.bind(this)),
+      storage = new MediaStorage(this.$props.storageKey, mediaStorageKey);
+
     const context = {
       player: this,
       scope: getScope(),
       qualities: new VideoQualityList(),
       audioTracks: new AudioTrackList(),
+      storage,
       $provider: signal<MediaProvider | null>(null),
       $providerSetup: signal(false),
       $props: this.$props,
@@ -156,7 +161,7 @@ export class MediaPlayer
     context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
     context.remote.setPlayer(this);
     context.$iosControls = computed(this._isIOSControls.bind(this));
-    context.textTracks = new TextTrackList();
+    context.textTracks = new TextTrackList(storage);
     context.textTracks[TextTrackSymbol._crossorigin] = this.$state.crossorigin;
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
@@ -241,6 +246,14 @@ export class MediaPlayer
     // @ts-expect-error
     this._media.player = null;
     this.canPlayQueue._reset();
+  }
+
+  private _computeMediaKey() {
+    const { storageKey, clipStartTime, clipEndTime } = this.$props,
+      { source } = this.$state;
+    return storageKey() && source().src
+      ? `${storageKey()}:${source().src}:${clipStartTime()}:${clipEndTime()}`
+      : null;
   }
 
   private _skipTitleUpdate = false;

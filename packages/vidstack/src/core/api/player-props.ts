@@ -36,6 +36,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   keyDisabled: false,
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
+  storageKey: null,
 };
 
 export interface MediaStateAccessors
@@ -190,4 +191,9 @@ export interface MediaPlayerProps
    * ```
    */
   keyShortcuts: MediaKeyShortcuts;
+  /**
+   * Determines whether volume, time, and captions settings should be saved to local storage
+   * and used when initializing media.
+   */
+  storageKey: string | null;
 }

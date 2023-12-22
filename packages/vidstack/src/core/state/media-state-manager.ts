@@ -596,14 +596,30 @@ export class MediaStateManager extends MediaPlayerController {
       this._clipEnded = true;
       this.dispatch('media-pause-request', { trigger: event });
     }
+
+    this._saveTime();
+  }
+
+  private _saveTime() {
+    const { storage } = this._media,
+      { canPlay, realCurrentTime } = this.$state;
+
+    if (!canPlay()) return;
+
+    storage.time = realCurrentTime();
   }
 
   ['volume-change'](event: ME.MediaVolumeChangeEvent) {
-    const { volume, muted } = this.$state,
+    const { storage } = this._media,
+      { volume, muted } = this.$state,
       detail = event.detail;
+
     volume.set(detail.volume);
     muted.set(detail.muted || detail.volume === 0);
     this._satisfyRequest('volume', event);
+
+    storage.volume = volume();
+    storage.muted = muted();
   }
 
   ['seeking'] = throttle(

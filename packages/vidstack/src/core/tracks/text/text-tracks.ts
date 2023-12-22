@@ -1,7 +1,9 @@
+import debounce from 'just-debounce-it';
 import { DOMEvent } from 'maverick.js/std';
 
 import { List, type ListReadonlyChangeEvent } from '../../../foundation/list/list';
 import { ListSymbol } from '../../../foundation/list/symbols';
+import type { MediaStorage } from '../../storage';
 import { TextTrackSymbol } from './symbols';
 import {
   isTrackCaptionKind,
@@ -16,20 +18,34 @@ import {
 export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   private _canLoad = false;
   private _defaults: Record<string, TextTrack | undefined> = {};
+  private _preferredLang: string | null = null;
 
   /** @internal */
   [TextTrackSymbol._crossorigin]?: () => string | null;
+
+  constructor(private readonly _storage?: MediaStorage) {
+    super();
+  }
 
   get selected() {
     const track = this._items.find((t) => t.mode === 'showing' && isTrackCaptionKind(t));
     return track ?? null;
   }
 
+  get preferredLang() {
+    return this._preferredLang;
+  }
+
+  set preferredLang(lang: string | null) {
+    this._preferredLang = lang;
+  }
+
   add(init: TextTrackInit | TextTrack, trigger?: Event) {
     const isTrack = init instanceof TextTrack,
-      track = isTrack ? init : new TextTrack(init);
+      track = isTrack ? init : new TextTrack(init),
+      kind = init.kind === 'captions' || init.kind === 'subtitles' ? 'captions' : init.kind;
 
-    if (this._defaults[init.kind] && init.default) delete init.default;
+    if (this._defaults[kind] && init.default) delete init.default;
 
     track.addEventListener('mode-change', this._onTrackModeChangeBind);
     this[ListSymbol._add](track, trigger);
@@ -37,8 +53,12 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     if (this._canLoad) track[TextTrackSymbol._canLoad]();
 
     if (init.default) {
-      this._defaults[init.kind] = track;
-      track.mode = 'showing';
+      this._defaults[kind] = track;
+      if (kind !== 'captions') {
+        track.mode = 'showing';
+      } else {
+        this._selectCaptions();
+      }
     }
 
     return this;
@@ -78,9 +98,38 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     this._canLoad = true;
   }
 
+  private _selectCaptions = debounce(() => {
+    if (this.selected || this._storage?.data.captions === false) return;
+
+    if (!this._preferredLang && this._storage) {
+      this._preferredLang = this._storage.data.lang;
+    }
+
+    const preferredTrack =
+        this._preferredLang &&
+        this._items.find(
+          (track) => isTrackCaptionKind(track) && track.language === this._preferredLang,
+        ),
+      defaultTrack = this._defaults.captions;
+
+    if (preferredTrack) {
+      preferredTrack.mode = 'showing';
+    } else if (defaultTrack) {
+      if (defaultTrack) defaultTrack.mode = 'showing';
+    }
+
+    if (this._storage) {
+      this._storage.lang = this._preferredLang ?? defaultTrack?.language ?? null;
+    }
+  }, 300);
+
   private _onTrackModeChangeBind = this._onTrackModeChange.bind(this);
   private _onTrackModeChange(event: TextTrackModeChangeEvent) {
     const track = event.detail;
+
+    if (this._storage && isTrackCaptionKind(track)) {
+      this._storage.captions = track.mode === 'showing';
+    }
 
     if (track.mode === 'showing') {
       const kinds = isTrackCaptionKind(track) ? ['captions', 'subtitles'] : [track.kind];
