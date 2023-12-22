@@ -55,6 +55,10 @@ export function DefaultAudioLayoutSmall() {
   `;
 }
 
+export function DefaultAudioLoadLayout() {
+  return html`<div class="vds-load-container">${DefaultPlayButton({ tooltip: 'top' })}</div>`;
+}
+
 function DefaultLivePlayButton() {
   const { live, canSeek } = useMediaContext().$state;
   return live() && !canSeek() ? DefaultPlayButton({ tooltip: 'top start' }) : null;

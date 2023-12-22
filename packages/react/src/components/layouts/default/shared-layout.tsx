@@ -129,6 +129,7 @@ export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitiveProps
 export interface CreateDefaultMediaLayout {
   type: 'audio' | 'video';
   smLayoutWhen: string;
+  LoadLayout: React.FC;
   SmallLayout: React.FC;
   LargeLayout: React.FC;
   UnknownStreamType?: React.FC;
@@ -137,6 +138,7 @@ export interface CreateDefaultMediaLayout {
 export function createDefaultMediaLayout({
   type,
   smLayoutWhen,
+  LoadLayout,
   SmallLayout,
   LargeLayout,
   UnknownStreamType,
@@ -161,13 +163,17 @@ export function createDefaultMediaLayout({
       },
       forwardRef,
     ) => {
-      const $canLoad = useMediaState('canLoad'),
+      const media = useReactContext(mediaContext)!,
+        $load = useSignal(media.$props.load),
+        $canLoad = useMediaState('canLoad'),
         $viewType = useMediaState('viewType'),
         $streamType = useMediaState('streamType'),
         isMatch = $viewType === type,
         isForcedLayout = typeof smallLayoutWhen === 'boolean',
         isSmallLayoutMatch = usePlayerQuery(isString(smallLayoutWhen) ? smallLayoutWhen : ''),
-        isSmallLayout = isForcedLayout ? smallLayoutWhen : isSmallLayoutMatch;
+        isSmallLayout = isForcedLayout ? smallLayoutWhen : isSmallLayoutMatch,
+        isLoadLayout = $load === 'play' && !$canLoad,
+        canRender = $canLoad || isForcedLayout || isLoadLayout;
       return (
         <div
           {...props}
@@ -176,7 +182,8 @@ export function createDefaultMediaLayout({
           data-size={isSmallLayout ? 'sm' : null}
           ref={forwardRef}
         >
-          {($canLoad || isForcedLayout) && isMatch ? (
+          {}
+          {canRender && isMatch ? (
             <DefaultLayoutContext.Provider
               value={{
                 thumbnails,
@@ -192,7 +199,9 @@ export function createDefaultMediaLayout({
                 Icons: icons,
               }}
             >
-              {$streamType === 'unknown' ? (
+              {isLoadLayout ? (
+                <LoadLayout />
+              ) : $streamType === 'unknown' ? (
                 UnknownStreamType ? (
                   <UnknownStreamType />
                 ) : null

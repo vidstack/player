@@ -37,6 +37,7 @@ import {
 const MediaLayout = createDefaultMediaLayout({
   type: 'video',
   smLayoutWhen: '(width < 576) or (height < 380)',
+  LoadLayout: DefaultVideoLoadLayout,
   SmallLayout: DefaultVideoSmallLayout,
   LargeLayout: DefaultVideoLargeLayout,
   UnknownStreamType: DefaultBufferingIndicator,
@@ -240,3 +241,20 @@ function DefaultVideoMenus({ slots }: { slots?: Slots<DefaultLayoutMenuSlotName>
 }
 
 DefaultVideoMenus.displayName = 'DefaultVideoMenus';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultVideoLoadLayout
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultVideoLoadLayout() {
+  const { isSmallLayout } = React.useContext(DefaultLayoutContext),
+    slots = useDefaultVideoLayoutSlots()?.[isSmallLayout ? 'smallLayout' : 'largeLayout'];
+  return (
+    <div className="vds-load-container">
+      {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
+      {slot(slots, 'loadButton', <DefaultPlayButton tooltip="top" />)}
+    </div>
+  );
+}
+
+DefaultVideoLoadLayout.displayName = 'DefaultVideoLoadLayout';

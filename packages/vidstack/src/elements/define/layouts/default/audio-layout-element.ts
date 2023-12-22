@@ -9,7 +9,11 @@ import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';
-import { DefaultAudioLayoutLarge, DefaultAudioLayoutSmall } from './audio-layout';
+import {
+  DefaultAudioLayoutLarge,
+  DefaultAudioLayoutSmall,
+  DefaultAudioLoadLayout,
+} from './audio-layout';
 import { DefaultLayoutIconsLoader } from './icons-loader';
 import { createMenuContainer } from './shared-layout';
 
@@ -59,11 +63,16 @@ export class MediaAudioLayoutElement
   }
 
   private _render() {
-    const { streamType } = this._media.$state;
-    return this.isMatch && streamType() !== 'unknown'
-      ? this.isSmallLayout
-        ? DefaultAudioLayoutSmall()
-        : DefaultAudioLayoutLarge()
+    const { load } = this._media.$props,
+      { canLoad, streamType } = this._media.$state;
+    return this.isMatch
+      ? load() === 'play' && !canLoad()
+        ? DefaultAudioLoadLayout()
+        : streamType() !== 'unknown'
+          ? this.isSmallLayout
+            ? DefaultAudioLayoutSmall()
+            : DefaultAudioLayoutLarge()
+          : null
       : null;
   }
 

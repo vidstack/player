@@ -56,6 +56,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       }
     }
 
+    this._attachLoadPlayListener();
     effect(this._watchProvider.bind(this));
     effect(this._onControlsDelayChange.bind(this));
     effect(this._onFullscreenSupportChange.bind(this));
@@ -64,6 +65,18 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
   protected override onDestroy(): void {
     this._providerQueue._reset();
+  }
+
+  private _attachLoadPlayListener() {
+    const { load } = this.$props,
+      { canLoad } = this.$state;
+
+    if (load() !== 'play' || canLoad()) return;
+
+    const off = this.listen('media-play-request', (event) => {
+      this._handleLoadPlayStrategy(event);
+      off();
+    });
   }
 
   private _watchProvider() {
@@ -105,6 +118,8 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     const { canPlay, paused, autoplaying } = this.$state;
 
+    if (this._handleLoadPlayStrategy(trigger)) return;
+
     if (!peek(paused) && !this._request._looping) return;
 
     if (trigger?.type === 'media-play-request') {
@@ -134,6 +149,28 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       this._stateMgr._handle(errorEvent);
       throw error;
     }
+  }
+
+  private _handleLoadPlayStrategy(trigger?: Event) {
+    const { load } = this.$props,
+      { canLoad } = this.$state;
+
+    if (load() === 'play' && !canLoad()) {
+      const event = this.createEvent('media-start-loading', { trigger });
+      this.dispatchEvent(event);
+
+      this._providerQueue._enqueue('play', async () => {
+        try {
+          await this._play(event);
+        } catch (e) {
+          // no-op
+        }
+      });
+
+      return true;
+    }
+
+    return false;
   }
 
   async _pause(trigger?: Event) {
@@ -458,7 +495,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     } catch (error) {
       if (__DEV__) {
         this._media.logger
-          ?.errorGroup('πause request failed')
+          ?.errorGroup('pause request failed')
           .labelledLog('Request', event)
           .labelledLog('Error', error)
           .dispatch();

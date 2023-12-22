@@ -107,6 +107,53 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Load Container
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-audio-layout .vds-load-container) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 99;
+}
+
+:where(
+    [data-media-player][data-load='play']:not([data-started])
+      .vds-audio-layout[data-match]
+      .vds-load-container
+  ) {
+  display: flex;
+}
+
+:where(.vds-audio-layout .vds-load-container .vds-play-button) {
+  --color: var(--audio-load-button-color, rgb(0 0 0 / 0.8));
+  --bg-color: var(--audio-load-button-bg, var(--media-brand));
+
+  --media-button-hover-transform: 0;
+  --media-button-border: var(--audio-load-button-border, var(--color));
+  --media-button-hover-bg: var(--bg-color);
+
+  width: var(--audio-load-button-size, 48px);
+  height: var(--audio-load-button-size, 48px);
+  border-radius: var(--audio-load-button-border-radius, 100%);
+  color: var(--color);
+  pointer-events: auto;
+  margin-bottom: 2px;
+  overflow: hidden;
+}
+
+.vds-audio-layout .vds-load-container .vds-play-button {
+  background-color: var(--bg-color);
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Controls
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */

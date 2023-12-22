@@ -1,3 +1,4 @@
+import { onDispose } from 'maverick.js';
 import { waitIdlePeriod } from 'maverick.js/std';
 
 import { MediaPlayerController } from '../api/player-controller';
@@ -20,17 +21,18 @@ export class MediaLoadController extends MediaPlayerController {
     } else if (load === 'idle') {
       waitIdlePeriod(this._callback);
     } else if (load === 'visible') {
-      const observer = new IntersectionObserver((entries) => {
-        if (!this.scope) return;
-
-        if (entries[0].isIntersecting) {
-          observer.disconnect();
-          this._callback();
-        }
-      });
+      let dispose: (() => void) | undefined,
+        observer = new IntersectionObserver((entries) => {
+          if (!this.scope) return;
+          if (entries[0].isIntersecting) {
+            dispose?.();
+            dispose = undefined;
+            this._callback();
+          }
+        });
 
       observer.observe(el);
-      return observer.disconnect.bind(observer);
+      dispose = onDispose(() => observer.disconnect());
     }
   }
 }

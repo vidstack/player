@@ -290,6 +290,9 @@ export class MediaPlayer
     }
 
     const $attrs: ElementAttributesRecord = {
+      'data-load': function (this: MediaPlayer) {
+        return this.$props.load();
+      },
       'data-captions': function (this: MediaPlayer) {
         const track = this.$state.textTrack();
         return !!track && isTrackCaptionKind(track);

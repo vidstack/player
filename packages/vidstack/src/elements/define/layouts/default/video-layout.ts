@@ -93,6 +93,14 @@ export function DefaultVideoLayoutSmall() {
   `;
 }
 
+export function DefaultVideoLoadLayout() {
+  return html`
+    <div class="vds-load-container">
+      ${DefaultBufferingIndicator()}${DefaultPlayButton({ tooltip: 'top' })}
+    </div>
+  `;
+}
+
 function StartDuration() {
   const { duration } = useMediaContext().$state;
   if (duration() === 0) return null;

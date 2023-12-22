@@ -307,6 +307,62 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Load Container
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-video-layout .vds-load-container) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 99;
+}
+
+:where(
+    [data-media-player][data-load='play']:not([data-started])
+      .vds-video-layout[data-match]
+      .vds-load-container
+  ) {
+  display: flex;
+}
+
+:where(.vds-video-layout .vds-load-container .vds-play-button) {
+  --size: var(--video-load-button-size, 64px);
+  --color: var(--audio-load-button-color, rgb(0 0 0 / 0.8));
+  --bg-color: var(--audio-load-button-bg, var(--media-brand));
+
+  --media-button-hover-transform: 0;
+  --media-button-border: var(--video-load-button-border, var(--color));
+  --media-button-hover-bg: var(--video-load-button-bg, var(--media-brand));
+
+  width: var(--size);
+  height: var(--size);
+  border-radius: var(--video-load-button-border-radius, 100%);
+  color: var(--color);
+  pointer-events: auto;
+  margin-bottom: 2px;
+  overflow: hidden;
+}
+
+.vds-video-layout .vds-load-container .vds-play-button {
+  background-color: var(--bg-color);
+}
+
+:where(.vds-video-layout[data-size='sm'] .vds-load-container .vds-play-button) {
+  --size: var(--video-sm-load-button-size, 48px);
+  --media-button-hover-transform: translateY(0%);
+  width: var(--size);
+  height: var(--size);
+  transform: translateY(0%);
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Small UI
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
@@ -371,22 +427,20 @@
   }
 }
 
-:where(.vds-video-layout[data-size='sm'] .vds-play-button) {
+:where(.vds-video-layout[data-size='sm'] .vds-controls .vds-play-button) {
+  --size: var(--video-sm-play-button-size, 45px);
   --media-button-hover-transform: translateY(25%);
+  width: var(--size);
+  height: var(--size);
+  transform: translateY(25%);
   border-radius: 100%;
   pointer-events: auto;
   margin-bottom: 2px;
-  width: var(--video-sm-play-button-size, 40px);
-  height: var(--video-sm-play-button-size, 40px);
-  transform: var(--video-sm-play-button-transform, translateY(25%));
+  overflow: hidden;
 }
 
-.vds-video-layout[data-size='sm'] .vds-play-button {
+.vds-video-layout[data-size='sm'] .vds-controls .vds-play-button {
   background-color: var(--video-sm-play-button-bg, rgba(0 0 0 / 0.6));
-}
-
-:where(.vds-video-layout[data-size='sm'] .vds-play-button svg) {
-  border-radius: 100%;
 }
 
 :where(

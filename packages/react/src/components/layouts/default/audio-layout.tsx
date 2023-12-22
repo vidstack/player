@@ -2,8 +2,13 @@ import * as React from 'react';
 
 import { DefaultAudioLargeLayout } from './audio-layout-large';
 import { DefaultAudioSmallLayout } from './audio-layout-small';
-import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './shared-layout';
-import type { DefaultAudioLayoutSlots } from './slots';
+import { DefaultLayoutContext } from './context';
+import {
+  createDefaultMediaLayout,
+  DefaultPlayButton,
+  type DefaultMediaLayoutProps,
+} from './shared-layout';
+import { slot, useDefaultVideoLayoutSlots, type DefaultAudioLayoutSlots } from './slots';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAudioLayout
@@ -12,6 +17,7 @@ import type { DefaultAudioLayoutSlots } from './slots';
 const MediaLayout = createDefaultMediaLayout({
   type: 'audio',
   smLayoutWhen: '(width < 576)',
+  LoadLayout: DefaultAudioLoadLayout,
   SmallLayout: DefaultAudioSmallLayout,
   LargeLayout: DefaultAudioLargeLayout,
 });
@@ -39,3 +45,19 @@ function DefaultAudioLayout(props: DefaultAudioLayoutProps) {
 
 DefaultAudioLayout.displayName = 'DefaultAudioLayout';
 export { DefaultAudioLayout };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultAudioLoadLayout
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultAudioLoadLayout() {
+  const { isSmallLayout } = React.useContext(DefaultLayoutContext),
+    slots = useDefaultVideoLayoutSlots()?.[isSmallLayout ? 'smallLayout' : 'largeLayout'];
+  return (
+    <div className="vds-load-container">
+      {slot(slots, 'loadButton', <DefaultPlayButton tooltip="top" />)}
+    </div>
+  );
+}
+
+DefaultAudioLoadLayout.displayName = 'DefaultAudioLoadLayout';

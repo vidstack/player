@@ -15,6 +15,7 @@ import {
   DefaultBufferingIndicator,
   DefaultVideoLayoutLarge,
   DefaultVideoLayoutSmall,
+  DefaultVideoLoadLayout,
 } from './video-layout';
 
 /**
@@ -63,13 +64,16 @@ export class MediaVideoLayoutElement
   }
 
   private _render() {
-    const { streamType } = this._media.$state;
+    const { load } = this._media.$props,
+      { canLoad, streamType } = this._media.$state;
     return this.isMatch
-      ? streamType() === 'unknown'
-        ? DefaultBufferingIndicator()
-        : this.isSmallLayout
-        ? DefaultVideoLayoutSmall()
-        : DefaultVideoLayoutLarge()
+      ? load() === 'play' && !canLoad()
+        ? DefaultVideoLoadLayout()
+        : streamType() === 'unknown'
+          ? DefaultBufferingIndicator()
+          : this.isSmallLayout
+            ? DefaultVideoLayoutSmall()
+            : DefaultVideoLayoutLarge()
       : null;
   }
 

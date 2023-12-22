@@ -24,7 +24,7 @@ export type MediaViewType = 'unknown' | 'audio' | 'video';
  *
  * @docs {@see https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
  */
-export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
+export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom' | 'play';
 
 /**
  * Indicates the type of strategy that should be used to initiate the poster loading process.

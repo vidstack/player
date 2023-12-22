@@ -26,6 +26,7 @@ export type DefaultLayoutSlotName =
   | 'muteButton'
   | 'pipButton'
   | 'playButton'
+  | 'loadButton'
   | 'seekBackwardButton'
   | 'seekForwardButton'
   | 'startDuration'
