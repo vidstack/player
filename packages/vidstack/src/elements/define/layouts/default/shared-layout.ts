@@ -179,10 +179,15 @@ export function DefaultVolumeSlider() {
 
 export function DefaultTimeSlider() {
   const { width } = useMediaContext().$state,
-    { thumbnails, translations, sliderChaptersMinWidth } = useDefaultLayoutContext(),
+    { thumbnails, translations, sliderChaptersMinWidth, disableTimeSlider } =
+      useDefaultLayoutContext(),
     $label = $i18n(translations, 'Seek');
   return html`
-    <media-time-slider class="vds-time-slider vds-slider" aria-label=${$label}>
+    <media-time-slider
+      class="vds-time-slider vds-slider"
+      aria-label=${$label}
+      ?disabled=${$signal(disableTimeSlider)}
+    >
       <media-slider-chapters
         class="vds-slider-chapters"
         ?disabled=${$signal(() => width() < sliderChaptersMinWidth())}

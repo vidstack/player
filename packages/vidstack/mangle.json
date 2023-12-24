@@ -633,5 +633,13 @@
   "_handleLoadPlayStrategy": "Lk",
   "_onLoadPoster": "Ok",
   "_onPreconnect": "Pk",
-  "_saveTime": "Nk"
+  "_saveTime": "Nk",
+  "_computeMediaKey": "Xk",
+  "_data": "Qk",
+  "_mediaKey": "Vk",
+  "_playerKey": "Uk",
+  "_preferredLang": "Rk",
+  "_save": "Tk",
+  "_selectCaptions": "Wk",
+  "_storage": "Sk"
 }

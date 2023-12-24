@@ -19,6 +19,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     menuGroup: 'bottom',
     noModal: false,
     sliderChaptersMinWidth: 600,
+    disableTimeSlider: false,
   };
 
   // slider-chapters-min-width
@@ -48,6 +49,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       menuGroup,
       noModal,
       sliderChaptersMinWidth,
+      disableTimeSlider,
     } = this.$props;
 
     this._whenQueryList = PlayerQueryList.create(when);
@@ -66,6 +68,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       menuGroup,
       noModal,
       sliderChaptersMinWidth,
+      disableTimeSlider,
       get menuContainer() {
         return self.menuContainer;
       },
@@ -147,6 +150,10 @@ export interface DefaultLayoutProps {
    * The minimum width to start displaying slider chapters when available.
    */
   sliderChaptersMinWidth: number;
+  /**
+   * Whether the time slider should be disabled.
+   */
+  disableTimeSlider?: boolean;
 }
 
 export interface DefaultLayoutContext {
@@ -157,6 +164,7 @@ export interface DefaultLayoutContext {
   menuGroup: ReadSignal<DefaultLayoutProps['menuGroup']>;
   sliderChaptersMinWidth: ReadSignal<DefaultLayoutProps['sliderChaptersMinWidth']>;
   menuContainer: HTMLElement | null;
+  disableTimeSlider: ReadSignal<boolean>;
 }
 
 export interface DefaultLayoutTranslations {

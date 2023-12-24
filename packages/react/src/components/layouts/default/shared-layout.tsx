@@ -124,6 +124,10 @@ export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitiveProps
    * @defaultValue 600
    */
   sliderChaptersMinWidth?: number;
+  /**
+   * Whether the time slider should be disabled.
+   */
+  disableTimeSlider?: boolean;
 }
 
 export interface CreateDefaultMediaLayout {
@@ -157,6 +161,7 @@ export function createDefaultMediaLayout({
         menuGroup = 'bottom',
         hideQualityBitrate = false,
         sliderChaptersMinWidth = 600,
+        disableTimeSlider = false,
         slots,
         children,
         ...props
@@ -196,6 +201,7 @@ export function createDefaultMediaLayout({
                 menuGroup,
                 slots,
                 sliderChaptersMinWidth,
+                disableTimeSlider,
                 Icons: icons,
               }}
             >
@@ -437,11 +443,16 @@ export { DefaultVolumeSlider };
 function DefaultTimeSlider() {
   const $src = useMediaState('currentSrc'),
     width = useMediaState('width'),
-    { thumbnails, sliderChaptersMinWidth } = React.useContext(DefaultLayoutContext),
+    { thumbnails, sliderChaptersMinWidth, disableTimeSlider } =
+      React.useContext(DefaultLayoutContext),
     label = useDefaultLayoutLang('Seek'),
     $RemotionSliderThumbnail = useSignal(RemotionSliderThumbnail);
   return (
-    <TimeSliderBase.Root className="vds-time-slider vds-slider" aria-label={label}>
+    <TimeSliderBase.Root
+      className="vds-time-slider vds-slider"
+      aria-label={label}
+      disabled={disableTimeSlider}
+    >
       <TimeSliderBase.Chapters
         className="vds-slider-chapters"
         disabled={width < sliderChaptersMinWidth}
