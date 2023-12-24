@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
 - new `posterLoad` player prop ([ea2a9e7](https://github.com/vidstack/player/commit/ea2a9e76d71067e864e660b78c620650ddc3cdd9))
 - new `load="play"` player option ([1b7389c](https://github.com/vidstack/player/commit/1b7389c6d11da5eb0c964b0e540e68af9db026d6))
 - new `storageKey` player prop ([b397859](https://github.com/vidstack/player/commit/b3978594384945e759f02ee6ac2bc59a6265fa0d))
+- new `disableTimeSlider` default layout prop ([219b90e](https://github.com/vidstack/player/commit/219b90e643d13ac1cedc1eddea8ae88a67ed994e))
+- new `noGestures` default layout prop ([2fff957](https://github.com/vidstack/player/commit/2fff9578490771194a3c6fe0d05a077a88435d0c))
+- load chapters from vimeo embed ([8a23415](https://github.com/vidstack/player/commit/8a234151a1251e01cbb62708a6aa2c028eca8f6c))
 
 #### Player (React)
 
@@ -33,6 +36,9 @@ All notable changes to this project will be documented in this file.
 - accessibility warning on iframes ([51e3697](https://github.com/vidstack/player/commit/51e3697e98124dcfcadbd392c26d581658fc06be))
 - switching src on cdn throwing ([5565724](https://github.com/vidstack/player/commit/55657244097d7579d512687845b22398bcd9f054))
 - include tooltip left/right default theme styles ([80ad732](https://github.com/vidstack/player/commit/80ad732f6f301ab307f3c9067de6cf0ed4186340))
+- vimeo video info can be undefined (#1062) ([c8b871f](https://github.com/vidstack/player/commit/c8b871f4b00da2a0bac5a2e6bff019d734fdcf0a))
+- update icon slots on all mutations ([00073a0](https://github.com/vidstack/player/commit/00073a02fdb884117b228c195df1e4cac35111ff))
+- catch false postive vimeo pro detection ([29d6fa0](https://github.com/vidstack/player/commit/29d6fa05fbcc373e47232cf5412f7f1f73446fae))
 
 #### Player (React)
 
