@@ -492,14 +492,18 @@ export class VimeoProvider
         kind: 'chapters',
         default: true,
       }),
-      { duration } = this._ctx.$state;
+      { intrinsicDuration } = this._ctx.$state;
 
     for (let i = 0; i < chapters.length; i++) {
       const chapter = chapters[i],
         nextChapter = chapters[i + 1];
 
       track.addCue(
-        new window.VTTCue(chapter.startTime, nextChapter?.startTime ?? duration(), chapter.title),
+        new window.VTTCue(
+          chapter.startTime,
+          nextChapter?.startTime ?? intrinsicDuration(),
+          chapter.title,
+        ),
       );
     }
 
