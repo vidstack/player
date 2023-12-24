@@ -19,7 +19,7 @@ import {
 
 export function DefaultVideoLayoutLarge() {
   return html`
-    ${DefaultVideoGestures()}${DefaultBufferingIndicator()}
+    ${$computed(DefaultVideoGestures)}${DefaultBufferingIndicator()}
     <media-captions class="vds-captions"></media-captions>
 
     <div class="vds-scrim"></div>
@@ -131,7 +131,9 @@ function DefaultVideoMenus() {
 }
 
 function DefaultVideoGestures() {
-  return html`
+  const { noGestures } = useDefaultLayoutContext();
+
+  const Gestures = html`
     <div class="vds-gestures">
       <media-gesture class="vds-gesture" event="pointerup" action="toggle:paused"></media-gesture>
       <media-gesture class="vds-gesture" event="pointerup" action="toggle:controls"></media-gesture>
@@ -144,4 +146,6 @@ function DefaultVideoGestures() {
       <media-gesture class="vds-gesture" event="dblpointerup" action="seek:10"></media-gesture>
     </div>
   `;
+
+  return noGestures() ? null : Gestures;
 }

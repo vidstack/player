@@ -20,6 +20,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     noModal: false,
     sliderChaptersMinWidth: 600,
     disableTimeSlider: false,
+    noGestures: false,
   };
 
   // slider-chapters-min-width
@@ -50,6 +51,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       noModal,
       sliderChaptersMinWidth,
       disableTimeSlider,
+      noGestures,
     } = this.$props;
 
     this._whenQueryList = PlayerQueryList.create(when);
@@ -69,6 +71,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       noModal,
       sliderChaptersMinWidth,
       disableTimeSlider,
+      noGestures,
       get menuContainer() {
         return self.menuContainer;
       },
@@ -154,6 +157,10 @@ export interface DefaultLayoutProps {
    * Whether the time slider should be disabled.
    */
   disableTimeSlider?: boolean;
+  /**
+   * Whether all gestures such as press to play or seek should not be active.
+   */
+  noGestures?: boolean;
 }
 
 export interface DefaultLayoutContext {
@@ -165,6 +172,7 @@ export interface DefaultLayoutContext {
   sliderChaptersMinWidth: ReadSignal<DefaultLayoutProps['sliderChaptersMinWidth']>;
   menuContainer: HTMLElement | null;
   disableTimeSlider: ReadSignal<boolean>;
+  noGestures: ReadSignal<boolean>;
 }
 
 export interface DefaultLayoutTranslations {

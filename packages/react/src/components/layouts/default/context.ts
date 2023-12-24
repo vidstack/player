@@ -20,6 +20,7 @@ interface DefaultLayoutContext {
   slots?: unknown;
   sliderChaptersMinWidth: number;
   disableTimeSlider: boolean;
+  noGestures?: boolean;
 }
 
 export function useDefaultLayoutLang(word: keyof DefaultLayoutTranslations) {

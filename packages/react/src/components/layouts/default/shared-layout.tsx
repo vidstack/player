@@ -128,6 +128,10 @@ export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitiveProps
    * Whether the time slider should be disabled.
    */
   disableTimeSlider?: boolean;
+  /**
+   * Whether all gestures such as pressing to play or seek should not be active.
+   */
+  noGestures?: boolean;
 }
 
 export interface CreateDefaultMediaLayout {
@@ -162,6 +166,7 @@ export function createDefaultMediaLayout({
         hideQualityBitrate = false,
         sliderChaptersMinWidth = 600,
         disableTimeSlider = false,
+        noGestures = false,
         slots,
         children,
         ...props
@@ -202,6 +207,7 @@ export function createDefaultMediaLayout({
                 slots,
                 sliderChaptersMinWidth,
                 disableTimeSlider,
+                noGestures,
                 Icons: icons,
               }}
             >

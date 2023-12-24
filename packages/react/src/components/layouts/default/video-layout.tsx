@@ -170,6 +170,10 @@ DefaultVideoStartDuration.displayName = 'DefaultVideoStartDuration';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoGestures() {
+  const { noGestures } = React.useContext(DefaultLayoutContext);
+
+  if (noGestures) return null;
+
   return (
     <div className="vds-gestures">
       <Gesture className="vds-gesture" event="pointerup" action="toggle:paused" />
