@@ -641,5 +641,6 @@
   "_preferredLang": "Rk",
   "_save": "Tk",
   "_selectCaptions": "Wk",
-  "_storage": "Sk"
+  "_storage": "Sk",
+  "_onChaptersChange": "Yk"
 }

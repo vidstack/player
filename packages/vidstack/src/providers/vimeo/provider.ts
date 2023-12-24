@@ -7,7 +7,7 @@ import {
   type DeferredPromise,
 } from 'maverick.js/std';
 
-import { TimeRange, type MediaSrc } from '../../core';
+import { TextTrack, TimeRange, type MediaSrc } from '../../core';
 import { QualitySymbol } from '../../core/quality/symbols';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
@@ -24,7 +24,7 @@ import {
   type VimeoEventPayload,
 } from './embed/event';
 import type { VimeoMessage } from './embed/message';
-import type { VimeoOEmbedData, VimeoQuality, VimeoVideoInfo } from './embed/misc';
+import type { VimeoChapter, VimeoQuality, VimeoVideoInfo } from './embed/misc';
 import type { VimeoParams } from './embed/params';
 import { getVimeoVideoInfo, resolveVimeoVideoId } from './utils';
 
@@ -67,6 +67,7 @@ export class VimeoProvider
   protected _currentSrc: MediaSrc<string> | null = null;
   protected _currentCue: VTTCue | null = null;
   protected _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
+  private _chaptersTrack: TextTrack | null = null;
 
   protected get _notify() {
     return this._ctx.delegate._notify;
@@ -350,8 +351,7 @@ export class VimeoProvider
         // We can't control visibility of vimeo captions whilst getting complete info on cues.
         // this._remote('getTextTracks');
 
-        // TODO: need a test video to implement.
-        // this._remote('getChapters');
+        this._remote('getChapters');
       })
       .catch((e) => {
         if (videoId !== this._videoId()) return;
@@ -385,6 +385,7 @@ export class VimeoProvider
       //   this._onTextTracksChange(data as VimeoTextTrack[], trigger);
       //   break;
       case 'getChapters':
+        this._onChaptersChange(data as VimeoChapter[]);
         break;
       case 'getQualities':
         this._onQualitiesChange(data as VimeoQuality[], trigger);
@@ -481,6 +482,36 @@ export class VimeoProvider
   //   this._currentCue = new window.VTTCue(currentTime(), Number.MAX_SAFE_INTEGER, cue.text);
   //   track?.addCue(this._currentCue, trigger);
   // }
+
+  protected _onChaptersChange(chapters: VimeoChapter[]) {
+    this._removeChapters();
+
+    if (!chapters.length) return;
+
+    const track = new TextTrack({
+        kind: 'chapters',
+        default: true,
+      }),
+      { duration } = this._ctx.$state;
+
+    for (let i = 0; i < chapters.length; i++) {
+      const chapter = chapters[i],
+        nextChapter = chapters[i + 1];
+
+      track.addCue(
+        new window.VTTCue(chapter.startTime, nextChapter?.startTime ?? duration(), chapter.title),
+      );
+    }
+
+    this._chaptersTrack = track;
+    this._ctx.textTracks.add(track);
+  }
+
+  protected _removeChapters() {
+    if (!this._chaptersTrack) return;
+    this._ctx.textTracks.remove(this._chaptersTrack);
+    this._chaptersTrack = null;
+  }
 
   protected _onQualitiesChange(qualities: VimeoQuality[], trigger: Event) {
     this._ctx.qualities[QualitySymbol._enableAuto] = qualities.some((q) => q.id === 'auto')
@@ -646,5 +677,6 @@ export class VimeoProvider
     this._videoInfoPromise = null;
     this._currentCue = null;
     this._pro.set(false);
+    this._removeChapters();
   }
 }
