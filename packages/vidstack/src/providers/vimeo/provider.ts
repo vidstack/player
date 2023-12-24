@@ -633,6 +633,10 @@ export class VimeoProvider
   }
 
   protected _onError(error: VimeoErrorPayload, trigger: Event) {
+    if (error.method === 'setPlaybackRate') {
+      this._pro.set(false);
+    }
+
     if (error.method === 'play') {
       this._playPromise?.reject(error.message);
       return;
