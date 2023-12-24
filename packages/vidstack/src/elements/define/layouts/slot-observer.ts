@@ -14,7 +14,7 @@ export class SlotObserver {
     this._update();
 
     const observer = new MutationObserver(this._onMutation);
-    observer.observe(this._root, { childList: true });
+    observer.observe(this._root, { childList: true, subtree: true });
     onDispose(() => observer.disconnect());
 
     onDispose(this.disconnect.bind(this));
@@ -45,12 +45,19 @@ export class SlotObserver {
 
   private _onMutation = animationFrameThrottle(this._update.bind(this));
 
-  private _update() {
-    for (const slot of this._root.querySelectorAll('slot')) {
-      if (slot.hasAttribute('name')) this.elements.add(slot);
+  private _update(entries?: MutationRecord[]) {
+    if (entries && !entries.some((e) => e.addedNodes.length)) return;
+
+    let changed = false,
+      slots = this._root.querySelectorAll('slot');
+
+    for (const slot of slots) {
+      if (!slot.hasAttribute('name') || this.elements.has(slot)) continue;
+      this.elements.add(slot);
+      changed = true;
     }
 
-    this._callback(this.elements);
+    if (changed) this._callback(this.elements);
   }
 }
 

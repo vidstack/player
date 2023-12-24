@@ -338,9 +338,9 @@ export function DefaultSettingsMenu({
     $hasMenuItems = computed(
       () =>
         canSetPlaybackRate() ||
-        (canSetQuality() && qualities().length) ||
-        audioTracks().length ||
-        textTracks().filter(isTrackCaptionKind).length,
+        !!(canSetQuality() && qualities().length) ||
+        !!audioTracks().length ||
+        !!textTracks().filter(isTrackCaptionKind).length,
     );
 
   const items = html`
