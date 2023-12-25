@@ -379,11 +379,11 @@ export interface VideoProviderProps {
 
 const VideoProvider = React.forwardRef<HTMLVideoElement, VideoProviderProps>(
   ({ instance, children, ...props }, forwardRef) => {
-    const { crossorigin, canLoad } = useStateContext(mediaState),
+    const { crossOrigin, canLoad } = useStateContext(mediaState),
       { src, video } = instance.$state,
       $src = useSignal(src),
       $canLoad = useSignal(canLoad),
-      $crossorigin = useSignal(crossorigin);
+      $crossOrigin = useSignal(crossOrigin);
     return (
       <Primitive.video
         style={{ maxWidth: 'unset' }}
@@ -392,7 +392,7 @@ const VideoProvider = React.forwardRef<HTMLVideoElement, VideoProviderProps>(
         muted
         playsInline
         preload={$canLoad ? 'auto' : 'none'}
-        crossOrigin={($crossorigin as '') || undefined}
+        crossOrigin={($crossOrigin as '') || undefined}
         ref={composeRefs(video.set as any, forwardRef)}
       >
         {children}

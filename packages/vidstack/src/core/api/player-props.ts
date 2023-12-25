@@ -12,6 +12,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   controls: false,
   currentTime: 0,
   crossorigin: null,
+  crossOrigin: null,
   fullscreenOrientation: 'landscape',
   load: 'visible',
   posterLoad: 'visible',
@@ -72,12 +73,16 @@ export interface MediaPlayerProps
     | 'minLiveDVRWindow'
   > {
   /**
+   * @deprecated - Use `crossOrigin`
+   */
+  crossorigin: string | true | null;
+  /**
    * Defines how the media element handles cross-origin requests, thereby enabling the
    * configuration of the CORS requests for the element's fetched data.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
    */
-  crossorigin: string | true | null;
+  crossOrigin: true | MediaState['crossOrigin'];
   /**
    * The URL and optionally type of the current media resource/s to be considered for playback.
    *

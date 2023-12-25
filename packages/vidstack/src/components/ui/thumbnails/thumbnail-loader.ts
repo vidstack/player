@@ -33,7 +33,7 @@ export class ThumbnailsLoader {
     if (!canLoad()) return;
 
     const controller = new AbortController(),
-      { crossorigin } = this._media.$state;
+      { crossOrigin } = this._media.$state;
 
     const src = this.$src();
     if (!src) return;
@@ -56,7 +56,7 @@ export class ThumbnailsLoader {
         try {
           const response = await fetch(src, {
               signal: controller.signal,
-              credentials: getRequestCredentials(crossorigin()),
+              credentials: getRequestCredentials(crossOrigin()),
             }),
             isJSON = response.headers.get('content-type') === 'application/json';
 

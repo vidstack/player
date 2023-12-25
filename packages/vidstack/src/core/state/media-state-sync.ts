@@ -93,8 +93,11 @@ export class MediaStateSync extends MediaPlayerController {
   }
 
   private _watchCrossOrigin() {
-    const crossorigin = this.$props.crossorigin();
-    this.$state.crossorigin.set(crossorigin === true ? '' : crossorigin);
+    // crossorigin is deprecated, we're syncing for backwards compatibility.
+    const _crossOrigin = this.$props.crossOrigin() ?? this.$props.crossorigin(),
+      value = _crossOrigin === true ? '' : (_crossOrigin as '');
+    this.$state.crossorigin.set(value);
+    this.$state.crossOrigin.set(value);
   }
 
   private _watchPlaysinline() {

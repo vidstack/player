@@ -58,13 +58,13 @@ export interface ImgProps extends PrimitivePropsWithRef<'img'> {
 }
 
 const Img = React.forwardRef<HTMLImageElement, ImgProps>(({ children, ...props }, forwardRef) => {
-  const { crossorigin } = useStateContext(mediaState),
+  const { crossOrigin } = useStateContext(mediaState),
     { src, img } = useStateContext(ThumbnailInstance.state),
     $src = useSignal(src),
-    $crossorigin = useSignal(crossorigin);
+    $crossOrigin = useSignal(crossOrigin);
   return (
     <Primitive.img
-      crossOrigin={$crossorigin as '' | undefined}
+      crossOrigin={$crossOrigin as '' | undefined}
       {...props}
       src={$src}
       ref={composeRefs((img as any).set, forwardRef)}

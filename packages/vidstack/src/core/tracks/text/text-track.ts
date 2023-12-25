@@ -58,7 +58,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   [TextTrackSymbol._readyState]: TextTrackReadyState = 0;
 
   /* @internal */
-  [TextTrackSymbol._crossorigin]?: () => string | null;
+  [TextTrackSymbol._crossOrigin]?: () => string | null;
 
   /* @internal */
   [TextTrackSymbol._onModeChange]: (() => void) | null = null;
@@ -226,11 +226,11 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
     try {
       const { parseResponse, VTTCue, VTTRegion } = await import('media-captions'),
-        crossorigin = this[TextTrackSymbol._crossorigin]?.();
+        crossOrigin = this[TextTrackSymbol._crossOrigin]?.();
 
       const response = fetch(this.src, {
         headers: this.type === 'json' ? { 'Content-Type': 'application/json' } : undefined,
-        credentials: getRequestCredentials(crossorigin),
+        credentials: getRequestCredentials(crossOrigin),
       });
 
       if (this.type === 'json') {

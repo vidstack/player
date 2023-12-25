@@ -33,6 +33,7 @@ export const mediaState = new State<MediaState>({
   controls: false,
   controlsVisible: false,
   crossorigin: null,
+  crossOrigin: null,
   ended: false,
   error: null,
   fullscreen: false,
@@ -176,6 +177,7 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'canSetVolume',
   'controls',
   'crossorigin',
+  'crossOrigin',
   'fullscreen',
   'height',
   'inferredViewType',
@@ -348,12 +350,16 @@ export interface MediaState {
    */
   controls: boolean;
   /**
+   * @deprecated - Use `crossOrigin`
+   */
+  crossorigin: string | null;
+  /**
    * Defines how the media element handles cross-origin requests, thereby enabling the
    * configuration of the CORS requests for the element's fetched data.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
    */
-  crossorigin: string | null;
+  crossOrigin: '' | 'anonymous' | 'use-credentials' | null;
   /**
    * The URL of the current poster. Defaults to `''` if no media/poster has been given or
    * loaded.

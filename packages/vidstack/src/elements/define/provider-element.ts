@@ -95,10 +95,10 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
     setAttribute(audio, 'preload', 'none');
     setAttribute(audio, 'aria-hidden', 'true');
 
-    const { controls, crossorigin } = this._media.$state;
+    const { controls, crossOrigin } = this._media.$state;
     effect(() => {
       setAttribute(audio, 'controls', controls());
-      setAttribute(audio, 'crossorigin', crossorigin());
+      setAttribute(audio, 'crossorigin', crossOrigin());
     });
 
     return audio;
@@ -108,14 +108,14 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
     const video =
       this._target instanceof HTMLVideoElement ? this._target : document.createElement('video');
 
-    const { controls, crossorigin, poster } = this._media.$state,
+    const { controls, crossOrigin, poster } = this._media.$state,
       { $iosControls } = this._media,
       $nativeControls = computed(() => (controls() || $iosControls() ? '' : null)),
       $poster = computed(() => (poster() && (controls() || $iosControls()) ? poster() : null));
 
     effect(() => {
       setAttribute(video, 'controls', $nativeControls());
-      setAttribute(video, 'crossorigin', crossorigin());
+      setAttribute(video, 'crossorigin', crossOrigin());
       setAttribute(video, 'poster', $poster());
     });
 

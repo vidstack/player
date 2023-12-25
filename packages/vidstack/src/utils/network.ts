@@ -57,10 +57,10 @@ export function loadScript(src: string): Promise<void> {
   return promise.promise;
 }
 
-export function getRequestCredentials(crossorigin?: string | null): RequestCredentials | undefined {
-  return crossorigin === 'use-credentials'
+export function getRequestCredentials(crossOrigin?: string | null): RequestCredentials | undefined {
+  return crossOrigin === 'use-credentials'
     ? 'include'
-    : isString(crossorigin)
+    : isString(crossOrigin)
       ? 'same-origin'
       : undefined;
 }

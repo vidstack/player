@@ -115,8 +115,8 @@ export class SourceSelection {
     }
 
     if (noMatch) {
-      const { crossorigin } = $state,
-        credentials = getRequestCredentials(crossorigin()),
+      const { crossOrigin } = $state,
+        credentials = getRequestCredentials(crossOrigin()),
         abort = new AbortController();
 
       Promise.all(
@@ -201,7 +201,7 @@ export class SourceSelection {
 
     const provider = this._media.$provider(),
       source = this._media.$state.source(),
-      crossorigin = peek(this._media.$state.crossorigin);
+      crossOrigin = peek(this._media.$state.crossOrigin);
 
     if (isSameSrc(provider?.currentSrc, source)) {
       return;
@@ -214,7 +214,7 @@ export class SourceSelection {
         // Determined using `HLSProvider` if `hls.js` supported.
         if (!isHLSSupported()) {
           resolveStreamTypeFromHLSManifest(source.src as string, {
-            credentials: getRequestCredentials(crossorigin),
+            credentials: getRequestCredentials(crossOrigin),
             signal: abort.signal,
           })
             .then((streamType) => {

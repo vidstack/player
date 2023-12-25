@@ -36,7 +36,7 @@ export class MediaThumbnailElement extends Host(HTMLElement, Thumbnail) {
 
   protected onConnect(): void {
     const { src } = this.$state,
-      { crossorigin } = this._media.$props;
+      { crossOrigin } = this._media.$props;
 
     if (this._img.parentNode !== this) {
       this.prepend(this._img);
@@ -44,7 +44,7 @@ export class MediaThumbnailElement extends Host(HTMLElement, Thumbnail) {
 
     effect(() => {
       setAttribute(this._img, 'src', src());
-      setAttribute(this._img, 'crossorigin', crossorigin());
+      setAttribute(this._img, 'crossorigin', crossOrigin());
     });
   }
 

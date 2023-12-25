@@ -145,9 +145,11 @@ export class Poster extends Component<PosterProps, PosterState> {
   }
 
   private _watchCrossOrigin() {
-    const { src } = this.$props,
+    const { src, crossOrigin: crossOriginProp } = this.$props,
       { crossOrigin: crossOriginState } = this.$state,
-      crossOrigin = this.$props.crossOrigin();
+      { crossOrigin: mediaCrossOrigin } = this._media.$state,
+      crossOrigin = crossOriginProp() !== null ? crossOriginProp() : mediaCrossOrigin();
+
     crossOriginState.set(
       /ytimg\.com|vimeo/.test(src() || '')
         ? null

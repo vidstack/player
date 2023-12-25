@@ -162,7 +162,7 @@ export class MediaPlayer
     context.remote.setPlayer(this);
     context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList(storage);
-    context.textTracks[TextTrackSymbol._crossorigin] = this.$state.crossorigin;
+    context.textTracks[TextTrackSymbol._crossOrigin] = this.$state.crossOrigin;
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
 

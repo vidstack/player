@@ -21,7 +21,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   private _preferredLang: string | null = null;
 
   /** @internal */
-  [TextTrackSymbol._crossorigin]?: () => string | null;
+  [TextTrackSymbol._crossOrigin]?: () => string | null;
 
   constructor(private readonly _storage?: MediaStorage) {
     super();
@@ -49,7 +49,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
 
     track.addEventListener('mode-change', this._onTrackModeChangeBind);
     this[ListSymbol._add](track, trigger);
-    track[TextTrackSymbol._crossorigin] = this[TextTrackSymbol._crossorigin];
+    track[TextTrackSymbol._crossOrigin] = this[TextTrackSymbol._crossOrigin];
     if (this._canLoad) track[TextTrackSymbol._canLoad]();
 
     if (init.default) {
