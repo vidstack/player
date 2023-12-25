@@ -8,18 +8,26 @@ export interface PosterProps {
   /**
    * The URL of the poster image resource.
    */
-  src: string | undefined;
+  src: string | null;
   /**
    * ♿ **ARIA:** Provides alternative information for a poster image if a user for some reason
    * cannot view it.
    */
-  alt: string | undefined;
+  alt: string | null;
+  /**
+   * Defines how the img handles cross-origin requests, thereby enabling the
+   * configuration of the CORS requests for the element's fetched data.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
+   */
+  crossOrigin: true | '' | 'anonymous' | 'use-credentials' | null;
 }
 
 export interface PosterState {
   img: HTMLImageElement | null;
   src: string | null;
-  alt: string | null | undefined;
+  alt: string | null;
+  crossOrigin: '' | 'anonymous' | 'use-credentials' | null;
   loading: boolean;
   error: ErrorEvent | null;
   hidden: boolean;
@@ -37,14 +45,16 @@ export interface PosterState {
  */
 export class Poster extends Component<PosterProps, PosterState> {
   static props: PosterProps = {
-    src: undefined,
-    alt: undefined,
+    src: null,
+    alt: null,
+    crossOrigin: null,
   };
 
   static state = new State<PosterState>({
     img: null,
     src: null,
     alt: null,
+    crossOrigin: null,
     loading: true,
     error: null,
     hidden: false,
@@ -54,8 +64,9 @@ export class Poster extends Component<PosterProps, PosterState> {
 
   protected override onSetup(): void {
     this._media = useMediaContext();
-    this._watchImgSrc();
-    this._watchImgAlt();
+    this._watchSrc();
+    this._watchAlt();
+    this._watchCrossOrigin();
     this._watchHidden();
   }
 
@@ -63,8 +74,9 @@ export class Poster extends Component<PosterProps, PosterState> {
     el.style.setProperty('pointer-events', 'none');
 
     effect(this._watchImg.bind(this));
-    effect(this._watchImgSrc.bind(this));
-    effect(this._watchImgAlt.bind(this));
+    effect(this._watchSrc.bind(this));
+    effect(this._watchAlt.bind(this));
+    effect(this._watchCrossOrigin.bind(this));
     effect(this._watchHidden.bind(this));
 
     const { started } = this._media.$state;
@@ -112,7 +124,7 @@ export class Poster extends Component<PosterProps, PosterState> {
     listenEvent(img, 'error', this._onError.bind(this));
   }
 
-  private _watchImgSrc() {
+  private _watchSrc() {
     const { canLoadPoster, poster: defaultPoster } = this._media.$state;
 
     // Either src set on this poster component, or defined on the player.
@@ -126,9 +138,23 @@ export class Poster extends Component<PosterProps, PosterState> {
     this.$state.src.set(canLoadPoster() && poster.length ? poster : null);
   }
 
-  private _watchImgAlt() {
-    const { src, alt } = this.$state;
+  private _watchAlt() {
+    const { src } = this.$props,
+      { alt } = this.$state;
     alt.set(src() ? this.$props.alt() : null);
+  }
+
+  private _watchCrossOrigin() {
+    const { src } = this.$props,
+      { crossOrigin: crossOriginState } = this.$state,
+      crossOrigin = this.$props.crossOrigin();
+    crossOriginState.set(
+      /ytimg\.com|vimeo/.test(src() || '')
+        ? null
+        : crossOrigin === true
+          ? 'anonymous'
+          : crossOrigin,
+    );
   }
 
   private _onLoadStart() {

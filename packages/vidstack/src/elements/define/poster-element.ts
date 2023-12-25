@@ -1,9 +1,8 @@
 import { effect } from 'maverick.js';
-import { Host } from 'maverick.js/element';
+import { Host, type Attributes } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
-import { Poster } from '../../components';
-import { useMediaContext, type MediaContext } from '../../core/api/media-context';
+import { Poster, type PosterProps } from '../../components';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/poster}
@@ -17,17 +16,18 @@ import { useMediaContext, type MediaContext } from '../../core/api/media-context
 export class MediaPosterElement extends Host(HTMLElement, Poster) {
   static tagName = 'media-poster';
 
-  private _media!: MediaContext;
+  static override attrs: Attributes<PosterProps> = {
+    crossOrigin: 'crossorigin',
+  };
+
   private _img = document.createElement('img');
 
   protected onSetup(): void {
-    this._media = useMediaContext();
     this.$state.img.set(this._img);
   }
 
   protected onConnect(): void {
-    const { src, alt } = this.$state,
-      { crossorigin } = this._media.$state;
+    const { src, alt, crossOrigin } = this.$state;
 
     if (this._img.parentNode !== this) {
       this.prepend(this._img);
@@ -36,11 +36,7 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
     effect(() => {
       setAttribute(this._img, 'src', src());
       setAttribute(this._img, 'alt', alt());
-      setAttribute(
-        this._img,
-        'crossorigin',
-        /ytimg\.com|vimeo/.test(src() || '') ? null : crossorigin(),
-      );
+      setAttribute(this._img, 'crossorigin', crossOrigin());
     });
   }
 }

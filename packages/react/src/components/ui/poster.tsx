@@ -4,10 +4,8 @@ import {
   composeRefs,
   createReactComponent,
   useSignal,
-  useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import { mediaState } from 'vidstack';
 
 import { PosterInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
@@ -68,19 +66,16 @@ interface PosterImgProps {
 
 const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
   ({ instance, children, ...props }, forwardRef) => {
-    const { crossorigin } = useStateContext(mediaState),
-      { src, alt, img } = instance.$state,
-      $crossorigin = useSignal(crossorigin),
+    const { src, img, alt, crossOrigin } = instance.$state,
       $src = useSignal(src),
-      $alt = useSignal(alt);
+      $alt = useSignal(alt),
+      $crossOrigin = useSignal(crossOrigin);
     return (
       <Primitive.img
         {...props}
         src={$src || undefined}
         alt={$alt || undefined}
-        crossOrigin={
-          /ytimg\.com|vimeo/.test($src || '') ? undefined : ($crossorigin as '' | undefined)
-        }
+        crossOrigin={$crossOrigin || undefined}
         ref={composeRefs(img.set as any, forwardRef)}
       >
         {children}
