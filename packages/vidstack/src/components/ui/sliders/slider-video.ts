@@ -18,11 +18,13 @@ import { Slider } from './slider/slider';
 export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, SliderVideoEvents> {
   static props: SliderVideoProps = {
     src: null,
+    crossOrigin: null,
   };
 
   static state = new State<SliderVideoState>({
     video: null,
     src: null,
+    crossOrigin: null,
     canPlay: false,
     error: null,
     hidden: false,
@@ -39,6 +41,9 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
   protected override onSetup(): void {
     this._media = useMediaContext();
     this._slider = useState(Slider.state);
+
+    this._watchCrossOrigin();
+
     this.setAttributes({
       'data-loading': this._isLoading.bind(this),
       'data-hidden': this.$state.hidden,
@@ -50,6 +55,7 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
   protected override onAttach(el: HTMLElement) {
     effect(this._watchVideo.bind(this));
     effect(this._watchSrc.bind(this));
+    effect(this._watchCrossOrigin.bind(this));
     effect(this._watchHidden.bind(this));
 
     effect(this._onSrcChange.bind(this));
@@ -70,6 +76,14 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
     const { src } = this.$state,
       { canLoad } = this._media.$state;
     src.set(canLoad() ? this.$props.src() : null);
+  }
+
+  private _watchCrossOrigin() {
+    const { crossOrigin: crossOriginProp } = this.$props,
+      { crossOrigin: crossOriginState } = this.$state,
+      { crossOrigin: mediaCrossOrigin } = this._media.$state,
+      crossOrigin = crossOriginProp() !== null ? crossOriginProp() : mediaCrossOrigin();
+    crossOriginState.set(crossOrigin === true ? 'anonymous' : crossOrigin);
   }
 
   private _isLoading() {
@@ -130,11 +144,20 @@ export interface SliderVideoProps {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    */
   src: string | null;
+
+  /**
+   * Defines how the media handles cross-origin requests, thereby enabling the
+   * configuration of the CORS requests for the element's fetched data.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
+   */
+  crossOrigin: true | '' | 'anonymous' | 'use-credentials' | null;
 }
 
 export interface SliderVideoState {
   video: HTMLVideoElement | null;
   src: string | null;
+  crossOrigin: '' | 'anonymous' | 'use-credentials' | null;
   canPlay: boolean;
   error: ErrorEvent | null;
   hidden: boolean;

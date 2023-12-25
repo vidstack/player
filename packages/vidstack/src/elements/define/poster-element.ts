@@ -34,9 +34,9 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
     }
 
     effect(() => {
-      setAttribute(this._img, 'src', src());
       setAttribute(this._img, 'alt', alt());
       setAttribute(this._img, 'crossorigin', crossOrigin());
+      setAttribute(this._img, 'src', src());
     });
   }
 }
