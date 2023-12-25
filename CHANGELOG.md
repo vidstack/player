@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - new `crossOrigin` prop on poster component ([ecbf277](https://github.com/vidstack/player/commit/ecbf2778e813b357ea60f37c5d81f705979f1083))
 - new `crossOrigin` prop on slider video component ([d699c7b](https://github.com/vidstack/player/commit/d699c7b9eb6a583a052f60e562853f7b727f7c5c))
 - new `crossOrigin` prop on thumbnail components ([fa9ee2d](https://github.com/vidstack/player/commit/fa9ee2d26465b2c22e081f605849ccfca2a9f102))
+- support new thumbnail src types ([842f7c4](https://github.com/vidstack/player/commit/842f7c422b44842bda48a5e9c5a39cb5572861e8))
 
 #### Player (React)
 

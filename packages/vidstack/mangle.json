@@ -645,5 +645,12 @@
   "_onChaptersChange": "Yk",
   "_chaptersTrack": "Zk",
   "_removeChapters": "_k",
-  "_watchAlt": "$k"
+  "_watchAlt": "$k",
+  "_crossOrigin": "al",
+  "_onFindActiveThumbnail": "il",
+  "_processStoryboard": "cl",
+  "_processVTTCues": "bl",
+  "_resolveBaseUrl": "dl",
+  "_resolveData": "fl",
+  "_resolveURL": "gl"
 }

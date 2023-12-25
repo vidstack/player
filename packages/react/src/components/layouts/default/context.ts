@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import type { DefaultLayoutTranslations } from 'vidstack';
+import type { DefaultLayoutTranslations, ThumbnailSrc } from 'vidstack';
 
 import type { DefaultLayoutIcons } from './icons';
 
 export const DefaultLayoutContext = React.createContext<DefaultLayoutContext>({} as any);
 
 interface DefaultLayoutContext {
-  thumbnails?: string;
+  thumbnails: ThumbnailSrc | null;
   menuContainer?: React.RefObject<HTMLElement | null>;
   translations?: DefaultLayoutTranslations | null;
   isSmallLayout: boolean;

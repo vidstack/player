@@ -1,5 +1,6 @@
 import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
+import { isString } from 'maverick.js/std';
 
 import { ChaptersRadioGroup, type ChaptersRadioOption } from '../../../components';
 import { renderMenuItemsTemplate } from './_template';
@@ -45,8 +46,12 @@ export class MediaChaptersRadioGroupElement extends Host(HTMLElement, ChaptersRa
       if (thumbnailEl) {
         thumbnailEl.setAttribute('time', cue.startTime + '');
         effect(() => {
-          const { thumbnails } = this.$props;
-          thumbnailEl.setAttribute('src', thumbnails());
+          const thumbnails = this.$props.thumbnails();
+          if ('src' in thumbnailEl) {
+            thumbnailEl.src = thumbnails;
+          } else if (isString(thumbnails)) {
+            thumbnailEl.setAttribute('src', thumbnails);
+          }
         });
       }
     });

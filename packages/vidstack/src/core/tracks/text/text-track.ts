@@ -25,7 +25,7 @@ export interface VTTCueInit
 
 export interface VTTRegionInit extends Omit<Partial<VTTRegion>, 'id'>, Pick<VTTRegion, 'id'> {}
 
-export interface VTTJSONContent {
+export interface VTTContent {
   cues?: VTTCueInit;
   regions?: VTTRegionInit;
 }
@@ -274,7 +274,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     this.dispatchEvent(new DOMEvent('error', { detail: error }));
   }
 
-  private _parseJSON(json: string | VTTJSONContent, VTTCue, VTTRegion) {
+  private _parseJSON(json: string | VTTContent, VTTCue, VTTRegion) {
     try {
       const { regions, cues } = parseJSONCaptionsFile(json, VTTCue, VTTRegion);
       this._regions = regions;
@@ -309,7 +309,7 @@ export interface TextTrackInit {
   /**
    * Used to directly pass in text track file contents.
    */
-  readonly content?: string | VTTJSONContent;
+  readonly content?: string | VTTContent;
   /**
    * The captions file format to be parsed or a custom parser factory (functions that returns a
    * captions parser). Supported types include: 'vtt', 'srt', 'ssa', 'ass', and 'json'.
@@ -411,7 +411,7 @@ export function isTrackCaptionKind(track: TextTrack): boolean {
 }
 
 export function parseJSONCaptionsFile(
-  json: string | VTTJSONContent,
+  json: string | VTTContent,
   Cue: typeof VTTCue,
   Region?: typeof VTTRegion,
 ) {

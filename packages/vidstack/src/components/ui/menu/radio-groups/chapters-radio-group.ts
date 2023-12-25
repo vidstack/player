@@ -16,6 +16,7 @@ import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { isCueActive, observeActiveTextTrack } from '../../../../core/tracks/text/utils';
 import { round } from '../../../../utils/number';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
+import type { ThumbnailSrc } from '../../thumbnails/thumbnail-loader';
 import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
@@ -32,7 +33,7 @@ export class ChaptersRadioGroup extends Component<
   ChaptersRadioGroupEvents
 > {
   static props: ChapterRadioGroupProps = {
-    thumbnails: '',
+    thumbnails: null,
   };
 
   private _media!: MediaContext;
@@ -188,10 +189,11 @@ export class ChaptersRadioGroup extends Component<
 
 export interface ChapterRadioGroupProps {
   /**
-   * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
-   * file resource.
+   * The thumbnails resource.
+   *
+   * @see {@link https://www.vidstack.io/docs/player/core-concepts/loading#thumbnails}
    */
-  thumbnails: string;
+  thumbnails: ThumbnailSrc | null;
 }
 
 export interface ChaptersRadioGroupEvents {

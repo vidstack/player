@@ -7,6 +7,7 @@ import {
   isTrackCaptionKind,
   mediaContext,
   type DefaultLayoutTranslations,
+  type ThumbnailSrc,
   type TooltipPlacement,
 } from 'vidstack';
 
@@ -64,10 +65,11 @@ export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitiveProps
    */
   icons: DefaultLayoutIcons;
   /**
-   * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
-   * file resource.
+   * The thumbnails resource.
+   *
+   * @see {@link https://www.vidstack.io/docs/player/core-concepts/loading#thumbnails}
    */
-  thumbnails?: string;
+  thumbnails?: ThumbnailSrc | null;
   /**
    * Translation map from english to your desired language for words used throughout the layout.
    */
@@ -156,7 +158,7 @@ export function createDefaultMediaLayout({
       {
         className,
         icons,
-        thumbnails,
+        thumbnails = null,
         translations,
         showMenuDelay,
         showTooltipDelay = type === 'video' ? 500 : 700,

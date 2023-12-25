@@ -204,7 +204,7 @@ export function DefaultTimeSlider() {
       <media-slider-preview class="vds-slider-preview">
         <media-slider-thumbnail
           class="vds-slider-thumbnail vds-thumbnail"
-          src=${$signal(thumbnails)}
+          .src=${$signal(thumbnails)}
         ></media-slider-thumbnail>
         <div class="vds-slider-chapter-title" data-part="chapter-title"></div>
         <media-slider-value class="vds-slider-value"></media-slider-value>
@@ -277,7 +277,7 @@ export function DefaultChaptersMenu({
     >
       <media-chapters-radio-group
         class="vds-chapters-radio-group vds-radio-group"
-        thumbnails=${$signal(thumbnails)}
+        .thumbnails=${$signal(thumbnails)}
       >
         <template>
           <media-radio class="vds-chapter-radio vds-radio">

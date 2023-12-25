@@ -57,7 +57,7 @@ export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps<Default
  * ```tsx
  * <MediaPlayer src="video.mp4">
  *   <MediaProvider />
- *   <DefaultVideoLayout thumbnails="thumbnails.vtt" icons={defaultLayoutIcons} />
+ *   <DefaultVideoLayout thumbnails="/thumbnails.vtt" icons={defaultLayoutIcons} />
  * </MediaPlayer>
  * ```
  */

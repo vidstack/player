@@ -8,12 +8,13 @@ import {
 } from 'maverick.js';
 
 import { PlayerQueryList } from '../../core';
+import type { ThumbnailSrc } from '../ui/thumbnails/thumbnail-loader';
 
 export class DefaultLayout extends Component<DefaultLayoutProps> {
   static props: DefaultLayoutProps = {
     when: '',
     smallWhen: '',
-    thumbnails: '',
+    thumbnails: null,
     customIcons: false,
     translations: null,
     menuGroup: 'bottom',
@@ -125,10 +126,11 @@ export interface DefaultLayoutProps {
    */
   smallWhen: string;
   /**
-   * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
-   * file resource.
+   * The thumbnails resource.
+   *
+   * @see {@link https://www.vidstack.io/docs/wc/player/core-concepts/loading#thumbnails}
    */
-  thumbnails: string;
+  thumbnails: ThumbnailSrc | null;
   /**
    * Whether the default icons should _not_ be loaded. Set this to `true` when providing your own
    * icons.
@@ -165,7 +167,7 @@ export interface DefaultLayoutProps {
 
 export interface DefaultLayoutContext {
   smQueryList: PlayerQueryList;
-  thumbnails: ReadSignal<string>;
+  thumbnails: ReadSignal<ThumbnailSrc | null>;
   translations: ReadSignal<DefaultLayoutTranslations | null>;
   noModal: ReadSignal<DefaultLayoutProps['noModal']>;
   menuGroup: ReadSignal<DefaultLayoutProps['menuGroup']>;
