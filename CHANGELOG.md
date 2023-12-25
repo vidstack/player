@@ -18,6 +18,9 @@ All notable changes to this project will be documented in this file.
 - new `disableTimeSlider` default layout prop ([219b90e](https://github.com/vidstack/player/commit/219b90e643d13ac1cedc1eddea8ae88a67ed994e))
 - new `noGestures` default layout prop ([2fff957](https://github.com/vidstack/player/commit/2fff9578490771194a3c6fe0d05a077a88435d0c))
 - load chapters from vimeo embed ([8a23415](https://github.com/vidstack/player/commit/8a234151a1251e01cbb62708a6aa2c028eca8f6c))
+- new `crossOrigin` prop on poster component ([ecbf277](https://github.com/vidstack/player/commit/ecbf2778e813b357ea60f37c5d81f705979f1083))
+- new `crossOrigin` prop on slider video component ([d699c7b](https://github.com/vidstack/player/commit/d699c7b9eb6a583a052f60e562853f7b727f7c5c))
+- new `crossOrigin` prop on thumbnail components ([fa9ee2d](https://github.com/vidstack/player/commit/fa9ee2d26465b2c22e081f605849ccfca2a9f102))
 
 #### Player (React)
 
@@ -39,6 +42,8 @@ All notable changes to this project will be documented in this file.
 - vimeo video info can be undefined (#1062) ([c8b871f](https://github.com/vidstack/player/commit/c8b871f4b00da2a0bac5a2e6bff019d734fdcf0a))
 - update icon slots on all mutations ([00073a0](https://github.com/vidstack/player/commit/00073a02fdb884117b228c195df1e4cac35111ff))
 - catch false postive vimeo pro detection ([29d6fa0](https://github.com/vidstack/player/commit/29d6fa05fbcc373e47232cf5412f7f1f73446fae))
+- use intrisic duration for last vimeo chapter end time ([4dbe21e](https://github.com/vidstack/player/commit/4dbe21eafdba83ef5071f3be7f9eadbc8999e96d))
+- rename `crossorigin` prop to `crossOrigin` ([37513ea](https://github.com/vidstack/player/commit/37513ea12c761c65f1dbbfd8280d9635be4ffb50))
 
 #### Player (React)
 

@@ -7,6 +7,7 @@ import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges'
 import type { AudioTrack } from '../tracks/audio-tracks';
 import type { TextTrack } from '../tracks/text/text-track';
 import type {
+  MediaCrossOrigin,
   MediaErrorDetail,
   MediaSrc,
   MediaStreamType,
@@ -359,7 +360,7 @@ export interface MediaState {
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
    */
-  crossOrigin: '' | 'anonymous' | 'use-credentials' | null;
+  crossOrigin: MediaCrossOrigin | null;
   /**
    * The URL of the current poster. Defaults to `''` if no media/poster has been given or
    * loaded.

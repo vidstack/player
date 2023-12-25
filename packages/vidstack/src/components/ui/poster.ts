@@ -2,6 +2,7 @@ import { Component, effect, State } from 'maverick.js';
 import { isNull, listenEvent, setAttribute } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
+import type { MediaCrossOrigin } from '../../core/api/types';
 import { preconnect } from '../../utils/network';
 
 export interface PosterProps {
@@ -20,14 +21,14 @@ export interface PosterProps {
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
    */
-  crossOrigin: true | '' | 'anonymous' | 'use-credentials' | null;
+  crossOrigin: true | MediaCrossOrigin | null;
 }
 
 export interface PosterState {
   img: HTMLImageElement | null;
   src: string | null;
   alt: string | null;
-  crossOrigin: '' | 'anonymous' | 'use-credentials' | null;
+  crossOrigin: MediaCrossOrigin | null;
   loading: boolean;
   error: ErrorEvent | null;
   hidden: boolean;

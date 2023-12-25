@@ -14,6 +14,8 @@ export type MediaStreamType =
   | 'll-live'
   | 'll-live:dvr';
 
+export type MediaCrossOrigin = '' | 'anonymous' | 'use-credentials';
+
 /**
  * Indicates the current view type which determines how the media will be presented.
  */

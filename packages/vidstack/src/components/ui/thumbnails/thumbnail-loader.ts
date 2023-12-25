@@ -2,6 +2,7 @@ import { effect, onDispose, peek, signal, type ReadSignal } from 'maverick.js';
 import type { VTTCue } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaCrossOrigin } from '../../../core/api/types';
 import { parseJSONCaptionsFile } from '../../../core/tracks/text/text-track';
 import { getRequestCredentials } from '../../../utils/network';
 
@@ -12,13 +13,14 @@ const cache = new Map<string, VTTCue[]>(),
 export class ThumbnailsLoader {
   readonly $cues = signal<VTTCue[]>([]);
 
-  static create($src: ReadSignal<string>) {
+  static create($src: ReadSignal<string>, $crossOrigin: ReadSignal<MediaCrossOrigin | null>) {
     const media = useMediaContext();
-    return new ThumbnailsLoader($src, media);
+    return new ThumbnailsLoader($src, $crossOrigin, media);
   }
 
   constructor(
     readonly $src: ReadSignal<string>,
+    readonly $crossOrigin: ReadSignal<MediaCrossOrigin | null>,
     private _media: MediaContext,
   ) {
     effect(this._onLoadCues.bind(this));
@@ -32,8 +34,7 @@ export class ThumbnailsLoader {
 
     if (!canLoad()) return;
 
-    const controller = new AbortController(),
-      { crossOrigin } = this._media.$state;
+    const controller = new AbortController();
 
     const src = this.$src();
     if (!src) return;
@@ -56,7 +57,7 @@ export class ThumbnailsLoader {
         try {
           const response = await fetch(src, {
               signal: controller.signal,
-              credentials: getRequestCredentials(crossOrigin()),
+              credentials: getRequestCredentials(this.$crossOrigin()),
             }),
             isJSON = response.headers.get('content-type') === 'application/json';
 

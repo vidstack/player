@@ -3,6 +3,7 @@ import { animationFrameThrottle, isNull, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaCrossOrigin } from '../../../core/api/types';
 import { findActiveCue } from '../../../core/tracks/text/utils';
 import { $ariaBool } from '../../../utils/aria';
 import { ThumbnailsLoader } from './thumbnail-loader';
@@ -10,6 +11,7 @@ import { ThumbnailsLoader } from './thumbnail-loader';
 export interface ThumbnailState {
   src: string;
   img: HTMLImageElement | null | undefined;
+  crossOrigin: MediaCrossOrigin | null;
   coords: ThumbnailCoords | null;
   activeCue: VTTCue | null;
   loading: boolean;
@@ -29,6 +31,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   static props: ThumbnailProps = {
     src: '',
     time: 0,
+    crossOrigin: null,
   };
 
   static state = new State<ThumbnailState>({
@@ -36,6 +39,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     img: null,
     coords: null,
     activeCue: null,
+    crossOrigin: null,
     loading: false,
     error: null,
     hidden: false,
@@ -48,7 +52,9 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
 
   protected override onSetup(): void {
     this._media = useMediaContext();
-    this._thumbnails = ThumbnailsLoader.create(this.$props.src);
+    this._thumbnails = ThumbnailsLoader.create(this.$props.src, this.$state.crossOrigin);
+
+    this._watchCrossOrigin();
 
     this.setAttributes({
       'data-loading': this._isLoading.bind(this),
@@ -61,6 +67,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   protected override onConnect(el: HTMLElement) {
     effect(this._watchImg.bind(this));
     effect(this._watchHidden.bind(this));
+    effect(this._watchCrossOrigin.bind(this));
     effect(this._onLoadStart.bind(this));
     effect(this._onFindActiveCue.bind(this));
     effect(this._onResolveThumbnail.bind(this));
@@ -71,6 +78,14 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     if (!img) return;
     listenEvent(img, 'load', this._onLoaded.bind(this));
     listenEvent(img, 'error', this._onError.bind(this));
+  }
+
+  private _watchCrossOrigin() {
+    const { crossOrigin: crossOriginProp } = this.$props,
+      { crossOrigin: crossOriginState } = this.$state,
+      { crossOrigin: mediaCrossOrigin } = this._media.$state,
+      crossOrigin = crossOriginProp() !== null ? crossOriginProp() : mediaCrossOrigin();
+    crossOriginState.set(crossOrigin === true ? 'anonymous' : crossOrigin);
   }
 
   private _onLoadStart() {
@@ -216,6 +231,13 @@ export interface ThumbnailProps {
    * Finds, loads, and displays the first active thumbnail cue that's start/end times are in range.
    */
   time: number;
+  /**
+   * Defines how the media handles cross-origin requests, thereby enabling the
+   * configuration of the CORS requests for the element's fetched data.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
+   */
+  crossOrigin: true | MediaCrossOrigin | null;
 }
 
 export interface ThumbnailCoords {

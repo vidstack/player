@@ -3,7 +3,7 @@ import * as React from 'react';
 import { scoped, signal } from 'maverick.js';
 import { useReactScope, useSignal } from 'maverick.js/react';
 import type { VTTCue } from 'media-captions';
-import { findActiveCue, ThumbnailsLoader } from 'vidstack';
+import { findActiveCue, ThumbnailsLoader, type MediaCrossOrigin } from 'vidstack';
 
 export interface ThumbnailData {
   url: string;
@@ -21,10 +21,14 @@ export interface ThumbnailData {
  *
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-thumbnails}
  */
-export function useThumbnails(src: string): ThumbnailData[] {
+export function useThumbnails(src: string, crossOrigin?: MediaCrossOrigin | null): ThumbnailData[] {
   const scope = useReactScope(),
     $src = React.useMemo(() => signal(src), []),
-    loader = React.useMemo(() => scoped(() => ThumbnailsLoader.create($src), scope)!, []),
+    $crossOrigin = React.useMemo(() => signal($crossOrigin), []),
+    loader = React.useMemo(
+      () => scoped(() => ThumbnailsLoader.create($src, $crossOrigin), scope)!,
+      [],
+    ),
     $cues = useSignal(loader.$cues),
     data = React.useMemo(() => {
       const items: ThumbnailData[] = [],
@@ -55,6 +59,10 @@ export function useThumbnails(src: string): ThumbnailData[] {
   React.useEffect(() => {
     $src.set(src);
   }, [src]);
+
+  React.useEffect(() => {
+    $crossOrigin.set(crossOrigin);
+  }, [crossOrigin]);
 
   return data;
 }

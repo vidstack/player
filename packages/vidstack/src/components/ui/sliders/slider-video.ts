@@ -2,6 +2,7 @@ import { Component, effect, prop, State, useState, type StateContext } from 'mav
 import { isNull, listenEvent, type DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaCrossOrigin } from '../../../core/api/types';
 import { $ariaBool } from '../../../utils/aria';
 import { Slider } from './slider/slider';
 
@@ -144,20 +145,19 @@ export interface SliderVideoProps {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    */
   src: string | null;
-
   /**
    * Defines how the media handles cross-origin requests, thereby enabling the
    * configuration of the CORS requests for the element's fetched data.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
    */
-  crossOrigin: true | '' | 'anonymous' | 'use-credentials' | null;
+  crossOrigin: true | MediaCrossOrigin | null;
 }
 
 export interface SliderVideoState {
   video: HTMLVideoElement | null;
   src: string | null;
-  crossOrigin: '' | 'anonymous' | 'use-credentials' | null;
+  crossOrigin: MediaCrossOrigin | null;
   canPlay: boolean;
   error: ErrorEvent | null;
   hidden: boolean;
