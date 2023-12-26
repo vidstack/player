@@ -193,7 +193,7 @@ export interface ChapterRadioGroupProps {
    *
    * @see {@link https://www.vidstack.io/docs/player/core-concepts/loading#thumbnails}
    */
-  thumbnails: ThumbnailSrc | null;
+  thumbnails: ThumbnailSrc;
 }
 
 export interface ChaptersRadioGroupEvents {

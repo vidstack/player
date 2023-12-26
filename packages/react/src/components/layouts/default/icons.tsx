@@ -70,6 +70,19 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
     Settings: createIcon(settingsIconPaths),
     Speed: createIcon(odometerIconPaths),
   },
+  KeyboardAction: {
+    Play: createIcon(playIconPaths),
+    Pause: createIcon(pauseIconPaths),
+    Mute: createIcon(muteIconPaths),
+    VolumeUp: createIcon(volumeHighIconPaths),
+    VolumeDown: createIcon(volumeLowIconPaths),
+    EnterFullscreen: createIcon(enterFullscreenIconPaths),
+    ExitFullscreen: createIcon(exitFullscreenIconPaths),
+    EnterPiP: createIcon(enterPIPIconPaths),
+    ExitPiP: createIcon(exitPIPIconPaths),
+    CaptionsOn: createIcon(ccOnIconPaths),
+    CaptionsOff: createIcon(ccIconPaths),
+  },
 };
 
 export interface DefaultLayoutIconProps
@@ -115,5 +128,18 @@ export interface DefaultLayoutIcons {
     Captions: DefaultLayoutIcon;
     Settings: DefaultLayoutIcon;
     Speed: DefaultLayoutIcon;
+  };
+  KeyboardAction?: {
+    Play: DefaultLayoutIcon;
+    Pause: DefaultLayoutIcon;
+    Mute: DefaultLayoutIcon;
+    VolumeUp: DefaultLayoutIcon;
+    VolumeDown: DefaultLayoutIcon;
+    EnterFullscreen: DefaultLayoutIcon;
+    ExitFullscreen: DefaultLayoutIcon;
+    EnterPiP: DefaultLayoutIcon;
+    ExitPiP: DefaultLayoutIcon;
+    CaptionsOn: DefaultLayoutIcon;
+    CaptionsOff: DefaultLayoutIcon;
   };
 }

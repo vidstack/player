@@ -170,6 +170,11 @@ export class MediaKeyboardController extends MediaPlayerController {
       default:
         this._media.remote[method]?.(event);
     }
+
+    this.$state.lastKeyboardAction.set({
+      action: method,
+      event,
+    });
   }
 
   private _onPreventVideoKeys(event: KeyboardEvent) {

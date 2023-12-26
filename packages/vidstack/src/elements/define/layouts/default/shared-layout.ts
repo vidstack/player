@@ -2,7 +2,6 @@ import { html, type TemplateResult } from 'lit-html';
 import { computed, type ReadSignal } from 'maverick.js';
 import { isFunction, unwrap } from 'maverick.js/std';
 
-import { isTrackCaptionKind } from '../../../..';
 import {
   getDefaultLayoutLang,
   useDefaultLayoutContext,
@@ -326,7 +325,7 @@ export function DefaultSettingsMenu({
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
 }) {
-  const { viewType, canSetPlaybackRate, canSetQuality, qualities, audioTracks, textTracks } =
+  const { viewType, canSetPlaybackRate, canSetQuality, qualities, audioTracks, hasCaptions } =
       useMediaContext().$state,
     { translations, smQueryList, menuContainer, noModal, menuGroup } = useDefaultLayoutContext(),
     $placement = computed(() =>
@@ -340,7 +339,7 @@ export function DefaultSettingsMenu({
         canSetPlaybackRate() ||
         !!(canSetQuality() && qualities().length) ||
         !!audioTracks().length ||
-        !!textTracks().filter(isTrackCaptionKind).length,
+        hasCaptions(),
     );
 
   const items = html`

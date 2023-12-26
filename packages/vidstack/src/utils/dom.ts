@@ -171,3 +171,9 @@ export function hasAnimation(el: HTMLElement): boolean {
   const styles = getComputedStyle(el);
   return styles.animationName !== 'none';
 }
+
+export function createSlot(name: string) {
+  const slot = document.createElement('slot');
+  slot.name = name;
+  return slot;
+}

@@ -652,5 +652,6 @@
   "_processVTTCues": "bl",
   "_resolveBaseUrl": "dl",
   "_resolveData": "fl",
-  "_resolveURL": "gl"
+  "_resolveURL": "gl",
+  "_processImages": "jl"
 }

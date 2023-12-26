@@ -4,6 +4,7 @@ import { computed } from 'maverick.js';
 import { useDefaultLayoutContext } from '../../../../components';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed } from '../../../lit/directives/signal';
+import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
 import {
   DefaultCaptionButton,
   DefaultChaptersMenu,
@@ -20,6 +21,7 @@ import {
 export function DefaultVideoLayoutLarge() {
   return html`
     ${$computed(DefaultVideoGestures)}${DefaultBufferingIndicator()}
+    ${$computed(DefaultVideoKeyboardActionDisplay)}
     <media-captions class="vds-captions"></media-captions>
 
     <div class="vds-scrim"></div>

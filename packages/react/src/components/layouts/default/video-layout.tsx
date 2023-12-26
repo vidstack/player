@@ -7,6 +7,7 @@ import { Gesture } from '../../ui/gesture';
 import * as Spinner from '../../ui/spinner';
 import { Time } from '../../ui/time';
 import { DefaultLayoutContext } from './context';
+import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
 import {
   createDefaultMediaLayout,
   DefaultCaptionButton,
@@ -78,6 +79,7 @@ function DefaultVideoLargeLayout() {
   return (
     <>
       <DefaultVideoGestures />
+      <DefaultVideoKeyboardActionDisplay />
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
       {slot(slots, 'captions', <Captions className="vds-captions" />)}
       <Controls.Root className="vds-controls">

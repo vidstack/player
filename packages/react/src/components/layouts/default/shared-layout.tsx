@@ -69,7 +69,7 @@ export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitiveProps
    *
    * @see {@link https://www.vidstack.io/docs/player/core-concepts/loading#thumbnails}
    */
-  thumbnails?: ThumbnailSrc | null;
+  thumbnails?: ThumbnailSrc;
   /**
    * Translation map from english to your desired language for words used throughout the layout.
    */
@@ -134,6 +134,10 @@ export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitiveProps
    * Whether all gestures such as pressing to play or seek should not be active.
    */
   noGestures?: boolean;
+  /**
+   * Whether keyboard actions should not be displayed.
+   */
+  noKeyboardActionDisplay?: boolean;
 }
 
 export interface CreateDefaultMediaLayout {
@@ -169,6 +173,7 @@ export function createDefaultMediaLayout({
         sliderChaptersMinWidth = 600,
         disableTimeSlider = false,
         noGestures = false,
+        noKeyboardActionDisplay = false,
         slots,
         children,
         ...props
@@ -210,6 +215,7 @@ export function createDefaultMediaLayout({
                 sliderChaptersMinWidth,
                 disableTimeSlider,
                 noGestures,
+                noKeyboardActionDisplay,
                 Icons: icons,
               }}
             >
@@ -668,12 +674,12 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
     $$hasMenuItems = React.useMemo(
       () =>
         computed(() => {
-          const { canSetPlaybackRate, canSetQuality, qualities, audioTracks, textTracks } = $state;
+          const { canSetPlaybackRate, canSetQuality, qualities, audioTracks, hasCaptions } = $state;
           return (
             canSetPlaybackRate() ||
             (canSetQuality() && qualities().length) ||
             audioTracks().length ||
-            textTracks().filter(isTrackCaptionKind).length
+            hasCaptions()
           );
         }),
       [],

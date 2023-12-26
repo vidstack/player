@@ -1,0 +1,91 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Keyboard Action
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-kb-action.hidden) {
+  display: none;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Keyboard Text
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-kb-text-wrapper) {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--media-kb-text-top, 10%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+:where(.vds-kb-text) {
+  display: inline-block;
+  padding: var(--media-kb-text-padding, 10px 20px);
+  font-size: var(--media-kb-text-size, 150%);
+  font-family: var(--media-font-family, sans-serif);
+  color: var(--media-kb-text-color, #eee);
+  background: var(--media-kb-text-bg, rgba(0, 0, 0, 0.5));
+  border-radius: var(--media-kb-border-radius, 2.5px);
+  pointer-events: none;
+}
+
+:where(.vds-kb-text:empty) {
+  display: none;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Keyboard Bezel
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-kb-bezel) {
+  --size: var(--media-kb-bezel-size, 52px);
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size);
+  height: var(--size);
+  margin-left: calc(-1 * calc(var(--size) / 2));
+  margin-right: calc(-1 * calc(var(--size) / 2));
+  z-index: 20;
+  background: var(--media-kb-bezel-bg, rgba(0, 0, 0, 0.5));
+  border-radius: var(--media-kb-bezel-border-radius, calc(var(--size) / 2));
+  animation: var(--media-kb-bezel-animation, vds-bezel-fade 0.35s linear 1 normal forwards);
+  pointer-events: none;
+}
+
+:where(.vds-kb-bezel:has(slot:empty)) {
+  display: none;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Keyboard Icon
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(.vds-kb-icon) {
+  --size: var(--media-kb-icon-size, 38px);
+  width: var(--size);
+  height: var(--size);
+}
+
+@keyframes vds-bezel-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}

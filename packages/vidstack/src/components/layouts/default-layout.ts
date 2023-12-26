@@ -22,6 +22,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     sliderChaptersMinWidth: 600,
     disableTimeSlider: false,
     noGestures: false,
+    noKeyboardActionDisplay: false,
   };
 
   // slider-chapters-min-width
@@ -53,6 +54,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       sliderChaptersMinWidth,
       disableTimeSlider,
       noGestures,
+      noKeyboardActionDisplay,
     } = this.$props;
 
     this._whenQueryList = PlayerQueryList.create(when);
@@ -73,6 +75,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       sliderChaptersMinWidth,
       disableTimeSlider,
       noGestures,
+      noKeyboardActionDisplay,
       get menuContainer() {
         return self.menuContainer;
       },
@@ -130,7 +133,7 @@ export interface DefaultLayoutProps {
    *
    * @see {@link https://www.vidstack.io/docs/wc/player/core-concepts/loading#thumbnails}
    */
-  thumbnails: ThumbnailSrc | null;
+  thumbnails: ThumbnailSrc;
   /**
    * Whether the default icons should _not_ be loaded. Set this to `true` when providing your own
    * icons.
@@ -158,16 +161,20 @@ export interface DefaultLayoutProps {
   /**
    * Whether the time slider should be disabled.
    */
-  disableTimeSlider?: boolean;
+  disableTimeSlider: boolean;
   /**
    * Whether all gestures such as press to play or seek should not be active.
    */
-  noGestures?: boolean;
+  noGestures: boolean;
+  /**
+   * Whether keyboard actions should not be displayed.
+   */
+  noKeyboardActionDisplay: boolean;
 }
 
 export interface DefaultLayoutContext {
   smQueryList: PlayerQueryList;
-  thumbnails: ReadSignal<ThumbnailSrc | null>;
+  thumbnails: ReadSignal<ThumbnailSrc>;
   translations: ReadSignal<DefaultLayoutTranslations | null>;
   noModal: ReadSignal<DefaultLayoutProps['noModal']>;
   menuGroup: ReadSignal<DefaultLayoutProps['menuGroup']>;
@@ -175,6 +182,7 @@ export interface DefaultLayoutContext {
   menuContainer: HTMLElement | null;
   disableTimeSlider: ReadSignal<boolean>;
   noGestures: ReadSignal<boolean>;
+  noKeyboardActionDisplay: ReadSignal<boolean>;
 }
 
 export interface DefaultLayoutTranslations {

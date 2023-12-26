@@ -5,7 +5,7 @@ import { canOrientScreen } from '../../utils/support';
 import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
 import type { AudioTrack } from '../tracks/audio-tracks';
-import type { TextTrack } from '../tracks/text/text-track';
+import { isTrackCaptionKind, type TextTrack } from '../tracks/text/text-track';
 import type {
   MediaCrossOrigin,
   MediaErrorDetail,
@@ -62,6 +62,9 @@ export const mediaState = new State<MediaState>({
   started: false,
   textTracks: [],
   textTrack: null,
+  get hasCaptions() {
+    return this.textTracks.filter(isTrackCaptionKind).length > 0;
+  },
   volume: 1,
   waiting: false,
   realCurrentTime: 0,
@@ -122,6 +125,7 @@ export const mediaState = new State<MediaState>({
   height: 0,
   mediaWidth: 0,
   mediaHeight: 0,
+  lastKeyboardAction: null,
 
   // ~~ user props ~~
   userBehindLiveEdge: false,
@@ -176,12 +180,15 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'canLoadPoster',
   'canPictureInPicture',
   'canSetVolume',
+  'clipEndTime',
+  'clipStartTime',
   'controls',
   'crossorigin',
   'crossOrigin',
   'fullscreen',
   'height',
   'inferredViewType',
+  'lastKeyboardAction',
   'logLevel',
   'loop',
   'mediaHeight',
@@ -203,8 +210,6 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'textTracks',
   'volume',
   'width',
-  'clipStartTime',
-  'clipEndTime',
 ]);
 
 /**
@@ -276,7 +281,7 @@ export interface MediaState {
    * @defaultValue 0
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration}
    */
-  duration: number;
+  readonly duration: number;
   /**
    * Whether the native browser Fullscreen API is available, or the current provider can
    * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
@@ -367,7 +372,7 @@ export interface MediaState {
    *
    * @defaultValue ''
    */
-  poster: string;
+  readonly poster: string;
   /**
    * A `double` indicating the current playback time in seconds. Defaults to `0` if the media has
    * not started to play and has not seeked. Setting this value seeks the media to the new
@@ -377,7 +382,7 @@ export interface MediaState {
    * @defaultValue 0
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime}
    */
-  currentTime: number;
+  readonly currentTime: number;
   /**
    * Whether media playback has reached the end. In other words it'll be true
    * if `currentTime === duration`.
@@ -672,7 +677,7 @@ export interface MediaState {
   /**
    * The title of the current media.
    */
-  title: string;
+  readonly title: string;
   /**
    * The list of all available text tracks.
    */
@@ -681,6 +686,10 @@ export interface MediaState {
    * The current captions/subtitles text track that is showing.
    */
   textTrack: TextTrack | null;
+  /**
+   * Whether there are any captions or subtitles available.
+   */
+  readonly hasCaptions: boolean;
   /**
    * The type of player view that should be used (i.e., audio or video). By default this is set
    * to `video`.
@@ -730,6 +739,13 @@ export interface MediaState {
    * The height of the media in provider pixels.
    */
   mediaHeight: number;
+  /**
+   *  The last keyboard shortcut that was triggered.
+   */
+  lastKeyboardAction: {
+    action: string;
+    event: KeyboardEvent;
+  } | null;
 
   // !!! INTERNALS !!!
 

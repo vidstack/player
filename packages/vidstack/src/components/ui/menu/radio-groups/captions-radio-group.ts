@@ -32,8 +32,8 @@ export class CaptionsRadioGroup extends Component<
 
   @prop
   get disabled() {
-    const { textTracks } = this._media.$state;
-    return textTracks().filter(isTrackCaptionKind).length === 0;
+    const { hasCaptions } = this._media.$state;
+    return !hasCaptions();
   }
 
   constructor() {

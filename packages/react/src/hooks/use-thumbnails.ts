@@ -17,7 +17,7 @@ import {
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-thumbnails}
  */
 export function useThumbnails(
-  src: ThumbnailSrc | null,
+  src: ThumbnailSrc,
   crossOrigin?: MediaCrossOrigin | null,
 ): ThumbnailImage[] {
   const scope = useReactScope(),
