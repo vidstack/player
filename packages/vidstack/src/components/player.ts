@@ -40,6 +40,7 @@ import {
   type MediaPlayerState,
   type MediaStateAccessors,
   type MediaStore,
+  type RemotePlaybackType,
 } from '../core';
 import { MEDIA_ATTRIBUTES, mediaAttributes } from '../core/api/media-attrs';
 import { mediaContext, type MediaContext } from '../core/api/media-context';
@@ -77,10 +78,13 @@ declare global {
  * requests, and expose media state through HTML attributes and CSS properties for styling
  * purposes.
  *
+ * @attr data-airplay - Whether AirPlay is connected.
  * @attr data-autoplay - Autoplay has successfully started.
  * @attr data-autoplay-error - Autoplay has failed to start.
  * @attr data-buffering - Media is not ready for playback or waiting for more data.
+ * @attr data-can-airplay - Whether AirPlay is available.
  * @attr data-can-fullscreen - Fullscreen mode is available.
+ * @attr data-can-google-cast - Whether Google Cast is available.
  * @attr data-can-load - Media can now begin loading.
  * @attr data-can-pip - Picture-in-Picture mode is available.
  * @attr data-can-play - Media is ready for playback.
@@ -90,7 +94,9 @@ declare global {
  * @attr data-ended - Playback has ended.
  * @attr data-error - Issue with media loading/playback.
  * @attr data-fullscreen - Fullscreen mode is active.
+ * @attr data-google-cast - Whether Google Cast is connected.
  * @attr data-ios-controls - iOS controls are visible.
+ * @attr data-load - Specified load strategy.
  * @attr data-live - Media is live stream.
  * @attr data-live-edge - Playback is at the live edge.
  * @attr data-loop - Media is set to replay on end.
@@ -103,6 +109,8 @@ declare global {
  * @attr data-playsinline - Media should play inline by default (iOS).
  * @attr data-pointer - The user's pointer device type (coarse/fine).
  * @attr data-preview - The user is interacting with the time slider.
+ * @attr data-remote-type - The remote playback type (airplay/google-cast).
+ * @attr data-remote-state - The remote playback state (connecting/connected/disconnected).
  * @attr data-seeking - User is seeking to a new playback position.
  * @attr data-started - Media playback has started.
  * @attr data-stream-type - Current stream type.
@@ -330,9 +338,14 @@ export class MediaPlayer
       },
     };
 
-    const alias = {
+    const alias: Partial<Record<keyof MediaPlayerState, string>> = {
+      canAirPlay: 'can-airplay',
       canPictureInPicture: 'can-pip',
       pictureInPicture: 'pip',
+      remotePlaybackState: 'remote-state',
+      remotePlaybackType: 'remote-type',
+      isAirPlayConnected: 'airplay',
+      isGoogleCastConnected: 'google-cast',
     };
 
     for (const prop of mediaAttributes) {
@@ -345,6 +358,11 @@ export class MediaPlayer
     delete $attrs.title;
     MediaPlayer[MEDIA_ATTRIBUTES] = $attrs;
     this.setAttributes($attrs);
+  }
+
+  private _isRemotePlaybackTypeConnected(type: RemotePlaybackType) {
+    const { remotePlaybackType, remotePlaybackState } = this.$state;
+    return remotePlaybackType() === type && remotePlaybackState() === 'connected';
   }
 
   private _onFindPlayer(event: FindMediaPlayerEvent) {

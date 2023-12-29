@@ -25,6 +25,7 @@ export type {
 
 // Buttons
 export { type ToggleButtonProps, ToggleButton } from './components/ui/buttons/toggle-button';
+export { type AirPlayButtonProps, AirPlayButton } from './components/ui/buttons/airplay-button';
 export { type PlayButtonProps, PlayButton } from './components/ui/buttons/play-button';
 export { type CaptionButtonProps, CaptionButton } from './components/ui/buttons/caption-button';
 export {

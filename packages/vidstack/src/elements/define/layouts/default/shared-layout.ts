@@ -1,6 +1,6 @@
 import { html, type TemplateResult } from 'lit-html';
 import { computed, type ReadSignal } from 'maverick.js';
-import { isFunction, unwrap } from 'maverick.js/std';
+import { isFunction, unwrap, uppercaseFirstChar } from 'maverick.js/std';
 
 import {
   getDefaultLayoutLang,
@@ -18,6 +18,28 @@ function $i18n(
   key: keyof DefaultLayoutTranslations,
 ) {
   return $computed(() => getDefaultLayoutLang(translations, key));
+}
+
+export function DefaultAirPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
+  const { translations } = useDefaultLayoutContext(),
+    { remotePlaybackState } = useMediaContext().$state,
+    $label = $computed(() => {
+      const airPlayText = getDefaultLayoutLang(translations, 'AirPlay'),
+        stateText = uppercaseFirstChar(remotePlaybackState()) as Capitalize<RemotePlaybackState>;
+      return `${airPlayText} ${stateText}`;
+    });
+  return html`
+    <media-tooltip class="vds-airplay-tooltip vds-tooltip">
+      <media-tooltip-trigger>
+        <media-airplay-button class="vds-airplay-button vds-button" aria-label=${$label}>
+          <slot name="airplay-icon" data-class="vds-airplay-icon"></slot>
+        </media-airplay-button>
+      </media-tooltip-trigger>
+      <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
+        <span class="vds-airplay-tooltip-text">${$i18n(translations, 'AirPlay')}</span>
+      </media-tooltip-content>
+    </media-tooltip>
+  `;
 }
 
 export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {

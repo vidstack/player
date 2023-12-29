@@ -290,6 +290,24 @@ export class MediaStateManager extends MediaPlayerController {
     this._satisfyRequest('rate', event);
   }
 
+  ['remote-playback-change'](event: ME.MediaRemotePlaybackChangeEvent) {
+    const { remotePlaybackState, remotePlaybackType } = this.$state,
+      { type, state } = event.detail,
+      isConnected = state === 'connected';
+
+    remotePlaybackType.set(type);
+    remotePlaybackState.set(state);
+
+    const queueKey = type === 'airplay' ? 'airPlay' : 'googleCast';
+    if (isConnected) {
+      this._satisfyRequest(queueKey, event);
+    } else {
+      this._request._queue._peek(queueKey, (requestEvent) => {
+        event.request = requestEvent;
+      });
+    }
+  }
+
   ['sources-change'](event: ME.MediaSourcesChangeEvent) {
     this.$state.sources.set(event.detail);
   }

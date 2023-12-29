@@ -14,9 +14,16 @@ export class Queue<QueueRecord> {
    * Process all items in queue for the given `key`.
    */
   _serve<T extends keyof QueueRecord>(key: T, callback: (item: QueueRecord[T]) => void) {
+    this._peek(key, callback);
+    this._queue.delete(key);
+  }
+
+  /**
+   * Peek at all items in queue for the given `key`.
+   */
+  _peek<T extends keyof QueueRecord>(key: T, callback: (item: QueueRecord[T]) => void) {
     const items = this._queue.get(key);
     if (items) for (const item of items) callback(item);
-    this._queue.delete(key);
   }
 
   /**

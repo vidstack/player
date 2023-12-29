@@ -24,6 +24,7 @@ import type {
   MediaStreamType,
   MediaType,
   MediaViewType,
+  RemotePlaybackType,
 } from './types';
 
 export interface MediaEvents {
@@ -58,6 +59,7 @@ export interface MediaEvents {
   'qualities-change': MediaQualitiesChangeEvent;
   'quality-change': MediaQualityChangeEvent;
   'rate-change': MediaRateChangeEvent;
+  'remote-playback-change': MediaRemotePlaybackChangeEvent;
   'source-change': MediaSourceChangeEvent;
   'sources-change': MediaSourcesChangeEvent;
   'time-update': MediaTimeUpdateEvent;
@@ -208,6 +210,20 @@ export interface MediaControlsChangeEvent extends MediaEvent<boolean> {
  */
 export interface MediaRateChangeEvent extends MediaEvent<number> {
   request?: RE.MediaRateChangeRequestEvent;
+}
+
+export interface MediaRemotePlaybackChangeEventDetail {
+  type: RemotePlaybackType;
+  state: RemotePlaybackState;
+}
+
+/**
+ * Fired when the remote playback state (`connecting`, `connected`, `disconnected`) and type
+ * (`airplay`, `google-cast`) has changed.
+ */
+export interface MediaRemotePlaybackChangeEvent
+  extends MediaEvent<MediaRemotePlaybackChangeEventDetail> {
+  request?: RE.MediaAirPlayRequestEvent;
 }
 
 /**

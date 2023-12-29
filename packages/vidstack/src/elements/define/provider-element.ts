@@ -110,7 +110,7 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
 
     const { controls, crossOrigin, poster } = this._media.$state,
       { $iosControls } = this._media,
-      $nativeControls = computed(() => (controls() || $iosControls() ? '' : null)),
+      $nativeControls = computed(() => (controls() || $iosControls() ? 'true' : null)),
       $poster = computed(() => (poster() && (controls() || $iosControls()) ? poster() : null));
 
     effect(() => {

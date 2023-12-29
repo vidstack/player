@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { computed } from 'maverick.js';
 import { useReactContext, useSignal } from 'maverick.js/react';
-import { isString } from 'maverick.js/std';
+import { isString, uppercaseFirstChar } from 'maverick.js/std';
 import {
   isTrackCaptionKind,
   mediaContext,
@@ -20,6 +20,7 @@ import { useMediaState } from '../../../hooks/use-media-state';
 import { usePlayerQuery } from '../../../hooks/use-player-query';
 import { isRemotionSource } from '../../../providers/remotion/type-check';
 import type { PrimitivePropsWithRef } from '../../primitives/nodes';
+import { AirPlayButton } from '../../ui/buttons/airplay-button';
 import { CaptionButton } from '../../ui/buttons/caption-button';
 import { FullscreenButton } from '../../ui/buttons/fullscreen-button';
 import { LiveButton } from '../../ui/buttons/live-button';
@@ -266,6 +267,34 @@ function DefaultTooltip({ content, placement, children }: DefaultTooltipProps) {
 
 DefaultTooltip.displayName = 'DefaultTooltip';
 export { DefaultTooltip };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultAirPlayButton
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultAirPlayButton({ tooltip }: DefaultMediaButtonProps) {
+  const { Icons } = React.useContext(DefaultLayoutContext),
+    airPlayText = useDefaultLayoutLang('AirPlay'),
+    state = useMediaState('remotePlaybackState'),
+    stateText = useDefaultLayoutLang(uppercaseFirstChar(state) as Capitalize<RemotePlaybackState>),
+    label = `${airPlayText} ${stateText}`,
+    Icon =
+      (state === 'connecting'
+        ? Icons.AirPlayButton.Connecting
+        : state === 'connected'
+          ? Icons.AirPlayButton.Connected
+          : null) ?? Icons.AirPlayButton.Default;
+  return (
+    <DefaultTooltip content={airPlayText} placement={tooltip}>
+      <AirPlayButton className="vds-airplay-button vds-button" aria-label={label}>
+        {React.createElement(Icon, { className: 'vds-icon' })}
+      </AirPlayButton>
+    </DefaultTooltip>
+  );
+}
+
+DefaultAirPlayButton.displayName = 'DefaultAirPlayButton';
+export { DefaultAirPlayButton };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultPlayButton
