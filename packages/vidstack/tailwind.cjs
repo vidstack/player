@@ -1,23 +1,24 @@
 const createPlugin = require('tailwindcss/plugin');
 
 const mediaAttributes = [
-  'autoplay',
   'autoplay-error',
+  'autoplay',
   'buffering',
-  'captions',
   'can-fullscreen',
-  'can-pip',
-  'can-load',
   'can-load-poster',
+  'can-load',
+  'can-pip',
   'can-play',
   'can-seek',
+  'captions',
+  'controls',
   'ended',
   'error',
   'fullscreen',
-  'controls',
-  'loop',
-  'live',
+  'ios-controls',
   'live-edge',
+  'live',
+  'loop',
   'muted',
   'paused',
   'pip',
@@ -27,7 +28,6 @@ const mediaAttributes = [
   'seeking',
   'started',
   'waiting',
-  'ios-controls',
 ];
 
 module.exports = createPlugin.withOptions(function (options) {
@@ -36,6 +36,18 @@ module.exports = createPlugin.withOptions(function (options) {
     prefix = prefixOpt ? `${prefixOpt}-` : 'media-';
 
   return function ({ addVariant }) {
+    // TODO: expose these
+    // airplay
+    // can-airplay
+    // can-google-cast
+    // google-cast
+    // remote-state
+    // remote-type
+    // load
+    // view-type
+    // media-type
+    // stream-type
+
     mediaAttributes.forEach((name) => {
       addVariant(`${prefix}${name}`, `${selector}[data-${name}] &`);
       addVariant(`not-${prefix}${name}`, `${selector}:not([data-${name}]) &`);

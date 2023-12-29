@@ -88,6 +88,15 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Dispatch a request to connect AirPlay.
+   *
+   * @see {@link https://www.apple.com/au/airplay}
+   */
+  requestAirPlay(trigger?: Event) {
+    this._dispatchRequest('media-airplay-request', trigger);
+  }
+
+  /**
    * Dispatch a request to begin/resume media playback.
    */
   play(trigger?: Event) {

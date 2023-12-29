@@ -26,9 +26,13 @@ async function buildIcons() {
     .map((name) => kebabToCamelCase(name) + 'Paths')
     .join(',\n');
 
+  const alias = {
+    airplay: 'AirPlay',
+  };
+
   const components = Object.keys(icons)
     .map((iconName) => {
-      const IconName = kebabToPascalCase(iconName) + 'Icon';
+      const IconName = (alias[iconName] ?? kebabToPascalCase(iconName)) + 'Icon';
       return (
         `/** [Click here to preview icon](https://vidstack.io/media-icons?lib=react&icon=${iconName}) */\n` +
         `export const ${IconName}: IconComponent = /* #__PURE__*/ forwardRef` +

@@ -41,6 +41,7 @@ export interface MediaProviderAdapter
   readonly currentSrc: MediaSrc | null;
   readonly fullscreen?: MediaFullscreenAdapter;
   readonly pictureInPicture?: MediaPictureInPictureAdapter;
+  readonly airPlay?: MediaAirPlayAdapter;
   readonly canLiveSync?: boolean;
   preconnect?(ctx: MediaContext): void;
   setup(ctx: MediaSetupContext): void;
@@ -57,6 +58,17 @@ export interface MediaProviderAdapter
 
 export interface MediaSetupContext extends MediaContext {
   player: MediaPlayer;
+}
+
+export interface MediaAirPlayAdapter {
+  /**
+   * Whether requesting AirPlay is supported.
+   */
+  readonly supported: boolean;
+  /**
+   * Request to open AirPlay.
+   */
+  request(): Promise<void>;
 }
 
 export interface MediaFullscreenAdapter extends FullscreenAdapter {}

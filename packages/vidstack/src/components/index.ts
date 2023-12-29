@@ -10,6 +10,7 @@ export * from './ui/tooltip/tooltip';
 export * from './ui/tooltip/tooltip-trigger';
 export * from './ui/tooltip/tooltip-content';
 export * from './ui/buttons/toggle-button';
+export * from './ui/buttons/airplay-button';
 export * from './ui/buttons/play-button';
 export * from './ui/buttons/caption-button';
 export * from './ui/buttons/fullscreen-button';

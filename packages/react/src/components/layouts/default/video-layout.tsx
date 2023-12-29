@@ -10,6 +10,7 @@ import { DefaultLayoutContext } from './context';
 import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
 import {
   createDefaultMediaLayout,
+  DefaultAirPlayButton,
   DefaultCaptionButton,
   DefaultChaptersMenu,
   DefaultChapterTitle,
@@ -102,6 +103,7 @@ function DefaultVideoLargeLayout() {
           {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top" />)}
           {menuGroup === 'bottom' && <DefaultVideoMenus slots={slots} />}
+          {slot(slots, 'airPlayButton', <DefaultAirPlayButton tooltip="top" />)}
           {slot(slots, 'pipButton', <DefaultPIPButton tooltip="top" />)}
           {slot(slots, 'fullscreenButton', <DefaultFullscreenButton tooltip="top end" />)}
         </Controls.Group>
@@ -126,6 +128,7 @@ function DefaultVideoSmallLayout() {
       {slot(slots, 'captions', <Captions className="vds-captions" />)}
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
+          {slot(slots, 'airPlayButton', <DefaultAirPlayButton tooltip="top start" />)}
           <div className="vds-controls-spacer" />
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="bottom" />)}
           <DefaultVideoMenus slots={slots} />

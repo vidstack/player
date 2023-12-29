@@ -1,3 +1,4 @@
+import airplay from 'media-icons/dist/icons/airplay.js';
 import menuArrowLeft from 'media-icons/dist/icons/arrow-left.js';
 import chapters from 'media-icons/dist/icons/chapters.js';
 import menuArrowRight from 'media-icons/dist/icons/chevron-right.js';
@@ -22,6 +23,7 @@ import volumeHigh from 'media-icons/dist/icons/volume-high.js';
 import volumeLow from 'media-icons/dist/icons/volume-low.js';
 
 export const icons = {
+  airplay,
   play,
   pause,
   replay,

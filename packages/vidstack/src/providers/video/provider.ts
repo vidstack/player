@@ -8,11 +8,13 @@ import {
 } from '../../utils/support';
 import { HTMLMediaProvider } from '../html/provider';
 import type {
+  MediaAirPlayAdapter,
   MediaFullscreenAdapter,
   MediaPictureInPictureAdapter,
   MediaProviderAdapter,
   MediaSetupContext,
 } from '../types';
+import { VideoAirPlayAdapter } from './airplay';
 import { NativeHLSTextTracks } from './native-hls-text-tracks';
 import { VideoPictureInPicture } from './picture-in-picture';
 import {
@@ -44,12 +46,16 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
     return 'video';
   }
 
+  airPlay?: MediaAirPlayAdapter;
   fullscreen?: MediaFullscreenAdapter;
   pictureInPicture?: MediaPictureInPictureAdapter;
 
   constructor(video: HTMLVideoElement, ctx: MediaContext) {
     super(video);
+
     scoped(() => {
+      this.airPlay = new VideoAirPlayAdapter(video, ctx);
+
       if (canUseVideoPresentation(video)) {
         const presentation = new VideoPresentation(video, ctx);
         this.fullscreen = new FullscreenPresentationAdapter(presentation);

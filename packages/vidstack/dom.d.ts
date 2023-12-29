@@ -77,6 +77,11 @@ declare global {
      * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631224-webkitsetpresentationmode}
      */
     webkitSetPresentationMode?(mode: WebKitPresentationMode): Promise<void>;
+
+    /**
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlmediaelement/1632172-webkitshowplaybacktargetpicker}
+     */
+    webkitShowPlaybackTargetPicker?(): void;
   }
 }
 

@@ -1,5 +1,6 @@
 import { defineCustomElement } from 'maverick.js/element';
 
+import { MediaAirPlayButtonElement } from '../define/buttons/airplay-button-element';
 import { MediaCaptionButtonElement } from '../define/buttons/caption-button-element';
 import { MediaFullscreenButtonElement } from '../define/buttons/fullscreen-button-element';
 import { MediaLiveButtonElement } from '../define/buttons/live-button-element';
@@ -54,6 +55,7 @@ defineCustomElement(MediaPIPButtonElement);
 defineCustomElement(MediaPlayButtonElement);
 defineCustomElement(MediaSeekButtonElement);
 defineCustomElement(MediaToggleButtonElement);
+defineCustomElement(MediaAirPlayButtonElement);
 // Sliders
 defineCustomElement(MediaSliderElement);
 defineCustomElement(MediaVolumeSliderElement);

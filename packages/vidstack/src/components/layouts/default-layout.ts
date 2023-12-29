@@ -194,10 +194,14 @@ export interface DefaultLayoutTranslations {
   'Exit PiP': string;
   'Seek Backward': string;
   'Seek Forward': string;
+  AirPlay: string;
   Audio: string;
   Auto: string;
   Captions: string;
   Chapters: string;
+  Connected: string;
+  Connecting: string;
+  Disconnected: string;
   Default: string;
   LIVE: string;
   Mute: string;

@@ -20,6 +20,7 @@ export { MediaAudioLayoutElement } from './define/layouts/default/audio-layout-e
 export { MediaVideoLayoutElement } from './define/layouts/default/video-layout-element';
 
 // Buttons
+export { MediaAirPlayButtonElement } from './define/buttons/airplay-button-element';
 export { MediaPlayButtonElement } from './define/buttons/play-button-element';
 export { MediaMuteButtonElement } from './define/buttons/mute-button-element';
 export { MediaCaptionButtonElement } from './define/buttons/caption-button-element';

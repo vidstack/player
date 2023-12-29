@@ -13,6 +13,7 @@ import type {
   MediaStreamType,
   MediaType,
   MediaViewType,
+  RemotePlaybackType,
 } from './types';
 
 export interface MediaPlayerState extends MediaState {}
@@ -118,6 +119,18 @@ export const mediaState = new State<MediaState>({
     return Math.max(0, this.seekableEnd - this.seekableStart);
   },
 
+  // ~~ remote playback ~~
+  canAirPlay: false,
+  canGoogleCast: false,
+  remotePlaybackState: 'disconnected',
+  remotePlaybackType: 'none',
+  get isAirPlayConnected() {
+    return this.remotePlaybackType === 'airplay' && this.remotePlaybackState === 'connected';
+  },
+  get isGoogleCastConnected() {
+    return this.remotePlaybackType === 'google-cast' && this.remotePlaybackState === 'connected';
+  },
+
   // ~~ responsive design ~~
   pointer: 'fine',
   orientation: 'landscape',
@@ -179,6 +192,10 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'canLoad',
   'canLoadPoster',
   'canPictureInPicture',
+  'canAirPlay',
+  'canGoogleCast',
+  'remotePlaybackState',
+  'remotePlaybackType',
   'canSetVolume',
   'clipEndTime',
   'clipStartTime',
@@ -282,6 +299,31 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration}
    */
   readonly duration: number;
+  /**
+   * Whether Apple AirPlay is available for casting and playing media on another device such as a
+   * TV.
+   */
+  canAirPlay: boolean;
+  /**
+   * Whether Google Cast is available for casting and playing media on another device such as a TV.
+   */
+  canGoogleCast: boolean;
+  /**
+   * The current remote playback state when using AirPlay or Google Cast.
+   */
+  remotePlaybackState: RemotePlaybackState;
+  /**
+   * The type of remote playback that is currently connecting or connected.
+   */
+  remotePlaybackType: RemotePlaybackType;
+  /**
+   * Whether AirPlay is connected.
+   */
+  readonly isAirPlayConnected: boolean;
+  /**
+   * Whether Google Cast is connected.
+   */
+  readonly isGoogleCastConnected: boolean;
   /**
    * Whether the native browser Fullscreen API is available, or the current provider can
    * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,

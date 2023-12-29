@@ -1,5 +1,5 @@
 import { effect, peek, type ReadSignal } from 'maverick.js';
-import { DOMEvent, isUndefined } from 'maverick.js/std';
+import { isUndefined } from 'maverick.js/std';
 
 import {
   FullscreenController,
@@ -59,6 +59,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this._attachLoadPlayListener();
     effect(this._watchProvider.bind(this));
     effect(this._onControlsDelayChange.bind(this));
+    effect(this._onAirPlaySupportChange.bind(this));
     effect(this._onFullscreenSupportChange.bind(this));
     effect(this._onPiPSupportChange.bind(this));
   }
@@ -134,6 +135,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       if (__DEV__) {
         this._media.logger
           ?.errorGroup('play request failed')
+          .labelledLog('Provider', this._$provider())
           .labelledLog('Trigger', trigger)
           .labelledLog('Error', error)
           .dispatch();
@@ -162,7 +164,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       this._providerQueue._enqueue('play', async () => {
         try {
           await this._play(event);
-        } catch (e) {
+        } catch (error) {
           // no-op
         }
       });
@@ -306,22 +308,49 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this._controls.defaultDelay = this.$props.controlsDelay();
   }
 
+  private _onAirPlaySupportChange() {
+    const { canAirPlay } = this.$state,
+      supported = !!this._$provider()?.airPlay?.supported;
+    canAirPlay.set(supported);
+  }
+
   private _onFullscreenSupportChange() {
-    const { canLoad, canFullscreen } = this.$state,
-      supported = this._fullscreen.supported || this._$provider()?.fullscreen?.supported || false;
-
-    if (canLoad() && peek(canFullscreen) === supported) return;
-
+    const { canFullscreen } = this.$state,
+      supported = this._fullscreen.supported || !!this._$provider()?.fullscreen?.supported;
     canFullscreen.set(supported);
   }
 
   private _onPiPSupportChange() {
-    const { canLoad, canPictureInPicture } = this.$state,
-      supported = this._$provider()?.pictureInPicture?.supported || false;
-
-    if (canLoad() && peek(canPictureInPicture) === supported) return;
-
+    const { canPictureInPicture } = this.$state,
+      supported = !!this._$provider()?.pictureInPicture?.supported;
     canPictureInPicture.set(supported);
+  }
+
+  async ['media-airplay-request'](event: RE.MediaAirPlayRequestEvent) {
+    try {
+      const adapter = this._$provider()?.airPlay;
+
+      if (!adapter) {
+        throw Error(__DEV__ ? 'AirPlay adapter not available on provider.' : 'No AirPlay adapter.');
+      }
+
+      this._request._queue._enqueue('airPlay', event);
+      await adapter.request();
+    } catch (error) {
+      this._request._queue._delete('airPlay');
+      if (__DEV__) {
+        this._media.logger
+          ?.errorGroup('airplay request failed')
+          .labelledLog('Provider', this._$provider())
+          .labelledLog('Request', event)
+          .labelledLog('Error', error)
+          .dispatch();
+      }
+    }
+  }
+
+  async ['media-google-cast-request'](event: RE.MediaGoogleCastRequestEvent) {
+    // TODO: Implement google cast.
   }
 
   ['media-audio-track-change-request'](event: RE.MediaAudioTrackChangeRequestEvent) {
@@ -391,6 +420,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     if (__DEV__) {
       this._media.logger
         ?.errorGroup('fullscreen request failed')
+        .labelledLog('Provider', this._$provider())
         .labelledLog('Request', request)
         .labelledLog('Error', error)
         .dispatch();
@@ -455,6 +485,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     if (__DEV__) {
       this._media.logger
         ?.errorGroup('pip request failed')
+        .labelledLog('Provider', this._$provider())
         .labelledLog('Request', request)
         .labelledLog('Error', error)
         .dispatch();
@@ -483,7 +514,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       this._request._looping = true;
       this._request._replaying = true;
       await this._play(event);
-    } catch (e) {
+    } catch (error) {
       this._request._looping = false;
     }
   }
@@ -496,6 +527,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       if (__DEV__) {
         this._media.logger
           ?.errorGroup('pause request failed')
+          .labelledLog('Provider', this._$provider())
           .labelledLog('Request', event)
           .labelledLog('Error', error)
           .dispatch();
@@ -691,21 +723,23 @@ export class MediaRequestContext {
 }
 
 export interface MediaRequestQueueRecord {
+  airPlay: RE.MediaAirPlayRequestEvent;
   audioTrack: RE.MediaAudioTrackChangeRequestEvent;
-  load: RE.MediaStartLoadingRequestEvent;
-  posterLoad: RE.MediaPosterStartLoadingRequestEvent;
-  play: RE.MediaPlayRequestEvent;
-  pause: RE.MediaPauseRequestEvent;
-  rate: RE.MediaRateChangeRequestEvent;
-  volume: RE.MediaVolumeChangeRequestEvent | RE.MediaMuteRequestEvent | RE.MediaUnmuteRequestEvent;
+  controls: RE.MediaResumeControlsRequestEvent | RE.MediaPauseControlsRequestEvent;
   fullscreen: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
+  googleCast: RE.MediaGoogleCastRequestEvent;
+  load: RE.MediaStartLoadingRequestEvent;
   orientation: RE.MediaOrientationLockRequestEvent | RE.MediaOrientationUnlockRequestEvent;
+  pause: RE.MediaPauseRequestEvent;
+  pip: RE.MediaEnterPIPRequestEvent | RE.MediaExitPIPRequestEvent;
+  play: RE.MediaPlayRequestEvent;
+  posterLoad: RE.MediaPosterStartLoadingRequestEvent;
+  quality: RE.MediaQualityChangeRequestEvent;
+  rate: RE.MediaRateChangeRequestEvent;
   seeked: RE.MediaSeekRequestEvent | RE.MediaLiveEdgeRequestEvent;
   seeking: RE.MediaSeekingRequestEvent;
   textTrack: RE.MediaTextTrackChangeRequestEvent;
-  quality: RE.MediaQualityChangeRequestEvent;
-  pip: RE.MediaEnterPIPRequestEvent | RE.MediaExitPIPRequestEvent;
-  controls: RE.MediaResumeControlsRequestEvent | RE.MediaPauseControlsRequestEvent;
+  volume: RE.MediaVolumeChangeRequestEvent | RE.MediaMuteRequestEvent | RE.MediaUnmuteRequestEvent;
 }
 
 export type MediaRequestHandler = {

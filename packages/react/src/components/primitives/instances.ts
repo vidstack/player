@@ -1,4 +1,5 @@
 import {
+  AirPlayButton,
   CaptionButton,
   Captions,
   Controls,
@@ -50,6 +51,7 @@ export class LiveButtonInstance extends LiveButton {}
 export class MuteButtonInstance extends MuteButton {}
 export class PIPButtonInstance extends PIPButton {}
 export class PlayButtonInstance extends PlayButton {}
+export class AirPlayButtonInstance extends AirPlayButton {}
 export class SeekButtonInstance extends SeekButton {}
 // Tooltip
 export class TooltipInstance extends Tooltip {}

@@ -16,6 +16,8 @@ export type MediaStreamType =
 
 export type MediaCrossOrigin = '' | 'anonymous' | 'use-credentials';
 
+export type RemotePlaybackType = 'airplay' | 'google-cast' | 'none';
+
 /**
  * Indicates the current view type which determines how the media will be presented.
  */

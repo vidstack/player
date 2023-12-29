@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import airPlayPaths from 'media-icons/dist/icons/airplay.js';
 import arrowLeftPaths from 'media-icons/dist/icons/arrow-left.js';
 import chaptersIconPaths from 'media-icons/dist/icons/chapters.js';
 import arrowRightPaths from 'media-icons/dist/icons/chevron-right.js';
@@ -34,6 +35,9 @@ function createIcon(paths: string) {
 }
 
 export const defaultLayoutIcons: DefaultLayoutIcons = {
+  AirPlayButton: {
+    Default: createIcon(airPlayPaths),
+  },
   PlayButton: {
     Play: createIcon(playIconPaths),
     Pause: createIcon(pauseIconPaths),
@@ -93,6 +97,11 @@ export interface DefaultLayoutIcon {
 }
 
 export interface DefaultLayoutIcons {
+  AirPlayButton: {
+    Default: DefaultLayoutIcon;
+    Connecting?: DefaultLayoutIcon;
+    Connected?: DefaultLayoutIcon;
+  };
   PlayButton: {
     Play: DefaultLayoutIcon;
     Pause: DefaultLayoutIcon;

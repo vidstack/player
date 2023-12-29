@@ -3,11 +3,13 @@ import type { DOMEvent } from 'maverick.js/std';
 import type { ScreenOrientationLockType } from '../../foundation/orientation/types';
 
 export interface MediaRequestEvents {
+  'media-airplay-request': MediaAirPlayRequestEvent;
   'media-audio-track-change-request': MediaAudioTrackChangeRequestEvent;
   'media-enter-fullscreen-request': MediaEnterFullscreenRequestEvent;
   'media-exit-fullscreen-request': MediaExitFullscreenRequestEvent;
   'media-enter-pip-request': MediaEnterPIPRequestEvent;
   'media-exit-pip-request': MediaExitPIPRequestEvent;
+  'media-google-cast-request': MediaGoogleCastRequestEvent;
   'media-live-edge-request': MediaLiveEdgeRequestEvent;
   'media-loop-request': MediaLoopRequestEvent;
   'media-orientation-lock-request': MediaOrientationLockRequestEvent;
@@ -29,13 +31,12 @@ export interface MediaRequestEvents {
 }
 
 /**
- * Fired when requesting media to begin loading. This will only take effect if the `load`
- * strategy on the player is set to `custom`.
+ * Fired when requesting the AirPlay picker to open.
  *
  * @bubbles
  * @composed
  */
-export interface MediaStartLoadingRequestEvent extends DOMEvent<void> {}
+export interface MediaAirPlayRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the media poster to begin loading. This will only take effect if the
@@ -125,6 +126,14 @@ export interface MediaEnterPIPRequestEvent extends DOMEvent<void> {}
 export interface MediaExitPIPRequestEvent extends DOMEvent<void> {}
 
 /**
+ * Fired when requesting Google Cast.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaGoogleCastRequestEvent extends DOMEvent<void> {}
+
+/**
  * Fired when requesting media to seek to the live edge (i.e., set the current time to the current
  * live time).
  */
@@ -182,6 +191,15 @@ export interface MediaSeekRequestEvent extends DOMEvent<number> {}
  * @detail time
  */
 export interface MediaSeekingRequestEvent extends DOMEvent<number> {}
+
+/**
+ * Fired when requesting media to begin loading. This will only take effect if the `load`
+ * strategy on the player is set to `custom`.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaStartLoadingRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the media volume to be set to a new level.

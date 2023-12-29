@@ -6,6 +6,7 @@ import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed } from '../../../lit/directives/signal';
 import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
 import {
+  DefaultAirPlayButton,
   DefaultCaptionButton,
   DefaultChaptersMenu,
   DefaultFullscreenButton,
@@ -39,7 +40,8 @@ export function DefaultVideoLayoutLarge() {
         ${$computed(DefaultTimeInfo)}
         <media-chapter-title class="vds-chapter-title"></media-chapter-title>
         ${DefaultCaptionButton({ tooltip: 'top' })}${$computed(DefaultBottomMenuGroup)}
-        ${DefaultPIPButton()} ${DefaultFullscreenButton({ tooltip: 'top end' })}
+        ${DefaultAirPlayButton({ tooltip: 'top' })}
+        ${DefaultPIPButton()}${DefaultFullscreenButton({ tooltip: 'top end' })}
       </media-controls-group>
     </media-controls>
   `;
@@ -74,6 +76,7 @@ export function DefaultVideoLayoutSmall() {
 
     <media-controls class="vds-controls">
       <media-controls-group class="vds-controls-group">
+        ${DefaultAirPlayButton({ tooltip: 'top start' })}
         <div class="vds-controls-spacer"></div>
         ${DefaultCaptionButton({ tooltip: 'bottom' })}
         ${DefaultVideoMenus()}${DefaultMuteButton({ tooltip: 'bottom end' })}

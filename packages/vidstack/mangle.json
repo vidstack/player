@@ -653,5 +653,9 @@
   "_resolveBaseUrl": "dl",
   "_resolveData": "fl",
   "_resolveURL": "gl",
-  "_processImages": "jl"
+  "_processImages": "jl",
+  "_getStatus": "ml",
+  "_isRemotePlaybackTypeConnected": "nl",
+  "_onAirPlaySupportChange": "ll",
+  "_peek": "kl"
 }

@@ -125,7 +125,7 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
     : $mediaType
       ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {
           ...props,
-          controls: $nativeControls ? '' : null,
+          controls: $nativeControls ? 'true' : null,
           crossOrigin: typeof $crossorigin === 'boolean' ? '' : $crossorigin,
           poster: $mediaType === 'video' && $nativeControls && $poster ? $poster : null,
           preload: 'none',
