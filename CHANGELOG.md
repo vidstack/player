@@ -20,9 +20,10 @@ All notable changes to this project will be documented in this file.
 - load chapters from vimeo embed ([8a23415](https://github.com/vidstack/player/commit/8a234151a1251e01cbb62708a6aa2c028eca8f6c))
 - new `crossOrigin` prop on poster component ([ecbf277](https://github.com/vidstack/player/commit/ecbf2778e813b357ea60f37c5d81f705979f1083))
 - new `crossOrigin` prop on slider video component ([d699c7b](https://github.com/vidstack/player/commit/d699c7b9eb6a583a052f60e562853f7b727f7c5c))
-- new `crossOrigin` prop on thumbnail components ([fa9ee2d](https://github.com/vidstack/player/commit/fa9ee2d26465b2c22e081f605849ccfca2a9f102))
-- support new thumbnail src types ([842f7c4](https://github.com/vidstack/player/commit/842f7c422b44842bda48a5e9c5a39cb5572861e8))
-- new keyboard action display in default layout ([4cc543f](https://github.com/vidstack/player/commit/4cc543f986551c999f0b22fd1e434a1e6df05273))
+- new `crossOrigin` prop on thumbnail components ([72b8056](https://github.com/vidstack/player/commit/72b805680be2726c9d2286e925e7492f7c32ace9))
+- support new thumbnail src types ([698e575](https://github.com/vidstack/player/commit/698e5756ace9b0a85fffaa33083f567c9f127945))
+- new keyboard action display in default layout ([52890b0](https://github.com/vidstack/player/commit/52890b0373a99d32a9620d46b5e5d7734ca85d16))
+- new airplay button ([0448950](https://github.com/vidstack/player/commit/0448950968e1bb9702e10b843f51e066ff661467))
 
 #### Player (React)
 
@@ -46,6 +47,7 @@ All notable changes to this project will be documented in this file.
 - catch false postive vimeo pro detection ([29d6fa0](https://github.com/vidstack/player/commit/29d6fa05fbcc373e47232cf5412f7f1f73446fae))
 - use intrisic duration for last vimeo chapter end time ([4dbe21e](https://github.com/vidstack/player/commit/4dbe21eafdba83ef5071f3be7f9eadbc8999e96d))
 - rename `crossorigin` prop to `crossOrigin` ([37513ea](https://github.com/vidstack/player/commit/37513ea12c761c65f1dbbfd8280d9635be4ffb50))
+- rework media request queue ([cd888a8](https://github.com/vidstack/player/commit/cd888a8025fbfdfd1a6d92aa083f2f18b9880f0a))
 
 #### Player (React)
 
