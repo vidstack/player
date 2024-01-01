@@ -24,7 +24,7 @@ import type {
   TextTrackListModeChangeEvent,
   TextTrackRemoveEvent,
 } from '../tracks/text/text-tracks';
-import type { MediaRequestContext, MediaRequestQueueRecord } from './media-request-manager';
+import type { MediaRequestContext, MediaRequestQueueItems } from './media-request-manager';
 import { TRACKED_EVENT } from './tracked-media-events';
 
 /**
@@ -101,11 +101,11 @@ export class MediaStateManager extends MediaPlayerController {
     this._trackedEvents.clear();
   }
 
-  private _satisfyRequest<T extends keyof MediaRequestQueueRecord>(request: T, event: any) {
-    this._request._queue._serve(request, (requestEvent) => {
-      event.request = requestEvent;
-      event.triggers.add(requestEvent);
-    });
+  private _satisfyRequest<T extends keyof MediaRequestQueueItems>(request: T, event: DOMEvent) {
+    const requestEvent = this._request._queue._serve(request);
+    if (!requestEvent) return;
+    (event as ME.MediaEvent).request = requestEvent;
+    event.triggers.add(requestEvent);
   }
 
   private _addTextTrackListeners() {
@@ -143,7 +143,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   private _onTextTrackModeChange(event?: TextTrackListModeChangeEvent) {
-    if (event) this._satisfyRequest('textTrack', event);
+    if (event) this._satisfyRequest('media-text-track-change-request', event);
 
     const current = this._media.textTracks.selected,
       { textTrack } = this.$state;
@@ -168,8 +168,10 @@ export class MediaStateManager extends MediaPlayerController {
 
   private _onAudioTrackChange(event?: AudioTrackChangeEvent) {
     const { audioTrack } = this.$state;
+
     audioTrack.set(this._media.audioTracks.selected);
-    this._satisfyRequest('audioTrack', event);
+    if (event) this._satisfyRequest('media-audio-track-change-request', event);
+
     this.dispatch('audio-track-change', {
       detail: audioTrack(),
       trigger: event,
@@ -187,8 +189,10 @@ export class MediaStateManager extends MediaPlayerController {
 
   private _onQualityChange(event?: VideoQualityChangeEvent) {
     const { quality } = this.$state;
+
     quality.set(this._media.qualities.selected);
-    this._satisfyRequest('quality', event);
+    if (event) this._satisfyRequest('media-quality-change-request', event);
+
     this.dispatch('quality-change', {
       detail: quality(),
       trigger: event,
@@ -237,14 +241,14 @@ export class MediaStateManager extends MediaPlayerController {
   ['can-load'](event: ME.MediaCanLoadEvent) {
     this.$state.canLoad.set(true);
     this._trackedEvents.set('can-load', event);
-    this._satisfyRequest('load', event);
     this._media.textTracks[TextTrackSymbol._canLoad]();
+    this._satisfyRequest('media-start-loading', event);
   }
 
   ['can-load-poster'](event: ME.MediaCanLoadEvent) {
     this.$state.canLoadPoster.set(true);
     this._trackedEvents.set('can-load-poster', event);
-    this._satisfyRequest('posterLoad', event);
+    this._satisfyRequest('media-poster-start-loading', event);
   }
 
   ['media-type-change'](event: ME.MediaTypeChangeEvent) {
@@ -287,7 +291,7 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['rate-change'](event: ME.MediaRateChangeEvent) {
     this.$state.playbackRate.set(event.detail);
-    this._satisfyRequest('rate', event);
+    this._satisfyRequest('media-rate-change-request', event);
   }
 
   ['remote-playback-change'](event: ME.MediaRemotePlaybackChangeEvent) {
@@ -298,13 +302,17 @@ export class MediaStateManager extends MediaPlayerController {
     remotePlaybackType.set(type);
     remotePlaybackState.set(state);
 
-    const queueKey = type === 'airplay' ? 'airPlay' : 'googleCast';
+    const key: keyof MediaRequestQueueItems =
+      type === 'airplay' ? 'media-airplay-request' : 'media-google-cast-request';
+
     if (isConnected) {
-      this._satisfyRequest(queueKey, event);
+      this._satisfyRequest(key, event);
     } else {
-      this._request._queue._peek(queueKey, (requestEvent) => {
+      const requestEvent = this._request._queue._peek(key);
+      if (requestEvent) {
         event.request = requestEvent;
-      });
+        event.triggers.add(requestEvent);
+      }
     }
   }
 
@@ -429,7 +437,7 @@ export class MediaStateManager extends MediaPlayerController {
     const waitingEvent = this._trackedEvents.get('waiting');
     if (waitingEvent) event.triggers.add(waitingEvent);
 
-    this._satisfyRequest('play', event);
+    this._satisfyRequest('media-play-request', event);
     this._trackedEvents.set('play', event);
 
     paused.set(false);
@@ -490,7 +498,7 @@ export class MediaStateManager extends MediaPlayerController {
     const playEvent = this._trackedEvents.get('play');
     if (playEvent) event.triggers.add(playEvent);
 
-    this._satisfyRequest('play', event);
+    this._satisfyRequest('media-play-request', event);
 
     const { paused, playing } = this.$state;
     paused.set(true);
@@ -567,7 +575,7 @@ export class MediaStateManager extends MediaPlayerController {
       this._isPlayingOnDisconnect = true;
     }
 
-    this._satisfyRequest('pause', event);
+    this._satisfyRequest('media-pause-request', event);
 
     const seekedEvent = this._trackedEvents.get('seeked');
     if (seekedEvent) event.triggers.add(seekedEvent);
@@ -634,7 +642,9 @@ export class MediaStateManager extends MediaPlayerController {
 
     volume.set(detail.volume);
     muted.set(detail.muted || detail.volume === 0);
-    this._satisfyRequest('volume', event);
+
+    this._satisfyRequest('media-volume-change-request', event);
+    this._satisfyRequest(detail.muted ? 'media-mute-request' : 'media-unmute-request', event);
 
     storage.volume = volume();
     storage.muted = muted();
@@ -645,7 +655,7 @@ export class MediaStateManager extends MediaPlayerController {
       const { seeking, realCurrentTime, paused } = this.$state;
       seeking.set(true);
       realCurrentTime.set(event.detail);
-      this._satisfyRequest('seeking', event);
+      this._satisfyRequest('media-seeking-request', event);
       if (paused()) {
         this._waitingTrigger = event;
         this._fireWaiting();
@@ -677,7 +687,7 @@ export class MediaStateManager extends MediaPlayerController {
       if (event.detail !== duration()) ended.set(false);
 
       realCurrentTime.set(event.detail);
-      this._satisfyRequest('seeked', event);
+      this._satisfyRequest('media-seek-request', event);
 
       // Only start if user initiated.
       const origin = event?.originEvent;
@@ -755,25 +765,36 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['fullscreen-change'](event: ME.MediaFullscreenChangeEvent) {
-    this.$state.fullscreen.set(event.detail);
-    this._satisfyRequest('fullscreen', event);
+    const isFullscreen = event.detail;
+    this.$state.fullscreen.set(isFullscreen);
+    this._satisfyRequest(
+      isFullscreen ? 'media-enter-fullscreen-request' : 'media-exit-fullscreen-request',
+      event,
+    );
   }
 
   ['fullscreen-error'](event: ME.MediaFullscreenErrorEvent) {
-    this._satisfyRequest('fullscreen', event);
+    this._satisfyRequest('media-enter-fullscreen-request', event);
+    this._satisfyRequest('media-exit-fullscreen-request', event);
   }
 
   ['orientation-change'](event: ME.MediaOrientationChangeEvent) {
-    this._satisfyRequest('orientation', event);
+    const isLocked = event.detail.lock;
+    this._satisfyRequest(
+      isLocked ? 'media-orientation-lock-request' : 'media-orientation-unlock-request',
+      event,
+    );
   }
 
   ['picture-in-picture-change'](event: ME.MediaPIPChangeEvent) {
-    this.$state.pictureInPicture.set(event.detail);
-    this._satisfyRequest('pip', event);
+    const isPiP = event.detail;
+    this.$state.pictureInPicture.set(isPiP);
+    this._satisfyRequest(isPiP ? 'media-enter-pip-request' : 'media-exit-pip-request', event);
   }
 
   ['picture-in-picture-error'](event: ME.MediaPIPErrorEvent) {
-    this._satisfyRequest('pip', event);
+    this._satisfyRequest('media-enter-pip-request', event);
+    this._satisfyRequest('media-exit-pip-request', event);
   }
 
   ['title-change'](event: ME.MediaPosterChangeEvent) {

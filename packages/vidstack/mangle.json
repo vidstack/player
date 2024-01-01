@@ -657,5 +657,8 @@
   "_getStatus": "ml",
   "_isRemotePlaybackTypeConnected": "nl",
   "_onAirPlaySupportChange": "ll",
-  "_peek": "kl"
+  "_peek": "kl",
+  "_clear": "pl",
+  "_requestAirPlay": "ol",
+  "_logError": "ql"
 }

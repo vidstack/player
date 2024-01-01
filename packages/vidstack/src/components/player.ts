@@ -699,6 +699,14 @@ export class MediaPlayer
   }
 
   /**
+   * Request Apple AirPlay picker to open.
+   */
+  @method
+  requestAirPlay(trigger?: Event) {
+    return this._requestMgr._requestAirPlay(trigger);
+  }
+
+  /**
    * Returns a new `PlayerQueryList` object that can then be used to determine if the
    * player and document matches the query string, as well as to monitor any changes to detect
    * when it matches (or stops matching) that query.

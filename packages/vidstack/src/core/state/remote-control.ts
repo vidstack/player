@@ -482,7 +482,8 @@ export class MediaRemoteControl {
     }
 
     if (this._player) {
-      if (type === 'media-play-request' && !this._player.$state.canLoad()) {
+      // Special case if the player load strategy is set to `play`.
+      if (type === 'media-play-request' && !this._player.state.canLoad) {
         target?.dispatchEvent(request);
       } else {
         this._player.canPlayQueue._enqueue(type, () => target?.dispatchEvent(request));

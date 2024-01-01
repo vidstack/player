@@ -3,21 +3,9 @@ import type { DOMEvent } from 'maverick.js/std';
 import type { MediaPlayer } from '../../components';
 import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
 import type { MediaProviderAdapter, MediaProviderLoader } from '../../providers/types';
-import type {
-  VideoQuality,
-  VideoQualityAddEvent,
-  VideoQualityChangeEvent,
-  VideoQualityRemoveEvent,
-} from '../quality/video-quality';
-import type {
-  AudioTrack,
-  AudioTrackAddEvent,
-  AudioTrackChangeEvent,
-  AudioTrackRemoveEvent,
-} from '../tracks/audio-tracks';
-import type { TextTrack, TextTrackModeChangeEvent } from '../tracks/text/text-track';
-import type { TextTrackAddEvent, TextTrackRemoveEvent } from '../tracks/text/text-tracks';
-import type * as RE from './media-request-events';
+import type { VideoQuality } from '../quality/video-quality';
+import type { AudioTrack } from '../tracks/audio-tracks';
+import type { TextTrack } from '../tracks/text/text-track';
 import type {
   MediaErrorDetail,
   MediaSrc,
@@ -91,7 +79,7 @@ export interface MediaEvents {
 
 export interface MediaEvent<Detail = unknown> extends DOMEvent<Detail> {
   target: MediaPlayer;
-  request?: DOMEvent<any>;
+  request?: Event;
 }
 
 /**
@@ -106,19 +94,14 @@ export interface MediaAbortEvent extends MediaEvent<void> {}
  *
  * @detail audioTrack
  */
-export interface MediaAudioTracksChangeEvent extends MediaEvent<AudioTrack[]> {
-  trigger: AudioTrackAddEvent | AudioTrackRemoveEvent;
-}
+export interface MediaAudioTracksChangeEvent extends MediaEvent<AudioTrack[]> {}
 
 /**
  * Fired when the current audio track changes.
  *
  * @detail audioTrack
  */
-export interface MediaAudioTrackChangeEvent extends MediaEvent<AudioTrack | null> {
-  trigger: AudioTrackChangeEvent;
-  request?: RE.MediaAudioTrackChangeRequestEvent;
-}
+export interface MediaAudioTrackChangeEvent extends MediaEvent<AudioTrack | null> {}
 
 /**
  * Fired when the `autoplay` property has changed value.
@@ -154,9 +137,7 @@ export interface MediaAutoplayEvent extends MediaEvent<MediaAutoplayEventDetail>
  *
  *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
  */
-export interface MediaCanLoadEvent extends MediaEvent<void> {
-  request?: RE.MediaStartLoadingRequestEvent;
-}
+export interface MediaCanLoadEvent extends MediaEvent<void> {}
 
 /**
  * Fired when the player can begin loading the poster image. This depends on the `posterLoad`
@@ -164,9 +145,7 @@ export interface MediaCanLoadEvent extends MediaEvent<void> {
  *
  *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
  */
-export interface MediaCanLoadPosterEvent extends MediaEvent<void> {
-  request?: RE.MediaPosterStartLoadingRequestEvent;
-}
+export interface MediaCanLoadPosterEvent extends MediaEvent<void> {}
 
 /**
  * Fired when the user agent can play the media, but estimates that **not enough** data has been
@@ -198,9 +177,7 @@ export interface MediaCanPlayThroughEvent extends MediaEvent<MediaCanPlayDetail>
  *
  * @detail isVisible
  */
-export interface MediaControlsChangeEvent extends MediaEvent<boolean> {
-  request?: RE.MediaResumeControlsRequestEvent | RE.MediaPauseControlsRequestEvent;
-}
+export interface MediaControlsChangeEvent extends MediaEvent<boolean> {}
 
 /**
  * Fired when the playback rate has changed. The event `detail` contains the new rate.
@@ -208,9 +185,7 @@ export interface MediaControlsChangeEvent extends MediaEvent<boolean> {
  * @detail rate
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ratechange_event}
  */
-export interface MediaRateChangeEvent extends MediaEvent<number> {
-  request?: RE.MediaRateChangeRequestEvent;
-}
+export interface MediaRateChangeEvent extends MediaEvent<number> {}
 
 export interface MediaRemotePlaybackChangeEventDetail {
   type: RemotePlaybackType;
@@ -222,9 +197,7 @@ export interface MediaRemotePlaybackChangeEventDetail {
  * (`airplay`, `google-cast`) has changed.
  */
 export interface MediaRemotePlaybackChangeEvent
-  extends MediaEvent<MediaRemotePlaybackChangeEventDetail> {
-  request?: RE.MediaAirPlayRequestEvent;
-}
+  extends MediaEvent<MediaRemotePlaybackChangeEventDetail> {}
 
 /**
  * Fired when the `source` property has changed value.
@@ -289,9 +262,7 @@ export interface MediaErrorEvent extends MediaEvent<MediaErrorDetail> {}
  * @composed
  * @detail isFullscreen
  */
-export interface MediaFullscreenChangeEvent extends MediaEvent<boolean> {
-  request?: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
-}
+export interface MediaFullscreenChangeEvent extends MediaEvent<boolean> {}
 
 /**
  * Fired when an error occurs either entering or exiting fullscreen. This will generally occur
@@ -301,9 +272,7 @@ export interface MediaFullscreenChangeEvent extends MediaEvent<boolean> {
  * @composed
  * @detail error
  */
-export interface MediaFullscreenErrorEvent extends MediaEvent<unknown> {
-  request?: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
-}
+export interface MediaFullscreenErrorEvent extends MediaEvent<unknown> {}
 
 /**
  * Fired when the frame at the current playback position of the media has finished loading; often
@@ -364,9 +333,7 @@ export interface MediaTypeChangeEvent extends MediaEvent<MediaType> {}
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event}
  */
-export interface MediaPauseEvent extends MediaEvent<void> {
-  request?: RE.MediaPauseRequestEvent;
-}
+export interface MediaPauseEvent extends MediaEvent<void> {}
 
 /**
  * Fired when the `paused` property is changed from `true` to `false`, as a result of the `play()`
@@ -376,7 +343,6 @@ export interface MediaPauseEvent extends MediaEvent<void> {
  */
 export interface MediaPlayEvent extends MediaEvent<void> {
   autoplay?: boolean;
-  request?: RE.MediaPlayRequestEvent;
 }
 
 /**
@@ -386,7 +352,6 @@ export interface MediaPlayEvent extends MediaEvent<void> {
  */
 export interface MediaPlayFailEvent extends MediaEvent<Error> {
   autoplay?: boolean;
-  request?: RE.MediaPlayRequestEvent;
 }
 
 /**
@@ -457,9 +422,7 @@ export interface MediaProviderSetupEvent extends MediaEvent<MediaProviderAdapter
  * @composed
  * @detail isPictureInPictureMode
  */
-export interface MediaPIPChangeEvent extends MediaEvent<boolean> {
-  request?: RE.MediaEnterPIPRequestEvent | RE.MediaExitPIPRequestEvent;
-}
+export interface MediaPIPChangeEvent extends MediaEvent<boolean> {}
 
 /**
  * Fired when an error occurs either entering or exiting picture-in-picture (PIP) mode. This will
@@ -469,18 +432,14 @@ export interface MediaPIPChangeEvent extends MediaEvent<boolean> {
  * @composed
  * @detail error
  */
-export interface MediaPIPErrorEvent extends MediaEvent<unknown> {
-  request?: RE.MediaEnterPIPRequestEvent | RE.MediaExitPIPRequestEvent;
-}
+export interface MediaPIPErrorEvent extends MediaEvent<unknown> {}
 
 /**
  * Fired when the list of available video qualities/renditions has changed.
  *
  * @detail renditions
  */
-export interface MediaQualitiesChangeEvent extends MediaEvent<VideoQuality[]> {
-  trigger: VideoQualityAddEvent | VideoQualityRemoveEvent;
-}
+export interface MediaQualitiesChangeEvent extends MediaEvent<VideoQuality[]> {}
 
 /**
  * Fired when the current video quality/rendition has changed. The event detail will be null if
@@ -488,10 +447,7 @@ export interface MediaQualitiesChangeEvent extends MediaEvent<VideoQuality[]> {
  *
  * @detail quality
  */
-export interface MediaQualityChangeEvent extends MediaEvent<VideoQuality | null> {
-  trigger: VideoQualityChangeEvent;
-  request?: RE.MediaQualityChangeRequestEvent;
-}
+export interface MediaQualityChangeEvent extends MediaEvent<VideoQuality | null> {}
 
 /**
  * Fired when a seek operation completed, the current playback position has changed, and the
@@ -500,9 +456,7 @@ export interface MediaQualityChangeEvent extends MediaEvent<VideoQuality | null>
  * @detail currentTime
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event}
  */
-export interface MediaSeekedEvent extends MediaEvent<number> {
-  request?: RE.MediaSeekRequestEvent;
-}
+export interface MediaSeekedEvent extends MediaEvent<number> {}
 
 /**
  * Fired when a seek operation starts, meaning the seeking property has changed to `true` and the
@@ -511,9 +465,7 @@ export interface MediaSeekedEvent extends MediaEvent<number> {
  * @detail currentTime
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event}
  */
-export interface MediaSeekingEvent extends MediaEvent<number> {
-  request?: RE.MediaSeekingRequestEvent;
-}
+export interface MediaSeekingEvent extends MediaEvent<number> {}
 
 /**
  * Fired when the current media sources has changed.
@@ -546,17 +498,13 @@ export interface MediaSuspendEvent extends MediaEvent<void> {}
 /**
  * Fired when a screen orientation change is requested on or by the media.
  */
-export interface MediaOrientationChangeEvent extends ScreenOrientationChangeEvent {
-  request?: RE.MediaOrientationLockRequestEvent | RE.MediaOrientationUnlockRequestEvent;
-}
+export interface MediaOrientationChangeEvent extends ScreenOrientationChangeEvent {}
 
 /**
  * Fired when media playback starts again after being in an `ended` state. This is fired
  * when the `loop` property is `true` and media loops, whereas the `play` event is not.
  */
-export interface MediaReplayEvent extends MediaEvent<void> {
-  request?: RE.MediaPlayRequestEvent;
-}
+export interface MediaReplayEvent extends MediaEvent<void> {}
 
 export interface MediaTimeUpdateEventDetail {
   currentTime: number;
@@ -591,19 +539,14 @@ export interface MediaStreamTypeChangeEvent extends MediaEvent<MediaStreamType> 
  *
  * @detail textTracks
  */
-export interface MediaTextTracksChangeEvent extends MediaEvent<TextTrack[]> {
-  trigger: TextTrackAddEvent | TextTrackRemoveEvent;
-}
+export interface MediaTextTracksChangeEvent extends MediaEvent<TextTrack[]> {}
 
 /**
  * Fired when the current captions/subtitles text track changes.
  *
  * @detail textTrack
  */
-export interface MediaTextTrackChangeEvent extends MediaEvent<TextTrack | null> {
-  trigger: TextTrackModeChangeEvent;
-  request?: RE.MediaTextTrackChangeRequestEvent;
-}
+export interface MediaTextTrackChangeEvent extends MediaEvent<TextTrack | null> {}
 
 /**
  * Fired when the `viewType` property changes value. This will generally fire when the
@@ -625,12 +568,7 @@ export interface MediaVolumeChange {
  * @detail volume
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event}
  */
-export interface MediaVolumeChangeEvent extends MediaEvent<MediaVolumeChange> {
-  request?:
-    | RE.MediaMuteRequestEvent
-    | RE.MediaUnmuteRequestEvent
-    | RE.MediaVolumeChangeRequestEvent;
-}
+export interface MediaVolumeChangeEvent extends MediaEvent<MediaVolumeChange> {}
 
 /**
  * Fired when playback has stopped because of a temporary lack of data.
