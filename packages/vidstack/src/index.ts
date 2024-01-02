@@ -1,5 +1,5 @@
 if (__DEV__) {
-  console.warn('[vidstack]: dev mode!');
+  console.warn('[vidstack] dev mode!');
 }
 
 // Foundation

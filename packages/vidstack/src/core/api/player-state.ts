@@ -1,6 +1,7 @@
 import { State, tick, type Store } from 'maverick.js';
 
 import type { LogLevel } from '../../foundation/logger/log-level';
+import type { MediaProviderLoader } from '../../providers/types';
 import { canOrientScreen } from '../../utils/support';
 import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
@@ -13,6 +14,7 @@ import type {
   MediaStreamType,
   MediaType,
   MediaViewType,
+  RemotePlaybackInfo,
   RemotePlaybackType,
 } from './types';
 
@@ -124,6 +126,8 @@ export const mediaState = new State<MediaState>({
   canGoogleCast: false,
   remotePlaybackState: 'disconnected',
   remotePlaybackType: 'none',
+  remotePlaybackLoader: null,
+  remotePlaybackInfo: null,
   get isAirPlayConnected() {
     return this.remotePlaybackType === 'airplay' && this.remotePlaybackState === 'connected';
   },
@@ -174,7 +178,7 @@ export const mediaState = new State<MediaState>({
   },
 
   // ~~ internal props ~~
-  autoplaying: false,
+  autoPlaying: false,
   providedTitle: '',
   inferredTitle: '',
   providedPoster: '',
@@ -186,54 +190,40 @@ export const mediaState = new State<MediaState>({
   liveSyncPosition: null,
 });
 
-const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
-  'autoplay',
-  'canFullscreen',
-  'canLoad',
-  'canLoadPoster',
-  'canPictureInPicture',
-  'canAirPlay',
-  'canGoogleCast',
-  'remotePlaybackState',
-  'remotePlaybackType',
-  'canSetVolume',
-  'clipEndTime',
-  'clipStartTime',
-  'controls',
-  'crossorigin',
-  'crossOrigin',
-  'fullscreen',
-  'height',
-  'inferredViewType',
-  'lastKeyboardAction',
-  'logLevel',
-  'loop',
-  'mediaHeight',
-  'mediaType',
-  'mediaWidth',
-  'muted',
-  'orientation',
-  'pictureInPicture',
-  'playsinline',
-  'pointer',
-  'preload',
-  'providedPoster',
-  'providedStreamType',
-  'providedTitle',
-  'providedViewType',
-  'source',
-  'sources',
-  'textTrack',
-  'textTracks',
-  'volume',
-  'width',
+const RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
+  'audioTrack',
+  'audioTracks',
+  'autoplayError',
+  'autoPlaying',
+  'autoQuality',
+  'buffered',
+  'canPlay',
+  'ended',
+  'error',
+  'inferredPoster',
+  'inferredStreamType',
+  'inferredTitle',
+  'intrinsicDuration',
+  'liveSyncPosition',
+  'paused',
+  'playbackRate',
+  'played',
+  'playing',
+  'qualities',
+  'quality',
+  'realCurrentTime',
+  'seekable',
+  'seeking',
+  'started',
+  'userBehindLiveEdge',
+  'waiting',
 ]);
 
 /**
  * Resets all media state and leaves general player state intact (i.e., `autoplay`, `volume`, etc.).
  */
 export function softResetMediaState($media: MediaStore) {
-  mediaState.reset($media, (prop) => !DO_NOT_RESET_ON_SRC_CHANGE.has(prop));
+  mediaState.reset($media, (prop) => RESET_ON_SRC_CHANGE.has(prop));
   tick();
 }
 
@@ -316,6 +306,14 @@ export interface MediaState {
    * The type of remote playback that is currently connecting or connected.
    */
   remotePlaybackType: RemotePlaybackType;
+  /**
+   * An active remote playback loader such as the `GoogleCastLoader`.
+   */
+  remotePlaybackLoader: MediaProviderLoader | null;
+  /**
+   * Information about the current remote playback.
+   */
+  remotePlaybackInfo: RemotePlaybackInfo | null;
   /**
    * Whether AirPlay is connected.
    */
@@ -792,7 +790,7 @@ export interface MediaState {
   // !!! INTERNALS !!!
 
   /* @internal */
-  autoplaying: boolean;
+  autoPlaying: boolean;
   /* @internal */
   providedTitle: string;
   /* @internal */

@@ -49,9 +49,13 @@ export class SourceSelection {
       EMBED_LOADERS = [YOUTUBE_LOADER, VIMEO_LOADER];
 
     this._loaders = computed<MediaProviderLoader[]>(() => {
-      return _media.$props.preferNativeHLS()
+      const remoteLoader = _media.$state.remotePlaybackLoader();
+
+      const loaders = _media.$props.preferNativeHLS()
         ? [VIDEO_LOADER, AUDIO_LOADER, HLS_LOADER, ...EMBED_LOADERS, ...customLoaders]
         : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER, ...EMBED_LOADERS, ...customLoaders];
+
+      return remoteLoader ? [remoteLoader, ...loaders] : loaders;
     });
 
     const { $state } = _media;
@@ -149,10 +153,11 @@ export class SourceSelection {
 
   protected _findNewSource(currentSource: MediaSrc, sources: MediaSrc[]) {
     let newSource: MediaSrc = { src: '', type: '' },
-      newLoader: MediaProviderLoader | null = null;
+      newLoader: MediaProviderLoader | null = null,
+      loaders = this._loaders();
 
     for (const src of sources) {
-      const loader = peek(this._loaders).find((loader) => loader.canPlay(src));
+      const loader = loaders.find((loader) => loader.canPlay(src));
       if (loader) {
         newSource = src;
         newLoader = loader;
@@ -185,15 +190,16 @@ export class SourceSelection {
 
   private _onSetup() {
     const provider = this._media.$provider();
+
     if (!provider || peek(this._media.$providerSetup)) return;
 
     if (this._media.$state.canLoad()) {
-      scoped(() => provider.setup(this._media), provider.scope);
+      scoped(() => provider.setup(), provider.scope);
       this._media.$providerSetup.set(true);
       return;
     }
 
-    peek(() => provider.preconnect?.(this._media));
+    peek(() => provider.preconnect?.());
   }
 
   private _onLoadSource() {
@@ -226,13 +232,26 @@ export class SourceSelection {
         this._notify('stream-type-change', 'on-demand');
       }
 
-      peek(() => provider?.loadSource(source, peek(this._media.$state.preload)));
+      peek(() => {
+        const preload = peek(this._media.$state.preload);
+        return provider?.loadSource(source, preload).catch((error) => {
+          if (__DEV__) {
+            this._media.logger
+              ?.errorGroup('[vidstack] failed to load source')
+              .labelledLog('Error', error)
+              .labelledLog('Source', source)
+              .labelledLog('Provider', provider)
+              .labelledLog('Media Context', { ...this._media })
+              .dispatch();
+          }
+        });
+      });
 
       return () => abort.abort();
     }
 
     try {
-      isString(source.src) && preconnect(new URL(source.src).origin, 'preconnect');
+      isString(source.src) && preconnect(new URL(source.src).origin);
     } catch (error) {
       if (__DEV__) {
         this._media.logger

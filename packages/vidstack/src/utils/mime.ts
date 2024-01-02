@@ -1,6 +1,7 @@
 import { isString } from 'maverick.js/std';
 
 import type { MediaSrc } from '../core';
+import { canPlayHLSNatively } from './support';
 
 // https://github.com/cookpete/react-player/blob/master/src/patterns.js#L16
 export const AUDIO_EXTENSIONS =
@@ -47,8 +48,29 @@ export const HLS_VIDEO_TYPES = new Set<string>([
   'application/mpegurl',
 ]);
 
+export function isAudioSrc({ src, type }: MediaSrc): boolean {
+  return isString(src)
+    ? AUDIO_EXTENSIONS.test(src) ||
+        AUDIO_TYPES.has(type) ||
+        (src.startsWith('blob:') && type === 'audio/object')
+    : type === 'audio/object';
+}
+
+export function isVideoSrc(src: MediaSrc): boolean {
+  return isString(src.src)
+    ? VIDEO_EXTENSIONS.test(src.src) ||
+        VIDEO_TYPES.has(src.type) ||
+        (src.src.startsWith('blob:') && src.type === 'video/object') ||
+        (isHLSSrc(src) && (__SERVER__ || canPlayHLSNatively()))
+    : src.type === 'video/object';
+}
+
 export function isHLSSrc({ src, type }: MediaSrc): boolean {
   return (isString(src) && HLS_VIDEO_EXTENSIONS.test(src)) || HLS_VIDEO_TYPES.has(type);
+}
+
+export function canGoogleCastSrc(src: MediaSrc): boolean {
+  return isString(src.src) && (isAudioSrc(src) || isVideoSrc(src) || isHLSSrc(src));
 }
 
 export function isMediaStream(src: unknown): src is MediaStream {

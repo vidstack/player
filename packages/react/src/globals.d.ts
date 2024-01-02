@@ -1,6 +1,3 @@
-declare global {
-  const __DEV__: boolean;
-  const __SERVER__: boolean;
-}
+/// <reference path="../../vidstack/src/globals.d.ts" />
 
 export {};

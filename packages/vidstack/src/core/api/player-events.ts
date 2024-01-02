@@ -2,6 +2,7 @@ import type { DOMEvent } from 'maverick.js/std';
 
 import type { MediaPlayer } from '../../components';
 import type { LoggerEvents } from '../../foundation/logger/events';
+import type { GoogleCastEvents } from '../../providers/google-cast/events';
 import type { HLSProviderEvents } from '../../providers/hls/events';
 import type { VideoPresentationEvents } from '../../providers/video/presentation/events';
 import type { MediaEvents } from './media-events';
@@ -13,7 +14,8 @@ export interface MediaPlayerEvents
     MediaUserEvents,
     LoggerEvents,
     VideoPresentationEvents,
-    HLSProviderEvents {
+    HLSProviderEvents,
+    GoogleCastEvents {
   'media-player-connect': MediaPlayerConnectEvent;
   /* @internal */
   'find-media-player': FindMediaPlayerEvent;

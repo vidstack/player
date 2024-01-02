@@ -1,5 +1,6 @@
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { ScreenOrientationLockType } from '../../foundation/orientation/types';
+import type { GoogleCastOptions } from '../../providers/google-cast/types';
 import { MEDIA_KEY_SHORTCUTS } from '../keyboard/controller';
 import type { MediaKeyShortcuts, MediaKeyTarget } from '../keyboard/types';
 import type { MediaState } from './player-state';
@@ -14,6 +15,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   crossorigin: null,
   crossOrigin: null,
   fullscreenOrientation: 'landscape',
+  googleCast: {},
   load: 'visible',
   posterLoad: 'visible',
   logLevel: __DEV__ ? 'warn' : 'silent',
@@ -134,6 +136,12 @@ export interface MediaPlayerProps
    * the Screen Orientation API is available.
    */
   fullscreenOrientation: ScreenOrientationLockType | undefined;
+  /**
+   * Google Cast options.
+   *
+   * @see {@link https://developers.google.com/cast/docs/reference/web_sender/cast.framework.CastOptions}
+   */
+  googleCast: GoogleCastOptions;
   /**
    * Whether native HLS support is preferred over using `hls.js`. We recommend setting this to
    * `false` to ensure a consistent and configurable experience across browsers. In addition, our

@@ -1,9 +1,10 @@
 import { createScope, onDispose } from 'maverick.js';
 import { isString, setAttribute } from 'maverick.js/std';
 
+import type { MediaContext } from '../../core/api/media-context';
 import type { MediaResource, MediaSrc } from '../../core/api/types';
 import { isMediaStream } from '../../utils/mime';
-import type { MediaProviderAdapter, MediaSetupContext } from '../types';
+import type { MediaProviderAdapter } from '../types';
 import { HTMLMediaEvents } from './html–media-events';
 import { NativeAudioTracks } from './native-audio-tracks';
 
@@ -16,17 +17,17 @@ import { NativeAudioTracks } from './native-audio-tracks';
 export class HTMLMediaProvider implements MediaProviderAdapter {
   readonly scope = createScope();
 
-  protected _ctx!: MediaSetupContext;
   protected _currentSrc: MediaSrc<MediaResource> | null = null;
 
-  constructor(protected _media: HTMLMediaElement) {}
+  constructor(
+    protected _media: HTMLMediaElement,
+    protected _ctx: MediaContext,
+  ) {}
 
-  setup(ctx: MediaSetupContext) {
-    this._ctx = ctx;
+  setup() {
+    new HTMLMediaEvents(this, this._ctx);
 
-    new HTMLMediaEvents(this, ctx);
-
-    if ('audioTracks' in this.media) new NativeAudioTracks(this, ctx);
+    if ('audioTracks' in this.media) new NativeAudioTracks(this, this._ctx);
 
     onDispose(() => {
       // Dispose of media.

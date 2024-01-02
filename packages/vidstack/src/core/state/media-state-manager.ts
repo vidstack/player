@@ -1,9 +1,10 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
-import { onDispose, peek } from 'maverick.js';
+import { effect, onDispose, peek } from 'maverick.js';
 import { DOMEvent, listenEvent } from 'maverick.js/std';
 
 import { ListSymbol } from '../../foundation/list/symbols';
+import { canChangeVolume } from '../../utils/support';
 import type { MediaContext } from '../api/media-context';
 import * as ME from '../api/media-events';
 import { MediaPlayerController } from '../api/player-controller';
@@ -53,6 +54,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   protected override onConnect(el: HTMLElement) {
+    effect(this._watchCanSetVolume.bind(this));
     this._addTextTrackListeners();
     this._addQualityListeners();
     this._addAudioTrackListeners();
@@ -74,12 +76,10 @@ export class MediaStateManager extends MediaPlayerController {
   private _resumePlaybackOnConnect() {
     if (!this._isPlayingOnDisconnect) return;
 
-    if (this._media.$provider()?.paused) {
-      requestAnimationFrame(() => {
-        if (!this.scope) return;
-        this._media.remote.play(new DOMEvent<void>('dom-connect'));
-      });
-    }
+    requestAnimationFrame(() => {
+      if (!this.scope) return;
+      this._media.remote.play(new DOMEvent<void>('dom-connect'));
+    });
 
     this._isPlayingOnDisconnect = false;
   }
@@ -205,6 +205,18 @@ export class MediaStateManager extends MediaPlayerController {
 
   private _onCanSetQualityChange() {
     this.$state.canSetQuality.set(!this._media.qualities.readonly);
+  }
+
+  protected _watchCanSetVolume() {
+    const { canSetVolume, isGoogleCastConnected } = this.$state;
+
+    if (isGoogleCastConnected()) {
+      // The provider will set this value accordingly.
+      canSetVolume.set(false);
+      return;
+    }
+
+    canChangeVolume().then(canSetVolume.set);
   }
 
   ['provider-change'](event: ME.MediaProviderChangeEvent) {
@@ -422,7 +434,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['play'](event: ME.MediaPlayEvent) {
-    const { paused, autoplayError, ended, autoplaying, playsinline, pointer, muted, viewType } =
+    const { paused, autoplayError, ended, autoPlaying, playsinline, pointer, muted, viewType } =
       this.$state;
 
     this._resetPlaybackIfNeeded();
@@ -432,7 +444,7 @@ export class MediaStateManager extends MediaPlayerController {
       return;
     }
 
-    event.autoplay = autoplaying();
+    event.autoplay = autoPlaying();
 
     const waitingEvent = this._trackedEvents.get('waiting');
     if (waitingEvent) event.triggers.add(waitingEvent);
@@ -451,7 +463,7 @@ export class MediaStateManager extends MediaPlayerController {
         }),
       );
 
-      autoplaying.set(false);
+      autoPlaying.set(false);
     }
 
     if (ended() || this._request._replaying) {
@@ -493,7 +505,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['play-fail'](event: ME.MediaPlayFailEvent) {
-    const { muted, autoplaying } = this.$state;
+    const { muted, autoPlaying } = this.$state;
 
     const playEvent = this._trackedEvents.get('play');
     if (playEvent) event.triggers.add(playEvent);
@@ -518,7 +530,7 @@ export class MediaStateManager extends MediaPlayerController {
         }),
       );
 
-      autoplaying.set(false);
+      autoPlaying.set(false);
     }
   }
 

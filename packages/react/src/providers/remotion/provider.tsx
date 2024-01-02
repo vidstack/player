@@ -11,12 +11,7 @@ import {
   type SetTimelineContextValue,
   type TimelineContextValue,
 } from 'remotion';
-import {
-  TimeRange,
-  type MediaProviderAdapter,
-  type MediaSetupContext,
-  type MediaSrc,
-} from 'vidstack';
+import { TimeRange, type MediaContext, type MediaProviderAdapter, type MediaSrc } from 'vidstack';
 
 import { RemotionLayoutEngine } from './layout-engine';
 import { RemotionPlaybackEngine } from './playback-engine';
@@ -31,7 +26,6 @@ export class RemotionProvider implements MediaProviderAdapter {
 
   readonly scope = createScope();
 
-  protected _ctx!: MediaSetupContext;
   protected _src = signal<RemotionMediaResource | null>(null);
   protected _setup = false;
   protected _played = 0;
@@ -74,12 +68,14 @@ export class RemotionProvider implements MediaProviderAdapter {
     return this._frame();
   }
 
-  constructor(readonly container: HTMLElement) {
+  constructor(
+    readonly container: HTMLElement,
+    protected readonly _ctx: MediaContext,
+  ) {
     this._layoutEngine.setContainer(container);
   }
 
-  setup(ctx: MediaSetupContext) {
-    this._ctx = ctx;
+  setup() {
     effect(this._watchWaiting.bind(this));
     effect(this._watchMediaTags.bind(this));
     effect(this._watchMediaElements.bind(this));
@@ -229,10 +225,10 @@ export class RemotionProvider implements MediaProviderAdapter {
     this._notify('rate-change', rate);
   }
 
-  protected _getPlayedRange(currentTime: number) {
-    return this._played >= currentTime
+  protected _getPlayedRange(time: number) {
+    return this._played >= time
       ? this._playedRange
-      : (this._playedRange = new TimeRange(0, (this._played = currentTime)));
+      : (this._playedRange = new TimeRange(0, (this._played = time)));
   }
 
   async loadSource(src: MediaSrc) {
@@ -252,7 +248,7 @@ export class RemotionProvider implements MediaProviderAdapter {
         onError: (error) => {
           if (__DEV__) {
             this._ctx.logger
-              ?.errorGroup(error.message)
+              ?.errorGroup(`[vidstack] ${error.message}`)
               .labelledLog('Source', peek(this._src))
               .labelledLog('Error', error)
               .dispatch();
@@ -315,8 +311,8 @@ export class RemotionProvider implements MediaProviderAdapter {
     if (!$src) {
       throw Error(
         __DEV__
-          ? '[vidstack]: attempting to render remotion provider without src'
-          : '[vidstack]: no src',
+          ? '[vidstack] attempting to render remotion provider without src'
+          : '[vidstack] no src',
       );
     }
 

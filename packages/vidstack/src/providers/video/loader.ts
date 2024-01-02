@@ -1,22 +1,16 @@
-import { isString } from 'maverick.js/std';
-
 import type { MediaSrc, MediaType } from '../../core';
 import type { MediaContext } from '../../core/api/media-context';
-import { isHLSSrc, VIDEO_EXTENSIONS, VIDEO_TYPES } from '../../utils/mime';
-import { canPlayHLSNatively } from '../../utils/support';
+import { isVideoSrc } from '../../utils/mime';
 import type { MediaProviderLoader } from '../types';
 import type { VideoProvider } from './provider';
 
 export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
+  readonly name: string = 'video';
+
   target!: HTMLVideoElement;
 
   canPlay(src: MediaSrc) {
-    return isString(src.src)
-      ? VIDEO_EXTENSIONS.test(src.src) ||
-          VIDEO_TYPES.has(src.type) ||
-          (src.src.startsWith('blob:') && src.type === 'video/object') ||
-          (isHLSSrc(src) && (__SERVER__ || canPlayHLSNatively()))
-      : src.type === 'video/object';
+    return isVideoSrc(src);
   }
 
   mediaType(): MediaType {

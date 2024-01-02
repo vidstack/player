@@ -2,6 +2,7 @@ import airplay from 'media-icons/dist/icons/airplay.js';
 import menuArrowLeft from 'media-icons/dist/icons/arrow-left.js';
 import chapters from 'media-icons/dist/icons/chapters.js';
 import menuArrowRight from 'media-icons/dist/icons/chevron-right.js';
+import googleCast from 'media-icons/dist/icons/chromecast.js';
 import ccOn from 'media-icons/dist/icons/closed-captions-on.js';
 import ccOff from 'media-icons/dist/icons/closed-captions.js';
 import menuCaptions from 'media-icons/dist/icons/closed-captions.js';
@@ -28,6 +29,7 @@ export const icons = {
   pause,
   replay,
   mute,
+  'google-cast': googleCast,
   'volume-low': volumeLow,
   'volume-high': volumeHigh,
   'cc-on': ccOn,

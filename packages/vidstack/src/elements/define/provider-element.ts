@@ -37,16 +37,19 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
   protected onConnect(): void {
     effect(() => {
       const loader = this.$state.loader(),
-        isYouTubeEmbed = loader?.canPlay({ src: '', type: 'video/youtube' }),
-        isVimeoEmbed = loader?.canPlay({ src: '', type: 'video/vimeo' }),
-        isEmbed = isYouTubeEmbed || isVimeoEmbed;
+        isYouTubeEmbed = loader?.name === 'youtube',
+        isVimeoEmbed = loader?.name === 'vimeo',
+        isEmbed = isYouTubeEmbed || isVimeoEmbed,
+        isGoogleCast = loader?.name === 'google-cast';
 
       const target = loader
-        ? isEmbed
-          ? this._createIFrame()
-          : loader.mediaType() === 'audio'
-            ? this._createAudio()
-            : this._createVideo()
+        ? isGoogleCast
+          ? document.createElement('div')
+          : isEmbed
+            ? this._createIFrame()
+            : loader.mediaType() === 'audio'
+              ? this._createAudio()
+              : this._createVideo()
         : null;
 
       if (this._target !== target) {
@@ -78,6 +81,7 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
 
       if (isYouTubeEmbed) target?.classList.add('vds-youtube');
       else if (isVimeoEmbed) target?.classList.add('vds-vimeo');
+      else if (isGoogleCast) target?.classList.add('vds-google-cast');
 
       if (!isEmbed) {
         this._blocker?.remove();

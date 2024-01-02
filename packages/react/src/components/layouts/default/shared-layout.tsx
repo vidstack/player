@@ -23,6 +23,7 @@ import type { PrimitivePropsWithRef } from '../../primitives/nodes';
 import { AirPlayButton } from '../../ui/buttons/airplay-button';
 import { CaptionButton } from '../../ui/buttons/caption-button';
 import { FullscreenButton } from '../../ui/buttons/fullscreen-button';
+import { GoogleCastButton } from '../../ui/buttons/google-cast-button';
 import { LiveButton } from '../../ui/buttons/live-button';
 import { MuteButton } from '../../ui/buttons/mute-button';
 import { PIPButton } from '../../ui/buttons/pip-button';
@@ -295,6 +296,34 @@ function DefaultAirPlayButton({ tooltip }: DefaultMediaButtonProps) {
 
 DefaultAirPlayButton.displayName = 'DefaultAirPlayButton';
 export { DefaultAirPlayButton };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultGoogleCastButton
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultGoogleCastButton({ tooltip }: DefaultMediaButtonProps) {
+  const { Icons } = React.useContext(DefaultLayoutContext),
+    googleCastText = useDefaultLayoutLang('Google Cast'),
+    state = useMediaState('remotePlaybackState'),
+    stateText = useDefaultLayoutLang(uppercaseFirstChar(state) as Capitalize<RemotePlaybackState>),
+    label = `${googleCastText} ${stateText}`,
+    Icon =
+      (state === 'connecting'
+        ? Icons.GoogleCastButton.Connecting
+        : state === 'connected'
+          ? Icons.GoogleCastButton.Connected
+          : null) ?? Icons.GoogleCastButton.Default;
+  return (
+    <DefaultTooltip content={googleCastText} placement={tooltip}>
+      <GoogleCastButton className="vds-google-cast-button vds-button" aria-label={label}>
+        {React.createElement(Icon, { className: 'vds-icon' })}
+      </GoogleCastButton>
+    </DefaultTooltip>
+  );
+}
+
+DefaultGoogleCastButton.displayName = 'DefaultGoogleCastButton';
+export { DefaultGoogleCastButton };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultPlayButton

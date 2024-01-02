@@ -97,6 +97,15 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Dispatch a request to connect Google Cast.
+   *
+   * @see {@link https://developers.google.com/cast/docs/overview}
+   */
+  requestGoogleCast(trigger?: Event) {
+    this._dispatchRequest('media-google-cast-request', trigger);
+  }
+
+  /**
    * Dispatch a request to begin/resume media playback.
    */
   play(trigger?: Event) {

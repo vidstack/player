@@ -54,7 +54,7 @@ class SignalDirective extends AsyncDirective {
           ].join('\n');
 
           console.warn(
-            `[vidstack]: Failed to render most likely due to a hydration issue with your framework.` +
+            `[vidstack] Failed to render most likely due to a hydration issue with your framework.` +
               ` Dynamically importing the player should resolve the issue.` +
               `\n\nSvelte Example:\n\n${svelteDynamicImportExample}`,
           );

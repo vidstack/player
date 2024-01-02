@@ -1,8 +1,8 @@
 import { onDispose } from 'maverick.js';
 
+import type { MediaContext } from '../../core/api/media-context';
 import { TextTrackSymbol } from '../../core/tracks/text/symbols';
 import { TextTrack as VdsTextTrack } from '../../core/tracks/text/text-track';
-import type { MediaSetupContext } from '../types';
 
 /**
  * This is used to discover text tracks that were found by the native playback engine. For example,
@@ -11,7 +11,7 @@ import type { MediaSetupContext } from '../types';
 export class NativeHLSTextTracks {
   constructor(
     private _video: HTMLVideoElement,
-    private _ctx: MediaSetupContext,
+    private _ctx: MediaContext,
   ) {
     _video.textTracks.onaddtrack = this._onAddTrack.bind(this);
     onDispose(this._onDispose.bind(this));

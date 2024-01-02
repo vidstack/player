@@ -63,7 +63,7 @@ import { RequestQueue } from '../foundation/queue/request-queue';
 import type { AnyMediaProvider, MediaProviderAdapter } from '../providers';
 import { setAttributeIfEmpty } from '../utils/dom';
 import { clampNumber } from '../utils/number';
-import { canChangeVolume, IS_IPHONE } from '../utils/support';
+import { IS_IPHONE } from '../utils/support';
 
 declare global {
   interface HTMLElementEventMap {
@@ -148,7 +148,6 @@ export class MediaPlayer
 
     const context = {
       player: this,
-      scope: getScope(),
       qualities: new VideoQualityList(),
       audioTracks: new AudioTrackList(),
       storage,
@@ -223,8 +222,6 @@ export class MediaPlayer
 
   protected override onConnect(el: HTMLElement) {
     if (IS_IPHONE) setAttribute(el, 'data-iphone', '');
-
-    canChangeVolume().then(this.$state.canSetVolume.set);
 
     const pointerQuery = window.matchMedia('(pointer: coarse)');
     this._onPointerChange(pointerQuery);
@@ -704,6 +701,15 @@ export class MediaPlayer
   @method
   requestAirPlay(trigger?: Event) {
     return this._requestMgr._requestAirPlay(trigger);
+  }
+
+  /**
+   * Request Google Cast device picker to open. The Google Cast framework will be loaded if it
+   * hasn't yet.
+   */
+  @method
+  requestGoogleCast(trigger?: Event) {
+    return this._requestMgr._requestGoogleCast(trigger);
   }
 
   /**

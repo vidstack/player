@@ -153,6 +153,8 @@
       "types": "./solid.d.ts",
       "default": "./solid.d.ts"
     },
+    "./dom.d.ts": "./dom.d.ts",
+    "./google-cast.d.ts": "./google-cast.d.ts",
     "./vscode.html-data.json": "./vscode.html-data.json"
   },
   "publishConfig": {

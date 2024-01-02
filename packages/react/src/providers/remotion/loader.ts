@@ -1,10 +1,18 @@
 import * as React from 'react';
 
-import type { MediaProviderAdapter, MediaProviderLoader, MediaSrc, MediaType } from 'vidstack';
+import type {
+  MediaContext,
+  MediaProviderAdapter,
+  MediaProviderLoader,
+  MediaSrc,
+  MediaType,
+} from 'vidstack';
 
 import * as UI from '../../components/layouts/remotion-ui';
 
 export class RemotionProviderLoader implements MediaProviderLoader {
+  readonly name = 'remotion';
+
   target!: HTMLElement;
 
   constructor() {
@@ -20,7 +28,7 @@ export class RemotionProviderLoader implements MediaProviderLoader {
     return 'video';
   }
 
-  async load(): Promise<MediaProviderAdapter> {
-    return new (await import('./provider')).RemotionProvider(this.target);
+  async load(ctx: MediaContext): Promise<MediaProviderAdapter> {
+    return new (await import('./provider')).RemotionProvider(this.target, ctx);
   }
 }

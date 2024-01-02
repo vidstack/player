@@ -8,6 +8,12 @@ import { isHLSProvider, type TextTrackInit } from '../src';
 
 const player = document.querySelector('media-player')!;
 
+Object.defineProperty(window, 'player', {
+  get() {
+    return player;
+  },
+});
+
 player.addEventListener('provider-change', (event) => {
   const provider = event.detail;
   // We can configure provider's here.

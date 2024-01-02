@@ -6,6 +6,7 @@ import {
   ControlsGroup,
   FullscreenButton,
   Gesture,
+  GoogleCastButton,
   LiveButton,
   MediaPlayer,
   MediaProvider,
@@ -52,6 +53,7 @@ export class MuteButtonInstance extends MuteButton {}
 export class PIPButtonInstance extends PIPButton {}
 export class PlayButtonInstance extends PlayButton {}
 export class AirPlayButtonInstance extends AirPlayButton {}
+export class GoogleCastButtonInstance extends GoogleCastButton {}
 export class SeekButtonInstance extends SeekButton {}
 // Tooltip
 export class TooltipInstance extends Tooltip {}

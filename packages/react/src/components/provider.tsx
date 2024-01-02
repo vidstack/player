@@ -65,12 +65,8 @@ interface MediaOutletProps extends React.HTMLAttributes<HTMLMediaElement> {
   provider: MediaProviderInstance;
 }
 
-const YOUTUBE_TYPE = { src: '', type: 'video/youtube' },
-  VIMEO_TYPE = { src: '', type: 'video/vimeo' },
-  REMOTION_TYPE = { src: '', type: 'video/remotion' };
-
 function MediaOutlet({ provider, ...props }: MediaOutletProps) {
-  const { controls, crossorigin, poster } = useStateContext(mediaState),
+  const { controls, crossOrigin, poster } = useStateContext(mediaState),
     { loader } = provider.$state,
     {
       $iosControls: $$iosControls,
@@ -80,17 +76,23 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
     $controls = useSignal(controls),
     $iosControls = useSignal($$iosControls),
     $nativeControls = $controls || $iosControls,
-    $crossorigin = useSignal(crossorigin),
+    $crossOrigin = useSignal(crossOrigin),
     $poster = useSignal(poster),
     $loader = useSignal(loader),
     $provider = useSignal($$provider),
     $providerSetup = useSignal($$providerSetup),
     $mediaType = $loader?.mediaType(),
-    isYouTubeEmbed = $loader?.canPlay(YOUTUBE_TYPE),
-    isVimeoEmbed = $loader?.canPlay(VIMEO_TYPE),
-    isEmbed = isYouTubeEmbed || isVimeoEmbed;
+    isYouTubeEmbed = $loader?.name === 'youtube',
+    isVimeoEmbed = $loader?.name === 'vimeo',
+    isEmbed = isYouTubeEmbed || isVimeoEmbed,
+    isRemotion = $loader?.name === 'remotion',
+    isGoogleCast = $loader?.name === 'google-cast';
 
-  if ($loader?.canPlay(REMOTION_TYPE)) {
+  if (isGoogleCast) {
+    return <div className="vds-google-cast" />;
+  }
+
+  if (isRemotion) {
     return (
       <div data-remotion-canvas>
         <div
@@ -126,7 +128,7 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
       ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {
           ...props,
           controls: $nativeControls ? 'true' : null,
-          crossOrigin: typeof $crossorigin === 'boolean' ? '' : $crossorigin,
+          crossOrigin: typeof $crossOrigin === 'boolean' ? '' : $crossOrigin,
           poster: $mediaType === 'video' && $nativeControls && $poster ? $poster : null,
           preload: 'none',
           'aria-hidden': 'true',

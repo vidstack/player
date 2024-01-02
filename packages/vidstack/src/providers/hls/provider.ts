@@ -4,7 +4,7 @@ import { isString } from 'maverick.js/std';
 import type { MediaSrc } from '../../core/api/types';
 import { preconnect } from '../../utils/network';
 import { isHLSSupported } from '../../utils/support';
-import type { MediaProviderAdapter, MediaSetupContext } from '../types';
+import type { MediaProviderAdapter } from '../types';
 import { VideoProvider } from '../video/provider';
 import { HLSController } from './hls';
 import { HLSLibLoader } from './lib-loader';
@@ -34,7 +34,7 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
   protected override $$PROVIDER_TYPE = 'HLS';
 
   private _ctor: HLSConstructor | null = null;
-  private readonly _controller = new HLSController(this.video);
+  private readonly _controller = new HLSController(this.video, this._ctx);
 
   /**
    * The `hls.js` constructor.
@@ -98,13 +98,13 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
     preconnect(this._library);
   }
 
-  override setup(ctx: MediaSetupContext) {
-    super.setup(ctx);
-    new HLSLibLoader(this._library, ctx, (ctor) => {
+  override setup() {
+    super.setup();
+    new HLSLibLoader(this._library, this._ctx, (ctor) => {
       this._ctor = ctor;
-      this._controller.setup(ctor, ctx);
-      ctx.delegate._notify('provider-setup', this);
-      const src = peek(ctx.$state.source);
+      this._controller.setup(ctor);
+      this._ctx.delegate._notify('provider-setup', this);
+      const src = peek(this._ctx.$state.source);
       if (src) this.loadSource(src);
     });
   }

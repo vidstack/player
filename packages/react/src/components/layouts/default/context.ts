@@ -7,21 +7,21 @@ import type { DefaultLayoutIcons } from './icons';
 export const DefaultLayoutContext = React.createContext<DefaultLayoutContext>({} as any);
 
 interface DefaultLayoutContext {
-  thumbnails: ThumbnailSrc;
-  menuContainer?: React.RefObject<HTMLElement | null>;
-  translations?: DefaultLayoutTranslations | null;
-  isSmallLayout: boolean;
-  showMenuDelay?: number;
-  showTooltipDelay: number;
-  hideQualityBitrate: boolean;
-  menuGroup: 'top' | 'bottom';
-  noModal: boolean;
-  Icons: DefaultLayoutIcons;
-  slots?: unknown;
-  sliderChaptersMinWidth: number;
   disableTimeSlider: boolean;
+  hideQualityBitrate: boolean;
+  Icons: DefaultLayoutIcons;
+  isSmallLayout: boolean;
+  menuContainer?: React.RefObject<HTMLElement | null>;
+  menuGroup: 'top' | 'bottom';
   noGestures: boolean;
   noKeyboardActionDisplay: boolean;
+  noModal: boolean;
+  showMenuDelay?: number;
+  showTooltipDelay: number;
+  sliderChaptersMinWidth: number;
+  slots?: unknown;
+  thumbnails: ThumbnailSrc;
+  translations?: DefaultLayoutTranslations | null;
 }
 
 export function useDefaultLayoutLang(word: keyof DefaultLayoutTranslations) {

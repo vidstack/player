@@ -8,13 +8,11 @@ import {
 } from '../../utils/support';
 import { HTMLMediaProvider } from '../html/provider';
 import type {
-  MediaAirPlayAdapter,
   MediaFullscreenAdapter,
   MediaPictureInPictureAdapter,
   MediaProviderAdapter,
-  MediaSetupContext,
+  MediaRemotePlaybackAdapter,
 } from '../types';
-import { VideoAirPlayAdapter } from './airplay';
 import { NativeHLSTextTracks } from './native-hls-text-tracks';
 import { VideoPictureInPicture } from './picture-in-picture';
 import {
@@ -22,6 +20,7 @@ import {
   PIPPresentationAdapter,
   VideoPresentation,
 } from './presentation/video-presentation';
+import { VideoAirPlayAdapter } from './remote-playback';
 
 /**
  * The video provider adapts the `<video>` element to enable loading videos via the HTML Media
@@ -46,12 +45,12 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
     return 'video';
   }
 
-  airPlay?: MediaAirPlayAdapter;
+  airPlay?: MediaRemotePlaybackAdapter;
   fullscreen?: MediaFullscreenAdapter;
   pictureInPicture?: MediaPictureInPictureAdapter;
 
   constructor(video: HTMLVideoElement, ctx: MediaContext) {
-    super(video);
+    super(video, ctx);
 
     scoped(() => {
       this.airPlay = new VideoAirPlayAdapter(video, ctx);
@@ -66,19 +65,19 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
     }, this.scope);
   }
 
-  override setup(ctx: MediaSetupContext): void {
-    super.setup(ctx);
+  override setup(): void {
+    super.setup();
 
     if (canPlayHLSNatively(this.video)) {
-      new NativeHLSTextTracks(this.video, ctx);
+      new NativeHLSTextTracks(this.video, this._ctx);
     }
 
-    ctx.textRenderers._attachVideo(this.video);
+    this._ctx.textRenderers._attachVideo(this.video);
     onDispose(() => {
-      ctx.textRenderers._attachVideo(null);
+      this._ctx.textRenderers._attachVideo(null);
     });
 
-    if (this.type === 'video') ctx.delegate._notify('provider-setup', this);
+    if (this.type === 'video') this._ctx.delegate._notify('provider-setup', this);
   }
 
   /**
