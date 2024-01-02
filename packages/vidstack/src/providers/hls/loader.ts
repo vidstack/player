@@ -11,6 +11,8 @@ export class HLSProviderLoader
 {
   static supported = isHLSSupported();
 
+  override readonly name = 'hls';
+
   override canPlay(src: MediaSrc) {
     return HLSProviderLoader.supported && isHLSSrc(src);
   }

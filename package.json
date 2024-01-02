@@ -14,7 +14,7 @@
     "clean": "turbo run clean",
     "format": "turbo run format --parallel",
     "test": "turbo run test --parallel",
-    "preinstall": "npx only-allow pnpm && pnpx simple-git-hooks",
+    "preinstall": "npx only-allow pnpm",
     "release": "pnpm build && node .scripts/release.js --next",
     "release:dry": "pnpm run release --dry",
     "validate": "turbo run build format test"

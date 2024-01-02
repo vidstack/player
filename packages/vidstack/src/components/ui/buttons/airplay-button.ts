@@ -46,7 +46,7 @@ export class AirPlayButton extends Component<AirPlayButtonProps> {
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'airplay');
-    setARIALabel(el, this._getLabel.bind(this));
+    setARIALabel(el, this._getDefaultLabel.bind(this));
   }
 
   private _onPress(event: Event) {
@@ -64,7 +64,7 @@ export class AirPlayButton extends Component<AirPlayButtonProps> {
     return remotePlaybackType() === 'airplay' && remotePlaybackState();
   }
 
-  private _getLabel() {
+  private _getDefaultLabel() {
     const { remotePlaybackState } = this._media.$state;
     return `AirPlay ${remotePlaybackState()}`;
   }

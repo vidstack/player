@@ -18,6 +18,14 @@ export type MediaCrossOrigin = '' | 'anonymous' | 'use-credentials';
 
 export type RemotePlaybackType = 'airplay' | 'google-cast' | 'none';
 
+export interface RemotePlaybackInfo {
+  deviceName?: string;
+  savedState?: {
+    paused?: boolean;
+    currentTime?: number;
+  };
+}
+
 /**
  * Indicates the current view type which determines how the media will be presented.
  */
@@ -59,7 +67,7 @@ export type MediaErrorCode = 1 | 2 | 3 | 4;
 
 export interface MediaErrorDetail {
   message: string;
-  code: MediaErrorCode;
+  code?: MediaErrorCode;
   error?: Error;
   mediaError?: MediaError;
 }

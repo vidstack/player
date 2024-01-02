@@ -47,7 +47,7 @@ export function validateInitialFrame(initialFrame: number | undefined, frames: n
 
   if (!isNumber(frames)) {
     throw new Error(
-      `[vidstack]: \`durationInFrames\` must be a number, but is ${JSON.stringify(frames)}`,
+      `[vidstack] \`durationInFrames\` must be a number, but is ${JSON.stringify(frames)}`,
     );
   }
 
@@ -57,27 +57,27 @@ export function validateInitialFrame(initialFrame: number | undefined, frames: n
 
   if (!isNumber(initialFrame)) {
     throw new Error(
-      `[vidstack]: \`initialFrame\` must be a number, but is ${JSON.stringify(initialFrame)}`,
+      `[vidstack] \`initialFrame\` must be a number, but is ${JSON.stringify(initialFrame)}`,
     );
   }
 
   if (Number.isNaN(initialFrame)) {
-    throw new Error(`[vidstack]: \`initialFrame\` must be a number, but is NaN`);
+    throw new Error(`[vidstack] \`initialFrame\` must be a number, but is NaN`);
   }
 
   if (!Number.isFinite(initialFrame)) {
-    throw new Error(`[vidstack]: \`initialFrame\` must be a number, but is Infinity`);
+    throw new Error(`[vidstack] \`initialFrame\` must be a number, but is Infinity`);
   }
 
   if (initialFrame % 1 !== 0) {
     throw new Error(
-      `[vidstack]: \`initialFrame\` must be an integer, but is ${JSON.stringify(initialFrame)}`,
+      `[vidstack] \`initialFrame\` must be an integer, but is ${JSON.stringify(initialFrame)}`,
     );
   }
 
   if (initialFrame > frames - 1) {
     throw new Error(
-      `[vidstack]: \`initialFrame\` must be less or equal than \`durationInFrames - 1\`, but is ${JSON.stringify(
+      `[vidstack] \`initialFrame\` must be less or equal than \`durationInFrames - 1\`, but is ${JSON.stringify(
         initialFrame,
       )}`,
     );
@@ -93,25 +93,25 @@ export function validateSingleFrame(frame: unknown, variableName: string): numbe
 
   if (!isNumber(frame)) {
     throw new TypeError(
-      `[vidstack]: \`${variableName}\` must be a number, but is ${JSON.stringify(frame)}`,
+      `[vidstack] \`${variableName}\` must be a number, but is ${JSON.stringify(frame)}`,
     );
   }
 
   if (Number.isNaN(frame)) {
     throw new TypeError(
-      `[vidstack]: \`${variableName}\` must not be NaN, but is ${JSON.stringify(frame)}`,
+      `[vidstack] \`${variableName}\` must not be NaN, but is ${JSON.stringify(frame)}`,
     );
   }
 
   if (!Number.isFinite(frame)) {
     throw new TypeError(
-      `[vidstack]: \`${variableName}\` must be finite, but is ${JSON.stringify(frame)}`,
+      `[vidstack] \`${variableName}\` must be finite, but is ${JSON.stringify(frame)}`,
     );
   }
 
   if (frame % 1 !== 0) {
     throw new TypeError(
-      `[vidstack]: \`${variableName}\` must be an integer, but is ${JSON.stringify(frame)}`,
+      `[vidstack] \`${variableName}\` must be an integer, but is ${JSON.stringify(frame)}`,
     );
   }
 
@@ -135,26 +135,26 @@ export function validateInOutFrames(
   // Must not be over the duration
   if (!isNull(validatedInFrame) && validatedInFrame > frames - 1) {
     throw new Error(
-      `[vidstack]: \`inFrame\` must be less than (durationInFrames - 1), but is \`${validatedInFrame}\``,
+      `[vidstack] \`inFrame\` must be less than (durationInFrames - 1), but is \`${validatedInFrame}\``,
     );
   }
 
   if (!isNull(validatedOutFrame) && validatedOutFrame > frames) {
     throw new Error(
-      `[vidstack]: \`outFrame\` must be less than (durationInFrames), but is \`${validatedOutFrame}\``,
+      `[vidstack] \`outFrame\` must be less than (durationInFrames), but is \`${validatedOutFrame}\``,
     );
   }
 
   // Must not be under 0
   if (!isNull(validatedInFrame) && validatedInFrame < 0) {
     throw new Error(
-      `[vidstack]: \`inFrame\` must be greater than 0, but is \`${validatedInFrame}\``,
+      `[vidstack] \`inFrame\` must be greater than 0, but is \`${validatedInFrame}\``,
     );
   }
 
   if (!isNull(validatedOutFrame) && validatedOutFrame <= 0) {
     throw new Error(
-      `[vidstack]: \`outFrame\` must be greater than 0, but is \`${validatedOutFrame}\`. If you want to render a single frame, use \`<RemotionThumbnail />\` instead.`,
+      `[vidstack] \`outFrame\` must be greater than 0, but is \`${validatedOutFrame}\`. If you want to render a single frame, use \`<RemotionThumbnail />\` instead.`,
     );
   }
 
@@ -164,7 +164,7 @@ export function validateInOutFrames(
     validatedOutFrame <= validatedInFrame
   ) {
     throw new Error(
-      '[vidstack]: `outFrame` must be greater than `inFrame`, but is ' +
+      '[vidstack] `outFrame` must be greater than `inFrame`, but is ' +
         validatedOutFrame +
         ' <= ' +
         validatedInFrame,
@@ -177,7 +177,7 @@ export function validateSharedNumberOfAudioTags(tags: number | undefined) {
 
   if (tags % 1 !== 0 || !Number.isFinite(tags) || Number.isNaN(tags) || tags < 0) {
     throw new TypeError(
-      `[vidstack]: \`numberOfSharedAudioTags\` must be an integer but got \`${tags}\` instead`,
+      `[vidstack] \`numberOfSharedAudioTags\` must be an integer but got \`${tags}\` instead`,
     );
   }
 }
@@ -187,18 +187,18 @@ export function validatePlaybackRate(playbackRate: number) {
 
   if (playbackRate > 4) {
     throw new Error(
-      `[vidstack]: The highest possible playback rate with Remotion is 4. You passed: ${playbackRate}`,
+      `[vidstack] The highest possible playback rate with Remotion is 4. You passed: ${playbackRate}`,
     );
   }
 
   if (playbackRate < -4) {
     throw new Error(
-      `[vidstack]: The lowest possible playback rate with Remotion is -4. You passed: ${playbackRate}`,
+      `[vidstack] The lowest possible playback rate with Remotion is -4. You passed: ${playbackRate}`,
     );
   }
 
   if (playbackRate === 0) {
-    throw new Error(`[vidstack]: A playback rate of 0 is not supported.`);
+    throw new Error(`[vidstack] A playback rate of 0 is not supported.`);
   }
 }
 
@@ -208,13 +208,13 @@ export function validateComponent(src: RemotionMediaResource['src']) {
   // @ts-expect-error
   if (src.type === Composition) {
     throw new TypeError(
-      `[vidstack]: \`src\` should not be an instance of \`<Composition/>\`. Pass the React component directly, and set the duration, fps and dimensions as source props.`,
+      `[vidstack] \`src\` should not be an instance of \`<Composition/>\`. Pass the React component directly, and set the duration, fps and dimensions as source props.`,
     );
   }
 
   if (src === Composition) {
     throw new TypeError(
-      `[vidstack]: \`src\` must not be the \`Composition\` component. Pass your own React component directly, and set the duration, fps and dimensions as source props.`,
+      `[vidstack] \`src\` must not be the \`Composition\` component. Pass your own React component directly, and set the duration, fps and dimensions as source props.`,
     );
   }
 }

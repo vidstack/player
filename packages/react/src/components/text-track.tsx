@@ -1,5 +1,5 @@
 import type { CaptionsFileFormat, CaptionsParserFactory } from 'media-captions';
-import type { VTTJSONContent } from 'vidstack';
+import type { VTTContent } from 'vidstack';
 
 import { createTextTrack } from '../hooks/create-text-track';
 
@@ -43,7 +43,7 @@ export interface TrackProps {
   /**
    * Used to directly pass in text track file contents.
    */
-  readonly content?: string | VTTJSONContent;
+  readonly content?: string | VTTContent;
   /**
    * The captions file format to be parsed or a custom parser factory (functions that returns a
    * captions parser). Supported types include: 'vtt', 'srt', 'ssa', 'ass', and 'json'.

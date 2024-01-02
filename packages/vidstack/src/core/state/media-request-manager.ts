@@ -8,8 +8,12 @@ import {
 import { ScreenOrientationController } from '../../foundation/orientation/controller';
 import { Queue } from '../../foundation/queue/queue';
 import { RequestQueue } from '../../foundation/queue/request-queue';
+import type { GoogleCastLoader } from '../../providers/google-cast/loader';
 import type { MediaProviderAdapter } from '../../providers/types';
 import { coerceToError } from '../../utils/error';
+import { canGoogleCastSrc } from '../../utils/mime';
+import { preconnect } from '../../utils/network';
+import { IS_CHROME, IS_IOS } from '../../utils/support';
 import type { MediaContext } from '../api/media-context';
 import type { MediaFullscreenChangeEvent } from '../api/media-events';
 import * as RE from '../api/media-request-events';
@@ -57,9 +61,11 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     }
 
     this._attachLoadPlayListener();
+
     effect(this._watchProvider.bind(this));
     effect(this._onControlsDelayChange.bind(this));
     effect(this._onAirPlaySupportChange.bind(this));
+    effect(this._onGoogleCastSupportChange.bind(this));
     effect(this._onFullscreenSupportChange.bind(this));
     effect(this._onPiPSupportChange.bind(this));
   }
@@ -117,7 +123,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   async _play(trigger?: Event) {
     if (__SERVER__) return;
 
-    const { canPlay, paused, autoplaying } = this.$state;
+    const { canPlay, paused, autoPlaying } = this.$state;
 
     if (this._handleLoadPlayStrategy(trigger)) return;
 
@@ -137,7 +143,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
         trigger,
       });
 
-      errorEvent.autoplay = autoplaying();
+      errorEvent.autoplay = autoPlaying();
 
       this._stateMgr._handle(errorEvent);
       throw error;
@@ -316,6 +322,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     canAirPlay.set(supported);
   }
 
+  private _onGoogleCastSupportChange() {
+    const { canGoogleCast, source } = this.$state,
+      supported = IS_CHROME && !IS_IOS && canGoogleCastSrc(source());
+    canGoogleCast.set(supported);
+  }
+
   private _onFullscreenSupportChange() {
     const { canFullscreen } = this.$state,
       supported = this._fullscreen.supported || !!this._$provider()?.fullscreen?.supported;
@@ -340,7 +352,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     try {
       const adapter = this._$provider()?.airPlay;
 
-      if (!adapter) {
+      if (!adapter?.supported) {
         throw Error(__DEV__ ? 'AirPlay adapter not available on provider.' : 'No AirPlay adapter.');
       }
 
@@ -348,7 +360,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
         this._request._queue._enqueue('media-airplay-request', trigger);
       }
 
-      return await adapter.request();
+      return await adapter.prompt();
     } catch (error) {
       this._request._queue._delete('media-airplay-request');
 
@@ -361,7 +373,59 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   async ['media-google-cast-request'](event: RE.MediaGoogleCastRequestEvent) {
-    // TODO: Implement google cast.
+    try {
+      await this._requestGoogleCast(event);
+    } catch (error) {
+      // no-op
+    }
+  }
+
+  protected _googleCastLoader?: GoogleCastLoader;
+  async _requestGoogleCast(trigger?: Event) {
+    try {
+      const { canGoogleCast } = this.$state;
+
+      if (!peek(canGoogleCast)) {
+        throw new Error(
+          __DEV__ ? 'Google Cast not available on this platform.' : 'Cast not available.',
+        );
+      }
+
+      preconnect('https://www.gstatic.com');
+
+      if (!this._googleCastLoader) {
+        const $module = await import('../../providers/google-cast/loader');
+        this._googleCastLoader = new $module.GoogleCastLoader();
+      }
+
+      await this._googleCastLoader.prompt(this._media);
+
+      if (trigger) {
+        this._request._queue._enqueue('media-google-cast-request', trigger);
+      }
+
+      const isConnecting = peek(this.$state.remotePlaybackState) !== 'disconnected';
+
+      if (isConnecting) {
+        this.$state.remotePlaybackInfo.set((info) => ({
+          ...info,
+          savedState: {
+            paused: peek(this.$state.paused),
+            currentTime: peek(this.$state.currentTime),
+          },
+        }));
+      }
+
+      this.$state.remotePlaybackLoader.set(isConnecting ? this._googleCastLoader : null);
+    } catch (error) {
+      this._request._queue._delete('media-google-cast-request');
+
+      if (__DEV__ && (error as Error).message !== '"cancel"') {
+        this._logError('google cast request failed', error, trigger);
+      }
+
+      throw error;
+    }
   }
 
   ['media-audio-track-change-request'](event: RE.MediaAudioTrackChangeRequestEvent) {
@@ -703,7 +767,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   private _logError(title: string, error: unknown, request?: Event) {
     if (!__DEV__) return;
     this._media.logger
-      ?.errorGroup(`[vidstack]: ${title}`)
+      ?.errorGroup(`[vidstack] ${title}`)
       .labelledLog('Error', error)
       .labelledLog('Media Context', { ...this._media })
       .labelledLog('Trigger Event', request)

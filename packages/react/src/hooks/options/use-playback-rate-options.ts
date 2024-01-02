@@ -29,7 +29,7 @@ export function usePlaybackRateOptions({
         rate = typeof opt === 'number' ? opt : opt.rate;
       return {
         label,
-        value: rate + '',
+        value: rate.toString(),
         rate,
         get selected() {
           return playbackRate() === rate;
@@ -48,7 +48,7 @@ export function usePlaybackRateOptions({
 
     Object.defineProperty(options, 'selectedValue', {
       get() {
-        return playbackRate() + '';
+        return playbackRate().toString();
       },
     });
 

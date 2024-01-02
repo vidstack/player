@@ -2,7 +2,6 @@ import { effect, peek, signal } from 'maverick.js';
 import { isString, listenEvent } from 'maverick.js/std';
 
 import { appendParamsToURL } from '../../utils/network';
-import type { MediaSetupContext } from '../types';
 
 export abstract class EmbedProvider<Message> {
   protected _src = signal('');
@@ -37,7 +36,7 @@ export abstract class EmbedProvider<Message> {
     }
   }
 
-  setup(ctx: MediaSetupContext) {
+  setup() {
     effect(this._watchSrc.bind(this));
     listenEvent(window, 'message' as any, this._onWindowMessage.bind(this) as any);
     listenEvent(this._iframe, 'load', this._onLoad.bind(this));

@@ -57,7 +57,7 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
     const { rates, normalLabel } = this.$props;
     return rates().map((rate) => ({
       label: rate === 1 ? normalLabel : rate + '×',
-      value: rate + '',
+      value: rate.toString(),
     }));
   }
 
@@ -78,7 +78,7 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
 
   private _getValue() {
     const { playbackRate } = this._media.$state;
-    return playbackRate() + '';
+    return playbackRate().toString();
   }
 
   private _onValueChange(value: string, trigger?: Event) {

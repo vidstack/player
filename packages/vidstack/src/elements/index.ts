@@ -21,14 +21,15 @@ export { MediaVideoLayoutElement } from './define/layouts/default/video-layout-e
 
 // Buttons
 export { MediaAirPlayButtonElement } from './define/buttons/airplay-button-element';
-export { MediaPlayButtonElement } from './define/buttons/play-button-element';
-export { MediaMuteButtonElement } from './define/buttons/mute-button-element';
 export { MediaCaptionButtonElement } from './define/buttons/caption-button-element';
 export { MediaFullscreenButtonElement } from './define/buttons/fullscreen-button-element';
+export { MediaGoogleCastButtonElement } from './define/buttons/google-cast-button-element';
+export { MediaLiveButtonElement } from './define/buttons/live-button-element';
+export { MediaMuteButtonElement } from './define/buttons/mute-button-element';
 export { MediaPIPButtonElement } from './define/buttons/pip-button-element';
+export { MediaPlayButtonElement } from './define/buttons/play-button-element';
 export { MediaSeekButtonElement } from './define/buttons/seek-button-element';
 export { MediaToggleButtonElement } from './define/buttons/toggle-button-element';
-export { MediaLiveButtonElement } from './define/buttons/live-button-element';
 
 // Tooltips
 export { MediaTooltipElement } from './define/tooltips/tooltip-element';

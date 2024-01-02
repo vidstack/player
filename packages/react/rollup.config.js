@@ -32,7 +32,7 @@ const EXTERNAL_PACKAGES = [
     /^remotion/,
   ],
   NPM_BUNDLES = [define({ dev: true }), define({ dev: false })],
-  TYPES_BUNDLES = [defineTypes()];
+  TYPES_BUNDLES = defineTypes();
 
 // Styles
 if (!MODE_TYPES) {
@@ -53,38 +53,60 @@ export default defineConfig(
 );
 
 /**
- * @returns {import('rollup').RollupOptions}
+ * @returns {import('rollup').RollupOptions[]}
  * */
 function defineTypes() {
-  return {
-    input: {
-      index: 'types/react/src/index.d.ts',
-      icons: 'types/react/src/icons.d.ts',
-      'player/remotion': 'types/react/src/providers/remotion/index.d.ts',
-      'player/layouts/default': 'types/react/src/components/layouts/default/index.d.ts',
-    },
-    output: {
-      dir: '.',
-      chunkFileNames: 'dist/types/[name].d.ts',
-      manualChunks(id) {
-        if (id.includes('react/src')) return 'vidstack-react';
-        if (id.includes('maverick')) return 'vidstack-framework';
-        if (id.includes('vidstack')) return 'vidstack';
+  return [
+    {
+      input: {
+        index: 'types/react/src/index.d.ts',
+        icons: 'types/react/src/icons.d.ts',
+        'player/remotion': 'types/react/src/providers/remotion/index.d.ts',
+        'player/layouts/default': 'types/react/src/components/layouts/default/index.d.ts',
       },
-    },
-    external: EXTERNAL_PACKAGES,
-    plugins: [
-      {
-        name: 'resolve-vidstack-types',
-        resolveId(id) {
-          if (id === 'vidstack') {
-            return 'types/vidstack/src/index.d.ts';
-          }
+      output: {
+        dir: '.',
+        chunkFileNames: 'dist/types/[name].d.ts',
+        manualChunks(id) {
+          if (id.includes('react/src')) return 'vidstack-react';
+          if (id.includes('maverick')) return 'vidstack-framework';
+          if (id.includes('vidstack')) return 'vidstack';
         },
       },
-      dts({ respectExternal: true }),
-    ],
-  };
+      external: EXTERNAL_PACKAGES,
+      plugins: [
+        {
+          name: 'resolve-vidstack-types',
+          resolveId(id) {
+            if (id === 'vidstack') {
+              return 'types/vidstack/src/index.d.ts';
+            }
+          },
+        },
+        dts({
+          respectExternal: true,
+        }),
+        {
+          name: 'globals',
+          generateBundle(_, bundle) {
+            const indexFile = Object.values(bundle).find((file) => file.fileName === 'index.d.ts'),
+              globalFiles = ['dom.d.ts', 'google-cast.d.ts'],
+              references = globalFiles
+                .map((path) => `/// <reference path="./${path}" />`)
+                .join('\n');
+
+            for (const file of globalFiles) {
+              fs.copyFileSync(path.resolve(`../vidstack/${file}`), file);
+            }
+
+            if (indexFile?.type === 'chunk') {
+              indexFile.code = references + `\n\n${indexFile.code}`;
+            }
+          },
+        },
+      ],
+    },
+  ];
 }
 
 /**

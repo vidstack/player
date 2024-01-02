@@ -37,16 +37,19 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
   protected onConnect(): void {
     effect(() => {
       const loader = this.$state.loader(),
-        isYouTubeEmbed = loader?.canPlay({ src: '', type: 'video/youtube' }),
-        isVimeoEmbed = loader?.canPlay({ src: '', type: 'video/vimeo' }),
-        isEmbed = isYouTubeEmbed || isVimeoEmbed;
+        isYouTubeEmbed = loader?.name === 'youtube',
+        isVimeoEmbed = loader?.name === 'vimeo',
+        isEmbed = isYouTubeEmbed || isVimeoEmbed,
+        isGoogleCast = loader?.name === 'google-cast';
 
       const target = loader
-        ? isEmbed
-          ? this._createIFrame()
-          : loader.mediaType() === 'audio'
-            ? this._createAudio()
-            : this._createVideo()
+        ? isGoogleCast
+          ? this._createGoogleCastContainer()
+          : isEmbed
+            ? this._createIFrame()
+            : loader.mediaType() === 'audio'
+              ? this._createAudio()
+              : this._createVideo()
         : null;
 
       if (this._target !== target) {
@@ -126,6 +129,21 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
     return this._target instanceof HTMLIFrameElement
       ? this._target
       : document.createElement('iframe');
+  }
+
+  private _createGoogleCastContainer() {
+    if (this._target?.classList.contains('vds-google-cast')) {
+      return this._target;
+    }
+
+    const container = document.createElement('div');
+    container.classList.add('vds-google-cast');
+
+    import('./provider-cast-display').then(({ insertContent }) => {
+      insertContent(container, this._media.$state);
+    });
+
+    return container;
   }
 }
 

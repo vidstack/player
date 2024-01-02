@@ -106,3 +106,32 @@ iframe.vds-youtube[data-no-controls] {
 .vds-icon:focus {
   outline: none;
 }
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Google Cast
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+.vds-google-cast {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #dedede;
+  font-family: sans-serif;
+  font-weight: 500;
+}
+
+.vds-google-cast svg {
+  --size: max(18%, 40px);
+  width: var(--size);
+  height: var(--size);
+  margin-bottom: 8px;
+}
+
+.vds-google-cast-info {
+  font-size: calc(var(--media-height) / 100 * 6);
+}

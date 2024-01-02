@@ -20,7 +20,7 @@ const NPM_EXTERNAL_PACKAGES = ['hls.js', 'media-captions', 'media-icons'],
   CDN_EXTERNAL_PACKAGES = ['media-captions', 'media-icons'],
   NPM_BUNDLES = [define({ type: 'server' }), define({ type: 'dev' }), define({ type: 'prod' })],
   CDN_BUNDLES = [defineCDN({ dev: true }), defineCDN(), defineCDN({ layouts: true })],
-  TYPES_BUNDLES = [defineTypes()];
+  TYPES_BUNDLES = defineTypes();
 
 // Styles
 if (!MODE_TYPES) {
@@ -46,34 +46,51 @@ export default defineConfig(
 );
 
 /**
- * @returns {import('rollup').RollupOptions}
+ * @returns {import('rollup').RollupOptions[]}
  * */
 function defineTypes() {
   /** @type {Record<string, string>} */
-  let input = {
-    ['index']: 'src/index.ts',
-    elements: 'src/elements/index.ts',
-    icons: 'src/elements/bundles/icons.ts',
+  const input = {
+    index: 'types/index.d.ts',
+    elements: 'types/elements/index.d.ts',
+    icons: 'types/elements/bundles/icons.d.ts',
   };
 
-  for (const key of Object.keys(input)) {
-    input[key] = input[key].replace(/^src/, 'types').replace(/\.ts$/, '.d.ts');
-  }
-
-  return {
-    input,
-    output: {
-      dir: '.',
-      chunkFileNames: 'dist/types/vidstack-[hash].d.ts',
-      manualChunks(id) {
-        if (id.includes('maverick') || id.includes('lit-html') || id.includes('@floating-ui')) {
-          return 'framework.d';
-        }
+  return [
+    {
+      input,
+      output: {
+        dir: '.',
+        chunkFileNames: 'dist/types/vidstack-[hash].d.ts',
+        manualChunks(id) {
+          if (id.includes('maverick') || id.includes('lit-html') || id.includes('@floating-ui')) {
+            return 'framework.d';
+          }
+        },
       },
+      external: NPM_EXTERNAL_PACKAGES,
+      plugins: [
+        dts({
+          respectExternal: true,
+        }),
+        {
+          name: 'globals',
+          generateBundle(_, bundle) {
+            const files = new Set(['index.d.ts', 'elements.d.ts']),
+              references = ['dom.d.ts', 'google-cast.d.ts']
+                .map((path) => `/// <reference path="./${path}" />`)
+                .join('\n');
+
+            for (const file of Object.values(bundle)) {
+              if (files.has(file.fileName) && file.type === 'chunk' && file.isEntry) {
+                file.code = references + `\n\n${file.code}`;
+              }
+            }
+          },
+        },
+      ],
     },
-    external: NPM_EXTERNAL_PACKAGES,
-    plugins: [dts({ respectExternal: true })],
-  };
+  ];
 }
 
 /**
@@ -105,12 +122,7 @@ function define({ target, type, minify }) {
   if (!isServer) {
     input = {
       ...input,
-      [`providers/vidstack-html`]: 'src/providers/html/provider.ts',
-      [`providers/vidstack-audio`]: 'src/providers/audio/provider.ts',
-      [`providers/vidstack-video`]: 'src/providers/video/provider.ts',
-      [`providers/vidstack-hls`]: 'src/providers/hls/provider.ts',
-      [`providers/vidstack-youtube`]: 'src/providers/youtube/provider.ts',
-      [`providers/vidstack-vimeo`]: 'src/providers/vimeo/provider.ts',
+      ...getProviderInputs(),
     };
 
     input['define/vidstack-audio-layout'] =
@@ -191,12 +203,7 @@ function defineCDN({ dev = false, layouts = false } = {}) {
     }),
     input: {
       [output]: input,
-      [`providers/vidstack-html`]: 'src/providers/html/provider.ts',
-      [`providers/vidstack-audio`]: 'src/providers/audio/provider.ts',
-      [`providers/vidstack-video`]: 'src/providers/video/provider.ts',
-      [`providers/vidstack-hls`]: 'src/providers/hls/provider.ts',
-      [`providers/vidstack-youtube`]: 'src/providers/youtube/provider.ts',
-      [`providers/vidstack-vimeo`]: 'src/providers/vimeo/provider.ts',
+      ...getProviderInputs(),
     },
     output: {
       format: 'esm',
@@ -263,4 +270,16 @@ export async function buildMangleCache() {
   await fs.writeFile('mangle.json', JSON.stringify(mangleCache, null, 2) + '\n');
 
   return mangleCache;
+}
+
+function getProviderInputs() {
+  return {
+    [`providers/vidstack-html`]: 'src/providers/html/provider.ts',
+    [`providers/vidstack-audio`]: 'src/providers/audio/provider.ts',
+    [`providers/vidstack-video`]: 'src/providers/video/provider.ts',
+    [`providers/vidstack-hls`]: 'src/providers/hls/provider.ts',
+    [`providers/vidstack-youtube`]: 'src/providers/youtube/provider.ts',
+    [`providers/vidstack-vimeo`]: 'src/providers/vimeo/provider.ts',
+    [`providers/vidstack-google-cast`]: 'src/providers/google-cast/provider.ts',
+  };
 }

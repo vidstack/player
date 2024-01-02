@@ -265,7 +265,7 @@ export class ThumbnailsLoader {
     if (!__DEV__ || warned?.has(src)) return;
 
     this._media.logger
-      ?.errorGroup('Failed to load thumbnails.')
+      ?.errorGroup('[vidstack] failed to load thumbnails')
       .labelledLog('Src', src)
       .labelledLog('Error', error)
       .dispatch();

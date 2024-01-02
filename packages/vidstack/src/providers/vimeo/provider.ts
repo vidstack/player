@@ -7,7 +7,7 @@ import {
   type DeferredPromise,
 } from 'maverick.js/std';
 
-import { TextTrack, TimeRange, type MediaSrc } from '../../core';
+import { TextTrack, TimeRange, type MediaContext, type MediaSrc } from '../../core';
 import { QualitySymbol } from '../../core/quality/symbols';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
@@ -15,7 +15,6 @@ import { coerceToError } from '../../utils/error';
 import { preconnect } from '../../utils/network';
 import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
-import type { MediaSetupContext } from '../types';
 import type { VimeoCommandArg, VimeoCommandData } from './embed/command';
 import {
   trackedVimeoEvents,
@@ -54,7 +53,6 @@ export class VimeoProvider
 
   readonly scope = createScope();
 
-  protected _ctx!: MediaSetupContext;
   protected _played = 0;
   protected _playedRange = new TimeRange(0, 0);
   protected _seekableRange = new TimeRange(0, 0);
@@ -71,6 +69,13 @@ export class VimeoProvider
 
   protected get _notify() {
     return this._ctx.delegate._notify;
+  }
+
+  constructor(
+    iframe: HTMLIFrameElement,
+    protected _ctx: MediaContext,
+  ) {
+    super(iframe);
   }
 
   /**
@@ -106,12 +111,11 @@ export class VimeoProvider
   }
 
   preconnect() {
-    preconnect(this._getOrigin(), 'preconnect');
+    preconnect(this._getOrigin());
   }
 
-  override setup(ctx: MediaSetupContext) {
-    this._ctx = ctx;
-    super.setup(ctx);
+  override setup() {
+    super.setup();
 
     effect(this._watchVideoId.bind(this));
     effect(this._watchVideoInfo.bind(this));
@@ -294,10 +298,7 @@ export class VimeoProvider
     const prevTime = realCurrentTime(),
       detail = {
         currentTime: time,
-        played:
-          this._played >= time
-            ? this._playedRange
-            : (this._playedRange = new TimeRange(0, (this._played = time))),
+        played: this._getPlayedRange(time),
       };
 
     this._notify('time-update', detail, trigger);
@@ -310,6 +311,12 @@ export class VimeoProvider
         this._notify('waiting', undefined, trigger);
       }
     }
+  }
+
+  protected _getPlayedRange(time: number) {
+    return this._played >= time
+      ? this._playedRange
+      : (this._playedRange = new TimeRange(0, (this._played = time)));
   }
 
   protected _onSeeked(time: number, trigger: Event) {

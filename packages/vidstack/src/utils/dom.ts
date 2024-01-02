@@ -13,6 +13,21 @@ import {
   setStyle,
 } from 'maverick.js/std';
 
+export interface EventTargetLike {
+  addEventListener(type: string, handler: (...args: any[]) => void): void;
+  removeEventListener(type: string, handler: (...args: any[]) => void): void;
+}
+
+export function listen(
+  target: EventTargetLike | null | undefined,
+  type: string,
+  handler: (...args: any[]) => void,
+) {
+  if (!target) return;
+  // @ts-expect-error - `listenEvent` is not typed to handle this.
+  return listenEvent(target, type, handler);
+}
+
 export function setAttributeIfEmpty(target: Element, name: string, value: string) {
   if (!target.hasAttribute(name)) target.setAttribute(name, value);
 }

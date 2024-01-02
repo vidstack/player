@@ -15,6 +15,7 @@ import {
   DefaultChaptersMenu,
   DefaultChapterTitle,
   DefaultFullscreenButton,
+  DefaultGoogleCastButton,
   DefaultMuteButton,
   DefaultPIPButton,
   DefaultPlayButton,
@@ -104,6 +105,7 @@ function DefaultVideoLargeLayout() {
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top" />)}
           {menuGroup === 'bottom' && <DefaultVideoMenus slots={slots} />}
           {slot(slots, 'airPlayButton', <DefaultAirPlayButton tooltip="top" />)}
+          {slot(slots, 'googleCastButton', <DefaultGoogleCastButton tooltip="top" />)}
           {slot(slots, 'pipButton', <DefaultPIPButton tooltip="top" />)}
           {slot(slots, 'fullscreenButton', <DefaultFullscreenButton tooltip="top end" />)}
         </Controls.Group>
@@ -129,6 +131,7 @@ function DefaultVideoSmallLayout() {
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
           {slot(slots, 'airPlayButton', <DefaultAirPlayButton tooltip="top start" />)}
+          {slot(slots, 'googleCastButton', <DefaultGoogleCastButton tooltip="top start" />)}
           <div className="vds-controls-spacer" />
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="bottom" />)}
           <DefaultVideoMenus slots={slots} />

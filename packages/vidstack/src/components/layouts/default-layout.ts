@@ -203,6 +203,7 @@ export interface DefaultLayoutTranslations {
   Connecting: string;
   Disconnected: string;
   Default: string;
+  'Google Cast': string;
   LIVE: string;
   Mute: string;
   Normal: string;

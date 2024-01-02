@@ -42,6 +42,28 @@ export function DefaultAirPlayButton({ tooltip }: { tooltip: TooltipPlacement })
   `;
 }
 
+export function DefaultGoogleCastButton({ tooltip }: { tooltip: TooltipPlacement }) {
+  const { translations } = useDefaultLayoutContext(),
+    { remotePlaybackState } = useMediaContext().$state,
+    $label = $computed(() => {
+      const googleCastText = getDefaultLayoutLang(translations, 'Google Cast'),
+        stateText = uppercaseFirstChar(remotePlaybackState()) as Capitalize<RemotePlaybackState>;
+      return `${googleCastText} ${stateText}`;
+    });
+  return html`
+    <media-tooltip class="vds-google-cast-tooltip vds-tooltip">
+      <media-tooltip-trigger>
+        <media-google-cast-button class="vds-google-cast-button vds-button" aria-label=${$label}>
+          <slot name="google-cast-icon" data-class="vds-google-cast-icon"></slot>
+        </media-google-cast-button>
+      </media-tooltip-trigger>
+      <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
+        <span class="vds-google-cast-tooltip-text">${$i18n(translations, 'Google Cast')}</span>
+      </media-tooltip-content>
+    </media-tooltip>
+  `;
+}
+
 export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultLayoutContext(),
     { paused } = useMediaContext().$state,

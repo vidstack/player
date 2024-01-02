@@ -37,6 +37,8 @@ packages/vidstack/player/styles/default/theme.css
 packages/react/src/icons.ts
 packages/react/index.d.ts
 packages/react/icons.d.ts
+packages/react/dom.d.ts
+packages/react/google-cast.d.ts
 packages/react/player/
 packages/react/tailwind*
 

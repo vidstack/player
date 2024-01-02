@@ -1,13 +1,13 @@
 import { effect, onDispose, peek } from 'maverick.js';
 import { DOMEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
 
+import type { MediaContext } from '../../core/api/media-context';
 import type { MediaCanPlayDetail } from '../../core/api/media-events';
 import type { MediaErrorCode } from '../../core/api/types';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { isHLSSrc } from '../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../utils/number';
 import { IS_SAFARI } from '../../utils/support';
-import type { MediaSetupContext } from '../types';
 import type { HTMLMediaProvider } from './provider';
 
 export class HTMLMediaEvents {
@@ -27,7 +27,7 @@ export class HTMLMediaEvents {
 
   constructor(
     private _provider: HTMLMediaProvider,
-    private _ctx: MediaSetupContext,
+    private _ctx: MediaContext,
   ) {
     this._attachInitialListeners();
     effect(this._attachTimeUpdate.bind(this));

@@ -1,8 +1,8 @@
 import { listenEvent } from 'maverick.js/std';
 
+import type { MediaContext } from '../../core/api/media-context';
 import type { AudioTrack, AudioTrackChangeEvent } from '../../core/tracks/audio-tracks';
 import { ListSymbol } from '../../foundation/list/symbols';
-import type { MediaSetupContext } from '../types';
 import type { HTMLMediaProvider } from './provider';
 
 interface NativeAudioTrack {
@@ -31,7 +31,7 @@ export class NativeAudioTracks {
 
   constructor(
     private _provider: HTMLMediaProvider,
-    private _ctx: MediaSetupContext,
+    private _ctx: MediaContext,
   ) {
     this._nativeTracks.onaddtrack = this._onAddNativeTrack.bind(this);
     this._nativeTracks.onremovetrack = this._onRemoveNativeTrack.bind(this);
@@ -45,7 +45,7 @@ export class NativeAudioTracks {
     if (_track.label === '') return;
 
     const audioTrack: AudioTrack = {
-      id: _track.id + '',
+      id: _track.id.toString(),
       label: _track.label,
       language: _track.language,
       kind: _track.kind,

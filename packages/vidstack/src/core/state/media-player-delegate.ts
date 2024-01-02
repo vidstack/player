@@ -63,7 +63,11 @@ export class MediaPlayerDelegate {
     const provider = peek(this._media.$provider),
       { storage } = this._media,
       { muted, volume, playsinline, clipStartTime } = this._media.$props,
-      startTime = storage.data.time ?? clipStartTime();
+      { remotePlaybackInfo } = this._media.$state,
+      remotePlaybackTime = remotePlaybackInfo()?.savedState?.currentTime,
+      wasRemotePlaying = remotePlaybackInfo()?.savedState?.paused === false,
+      startTime = remotePlaybackTime ?? storage.data.time ?? clipStartTime(),
+      shouldAutoPlay = wasRemotePlaying || $state.autoplay();
 
     if (provider) {
       provider.setVolume(storage.data.volume ?? peek(volume));
@@ -72,15 +76,17 @@ export class MediaPlayerDelegate {
       if (startTime > 0) provider.setCurrentTime(startTime);
     }
 
-    if ($state.canPlay() && $state.autoplay() && !$state.started()) {
+    if ($state.canPlay() && shouldAutoPlay && !$state.started()) {
       await this._attemptAutoplay(trigger);
     }
+
+    remotePlaybackInfo.set(null);
   }
 
   private async _attemptAutoplay(trigger?: Event) {
     const { player, $state } = this._media;
 
-    $state.autoplaying.set(true);
+    $state.autoPlaying.set(true);
 
     const attemptEvent = new DOMEvent<void>('autoplay-attempt', { trigger });
 
@@ -93,7 +99,7 @@ export class MediaPlayerDelegate {
           : '';
 
         this._media.logger
-          ?.errorGroup('autoplay request failed')
+          ?.errorGroup('[vidstack] autoplay request failed')
           .labelledLog(
             'Message',
             `Autoplay was requested but failed most likely due to browser autoplay policies.${muteMsg}`,

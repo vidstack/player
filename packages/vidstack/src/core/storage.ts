@@ -80,7 +80,7 @@ export class MediaStorage {
     : throttle(() => {
         const mediaKey = this._mediaKey();
         if (!mediaKey) return;
-        const data = this._data.time + '';
+        const data = (this._data.time ?? 0).toString();
         localStorage.setItem(mediaKey, data);
       }, 1000);
 }

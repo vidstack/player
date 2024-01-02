@@ -59,7 +59,7 @@ export class SeekButton extends Component<SeekButtonProps> {
     setAttributeIfEmpty(el, 'role', 'button');
     setAttributeIfEmpty(el, 'type', 'button');
     el.setAttribute('data-media-tooltip', 'seek');
-    setARIALabel(el, this._getLabel.bind(this));
+    setARIALabel(el, this._getDefaultLabel.bind(this));
   }
 
   protected override onConnect(el: HTMLElement) {
@@ -71,7 +71,7 @@ export class SeekButton extends Component<SeekButtonProps> {
     return canSeek();
   }
 
-  protected _getLabel() {
+  protected _getDefaultLabel() {
     const { seconds } = this.$props;
     return `Seek ${seconds() > 0 ? 'forward' : 'backward'} ${seconds()} seconds`;
   }

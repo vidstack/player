@@ -1,4 +1,5 @@
 /// <reference types="vitest" />
+
 import { defineConfig } from 'vite';
 
 const SERVER = !!process.env.SERVER;
@@ -19,7 +20,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['maverick.js', 'maverick.js/element', 'media-icons', 'media-captions'],
   },
-  plugins: [],
   // https://vitest.dev/config
   test: {
     include: ['src/**/*.test.ts'],

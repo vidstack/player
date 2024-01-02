@@ -7,6 +7,8 @@ import type { MediaProviderLoader } from '../types';
 import type { VimeoProvider } from './provider';
 
 export class VimeoProviderLoader implements MediaProviderLoader<VimeoProvider> {
+  readonly name = 'vimeo';
+
   target!: HTMLIFrameElement;
 
   preconnect(): void {
@@ -17,7 +19,7 @@ export class VimeoProviderLoader implements MediaProviderLoader<VimeoProvider> {
     ];
 
     for (const url of connections) {
-      preconnect(url, 'preconnect');
+      preconnect(url);
     }
   }
 
@@ -40,7 +42,7 @@ export class VimeoProviderLoader implements MediaProviderLoader<VimeoProvider> {
       );
     }
 
-    return new (await import('./provider')).VimeoProvider(this.target);
+    return new (await import('./provider')).VimeoProvider(this.target, ctx);
   }
 
   async loadPoster(

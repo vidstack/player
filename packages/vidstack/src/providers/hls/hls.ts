@@ -2,6 +2,7 @@ import type * as HLS from 'hls.js';
 import { effect, peek } from 'maverick.js';
 import { camelToKebabCase, DOMEvent, isString, listenEvent } from 'maverick.js/std';
 
+import type { MediaContext } from '../../core/api/media-context';
 import type { MediaSrc } from '../../core/api/types';
 import { QualitySymbol } from '../../core/quality/symbols';
 import { TextTrackSymbol } from '../../core/tracks/text/symbols';
@@ -9,13 +10,11 @@ import { TextTrack } from '../../core/tracks/text/text-track';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { IS_CHROME } from '../../utils/support';
-import type { MediaSetupContext } from '../types';
 import type { HLSConstructor, HLSInstanceCallback } from './types';
 
 const toDOMEventType = (type: string) => camelToKebabCase(type);
 
 export class HLSController {
-  private _ctx!: MediaSetupContext;
   private _instance: HLS.default | null = null;
   private _stopLiveSync: (() => void) | null = null;
 
@@ -26,13 +25,16 @@ export class HLSController {
     return this._instance;
   }
 
-  constructor(private _video: HTMLVideoElement) {}
+  constructor(
+    private _video: HTMLVideoElement,
+    protected _ctx: MediaContext,
+  ) {}
 
-  setup(ctor: HLSConstructor, ctx: MediaSetupContext) {
-    this._ctx = ctx;
+  setup(ctor: HLSConstructor) {
+    const { streamType } = this._ctx.$state;
 
-    const isLive = peek(ctx.$state.streamType).includes('live'),
-      isLiveLowLatency = peek(ctx.$state.streamType).includes('ll-');
+    const isLive = peek(streamType).includes('live'),
+      isLiveLowLatency = peek(streamType).includes('ll-');
 
     this._instance = new ctor({
       lowLatencyMode: isLiveLowLatency,
@@ -47,7 +49,9 @@ export class HLSController {
     this._instance.on(ctor.Events.ERROR, this._onError.bind(this));
     for (const callback of this._callbacks) callback(this._instance);
 
-    ctx.player.dispatch(new DOMEvent('hls-instance', { detail: this._instance }));
+    this._ctx.player.dispatch('hls-instance', {
+      detail: this._instance,
+    });
 
     this._instance.attachMedia(this._video);
     this._instance.on(ctor.Events.FRAG_LOADING, this._onFragLoading.bind(this));
@@ -57,10 +61,10 @@ export class HLSController {
     this._instance.on(ctor.Events.NON_NATIVE_TEXT_TRACKS_FOUND, this._onTracksFound.bind(this));
     this._instance.on(ctor.Events.CUES_PARSED, this._onCuesParsed.bind(this));
 
-    ctx.qualities[QualitySymbol._enableAuto] = this._enableAutoQuality.bind(this);
+    this._ctx.qualities[QualitySymbol._enableAuto] = this._enableAutoQuality.bind(this);
 
-    listenEvent(ctx.qualities, 'change', this._onQualityChange.bind(this));
-    listenEvent(ctx.audioTracks, 'change', this._onAudioChange.bind(this));
+    listenEvent(this._ctx.qualities, 'change', this._onQualityChange.bind(this));
+    listenEvent(this._ctx.audioTracks, 'change', this._onAudioChange.bind(this));
 
     this._stopLiveSync = effect(this._liveSync.bind(this));
   }
@@ -124,30 +128,24 @@ export class HLSController {
   private _onAudioSwitch(eventType: string, data: HLS.AudioTrackSwitchedData) {
     const track = this._ctx.audioTracks[data.id];
     if (track) {
-      this._ctx.audioTracks[ListSymbol._select](
-        track,
-        true,
-        new DOMEvent(eventType, { detail: data }),
-      );
+      const trigger = new DOMEvent(eventType, { detail: data });
+      this._ctx.audioTracks[ListSymbol._select](track, true, trigger);
     }
   }
 
   private _onLevelSwitched(eventType: string, data: HLS.LevelSwitchedData) {
     const quality = this._ctx.qualities[data.level];
     if (quality) {
-      this._ctx.qualities[ListSymbol._select](
-        quality,
-        true,
-        new DOMEvent(eventType, { detail: data }),
-      );
+      const trigger = new DOMEvent(eventType, { detail: data });
+      this._ctx.qualities[ListSymbol._select](quality, true, trigger);
     }
   }
 
   private _onLevelLoaded(eventType: string, data: HLS.LevelLoadedData): void {
     if (this._ctx.$state.canPlay()) return;
 
-    const { type, live, totalduration: duration, targetduration } = data.details;
-    const event = new DOMEvent(eventType, { detail: data });
+    const { type, live, totalduration: duration, targetduration } = data.details,
+      trigger = new DOMEvent(eventType, { detail: data });
 
     this._ctx.delegate._notify(
       'stream-type-change',
@@ -156,49 +154,47 @@ export class HLSController {
           ? 'live:dvr'
           : 'live'
         : 'on-demand',
-      event,
+      trigger,
     );
 
-    this._ctx.delegate._notify('duration-change', duration, event);
+    this._ctx.delegate._notify('duration-change', duration, trigger);
 
     const media = this._instance!.media!;
 
     if (this._instance!.currentLevel === -1) {
-      this._ctx.qualities[QualitySymbol._setAuto](true, event);
+      this._ctx.qualities[QualitySymbol._setAuto](true, trigger);
     }
 
-    for (const track of this._instance!.audioTracks) {
-      this._ctx.audioTracks[ListSymbol._add](
-        {
-          id: track.id + '',
-          label: track.name,
-          language: track.lang || '',
-          kind: 'main',
-        },
-        event,
-      );
+    for (const remoteTrack of this._instance!.audioTracks) {
+      const localTrack = {
+        id: remoteTrack.id.toString(),
+        label: remoteTrack.name,
+        language: remoteTrack.lang || '',
+        kind: 'main',
+      };
+
+      this._ctx.audioTracks[ListSymbol._add](localTrack, trigger);
     }
 
     for (const level of this._instance!.levels) {
-      this._ctx.qualities[ListSymbol._add](
-        {
-          id: (level.id ?? level.height + 'p') + '',
-          width: level.width,
-          height: level.height,
-          codec: level.codecSet,
-          bitrate: level.bitrate,
-        },
-        event,
-      );
+      const videoQuality = {
+        id: level.id?.toString() ?? level.height + 'p',
+        width: level.width,
+        height: level.height,
+        codec: level.codecSet,
+        bitrate: level.bitrate,
+      };
+
+      this._ctx.qualities[ListSymbol._add](videoQuality, trigger);
     }
 
-    media.dispatchEvent(new DOMEvent<void>('canplay', { trigger: event }));
+    media.dispatchEvent(new DOMEvent<void>('canplay', { trigger }));
   }
 
   private _onError(eventType: string, data: HLS.ErrorData) {
     if (__DEV__) {
       this._ctx.logger
-        ?.errorGroup(`HLS error \`${eventType}\``)
+        ?.errorGroup(`[vidstack] HLS error \`${eventType}\``)
         .labelledLog('Media Element', this._instance?.media)
         .labelledLog('HLS Instance', this._instance)
         .labelledLog('Event Type', eventType)

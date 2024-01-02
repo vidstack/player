@@ -1,8 +1,8 @@
 import { DOMEvent, isFunction, isString, isUndefined } from 'maverick.js/std';
 
+import type { MediaContext } from '../../core/api/media-context';
 import { coerceToError } from '../../utils/error';
 import { loadScript } from '../../utils/network';
-import type { MediaSetupContext } from '../types';
 import type { HLSConstructor, HLSConstructorLoader, HLSLibrary } from './types';
 
 interface LoadHLSConstructorCallbacks {
@@ -14,7 +14,7 @@ interface LoadHLSConstructorCallbacks {
 export class HLSLibLoader {
   constructor(
     private _lib: HLSLibrary,
-    private _ctx: MediaSetupContext,
+    private _ctx: MediaContext,
     private _callback: (ctor: HLSConstructor) => void,
   ) {
     this._startLoading();
@@ -40,7 +40,7 @@ export class HLSLibLoader {
 
     // Not supported.
     if (!ctor.isSupported()) {
-      const message = '[vidstack]: `hls.js` is not supported in this environment';
+      const message = '[vidstack] `hls.js` is not supported in this environment';
       if (__DEV__) this._ctx.logger?.error(message);
       this._ctx.player.dispatch(new DOMEvent<void>('hls-unsupported'));
       this._ctx.delegate._notify('error', { message, code: 4 });
@@ -84,7 +84,7 @@ export class HLSLibLoader {
 
     if (__DEV__) {
       this._ctx.logger
-        ?.errorGroup('Failed to load `hls.js`')
+        ?.errorGroup('[vidstack] Failed to load `hls.js`')
         .labelledLog('Library', this._lib)
         .labelledLog('Error', e)
         .dispatch();

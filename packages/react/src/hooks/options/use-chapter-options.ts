@@ -31,7 +31,7 @@ export function useChapterOptions(): ChapterOptions {
             return {
               cue,
               label: cue.text,
-              value: i + '',
+              value: i.toString(),
               startTimeText: formatTime(Math.max(0, cue.startTime - $startTime), false),
               durationText: formatSpokenTime(
                 Math.min($endTime, cue.endTime) - Math.max($startTime, cue.startTime),
@@ -72,7 +72,7 @@ export function useChapterOptions(): ChapterOptions {
     Object.defineProperty(options, 'selectedValue', {
       get() {
         const index = options.findIndex((option) => option.selected);
-        return (index >= 0 ? index : 0) + '';
+        return (index >= 0 ? index : 0).toString();
       },
     });
 

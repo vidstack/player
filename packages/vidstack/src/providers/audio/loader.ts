@@ -1,19 +1,15 @@
-import { isString } from 'maverick.js/std';
-
 import type { MediaSrc, MediaType } from '../../core';
-import { AUDIO_EXTENSIONS, AUDIO_TYPES } from '../../utils/mime';
+import { isAudioSrc } from '../../utils/mime';
 import type { MediaProviderLoader } from '../types';
 import type { AudioProvider } from './provider';
 
 export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
+  readonly name = 'audio';
+
   target!: HTMLAudioElement;
 
-  canPlay({ src, type }: MediaSrc) {
-    return isString(src)
-      ? AUDIO_EXTENSIONS.test(src) ||
-          AUDIO_TYPES.has(type) ||
-          (src.startsWith('blob:') && type === 'audio/object')
-      : type === 'audio/object';
+  canPlay(src: MediaSrc) {
+    return isAudioSrc(src);
   }
 
   mediaType(): MediaType {

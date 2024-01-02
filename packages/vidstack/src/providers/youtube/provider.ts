@@ -1,18 +1,11 @@
 import { createScope, effect, signal } from 'maverick.js';
-import {
-  isBoolean,
-  isNumber,
-  isObject,
-  isString,
-  noop,
-  type DeferredPromise,
-} from 'maverick.js/std';
+import { isBoolean, isNumber, isObject, isString, type DeferredPromise } from 'maverick.js/std';
 
-import { TimeRange, type MediaSrc } from '../../core';
+import { TimeRange, type MediaContext, type MediaSrc } from '../../core';
 import { preconnect } from '../../utils/network';
 import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
-import type { MediaProviderAdapter, MediaSetupContext } from '../types';
+import type { MediaProviderAdapter } from '../types';
 import type { YouTubeCommandArg } from './embed/command';
 import type { YouTubeMessage } from './embed/message';
 import type { YouTubeParams } from './embed/params';
@@ -39,7 +32,6 @@ export class YouTubeProvider
 
   readonly scope = createScope();
 
-  protected _ctx!: MediaSetupContext;
   protected _videoId = signal('');
   protected _state: YouTubePlayerStateValue = -1;
   protected _seekingTimer = -1;
@@ -52,6 +44,13 @@ export class YouTubeProvider
 
   protected get _notify() {
     return this._ctx.delegate._notify;
+  }
+
+  constructor(
+    iframe: HTMLIFrameElement,
+    protected _ctx: MediaContext,
+  ) {
+    super(iframe);
   }
 
   /**
@@ -89,12 +88,11 @@ export class YouTubeProvider
   }
 
   preconnect() {
-    preconnect(this._getOrigin(), 'preconnect');
+    preconnect(this._getOrigin());
   }
 
-  override setup(ctx: MediaSetupContext) {
-    this._ctx = ctx;
-    super.setup(ctx);
+  override setup() {
+    super.setup();
     effect(this._watchVideoId.bind(this));
     this._notify('provider-setup', this);
   }
@@ -228,10 +226,7 @@ export class YouTubeProvider
       boundTime = hasEnded ? duration() : time,
       detail = {
         currentTime: boundTime,
-        played:
-          this._played >= boundTime
-            ? this._playedRange
-            : (this._playedRange = new TimeRange(0, (this._played = time))),
+        played: this._getPlayedRange(boundTime),
       };
 
     this._notify('time-update', detail, trigger);
@@ -240,6 +235,12 @@ export class YouTubeProvider
     if (!hasEnded && Math.abs(boundTime - realCurrentTime()) > 1) {
       this._notify('seeking', boundTime, trigger);
     }
+  }
+
+  protected _getPlayedRange(time: number) {
+    return this._played >= time
+      ? this._playedRange
+      : (this._playedRange = new TimeRange(0, (this._played = time)));
   }
 
   protected _onProgress(buffered: number, seekable: TimeRange, trigger: Event) {

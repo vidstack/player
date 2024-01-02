@@ -86,7 +86,7 @@ export class ChaptersRadioGroup extends Component<
       endTime = clipEndTime() || Infinity;
     return this._cues().map((cue, i) => ({
       cue,
-      value: i + '',
+      value: i.toString(),
       label: cue.text,
       startTime: formatTime(Math.max(0, cue.startTime - startTime), false),
       duration: formatSpokenTime(
@@ -169,7 +169,7 @@ export class ChaptersRadioGroup extends Component<
   }
 
   private _getValue() {
-    return this._index() + '';
+    return this._index().toString();
   }
 
   private _onValueChange(value: string, trigger?: Event) {

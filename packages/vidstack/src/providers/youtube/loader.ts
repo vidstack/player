@@ -7,6 +7,8 @@ import type { MediaProviderLoader } from '../types';
 import type { YouTubeProvider } from './provider';
 
 export class YouTubeProviderLoader implements MediaProviderLoader<YouTubeProvider> {
+  readonly name = 'youtube';
+
   target!: HTMLIFrameElement;
 
   preconnect() {
@@ -21,7 +23,7 @@ export class YouTubeProviderLoader implements MediaProviderLoader<YouTubeProvide
     ];
 
     for (const url of connections) {
-      preconnect(url, 'preconnect');
+      preconnect(url);
     }
   }
 
@@ -44,7 +46,7 @@ export class YouTubeProviderLoader implements MediaProviderLoader<YouTubeProvide
       );
     }
 
-    return new (await import('./provider')).YouTubeProvider(this.target);
+    return new (await import('./provider')).YouTubeProvider(this.target, ctx);
   }
 
   async loadPoster(
