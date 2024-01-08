@@ -14,6 +14,7 @@ export class MediaStateSync extends MediaPlayerController {
 
     if (__DEV__) effect(this._watchLogLevel.bind(this));
     effect(this._watchProvidedTypes.bind(this));
+    effect(this._watchArtist.bind(this));
     effect(this._watchTitle.bind(this));
     effect(this._watchAutoplay.bind(this));
     effect(this._watchPoster.bind(this));
@@ -63,6 +64,11 @@ export class MediaStateSync extends MediaPlayerController {
   private _watchLogLevel() {
     if (!__DEV__) return;
     this.$state.logLevel.set(this.$props.logLevel());
+  }
+
+  private _watchArtist() {
+    const { artist } = this.$props;
+    this.$state.artist.set(artist());
   }
 
   private _watchTitle() {

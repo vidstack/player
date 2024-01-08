@@ -7,6 +7,7 @@ import type { MediaState } from './player-state';
 import type { MediaLoadingStrategy, MediaPosterLoadingStrategy, MediaResource } from './types';
 
 export const mediaPlayerProps: MediaPlayerProps = {
+  artist: '',
   autoplay: false,
   clipStartTime: 0,
   clipEndTime: 0,
@@ -54,6 +55,7 @@ export interface MediaPlayerProps
   // Prefer picking off the `MediaStore` type to ensure docs are kept in-sync.
   extends Pick<
     MediaState,
+    | 'artist'
     | 'autoplay'
     | 'clipStartTime'
     | 'clipEndTime'

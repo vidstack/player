@@ -23,7 +23,9 @@ All notable changes to this project will be documented in this file.
 - new `crossOrigin` prop on thumbnail components ([72b8056](https://github.com/vidstack/player/commit/72b805680be2726c9d2286e925e7492f7c32ace9))
 - support new thumbnail src types ([698e575](https://github.com/vidstack/player/commit/698e5756ace9b0a85fffaa33083f567c9f127945))
 - new keyboard action display in default layout ([52890b0](https://github.com/vidstack/player/commit/52890b0373a99d32a9620d46b5e5d7734ca85d16))
-- new airplay button ([0448950](https://github.com/vidstack/player/commit/0448950968e1bb9702e10b843f51e066ff661467))
+- airplay support ([0f7df2f](https://github.com/vidstack/player/commit/0f7df2fa9ece6a9923c1b4c2f611e6362a8eb28e))
+- google cast support ([d08d630](https://github.com/vidstack/player/commit/d08d63044a3cbb54fc278e72ef4dd3ab1a28dd0b))
+- add media session api support ([2817694](https://github.com/vidstack/player/commit/2817694e10700f4a0cb0eb884cc5bd5272b345c9))
 
 #### Player (React)
 
@@ -47,7 +49,7 @@ All notable changes to this project will be documented in this file.
 - catch false postive vimeo pro detection ([29d6fa0](https://github.com/vidstack/player/commit/29d6fa05fbcc373e47232cf5412f7f1f73446fae))
 - use intrisic duration for last vimeo chapter end time ([4dbe21e](https://github.com/vidstack/player/commit/4dbe21eafdba83ef5071f3be7f9eadbc8999e96d))
 - rename `crossorigin` prop to `crossOrigin` ([37513ea](https://github.com/vidstack/player/commit/37513ea12c761c65f1dbbfd8280d9635be4ffb50))
-- rework media request queue ([cd888a8](https://github.com/vidstack/player/commit/cd888a8025fbfdfd1a6d92aa083f2f18b9880f0a))
+- rework media request queue ([6f9c16b](https://github.com/vidstack/player/commit/6f9c16b1c9a41487233a033d2801bc1691aa5716))
 
 #### Player (React)
 

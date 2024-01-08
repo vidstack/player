@@ -736,5 +736,11 @@
   "_syncActiveIds": "Im",
   "_syncLocalTracks": "Lm",
   "_syncRemoteActiveIds": "Km",
-  "_syncRemoteTracks": "Mm"
+  "_syncRemoteTracks": "Mm",
+  "_actions": "Nm",
+  "_createGoogleCastContainer": "Sm",
+  "_handleAction": "Rm",
+  "_onMetadataChange": "Pm",
+  "_onPlaybackStateChange": "Qm",
+  "_watchArtist": "Om"
 }

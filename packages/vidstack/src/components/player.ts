@@ -52,6 +52,7 @@ import { MediaPlayerDelegate } from '../core/state/media-player-delegate';
 import { MediaRequestContext, MediaRequestManager } from '../core/state/media-request-manager';
 import { MediaStateManager } from '../core/state/media-state-manager';
 import { MediaStateSync } from '../core/state/media-state-sync';
+import { NavigatorMediaSession } from '../core/state/navigator-media-session';
 import { MediaStorage } from '../core/storage';
 import { TextTrackSymbol } from '../core/tracks/text/symbols';
 import { canFullscreen } from '../foundation/fullscreen/controller';
@@ -191,6 +192,7 @@ export class MediaPlayer
       context,
     );
 
+    new NavigatorMediaSession();
     new MediaLoadController('load', this.startLoading.bind(this));
     new MediaLoadController('posterLoad', this.startLoadingPoster.bind(this));
   }

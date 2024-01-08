@@ -21,8 +21,9 @@ import type {
 export interface MediaPlayerState extends MediaState {}
 
 export const mediaState = new State<MediaState>({
-  audioTracks: [],
+  artist: '',
   audioTrack: null,
+  audioTracks: [],
   autoplay: false,
   autoplayError: null,
   buffered: new TimeRange(),
@@ -718,6 +719,11 @@ export interface MediaState {
    * The title of the current media.
    */
   readonly title: string;
+  /**
+   * The artist or channel name for which this content belongs to. This can be used in your
+   * layout and it will be included in the Media Session API.
+   */
+  artist: string;
   /**
    * The list of all available text tracks.
    */
