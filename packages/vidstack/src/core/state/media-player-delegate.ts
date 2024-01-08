@@ -1,4 +1,4 @@
-import { peek, tick } from 'maverick.js';
+import { tick, untrack } from 'maverick.js';
 import { DOMEvent, type InferEventDetail } from 'maverick.js/std';
 
 import type { MediaContext } from '../api/media-context';
@@ -37,56 +37,63 @@ export class MediaPlayerDelegate {
   ) {
     if (__SERVER__) return;
 
-    const { $state, logger } = this._media;
+    return untrack(async () => {
+      const { logger } = this._media,
+        { autoplay, canPlay, started, duration, seekable, buffered, remotePlaybackInfo } =
+          this._media.$state;
 
-    if (peek($state.canPlay)) return;
+      if (canPlay()) return;
 
-    const detail = {
-      duration: info?.duration ?? peek($state.duration),
-      seekable: info?.seekable ?? peek($state.seekable),
-      buffered: info?.buffered ?? peek($state.buffered),
-      provider: peek(this._media.$provider)!,
-    };
+      const detail = {
+        duration: info?.duration ?? duration(),
+        seekable: info?.seekable ?? seekable(),
+        buffered: info?.buffered ?? buffered(),
+        provider: this._media.$provider()!,
+      };
 
-    this._notify('can-play', detail, trigger);
+      this._notify('can-play', detail, trigger);
 
-    tick();
+      tick();
 
-    if (__DEV__) {
-      logger
-        ?.infoGroup('-~-~-~-~-~-~- ✅ MEDIA READY -~-~-~-~-~-~-')
-        .labelledLog('Media Store', { ...$state })
-        .labelledLog('Trigger Event', trigger)
-        .dispatch();
-    }
+      if (__DEV__) {
+        logger
+          ?.infoGroup('-~-~-~-~-~-~- ✅ MEDIA READY -~-~-~-~-~-~-')
+          .labelledLog('Media', this._media)
+          .labelledLog('Trigger Event', trigger)
+          .dispatch();
+      }
 
-    const provider = peek(this._media.$provider),
-      { storage } = this._media,
-      { muted, volume, playsinline, clipStartTime } = this._media.$props,
-      { remotePlaybackInfo } = this._media.$state,
-      remotePlaybackTime = remotePlaybackInfo()?.savedState?.currentTime,
-      wasRemotePlaying = remotePlaybackInfo()?.savedState?.paused === false,
-      startTime = remotePlaybackTime ?? storage.data.time ?? clipStartTime(),
-      shouldAutoPlay = wasRemotePlaying || $state.autoplay();
+      let provider = this._media.$provider(),
+        { storage } = this._media,
+        { muted, volume, playsinline, clipStartTime } = this._media.$props;
 
-    if (provider) {
-      provider.setVolume(storage.data.volume ?? peek(volume));
-      provider.setMuted(storage.data.muted ?? peek(muted));
-      provider.setPlaysinline?.(peek(playsinline));
-      if (startTime > 0) provider.setCurrentTime(startTime);
-    }
+      const remotePlaybackTime = remotePlaybackInfo()?.savedState?.currentTime,
+        wasRemotePlaying = remotePlaybackInfo()?.savedState?.paused === false,
+        startTime = remotePlaybackTime ?? (await storage?.getTime()) ?? clipStartTime(),
+        shouldAutoPlay = wasRemotePlaying || autoplay();
 
-    if ($state.canPlay() && shouldAutoPlay && !$state.started()) {
-      await this._attemptAutoplay(trigger);
-    }
+      if (provider) {
+        provider.setVolume((await storage?.getVolume()) ?? volume());
+        provider.setMuted((await storage?.getMuted()) ?? muted());
+        provider.setPlaysinline?.(playsinline());
+        if (startTime > 0) provider.setCurrentTime(startTime);
+      }
 
-    remotePlaybackInfo.set(null);
+      if (canPlay() && shouldAutoPlay && !started()) {
+        await this._attemptAutoplay(trigger);
+      }
+
+      remotePlaybackInfo.set(null);
+    });
   }
 
   private async _attemptAutoplay(trigger?: Event) {
-    const { player, $state } = this._media;
+    const {
+      player,
+      $state: { autoPlaying, muted },
+    } = this._media;
 
-    $state.autoPlaying.set(true);
+    autoPlaying.set(true);
 
     const attemptEvent = new DOMEvent<void>('autoplay-attempt', { trigger });
 
@@ -94,7 +101,7 @@ export class MediaPlayerDelegate {
       await player.play(attemptEvent);
     } catch (error) {
       if (__DEV__ && !seenAutoplayWarning) {
-        const muteMsg = !$state.muted()
+        const muteMsg = !muted()
           ? ' Attempting with volume muted will most likely resolve the issue.'
           : '';
 

@@ -2,7 +2,6 @@ import {
   Component,
   computed,
   effect,
-  getScope,
   method,
   onDispose,
   peek,
@@ -16,6 +15,7 @@ import type { ElementAttributesRecord } from 'maverick.js/element';
 import {
   animationFrameThrottle,
   camelToKebabCase,
+  isString,
   listenEvent,
   setAttribute,
   setStyle,
@@ -52,8 +52,8 @@ import { MediaPlayerDelegate } from '../core/state/media-player-delegate';
 import { MediaRequestContext, MediaRequestManager } from '../core/state/media-request-manager';
 import { MediaStateManager } from '../core/state/media-state-manager';
 import { MediaStateSync } from '../core/state/media-state-sync';
+import { LocalMediaStorage, type MediaStorage } from '../core/state/media-storage';
 import { NavigatorMediaSession } from '../core/state/navigator-media-session';
-import { MediaStorage } from '../core/storage';
 import { TextTrackSymbol } from '../core/tracks/text/symbols';
 import { canFullscreen } from '../foundation/fullscreen/controller';
 import { Logger } from '../foundation/logger/controller';
@@ -144,14 +144,11 @@ export class MediaPlayer
 
     new MediaStateSync();
 
-    const mediaStorageKey = computed(this._computeMediaKey.bind(this)),
-      storage = new MediaStorage(this.$props.storageKey, mediaStorageKey);
-
     const context = {
       player: this,
       qualities: new VideoQualityList(),
       audioTracks: new AudioTrackList(),
-      storage,
+      storage: null,
       $provider: signal<MediaProvider | null>(null),
       $providerSetup: signal(false),
       $props: this.$props,
@@ -169,7 +166,7 @@ export class MediaPlayer
     context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
     context.remote.setPlayer(this);
     context.$iosControls = computed(this._isIOSControls.bind(this));
-    context.textTracks = new TextTrackList(storage);
+    context.textTracks = new TextTrackList();
     context.textTracks[TextTrackSymbol._crossOrigin] = this.$state.crossOrigin;
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
@@ -213,6 +210,8 @@ export class MediaPlayer
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'region');
 
+    effect(this._watchStorage.bind(this));
+
     if (__SERVER__) this._watchTitle();
     else effect(this._watchTitle.bind(this));
 
@@ -253,14 +252,6 @@ export class MediaPlayer
     // @ts-expect-error
     this._media.player = null;
     this.canPlayQueue._reset();
-  }
-
-  private _computeMediaKey() {
-    const { storageKey, clipStartTime, clipEndTime } = this.$props,
-      { source } = this.$state;
-    return storageKey() && source().src
-      ? `${storageKey()}:${source().src}:${clipStartTime()}:${clipEndTime()}`
-      : null;
   }
 
   private _skipTitleUpdate = false;
@@ -583,7 +574,7 @@ export class MediaPlayer
 
   private _queuePlaybackRateUpdate(rate: number) {
     this.canPlayQueue._enqueue('rate', () => {
-      if (this._provider) this._provider.setPlaybackRate?.(rate);
+      if (this._provider) (this._provider as MediaProviderAdapter).setPlaybackRate?.(rate);
     });
   }
 
@@ -595,6 +586,37 @@ export class MediaPlayer
     this.canPlayQueue._enqueue('playsinline', () => {
       if (this._provider) (this._provider as MediaProviderAdapter).setPlaysinline?.(inline);
     });
+  }
+
+  private _watchStorage() {
+    let storageValue = this.$props.storage(),
+      storage: MediaStorage | null = isString(storageValue)
+        ? new LocalMediaStorage()
+        : storageValue;
+
+    if (storage?.onChange) {
+      const { source } = this.$state,
+        playerId = isString(storageValue) ? storageValue : this.el?.id,
+        mediaId = computed(this._computeMediaId.bind(this));
+
+      effect(() => storage!.onChange!(source(), mediaId(), playerId));
+    }
+
+    this._media.storage = storage;
+    this._media.textTracks.setStorage(storage);
+
+    onDispose(() => {
+      storage?.onDestroy?.();
+      this._media.storage = null;
+      this._media.textTracks.setStorage(null);
+    });
+  }
+
+  private _computeMediaId() {
+    const { clipStartTime, clipEndTime } = this.$props,
+      { source } = this.$state,
+      src = source();
+    return src.src ? `${src.src}:${clipStartTime()}:${clipEndTime()}` : null;
   }
 
   /**

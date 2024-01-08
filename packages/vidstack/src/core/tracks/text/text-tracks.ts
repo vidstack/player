@@ -3,7 +3,7 @@ import { DOMEvent } from 'maverick.js/std';
 
 import { List, type ListReadonlyChangeEvent } from '../../../foundation/list/list';
 import { ListSymbol } from '../../../foundation/list/symbols';
-import type { MediaStorage } from '../../storage';
+import type { MediaStorage } from '../../state/media-storage';
 import { TextTrackSymbol } from './symbols';
 import {
   isTrackCaptionKind,
@@ -18,12 +18,13 @@ import {
 export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   private _canLoad = false;
   private _defaults: Record<string, TextTrack | undefined> = {};
+  private _storage: MediaStorage | null = null;
   private _preferredLang: string | null = null;
 
   /** @internal */
   [TextTrackSymbol._crossOrigin]?: () => string | null;
 
-  constructor(private readonly _storage?: MediaStorage) {
+  constructor() {
     super();
   }
 
@@ -96,13 +97,14 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     if (this._canLoad) return;
     for (const track of this._items) track[TextTrackSymbol._canLoad]();
     this._canLoad = true;
+    this._selectCaptions();
   }
 
-  private _selectCaptions = debounce(() => {
-    if (this.selected || this._storage?.data.captions === false) return;
+  private _selectCaptions = debounce(async () => {
+    if (!this._canLoad || this.selected || (await this._storage?.getCaptions()) === false) return;
 
     if (!this._preferredLang && this._storage) {
-      this._preferredLang = this._storage.data.lang;
+      this._preferredLang = await this._storage.getLang();
     }
 
     const preferredTrack =
@@ -118,9 +120,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
       if (defaultTrack) defaultTrack.mode = 'showing';
     }
 
-    if (this._storage) {
-      this._storage.lang = this._preferredLang ?? defaultTrack?.language ?? null;
-    }
+    this._storage?.setLang?.(this._preferredLang ?? defaultTrack?.language ?? null);
   }, 300);
 
   private _onTrackModeChangeBind = this._onTrackModeChange.bind(this);
@@ -128,7 +128,8 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     const track = event.detail;
 
     if (this._storage && isTrackCaptionKind(track)) {
-      this._storage.captions = track.mode === 'showing';
+      this._storage.setCaptions?.(track.mode === 'showing');
+      this._storage?.setLang?.(this._preferredLang ?? track?.language ?? null);
     }
 
     if (track.mode === 'showing') {
@@ -146,6 +147,10 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
         trigger: event,
       }),
     );
+  }
+
+  setStorage(storage: MediaStorage | null) {
+    this._storage = storage;
   }
 }
 

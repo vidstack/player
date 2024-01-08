@@ -3,6 +3,7 @@ import type { ScreenOrientationLockType } from '../../foundation/orientation/typ
 import type { GoogleCastOptions } from '../../providers/google-cast/types';
 import { MEDIA_KEY_SHORTCUTS } from '../keyboard/controller';
 import type { MediaKeyShortcuts, MediaKeyTarget } from '../keyboard/types';
+import type { MediaStorage } from '../state/media-storage';
 import type { MediaState } from './player-state';
 import type { MediaLoadingStrategy, MediaPosterLoadingStrategy, MediaResource } from './types';
 
@@ -40,7 +41,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   keyDisabled: false,
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
-  storageKey: null,
+  storage: null,
 };
 
 export interface MediaStateAccessors
@@ -207,8 +208,14 @@ export interface MediaPlayerProps
    */
   keyShortcuts: MediaKeyShortcuts;
   /**
-   * Determines whether volume, time, and captions settings should be saved to local storage
-   * and used when initializing media.
+   * Determines whether volume, time, and other player settings should be saved to storage
+   * and used when initializing media. The two options for enabling storage are:
+   *
+   * 1. You can provide a string which will use our local storage solution and the given string as
+   * a key prefix.
+   *
+   * 2. Or, you can provide your own storage solution (e.g., database) by implementing
+   * the `MediaStorage` interface and providing the object/class.
    */
-  storageKey: string | null;
+  storage: string | MediaStorage | null;
 }
