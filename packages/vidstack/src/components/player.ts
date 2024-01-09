@@ -323,12 +323,13 @@ export class MediaPlayer
         return !!error();
       },
       'data-autoplay-error': function (this: MediaPlayer) {
-        const { autoplayError } = this.$state;
-        return !!autoplayError();
+        const { autoPlayError } = this.$state;
+        return !!autoPlayError();
       },
     };
 
     const alias: Partial<Record<keyof MediaPlayerState, string>> = {
+      autoPlay: 'autoplay',
       canAirPlay: 'can-airplay',
       canPictureInPicture: 'can-pip',
       pictureInPicture: 'pip',
@@ -349,11 +350,6 @@ export class MediaPlayer
     delete $attrs.title;
     MediaPlayer[MEDIA_ATTRIBUTES] = $attrs;
     this.setAttributes($attrs);
-  }
-
-  private _isRemotePlaybackTypeConnected(type: RemotePlaybackType) {
-    const { remotePlaybackType, remotePlaybackState } = this.$state;
-    return remotePlaybackType() === type && remotePlaybackState() === 'connected';
   }
 
   private _onFindPlayer(event: FindMediaPlayerEvent) {

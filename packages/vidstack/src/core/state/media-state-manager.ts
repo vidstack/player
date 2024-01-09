@@ -241,12 +241,12 @@ export class MediaStateManager extends MediaPlayerController {
     }
   }
 
-  ['autoplay'](event: ME.MediaAutoplayEvent) {
-    this.$state.autoplayError.set(null);
+  ['auto-play'](event: ME.MediaAutoPlayEvent) {
+    this.$state.autoPlayError.set(null);
   }
 
-  ['autoplay-fail'](event: ME.MediaAutoplayFailEvent) {
-    this.$state.autoplayError.set(event.detail);
+  ['auto-play-fail'](event: ME.MediaAutoPlayFailEvent) {
+    this.$state.autoPlayError.set(event.detail);
     this._resetTracking();
   }
 
@@ -434,7 +434,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['play'](event: ME.MediaPlayEvent) {
-    const { paused, autoplayError, ended, autoPlaying, playsInline, pointer, muted, viewType } =
+    const { paused, autoPlayError, ended, autoPlaying, playsInline, pointer, muted, viewType } =
       this.$state;
 
     this._resetPlaybackIfNeeded();
@@ -444,7 +444,7 @@ export class MediaStateManager extends MediaPlayerController {
       return;
     }
 
-    event.autoplay = autoPlaying();
+    event.autoPlay = autoPlaying();
 
     const waitingEvent = this._trackedEvents.get('waiting');
     if (waitingEvent) event.triggers.add(waitingEvent);
@@ -453,11 +453,11 @@ export class MediaStateManager extends MediaPlayerController {
     this._trackedEvents.set('play', event);
 
     paused.set(false);
-    autoplayError.set(null);
+    autoPlayError.set(null);
 
-    if (event.autoplay) {
+    if (event.autoPlay) {
       this._handle(
-        this.createEvent('autoplay', {
+        this.createEvent('auto-play', {
           detail: { muted: muted() },
           trigger: event,
         }),
@@ -519,9 +519,9 @@ export class MediaStateManager extends MediaPlayerController {
     this._resetTracking();
     this._trackedEvents.set('play-fail', event);
 
-    if (event.autoplay) {
+    if (event.autoPlay) {
       this._handle(
-        this.createEvent('autoplay-fail', {
+        this.createEvent('auto-play-fail', {
           detail: {
             muted: muted(),
             error: event.detail,

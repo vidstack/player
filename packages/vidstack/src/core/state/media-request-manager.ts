@@ -143,7 +143,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
         trigger,
       });
 
-      errorEvent.autoplay = autoPlaying();
+      errorEvent.autoPlay = autoPlaying();
 
       this._stateMgr._handle(errorEvent);
       throw error;

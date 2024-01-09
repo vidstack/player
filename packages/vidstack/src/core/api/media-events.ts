@@ -18,8 +18,8 @@ import type {
 export interface MediaEvents {
   'audio-tracks-change': MediaAudioTracksChangeEvent;
   'audio-track-change': MediaAudioTrackChangeEvent;
-  'autoplay-change': MediaAutoplayChangeEvent;
-  'autoplay-fail': MediaAutoplayFailEvent;
+  'auto-play-change': MediaAutoPlayChangeEvent;
+  'auto-play-fail': MediaAutoPlayFailEvent;
   'can-load': MediaCanLoadEvent;
   'can-load-poster': MediaCanLoadPosterEvent;
   'can-play-through': MediaCanPlayThroughEvent;
@@ -58,7 +58,7 @@ export interface MediaEvents {
   'view-type-change': MediaViewTypeChangeEvent;
   'volume-change': MediaVolumeChangeEvent;
   abort: MediaAbortEvent;
-  autoplay: MediaAutoplayEvent;
+  'auto-play': MediaAutoPlayEvent;
   destroy: MediaDestroyEvent;
   emptied: MediaEmptiedEvent;
   end: MediaEndEvent;
@@ -104,11 +104,11 @@ export interface MediaAudioTracksChangeEvent extends MediaEvent<AudioTrack[]> {}
 export interface MediaAudioTrackChangeEvent extends MediaEvent<AudioTrack | null> {}
 
 /**
- * Fired when the `autoplay` property has changed value.
+ * Fired when the `autoPlay` property has changed value.
  *
- * @detail isAutoplay
+ * @detail shouldAutoPlay
  */
-export interface MediaAutoplayChangeEvent extends MediaEvent<boolean> {}
+export interface MediaAutoPlayChangeEvent extends MediaEvent<boolean> {}
 
 export interface MediaAutoplayFailEventDetail {
   muted: boolean;
@@ -116,20 +116,20 @@ export interface MediaAutoplayFailEventDetail {
 }
 
 /**
- * Fired when an autoplay attempt has failed. The event detail contains the error that
- * had occurred on the last autoplay attempt which caused it to fail.
+ * Fired when an auto-play attempt has failed. The event detail contains the error that
+ * had occurred on the last auto-play attempt which caused it to fail.
  */
-export interface MediaAutoplayFailEvent extends MediaEvent<MediaAutoplayFailEventDetail> {}
+export interface MediaAutoPlayFailEvent extends MediaEvent<MediaAutoplayFailEventDetail> {}
 
 export interface MediaAutoplayEventDetail {
   muted: boolean;
 }
 
 /**
- * Fired when an autoplay attempt has successfully been made (ie: media playback has automatically
+ * Fired when an auto-play attempt has successfully been made (ie: media playback has automatically
  * started). The event detail whether media is `muted` before any attempts are made.
  */
-export interface MediaAutoplayEvent extends MediaEvent<MediaAutoplayEventDetail> {}
+export interface MediaAutoPlayEvent extends MediaEvent<MediaAutoplayEventDetail> {}
 
 /**
  * Fired when the player can begin loading the current provider and media. This depends on the
@@ -337,12 +337,12 @@ export interface MediaPauseEvent extends MediaEvent<void> {}
 
 /**
  * Fired when the `paused` property is changed from `true` to `false`, as a result of the `play()`
- * method, or the `autoplay` attribute.
+ * method, or the `autoPlay` property.
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play_event}
  */
 export interface MediaPlayEvent extends MediaEvent<void> {
-  autoplay?: boolean;
+  autoPlay?: boolean;
 }
 
 /**
@@ -351,7 +351,7 @@ export interface MediaPlayEvent extends MediaEvent<void> {
  * @detail error
  */
 export interface MediaPlayFailEvent extends MediaEvent<Error> {
-  autoplay?: boolean;
+  autoPlay?: boolean;
 }
 
 /**

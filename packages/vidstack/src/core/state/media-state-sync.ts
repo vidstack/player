@@ -77,9 +77,10 @@ export class MediaStateSync extends MediaPlayerController {
   }
 
   private _watchAutoplay() {
-    const autoplay = this.$props.autoplay();
-    this.$state.autoplay.set(autoplay);
-    this.dispatch('autoplay-change', { detail: autoplay });
+    // autoplay prop is deprecated, we're syncing for backwards compatibility.
+    const autoPlay = this.$props.autoPlay() || this.$props.autoplay();
+    this.$state.autoPlay.set(autoPlay);
+    this.dispatch('auto-play-change', { detail: autoPlay });
   }
 
   private _watchLoop() {

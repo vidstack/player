@@ -87,7 +87,7 @@ export class MediaControls extends MediaPlayerController {
     this.listen('play', onPlay);
 
     this.listen('pause', onPause);
-    this.listen('autoplay-fail', onPause);
+    this.listen('auto-play-fail', onPause);
   }
 
   private _watchMouse() {
@@ -109,8 +109,8 @@ export class MediaControls extends MediaPlayerController {
   }
 
   private _watchPaused() {
-    const { paused, started, autoplayError } = this.$state;
-    if (paused() || (autoplayError() && !started())) return;
+    const { paused, started, autoPlayError } = this.$state;
+    if (paused() || (autoPlayError() && !started())) return;
 
     const onStopIdle = this._onStopIdle.bind(this);
 

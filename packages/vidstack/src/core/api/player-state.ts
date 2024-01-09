@@ -24,8 +24,8 @@ export const mediaState = new State<MediaState>({
   artist: '',
   audioTrack: null,
   audioTracks: [],
-  autoplay: false,
-  autoplayError: null,
+  autoPlay: false,
+  autoPlayError: null,
   buffered: new TimeRange(),
   canLoad: false,
   canLoadPoster: false,
@@ -193,7 +193,7 @@ export const mediaState = new State<MediaState>({
 const RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'audioTrack',
   'audioTracks',
-  'autoplayError',
+  'autoPlayError',
   'autoPlaying',
   'autoQuality',
   'buffered',
@@ -220,7 +220,7 @@ const RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
 ]);
 
 /**
- * Resets all media state and leaves general player state intact (i.e., `autoplay`, `volume`, etc.).
+ * Resets all media state and leaves general player state intact.
  */
 export function softResetMediaState($media: MediaStore) {
   mediaState.reset($media, (prop) => RESET_ON_SRC_CHANGE.has(prop));
@@ -237,23 +237,23 @@ export interface MediaState {
    * without interruption.
    *
    * Sites which automatically play audio (or videos with an audio track) can be an unpleasant
-   * experience for users, so it should be avoided when possible. If you must offer autoplay
+   * experience for users, so it should be avoided when possible. If you must offer auto-play
    * functionality, you should make it opt-in (requiring a user to specifically enable it).
    *
-   * However, autoplay can be useful when creating media elements whose source will be set at a
+   * However, auto-play can be useful when creating media elements whose source will be set at a
    * later time, under user control.
    *
    * @defaultValue false
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay}
    */
-  autoplay: boolean;
+  autoPlay: boolean;
   /**
-   * Set to an error when autoplay has failed to begin playback. This can be used to determine
-   * when to show a recovery UI in the event autoplay fails.
+   * Set to an error when auto-play has failed to begin playback. This can be used to determine
+   * when to show a recovery UI in the event auto-play fails.
    *
    * @defaultValue null
    */
-  autoplayError: { muted: boolean; error: Error } | null;
+  autoPlayError: { muted: boolean; error: Error } | null;
   /**
    * Returns a `TimeRanges` object that indicates the ranges of the media source that the
    * browser has buffered (if any) at the moment the buffered property is accessed. This is usually

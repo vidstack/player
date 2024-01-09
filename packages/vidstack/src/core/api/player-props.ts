@@ -10,6 +10,7 @@ import type { MediaLoadingStrategy, MediaPosterLoadingStrategy, MediaResource } 
 export const mediaPlayerProps: MediaPlayerProps = {
   artist: '',
   autoplay: false,
+  autoPlay: false,
   clipStartTime: 0,
   clipEndTime: 0,
   controls: false,
@@ -58,7 +59,7 @@ export interface MediaPlayerProps
   extends Pick<
     MediaState,
     | 'artist'
-    | 'autoplay'
+    | 'autoPlay'
     | 'clipStartTime'
     | 'clipEndTime'
     | 'controls'
@@ -78,9 +79,9 @@ export interface MediaPlayerProps
     | 'liveEdgeTolerance'
     | 'minLiveDVRWindow'
   > {
-  /**
-   * @deprecated - Use `crossOrigin`
-   */
+  /** @deprecated - Use `autoPlay` */
+  autoplay: boolean;
+  /** @deprecated - Use `crossOrigin` */
   crossorigin: string | true | null;
   /**
    * Defines how the media element handles cross-origin requests, thereby enabling the

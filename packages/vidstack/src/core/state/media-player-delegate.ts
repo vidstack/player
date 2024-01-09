@@ -40,7 +40,7 @@ export class MediaPlayerDelegate {
     return untrack(async () => {
       const { logger } = this._media,
         {
-          autoplay,
+          autoPlay,
           canPlay,
           started,
           duration,
@@ -78,7 +78,7 @@ export class MediaPlayerDelegate {
       const remotePlaybackTime = remotePlaybackInfo()?.savedState?.currentTime,
         wasRemotePlaying = remotePlaybackInfo()?.savedState?.paused === false,
         startTime = remotePlaybackTime ?? (await storage?.getTime()) ?? clipStartTime(),
-        shouldAutoPlay = wasRemotePlaying || autoplay();
+        shouldAutoPlay = wasRemotePlaying || autoPlay();
 
       if (provider) {
         provider.setVolume((await storage?.getVolume()) ?? volume());
@@ -103,7 +103,7 @@ export class MediaPlayerDelegate {
 
     autoPlaying.set(true);
 
-    const attemptEvent = new DOMEvent<void>('autoplay-attempt', { trigger });
+    const attemptEvent = new DOMEvent<void>('auto-play-attempt', { trigger });
 
     try {
       await player.play(attemptEvent);
@@ -114,7 +114,7 @@ export class MediaPlayerDelegate {
           : '';
 
         this._media.logger
-          ?.errorGroup('[vidstack] autoplay request failed')
+          ?.errorGroup('[vidstack] auto-play request failed')
           .labelledLog(
             'Message',
             `Autoplay was requested but failed most likely due to browser autoplay policies.${muteMsg}`,
