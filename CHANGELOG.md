@@ -53,6 +53,9 @@ All notable changes to this project will be documented in this file.
 - rename `crossorigin` prop to `crossOrigin` ([37513ea](https://github.com/vidstack/player/commit/37513ea12c761c65f1dbbfd8280d9635be4ffb50))
 - rework media request queue ([6f9c16b](https://github.com/vidstack/player/commit/6f9c16b1c9a41487233a033d2801bc1691aa5716))
 - set `src` on poster image to prevent white border ([437764f](https://github.com/vidstack/player/commit/437764f6b60cf69372533f12a175abf4edc470c9))
+- rename `playsinline` prop to `playsInline` ([e7cb6c5](https://github.com/vidstack/player/commit/e7cb6c5a0f8f03281673bf7d886ee9612d4c373c))
+- rename `autoplay` prop to `autoPlay` ([0fc9dd7](https://github.com/vidstack/player/commit/0fc9dd72ba5d804acb3315983a5f17bff44d22f6))
+- add missing load events to all providers ([446a4f4](https://github.com/vidstack/player/commit/446a4f41e7408431c745d4f81a42276666b64169))
 
 #### Player (React)
 
