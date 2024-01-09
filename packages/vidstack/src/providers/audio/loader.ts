@@ -1,4 +1,5 @@
 import type { MediaSrc, MediaType } from '../../core';
+import type { MediaContext } from '../../core/api/media-context';
 import { isAudioSrc } from '../../utils/mime';
 import type { MediaProviderLoader } from '../types';
 import type { AudioProvider } from './provider';
@@ -16,7 +17,7 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
     return 'audio';
   }
 
-  async load() {
+  async load(ctx: MediaContext) {
     if (__SERVER__) {
       throw Error('[vidstack] can not load audio provider server-side');
     }
@@ -27,6 +28,6 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
       );
     }
 
-    return new (await import('./provider')).AudioProvider(this.target);
+    return new (await import('./provider')).AudioProvider(this.target, ctx);
   }
 }

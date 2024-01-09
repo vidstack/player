@@ -201,7 +201,7 @@ export class MediaPlayer
     effect(this._watchPaused.bind(this));
     effect(this._watchVolume.bind(this));
     effect(this._watchCurrentTime.bind(this));
-    effect(this._watchPlaysinline.bind(this));
+    effect(this._watchPlaysInline.bind(this));
     effect(this._watchPlaybackRate.bind(this));
   }
 
@@ -332,6 +332,7 @@ export class MediaPlayer
       canAirPlay: 'can-airplay',
       canPictureInPicture: 'can-pip',
       pictureInPicture: 'pip',
+      playsInline: 'playsinline',
       remotePlaybackState: 'remote-state',
       remotePlaybackType: 'remote-type',
       isAirPlayConnected: 'airplay',
@@ -381,12 +382,12 @@ export class MediaPlayer
   }
 
   private _isIOSControls() {
-    const { playsinline, fullscreen } = this.$state;
+    const { playsInline, fullscreen } = this.$state;
     return (
       IS_IPHONE &&
       !canFullscreen() &&
       this.$state.mediaType() === 'video' &&
-      (!playsinline() || fullscreen())
+      (!playsInline() || fullscreen())
     );
   }
 
@@ -578,13 +579,13 @@ export class MediaPlayer
     });
   }
 
-  private _watchPlaysinline() {
-    this._queuePlaysinlineUpdate(this.$props.playsinline());
+  private _watchPlaysInline() {
+    this._queuePlaysInlineUpdate(this.$props.playsInline());
   }
 
-  private _queuePlaysinlineUpdate(inline: boolean) {
+  private _queuePlaysInlineUpdate(inline: boolean) {
     this.canPlayQueue._enqueue('playsinline', () => {
-      if (this._provider) (this._provider as MediaProviderAdapter).setPlaysinline?.(inline);
+      if (this._provider) (this._provider as MediaProviderAdapter).setPlaysInline?.(inline);
     });
   }
 

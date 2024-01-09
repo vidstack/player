@@ -37,7 +37,7 @@ export interface MediaEvents {
   'media-type-change': MediaTypeChangeEvent;
   'orientation-change': MediaOrientationChangeEvent;
   'play-fail': MediaPlayFailEvent;
-  'playsinline-change': MediaPlaysinlineChangeEvent;
+  'plays-inline-change': MediaPlaysInlineChangeEvent;
   'poster-change': MediaPosterChangeEvent;
   'provider-change': MediaProviderChangeEvent;
   'provider-loader-change': MediaProviderLoaderChangeEvent;
@@ -362,11 +362,11 @@ export interface MediaPlayFailEvent extends MediaEvent<Error> {
 export interface MediaPlayingEvent extends MediaEvent<void> {}
 
 /**
- * Fired when the `playsinline` property has changed value.
+ * Fired when the `playsInline` property has changed value.
  *
- * @detail isPlaysinline
+ * @detail isInline
  */
-export interface MediaPlaysinlineChangeEvent extends MediaEvent<boolean> {}
+export interface MediaPlaysInlineChangeEvent extends MediaEvent<boolean> {}
 
 /**
  * Fired when the `currentPoster` property has changed value.

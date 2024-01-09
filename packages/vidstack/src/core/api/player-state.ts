@@ -37,7 +37,6 @@ export const mediaState = new State<MediaState>({
   clipEndTime: 0,
   controls: false,
   controlsVisible: false,
-  crossorigin: null,
   crossOrigin: null,
   ended: false,
   error: null,
@@ -49,7 +48,7 @@ export const mediaState = new State<MediaState>({
   paused: true,
   played: new TimeRange(),
   playing: false,
-  playsinline: false,
+  playsInline: false,
   pictureInPicture: false,
   preload: 'metadata',
   playbackRate: 1,
@@ -397,10 +396,6 @@ export interface MediaState {
    */
   controls: boolean;
   /**
-   * @deprecated - Use `crossOrigin`
-   */
-  crossorigin: string | null;
-  /**
    * Defines how the media element handles cross-origin requests, thereby enabling the
    * configuration of the CORS requests for the element's fetched data.
    *
@@ -569,7 +564,7 @@ export interface MediaState {
    * @defaultValue false
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-playsinline}
    */
-  playsinline: boolean;
+  playsInline: boolean;
   /**
    * Sets the rate at which the media is being played back. This is used to implement user
    * controls for fast forward, slow motion, and so forth. The normal playback rate is multiplied

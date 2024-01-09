@@ -39,8 +39,16 @@ export class MediaPlayerDelegate {
 
     return untrack(async () => {
       const { logger } = this._media,
-        { autoplay, canPlay, started, duration, seekable, buffered, remotePlaybackInfo } =
-          this._media.$state;
+        {
+          autoplay,
+          canPlay,
+          started,
+          duration,
+          seekable,
+          buffered,
+          remotePlaybackInfo,
+          playsInline,
+        } = this._media.$state;
 
       if (canPlay()) return;
 
@@ -65,7 +73,7 @@ export class MediaPlayerDelegate {
 
       let provider = this._media.$provider(),
         { storage } = this._media,
-        { muted, volume, playsinline, clipStartTime } = this._media.$props;
+        { muted, volume, clipStartTime } = this._media.$props;
 
       const remotePlaybackTime = remotePlaybackInfo()?.savedState?.currentTime,
         wasRemotePlaying = remotePlaybackInfo()?.savedState?.paused === false,
@@ -75,7 +83,7 @@ export class MediaPlayerDelegate {
       if (provider) {
         provider.setVolume((await storage?.getVolume()) ?? volume());
         provider.setMuted((await storage?.getMuted()) ?? muted());
-        provider.setPlaysinline?.(playsinline());
+        provider.setPlaysInline?.(playsInline());
         if (startTime > 0) provider.setCurrentTime(startTime);
       }
 

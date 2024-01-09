@@ -25,6 +25,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   muted: false,
   paused: true,
   playsinline: false,
+  playsInline: false,
   playbackRate: 1,
   poster: '',
   preload: 'metadata',
@@ -65,7 +66,7 @@ export interface MediaPlayerProps
     | 'loop'
     | 'muted'
     | 'paused'
-    | 'playsinline'
+    | 'playsInline'
     | 'poster'
     | 'preload'
     | 'playbackRate'
@@ -145,6 +146,8 @@ export interface MediaPlayerProps
    * @see {@link https://developers.google.com/cast/docs/reference/web_sender/cast.framework.CastOptions}
    */
   googleCast: GoogleCastOptions;
+  /** @deprecated - Use `playsInline`. */
+  playsinline: boolean;
   /**
    * Whether native HLS support is preferred over using `hls.js`. We recommend setting this to
    * `false` to ensure a consistent and configurable experience across browsers. In addition, our

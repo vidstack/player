@@ -179,7 +179,7 @@ export class YouTubeProvider
   protected override _buildParams(): YouTubeParams {
     const { keyDisabled } = this._ctx.$props,
       { $iosControls } = this._ctx,
-      { controls, muted, playsinline } = this._ctx.$state,
+      { controls, muted, playsInline } = this._ctx.$state,
       showControls = controls() || $iosControls();
     return {
       autoplay: 0,
@@ -193,7 +193,7 @@ export class YouTubeProvider
       hl: this.language,
       iv_load_policy: showControls ? 1 : 3,
       mute: muted() ? 1 : 0,
-      playsinline: playsinline() ? 1 : 0,
+      playsinline: playsInline() ? 1 : 0,
     };
   }
 

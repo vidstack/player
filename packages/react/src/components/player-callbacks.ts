@@ -38,7 +38,7 @@ export const playerCallbacks: PlayerCallbacks[] = [
   'onPlay',
   'onPlayFail',
   'onPlaying',
-  'onPlaysinlineChange',
+  'onPlaysInlineChange',
   'onPosterChange',
   'onProgress',
   'onProviderChange',

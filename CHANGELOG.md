@@ -25,7 +25,9 @@ All notable changes to this project will be documented in this file.
 - new keyboard action display in default layout ([52890b0](https://github.com/vidstack/player/commit/52890b0373a99d32a9620d46b5e5d7734ca85d16))
 - airplay support ([0f7df2f](https://github.com/vidstack/player/commit/0f7df2fa9ece6a9923c1b4c2f611e6362a8eb28e))
 - google cast support ([d08d630](https://github.com/vidstack/player/commit/d08d63044a3cbb54fc278e72ef4dd3ab1a28dd0b))
-- add media session api support ([2817694](https://github.com/vidstack/player/commit/2817694e10700f4a0cb0eb884cc5bd5272b345c9))
+- add media session api support ([da82b35](https://github.com/vidstack/player/commit/da82b35c68e24166ea2f6d619e8af18a51b1634f))
+- new `storage` player prop and `MediaStorage` interface ([778ff6c](https://github.com/vidstack/player/commit/778ff6cfcef2a195934fa9d062b28b62007abf42))
+- new view, stream, and remote type tailwind variants ([e15aefc](https://github.com/vidstack/player/commit/e15aefc88a71b3a097ad6d5f0bf08573ed1df455))
 
 #### Player (React)
 
@@ -50,6 +52,7 @@ All notable changes to this project will be documented in this file.
 - use intrisic duration for last vimeo chapter end time ([4dbe21e](https://github.com/vidstack/player/commit/4dbe21eafdba83ef5071f3be7f9eadbc8999e96d))
 - rename `crossorigin` prop to `crossOrigin` ([37513ea](https://github.com/vidstack/player/commit/37513ea12c761c65f1dbbfd8280d9635be4ffb50))
 - rework media request queue ([6f9c16b](https://github.com/vidstack/player/commit/6f9c16b1c9a41487233a033d2801bc1691aa5716))
+- set `src` on poster image to prevent white border ([437764f](https://github.com/vidstack/player/commit/437764f6b60cf69372533f12a175abf4edc470c9))
 
 #### Player (React)
 

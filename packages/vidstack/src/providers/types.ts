@@ -45,7 +45,7 @@ export interface MediaProviderAdapter {
   setMuted(muted: boolean): void;
   setCurrentTime(time: number): void;
   setVolume(volume: number): void;
-  setPlaysinline?(inline: boolean): void;
+  setPlaysInline?(inline: boolean): void;
   setPlaybackRate?(rate: number): void;
   loadSource(src: MediaSrc, preload: MediaState['preload']): Promise<void>;
 }

@@ -24,7 +24,7 @@ export const mediaAttributes: (keyof MediaState)[] = [
   'paused',
   'pictureInPicture',
   'playing',
-  'playsinline',
+  'playsInline',
   'remotePlaybackState',
   'remotePlaybackType',
   'seeking',

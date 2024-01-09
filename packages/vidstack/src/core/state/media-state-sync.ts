@@ -21,7 +21,7 @@ export class MediaStateSync extends MediaPlayerController {
     effect(this._watchLoop.bind(this));
     effect(this._watchControls.bind(this));
     effect(this._watchCrossOrigin.bind(this));
-    effect(this._watchPlaysinline.bind(this));
+    effect(this._watchPlaysInline.bind(this));
     effect(this._watchClipTimes.bind(this));
     effect(this._watchLiveTolerance.bind(this));
     effect(this._watchLive.bind(this));
@@ -99,17 +99,17 @@ export class MediaStateSync extends MediaPlayerController {
   }
 
   private _watchCrossOrigin() {
-    // crossorigin is deprecated, we're syncing for backwards compatibility.
+    // crossorigin prop is deprecated, we're syncing for backwards compatibility.
     const _crossOrigin = this.$props.crossOrigin() ?? this.$props.crossorigin(),
       value = _crossOrigin === true ? '' : (_crossOrigin as '');
-    this.$state.crossorigin.set(value);
     this.$state.crossOrigin.set(value);
   }
 
-  private _watchPlaysinline() {
-    const playsinline = this.$props.playsinline();
-    this.$state.playsinline.set(playsinline);
-    this.dispatch('playsinline-change', { detail: playsinline });
+  private _watchPlaysInline() {
+    // playsinline prop is deprecated, we're syncing for backwards compatibility.
+    const inline = this.$props.playsInline() || this.$props.playsinline();
+    this.$state.playsInline.set(inline);
+    this.dispatch('plays-inline-change', { detail: inline });
   }
 
   private _watchClipTimes() {

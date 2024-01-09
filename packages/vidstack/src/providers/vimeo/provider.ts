@@ -270,7 +270,7 @@ export class VimeoProvider
   protected override _buildParams(): VimeoParams {
     const { $iosControls } = this._ctx,
       { keyDisabled } = this._ctx.$props,
-      { controls, playsinline } = this._ctx.$state,
+      { controls, playsInline } = this._ctx.$state,
       showControls = controls() || $iosControls();
     return {
       title: this.title,
@@ -281,7 +281,7 @@ export class VimeoProvider
       h: this.hash,
       keyboard: showControls && !keyDisabled(),
       transparent: true,
-      playsinline: playsinline(),
+      playsinline: playsInline(),
       dnt: !this.cookies,
     };
   }

@@ -72,8 +72,8 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     this._media.currentTime = time;
   }
 
-  setPlaysinline(playsinline: boolean) {
-    setAttribute(this._media, 'playsinline', playsinline);
+  setPlaysInline(inline: boolean) {
+    setAttribute(this._media, 'playsinline', inline);
   }
 
   async loadSource({ src, type }: MediaSrc, preload?: HTMLMediaElement['preload']) {

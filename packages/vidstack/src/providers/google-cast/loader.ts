@@ -1,7 +1,8 @@
 import { peek } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 
-import type { MediaContext, MediaSrc, MediaType } from '../../core';
+import type { MediaSrc, MediaType } from '../../core';
+import type { MediaContext } from '../../core/api/media-context';
 import { coerceToError } from '../../utils/error';
 import { canGoogleCastSrc } from '../../utils/mime';
 import { loadScript } from '../../utils/network';
