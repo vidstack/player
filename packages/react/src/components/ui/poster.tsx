@@ -73,7 +73,7 @@ const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
     return (
       <Primitive.img
         {...props}
-        src={$src || undefined}
+        src={$src || ''}
         alt={$alt || undefined}
         crossOrigin={$crossOrigin || undefined}
         ref={composeRefs(img.set as any, forwardRef)}

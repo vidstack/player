@@ -82,7 +82,7 @@ export class Poster extends Component<PosterProps, PosterState> {
 
     const { started } = this._media.$state;
     this.setAttributes({
-      'data-visible': () => !started(),
+      'data-visible': () => !started() && !this.$state.hidden(),
       'data-loading': this._isLoading.bind(this),
       'data-error': this._hasError.bind(this),
       'data-hidden': this.$state.hidden,
