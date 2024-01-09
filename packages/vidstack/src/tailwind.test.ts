@@ -6,27 +6,56 @@ import tailwindcss from 'tailwindcss';
 import vidstackPlugin, { type PluginOptions } from '../tailwind.cjs';
 
 const mediaAttributes = [
-  'autoplay',
+  'airplay',
   'autoplay-error',
-  'can-load',
-  'can-play',
+  'autoplay',
+  'buffering',
+  'can-airplay',
   'can-fullscreen',
+  'can-google-cast',
+  'can-load-poster',
+  'can-load',
+  'can-pip',
+  'can-play',
+  'can-seek',
+  'captions',
+  'controls',
   'ended',
   'error',
   'fullscreen',
-  'controls',
-  'loop',
-  'live',
+  'google-cast',
+  'ios-controls',
   'live-edge',
+  'live',
+  'loop',
   'muted',
   'paused',
+  'pip',
   'playing',
   'playsinline',
+  'preview',
   'seeking',
   'started',
   'waiting',
-  // custom
-  'buffering',
+  // media types
+  'audio',
+  'video',
+  'unknown',
+  // view types
+  'view-audio',
+  'view-video',
+  'view-unknown',
+  // stream types
+  'stream-unknown',
+  'stream-on-demand',
+  'stream-live',
+  'stream-dvr',
+  'stream-ll',
+  'stream-ll-dvr',
+  // remote playback state
+  'remote-connected',
+  'remote-connecting',
+  'remote-disconnected',
 ];
 
 async function run(content: string, options?: PluginOptions) {
@@ -47,22 +76,91 @@ it('should create media variants', async () => {
   const content = mediaAttributes.map((name) => `media-${name}:hidden`).join(' '),
     css = await run(content);
   expect(css).toMatchInlineSnapshot(`
-    "div[data-autoplay] .media-autoplay\\\\:hidden {
+    "div[data-media-type=\\"audio\\"] .media-audio\\\\:hidden {
+        display: none
+    }
+    div[data-view-type=\\"audio\\"] .media-view-audio\\\\:hidden {
+        display: none
+    }
+    div[data-media-type=\\"video\\"] .media-video\\\\:hidden {
+        display: none
+    }
+    div[data-view-type=\\"video\\"] .media-view-video\\\\:hidden {
+        display: none
+    }
+    div[data-media-type=\\"unknown\\"] .media-unknown\\\\:hidden {
+        display: none
+    }
+    div[data-view-type=\\"unknown\\"] .media-view-unknown\\\\:hidden {
+        display: none
+    }
+    div[data-stream-type=\\"unknown\\"] .media-stream-unknown\\\\:hidden {
+        display: none
+    }
+    div[data-stream-type=\\"on-demand\\"] .media-stream-on-demand\\\\:hidden {
+        display: none
+    }
+    div[data-stream-type=\\"live\\"] .media-stream-live\\\\:hidden {
+        display: none
+    }
+    div[data-stream-type=\\"live:dvr\\"] .media-stream-dvr\\\\:hidden {
+        display: none
+    }
+    div[data-stream-type=\\"ll-live\\"] .media-stream-ll\\\\:hidden {
+        display: none
+    }
+    div[data-stream-type=\\"ll-live:dvr\\"] .media-stream-ll-dvr\\\\:hidden {
+        display: none
+    }
+    div[data-remote-state=\\"connected\\"] .media-remote-connected\\\\:hidden {
+        display: none
+    }
+    div[data-remote-state=\\"connecting\\"] .media-remote-connecting\\\\:hidden {
+        display: none
+    }
+    div[data-remote-state=\\"disconnected\\"] .media-remote-disconnected\\\\:hidden {
+        display: none
+    }
+    div[data-airplay] .media-airplay\\\\:hidden {
         display: none
     }
     div[data-autoplay-error] .media-autoplay-error\\\\:hidden {
         display: none
     }
+    div[data-autoplay] .media-autoplay\\\\:hidden {
+        display: none
+    }
     div[data-buffering] .media-buffering\\\\:hidden {
+        display: none
+    }
+    div[data-can-airplay] .media-can-airplay\\\\:hidden {
         display: none
     }
     div[data-can-fullscreen] .media-can-fullscreen\\\\:hidden {
         display: none
     }
+    div[data-can-google-cast] .media-can-google-cast\\\\:hidden {
+        display: none
+    }
+    div[data-can-load-poster] .media-can-load-poster\\\\:hidden {
+        display: none
+    }
     div[data-can-load] .media-can-load\\\\:hidden {
         display: none
     }
+    div[data-can-pip] .media-can-pip\\\\:hidden {
+        display: none
+    }
     div[data-can-play] .media-can-play\\\\:hidden {
+        display: none
+    }
+    div[data-can-seek] .media-can-seek\\\\:hidden {
+        display: none
+    }
+    div[data-captions] .media-captions\\\\:hidden {
+        display: none
+    }
+    div[data-controls] .media-controls\\\\:hidden {
         display: none
     }
     div[data-ended] .media-ended\\\\:hidden {
@@ -74,16 +172,19 @@ it('should create media variants', async () => {
     div[data-fullscreen] .media-fullscreen\\\\:hidden {
         display: none
     }
-    div[data-controls] .media-controls\\\\:hidden {
+    div[data-google-cast] .media-google-cast\\\\:hidden {
         display: none
     }
-    div[data-loop] .media-loop\\\\:hidden {
+    div[data-ios-controls] .media-ios-controls\\\\:hidden {
+        display: none
+    }
+    div[data-live-edge] .media-live-edge\\\\:hidden {
         display: none
     }
     div[data-live] .media-live\\\\:hidden {
         display: none
     }
-    div[data-live-edge] .media-live-edge\\\\:hidden {
+    div[data-loop] .media-loop\\\\:hidden {
         display: none
     }
     div[data-muted] .media-muted\\\\:hidden {
@@ -92,10 +193,16 @@ it('should create media variants', async () => {
     div[data-paused] .media-paused\\\\:hidden {
         display: none
     }
+    div[data-pip] .media-pip\\\\:hidden {
+        display: none
+    }
     div[data-playing] .media-playing\\\\:hidden {
         display: none
     }
     div[data-playsinline] .media-playsinline\\\\:hidden {
+        display: none
+    }
+    div[data-preview] .media-preview\\\\:hidden {
         display: none
     }
     div[data-seeking] .media-seeking\\\\:hidden {
@@ -114,22 +221,91 @@ it('should create _not_ media variants', async () => {
   const content = mediaAttributes.map((name) => `not-media-${name}:hidden`).join(' '),
     css = await run(content);
   expect(css).toMatchInlineSnapshot(`
-    "div:not([data-autoplay]) .not-media-autoplay\\\\:hidden {
+    "div:not([data-media-type=\\"audio\\"]) .not-media-audio\\\\:hidden {
+        display: none
+    }
+    div:not([data-view-type=\\"audio\\"]) .not-media-view-audio\\\\:hidden {
+        display: none
+    }
+    div:not([data-media-type=\\"video\\"]) .not-media-video\\\\:hidden {
+        display: none
+    }
+    div:not([data-view-type=\\"video\\"]) .not-media-view-video\\\\:hidden {
+        display: none
+    }
+    div:not([data-media-type=\\"unknown\\"]) .not-media-unknown\\\\:hidden {
+        display: none
+    }
+    div:not([data-view-type=\\"unknown\\"]) .not-media-view-unknown\\\\:hidden {
+        display: none
+    }
+    div:not([data-stream-type=\\"unknown\\"]) .not-media-stream-unknown\\\\:hidden {
+        display: none
+    }
+    div:not([data-stream-type=\\"on-demand\\"]) .not-media-stream-on-demand\\\\:hidden {
+        display: none
+    }
+    div:not([data-stream-type=\\"live\\"]) .not-media-stream-live\\\\:hidden {
+        display: none
+    }
+    div:not([data-stream-type=\\"live:dvr\\"]) .not-media-stream-dvr\\\\:hidden {
+        display: none
+    }
+    div:not([data-stream-type=\\"ll-live\\"]) .not-media-stream-ll\\\\:hidden {
+        display: none
+    }
+    div:not([data-stream-type=\\"ll-live:dvr\\"]) .not-media-stream-ll-dvr\\\\:hidden {
+        display: none
+    }
+    div:not([data-remote-state=\\"connected\\"]) .not-media-remote-connected\\\\:hidden {
+        display: none
+    }
+    div:not([data-remote-state=\\"connecting\\"]) .not-media-remote-connecting\\\\:hidden {
+        display: none
+    }
+    div:not([data-remote-state=\\"disconnected\\"]) .not-media-remote-disconnected\\\\:hidden {
+        display: none
+    }
+    div:not([data-airplay]) .not-media-airplay\\\\:hidden {
         display: none
     }
     div:not([data-autoplay-error]) .not-media-autoplay-error\\\\:hidden {
         display: none
     }
+    div:not([data-autoplay]) .not-media-autoplay\\\\:hidden {
+        display: none
+    }
     div:not([data-buffering]) .not-media-buffering\\\\:hidden {
+        display: none
+    }
+    div:not([data-can-airplay]) .not-media-can-airplay\\\\:hidden {
         display: none
     }
     div:not([data-can-fullscreen]) .not-media-can-fullscreen\\\\:hidden {
         display: none
     }
+    div:not([data-can-google-cast]) .not-media-can-google-cast\\\\:hidden {
+        display: none
+    }
+    div:not([data-can-load-poster]) .not-media-can-load-poster\\\\:hidden {
+        display: none
+    }
     div:not([data-can-load]) .not-media-can-load\\\\:hidden {
         display: none
     }
+    div:not([data-can-pip]) .not-media-can-pip\\\\:hidden {
+        display: none
+    }
     div:not([data-can-play]) .not-media-can-play\\\\:hidden {
+        display: none
+    }
+    div:not([data-can-seek]) .not-media-can-seek\\\\:hidden {
+        display: none
+    }
+    div:not([data-captions]) .not-media-captions\\\\:hidden {
+        display: none
+    }
+    div:not([data-controls]) .not-media-controls\\\\:hidden {
         display: none
     }
     div:not([data-ended]) .not-media-ended\\\\:hidden {
@@ -141,16 +317,19 @@ it('should create _not_ media variants', async () => {
     div:not([data-fullscreen]) .not-media-fullscreen\\\\:hidden {
         display: none
     }
-    div:not([data-controls]) .not-media-controls\\\\:hidden {
+    div:not([data-google-cast]) .not-media-google-cast\\\\:hidden {
         display: none
     }
-    div:not([data-loop]) .not-media-loop\\\\:hidden {
+    div:not([data-ios-controls]) .not-media-ios-controls\\\\:hidden {
+        display: none
+    }
+    div:not([data-live-edge]) .not-media-live-edge\\\\:hidden {
         display: none
     }
     div:not([data-live]) .not-media-live\\\\:hidden {
         display: none
     }
-    div:not([data-live-edge]) .not-media-live-edge\\\\:hidden {
+    div:not([data-loop]) .not-media-loop\\\\:hidden {
         display: none
     }
     div:not([data-muted]) .not-media-muted\\\\:hidden {
@@ -159,10 +338,16 @@ it('should create _not_ media variants', async () => {
     div:not([data-paused]) .not-media-paused\\\\:hidden {
         display: none
     }
+    div:not([data-pip]) .not-media-pip\\\\:hidden {
+        display: none
+    }
     div:not([data-playing]) .not-media-playing\\\\:hidden {
         display: none
     }
     div:not([data-playsinline]) .not-media-playsinline\\\\:hidden {
+        display: none
+    }
+    div:not([data-preview]) .not-media-preview\\\\:hidden {
         display: none
     }
     div:not([data-seeking]) .not-media-seeking\\\\:hidden {

@@ -1,10 +1,13 @@
 const createPlugin = require('tailwindcss/plugin');
 
 const mediaAttributes = [
+  'airplay',
   'autoplay-error',
   'autoplay',
   'buffering',
+  'can-airplay',
   'can-fullscreen',
+  'can-google-cast',
   'can-load-poster',
   'can-load',
   'can-pip',
@@ -15,6 +18,7 @@ const mediaAttributes = [
   'ended',
   'error',
   'fullscreen',
+  'google-cast',
   'ios-controls',
   'live-edge',
   'live',
@@ -36,21 +40,42 @@ module.exports = createPlugin.withOptions(function (options) {
     prefix = prefixOpt ? `${prefixOpt}-` : 'media-';
 
   return function ({ addVariant }) {
-    // TODO: expose these
-    // airplay
-    // can-airplay
-    // can-google-cast
-    // google-cast
-    // remote-state
-    // remote-type
-    // load
-    // view-type
-    // media-type
-    // stream-type
+    function createVariant(name, attrName = name) {
+      addVariant(`${prefix}${name}`, `${selector}[data-${attrName}] &`);
+      addVariant(`not-${prefix}${name}`, `${selector}:not([data-${attrName}]) &`);
+    }
 
-    mediaAttributes.forEach((name) => {
-      addVariant(`${prefix}${name}`, `${selector}[data-${name}] &`);
-      addVariant(`not-${prefix}${name}`, `${selector}:not([data-${name}]) &`);
-    });
+    // media-type + view type
+    for (const type of ['audio', 'video', 'unknown']) {
+      // e.g, media-video: => data-media-type="video"
+      createVariant(type, `media-type="${type}"`);
+      // e.g, media-view-video: => data-view-type="video"
+      createVariant(`view-${type}`, `view-type="${type}"`);
+    }
+
+    // stream type
+    const streamTypes = {
+      unknown: 'unknown',
+      'on-demand': 'on-demand',
+      live: 'live',
+      dvr: 'live:dvr',
+      ll: 'll-live',
+      'll-dvr': 'll-live:dvr',
+    };
+
+    for (const [type, attrName] of Object.entries(streamTypes)) {
+      // e.g, media-stream-live: => data-stream-type="video"
+      createVariant(`stream-${type}`, `stream-type="${attrName}"`);
+    }
+
+    // remote playback state
+    for (const state of ['connected', 'connecting', 'disconnected']) {
+      // e.g, media-remote-connecting: => data-remote-state="connecting"
+      createVariant(`remote-${state}`, `remote-state="${state}"`);
+    }
+
+    for (const name of mediaAttributes) {
+      createVariant(name);
+    }
   };
 });
