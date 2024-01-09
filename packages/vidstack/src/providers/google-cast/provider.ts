@@ -314,6 +314,8 @@ export class GoogleCastProvider implements MediaProviderAdapter {
         },
         trigger = this._createEvent(event);
 
+      this._notify('loaded-metadata', undefined, trigger);
+      this._notify('loaded-data', undefined, trigger);
       this._notify('can-play', detail, trigger);
 
       this._onCanControlVolumeChange();

@@ -216,6 +216,7 @@ export class VimeoProvider
     }
 
     this._src.set(`${this._getOrigin()}/video/${videoId}`);
+    this._notify('load-start');
   }
 
   protected _watchVideoInfo() {

@@ -28,6 +28,7 @@ export class RemotionProvider implements MediaProviderAdapter {
 
   protected _src = signal<RemotionMediaResource | null>(null);
   protected _setup = false;
+  protected _loadStart = false;
   protected _played = 0;
   protected _playedRange = new TimeRange(0, 0);
   protected _audio: any = null;
@@ -326,13 +327,20 @@ export class RemotionProvider implements MediaProviderAdapter {
           this._setup = true;
         }
 
+        if (!this._loadStart) {
+          this._notify('load-start');
+          this._loadStart = true;
+        }
+
         this._discoverMediaElements();
         tick();
-
         if (!this._waiting()) this._ready($src);
       });
 
-      return () => cancelAnimationFrame(rafId);
+      return () => {
+        cancelAnimationFrame(rafId);
+        this._loadStart = false;
+      };
     }, [$src]);
 
     const Component = Internals.useLazyComponent({
@@ -399,6 +407,9 @@ export class RemotionProvider implements MediaProviderAdapter {
 
     const { outFrame, inFrame, fps } = src,
       duration = (outFrame! - inFrame!) / fps!;
+
+    this._notify('loaded-metadata');
+    this._notify('loaded-data');
 
     this._ctx.delegate._ready({
       duration,

@@ -174,6 +174,7 @@ export class YouTubeProvider
     }
 
     this._src.set(`${this._getOrigin()}/embed/${videoId}`);
+    this._notify('load-start');
   }
 
   protected override _buildParams(): YouTubeParams {
@@ -211,6 +212,8 @@ export class YouTubeProvider
   }
 
   protected _onReady(trigger: Event) {
+    this._notify('loaded-metadata');
+    this._notify('loaded-data');
     this._ctx.delegate._ready(undefined, trigger);
   }
 
