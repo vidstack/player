@@ -7,19 +7,21 @@
 :where(.vds-captions) {
   /* Recommended settings in the WebVTT spec (https://www.w3.org/TR/webvtt1). */
   --overlay-padding: var(--media-captions-padding, 1%);
-  --cue-color: var(--media-cue-color, white);
-  --cue-bg-color: var(--media-cue-bg, rgba(0, 0, 0, 0.7));
-  --cue-font-size: var(--media-cue-font-size, calc(var(--overlay-height) / 100 * 4.5));
+  --cue-color: var(--media-user-text-color, var(--media-cue-color, white));
+  --cue-bg-color: var(--media-user-text-bg, var(--media-cue-bg, rgba(0, 0, 0, 0.7)));
+  --cue-default-font-size: var(--media-cue-font-size, calc(var(--overlay-height) / 100 * 4.5));
+  --cue-font-size: calc(var(--cue-default-font-size) * var(--media-user-font-size, 1));
   --cue-line-height: var(--media-cue-line-height, calc(var(--cue-font-size) * 1.2));
   --cue-padding-x: var(--media-cue-padding-x, calc(var(--cue-font-size) * 0.6));
   --cue-padding-y: var(--media-cue-padding-x, calc(var(--cue-font-size) * 0.4));
+  --cue-padding: var(--cue-padding-y) var(--cue-padding-x);
   position: absolute;
   inset: 0;
   z-index: 1;
   contain: layout style;
   margin: var(--overlay-padding);
   font-size: var(--cue-font-size);
-  font-family: sans-serif;
+  font-family: var(--media-user-font-family, sans-serif);
   box-sizing: border-box;
   pointer-events: none;
   user-select: none;
@@ -78,7 +80,7 @@
   min-width: min-content;
   min-height: min-content;
   padding: var(--media-cue-display-padding);
-  background-color: var(--media-cue-display-bg);
+  background-color: var(--media-user-display-bg, var(--media-cue-display-bg));
   border-radius: var(--media-cue-display-border-radius);
 }
 
@@ -89,10 +91,11 @@
 :where(.vds-captions [data-part='cue']) {
   display: inline-block;
   contain: content;
+  font-variant: var(--media-user-font-variant);
   border: var(--media-cue-border, unset);
   border-radius: var(--media-cue-border-radius, 2px);
   backdrop-filter: var(--media-cue-backdrop, blur(8px));
-  padding: var(--cue-padding-y) var(--cue-padding-x);
+  padding: var(--cue-padding);
   line-height: var(--cue-line-height);
   background-color: var(--cue-bg-color);
   box-sizing: border-box;
@@ -100,11 +103,11 @@
   box-shadow: var(--media-cue-box-shadow, var(--cue-box-shadow));
   white-space: var(--cue-white-space, pre-wrap);
   outline: var(--cue-outline);
-  text-shadow: var(--cue-text-shadow);
+  text-shadow: var(--media-user-text-shadow, var(--cue-text-shadow));
 }
 
 :where(.vds-captions [data-part='cue-display'][data-vertical] [data-part='cue']) {
-  padding: var(--cue-padding-x) var(--cue-padding-y);
+  --cue-padding: var(--cue-padding-x) var(--cue-padding-y);
 }
 
 /*

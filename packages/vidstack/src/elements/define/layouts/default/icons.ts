@@ -23,6 +23,8 @@ import settings from 'media-icons/dist/icons/settings.js';
 import volumeHigh from 'media-icons/dist/icons/volume-high.js';
 import volumeLow from 'media-icons/dist/icons/volume-low.js';
 
+const menuFont = `<path d="M22.6667 10.6667H26.6667V26.6667H28V28H22.6667V26.6667H24V22.6667H18.6667L16.6667 26.6667H18.6667V28H13.3333V26.6667H14.6667L22.6667 10.6667ZM24 12L19.3333 21.3333H24V12ZM6.66667 4H13.3333C14.8133 4 16 5.18667 16 6.66667V21.3333H12V14.6667H8V21.3333H4V6.66667C4 5.18667 5.18667 4 6.66667 4ZM8 6.66667V12H12V6.66667H8Z" fill="currentColor" />`;
+
 export const icons = {
   airplay,
   play,
@@ -48,6 +50,7 @@ export const icons = {
   'menu-speed': menuSpeed,
   'menu-quality': menuQuality,
   'menu-captions': menuCaptions,
+  'menu-font': menuFont,
   'kb-play': play,
   'kb-pause': pause,
   'kb-mute': mute,

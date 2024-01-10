@@ -11,10 +11,11 @@ import {
 } from '../../../../components';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed, $signal } from '../../../lit/directives/signal';
+import { DefaultFontMenu } from './font-menu';
 import { renderMenuButton } from './menu-layout';
 
 function $i18n(
-  translations: ReadSignal<DefaultLayoutTranslations | null>,
+  translations: ReadSignal<Partial<DefaultLayoutTranslations> | null>,
   key: keyof DefaultLayoutTranslations,
 ) {
   return $computed(() => getDefaultLayoutLang(translations, key));
@@ -337,7 +338,6 @@ export function DefaultChaptersMenu({
   `;
 
   return html`
-    <!-- Chapters Menu -->
     <media-menu class="vds-chapters-menu vds-menu">
       <media-tooltip class="vds-tooltip">
         <media-tooltip-trigger>
@@ -392,7 +392,8 @@ export function DefaultSettingsMenu({
       placement=${$signal($placement)}
       offset=${$signal($offset)}
     >
-      ${DefaultAudioSubmenu()}${DefaultSpeedSubmenu()}${DefaultQualitySubmenu()}${DefaultCaptionsSubmenu()}
+      ${DefaultAudioMenu()}${DefaultSpeedMenu()}${DefaultQualityMenu()}
+      ${DefaultCaptionsMenu()}${$computed(DefaultFontMenu)}
     </media-menu-items>
   `;
 
@@ -421,10 +422,9 @@ export function DefaultSettingsMenu({
   return $computed(() => ($hasMenuItems() ? menu : null)) as any;
 }
 
-function DefaultAudioSubmenu() {
+function DefaultAudioMenu() {
   const { translations } = useDefaultLayoutContext();
   return html`
-    <!-- Audio Menu -->
     <media-menu class="vds-audio-menu vds-menu">
       ${renderMenuButton({
         label: () => getDefaultLayoutLang(translations, 'Audio'),
@@ -447,10 +447,9 @@ function DefaultAudioSubmenu() {
   `;
 }
 
-function DefaultSpeedSubmenu() {
+function DefaultSpeedMenu() {
   const { translations } = useDefaultLayoutContext();
   return html`
-    <!-- Speed Menu -->
     <media-menu class="vds-speed-menu vds-menu">
       ${renderMenuButton({
         label: () => getDefaultLayoutLang(translations, 'Speed'),
@@ -473,10 +472,9 @@ function DefaultSpeedSubmenu() {
   `;
 }
 
-function DefaultQualitySubmenu() {
+function DefaultQualityMenu() {
   const { translations } = useDefaultLayoutContext();
   return html`
-    <!-- Quality Menu -->
     <media-menu class="vds-quality-menu vds-menu">
       ${renderMenuButton({
         label: () => getDefaultLayoutLang(translations, 'Quality'),
@@ -500,10 +498,9 @@ function DefaultQualitySubmenu() {
   `;
 }
 
-function DefaultCaptionsSubmenu() {
+function DefaultCaptionsMenu() {
   const { translations } = useDefaultLayoutContext();
   return html`
-    <!-- Captions Menu -->
     <media-menu class="vds-captions-menu vds-menu">
       ${renderMenuButton({
         label: () => getDefaultLayoutLang(translations, 'Captions'),

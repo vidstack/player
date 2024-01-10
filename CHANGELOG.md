@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - add media session api support ([da82b35](https://github.com/vidstack/player/commit/da82b35c68e24166ea2f6d619e8af18a51b1634f))
 - new `storage` player prop and `MediaStorage` interface ([778ff6c](https://github.com/vidstack/player/commit/778ff6cfcef2a195934fa9d062b28b62007abf42))
 - new view, stream, and remote type tailwind variants ([e15aefc](https://github.com/vidstack/player/commit/e15aefc88a71b3a097ad6d5f0bf08573ed1df455))
+- font style customization menu ([15d1a44](https://github.com/vidstack/player/commit/15d1a44d2d63840121baef6b68c218a04d2a4a52))
 
 #### Player (React)
 

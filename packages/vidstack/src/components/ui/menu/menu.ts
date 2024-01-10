@@ -159,11 +159,9 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   protected override onConnect(el: HTMLElement) {
     effect(this._watchExpanded.bind(this));
-    if (this.isSubmenu) this._parentMenu?._addSubmenu(this);
-
-    requestAnimationFrame(() => {
-      this._onResize();
-    });
+    if (this.isSubmenu) {
+      this._parentMenu?._addSubmenu(this);
+    }
   }
 
   protected override onDestroy() {
@@ -175,7 +173,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   private _watchExpanded() {
     const expanded = this._isExpanded();
 
-    this._onResize();
+    if (!this.isSubmenu) this._onResize();
     this._updateMenuItemsHidden(expanded);
 
     if (!expanded) return;
@@ -235,24 +233,19 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._content.set(el);
     onDispose(() => this._content.set(null));
 
-    const watchAttrs = () => {
-      setAttribute(el, 'data-open', this._expanded());
-    };
-
+    const watchAttrs = () => setAttribute(el, 'data-open', this._expanded());
     if (__SERVER__) watchAttrs();
     else effect(watchAttrs);
 
     this._focus._attachMenu(el);
     this._updateMenuItemsHidden(false);
 
-    if (!__SERVER__) {
-      const onResize = animationFrameThrottle(this._onResize.bind(this)),
-        mutations = new MutationObserver(onResize);
+    if (!this.isSubmenu) {
+      const onTransition = this._onResizeTransition.bind(this);
+      items.listen('transitionstart', onTransition);
+      items.listen('transitionend', onTransition);
 
-      onResize();
-
-      mutations.observe(el, { childList: true, subtree: true });
-      onDispose(() => mutations.disconnect());
+      items.listen('vds-menu-resize' as any, this._onResize);
     }
   }
 
@@ -283,6 +276,13 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       if (isExpanded) this._popper.hide(event);
       return;
     }
+
+    this.el?.dispatchEvent(
+      new Event('vds-menu-resize', {
+        bubbles: true,
+        composed: true,
+      }),
+    );
 
     const trigger = this._trigger(),
       content = this._content();
@@ -403,8 +403,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _addSubmenu(menu: Menu) {
     this._submenus.add(menu);
+
     listenEvent(menu, 'open', this._onSubmenuOpenBind);
     listenEvent(menu, 'close', this._onSubmenuCloseBind);
+
     onDispose(this._removeSubmenuBind);
   }
 
@@ -415,6 +417,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _onSubmenuOpenBind = this._onSubmenuOpen.bind(this);
   private _onSubmenuOpen(event: MenuOpenEvent) {
+    if (this.isSubmenu) {
+      this.triggerElement?.setAttribute('aria-hidden', 'true');
+    }
+
     for (const target of this._submenus) {
       if (target !== event.target) {
         for (const el of [target.el, target.triggerElement]) {
@@ -422,60 +428,59 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
         }
       }
     }
-
-    requestAnimationFrame(() => {
-      this._onResize();
-    });
   }
 
   private _onSubmenuCloseBind = this._onSubmenuClose.bind(this);
   private _onSubmenuClose() {
+    if (this.isSubmenu) {
+      this.triggerElement?.setAttribute('aria-hidden', 'false');
+    }
+
     for (const target of this._submenus) {
       for (const el of [target.el, target.triggerElement]) {
         el?.setAttribute('aria-hidden', 'false');
       }
     }
-
-    requestAnimationFrame(() => {
-      this._onResize();
-    });
   }
 
-  private _onResize() {
+  private _onResize = animationFrameThrottle(() => {
     const content = peek(this._content);
-
     if (!content || __SERVER__) return;
 
-    let { paddingTop, paddingBottom, borderTopWidth, borderBottomWidth } =
-        getComputedStyle(content),
-      height =
-        parseFloat(paddingTop) +
-        parseFloat(paddingBottom) +
-        parseFloat(borderTopWidth) +
-        parseFloat(borderBottomWidth),
+    let height = 0,
+      styles = getComputedStyle(content),
       children = [...content.children];
+
+    for (const prop of ['paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth']) {
+      height += parseFloat(styles[prop]) || 0;
+    }
 
     for (const child of children) {
       if (child instanceof HTMLElement && child.style.display === 'contents') {
         children.push(...child.children);
       } else if (child.nodeType === 3) {
-        height += parseInt(window.getComputedStyle(child).fontSize, 10);
-      } else {
-        height += (child as HTMLElement).offsetHeight || 0;
+        height += parseFloat(getComputedStyle(child).fontSize);
+      } else if (child instanceof HTMLElement) {
+        const style = getComputedStyle(child);
+        if (style.display === 'none') continue;
+        height +=
+          child.offsetHeight +
+          (parseFloat(style.marginTop) || 0) +
+          (parseFloat(style.marginBottom) || 0);
       }
     }
 
     requestAnimationFrame(() => {
-      if (!content) return;
-
-      setAttribute(content, 'data-resizing', '');
-
-      setTimeout(() => {
-        if (content) setAttribute(content, 'data-resizing', false);
-      }, 400);
-
       setStyle(content, '--menu-height', height + 'px');
     });
+  });
+
+  protected _onResizeTransition(event: TransitionEvent) {
+    const content = this._content();
+    if (content && event.propertyName === 'height') {
+      const hasStarted = event.type === 'transitionstart';
+      setAttribute(content, 'data-resizing', hasStarted);
+    }
   }
 
   /**

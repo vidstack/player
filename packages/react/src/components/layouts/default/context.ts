@@ -24,7 +24,7 @@ interface DefaultLayoutContext {
   translations?: DefaultLayoutTranslations | null;
 }
 
-export function useDefaultLayoutLang(word: keyof DefaultLayoutTranslations) {
+export function useDefaultLayoutLang(word: string) {
   const { translations } = React.useContext(DefaultLayoutContext);
   return i18n(translations, word);
 }

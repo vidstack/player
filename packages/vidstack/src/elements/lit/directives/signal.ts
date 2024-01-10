@@ -1,10 +1,11 @@
 import type { TemplateResult } from 'lit-html';
 import { AsyncDirective, directive, PartType, type PartInfo } from 'lit-html/async-directive.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { computed, effect, type ReadSignal, type StopEffect } from 'maverick.js';
+import { computed, effect, peek, type ReadSignal, type StopEffect } from 'maverick.js';
 
 class SignalDirective extends AsyncDirective {
   protected _signal: ReadSignal<any> | null = null;
+  protected _value: any = undefined;
   protected _stop: StopEffect | null = null;
   protected _isAttr = false;
 
@@ -15,13 +16,15 @@ class SignalDirective extends AsyncDirective {
 
   render(signal: ReadSignal<any>) {
     if (this._signal !== signal) {
-      this._signal = signal;
       this.disconnected();
-      if (this.isConnected) this._watch();
+      this._signal = signal;
+      if (this.isConnected) {
+        this._value = peek(this._signal);
+        this._watch();
+      }
     }
 
-    const value = this._signal();
-    return this._isAttr ? ifDefined(value) : value;
+    return this._isAttr ? ifDefined(this._value) : this._value;
   }
 
   override reconnected() {
@@ -31,6 +34,7 @@ class SignalDirective extends AsyncDirective {
   override disconnected() {
     this._stop?.();
     this._stop = null;
+    this._value = undefined;
   }
 
   protected _watch() {
@@ -39,9 +43,13 @@ class SignalDirective extends AsyncDirective {
   }
 
   protected _onValueChange() {
+    const value = this._signal?.();
+    if (value === this._value) return;
+
     if (__DEV__) {
       try {
-        this.setValue(this._signal?.());
+        this._value = value;
+        this.setValue(value);
       } catch (error) {
         if (
           error instanceof Error &&

@@ -30,7 +30,7 @@ import { PIPButton } from '../../ui/buttons/pip-button';
 import { PlayButton } from '../../ui/buttons/play-button';
 import { SeekButton } from '../../ui/buttons/seek-button';
 import { ChapterTitle } from '../../ui/chapter-title';
-import * as MenuBase from '../../ui/menu';
+import * as Menu from '../../ui/menu';
 import * as TimeSliderBase from '../../ui/sliders/time-slider';
 import * as VolumeSliderBase from '../../ui/sliders/volume-slider';
 import * as ThumbnailBase from '../../ui/thumbnail';
@@ -38,7 +38,9 @@ import { Time } from '../../ui/time';
 import * as TooltipBase from '../../ui/tooltip';
 import { RemotionSliderThumbnail, RemotionThumbnail } from '../remotion-ui';
 import { DefaultLayoutContext, useDefaultLayoutLang } from './context';
-import type { DefaultLayoutIcon, DefaultLayoutIcons } from './icons';
+import { DefaultFontSubmenu } from './font-menu';
+import type { DefaultLayoutIcons } from './icons';
+import { DefaultSubmenuButton } from './menu-layout';
 import { slot, type DefaultLayoutMenuSlotName, type Slots } from './slots';
 
 /* -------------------------------------------------------------------------------------------------
@@ -51,7 +53,7 @@ interface DefaultMediaButtonProps {
 
 interface DefaultMediaMenuProps {
   tooltip: TooltipBase.ContentProps['placement'];
-  placement: MenuBase.ContentProps['placement'];
+  placement: Menu.ContentProps['placement'];
   portalClass?: string;
   slots?: Slots<DefaultLayoutMenuSlotName>;
 }
@@ -276,13 +278,13 @@ export { DefaultTooltip };
 function DefaultAirPlayButton({ tooltip }: DefaultMediaButtonProps) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     airPlayText = useDefaultLayoutLang('AirPlay'),
-    state = useMediaState('remotePlaybackState'),
-    stateText = useDefaultLayoutLang(uppercaseFirstChar(state) as Capitalize<RemotePlaybackState>),
+    $state = useMediaState('remotePlaybackState'),
+    stateText = useDefaultLayoutLang(uppercaseFirstChar($state) as Capitalize<RemotePlaybackState>),
     label = `${airPlayText} ${stateText}`,
     Icon =
-      (state === 'connecting'
+      ($state === 'connecting'
         ? Icons.AirPlayButton.Connecting
-        : state === 'connected'
+        : $state === 'connected'
           ? Icons.AirPlayButton.Connected
           : null) ?? Icons.AirPlayButton.Default;
   return (
@@ -304,13 +306,13 @@ export { DefaultAirPlayButton };
 function DefaultGoogleCastButton({ tooltip }: DefaultMediaButtonProps) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     googleCastText = useDefaultLayoutLang('Google Cast'),
-    state = useMediaState('remotePlaybackState'),
-    stateText = useDefaultLayoutLang(uppercaseFirstChar(state) as Capitalize<RemotePlaybackState>),
+    $state = useMediaState('remotePlaybackState'),
+    stateText = useDefaultLayoutLang(uppercaseFirstChar($state) as Capitalize<RemotePlaybackState>),
     label = `${googleCastText} ${stateText}`,
     Icon =
-      (state === 'connecting'
+      ($state === 'connecting'
         ? Icons.GoogleCastButton.Connecting
-        : state === 'connected'
+        : $state === 'connected'
           ? Icons.GoogleCastButton.Connected
           : null) ?? Icons.GoogleCastButton.Default;
   return (
@@ -333,15 +335,15 @@ function DefaultPlayButton({ tooltip }: DefaultMediaButtonProps) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     playText = useDefaultLayoutLang('Play'),
     pauseText = useDefaultLayoutLang('Pause'),
-    paused = useMediaState('paused'),
-    ended = useMediaState('ended'),
-    label = paused ? playText : pauseText;
+    $paused = useMediaState('paused'),
+    $ended = useMediaState('ended'),
+    label = $paused ? playText : pauseText;
   return (
-    <DefaultTooltip content={paused ? playText : pauseText} placement={tooltip}>
+    <DefaultTooltip content={$paused ? playText : pauseText} placement={tooltip}>
       <PlayButton className="vds-play-button vds-button" aria-label={label}>
-        {ended ? (
+        {$ended ? (
           <Icons.PlayButton.Replay className="vds-icon" />
-        ) : paused ? (
+        ) : $paused ? (
           <Icons.PlayButton.Play className="vds-icon" />
         ) : (
           <Icons.PlayButton.Pause className="vds-icon" />
@@ -362,15 +364,15 @@ function DefaultMuteButton({ tooltip }: DefaultMediaButtonProps) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     muteText = useDefaultLayoutLang('Mute'),
     unmuteText = useDefaultLayoutLang('Unmute'),
-    muted = useMediaState('muted'),
-    volume = useMediaState('volume'),
-    label = muted ? unmuteText : muteText;
+    $muted = useMediaState('muted'),
+    $volume = useMediaState('volume'),
+    label = $muted ? unmuteText : muteText;
   return (
-    <DefaultTooltip content={muted ? unmuteText : muteText} placement={tooltip}>
+    <DefaultTooltip content={$muted ? unmuteText : muteText} placement={tooltip}>
       <MuteButton className="vds-mute-button vds-button" aria-label={label}>
-        {muted || volume == 0 ? (
+        {$muted || $volume == 0 ? (
           <Icons.MuteButton.Mute className="vds-icon" />
-        ) : volume < 0.5 ? (
+        ) : $volume < 0.5 ? (
           <Icons.MuteButton.VolumeLow className="vds-icon" />
         ) : (
           <Icons.MuteButton.VolumeHigh className="vds-icon" />
@@ -391,9 +393,9 @@ function DefaultCaptionButton({ tooltip }: DefaultMediaButtonProps) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     onText = useDefaultLayoutLang('Closed-Captions On'),
     offText = useDefaultLayoutLang('Closed-Captions Off'),
-    track = useMediaState('textTrack'),
-    isOn = track && isTrackCaptionKind(track),
-    label = track ? offText : onText;
+    $track = useMediaState('textTrack'),
+    isOn = $track && isTrackCaptionKind($track),
+    label = $track ? offText : onText;
   return (
     <DefaultTooltip content={isOn ? onText : offText} placement={tooltip}>
       <CaptionButton className="vds-caption-button vds-button" aria-label={label}>
@@ -418,12 +420,12 @@ function DefaultPIPButton({ tooltip }: DefaultMediaButtonProps) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     enterText = useDefaultLayoutLang('Enter PiP'),
     exitText = useDefaultLayoutLang('Exit PiP'),
-    pip = useMediaState('pictureInPicture'),
-    label = pip ? exitText : enterText;
+    $pip = useMediaState('pictureInPicture'),
+    label = $pip ? exitText : enterText;
   return (
-    <DefaultTooltip content={pip ? exitText : enterText} placement={tooltip}>
+    <DefaultTooltip content={$pip ? exitText : enterText} placement={tooltip}>
       <PIPButton className="vds-pip-button vds-button" aria-label={label}>
-        {pip ? (
+        {$pip ? (
           <Icons.PIPButton.Exit className="vds-icon" />
         ) : (
           <Icons.PIPButton.Enter className="vds-icon" />
@@ -444,12 +446,12 @@ function DefaultFullscreenButton({ tooltip }: DefaultMediaButtonProps) {
   const { Icons } = React.useContext(DefaultLayoutContext),
     enterText = useDefaultLayoutLang('Enter Fullscreen'),
     exitText = useDefaultLayoutLang('Exit Fullscreen'),
-    fullscreen = useMediaState('fullscreen'),
-    label = fullscreen ? exitText : enterText;
+    $fullscreen = useMediaState('fullscreen'),
+    label = $fullscreen ? exitText : enterText;
   return (
-    <DefaultTooltip content={fullscreen ? exitText : enterText} placement={tooltip}>
+    <DefaultTooltip content={$fullscreen ? exitText : enterText} placement={tooltip}>
       <FullscreenButton className="vds-fullscreen-button vds-button" aria-label={label}>
-        {fullscreen ? (
+        {$fullscreen ? (
           <Icons.FullscreenButton.Exit className="vds-icon" />
         ) : (
           <Icons.FullscreenButton.Enter className="vds-icon" />
@@ -514,7 +516,7 @@ export { DefaultVolumeSlider };
 
 function DefaultTimeSlider() {
   const $src = useMediaState('currentSrc'),
-    width = useMediaState('width'),
+    $width = useMediaState('width'),
     { thumbnails, sliderChaptersMinWidth, disableTimeSlider } =
       React.useContext(DefaultLayoutContext),
     label = useDefaultLayoutLang('Seek'),
@@ -527,7 +529,7 @@ function DefaultTimeSlider() {
     >
       <TimeSliderBase.Chapters
         className="vds-slider-chapters"
-        disabled={width < sliderChaptersMinWidth}
+        disabled={$width < sliderChaptersMinWidth}
       >
         {(cues, forwardRef) =>
           cues.map((cue) => (
@@ -577,10 +579,10 @@ export { DefaultChapterTitle };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultLiveButton() {
-  const live = useMediaState('live'),
+  const $live = useMediaState('live'),
     label = useDefaultLayoutLang('Skip To Live'),
     liveText = useDefaultLayoutLang('LIVE');
-  return live ? (
+  return $live ? (
     <LiveButton className="vds-live-button" aria-label={label}>
       <span className="vds-live-button-text">{liveText}</span>
     </LiveButton>
@@ -622,8 +624,8 @@ interface DefaultTimeInfoSlots extends DefaultTimeGroupSlots {
 }
 
 function DefaultTimeInfo({ slots }: { slots?: DefaultTimeInfoSlots }) {
-  const live = useMediaState('live');
-  return live ? (
+  const $live = useMediaState('live');
+  return $live ? (
     slot(slots, 'liveButton', <DefaultLiveButton />)
   ) : (
     <DefaultTimeGroup slots={slots} />
@@ -650,19 +652,19 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
     $RemotionThumbnail = useSignal(RemotionThumbnail);
 
   const Content = (
-    <MenuBase.Content
+    <Menu.Content
       className="vds-chapters-menu-items vds-menu-items"
       placement={placement}
       offset={$offset}
     >
-      <MenuBase.RadioGroup
+      <Menu.RadioGroup
         className="vds-chapters-radio-group vds-radio-group"
         value={options.selectedValue}
         data-thumbnails={thumbnails ? '' : null}
       >
         {options.map(
           ({ cue, label, value, startTimeText, durationText, select, setProgressVar }) => (
-            <MenuBase.Radio
+            <Menu.Radio
               className="vds-chapter-radio vds-radio"
               value={value}
               key={value}
@@ -681,36 +683,36 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
                 <span className="vds-chapter-radio-start-time">{startTimeText}</span>
                 <span className="vds-chapter-radio-duration">{durationText}</span>
               </div>
-            </MenuBase.Radio>
+            </Menu.Radio>
           ),
         )}
-      </MenuBase.RadioGroup>
-    </MenuBase.Content>
+      </Menu.RadioGroup>
+    </Menu.Content>
   );
 
   return (
-    <MenuBase.Root className="vds-chapters-menu vds-menu" showDelay={showMenuDelay}>
+    <Menu.Root className="vds-chapters-menu vds-menu" showDelay={showMenuDelay}>
       <DefaultTooltip content={chaptersText} placement={tooltip}>
-        <MenuBase.Button
+        <Menu.Button
           className="vds-menu-button vds-button"
           disabled={disabled}
           aria-label={chaptersText}
         >
           <Icons.Menu.Chapters className="vds-icon" />
-        </MenuBase.Button>
+        </Menu.Button>
       </DefaultTooltip>
       {noModal || !isSmallLayout ? (
         Content
       ) : (
-        <MenuBase.Portal
+        <Menu.Portal
           className={portalClass}
           disabled="fullscreen"
           data-size={isSmallLayout ? 'sm' : null}
         >
           {Content}
-        </MenuBase.Portal>
+        </Menu.Portal>
       )}
-    </MenuBase.Root>
+    </Menu.Root>
   );
 }
 
@@ -747,7 +749,7 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
   if (!$hasMenuItems) return null;
 
   const Content = (
-    <MenuBase.Content
+    <Menu.Content
       className="vds-settings-menu-items vds-menu-items"
       placement={placement}
       offset={$offset}
@@ -757,61 +759,35 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
       <DefaultSpeedSubmenu />
       <DefaultQualitySubmenu />
       <DefaultCaptionSubmenu />
+      <DefaultFontSubmenu />
       {slot(slots, 'settingsMenuEndItems', null)}
-    </MenuBase.Content>
+    </Menu.Content>
   );
 
   return (
-    <MenuBase.Root className="vds-settings-menu vds-menu" showDelay={showMenuDelay}>
+    <Menu.Root className="vds-settings-menu vds-menu" showDelay={showMenuDelay}>
       <DefaultTooltip content={settingsText} placement={tooltip}>
-        <MenuBase.Button className="vds-menu-button vds-button" aria-label={settingsText}>
+        <Menu.Button className="vds-menu-button vds-button" aria-label={settingsText}>
           <Icons.Menu.Settings className="vds-icon vds-rotate-icon" />
-        </MenuBase.Button>
+        </Menu.Button>
       </DefaultTooltip>
       {noModal || !isSmallLayout ? (
         Content
       ) : (
-        <MenuBase.Portal
+        <Menu.Portal
           className={portalClass}
           disabled="fullscreen"
           data-size={isSmallLayout ? 'sm' : null}
         >
           {Content}
-        </MenuBase.Portal>
+        </Menu.Portal>
       )}
-    </MenuBase.Root>
+    </Menu.Root>
   );
 }
 
 DefaultSettingsMenu.displayName = 'DefaultSettingsMenu';
 export { DefaultSettingsMenu };
-
-/* -------------------------------------------------------------------------------------------------
- * DefaultSubmenuButton
- * -----------------------------------------------------------------------------------------------*/
-
-export interface DefaultSubmenuButtonProps {
-  label: string;
-  hint: string;
-  disabled: boolean;
-  Icon: DefaultLayoutIcon;
-}
-
-function DefaultSubmenuButton({ label, hint, Icon, disabled }: DefaultSubmenuButtonProps) {
-  const { Icons } = React.useContext(DefaultLayoutContext);
-  return (
-    <MenuBase.Button className="vds-menu-button" disabled={disabled}>
-      <Icons.Menu.ArrowLeft className="vds-menu-button-close-icon vds-icon" />
-      <Icon className="vds-menu-button-icon" />
-      <span className="vds-menu-button-label">{label}</span>
-      <span className="vds-menu-button-hint">{hint}</span>
-      <Icons.Menu.ArrowRight className="vds-menu-button-open-icon vds-icon" />
-    </MenuBase.Button>
-  );
-}
-
-DefaultSubmenuButton.displayName = 'DefaultSubmenuButton';
-export { DefaultSubmenuButton };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAudioSubmenu
@@ -821,23 +797,23 @@ function DefaultAudioSubmenu() {
   const { Icons } = React.useContext(DefaultLayoutContext),
     label = useDefaultLayoutLang('Audio'),
     defaultText = useDefaultLayoutLang('Default'),
-    track = useMediaState('audioTrack'),
+    $track = useMediaState('audioTrack'),
     options = useAudioOptions();
   return (
-    <MenuBase.Root className="vds-audio-menu vds-menu">
+    <Menu.Root className="vds-audio-menu vds-menu">
       <DefaultSubmenuButton
         label={label}
-        hint={track?.label ?? defaultText}
+        hint={$track?.label ?? defaultText}
         disabled={options.disabled}
         Icon={Icons.Menu.Audio}
       />
-      <MenuBase.Content className="vds-menu-items">
-        <MenuBase.RadioGroup
+      <Menu.Content className="vds-menu-items">
+        <Menu.RadioGroup
           className="vds-audio-radio-group vds-radio-group"
           value={options.selectedValue}
         >
           {options.map(({ label, value, select }) => (
-            <MenuBase.Radio
+            <Menu.Radio
               className="vds-audio-radio vds-radio"
               value={value}
               onSelect={select}
@@ -845,11 +821,11 @@ function DefaultAudioSubmenu() {
             >
               <div className="vds-radio-check" />
               <span className="vds-radio-label">{label}</span>
-            </MenuBase.Radio>
+            </Menu.Radio>
           ))}
-        </MenuBase.RadioGroup>
-      </MenuBase.Content>
-    </MenuBase.Root>
+        </Menu.RadioGroup>
+      </Menu.Content>
+    </Menu.Root>
   );
 }
 
@@ -868,20 +844,20 @@ function DefaultSpeedSubmenu() {
     }),
     hint = options.selectedValue === '1' ? normalText : options.selectedValue + 'x';
   return (
-    <MenuBase.Root className="vds-speed-menu vds-menu">
+    <Menu.Root className="vds-speed-menu vds-menu">
       <DefaultSubmenuButton
         label={label}
         hint={hint}
         disabled={options.disabled}
         Icon={Icons.Menu.Speed}
       />
-      <MenuBase.Content className="vds-menu-items">
-        <MenuBase.RadioGroup
+      <Menu.Content className="vds-menu-items">
+        <Menu.RadioGroup
           className="vds-speed-radio-group vds-radio-group"
           value={options.selectedValue}
         >
           {options.map(({ label, value, select }) => (
-            <MenuBase.Radio
+            <Menu.Radio
               className="vds-speed-radio vds-radio"
               value={value}
               onSelect={select}
@@ -889,11 +865,11 @@ function DefaultSpeedSubmenu() {
             >
               <div className="vds-radio-check" />
               <span className="vds-radio-label">{label}</span>
-            </MenuBase.Radio>
+            </Menu.Radio>
           ))}
-        </MenuBase.RadioGroup>
-      </MenuBase.Content>
-    </MenuBase.Root>
+        </Menu.RadioGroup>
+      </Menu.Content>
+    </Menu.Root>
   );
 }
 
@@ -914,20 +890,20 @@ function DefaultQualitySubmenu() {
         ? `${currentQuality}p`
         : `${autoText}${currentQuality ? ` (${currentQuality}p)` : ''}`;
   return (
-    <MenuBase.Root className="vds-quality-menu vds-menu">
+    <Menu.Root className="vds-quality-menu vds-menu">
       <DefaultSubmenuButton
         label={label}
         hint={hint}
         disabled={options.disabled}
         Icon={Icons.Menu.Quality}
       />
-      <MenuBase.Content className="vds-menu-items">
-        <MenuBase.RadioGroup
+      <Menu.Content className="vds-menu-items">
+        <Menu.RadioGroup
           className="vds-quality-radio-group vds-radio-group"
           value={options.selectedValue}
         >
           {options.map(({ label, value, bitrateText, select }) => (
-            <MenuBase.Radio
+            <Menu.Radio
               className="vds-quality-radio vds-radio"
               value={value}
               onSelect={select}
@@ -938,11 +914,11 @@ function DefaultQualitySubmenu() {
               {!hideQualityBitrate && bitrateText ? (
                 <span className="vds-radio-hint">{bitrateText}</span>
               ) : null}
-            </MenuBase.Radio>
+            </Menu.Radio>
           ))}
-        </MenuBase.RadioGroup>
-      </MenuBase.Content>
-    </MenuBase.Root>
+        </Menu.RadioGroup>
+      </Menu.Content>
+    </Menu.Root>
   );
 }
 
@@ -959,20 +935,20 @@ function DefaultCaptionSubmenu() {
     options = useCaptionOptions({ off: offText }),
     hint = options.selectedTrack?.label ?? offText;
   return (
-    <MenuBase.Root className="vds-captions-menu vds-menu">
+    <Menu.Root className="vds-captions-menu vds-menu">
       <DefaultSubmenuButton
         label={label}
         hint={hint}
         disabled={options.disabled}
         Icon={Icons.Menu.Captions}
       />
-      <MenuBase.Content className="vds-menu-items">
-        <MenuBase.RadioGroup
+      <Menu.Content className="vds-menu-items">
+        <Menu.RadioGroup
           className="vds-captions-radio-group vds-radio-group"
           value={options.selectedValue}
         >
           {options.map(({ label, value, select }) => (
-            <MenuBase.Radio
+            <Menu.Radio
               className="vds-caption-radio vds-radio"
               value={value}
               onSelect={select}
@@ -980,11 +956,11 @@ function DefaultCaptionSubmenu() {
             >
               <div className="vds-radio-check" />
               <span className="vds-radio-label">{label}</span>
-            </MenuBase.Radio>
+            </Menu.Radio>
           ))}
-        </MenuBase.RadioGroup>
-      </MenuBase.Content>
-    </MenuBase.Root>
+        </Menu.RadioGroup>
+      </Menu.Content>
+    </Menu.Root>
   );
 }
 

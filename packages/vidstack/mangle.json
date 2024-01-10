@@ -744,5 +744,8 @@
   "_onPlaybackStateChange": "Qm",
   "_watchArtist": "Om",
   "_computeMediaId": "Um",
-  "_watchStorage": "Tm"
+  "_watchStorage": "Tm",
+  "_onResizeTransition": "Xm",
+  "_queuePlaysInlineUpdate": "Wm",
+  "_watchPlaysInline": "Vm"
 }

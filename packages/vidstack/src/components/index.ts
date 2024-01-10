@@ -62,14 +62,4 @@ export * from './ui/thumbnails/thumbnail-loader';
 export type { IconProps } from './icons/types';
 
 // Layouts
-export {
-  DefaultLayout,
-  DefaultAudioLayout,
-  DefaultVideoLayout,
-  type DefaultLayoutProps,
-  type DefaultLayoutTranslations,
-  type DefaultLayoutContext,
-  defaultLayoutContext,
-  getDefaultLayoutLang,
-  useDefaultLayoutContext,
-} from './layouts/default-layout';
+export * from './layouts/default';
