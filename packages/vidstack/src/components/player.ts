@@ -28,7 +28,6 @@ import {
   MediaControls,
   MediaRemoteControl,
   mediaState,
-  PlayerQueryList,
   TextRenderers,
   TextTrackList,
   VideoQualityList,
@@ -731,34 +730,6 @@ export class MediaPlayer
   @method
   requestGoogleCast(trigger?: Event) {
     return this._requestMgr._requestGoogleCast(trigger);
-  }
-
-  /**
-   * Returns a new `PlayerQueryList` object that can then be used to determine if the
-   * player and document matches the query string, as well as to monitor any changes to detect
-   * when it matches (or stops matching) that query.
-   *
-   * A player query supports the same syntax as media queries and allows media state properties
-   * to be used like so:
-   *
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList}
-   * @example
-   * ```ts
-   * const queryList = player.matchQuery("(width < 680) and (streamType: on-demand)");
-   *
-   * if (queryList.matches) {
-   *  // ...
-   * }
-   *
-   * // Listen for match changes.
-   * queryList.addEventListener("change", () => {
-   *   // ...
-   * });
-   * ```
-   */
-  @method
-  matchQuery(query: string) {
-    return scoped(() => PlayerQueryList.create(query), this.scope)!;
   }
 
   override destroy() {

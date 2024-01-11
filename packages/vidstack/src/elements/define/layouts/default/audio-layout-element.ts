@@ -3,7 +3,7 @@ import { effect, onDispose } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
-import { DefaultAudioLayout } from '../../../../components/layouts/default';
+import { DefaultAudioLayout } from '../../../../components/layouts/default/audio-layout';
 import type { MediaContext } from '../../../../core';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed } from '../../../lit/directives/signal';

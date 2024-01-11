@@ -2,7 +2,7 @@ import { createContext, useContext, type ReadSignal } from 'maverick.js';
 
 import type { PlayerQueryList } from '../../../core/query-list';
 import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
-import type { DefaultLayoutProps } from './default-layout';
+import type { DefaultLayoutProps } from './props';
 import type { DefaultLayoutTranslations } from './translations';
 
 export interface DefaultLayoutContext {

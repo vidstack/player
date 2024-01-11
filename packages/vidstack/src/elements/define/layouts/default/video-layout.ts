@@ -1,7 +1,7 @@
 import { html } from 'lit-html';
 import { computed } from 'maverick.js';
 
-import { useDefaultLayoutContext } from '../../../../components';
+import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed } from '../../../lit/directives/signal';
 import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';

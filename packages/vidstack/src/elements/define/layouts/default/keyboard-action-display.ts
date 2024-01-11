@@ -2,10 +2,8 @@ import { html } from 'lit-html';
 import { computed, effect, signal } from 'maverick.js';
 import { camelToKebabCase } from 'maverick.js/std';
 
-import {
-  getDefaultLayoutLang,
-  useDefaultLayoutContext,
-} from '../../../../components/layouts/default';
+import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
+import { getDefaultLayoutLang } from '../../../../components/layouts/default/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { createSlot } from '../../../../utils/dom';
 import { $computed, $signal } from '../../../lit/directives/signal';

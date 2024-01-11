@@ -2,12 +2,9 @@ import { html } from 'lit-html';
 import { createContext, onDispose, peek, provideContext, signal, useContext } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
-import {
-  getDefaultLayoutLang,
-  useDefaultLayoutContext,
-  type DefaultLayoutTranslations,
-  type MediaPlayer,
-} from '../../../../components';
+import { type DefaultLayoutTranslations, type MediaPlayer } from '../../../../components';
+import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
+import { getDefaultLayoutLang } from '../../../../components/layouts/default/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
 import { createRadioOptions, renderMenuButton, renderRadioGroup } from './menu-layout';

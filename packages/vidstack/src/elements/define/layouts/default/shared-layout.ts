@@ -3,12 +3,12 @@ import { computed, type ReadSignal } from 'maverick.js';
 import { isFunction, unwrap, uppercaseFirstChar } from 'maverick.js/std';
 
 import {
-  getDefaultLayoutLang,
-  useDefaultLayoutContext,
   type DefaultLayoutTranslations,
   type MenuPlacement,
   type TooltipPlacement,
 } from '../../../../components';
+import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
+import { getDefaultLayoutLang } from '../../../../components/layouts/default/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed, $signal } from '../../../lit/directives/signal';
 import { DefaultFontMenu } from './font-menu';
