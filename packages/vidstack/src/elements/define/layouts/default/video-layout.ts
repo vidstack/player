@@ -127,8 +127,8 @@ export function DefaultBufferingIndicator() {
 }
 
 function DefaultVideoMenus() {
-  const { menuGroup, smQueryList } = useDefaultLayoutContext(),
-    $side = () => (menuGroup() === 'top' || smQueryList.matches ? 'bottom' : 'top'),
+  const { menuGroup, smWhen } = useDefaultLayoutContext(),
+    $side = () => (menuGroup() === 'top' || smWhen() ? 'bottom' : 'top'),
     $tooltip = computed(() => `${$side()} ${menuGroup() === 'top' ? 'end' : 'center'}` as const),
     $placement = computed(() => `${$side()} end` as const);
   return html`

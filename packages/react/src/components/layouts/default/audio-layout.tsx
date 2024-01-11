@@ -3,11 +3,8 @@ import * as React from 'react';
 import { DefaultAudioLargeLayout } from './audio-layout-large';
 import { DefaultAudioSmallLayout } from './audio-layout-small';
 import { DefaultLayoutContext } from './context';
-import {
-  createDefaultMediaLayout,
-  DefaultPlayButton,
-  type DefaultMediaLayoutProps,
-} from './shared-layout';
+import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './media-layout';
+import { DefaultPlayButton } from './shared-layout';
 import { slot, useDefaultVideoLayoutSlots, type DefaultAudioLayoutSlots } from './slots';
 
 /* -------------------------------------------------------------------------------------------------
@@ -16,7 +13,7 @@ import { slot, useDefaultVideoLayoutSlots, type DefaultAudioLayoutSlots } from '
 
 const MediaLayout = createDefaultMediaLayout({
   type: 'audio',
-  smLayoutWhen: '(width < 576)',
+  smLayoutWhen: ({ width }) => width < 576,
   LoadLayout: DefaultAudioLoadLayout,
   SmallLayout: DefaultAudioSmallLayout,
   LargeLayout: DefaultAudioLargeLayout,
@@ -26,10 +23,10 @@ export interface DefaultAudioLayoutProps extends DefaultMediaLayoutProps<Default
 
 /**
  * The audio layout is our production-ready UI that's displayed when the media view type is set to
- * 'audio'. It includes support for audio tracks, slider chapters, and captions out of the box. It
- * doesn't support live streams just yet.
+ * 'audio'. It includes support for audio tracks, slider chapters, captions, live streams
+ * and more out of the box.
  *
- * @attr data-match - Whether this layout is being used (query match).
+ * @attr data-match - Whether this layout is being used.
  * @attr data-size - The active layout size.
  * @example
  * ```tsx

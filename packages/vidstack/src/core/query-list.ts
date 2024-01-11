@@ -13,11 +13,11 @@ import { mediaState, type MediaState, type MediaStore } from './api/player-state
 
 const globalEval = eval;
 
-const equalsRE = /:\s+'?"?(.*?)'?"?\)/g,
-  notRE = /\s+not\s+/g,
-  andRE = /\s+and\s+/g,
-  orRE = /\s+or\s+/g,
-  pxRE = /(\d)px/g;
+const equalsRE = /* #__PURE__*/ /:\s+'?"?(.*?)'?"?\)/g,
+  notRE = /* #__PURE__*/ /\s+not\s+/g,
+  andRE = /* #__PURE__*/ /\s+and\s+/g,
+  orRE = /* #__PURE__*/ /\s+or\s+/g,
+  pxRE = /* #__PURE__*/ /(\d)px/g;
 
 export class PlayerQueryList extends EventsTarget<PlayerQueryListEvents> {
   static create = (query: string | ReadSignal<string>) => {

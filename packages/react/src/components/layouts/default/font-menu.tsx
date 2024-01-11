@@ -292,7 +292,8 @@ function DefaultFontSettingSubmenu({
   }, []);
 
   React.useEffect(() => {
-    onChange(localStorage.getItem(`vds-player:${key}`) || defaultValue);
+    const savedValue = localStorage.getItem(`vds-player:${key}`);
+    if (savedValue) onChange(savedValue);
 
     resets.all.add(onReset);
     return () => {

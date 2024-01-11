@@ -1,21 +1,20 @@
 import { createContext, useContext, type ReadSignal } from 'maverick.js';
 
-import type { PlayerQueryList } from '../../../core/query-list';
 import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { DefaultLayoutProps } from './props';
 import type { DefaultLayoutTranslations } from './translations';
 
 export interface DefaultLayoutContext {
-  smQueryList: PlayerQueryList;
-  thumbnails: ReadSignal<ThumbnailSrc>;
-  translations: ReadSignal<Partial<DefaultLayoutTranslations> | null>;
-  noModal: ReadSignal<DefaultLayoutProps['noModal']>;
-  menuGroup: ReadSignal<DefaultLayoutProps['menuGroup']>;
-  sliderChaptersMinWidth: ReadSignal<DefaultLayoutProps['sliderChaptersMinWidth']>;
-  menuContainer: HTMLElement | null;
   disableTimeSlider: ReadSignal<boolean>;
+  menuContainer: HTMLElement | null;
+  menuGroup: ReadSignal<DefaultLayoutProps['menuGroup']>;
   noGestures: ReadSignal<boolean>;
   noKeyboardActionDisplay: ReadSignal<boolean>;
+  noModal: ReadSignal<DefaultLayoutProps['noModal']>;
+  sliderChaptersMinWidth: ReadSignal<DefaultLayoutProps['sliderChaptersMinWidth']>;
+  smWhen: ReadSignal<boolean>;
+  thumbnails: ReadSignal<ThumbnailSrc>;
+  translations: ReadSignal<Partial<DefaultLayoutTranslations> | null>;
 }
 
 export const defaultLayoutContext = createContext<DefaultLayoutContext>();

@@ -8,8 +8,8 @@ import * as Spinner from '../../ui/spinner';
 import { Time } from '../../ui/time';
 import { DefaultLayoutContext } from './context';
 import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
+import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './media-layout';
 import {
-  createDefaultMediaLayout,
   DefaultAirPlayButton,
   DefaultCaptionButton,
   DefaultChaptersMenu,
@@ -23,7 +23,6 @@ import {
   DefaultTimeInfo,
   DefaultTimeSlider,
   DefaultVolumeSlider,
-  type DefaultMediaLayoutProps,
 } from './shared-layout';
 import {
   slot,
@@ -39,7 +38,7 @@ import {
 
 const MediaLayout = createDefaultMediaLayout({
   type: 'video',
-  smLayoutWhen: '(width < 576) or (height < 380)',
+  smLayoutWhen: ({ width, height }) => width < 576 || height < 380,
   LoadLayout: DefaultVideoLoadLayout,
   SmallLayout: DefaultVideoSmallLayout,
   LargeLayout: DefaultVideoLargeLayout,
@@ -51,10 +50,9 @@ export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps<Default
 /**
  * The video layout is our production-ready UI that's displayed when the media view type is set to
  * 'video'. It includes support for picture-in-picture, fullscreen, slider chapters, slider
- * previews, captions, and audio/quality settings out of the box. It doesn't support live
- * streams just yet.
+ * previews, captions, audio/quality settings, live streams, and more out of the box.
  *
- * @attr data-match - Whether this layout is being used (query match).
+ * @attr data-match - Whether this layout is being used.
  * @attr data-size - The active layout size.
  * @example
  * ```tsx

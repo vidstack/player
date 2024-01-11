@@ -1,9 +1,10 @@
+import type { MediaPlayerQueryCallback } from '../../../core/api/player-state';
 import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { DefaultLayoutTranslations } from './translations';
 
 export const defaultLayoutProps: DefaultLayoutProps = {
-  when: '',
-  smallWhen: '',
+  when: false,
+  smallWhen: false,
   thumbnails: null,
   customIcons: false,
   translations: null,
@@ -17,16 +18,13 @@ export const defaultLayoutProps: DefaultLayoutProps = {
 
 export interface DefaultLayoutProps {
   /**
-   * A player query string that determines when the UI should be displayed. The special string
-   * 'never' will indicate that the UI should never be displayed.
+   * Determines when the UI should be displayed.
    */
-  when: string;
+  when: boolean | MediaPlayerQueryCallback;
   /**
-   * A player query string that determines when the small (e.g., mobile) UI should be displayed. The
-   * special string 'never' will indicate that the small device optimized UI should never be
-   * displayed.
+   * Determines when the small (e.g., mobile) UI should be displayed.
    */
-  smallWhen: string;
+  smallWhen: boolean | MediaPlayerQueryCallback;
   /**
    * The thumbnails resource.
    *

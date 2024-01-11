@@ -2,14 +2,8 @@ import * as React from 'react';
 
 import { computed } from 'maverick.js';
 import { useReactContext, useSignal } from 'maverick.js/react';
-import { isString, uppercaseFirstChar } from 'maverick.js/std';
-import {
-  isTrackCaptionKind,
-  mediaContext,
-  type DefaultLayoutTranslations,
-  type ThumbnailSrc,
-  type TooltipPlacement,
-} from 'vidstack';
+import { uppercaseFirstChar } from 'maverick.js/std';
+import { isTrackCaptionKind, mediaContext, type TooltipPlacement } from 'vidstack';
 
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
@@ -17,9 +11,7 @@ import { useChapterOptions } from '../../../hooks/options/use-chapter-options';
 import { usePlaybackRateOptions } from '../../../hooks/options/use-playback-rate-options';
 import { useVideoQualityOptions } from '../../../hooks/options/use-video-quality-options';
 import { useMediaState } from '../../../hooks/use-media-state';
-import { usePlayerQuery } from '../../../hooks/use-player-query';
 import { isRemotionSource } from '../../../providers/remotion/type-check';
-import type { PrimitivePropsWithRef } from '../../primitives/nodes';
 import { AirPlayButton } from '../../ui/buttons/airplay-button';
 import { CaptionButton } from '../../ui/buttons/caption-button';
 import { FullscreenButton } from '../../ui/buttons/fullscreen-button';
@@ -39,7 +31,6 @@ import * as TooltipBase from '../../ui/tooltip';
 import { RemotionSliderThumbnail, RemotionThumbnail } from '../remotion-ui';
 import { DefaultLayoutContext, useDefaultLayoutLang } from './context';
 import { DefaultFontSubmenu } from './font-menu';
-import type { DefaultLayoutIcons } from './icons';
 import { DefaultSubmenuButton } from './menu-layout';
 import { slot, type DefaultLayoutMenuSlotName, type Slots } from './slots';
 
@@ -56,194 +47,6 @@ interface DefaultMediaMenuProps {
   placement: Menu.ContentProps['placement'];
   portalClass?: string;
   slots?: Slots<DefaultLayoutMenuSlotName>;
-}
-
-/* -------------------------------------------------------------------------------------------------
- * DefaultMediaLayout
- * -----------------------------------------------------------------------------------------------*/
-
-export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitivePropsWithRef<'div'> {
-  children?: React.ReactNode;
-  /**
-   * The icons to be rendered and displayed inside the layout.
-   */
-  icons: DefaultLayoutIcons;
-  /**
-   * The thumbnails resource.
-   *
-   * @see {@link https://www.vidstack.io/docs/player/core-concepts/loading#thumbnails}
-   */
-  thumbnails?: ThumbnailSrc;
-  /**
-   * Translation map from english to your desired language for words used throughout the layout.
-   */
-  translations?: DefaultLayoutTranslations | null;
-  /**
-   * Specifies the number of milliseconds to wait before tooltips are visible after interacting
-   * with a control.
-   *
-   * @defaultValue 700
-   */
-  showTooltipDelay?: number;
-  /**
-   * Specifies the number of milliseconds to wait before menus are visible after opening them.
-   *
-   * @defaultValue 0
-   */
-  showMenuDelay?: number;
-  /**
-   * Whether the bitrate should be hidden in the settings quality menu next to each option.
-   *
-   * @defaultValue false
-   */
-  hideQualityBitrate?: boolean;
-  /**
-   * A player query string that determines when the small (e.g., mobile) UI should be displayed. The
-   * special string 'never' will indicate that the small device optimized UI should never be
-   * displayed.
-   *
-   * @defaultValue '(width < 576) or (height < 380)'
-   */
-  smallLayoutWhen?: string | boolean;
-  /**
-   * Specifies whether menu buttons should be placed in the top or bottom controls group. This
-   * only applies to the large video layout.
-   *
-   * @defaultValue 'bottom'
-   */
-  menuGroup?: 'top' | 'bottom';
-  /**
-   * Whether modal menus should be disabled when the small layout is active. A modal menu is
-   * a floating panel that floats up from the bottom of the screen (outside of the player). It's
-   * enabled by default as it provides a better user experience for touch devices.
-   *
-   * @defaultValue false
-   */
-  noModal?: boolean;
-  /**
-   * Provide additional content to be inserted in specific positions.
-   */
-  slots?: Slots;
-  /**
-   * The minimum width to start displaying slider chapters when available.
-   *
-   * @defaultValue 600
-   */
-  sliderChaptersMinWidth?: number;
-  /**
-   * Whether the time slider should be disabled.
-   */
-  disableTimeSlider?: boolean;
-  /**
-   * Whether all gestures such as pressing to play or seek should not be active.
-   */
-  noGestures?: boolean;
-  /**
-   * Whether keyboard actions should not be displayed.
-   */
-  noKeyboardActionDisplay?: boolean;
-}
-
-export interface CreateDefaultMediaLayout {
-  type: 'audio' | 'video';
-  smLayoutWhen: string;
-  LoadLayout: React.FC;
-  SmallLayout: React.FC;
-  LargeLayout: React.FC;
-  UnknownStreamType?: React.FC;
-}
-
-export function createDefaultMediaLayout({
-  type,
-  smLayoutWhen,
-  LoadLayout,
-  SmallLayout,
-  LargeLayout,
-  UnknownStreamType,
-}: CreateDefaultMediaLayout) {
-  const Layout = React.forwardRef<HTMLDivElement, DefaultMediaLayoutProps>(
-    (
-      {
-        className,
-        icons,
-        thumbnails = null,
-        translations,
-        showMenuDelay,
-        showTooltipDelay = type === 'video' ? 500 : 700,
-        smallLayoutWhen = smLayoutWhen,
-        noModal = false,
-        menuGroup = 'bottom',
-        hideQualityBitrate = false,
-        sliderChaptersMinWidth = 600,
-        disableTimeSlider = false,
-        noGestures = false,
-        noKeyboardActionDisplay = false,
-        slots,
-        children,
-        ...props
-      },
-      forwardRef,
-    ) => {
-      const media = useReactContext(mediaContext)!,
-        $load = useSignal(media.$props.load),
-        $canLoad = useMediaState('canLoad'),
-        $viewType = useMediaState('viewType'),
-        $streamType = useMediaState('streamType'),
-        isMatch = $viewType === type,
-        isForcedLayout = typeof smallLayoutWhen === 'boolean',
-        isSmallLayoutMatch = usePlayerQuery(isString(smallLayoutWhen) ? smallLayoutWhen : ''),
-        isSmallLayout = isForcedLayout ? smallLayoutWhen : isSmallLayoutMatch,
-        isLoadLayout = $load === 'play' && !$canLoad,
-        canRender = $canLoad || isForcedLayout || isLoadLayout;
-      return (
-        <div
-          {...props}
-          className={`vds-${type}-layout` + (className ? ` ${className}` : '')}
-          data-match={isMatch ? '' : null}
-          data-size={isSmallLayout ? 'sm' : null}
-          ref={forwardRef}
-        >
-          {}
-          {canRender && isMatch ? (
-            <DefaultLayoutContext.Provider
-              value={{
-                thumbnails,
-                translations,
-                isSmallLayout,
-                showMenuDelay,
-                showTooltipDelay,
-                hideQualityBitrate,
-                noModal,
-                menuGroup,
-                slots,
-                sliderChaptersMinWidth,
-                disableTimeSlider,
-                noGestures,
-                noKeyboardActionDisplay,
-                Icons: icons,
-              }}
-            >
-              {isLoadLayout ? (
-                <LoadLayout />
-              ) : $streamType === 'unknown' ? (
-                UnknownStreamType ? (
-                  <UnknownStreamType />
-                ) : null
-              ) : isSmallLayout ? (
-                <SmallLayout />
-              ) : (
-                <LargeLayout />
-              )}
-              {children}
-            </DefaultLayoutContext.Provider>
-          ) : null}
-        </div>
-      );
-    },
-  );
-
-  Layout.displayName = 'DefaultMediaLayout';
-  return Layout;
 }
 
 /* -------------------------------------------------------------------------------------------------

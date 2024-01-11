@@ -1,44 +1,58 @@
-import { Component, effect } from 'maverick.js';
+import { Component, computed, effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
+import { isBoolean } from 'maverick.js/std';
 
-import { PlayerQueryList } from '../../../core';
+import { type MediaPlayerQueryCallback } from '../../../core';
+import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 
-class MediaLayout extends Component<{ when: string }> {
-  static props = {
-    when: '',
+class MediaLayout extends Component<MediaLayoutProps> {
+  static props: MediaLayoutProps = {
+    when: false,
   };
+}
+
+export interface MediaLayoutProps {
+  when: boolean | MediaPlayerQueryCallback;
 }
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/layouts#custom}
  * @example
  * ```html
- * <media-layout when="(view-type: video)">
+ * <media-layout class="video-layout">
  *   <template>
  *     <!-- ... -->
  *   </template>
  * </media-layout>
+ *
+ * <script>
+ *   const layout = document.querySelector(".video-layout");
+ *   // All player state is available.
+ *   layout.when = ({ viewType }) => viewType === 'video';
+ * </script>
  * ```
  */
 export class MediaLayoutElement extends Host(HTMLElement, MediaLayout) {
   static tagName = 'media-layout';
 
-  query!: PlayerQueryList;
+  protected _media!: MediaContext;
 
   protected onSetup() {
-    this.query = PlayerQueryList.create(this.$props.when);
+    this._media = useMediaContext();
   }
 
   protected onConnect() {
-    effect(this._watchQuery.bind(this));
+    effect(this._watchWhen.bind(this));
   }
 
-  private _watchQuery() {
+  private _watchWhen() {
     const root = this.firstElementChild,
       isTemplate = root?.localName === 'template',
-      isHTMLElement = root instanceof HTMLElement;
+      isHTMLElement = root instanceof HTMLElement,
+      when = this.$props.when(),
+      matches = isBoolean(when) ? when : computed(() => when(this._media.player.state))();
 
-    if (!this.query.matches) {
+    if (!matches) {
       if (isTemplate) {
         this.textContent = '';
         this.appendChild(root);

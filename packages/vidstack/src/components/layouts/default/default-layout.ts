@@ -1,34 +1,43 @@
-import { Component, prop, provideContext } from 'maverick.js';
+import { Component, computed, prop, provideContext } from 'maverick.js';
+import { isBoolean } from 'maverick.js/std';
 
-import { PlayerQueryList } from '../../../core';
+import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaPlayerQueryCallback } from '../../../core/api/player-state';
 import { defaultLayoutContext } from './context';
 import { defaultLayoutProps, type DefaultLayoutProps } from './props';
 
 export class DefaultLayout extends Component<DefaultLayoutProps> {
   static props = defaultLayoutProps;
 
-  // slider-chapters-min-width
+  protected _media!: MediaContext;
 
-  private _whenQueryList!: PlayerQueryList;
-  private _whenSmQueryList!: PlayerQueryList;
+  protected _when = computed(() => {
+    const when = this.$props.when();
+    return this._matches(when);
+  });
+
+  protected _smallWhen = computed(() => {
+    const when = this.$props.smallWhen();
+    return this._matches(when);
+  });
 
   @prop
   menuContainer: HTMLElement | null = null;
 
   @prop
   get isMatch() {
-    return this._whenQueryList.matches;
+    return this._when();
   }
 
   @prop
   get isSmallLayout() {
-    return this._whenSmQueryList.matches;
+    return this._smallWhen();
   }
 
   protected override onSetup(): void {
+    this._media = useMediaContext();
+
     const {
-      when,
-      smallWhen,
       thumbnails,
       translations,
       menuGroup,
@@ -39,28 +48,29 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       noKeyboardActionDisplay,
     } = this.$props;
 
-    this._whenQueryList = PlayerQueryList.create(when);
-    this._whenSmQueryList = PlayerQueryList.create(smallWhen);
-
     this.setAttributes({
-      'data-match': this._whenQueryList.$matches,
-      'data-size': () => (this._whenSmQueryList.matches ? 'sm' : null),
+      'data-match': this._when,
+      'data-size': () => (this._smallWhen() ? 'sm' : null),
     });
 
     const self = this;
     provideContext(defaultLayoutContext, {
-      smQueryList: this._whenSmQueryList,
-      thumbnails,
-      translations,
-      menuGroup,
-      noModal,
-      sliderChaptersMinWidth,
       disableTimeSlider,
-      noGestures,
-      noKeyboardActionDisplay,
       get menuContainer() {
         return self.menuContainer;
       },
+      menuGroup,
+      noGestures,
+      noKeyboardActionDisplay,
+      noModal,
+      sliderChaptersMinWidth,
+      smWhen: this._smallWhen,
+      thumbnails,
+      translations,
     });
+  }
+
+  protected _matches(query: boolean | MediaPlayerQueryCallback) {
+    return isBoolean(query) ? query : computed(() => query(this._media.player.state))();
   }
 }

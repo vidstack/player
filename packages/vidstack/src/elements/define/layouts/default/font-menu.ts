@@ -184,7 +184,7 @@ function DefaultFontSettingMenu({
     resets = useContext(resetContext),
     radioOptions = createRadioOptions(options),
     key = `${label.toLowerCase().replace(/\s/g, '-')}`,
-    $value = signal(localStorage.getItem(`vds-player:${key}`) || defaultValue),
+    $value = signal(defaultValue),
     $label = () => getDefaultLayoutLang(translations, label),
     $hint = () => {
       const value = $value(),
@@ -192,7 +192,8 @@ function DefaultFontSettingMenu({
       return getDefaultLayoutLang(translations, isString(label) ? label : label());
     };
 
-  onValueChange(peek($value));
+  const savedValue = localStorage.getItem(`vds-player:${key}`);
+  if (savedValue) onValueChange(savedValue);
 
   function onValueChange(value: string) {
     $value.set(value);
