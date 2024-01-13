@@ -28,7 +28,8 @@ All notable changes to this project will be documented in this file.
 - add media session api support ([da82b35](https://github.com/vidstack/player/commit/da82b35c68e24166ea2f6d619e8af18a51b1634f))
 - new `storage` player prop and `MediaStorage` interface ([778ff6c](https://github.com/vidstack/player/commit/778ff6cfcef2a195934fa9d062b28b62007abf42))
 - new view, stream, and remote type tailwind variants ([e15aefc](https://github.com/vidstack/player/commit/e15aefc88a71b3a097ad6d5f0bf08573ed1df455))
-- font style customization menu ([15d1a44](https://github.com/vidstack/player/commit/15d1a44d2d63840121baef6b68c218a04d2a4a52))
+- font style customization menu ([4e902b6](https://github.com/vidstack/player/commit/4e902b68d6c72835d6b4cbabdb06d4d411f73505))
+- expose cancellable media request events on all components ([b6d84af](https://github.com/vidstack/player/commit/b6d84afed90f249587967b531188536ba81ead92))
 
 #### Player (React)
 
@@ -57,6 +58,8 @@ All notable changes to this project will be documented in this file.
 - rename `playsinline` prop to `playsInline` ([e7cb6c5](https://github.com/vidstack/player/commit/e7cb6c5a0f8f03281673bf7d886ee9612d4c373c))
 - rename `autoplay` prop to `autoPlay` ([0fc9dd7](https://github.com/vidstack/player/commit/0fc9dd72ba5d804acb3315983a5f17bff44d22f6))
 - add missing load events to all providers ([446a4f4](https://github.com/vidstack/player/commit/446a4f41e7408431c745d4f81a42276666b64169))
+- remove redundant default layout exports ([67de0e9](https://github.com/vidstack/player/commit/67de0e98b92596ca9193e7bfec4ae69071547fa6))
+- replace player query lists with callbacks ([3644a74](https://github.com/vidstack/player/commit/3644a7471e6b58819136b7ef8159e8111f108925))
 
 #### Player (React)
 
