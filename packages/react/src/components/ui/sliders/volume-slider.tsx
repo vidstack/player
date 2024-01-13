@@ -16,7 +16,9 @@ import { SliderValueBridge } from './slider-value';
  * VolumeSlider
  * -----------------------------------------------------------------------------------------------*/
 
-const VolumeSliderBridge = createReactComponent(VolumeSliderInstance);
+const VolumeSliderBridge = createReactComponent(VolumeSliderInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface RootProps extends ReactElementProps<VolumeSliderInstance> {
   asChild?: boolean;

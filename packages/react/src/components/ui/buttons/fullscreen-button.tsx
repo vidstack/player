@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * FullscreenButton
  * -----------------------------------------------------------------------------------------------*/
 
-const FullscreenButtonBridge = createReactComponent(FullscreenButtonInstance);
+const FullscreenButtonBridge = createReactComponent(FullscreenButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface FullscreenButtonProps
   extends ReactElementProps<FullscreenButtonInstance, HTMLButtonElement> {

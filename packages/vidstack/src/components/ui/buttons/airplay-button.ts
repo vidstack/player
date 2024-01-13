@@ -1,6 +1,7 @@
 import { Component } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
 import {
@@ -9,6 +10,8 @@ import {
 } from './toggle-button-controller';
 
 export interface AirPlayButtonProps extends ToggleButtonControllerProps {}
+
+export interface AirPlayButtonEvents extends Pick<MediaRequestEvents, 'media-airplay-request'> {}
 
 /**
  * A button for requesting Apple AirPlay.
@@ -19,7 +22,7 @@ export interface AirPlayButtonProps extends ToggleButtonControllerProps {}
  * @see {@link https://www.apple.com/au/airplay}
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/airplay-button}
  */
-export class AirPlayButton extends Component<AirPlayButtonProps> {
+export class AirPlayButton extends Component<AirPlayButtonProps, {}, AirPlayButtonEvents> {
   static props: AirPlayButtonProps = ToggleButtonController.props;
 
   private _media!: MediaContext;

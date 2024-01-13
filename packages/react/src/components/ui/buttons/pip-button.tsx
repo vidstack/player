@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * PIPButton
  * -----------------------------------------------------------------------------------------------*/
 
-const PIPButtonBridge = createReactComponent(PIPButtonInstance);
+const PIPButtonBridge = createReactComponent(PIPButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface PIPButtonProps extends ReactElementProps<PIPButtonInstance, HTMLButtonElement> {
   asChild?: boolean;

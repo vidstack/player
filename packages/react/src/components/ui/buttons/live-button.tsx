@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * LiveButton
  * -----------------------------------------------------------------------------------------------*/
 
-const LiveButtonBridge = createReactComponent(LiveButtonInstance);
+const LiveButtonBridge = createReactComponent(LiveButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface LiveButtonProps extends ReactElementProps<LiveButtonInstance, HTMLButtonElement> {
   asChild?: boolean;

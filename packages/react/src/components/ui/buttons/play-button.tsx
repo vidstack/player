@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * PlayButton
  * -----------------------------------------------------------------------------------------------*/
 
-const PlayButtonBridge = createReactComponent(PlayButtonInstance);
+const PlayButtonBridge = createReactComponent(PlayButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface PlayButtonProps extends ReactElementProps<PlayButtonInstance, HTMLButtonElement> {
   asChild?: boolean;

@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * SeekButton
  * -----------------------------------------------------------------------------------------------*/
 
-const SeekButtonBridge = createReactComponent(SeekButtonInstance);
+const SeekButtonBridge = createReactComponent(SeekButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface SeekButtonProps extends ReactElementProps<SeekButtonInstance, HTMLButtonElement> {
   asChild?: boolean;

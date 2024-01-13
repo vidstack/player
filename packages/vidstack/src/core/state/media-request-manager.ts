@@ -101,6 +101,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
   private _handleRequest(event: Event) {
     event.stopPropagation();
+    if (event.defaultPrevented) return;
 
     if (__DEV__) {
       this._media.logger

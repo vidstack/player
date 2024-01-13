@@ -464,6 +464,7 @@ export class MediaRemoteControl {
     const request = new DOMEvent<any>(type, {
       bubbles: true,
       composed: true,
+      cancelable: true,
       detail,
       trigger,
     });

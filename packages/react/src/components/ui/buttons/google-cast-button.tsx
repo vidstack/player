@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * GoogleCastButton
  * -----------------------------------------------------------------------------------------------*/
 
-const GoogleCastButtonBridge = createReactComponent(GoogleCastButtonInstance);
+const GoogleCastButtonBridge = createReactComponent(GoogleCastButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface GoogleCastButtonProps
   extends ReactElementProps<GoogleCastButtonInstance, HTMLButtonElement> {

@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * AirPlayButton
  * -----------------------------------------------------------------------------------------------*/
 
-const AirPlayButtonBridge = createReactComponent(AirPlayButtonInstance);
+const AirPlayButtonBridge = createReactComponent(AirPlayButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface AirPlayButtonProps
   extends ReactElementProps<AirPlayButtonInstance, HTMLButtonElement> {

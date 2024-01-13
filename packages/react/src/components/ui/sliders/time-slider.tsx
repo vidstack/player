@@ -41,7 +41,9 @@ TimeSliderContext.displayName = 'TimeSliderContext';
  * TimeSlider
  * -----------------------------------------------------------------------------------------------*/
 
-const TimeSliderBridge = createReactComponent(TimeSliderInstance);
+const TimeSliderBridge = createReactComponent(TimeSliderInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface RootProps extends ReactElementProps<TimeSliderInstance> {
   asChild?: boolean;

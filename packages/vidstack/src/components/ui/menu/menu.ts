@@ -22,6 +22,7 @@ import {
 } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
 import { isElementParent, onPress, setAttributeIfEmpty } from '../../../utils/dom';
 import { Popper } from '../popper/popper';
@@ -374,8 +375,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   }
 
   private _getCloseTarget() {
-    const target = this.el!.querySelector('[data-part="close-target"]');
-    return isElementParent(this.el!, target, (node) => node.getAttribute('role') === 'menu')
+    const target = this.el?.querySelector('[data-part="close-target"]');
+    return this.el &&
+      target &&
+      isElementParent(this.el, target, (node) => node.getAttribute('role') === 'menu')
       ? target
       : null;
   }
@@ -512,7 +515,11 @@ export interface MenuProps {
   showDelay: number;
 }
 
-export interface MenuEvents {
+export interface MenuEvents
+  extends Pick<
+    MediaRequestEvents,
+    'media-pause-controls-request' | 'media-resume-controls-request'
+  > {
   open: MenuOpenEvent;
   close: MenuCloseEvent;
 }

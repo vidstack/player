@@ -2,6 +2,7 @@ import throttle from 'just-throttle';
 import { Component, effect, provideContext } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
@@ -16,6 +17,14 @@ import { sliderValueFormatContext } from './slider/format';
 import { SliderController, type SliderControllerProps } from './slider/slider-controller';
 
 export interface VolumeSliderProps extends SliderControllerProps {}
+
+export interface VolumeSliderState extends SliderState {}
+
+export interface VolumeSliderEvents
+  extends SliderEvents,
+    Pick<MediaRequestEvents, 'media-volume-change-request'> {}
+
+export interface VolumeSliderCSSVars extends SliderCSSVars {}
 
 /**
  * Versatile and user-friendly input volume control designed for seamless cross-browser and provider
@@ -33,9 +42,9 @@ export interface VolumeSliderProps extends SliderControllerProps {}
  */
 export class VolumeSlider extends Component<
   VolumeSliderProps,
-  SliderState,
-  SliderEvents,
-  SliderCSSVars
+  VolumeSliderState,
+  VolumeSliderEvents,
+  VolumeSliderCSSVars
 > {
   static props: VolumeSliderProps = {
     ...SliderController.props,

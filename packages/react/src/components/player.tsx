@@ -13,7 +13,8 @@ import { Primitive } from './primitives/nodes';
 
 const MediaPlayerBridge = createReactComponent(MediaPlayerInstance, {
   events: playerCallbacks,
-  eventsRegex: /^on(Hls|Media)/,
+  eventsRegex: /^onHls/,
+  domEventsRegex: /^onMedia/,
 });
 
 export interface MediaPlayerProps extends Omit<ReactElementProps<MediaPlayerInstance>, 'src'> {

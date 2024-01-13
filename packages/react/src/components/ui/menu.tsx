@@ -20,6 +20,7 @@ import { Primitive } from '../primitives/nodes';
 
 const MenuBridge = createReactComponent(MenuInstance, {
   events: ['onOpen', 'onClose'],
+  domEventsRegex: /^onMedia/,
 });
 
 export interface RootProps extends ReactElementProps<MenuInstance> {

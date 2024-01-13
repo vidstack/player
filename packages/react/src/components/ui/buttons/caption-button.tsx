@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * CaptionButton
  * -----------------------------------------------------------------------------------------------*/
 
-const CaptionButtonBridge = createReactComponent(CaptionButtonInstance);
+const CaptionButtonBridge = createReactComponent(CaptionButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface CaptionButtonProps
   extends ReactElementProps<CaptionButtonInstance, HTMLButtonElement> {

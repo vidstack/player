@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * MuteButton
  * -----------------------------------------------------------------------------------------------*/
 
-const MuteButtonBridge = createReactComponent(MuteButtonInstance);
+const MuteButtonBridge = createReactComponent(MuteButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface MuteButtonProps extends ReactElementProps<MuteButtonInstance, HTMLButtonElement> {
   asChild?: boolean;
