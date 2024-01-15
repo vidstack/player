@@ -11,16 +11,27 @@ import esbuildPlugin from 'rollup-plugin-esbuild';
 
 const MODE_WATCH = process.argv.includes('-w'),
   MODE_TYPES = process.argv.includes('--config-types'),
-  MODE_CDN = process.argv.includes('--config-cdn');
+  MODE_CDN = process.argv.includes('--config-cdn'),
+  MODE_PLUGINS = process.argv.includes('--config-plugins');
 
 /** @type {Record<string, string | false>} */
 const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
 
 const NPM_EXTERNAL_PACKAGES = ['hls.js', 'media-captions', 'media-icons'],
   CDN_EXTERNAL_PACKAGES = ['media-captions', 'media-icons'],
-  NPM_BUNDLES = [define({ type: 'server' }), define({ type: 'dev' }), define({ type: 'prod' })],
-  CDN_BUNDLES = [defineCDN({ dev: true }), defineCDN(), defineCDN({ layouts: true })],
-  TYPES_BUNDLES = defineTypes();
+  PLUGINS_EXTERNAL_PACKAGES = ['vite', 'rollup', /webpack/, /rspack/, 'esbuild', 'unplugin'],
+  NPM_BUNDLES = [
+    defineNPMBundle({ type: 'server' }),
+    defineNPMBundle({ type: 'dev' }),
+    defineNPMBundle({ type: 'prod' }),
+  ],
+  CDN_BUNDLES = [
+    defineCDNBundle({ dev: true }),
+    defineCDNBundle(),
+    defineCDNBundle({ layouts: true }),
+  ],
+  PLUGIN_BUNDLES = definePluginsBundle(),
+  TYPES_BUNDLES = defineTypesBundle();
 
 // Styles
 if (!MODE_TYPES) {
@@ -36,19 +47,21 @@ if (!MODE_TYPES) {
 }
 
 export default defineConfig(
-  MODE_CDN
-    ? CDN_BUNDLES
-    : MODE_WATCH
-      ? [...NPM_BUNDLES, ...TYPES_BUNDLES]
-      : MODE_TYPES
-        ? TYPES_BUNDLES
-        : [...NPM_BUNDLES, ...CDN_BUNDLES],
+  MODE_PLUGINS
+    ? PLUGIN_BUNDLES
+    : MODE_CDN
+      ? CDN_BUNDLES
+      : MODE_WATCH
+        ? [...NPM_BUNDLES, ...TYPES_BUNDLES]
+        : MODE_TYPES
+          ? TYPES_BUNDLES
+          : [...NPM_BUNDLES, ...CDN_BUNDLES, ...PLUGIN_BUNDLES],
 );
 
 /**
  * @returns {import('rollup').RollupOptions[]}
  * */
-function defineTypes() {
+function defineTypesBundle() {
   /** @type {Record<string, string>} */
   const input = {
     index: 'types/index.d.ts',
@@ -90,6 +103,12 @@ function defineTypes() {
         },
       ],
     },
+    {
+      input: 'types/plugins.d.ts',
+      output: { file: 'plugins.d.ts' },
+      external: PLUGINS_EXTERNAL_PACKAGES,
+      plugins: [dts({ respectExternal: true })],
+    },
   ];
 }
 
@@ -105,7 +124,7 @@ function defineTypes() {
  * @param {BundleOptions}
  * @returns {import('rollup').RollupOptions}
  */
-function define({ target, type, minify }) {
+function defineNPMBundle({ target, type, minify }) {
   /** @type {Record<string, string>} */
   let input = {
       vidstack: 'src/index.ts',
@@ -189,14 +208,14 @@ function define({ target, type, minify }) {
 }
 
 /** @returns {import('rollup').RollupOptions} */
-function defineCDN({ dev = false, layouts = false } = {}) {
+function defineCDNBundle({ dev = false, layouts = false } = {}) {
   const input =
       dev || layouts
         ? 'src/elements/bundles/cdn/player-with-layouts.ts'
         : 'src/elements/bundles/cdn/player.ts',
     output = dev ? `vidstack.dev` : `vidstack`;
   return {
-    ...define({
+    ...defineNPMBundle({
       type: dev ? 'dev' : 'prod',
       minify: !dev,
       target: 'es2020',
@@ -282,4 +301,30 @@ function getProviderInputs() {
     [`providers/vidstack-vimeo`]: 'src/providers/vimeo/provider.ts',
     [`providers/vidstack-google-cast`]: 'src/providers/google-cast/provider.ts',
   };
+}
+
+/** @returns {import('rollup').RollupOptions[]} */
+function definePluginsBundle() {
+  return [
+    {
+      input: 'src/plugins.ts',
+      output: { file: 'plugins.js', format: 'esm' },
+      external: PLUGINS_EXTERNAL_PACKAGES,
+      treeshake: true,
+      plugins: [
+        nodeResolve(),
+        esbuildPlugin({
+          tsconfig: 'tsconfig.build.json',
+          target: 'node18',
+          platform: 'node',
+          format: 'esm',
+          // minify: true,
+          legalComments: 'none',
+          define: {
+            __DEV__: 'false',
+          },
+        }),
+      ],
+    },
+  ];
 }

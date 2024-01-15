@@ -19,6 +19,7 @@
     "cdn/",
     "tailwind.*",
     "analyze.json",
+    "elements.json",
     "empty.vtt",
     "vscode.html-data.json"
   ],
@@ -27,6 +28,7 @@
     "dev": "pnpm clean && pnpm build:types && pnpm watch",
     "build": "rollup -c",
     "build:cdn": "rollup -c --config-cdn",
+    "build:plugins": "rollup -c --config-plugins",
     "build:types": "tsc -p tsconfig.build.json",
     "types": "pnpm build:types && rollup -c --config-types",
     "clean": "rimraf dist cdn",
@@ -42,7 +44,8 @@
     "watch:types": "pnpm run build:types -w"
   },
   "dependencies": {
-    "media-captions": "^1.0.1"
+    "media-captions": "^1.0.1",
+    "unplugin": "^1.6.0"
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.4.4",
@@ -69,6 +72,7 @@
     "rollup": "^4.0.0",
     "rollup-plugin-dts": "^6.0.0",
     "rollup-plugin-esbuild": "^6.1.0",
+    "rollup-pluginutils": "^2.8.2",
     "solid-js": "^1.7.11",
     "svelte": "^4.2.1",
     "tailwindcss": "^3.2.0",
@@ -141,6 +145,7 @@
       "types": "./analyze.json.d.ts",
       "default": "./analyze.json"
     },
+    "./elements.json": "./elements.json",
     "./vue": {
       "types": "./vue.d.ts",
       "default": "./vue.d.ts"
@@ -152,6 +157,14 @@
     "./solid": {
       "types": "./solid.d.ts",
       "default": "./solid.d.ts"
+    },
+    "./bundle": {
+      "types": "./bundle.d.ts",
+      "default": "./bundle.d.ts"
+    },
+    "./plugins": {
+      "types": "./plugins.d.ts",
+      "default": "./plugins.js"
     },
     "./dom.d.ts": "./dom.d.ts",
     "./google-cast.d.ts": "./google-cast.d.ts",

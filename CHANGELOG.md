@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ### ✨ Features
 
+#### Core
+
+- web component bundler plugins ([d97a9e1](https://github.com/vidstack/player/commit/d97a9e13a542952f8745584ca26dac1f32bb03f6))
+
 #### Player
 
 - new `sliderChaptersMinWidth` layouts prop ([441c54e](https://github.com/vidstack/player/commit/441c54e08f4c9e02b97c1d274801493e5dc7aca3))

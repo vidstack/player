@@ -31,8 +31,8 @@ const EXTERNAL_PACKAGES = [
     'hls.js',
     /^remotion/,
   ],
-  NPM_BUNDLES = [define({ dev: true }), define({ dev: false })],
-  TYPES_BUNDLES = defineTypes();
+  NPM_BUNDLES = [defineNPMBundle({ dev: true }), defineNPMBundle({ dev: false })],
+  TYPES_BUNDLES = defineTypesBundle();
 
 // Styles
 if (!MODE_TYPES) {
@@ -55,7 +55,7 @@ export default defineConfig(
 /**
  * @returns {import('rollup').RollupOptions[]}
  * */
-function defineTypes() {
+function defineTypesBundle() {
   return [
     {
       input: {
@@ -119,7 +119,7 @@ function defineTypes() {
  * @param {BundleOptions}
  * @returns {import('rollup').RollupOptions}
  */
-function define({ dev }) {
+function defineNPMBundle({ dev }) {
   let alias = dev ? 'dev' : 'prod';
 
   let input = {

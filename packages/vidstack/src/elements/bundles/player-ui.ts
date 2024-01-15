@@ -48,16 +48,20 @@ defineCustomElement(MediaLayoutElement);
 defineCustomElement(MediaControlsElement);
 defineCustomElement(MediaControlsGroupElement);
 defineCustomElement(MediaPosterElement);
+// Tooltips
+defineCustomElement(MediaTooltipElement);
+defineCustomElement(MediaTooltipTriggerElement);
+defineCustomElement(MediaTooltipContentElement);
 // Buttons
+defineCustomElement(MediaPlayButtonElement);
+defineCustomElement(MediaMuteButtonElement);
 defineCustomElement(MediaCaptionButtonElement);
 defineCustomElement(MediaFullscreenButtonElement);
-defineCustomElement(MediaMuteButtonElement);
 defineCustomElement(MediaPIPButtonElement);
-defineCustomElement(MediaPlayButtonElement);
 defineCustomElement(MediaSeekButtonElement);
-defineCustomElement(MediaToggleButtonElement);
 defineCustomElement(MediaAirPlayButtonElement);
 defineCustomElement(MediaGoogleCastButtonElement);
+defineCustomElement(MediaToggleButtonElement);
 // Sliders
 defineCustomElement(MediaSliderElement);
 defineCustomElement(MediaVolumeSliderElement);
@@ -80,10 +84,6 @@ defineCustomElement(MediaQualityRadioGroupElement);
 defineCustomElement(MediaChaptersRadioGroupElement);
 defineCustomElement(MediaRadioGroupElement);
 defineCustomElement(MediaRadioElement);
-// Tooltips
-defineCustomElement(MediaTooltipElement);
-defineCustomElement(MediaTooltipTriggerElement);
-defineCustomElement(MediaTooltipContentElement);
 // Display
 defineCustomElement(MediaGestureElement);
 defineCustomElement(MediaThumbnailElement);
