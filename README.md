@@ -4,22 +4,35 @@
 [![discord-badge]][discord]
 [![jsdelivr-badge]][jsdelivr]
 
-Build and ship a production-ready player in minutes. Robust, customizable, and accessible. Available
-as Web Components and React Components. The successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
-
-<img src="./assets/video-player.png" alt="Preview of Vidstack Video Player" />
-
-<img src="./assets/audio-player.png" alt="Preview of Vidstack Audio Player" style="margin: 16px 0;" />
+Build and ship a production-ready video or audio player! Robust, customizable, and accessible. The
+successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
 
 ## Quickstart
 
-- [Installation](https://www.vidstack.io/docs/player/getting-started/installation)
+Our library works with any of the JavaScript frameworks listed below. You can decide to
+build your own player layout using our components, or you can take advantage of our pre-built
+layouts to get up and running quickly! See any of the following links to get started.
+
+**Installation:**
+
+- [Angular](https://www.vidstack.io/docs/player/getting-started/installation/angular)
+- [React](https://www.vidstack.io/docs/player/getting-started/installation/react)
+- [Svelte](https://www.vidstack.io/docs/player/getting-started/installation/svelte)
+- [Vue](https://www.vidstack.io/docs/player/getting-started/installation/vue)
+- [Solid](https://www.vidstack.io/docs/player/getting-started/installation/solid)
+- [Web Components](https://www.vidstack.io/docs/player/getting-started/installation/web-components)
+- [CDN](https://www.vidstack.io/docs/player/getting-started/installation/cdn)
+
+**Resources:**
+
+- [Media Files](https://github.com/vidstack/media-files)
+- [Media Captions](https://github.com/vidstack/media-captions)
 - [Media Icons](https://www.vidstack.io/media-icons)
 - [Examples](https://github.com/vidstack/examples)
 
 ## Documentation
 
-If you'd like to try Vidstack Player, you can find our documentation on our website:
+If you'd like to learn more about Vidstack Player, you can find our documentation on our website:
 
 [Player Documentation][docs-player]
 
