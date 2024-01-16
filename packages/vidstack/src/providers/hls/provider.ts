@@ -63,7 +63,7 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
     return true;
   }
 
-  protected _library: HLSLibrary = `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls${
+  protected _library: HLSLibrary = `${JS_DELIVR_CDN}/npm/hls.js@^1.5.0/dist/hls${
     __DEV__ ? '.js' : '.min.js'
   }`;
 

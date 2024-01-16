@@ -99,7 +99,9 @@ export async function canChangeVolume() {
  * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
 export function getMediaSource(): typeof MediaSource | undefined {
-  return __SERVER__ ? undefined : window?.MediaSource ?? window?.WebKitMediaSource;
+  return __SERVER__
+    ? undefined
+    : window?.ManagedMediaSource ?? window?.MediaSource ?? window?.WebKitMediaSource;
 }
 
 /**

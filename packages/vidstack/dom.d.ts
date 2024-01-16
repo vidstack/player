@@ -4,6 +4,7 @@ declare global {
   interface Window {
     readonly chrome: boolean;
     readonly safari: any;
+    readonly ManagedMediaSource: typeof MediaSource | undefined;
     readonly WebKitMediaSource: typeof MediaSource | undefined;
     readonly WebKitSourceBuffer: typeof SourceBuffer | undefined;
   }

@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 #### Core
 
-- web component bundler plugins ([d97a9e1](https://github.com/vidstack/player/commit/d97a9e13a542952f8745584ca26dac1f32bb03f6))
+- web component bundler plugins ([dfd4fa5](https://github.com/vidstack/player/commit/dfd4fa52431604d2b00a481364f213494c221f27))
 
 #### Player
 
@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - new view, stream, and remote type tailwind variants ([e15aefc](https://github.com/vidstack/player/commit/e15aefc88a71b3a097ad6d5f0bf08573ed1df455))
 - font style customization menu ([4e902b6](https://github.com/vidstack/player/commit/4e902b68d6c72835d6b4cbabdb06d4d411f73505))
 - expose cancellable media request events on all components ([b6d84af](https://github.com/vidstack/player/commit/b6d84afed90f249587967b531188536ba81ead92))
+- include `ManagedMediaSource` support check ([ef180c9](https://github.com/vidstack/player/commit/ef180c9a59fdfde6e52455936092c050696fca10))
 
 #### Player (React)
 
