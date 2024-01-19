@@ -1,4 +1,5 @@
 import { Component, effect, onDispose, useContext, useState } from 'maverick.js';
+import { animationFrameThrottle } from 'maverick.js/std';
 
 import { Slider } from './slider/slider';
 import { sliderContext, type SliderContext } from './slider/slider-context';
@@ -50,7 +51,7 @@ export class SliderPreview extends Component<SliderPreviewProps> {
     onDispose(() => resize.disconnect());
   }
 
-  private _updatePlacement() {
+  private _updatePlacement = animationFrameThrottle(() => {
     const { _disabled, _orientation } = this._slider;
 
     if (_disabled()) return;
@@ -63,7 +64,7 @@ export class SliderPreview extends Component<SliderPreviewProps> {
       offset: offset(),
       orientation: _orientation(),
     });
-  }
+  });
 }
 
 export function updateSliderPreviewPlacement(
@@ -78,7 +79,9 @@ export function updateSliderPreviewPlacement(
     orientation: SliderOrientation;
   },
 ) {
-  const { width, height } = el.getBoundingClientRect(),
+  const computedStyle = getComputedStyle(el),
+    width = parseFloat(computedStyle.width),
+    height = parseFloat(computedStyle.height),
     styles: Record<string, string | null> = {
       top: null,
       right: null,
@@ -86,9 +89,8 @@ export function updateSliderPreviewPlacement(
       left: null,
     };
 
-  styles[
-    orientation === 'horizontal' ? 'bottom' : 'left'
-  ] = `calc(100% + var(--media-slider-preview-offset, ${offset}px))`;
+  styles[orientation === 'horizontal' ? 'bottom' : 'left'] =
+    `calc(100% + var(--media-slider-preview-offset, ${offset}px))`;
 
   if (orientation === 'horizontal') {
     const widthHalf = width / 2;

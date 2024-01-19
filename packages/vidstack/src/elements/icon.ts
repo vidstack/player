@@ -7,10 +7,10 @@ import { isString } from 'maverick.js/std';
 
 import { $signal } from './lit/directives/signal';
 
-export function Icon({ name, class: _class, state, paths }: IconProps) {
+export function Icon({ name, class: _class, state, paths, viewBox = '0 0 32 32' }: IconProps) {
   return html`<svg
     class="${'vds-icon' + (_class ? ` ${_class}` : '')}"
-    viewBox="0 0 32 32"
+    viewBox="${viewBox}"
     fill="none"
     aria-hidden="true"
     focusable="false"
@@ -25,5 +25,6 @@ export interface IconProps {
   name?: string;
   class?: string;
   state?: string;
+  viewBox?: string;
   paths: string | ReadSignal<string> | ReadSignal<DirectiveResult>;
 }

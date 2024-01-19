@@ -43,6 +43,7 @@
   position: relative;
   box-sizing: border-box;
   align-items: center;
+  border-radius: inherit;
   width: 100%;
   aspect-ratio: inherit;
 }
@@ -72,6 +73,11 @@
   width: 100%;
 }
 
+:where([data-media-provider][data-fullscreen] video),
+:where([data-media-provider][data-fullscreen] iframe) {
+  z-index: 1;
+}
+
 [data-media-provider] iframe {
   height: 100%;
 }
@@ -96,6 +102,7 @@ iframe.vds-youtube[data-no-controls] {
   height: auto;
   aspect-ratio: inherit;
   pointer-events: auto;
+  border-radius: inherit;
   z-index: 1;
 }
 

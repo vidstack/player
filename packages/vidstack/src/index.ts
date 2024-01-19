@@ -32,6 +32,7 @@ export * from './components';
 
 // Utils
 export { formatTime, formatSpokenTime } from './utils/time';
+export * from './utils/mime';
 export {
   canChangeVolume,
   canOrientScreen,

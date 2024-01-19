@@ -24,6 +24,7 @@ const priorityImports = [
   // Layout
   'media-audio-layout',
   'media-video-layout',
+  'media-plyr-layout',
   'media-layout',
   'media-controls',
   'media-controls-group',
@@ -133,12 +134,13 @@ export const unplugin = createUnplugin<UserOptions | undefined>((options = {}) =
     load(id) {
       if (id === bundleModuleId) {
         const imports: string[] = [],
-          isUsingDefaultLayout =
-            elements.has('media-audio-layout') || elements.has('media-video-layout');
+          hasDefaultLayout =
+            elements.has('media-audio-layout') || elements.has('media-video-layout'),
+          hasPlyrLayout = elements.has('media-plyr-layout');
 
         imports.push('import "vidstack/player/styles/base.css";');
 
-        if (!isUsingDefaultLayout) {
+        if (!hasDefaultLayout) {
           for (const style of styles) {
             imports.push(`import "${style}";`);
           }
@@ -147,6 +149,12 @@ export const unplugin = createUnplugin<UserOptions | undefined>((options = {}) =
 
           for (const tagName of [...priorityImports, ...elements]) {
             if (!elements.has(tagName)) continue;
+
+            if (tagName === 'media-plyr-layout') {
+              imports.push('vidstack/player/styles/plyr/theme.css');
+              imports.push('vidstack/player/layouts/plyr');
+              continue;
+            }
 
             const className = elementsManifest[tagName];
 
@@ -168,6 +176,10 @@ export const unplugin = createUnplugin<UserOptions | undefined>((options = {}) =
         } else {
           imports.push(`import "vidstack/player/styles/default/theme.css";`);
 
+          if (hasPlyrLayout) {
+            imports.push(`vidstack/player/styles/plyr/theme.css`);
+          }
+
           if (elements.has('media-audio-layout')) {
             imports.push(`import "vidstack/player/styles/default/layouts/audio.css";`);
           }
@@ -177,7 +189,7 @@ export const unplugin = createUnplugin<UserOptions | undefined>((options = {}) =
           }
 
           imports.push('import "vidstack/player";');
-          imports.push('import "vidstack/player/layouts";');
+          imports.push(`import "vidstack/player/layouts${!hasPlyrLayout ? '/default' : ''}";`);
           imports.push('import "vidstack/player/ui";');
 
           return imports.join('\n');

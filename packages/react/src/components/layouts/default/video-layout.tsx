@@ -6,6 +6,7 @@ import * as Controls from '../../ui/controls';
 import { Gesture } from '../../ui/gesture';
 import * as Spinner from '../../ui/spinner';
 import { Time } from '../../ui/time';
+import { useLayoutName } from '../utils';
 import { DefaultLayoutContext } from './context';
 import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
 import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './media-layout';
@@ -63,6 +64,7 @@ export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps<Default
  * ```
  */
 function DefaultVideoLayout(props: DefaultVideoLayoutProps) {
+  useLayoutName('video');
   return <MediaLayout {...props} />;
 }
 

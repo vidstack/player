@@ -17,6 +17,7 @@ import {
   defaultLayoutIcons,
   DefaultVideoLayout,
 } from '../src/components/layouts/default';
+import { PlyrLayout, plyrLayoutIcons } from '../src/components/layouts/plyr';
 import { textTracks } from './tracks';
 
 export function Player() {

@@ -3,12 +3,7 @@ import * as React from 'react';
 import { computed } from 'maverick.js';
 import { useReactContext, useSignal } from 'maverick.js/react';
 import { isBoolean } from 'maverick.js/std';
-import {
-  mediaContext,
-  type DefaultLayoutTranslations,
-  type MediaPlayerQueryCallback,
-  type ThumbnailSrc,
-} from 'vidstack';
+import { mediaContext, type DefaultLayoutProps, type MediaPlayerQueryCallback } from 'vidstack';
 
 import { useMediaState } from '../../../hooks/use-media-state';
 import type { PrimitivePropsWithRef } from '../../primitives/nodes';
@@ -19,22 +14,14 @@ import type { DefaultLayoutIcons } from './icons';
  * DefaultMediaLayout
  * -----------------------------------------------------------------------------------------------*/
 
-export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitivePropsWithRef<'div'> {
+export interface DefaultMediaLayoutProps<Slots = unknown>
+  extends PrimitivePropsWithRef<'div'>,
+    Omit<Partial<DefaultLayoutProps>, 'when' | 'smallWhen' | 'customIcons'> {
   children?: React.ReactNode;
   /**
    * The icons to be rendered and displayed inside the layout.
    */
   icons: DefaultLayoutIcons;
-  /**
-   * The thumbnails resource.
-   *
-   * @see {@link https://www.vidstack.io/docs/player/core-concepts/loading#thumbnails}
-   */
-  thumbnails?: ThumbnailSrc;
-  /**
-   * Translation map from english to your desired language for words used throughout the layout.
-   */
-  translations?: DefaultLayoutTranslations | null;
   /**
    * Specifies the number of milliseconds to wait before tooltips are visible after interacting
    * with a control.
@@ -61,42 +48,9 @@ export interface DefaultMediaLayoutProps<Slots = unknown> extends PrimitiveProps
    */
   smallLayoutWhen?: boolean | MediaPlayerQueryCallback;
   /**
-   * Specifies whether menu buttons should be placed in the top or bottom controls group. This
-   * only applies to the large video layout.
-   *
-   * @defaultValue 'bottom'
-   */
-  menuGroup?: 'top' | 'bottom';
-  /**
-   * Whether modal menus should be disabled when the small layout is active. A modal menu is
-   * a floating panel that floats up from the bottom of the screen (outside of the player). It's
-   * enabled by default as it provides a better user experience for touch devices.
-   *
-   * @defaultValue false
-   */
-  noModal?: boolean;
-  /**
    * Provide additional content to be inserted in specific positions.
    */
   slots?: Slots;
-  /**
-   * The minimum width to start displaying slider chapters when available.
-   *
-   * @defaultValue 600
-   */
-  sliderChaptersMinWidth?: number;
-  /**
-   * Whether the time slider should be disabled.
-   */
-  disableTimeSlider?: boolean;
-  /**
-   * Whether all gestures such as pressing to play or seek should not be active.
-   */
-  noGestures?: boolean;
-  /**
-   * Whether keyboard actions should not be displayed.
-   */
-  noKeyboardActionDisplay?: boolean;
 }
 
 export interface CreateDefaultMediaLayout {
@@ -171,7 +125,7 @@ export function createDefaultMediaLayout({
               value={{
                 disableTimeSlider,
                 hideQualityBitrate,
-                Icons: icons,
+                icons: icons,
                 isSmallLayout,
                 menuGroup,
                 noGestures,

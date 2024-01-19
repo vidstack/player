@@ -6,7 +6,7 @@
   "type": "module",
   "types": "index.d.ts",
   "sideEffects": [
-    "./src/elements/bundles/*.ts",
+    "./src/elements/bundles/**/*.ts",
     "./dist/*/define/*.js"
   ],
   "engines": {
@@ -129,10 +129,22 @@
       "default": "./dist/prod/define/vidstack-player-ui.js"
     },
     "./player/layouts": {
-      "types": "./player/layouts.d.ts",
+      "types": "./player/layouts/index.d.ts",
       "node": "./dist/server/define/vidstack-player-layouts.js",
       "development": "./dist/dev/define/vidstack-player-layouts.js",
       "default": "./dist/prod/define/vidstack-player-layouts.js"
+    },
+    "./player/layouts/default": {
+      "types": "./player/layouts/default.d.ts",
+      "node": "./dist/server/define/vidstack-player-default-layout.js",
+      "development": "./dist/dev/define/vidstack-player-default-layout.js",
+      "default": "./dist/prod/define/vidstack-player-default-layout.js"
+    },
+    "./player/layouts/plyr": {
+      "types": "./player/layouts/plyr.d.ts",
+      "node": "./dist/server/define/vidstack-player-plyr-layout.js",
+      "development": "./dist/dev/define/vidstack-player-plyr-layout.js",
+      "default": "./dist/prod/define/vidstack-player-plyr-layout.js"
     },
     "./dist/types/*": "./dist/types/*",
     "./player/styles/*": "./player/styles/*",

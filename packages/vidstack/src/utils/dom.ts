@@ -33,7 +33,7 @@ export function setAttributeIfEmpty(target: Element, name: string, value: string
 }
 
 export function setARIALabel(target: Element, $label: () => string | null) {
-  if (target.hasAttribute('aria-label')) return;
+  if (target.hasAttribute('aria-label') || target.hasAttribute('data-no-label')) return;
 
   function updateAriaDescription() {
     setAttribute(target, 'aria-label', $label());

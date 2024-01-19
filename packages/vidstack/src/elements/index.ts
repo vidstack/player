@@ -19,6 +19,9 @@ export { MediaLayoutElement } from './define/layouts/layout-element';
 export { MediaAudioLayoutElement } from './define/layouts/default/audio-layout-element';
 export { MediaVideoLayoutElement } from './define/layouts/default/video-layout-element';
 
+// Plyr Layout
+export { MediaPlyrLayoutElement } from './define/layouts/plyr/plyr-layout-element';
+
 // Buttons
 export { MediaAirPlayButtonElement } from './define/buttons/airplay-button-element';
 export { MediaCaptionButtonElement } from './define/buttons/caption-button-element';

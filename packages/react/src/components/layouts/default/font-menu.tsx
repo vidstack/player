@@ -6,7 +6,7 @@ import { useMediaPlayer } from '../../../hooks/use-media-player';
 import { useMediaState } from '../../../hooks/use-media-state';
 import type { MediaPlayerInstance } from '../../primitives/instances';
 import * as Menu from '../../ui/menu';
-import { DefaultLayoutContext, i18n, useDefaultLayoutLang } from './context';
+import { DefaultLayoutContext, i18n, useDefaultLayoutWord } from './context';
 import { createRadioOptions, DefaultMenuRadioGroup, DefaultSubmenuButton } from './menu-layout';
 
 /* -------------------------------------------------------------------------------------------------
@@ -40,8 +40,8 @@ FontResetContext.displayName = 'FontResetContext';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultFontSubmenu() {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    label = useDefaultLayoutLang('Font Styles'),
+  const { icons: Icons } = React.useContext(DefaultLayoutContext),
+    label = useDefaultLayoutWord('Font Styles'),
     $hasCaptions = useMediaState('hasCaptions'),
     resets = React.useMemo<FontReset>(() => ({ all: new Set() }), []);
 
@@ -268,7 +268,7 @@ function DefaultFontSettingSubmenu({
     radioOptions = createRadioOptions(options),
     key = `${label.toLowerCase().replace(/\s/g, '-')}`,
     { translations } = React.useContext(DefaultLayoutContext),
-    translatedLabel = useDefaultLayoutLang(label),
+    translatedLabel = useDefaultLayoutWord(label),
     resets = React.useContext(FontResetContext);
 
   const [value, setValue] = React.useState(defaultValue);
@@ -326,7 +326,7 @@ DefaultFontSettingSubmenu.displayName = 'DefaultFontSettingSubmenu';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultResetMenuItem() {
-  const resetText = useDefaultLayoutLang('Reset'),
+  const resetText = useDefaultLayoutWord('Reset'),
     resets = React.useContext(FontResetContext);
 
   function onClick() {

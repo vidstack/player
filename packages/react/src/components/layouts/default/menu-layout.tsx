@@ -23,7 +23,7 @@ function DefaultSubmenuButton({
   Icon,
   disabled = false,
 }: DefaultSubmenuButtonProps) {
-  const { Icons } = React.useContext(DefaultLayoutContext);
+  const { icons: Icons } = React.useContext(DefaultLayoutContext);
   return (
     <Menu.Button className="vds-menu-button" disabled={disabled}>
       <Icons.Menu.ArrowLeft className="vds-menu-button-close-icon vds-icon" />

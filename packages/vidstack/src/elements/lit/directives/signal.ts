@@ -1,27 +1,23 @@
-import type { TemplateResult } from 'lit-html';
 import { AsyncDirective, directive, PartType, type PartInfo } from 'lit-html/async-directive.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { computed, effect, peek, type ReadSignal, type StopEffect } from 'maverick.js';
+import { computed, effect, type ReadSignal, type StopEffect } from 'maverick.js';
 
 class SignalDirective extends AsyncDirective {
   protected _signal: ReadSignal<any> | null = null;
-  protected _value: any = undefined;
+  protected _value: any;
   protected _stop: StopEffect | null = null;
   protected _isAttr = false;
 
   constructor(part: PartInfo) {
     super(part);
-    this._isAttr = part.type === PartType.ATTRIBUTE;
+    this._isAttr = part.type === PartType.ATTRIBUTE || part.type === PartType.BOOLEAN_ATTRIBUTE;
   }
 
   render(signal: ReadSignal<any>) {
-    if (this._signal !== signal) {
+    if (signal !== this._signal) {
       this.disconnected();
       this._signal = signal;
-      if (this.isConnected) {
-        this._value = peek(this._signal);
-        this._watch();
-      }
+      if (this.isConnected) this._watch();
     }
 
     return this._isAttr ? ifDefined(this._value) : this._value;
@@ -43,13 +39,9 @@ class SignalDirective extends AsyncDirective {
   }
 
   protected _onValueChange() {
-    const value = this._signal?.();
-    if (value === this._value) return;
-
     if (__DEV__) {
       try {
-        this._value = value;
-        this.setValue(value);
+        this.setValue((this._value = this._signal?.()));
       } catch (error) {
         if (
           error instanceof Error &&
@@ -71,13 +63,13 @@ class SignalDirective extends AsyncDirective {
         }
       }
     } else {
-      this.setValue(this._signal?.());
+      this.setValue((this._value = this._signal?.()));
     }
   }
 }
 
 export const $signal = directive(SignalDirective);
 
-export function $computed(compute: () => TemplateResult | string | null) {
-  return $signal(computed(compute));
+export function $computed(compute: () => any) {
+  return $signal(computed(compute)) as any;
 }

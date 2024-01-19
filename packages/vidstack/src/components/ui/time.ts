@@ -1,5 +1,4 @@
 import { Component, effect, State } from 'maverick.js';
-import { isNull } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { formatTime } from '../../utils/time';
@@ -55,7 +54,7 @@ export class Time extends Component<TimeProps, TimeState> {
     const time = remainder() ? Math.max(0, duration - seconds) : seconds,
       formattedTime = formatTime(time, padHours(), padMinutes(), showHours());
 
-    this.$state.timeText.set(formattedTime);
+    this.$state.timeText.set((remainder() ? '-' : '') + formattedTime);
   }
 
   private _getSeconds(type: TimeProps['type']) {

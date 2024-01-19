@@ -11,7 +11,11 @@ import type { DefaultLayoutIcons } from './icons';
 
 function DefaultVideoKeyboardActionDisplay() {
   const scope = useReactScope(),
-    { translations, Icons, noKeyboardActionDisplay } = React.useContext(DefaultLayoutContext),
+    {
+      translations,
+      icons: Icons,
+      noKeyboardActionDisplay,
+    } = React.useContext(DefaultLayoutContext),
     [visible, setVisible] = React.useState(false),
     [Icon, setIcon] = React.useState<any>(null),
     $lastKeyboardAction = useMediaState('lastKeyboardAction');

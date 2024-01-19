@@ -8,7 +8,7 @@
   display: none !important;
 }
 
-:where([data-media-player][data-view-type='audio']) {
+:where([data-media-player][data-layout='audio']) {
   border-radius: var(--audio-border-radius, 6px);
 }
 
@@ -24,7 +24,7 @@
   box-sizing: border-box;
 }
 
-:where([data-media-player][data-focus]:not([data-playing]) .vds-controls) {
+:where([data-media-player][data-focus]:not([data-playing]) .vds-audio-layout .vds-controls) {
   box-shadow: var(--media-focus-ring);
 }
 

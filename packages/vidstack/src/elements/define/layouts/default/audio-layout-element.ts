@@ -18,7 +18,7 @@ import { DefaultLayoutIconsLoader } from './icons-loader';
 import { createMenuContainer } from './shared-layout';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/layouts/default-layout}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/layouts/default-layout}
  * @example
  * ```html
  * <media-player>
@@ -53,6 +53,9 @@ export class MediaAudioLayoutElement
   }
 
   protected onConnect() {
+    this._media.player.el?.setAttribute('data-layout', 'audio');
+    onDispose(() => this._media.player.el?.removeAttribute('data-layout'));
+
     effect(() => {
       if (this.$props.customIcons()) {
         new SlotManager(this).connect();
@@ -60,6 +63,10 @@ export class MediaAudioLayoutElement
         new DefaultLayoutIconsLoader(this).connect();
       }
     });
+  }
+
+  render() {
+    return html`${$computed(this._render.bind(this))}`;
   }
 
   private _render() {
@@ -74,10 +81,6 @@ export class MediaAudioLayoutElement
             : DefaultAudioLayoutLarge()
           : null
       : null;
-  }
-
-  render() {
-    return html`${$computed(this._render.bind(this))}`;
   }
 }
 

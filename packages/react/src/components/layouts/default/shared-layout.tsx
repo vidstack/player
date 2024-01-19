@@ -23,13 +23,13 @@ import { PlayButton } from '../../ui/buttons/play-button';
 import { SeekButton } from '../../ui/buttons/seek-button';
 import { ChapterTitle } from '../../ui/chapter-title';
 import * as Menu from '../../ui/menu';
-import * as TimeSliderBase from '../../ui/sliders/time-slider';
-import * as VolumeSliderBase from '../../ui/sliders/volume-slider';
-import * as ThumbnailBase from '../../ui/thumbnail';
+import * as TimeSlider from '../../ui/sliders/time-slider';
+import * as VolumeSlider from '../../ui/sliders/volume-slider';
+import * as Thumbnail from '../../ui/thumbnail';
 import { Time } from '../../ui/time';
-import * as TooltipBase from '../../ui/tooltip';
+import * as Tooltip from '../../ui/tooltip';
 import { RemotionSliderThumbnail, RemotionThumbnail } from '../remotion-ui';
-import { DefaultLayoutContext, useDefaultLayoutLang } from './context';
+import { useDefaultLayoutContext, useDefaultLayoutWord } from './context';
 import { DefaultFontSubmenu } from './font-menu';
 import { DefaultSubmenuButton } from './menu-layout';
 import { slot, type DefaultLayoutMenuSlotName, type Slots } from './slots';
@@ -39,11 +39,11 @@ import { slot, type DefaultLayoutMenuSlotName, type Slots } from './slots';
  * -----------------------------------------------------------------------------------------------*/
 
 interface DefaultMediaButtonProps {
-  tooltip: TooltipBase.ContentProps['placement'];
+  tooltip: Tooltip.ContentProps['placement'];
 }
 
 interface DefaultMediaMenuProps {
-  tooltip: TooltipBase.ContentProps['placement'];
+  tooltip: Tooltip.ContentProps['placement'];
   placement: Menu.ContentProps['placement'];
   portalClass?: string;
   slots?: Slots<DefaultLayoutMenuSlotName>;
@@ -60,14 +60,14 @@ export interface DefaultTooltipProps {
 }
 
 function DefaultTooltip({ content, placement, children }: DefaultTooltipProps) {
-  const { showTooltipDelay } = React.useContext(DefaultLayoutContext);
+  const { showTooltipDelay } = useDefaultLayoutContext();
   return (
-    <TooltipBase.Root showDelay={showTooltipDelay}>
-      <TooltipBase.Trigger asChild>{children}</TooltipBase.Trigger>
-      <TooltipBase.Content className="vds-tooltip-content" placement={placement}>
+    <Tooltip.Root showDelay={showTooltipDelay}>
+      <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
+      <Tooltip.Content className="vds-tooltip-content" placement={placement}>
         {content}
-      </TooltipBase.Content>
-    </TooltipBase.Root>
+      </Tooltip.Content>
+    </Tooltip.Root>
   );
 }
 
@@ -79,10 +79,10 @@ export { DefaultTooltip };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultAirPlayButton({ tooltip }: DefaultMediaButtonProps) {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    airPlayText = useDefaultLayoutLang('AirPlay'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    airPlayText = useDefaultLayoutWord('AirPlay'),
     $state = useMediaState('remotePlaybackState'),
-    stateText = useDefaultLayoutLang(uppercaseFirstChar($state) as Capitalize<RemotePlaybackState>),
+    stateText = useDefaultLayoutWord(uppercaseFirstChar($state) as Capitalize<RemotePlaybackState>),
     label = `${airPlayText} ${stateText}`,
     Icon =
       ($state === 'connecting'
@@ -93,7 +93,7 @@ function DefaultAirPlayButton({ tooltip }: DefaultMediaButtonProps) {
   return (
     <DefaultTooltip content={airPlayText} placement={tooltip}>
       <AirPlayButton className="vds-airplay-button vds-button" aria-label={label}>
-        {React.createElement(Icon, { className: 'vds-icon' })}
+        <Icon className="vds-icon" />
       </AirPlayButton>
     </DefaultTooltip>
   );
@@ -107,10 +107,10 @@ export { DefaultAirPlayButton };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultGoogleCastButton({ tooltip }: DefaultMediaButtonProps) {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    googleCastText = useDefaultLayoutLang('Google Cast'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    googleCastText = useDefaultLayoutWord('Google Cast'),
     $state = useMediaState('remotePlaybackState'),
-    stateText = useDefaultLayoutLang(uppercaseFirstChar($state) as Capitalize<RemotePlaybackState>),
+    stateText = useDefaultLayoutWord(uppercaseFirstChar($state) as Capitalize<RemotePlaybackState>),
     label = `${googleCastText} ${stateText}`,
     Icon =
       ($state === 'connecting'
@@ -121,7 +121,7 @@ function DefaultGoogleCastButton({ tooltip }: DefaultMediaButtonProps) {
   return (
     <DefaultTooltip content={googleCastText} placement={tooltip}>
       <GoogleCastButton className="vds-google-cast-button vds-button" aria-label={label}>
-        {React.createElement(Icon, { className: 'vds-icon' })}
+        <Icon className="vds-icon" />
       </GoogleCastButton>
     </DefaultTooltip>
   );
@@ -135,9 +135,9 @@ export { DefaultGoogleCastButton };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultPlayButton({ tooltip }: DefaultMediaButtonProps) {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    playText = useDefaultLayoutLang('Play'),
-    pauseText = useDefaultLayoutLang('Pause'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    playText = useDefaultLayoutWord('Play'),
+    pauseText = useDefaultLayoutWord('Pause'),
     $paused = useMediaState('paused'),
     $ended = useMediaState('ended'),
     label = $paused ? playText : pauseText;
@@ -164,9 +164,9 @@ export { DefaultPlayButton };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultMuteButton({ tooltip }: DefaultMediaButtonProps) {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    muteText = useDefaultLayoutLang('Mute'),
-    unmuteText = useDefaultLayoutLang('Unmute'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    muteText = useDefaultLayoutWord('Mute'),
+    unmuteText = useDefaultLayoutWord('Unmute'),
     $muted = useMediaState('muted'),
     $volume = useMediaState('volume'),
     label = $muted ? unmuteText : muteText;
@@ -193,9 +193,9 @@ export { DefaultMuteButton };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultCaptionButton({ tooltip }: DefaultMediaButtonProps) {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    onText = useDefaultLayoutLang('Closed-Captions On'),
-    offText = useDefaultLayoutLang('Closed-Captions Off'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    onText = useDefaultLayoutWord('Closed-Captions On'),
+    offText = useDefaultLayoutWord('Closed-Captions Off'),
     $track = useMediaState('textTrack'),
     isOn = $track && isTrackCaptionKind($track),
     label = $track ? offText : onText;
@@ -220,9 +220,9 @@ export { DefaultCaptionButton };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultPIPButton({ tooltip }: DefaultMediaButtonProps) {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    enterText = useDefaultLayoutLang('Enter PiP'),
-    exitText = useDefaultLayoutLang('Exit PiP'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    enterText = useDefaultLayoutWord('Enter PiP'),
+    exitText = useDefaultLayoutWord('Exit PiP'),
     $pip = useMediaState('pictureInPicture'),
     label = $pip ? exitText : enterText;
   return (
@@ -246,9 +246,9 @@ export { DefaultPIPButton };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultFullscreenButton({ tooltip }: DefaultMediaButtonProps) {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    enterText = useDefaultLayoutLang('Enter Fullscreen'),
-    exitText = useDefaultLayoutLang('Exit Fullscreen'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    enterText = useDefaultLayoutWord('Enter Fullscreen'),
+    exitText = useDefaultLayoutWord('Exit Fullscreen'),
     $fullscreen = useMediaState('fullscreen'),
     label = $fullscreen ? exitText : enterText;
   return (
@@ -272,9 +272,9 @@ export { DefaultFullscreenButton };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultSeekButton({ seconds, tooltip }: DefaultMediaButtonProps & { seconds: number }) {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    seekForwardText = useDefaultLayoutLang('Seek Forward'),
-    seekBackwardText = useDefaultLayoutLang('Seek Backward'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    seekForwardText = useDefaultLayoutWord('Seek Forward'),
+    seekBackwardText = useDefaultLayoutWord('Seek Backward'),
     label = seconds >= 0 ? seekForwardText : seekBackwardText;
   return (
     <DefaultTooltip content={label} placement={tooltip}>
@@ -297,16 +297,16 @@ export { DefaultSeekButton };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVolumeSlider() {
-  const label = useDefaultLayoutLang('Volume');
+  const label = useDefaultLayoutWord('Volume');
   return (
-    <VolumeSliderBase.Root className="vds-volume-slider vds-slider" aria-label={label}>
-      <VolumeSliderBase.Track className="vds-slider-track" />
-      <VolumeSliderBase.TrackFill className="vds-slider-track-fill vds-slider-track" />
-      <VolumeSliderBase.Thumb className="vds-slider-thumb" />
-      <VolumeSliderBase.Preview className="vds-slider-preview" noClamp>
-        <VolumeSliderBase.Value className="vds-slider-value" />
-      </VolumeSliderBase.Preview>
-    </VolumeSliderBase.Root>
+    <VolumeSlider.Root className="vds-volume-slider vds-slider" aria-label={label}>
+      <VolumeSlider.Track className="vds-slider-track" />
+      <VolumeSlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
+      <VolumeSlider.Thumb className="vds-slider-thumb" />
+      <VolumeSlider.Preview className="vds-slider-preview" noClamp>
+        <VolumeSlider.Value className="vds-slider-value" />
+      </VolumeSlider.Preview>
+    </VolumeSlider.Root>
   );
 }
 
@@ -320,46 +320,45 @@ export { DefaultVolumeSlider };
 function DefaultTimeSlider() {
   const $src = useMediaState('currentSrc'),
     $width = useMediaState('width'),
-    { thumbnails, sliderChaptersMinWidth, disableTimeSlider } =
-      React.useContext(DefaultLayoutContext),
-    label = useDefaultLayoutLang('Seek'),
+    { thumbnails, sliderChaptersMinWidth, disableTimeSlider } = useDefaultLayoutContext(),
+    label = useDefaultLayoutWord('Seek'),
     $RemotionSliderThumbnail = useSignal(RemotionSliderThumbnail);
   return (
-    <TimeSliderBase.Root
+    <TimeSlider.Root
       className="vds-time-slider vds-slider"
       aria-label={label}
       disabled={disableTimeSlider}
     >
-      <TimeSliderBase.Chapters
+      <TimeSlider.Chapters
         className="vds-slider-chapters"
-        disabled={$width < sliderChaptersMinWidth}
+        disabled={$width < sliderChaptersMinWidth!}
       >
         {(cues, forwardRef) =>
           cues.map((cue) => (
             <div className="vds-slider-chapter" key={cue.startTime} ref={forwardRef}>
-              <TimeSliderBase.Track className="vds-slider-track" />
-              <TimeSliderBase.TrackFill className="vds-slider-track-fill vds-slider-track" />
-              <TimeSliderBase.Progress className="vds-slider-progress vds-slider-track" />
+              <TimeSlider.Track className="vds-slider-track" />
+              <TimeSlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
+              <TimeSlider.Progress className="vds-slider-progress vds-slider-track" />
             </div>
           ))
         }
-      </TimeSliderBase.Chapters>
-      <TimeSliderBase.Thumb className="vds-slider-thumb" />
-      <TimeSliderBase.Preview className="vds-slider-preview">
+      </TimeSlider.Chapters>
+      <TimeSlider.Thumb className="vds-slider-thumb" />
+      <TimeSlider.Preview className="vds-slider-preview">
         {thumbnails ? (
-          <TimeSliderBase.Thumbnail.Root
+          <TimeSlider.Thumbnail.Root
             src={thumbnails}
             className="vds-slider-thumbnail vds-thumbnail"
           >
-            <TimeSliderBase.Thumbnail.Img />
-          </TimeSliderBase.Thumbnail.Root>
+            <TimeSlider.Thumbnail.Img />
+          </TimeSlider.Thumbnail.Root>
         ) : $RemotionSliderThumbnail && isRemotionSource($src) ? (
           <$RemotionSliderThumbnail className="vds-slider-thumbnail vds-thumbnail" />
         ) : null}
-        <TimeSliderBase.ChapterTitle className="vds-slider-chapter-title" />
-        <TimeSliderBase.Value className="vds-slider-value" />
-      </TimeSliderBase.Preview>
-    </TimeSliderBase.Root>
+        <TimeSlider.ChapterTitle className="vds-slider-chapter-title" />
+        <TimeSlider.Value className="vds-slider-value" />
+      </TimeSlider.Preview>
+    </TimeSlider.Root>
   );
 }
 
@@ -383,8 +382,8 @@ export { DefaultChapterTitle };
 
 function DefaultLiveButton() {
   const $live = useMediaState('live'),
-    label = useDefaultLayoutLang('Skip To Live'),
-    liveText = useDefaultLayoutLang('LIVE');
+    label = useDefaultLayoutWord('Skip To Live'),
+    liveText = useDefaultLayoutWord('LIVE');
   return $live ? (
     <LiveButton className="vds-live-button" aria-label={label}>
       <span className="vds-live-button-text">{liveText}</span>
@@ -443,12 +442,17 @@ export { DefaultTimeInfo };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
-  const { showMenuDelay, noModal, isSmallLayout, Icons, menuGroup } =
-      React.useContext(DefaultLayoutContext),
-    chaptersText = useDefaultLayoutLang('Chapters'),
+  const {
+      showMenuDelay,
+      noModal,
+      isSmallLayout,
+      icons: Icons,
+      menuGroup,
+    } = useDefaultLayoutContext(),
+    chaptersText = useDefaultLayoutWord('Chapters'),
     options = useChapterOptions(),
     disabled = !options.length,
-    { thumbnails } = React.useContext(DefaultLayoutContext),
+    { thumbnails } = useDefaultLayoutContext(),
     $src = useMediaState('currentSrc'),
     $viewType = useMediaState('viewType'),
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
@@ -475,9 +479,9 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
               ref={setProgressVar}
             >
               {thumbnails ? (
-                <ThumbnailBase.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
-                  <ThumbnailBase.Img />
-                </ThumbnailBase.Root>
+                <Thumbnail.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
+                  <Thumbnail.Img />
+                </Thumbnail.Root>
               ) : $RemotionThumbnail && isRemotionSource($src) ? (
                 <$RemotionThumbnail className="vds-thumbnail" frame={cue.startTime * $src.fps!} />
               ) : null}
@@ -528,9 +532,8 @@ export { DefaultChaptersMenu };
 
 function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: DefaultMediaMenuProps) {
   const { $state } = useReactContext(mediaContext)!,
-    { showMenuDelay, Icons, isSmallLayout, menuGroup, noModal } =
-      React.useContext(DefaultLayoutContext),
-    settingsText = useDefaultLayoutLang('Settings'),
+    { showMenuDelay, icons: Icons, isSmallLayout, menuGroup, noModal } = useDefaultLayoutContext(),
+    settingsText = useDefaultLayoutWord('Settings'),
     $viewType = useMediaState('viewType'),
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
     // Create as a computed signal to avoid unnecessary re-rendering.
@@ -597,9 +600,9 @@ export { DefaultSettingsMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultAudioSubmenu() {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    label = useDefaultLayoutLang('Audio'),
-    defaultText = useDefaultLayoutLang('Default'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    label = useDefaultLayoutWord('Audio'),
+    defaultText = useDefaultLayoutWord('Default'),
     $track = useMediaState('audioTrack'),
     options = useAudioOptions();
   return (
@@ -639,9 +642,9 @@ DefaultAudioSubmenu.displayName = 'DefaultAudioSubmenu';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultSpeedSubmenu() {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    label = useDefaultLayoutLang('Speed'),
-    normalText = useDefaultLayoutLang('Normal'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    label = useDefaultLayoutWord('Speed'),
+    normalText = useDefaultLayoutWord('Normal'),
     options = usePlaybackRateOptions({
       normalLabel: normalText,
     }),
@@ -683,9 +686,9 @@ DefaultSpeedSubmenu.displayName = 'DefaultSpeedSubmenu';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultQualitySubmenu() {
-  const { hideQualityBitrate, Icons } = React.useContext(DefaultLayoutContext),
-    label = useDefaultLayoutLang('Quality'),
-    autoText = useDefaultLayoutLang('Auto'),
+  const { hideQualityBitrate, icons: Icons } = useDefaultLayoutContext(),
+    label = useDefaultLayoutWord('Quality'),
+    autoText = useDefaultLayoutWord('Auto'),
     options = useVideoQualityOptions({ auto: autoText, sort: 'descending' }),
     currentQuality = options.selectedQuality?.height,
     hint =
@@ -732,9 +735,9 @@ DefaultQualitySubmenu.displayName = 'DefaultQualitySubmenu';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultCaptionSubmenu() {
-  const { Icons } = React.useContext(DefaultLayoutContext),
-    label = useDefaultLayoutLang('Captions'),
-    offText = useDefaultLayoutLang('Off'),
+  const { icons: Icons } = useDefaultLayoutContext(),
+    label = useDefaultLayoutWord('Captions'),
+    offText = useDefaultLayoutWord('Off'),
     options = useCaptionOptions({ off: offText }),
     hint = options.selectedTrack?.label ?? offText;
   return (

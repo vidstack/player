@@ -62,7 +62,8 @@ export * from './ui/thumbnails/thumbnail-loader';
 export type { IconProps } from './icons/types';
 
 // Layouts
-export {
-  type DefaultLayoutWord,
-  type DefaultLayoutTranslations,
-} from './layouts/default/translations';
+export type { DefaultLayoutProps } from './layouts/default/props';
+export type { DefaultLayoutWord, DefaultLayoutTranslations } from './layouts/default/translations';
+export type { PlyrLayoutProps, PlyrMarker, PlyrControl } from './layouts/plyr/props';
+export type { PlyrLayoutWord, PlyrLayoutTranslations } from './layouts/plyr/translations';
+export { usePlyrLayoutClasses } from './layouts/plyr/plyr-layout';

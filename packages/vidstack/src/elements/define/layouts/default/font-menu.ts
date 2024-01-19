@@ -4,7 +4,7 @@ import { isString } from 'maverick.js/std';
 
 import { type DefaultLayoutTranslations, type MediaPlayer } from '../../../../components';
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
-import { getDefaultLayoutLang } from '../../../../components/layouts/default/translations';
+import { i18n } from '../../../../components/layouts/default/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
 import { createRadioOptions, renderMenuButton, renderRadioGroup } from './menu-layout';
@@ -38,7 +38,7 @@ export function DefaultFontMenu() {
   return html`
     <media-menu class="vds-font-menu vds-menu">
       ${renderMenuButton({
-        label: () => getDefaultLayoutLang(translations, 'Font Styles'),
+        label: () => i18n(translations, 'Font Styles'),
         icon: 'menu-font',
       })}
       <media-menu-items class="vds-menu-items">
@@ -152,7 +152,7 @@ function DefaultDisplayOpacityMenu() {
 
 function DefaultResetMenuItem() {
   const { translations } = useDefaultLayoutContext(),
-    $label = () => getDefaultLayoutLang(translations, 'Reset'),
+    $label = () => i18n(translations, 'Reset'),
     resets = useContext(resetContext);
 
   function onClick() {
@@ -185,11 +185,11 @@ function DefaultFontSettingMenu({
     radioOptions = createRadioOptions(options),
     key = `${label.toLowerCase().replace(/\s/g, '-')}`,
     $value = signal(defaultValue),
-    $label = () => getDefaultLayoutLang(translations, label),
+    $label = () => i18n(translations, label),
     $hint = () => {
       const value = $value(),
         label = radioOptions.find((radio) => radio.value === value)?.label || '';
-      return getDefaultLayoutLang(translations, isString(label) ? label : label());
+      return i18n(translations, isString(label) ? label : label());
     };
 
   const savedValue = localStorage.getItem(`vds-player:${key}`);

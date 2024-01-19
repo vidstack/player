@@ -19,7 +19,7 @@ import {
 } from './video-layout';
 
 /**
- * @docs {@link https://www.vidstack.io/docs/player/components/layouts/default-layout}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/layouts/default-layout}
  * @example
  * ```html
  * <media-player>
@@ -54,6 +54,9 @@ export class MediaVideoLayoutElement
   }
 
   protected onConnect() {
+    this._media.player.el?.setAttribute('data-layout', 'video');
+    onDispose(() => this._media.player.el?.removeAttribute('data-layout'));
+
     effect(() => {
       if (this.$props.customIcons()) {
         new SlotManager(this).connect();
@@ -61,6 +64,10 @@ export class MediaVideoLayoutElement
         new DefaultLayoutIconsLoader(this).connect();
       }
     });
+  }
+
+  render() {
+    return html`${$computed(this._render.bind(this))}`;
   }
 
   private _render() {
@@ -75,10 +82,6 @@ export class MediaVideoLayoutElement
             ? DefaultVideoLayoutSmall()
             : DefaultVideoLayoutLarge()
       : null;
-  }
-
-  render() {
-    return html`${$computed(this._render.bind(this))}`;
   }
 }
 

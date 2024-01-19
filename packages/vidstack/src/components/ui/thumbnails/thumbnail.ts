@@ -156,15 +156,26 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
 
     if (!imgEl || !thumbnail || !rootEl || loading) return;
 
-    const width = thumbnail.width ?? imgEl.naturalWidth,
+    let width = thumbnail.width ?? imgEl.naturalWidth,
       height = thumbnail?.height ?? imgEl.naturalHeight,
-      { maxWidth, maxHeight, minWidth, minHeight } = getComputedStyle(this.el),
-      minRatio = Math.max(parseInt(minWidth) / width, parseInt(minHeight) / height),
+      {
+        maxWidth,
+        maxHeight,
+        minWidth,
+        minHeight,
+        width: elWidth,
+        height: elHeight,
+      } = getComputedStyle(this.el);
+
+    if (minWidth === '100%') minWidth = parseFloat(elWidth) + '';
+    if (minHeight === '100%') minHeight = parseFloat(elHeight) + '';
+
+    let minRatio = Math.max(parseInt(minWidth) / width, parseInt(minHeight) / height),
       maxRatio = Math.min(
         Math.max(parseInt(minWidth), parseInt(maxWidth)) / width,
         Math.max(parseInt(minHeight), parseInt(maxHeight)) / height,
       ),
-      scale = maxRatio < 1 ? maxRatio : minRatio > 1 ? minRatio : 1;
+      scale = !isNaN(maxRatio) && maxRatio < 1 ? maxRatio : minRatio > 1 ? minRatio : 1;
 
     this._style(rootEl, '--thumbnail-width', `${width * scale}px`);
     this._style(rootEl, '--thumbnail-height', `${height * scale}px`);

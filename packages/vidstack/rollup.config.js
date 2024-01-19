@@ -132,7 +132,9 @@ function defineNPMBundle({ target, type, minify }) {
       'define/vidstack-icons': 'src/elements/bundles/icons.ts',
       'define/vidstack-player': 'src/elements/bundles/player.ts',
       'define/vidstack-player-ui': 'src/elements/bundles/player-ui.ts',
-      'define/vidstack-player-layouts': 'src/elements/bundles/player-layouts.ts',
+      'define/vidstack-player-layouts': 'src/elements/bundles/player-layouts/index.ts',
+      'define/vidstack-player-default-layout': 'src/elements/bundles/player-layouts/default.ts',
+      'define/vidstack-player-plyr-layout': 'src/elements/bundles/player-layouts/plyr.ts',
     },
     isProd = type === 'prod',
     isServer = type === 'server',
@@ -148,6 +150,8 @@ function defineNPMBundle({ target, type, minify }) {
       'src/elements/define/layouts/default/audio-layout-element.ts';
     input['define/vidstack-video-layout'] =
       'src/elements/define/layouts/default/video-layout-element.ts';
+    input['define/vidstack-plyr-layout'] =
+      'src/elements/define/layouts/plyr/plyr-layout-element.ts';
   }
 
   return {

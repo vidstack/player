@@ -37,17 +37,6 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
   protected override onSetup(): void {
     this._media = useMediaContext();
 
-    const {
-      thumbnails,
-      translations,
-      menuGroup,
-      noModal,
-      sliderChaptersMinWidth,
-      disableTimeSlider,
-      noGestures,
-      noKeyboardActionDisplay,
-    } = this.$props;
-
     this.setAttributes({
       'data-match': this._when,
       'data-size': () => (this._smallWhen() ? 'sm' : null),
@@ -55,18 +44,12 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
 
     const self = this;
     provideContext(defaultLayoutContext, {
-      disableTimeSlider,
+      ...this.$props,
+      when: this._when,
+      smallWhen: this._smallWhen,
       get menuContainer() {
         return self.menuContainer;
       },
-      menuGroup,
-      noGestures,
-      noKeyboardActionDisplay,
-      noModal,
-      sliderChaptersMinWidth,
-      smWhen: this._smallWhen,
-      thumbnails,
-      translations,
     });
   }
 

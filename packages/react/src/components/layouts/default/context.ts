@@ -1,31 +1,21 @@
 import * as React from 'react';
 
-import type { DefaultLayoutTranslations, ThumbnailSrc } from 'vidstack';
-
-import type { DefaultLayoutIcons } from './icons';
+import type { DefaultMediaLayoutProps } from './media-layout';
 
 export const DefaultLayoutContext = React.createContext<DefaultLayoutContext>({} as any);
+DefaultLayoutContext.displayName = 'DefaultLayoutContext';
 
-interface DefaultLayoutContext {
-  disableTimeSlider: boolean;
-  hideQualityBitrate: boolean;
-  Icons: DefaultLayoutIcons;
-  isSmallLayout: boolean;
+interface DefaultLayoutContext extends DefaultMediaLayoutProps {
   menuContainer?: React.RefObject<HTMLElement | null>;
-  menuGroup: 'top' | 'bottom';
-  noGestures: boolean;
-  noKeyboardActionDisplay: boolean;
-  noModal: boolean;
-  showMenuDelay?: number;
-  showTooltipDelay: number;
-  sliderChaptersMinWidth: number;
-  slots?: unknown;
-  thumbnails: ThumbnailSrc;
-  translations?: DefaultLayoutTranslations | null;
+  isSmallLayout: boolean;
 }
 
-export function useDefaultLayoutLang(word: string) {
-  const { translations } = React.useContext(DefaultLayoutContext);
+export function useDefaultLayoutContext() {
+  return React.useContext(DefaultLayoutContext);
+}
+
+export function useDefaultLayoutWord(word: string) {
+  const { translations } = useDefaultLayoutContext();
   return i18n(translations, word);
 }
 

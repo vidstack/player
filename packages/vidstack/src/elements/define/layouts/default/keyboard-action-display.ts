@@ -3,7 +3,7 @@ import { computed, effect, signal } from 'maverick.js';
 import { camelToKebabCase } from 'maverick.js/std';
 
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
-import { getDefaultLayoutLang } from '../../../../components/layouts/default/translations';
+import { i18n } from '../../../../components/layouts/default/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { createSlot } from '../../../../utils/dom';
 import { $computed, $signal } from '../../../lit/directives/signal';
@@ -107,7 +107,7 @@ function getIconName() {
 function getStatusLabel() {
   const $text = getStatusText(),
     { translations } = useDefaultLayoutContext();
-  return $text ? getDefaultLayoutLang(translations, $text) : null;
+  return $text ? i18n(translations, $text) : null;
 }
 
 function getStatusText(): any {

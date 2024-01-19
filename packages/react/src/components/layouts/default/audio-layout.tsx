@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { useLayoutName } from '../utils';
 import { DefaultAudioLargeLayout } from './audio-layout-large';
 import { DefaultAudioSmallLayout } from './audio-layout-small';
 import { DefaultLayoutContext } from './context';
@@ -37,6 +38,7 @@ export interface DefaultAudioLayoutProps extends DefaultMediaLayoutProps<Default
  * ```
  */
 function DefaultAudioLayout(props: DefaultAudioLayoutProps) {
+  useLayoutName('audio');
   return <MediaLayout {...props} />;
 }
 

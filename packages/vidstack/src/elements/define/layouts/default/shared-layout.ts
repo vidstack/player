@@ -2,30 +2,22 @@ import { html, type TemplateResult } from 'lit-html';
 import { computed, type ReadSignal } from 'maverick.js';
 import { isFunction, unwrap, uppercaseFirstChar } from 'maverick.js/std';
 
+import { type MenuPlacement, type TooltipPlacement } from '../../../../components';
 import {
-  type DefaultLayoutTranslations,
-  type MenuPlacement,
-  type TooltipPlacement,
-} from '../../../../components';
-import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
-import { getDefaultLayoutLang } from '../../../../components/layouts/default/translations';
+  useDefaultLayoutContext,
+  type DefaultLayoutContext,
+} from '../../../../components/layouts/default/context';
+import { i18n, type DefaultLayoutWord } from '../../../../components/layouts/default/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $computed, $signal } from '../../../lit/directives/signal';
 import { DefaultFontMenu } from './font-menu';
 import { renderMenuButton } from './menu-layout';
 
-function $i18n(
-  translations: ReadSignal<Partial<DefaultLayoutTranslations> | null>,
-  key: keyof DefaultLayoutTranslations,
-) {
-  return $computed(() => getDefaultLayoutLang(translations, key));
-}
-
 export function DefaultAirPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultLayoutContext(),
     { remotePlaybackState } = useMediaContext().$state,
     $label = $computed(() => {
-      const airPlayText = getDefaultLayoutLang(translations, 'AirPlay'),
+      const airPlayText = i18n(translations, 'AirPlay'),
         stateText = uppercaseFirstChar(remotePlaybackState()) as Capitalize<RemotePlaybackState>;
       return `${airPlayText} ${stateText}`;
     });
@@ -47,7 +39,7 @@ export function DefaultGoogleCastButton({ tooltip }: { tooltip: TooltipPlacement
   const { translations } = useDefaultLayoutContext(),
     { remotePlaybackState } = useMediaContext().$state,
     $label = $computed(() => {
-      const googleCastText = getDefaultLayoutLang(translations, 'Google Cast'),
+      const googleCastText = i18n(translations, 'Google Cast'),
         stateText = uppercaseFirstChar(remotePlaybackState()) as Capitalize<RemotePlaybackState>;
       return `${googleCastText} ${stateText}`;
     });
@@ -68,7 +60,7 @@ export function DefaultGoogleCastButton({ tooltip }: { tooltip: TooltipPlacement
 export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultLayoutContext(),
     { paused } = useMediaContext().$state,
-    $label = $computed(() => getDefaultLayoutLang(translations, paused() ? 'Play' : 'Pause'));
+    $label = $computed(() => i18n(translations, paused() ? 'Play' : 'Pause'));
   return html`
     <media-tooltip class="vds-play-tooltip vds-tooltip">
       <media-tooltip-trigger>
@@ -89,7 +81,7 @@ export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
 export function DefaultMuteButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultLayoutContext(),
     { muted } = useMediaContext().$state,
-    $label = $computed(() => getDefaultLayoutLang(translations, muted() ? 'Unmute' : 'Unmute'));
+    $label = $computed(() => i18n(translations, muted() ? 'Unmute' : 'Unmute'));
   return html`
     <media-tooltip class="vds-mute-tooltip vds-tooltip">
       <media-tooltip-trigger>
@@ -111,10 +103,7 @@ export function DefaultCaptionButton({ tooltip }: { tooltip: TooltipPlacement })
   const { translations } = useDefaultLayoutContext(),
     { textTrack } = useMediaContext().$state,
     $label = $computed(() =>
-      getDefaultLayoutLang(
-        translations,
-        textTrack() ? 'Closed-Captions Off' : 'Closed-Captions On',
-      ),
+      i18n(translations, textTrack() ? 'Closed-Captions Off' : 'Closed-Captions On'),
     );
   return html`
     <media-tooltip class="vds-caption-tooltip vds-tooltip">
@@ -135,9 +124,7 @@ export function DefaultCaptionButton({ tooltip }: { tooltip: TooltipPlacement })
 export function DefaultPIPButton() {
   const { translations } = useDefaultLayoutContext(),
     { pictureInPicture } = useMediaContext().$state,
-    $label = $computed(() =>
-      getDefaultLayoutLang(translations, pictureInPicture() ? 'Exit PiP' : 'Enter PiP'),
-    );
+    $label = $computed(() => i18n(translations, pictureInPicture() ? 'Exit PiP' : 'Enter PiP'));
   return html`
     <media-tooltip class="vds-pip-tooltip vds-tooltip">
       <media-tooltip-trigger>
@@ -158,7 +145,7 @@ export function DefaultFullscreenButton({ tooltip }: { tooltip: TooltipPlacement
   const { translations } = useDefaultLayoutContext(),
     { fullscreen } = useMediaContext().$state,
     $label = $computed(() =>
-      getDefaultLayoutLang(translations, fullscreen() ? 'Exit Fullscreen' : 'Enter Fullscreen'),
+      i18n(translations, fullscreen() ? 'Exit Fullscreen' : 'Enter Fullscreen'),
     );
   return html`
     <media-tooltip class="vds-fullscreen-tooltip vds-tooltip">
@@ -304,8 +291,14 @@ export function DefaultChaptersMenu({
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
 }) {
   const { viewType } = useMediaContext().$state,
-    { translations, thumbnails, menuContainer, noModal, menuGroup, smWhen } =
-      useDefaultLayoutContext(),
+    {
+      translations,
+      thumbnails,
+      menuContainer,
+      noModal,
+      menuGroup,
+      smallWhen: smWhen,
+    } = useDefaultLayoutContext(),
     $placement = computed(() =>
       noModal() ? unwrap(placement) : !smWhen() ? unwrap(placement) : null,
     ),
@@ -371,7 +364,13 @@ export function DefaultSettingsMenu({
 }) {
   const { viewType, canSetPlaybackRate, canSetQuality, qualities, audioTracks, hasCaptions } =
       useMediaContext().$state,
-    { translations, menuContainer, noModal, menuGroup, smWhen } = useDefaultLayoutContext(),
+    {
+      translations,
+      menuContainer,
+      noModal,
+      menuGroup,
+      smallWhen: smWhen,
+    } = useDefaultLayoutContext(),
     $placement = computed(() =>
       noModal() ? unwrap(placement) : !smWhen() ? unwrap(placement) : null,
     ),
@@ -427,7 +426,7 @@ function DefaultAudioMenu() {
   return html`
     <media-menu class="vds-audio-menu vds-menu">
       ${renderMenuButton({
-        label: () => getDefaultLayoutLang(translations, 'Audio'),
+        label: () => i18n(translations, 'Audio'),
         icon: 'menu-audio',
       })}
       <media-menu-items class="vds-menu-items">
@@ -452,7 +451,7 @@ function DefaultSpeedMenu() {
   return html`
     <media-menu class="vds-speed-menu vds-menu">
       ${renderMenuButton({
-        label: () => getDefaultLayoutLang(translations, 'Speed'),
+        label: () => i18n(translations, 'Speed'),
         icon: 'menu-speed',
       })}
       <media-menu-items class="vds-menu-items">
@@ -477,7 +476,7 @@ function DefaultQualityMenu() {
   return html`
     <media-menu class="vds-quality-menu vds-menu">
       ${renderMenuButton({
-        label: () => getDefaultLayoutLang(translations, 'Quality'),
+        label: () => i18n(translations, 'Quality'),
         icon: 'menu-quality',
       })}
       <media-menu-items class="vds-menu-items">
@@ -503,7 +502,7 @@ function DefaultCaptionsMenu() {
   return html`
     <media-menu class="vds-captions-menu vds-menu">
       ${renderMenuButton({
-        label: () => getDefaultLayoutLang(translations, 'Captions'),
+        label: () => i18n(translations, 'Captions'),
         icon: 'menu-captions',
       })}
       <media-menu-items class="vds-menu-items">
@@ -534,4 +533,8 @@ export function createMenuContainer(className: string) {
   }
 
   return container;
+}
+
+function $i18n(translations: DefaultLayoutContext['translations'], word: DefaultLayoutWord) {
+  return $computed(() => i18n(translations, word));
 }
