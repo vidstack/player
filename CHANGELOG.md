@@ -34,7 +34,8 @@ All notable changes to this project will be documented in this file.
 - new view, stream, and remote type tailwind variants ([e15aefc](https://github.com/vidstack/player/commit/e15aefc88a71b3a097ad6d5f0bf08573ed1df455))
 - font style customization menu ([4e902b6](https://github.com/vidstack/player/commit/4e902b68d6c72835d6b4cbabdb06d4d411f73505))
 - expose cancellable media request events on all components ([b6d84af](https://github.com/vidstack/player/commit/b6d84afed90f249587967b531188536ba81ead92))
-- include `ManagedMediaSource` support check ([ef180c9](https://github.com/vidstack/player/commit/ef180c9a59fdfde6e52455936092c050696fca10))
+- include `ManagedMediaSource` support check ([ab35874](https://github.com/vidstack/player/commit/ab3587403c9e24f84156845a8539cbe875c64bc5))
+- plyr layout ([622dfda](https://github.com/vidstack/player/commit/622dfda5d99c88668f7196c116878674758efccf))
 
 #### Player (React)
 
