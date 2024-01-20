@@ -9,7 +9,7 @@ import { Time } from '../../ui/time';
 import { useLayoutName } from '../utils';
 import { DefaultLayoutContext } from './context';
 import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
-import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './media-layout';
+import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
 import {
   DefaultAirPlayButton,
   DefaultCaptionButton,
@@ -46,7 +46,7 @@ const MediaLayout = createDefaultMediaLayout({
   UnknownStreamType: DefaultBufferingIndicator,
 });
 
-export interface DefaultVideoLayoutProps extends DefaultMediaLayoutProps<DefaultVideoLayoutSlots> {}
+export interface DefaultVideoLayoutProps extends DefaultLayoutProps<DefaultVideoLayoutSlots> {}
 
 /**
  * The video layout is our production-ready UI that's displayed when the media view type is set to

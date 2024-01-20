@@ -1,6 +1,5 @@
 dist/
 dist-*/
-sandbox/
 
 .tsbuildinfo
 tsconfig.build.tsbuildinfo

@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import type { DefaultMediaLayoutProps } from './media-layout';
+import type { DefaultLayoutProps } from './media-layout';
 
 export const DefaultLayoutContext = React.createContext<DefaultLayoutContext>({} as any);
 DefaultLayoutContext.displayName = 'DefaultLayoutContext';
 
-interface DefaultLayoutContext extends DefaultMediaLayoutProps {
+interface DefaultLayoutContext extends DefaultLayoutProps {
   menuContainer?: React.RefObject<HTMLElement | null>;
   isSmallLayout: boolean;
 }

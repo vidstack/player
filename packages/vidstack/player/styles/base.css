@@ -73,11 +73,6 @@
   width: 100%;
 }
 
-:where([data-media-provider][data-fullscreen] video),
-:where([data-media-provider][data-fullscreen] iframe) {
-  z-index: 1;
-}
-
 [data-media-provider] iframe {
   height: 100%;
 }

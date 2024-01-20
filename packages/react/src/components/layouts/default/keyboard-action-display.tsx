@@ -3,7 +3,7 @@ import * as React from 'react';
 import { computed, effect, scoped, useContext } from 'maverick.js';
 import { useReactScope, useSignal } from 'maverick.js/react';
 import { camelToKebabCase } from 'maverick.js/std';
-import { mediaContext, type DefaultLayoutTranslations } from 'vidstack';
+import { mediaContext, type DefaultLayoutProps } from 'vidstack';
 
 import { useMediaState } from '../../../hooks/use-media-state';
 import { DefaultLayoutContext, i18n } from './context';
@@ -31,7 +31,7 @@ function DefaultVideoKeyboardActionDisplay() {
     $text = useSignal($$text);
 
   const $$statusLabel = React.useMemo(
-      () => scoped(() => computed(() => getStatusLabel(translations)), scope)!,
+      () => scoped(() => computed(() => getStatusLabel(translations!)), scope)!,
       [scope, translations],
     ),
     $statusLabel = useSignal($$statusLabel);
@@ -124,12 +124,12 @@ function getIcon(Icons?: DefaultLayoutIcons['KeyboardAction']) {
   }
 }
 
-function getStatusLabel(translations?: DefaultLayoutTranslations | null) {
+function getStatusLabel(translations?: DefaultLayoutProps['translations']) {
   const text = getStatusText(translations);
   return text ? i18n(translations, text) : null;
 }
 
-function getStatusText(translations?: DefaultLayoutTranslations | null): any {
+function getStatusText(translations?: DefaultLayoutProps['translations']): any {
   const { $state } = useContext(mediaContext),
     action = $state.lastKeyboardAction()?.action;
   switch (action) {

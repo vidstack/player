@@ -4,7 +4,7 @@ import { useLayoutName } from '../utils';
 import { DefaultAudioLargeLayout } from './audio-layout-large';
 import { DefaultAudioSmallLayout } from './audio-layout-small';
 import { DefaultLayoutContext } from './context';
-import { createDefaultMediaLayout, type DefaultMediaLayoutProps } from './media-layout';
+import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
 import { DefaultPlayButton } from './shared-layout';
 import { slot, useDefaultVideoLayoutSlots, type DefaultAudioLayoutSlots } from './slots';
 
@@ -20,7 +20,7 @@ const MediaLayout = createDefaultMediaLayout({
   LargeLayout: DefaultAudioLargeLayout,
 });
 
-export interface DefaultAudioLayoutProps extends DefaultMediaLayoutProps<DefaultAudioLayoutSlots> {}
+export interface DefaultAudioLayoutProps extends DefaultLayoutProps<DefaultAudioLayoutSlots> {}
 
 /**
  * The audio layout is our production-ready UI that's displayed when the media view type is set to

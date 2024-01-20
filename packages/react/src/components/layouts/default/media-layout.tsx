@@ -3,7 +3,11 @@ import * as React from 'react';
 import { computed } from 'maverick.js';
 import { useReactContext, useSignal } from 'maverick.js/react';
 import { isBoolean } from 'maverick.js/std';
-import { mediaContext, type DefaultLayoutProps, type MediaPlayerQueryCallback } from 'vidstack';
+import {
+  mediaContext,
+  type DefaultLayoutProps as BaseLayoutProps,
+  type MediaPlayerQueryCallback,
+} from 'vidstack';
 
 import { useMediaState } from '../../../hooks/use-media-state';
 import type { PrimitivePropsWithRef } from '../../primitives/nodes';
@@ -14,9 +18,9 @@ import type { DefaultLayoutIcons } from './icons';
  * DefaultMediaLayout
  * -----------------------------------------------------------------------------------------------*/
 
-export interface DefaultMediaLayoutProps<Slots = unknown>
+export interface DefaultLayoutProps<Slots = unknown>
   extends PrimitivePropsWithRef<'div'>,
-    Omit<Partial<DefaultLayoutProps>, 'when' | 'smallWhen' | 'customIcons'> {
+    Omit<Partial<BaseLayoutProps>, 'when' | 'smallWhen' | 'customIcons'> {
   children?: React.ReactNode;
   /**
    * The icons to be rendered and displayed inside the layout.
@@ -70,7 +74,7 @@ export function createDefaultMediaLayout({
   LargeLayout,
   UnknownStreamType,
 }: CreateDefaultMediaLayout) {
-  const Layout = React.forwardRef<HTMLDivElement, DefaultMediaLayoutProps>(
+  const Layout = React.forwardRef<HTMLDivElement, DefaultLayoutProps>(
     (
       {
         className,

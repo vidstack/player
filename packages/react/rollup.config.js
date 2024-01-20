@@ -63,6 +63,7 @@ function defineTypesBundle() {
         icons: 'types/react/src/icons.d.ts',
         'player/remotion': 'types/react/src/providers/remotion/index.d.ts',
         'player/layouts/default': 'types/react/src/components/layouts/default/index.d.ts',
+        'player/layouts/plyr': 'types/react/src/components/layouts/plyr/index.d.ts',
       },
       output: {
         dir: '.',
@@ -126,6 +127,8 @@ function defineNPMBundle({ dev }) {
     vidstack: 'src/index.ts',
     'player/vidstack-remotion': 'src/providers/remotion/index.ts',
     'player/vidstack-default-layout': 'src/components/layouts/default/index.ts',
+    'player/vidstack-plyr-layout': 'src/components/layouts/plyr/index.ts',
+    'player/vidstack-plyr-icons': 'src/components/layouts/plyr/icons.tsx',
     'player/vidstack-default-components': 'src/components/layouts/default/ui.ts',
     'player/vidstack-default-icons': 'src/components/layouts/default/icons.tsx',
   };

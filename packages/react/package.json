@@ -89,6 +89,11 @@
       "development": "./dist/dev/player/vidstack-default-layout.js",
       "default": "./dist/prod/player/vidstack-default-layout.js"
     },
+    "./player/layouts/plyr": {
+      "types": "./player/layouts/plyr.d.ts",
+      "development": "./dist/dev/player/vidstack-plyr-layout.js",
+      "default": "./dist/prod/player/vidstack-plyr-layout.js"
+    },
     "./player/styles/*": "./player/styles/*",
     "./dist/types/*": "./dist/types/*",
     "./dom.d.ts": "./dom.d.ts",

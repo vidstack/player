@@ -128,3 +128,7 @@ export * from './hooks/options/use-caption-options';
 export * from './hooks/options/use-chapter-options';
 export * from './hooks/options/use-video-quality-options';
 export * from './hooks/options/use-playback-rate-options';
+
+// Layouts
+export type { DefaultLayoutProps } from './components/layouts/default';
+export type { PlyrLayoutProps } from './components/layouts/plyr';

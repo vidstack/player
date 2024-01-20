@@ -1,3 +1,4 @@
+@import '../player/styles/base.css';
 @import '../player/styles/default/theme.css';
 @import '../player/styles/default/layouts/audio.css';
 @import '../player/styles/default/layouts/video.css';
