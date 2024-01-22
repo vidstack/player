@@ -816,6 +816,6 @@ export interface MediaState {
   liveSyncPosition: number | null;
 }
 
-export interface MediaPlayerQueryCallback {
+export interface MediaPlayerQuery {
   (state: MediaPlayerState): boolean;
 }

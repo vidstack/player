@@ -112,7 +112,6 @@ export type {
 // Hooks
 export * from './hooks/use-state';
 export * from './hooks/use-media-player';
-export * from './hooks/use-player-query';
 export * from './hooks/use-media-provider';
 export * from './hooks/use-media-remote';
 export * from './hooks/use-media-state';

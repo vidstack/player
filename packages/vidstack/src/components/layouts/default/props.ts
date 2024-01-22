@@ -1,4 +1,4 @@
-import type { MediaPlayerQueryCallback } from '../../../core/api/player-state';
+import type { MediaPlayerQuery } from '../../../core/api/player-state';
 import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { DefaultLayoutTranslations } from './translations';
 
@@ -20,11 +20,11 @@ export interface DefaultLayoutProps {
   /**
    * Determines when the UI should be displayed.
    */
-  when: boolean | MediaPlayerQueryCallback;
+  when: boolean | MediaPlayerQuery;
   /**
    * Determines when the small (e.g., mobile) UI should be displayed.
    */
-  smallWhen: boolean | MediaPlayerQueryCallback;
+  smallWhen: boolean | MediaPlayerQuery;
   /**
    * The thumbnails resource.
    *

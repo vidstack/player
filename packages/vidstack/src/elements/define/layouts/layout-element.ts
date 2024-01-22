@@ -2,7 +2,7 @@ import { Component, computed, effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { isBoolean } from 'maverick.js/std';
 
-import { type MediaPlayerQueryCallback } from '../../../core';
+import { type MediaPlayerQuery } from '../../../core';
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 
 class MediaLayout extends Component<MediaLayoutProps> {
@@ -12,7 +12,7 @@ class MediaLayout extends Component<MediaLayoutProps> {
 }
 
 export interface MediaLayoutProps {
-  when: boolean | MediaPlayerQueryCallback;
+  when: boolean | MediaPlayerQuery;
 }
 
 /**

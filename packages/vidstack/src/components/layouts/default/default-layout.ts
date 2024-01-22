@@ -2,7 +2,7 @@ import { Component, computed, prop, provideContext } from 'maverick.js';
 import { isBoolean } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
-import type { MediaPlayerQueryCallback } from '../../../core/api/player-state';
+import type { MediaPlayerQuery } from '../../../core/api/player-state';
 import { defaultLayoutContext } from './context';
 import { defaultLayoutProps, type DefaultLayoutProps } from './props';
 
@@ -53,7 +53,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     });
   }
 
-  protected _matches(query: boolean | MediaPlayerQueryCallback) {
+  protected _matches(query: boolean | MediaPlayerQuery) {
     return isBoolean(query) ? query : computed(() => query(this._media.player.state))();
   }
 }
