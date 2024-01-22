@@ -281,7 +281,7 @@ function FastForwardButton() {
 
 function TimeSlider() {
   let media = useMediaContext(),
-    { duration } = media.$state,
+    { duration, viewType } = media.$state,
     { translations, markers, thumbnails, seekTime, previewTime } = usePlyrLayoutContext(),
     $seekText = $i18n(translations, 'Seek'),
     activeMarker = signal<PlyrMarker | null>(null),
@@ -305,7 +305,9 @@ function TimeSlider() {
   }
 
   function Preview() {
-    const src = thumbnails();
+    const src = thumbnails(),
+      $noClamp = $signal(() => viewType() === 'audio');
+
     return !src
       ? html`
           <span class="plyr__tooltip">
@@ -314,7 +316,7 @@ function TimeSlider() {
           </span>
         `
       : html`
-          <media-slider-preview class="plyr__slider__preview">
+          <media-slider-preview class="plyr__slider__preview" ?no-clamp=${$noClamp}>
             <media-slider-thumbnail .src=${src} class="plyr__slider__preview__thumbnail">
               <span class="plyr__slider__preview__time-container">
                 ${$markerLabel}

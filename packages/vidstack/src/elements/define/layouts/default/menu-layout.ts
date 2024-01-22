@@ -1,9 +1,9 @@
 import { html, type TemplateResult } from 'lit-html';
-import { computed, type ReadSignal } from 'maverick.js';
+import { type ReadSignal } from 'maverick.js';
 import { isArray, isFunction, isString } from 'maverick.js/std';
 
 import type { RadioGroupChangeEvent, RadioOption } from '../../../../components';
-import { $signal } from '../../../lit/directives/signal';
+import { $computed, $signal } from '../../../lit/directives/signal';
 
 export function renderMenuButton({
   label,
@@ -61,9 +61,7 @@ export function renderRadioGroup({
       value=${isString(value) ? value : value ? $signal(value) : ''}
       @change=${onChange}
     >
-      ${isArray(options)
-        ? options.map(renderRadio)
-        : $signal(computed(() => options().map(renderRadio)))}
+      ${isArray(options) ? options.map(renderRadio) : $computed(() => options().map(renderRadio))}
     </media-radio-group>
   `;
 }

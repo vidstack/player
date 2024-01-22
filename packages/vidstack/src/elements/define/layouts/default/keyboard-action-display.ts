@@ -9,54 +9,56 @@ import { createSlot } from '../../../../utils/dom';
 import { $computed, $signal } from '../../../lit/directives/signal';
 
 export function DefaultVideoKeyboardActionDisplay() {
-  const visible = signal(false),
-    media = useMediaContext(),
-    { noKeyboardActionDisplay } = useDefaultLayoutContext(),
-    { lastKeyboardAction } = media.$state;
+  return $computed(() => {
+    const visible = signal(false),
+      media = useMediaContext(),
+      { noKeyboardActionDisplay } = useDefaultLayoutContext(),
+      { lastKeyboardAction } = media.$state;
 
-  if (noKeyboardActionDisplay()) return null;
+    if (noKeyboardActionDisplay()) return null;
 
-  effect(() => {
-    visible.set(!!lastKeyboardAction());
-    const id = setTimeout(() => visible.set(false), 500);
-    return () => {
-      visible.set(false);
-      window.clearTimeout(id);
-    };
-  });
-
-  const $actionDataAttr = computed(() => {
-    const action = lastKeyboardAction()?.action;
-    return action && visible() ? camelToKebabCase(action) : null;
-  });
-
-  const $classList = computed(() => `vds-kb-action${!visible() ? ' hidden' : ''}`),
-    $text = computed(getText),
-    $statusLabel = computed(getStatusLabel),
-    $iconSlot = computed(() => {
-      const name = getIconName();
-      return name ? createSlot(name) : null;
+    effect(() => {
+      visible.set(!!lastKeyboardAction());
+      const id = setTimeout(() => visible.set(false), 500);
+      return () => {
+        visible.set(false);
+        window.clearTimeout(id);
+      };
     });
 
-  function Icon() {
-    const $slot = $iconSlot();
-    return $slot
-      ? html`
-          <div class="vds-kb-bezel" role="status" aria-label=${$signal($statusLabel)}>
-            <div class="vds-kb-icon">${$iconSlot()}</div>
-          </div>
-        `
-      : null;
-  }
+    const $actionDataAttr = computed(() => {
+      const action = lastKeyboardAction()?.action;
+      return action && visible() ? camelToKebabCase(action) : null;
+    });
 
-  return html`
-    <div class=${$signal($classList)} data-action=${$signal($actionDataAttr)}>
-      <div class="vds-kb-text-wrapper">
-        <div class="vds-kb-text">${$signal($text)}</div>
+    const $classList = computed(() => `vds-kb-action${!visible() ? ' hidden' : ''}`),
+      $text = computed(getText),
+      $statusLabel = computed(getStatusLabel),
+      $iconSlot = computed(() => {
+        const name = getIconName();
+        return name ? createSlot(name) : null;
+      });
+
+    function Icon() {
+      const $slot = $iconSlot();
+      return $slot
+        ? html`
+            <div class="vds-kb-bezel" role="status" aria-label=${$signal($statusLabel)}>
+              <div class="vds-kb-icon">${$iconSlot()}</div>
+            </div>
+          `
+        : null;
+    }
+
+    return html`
+      <div class=${$signal($classList)} data-action=${$signal($actionDataAttr)}>
+        <div class="vds-kb-text-wrapper">
+          <div class="vds-kb-text">${$signal($text)}</div>
+        </div>
+        ${$computed(Icon)}
       </div>
-      ${$computed(Icon)}
-    </div>
-  `;
+    `;
+  });
 }
 
 function getText() {

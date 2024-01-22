@@ -43,19 +43,12 @@ export function usePlyrLayoutClasses(el: HTMLElement, media: MediaContext) {
   el.classList.add('plyr');
   el.classList.add('plyr--full-ui');
 
-  function isHTMLProvider() {
-    const { $provider } = media,
-      type = $provider()?.type;
-    return type === 'audio' || type === 'video';
-  }
-
   const classes = {
     'plyr--airplay-active': isAirPlayConnected,
     'plyr--airplay-supported': canAirPlay,
     'plyr--fullscreen-active': fullscreen,
     'plyr--fullscreen-enabled': canFullscreen,
     'plyr--hide-controls': () => !controlsVisible(),
-    'plyr--html5': isHTMLProvider,
     'plyr--is-touch': () => pointer() === 'coarse',
     'plyr--loading': waiting,
     'plyr--paused': paused,
@@ -79,8 +72,14 @@ export function usePlyrLayoutClasses(el: HTMLElement, media: MediaContext) {
   });
 
   effect(() => {
-    const token = `plyr--${$provider()?.type}`;
-    el.classList.toggle(token, !!$provider());
+    const { $provider } = media,
+      type = $provider()?.type,
+      token = `plyr--${isHTMLProvider(type) ? 'html5' : type}`;
+    el.classList.toggle(token, !!type);
     return () => el.classList.remove(token);
   });
+}
+
+function isHTMLProvider(type: string | undefined) {
+  return type === 'audio' || type === 'video';
 }

@@ -160,6 +160,7 @@
 
 :where(.vds-audio-layout .vds-controls) {
   padding-inline: 8px;
+  border-radius: var(--audio-border-radius, 6px);
 }
 
 :where(.vds-audio-layout .vds-controls-group) {
@@ -315,22 +316,16 @@
  */
 
 :where(.vds-audio-layout .vds-captions) {
-  --cue-font-size: var(--audio-cue-font-size, 14px);
+  --cue-font-size: calc(var(--audio-cue-font-size, 14px) * var(--media-user-font-size, 1));
   display: inline-block;
   position: absolute;
   width: 100%;
   top: unset;
   bottom: calc(100% + var(--audio-captions-offset, 2px));
   text-align: center;
-  background-color: var(--audio-captions-bg, transparent);
+  background-color: var(--media-user-display-bg, var(--media-cue-display-bg));
 }
 
-:where(.vds-audio-layout .vds-captions [data-part='cue']) {
-  color: var(--audio-cue-color, white);
-  border: var(--audio-cue-border, 1px solid rgb(255 255 255 / 0.1));
-  background-color: var(--audio-cue-bg, black);
-}
-
-:where([data-preview] .vds-audio-layout:not([data-size='sm']) .vds-captions) {
+:where([data-preview] .vds-audio-layout .vds-captions) {
   opacity: 0;
 }

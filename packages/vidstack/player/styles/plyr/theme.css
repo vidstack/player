@@ -543,10 +543,6 @@ a.plyr__control::before {
   max-width: 128px;
 }
 
-.plyr__volume .plyr__control + .plyr__slider {
-  margin-left: calc(-1 * calc(var(--plyr-control-spacing, 10px) * 0.1));
-}
-
 .plyr__volume .plyr__slider {
   max-width: 90px;
   min-width: 60px;

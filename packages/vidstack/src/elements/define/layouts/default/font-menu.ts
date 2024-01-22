@@ -6,7 +6,7 @@ import { type DefaultLayoutTranslations, type MediaPlayer } from '../../../../co
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import { i18n } from '../../../../components/layouts/default/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
-import { $signal } from '../../../lit/directives/signal';
+import { $computed, $signal } from '../../../lit/directives/signal';
 import { createRadioOptions, renderMenuButton, renderRadioGroup } from './menu-layout';
 
 const COLOR_OPTIONS = ['White', 'Yellow', 'Green', 'Cyan', 'Blue', 'Magenta', 'Red', 'Black'],
@@ -26,28 +26,30 @@ const COLOR_OPTIONS = ['White', 'Yellow', 'Green', 'Cyan', 'Blue', 'Magenta', 'R
 const resetContext = createContext<{ current?(): void; all: Set<() => void> }>();
 
 export function DefaultFontMenu() {
-  const { hasCaptions } = useMediaContext().$state,
-    { translations } = useDefaultLayoutContext();
+  return $computed(() => {
+    const { hasCaptions } = useMediaContext().$state,
+      { translations } = useDefaultLayoutContext();
 
-  if (!hasCaptions()) return null;
+    if (!hasCaptions()) return null;
 
-  provideContext(resetContext, {
-    all: new Set<() => void>(),
+    provideContext(resetContext, {
+      all: new Set<() => void>(),
+    });
+
+    return html`
+      <media-menu class="vds-font-menu vds-menu">
+        ${renderMenuButton({
+          label: () => i18n(translations, 'Font Styles'),
+          icon: 'menu-font',
+        })}
+        <media-menu-items class="vds-menu-items">
+          ${DefaultFontFamilyMenu()}${DefaultFontSizeMenu()}${DefaultTextColorMenu()}${DefaultTextOpacityMenu()}${DefaultTextShadowMenu()}
+          ${DefaultTextBgMenu()}${DefaultTextBgOpacityMenu()}${DefaultDisplayBgMenu()}
+          ${DefaultDisplayOpacityMenu()}${DefaultResetMenuItem()}
+        </media-menu-items>
+      </media-menu>
+    `;
   });
-
-  return html`
-    <media-menu class="vds-font-menu vds-menu">
-      ${renderMenuButton({
-        label: () => i18n(translations, 'Font Styles'),
-        icon: 'menu-font',
-      })}
-      <media-menu-items class="vds-menu-items">
-        ${DefaultFontFamilyMenu()}${DefaultFontSizeMenu()}${DefaultTextColorMenu()}${DefaultTextOpacityMenu()}${DefaultTextShadowMenu()}
-        ${DefaultTextBgMenu()}${DefaultTextBgOpacityMenu()}${DefaultDisplayBgMenu()}
-        ${DefaultDisplayOpacityMenu()}${DefaultResetMenuItem()}
-      </media-menu-items>
-    </media-menu>
-  `;
 }
 
 function DefaultFontFamilyMenu() {
