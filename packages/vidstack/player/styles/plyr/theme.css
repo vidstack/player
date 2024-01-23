@@ -550,6 +550,10 @@ a.plyr__control::before {
   z-index: 2;
 }
 
+.plyr__volume + .plyr__controls__item {
+  margin-left: calc(var(--plyr-control-spacing, 10px));
+}
+
 .plyr__progress .plyr__tooltip {
   left: var(--slider-pointer);
   max-width: 120px;

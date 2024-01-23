@@ -136,7 +136,7 @@
 
 :where(.vds-menu-button) :where(.vds-menu-button-hint, .vds-menu-button-open-icon) {
   color: var(--media-menu-hint-color, rgb(245 245 245 / 0.5));
-  font-size: var(--media-menu-hint-font-size, 13px);
+  font-size: var(--media-menu-hint-font-size, 14px);
 }
 
 /*
@@ -156,7 +156,7 @@
 
 :where(.vds-menu-items:not([data-submenu])) {
   padding: var(--media-menu-padding, 10px);
-  background-color: var(--media-menu-bg, rgb(10 10 10 / 0.95));
+  background-color: var(--media-menu-bg, rgb(10 10 10));
   border-radius: var(--media-menu-border-radius, 8px);
   box-shadow: var(--media-menu-box-shadow, 1px 1px 1px rgb(10 10 10 / 0.5));
   backdrop-filter: blur(4px);

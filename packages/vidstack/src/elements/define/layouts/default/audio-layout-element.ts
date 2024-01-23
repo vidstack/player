@@ -1,19 +1,15 @@
 import { html } from 'lit-html';
-import { effect, onDispose } from 'maverick.js';
+import { effect, onDispose, signal } from 'maverick.js';
 import { Host } from 'maverick.js/element';
-import { setAttribute } from 'maverick.js/std';
+import { listenEvent, setAttribute } from 'maverick.js/std';
 
 import { DefaultAudioLayout } from '../../../../components/layouts/default/audio-layout';
 import type { MediaContext } from '../../../../core';
 import { useMediaContext } from '../../../../core/api/media-context';
-import { $computed } from '../../../lit/directives/signal';
+import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';
-import {
-  DefaultAudioLayoutLarge,
-  DefaultAudioLayoutSmall,
-  DefaultAudioLoadLayout,
-} from './audio-layout';
+import { DefaultAudioLayout as Layout } from './audio-layout';
 import { DefaultLayoutIconsLoader } from './icons-loader';
 import { createMenuContainer } from './shared-layout';
 
@@ -34,6 +30,7 @@ export class MediaAudioLayoutElement
   static tagName = 'media-audio-layout';
 
   private _media!: MediaContext;
+  private _scrubbing = signal(false);
 
   protected onSetup() {
     // Avoid memory leaks if `keepAlive` is true. The DOM will re-render regardless.
@@ -47,6 +44,12 @@ export class MediaAudioLayoutElement
     effect(() => {
       if (!this.menuContainer) return;
       setAttribute(this.menuContainer, 'data-size', this.isSmallLayout && 'sm');
+    });
+
+    const { pointer } = this._media.$state;
+    effect(() => {
+      if (pointer() !== 'coarse') return;
+      effect(this._watchScrubbing.bind(this));
     });
 
     onDispose(() => this.menuContainer?.remove());
@@ -66,21 +69,37 @@ export class MediaAudioLayoutElement
   }
 
   render() {
-    return html`${$computed(this._render.bind(this))}`;
+    return html`${$signal(this._render.bind(this))}`;
   }
 
   private _render() {
-    const { load } = this._media.$props,
-      { canLoad, streamType } = this._media.$state;
-    return this.isMatch
-      ? load() === 'play' && !canLoad()
-        ? DefaultAudioLoadLayout()
-        : streamType() !== 'unknown'
-          ? this.isSmallLayout
-            ? DefaultAudioLayoutSmall()
-            : DefaultAudioLayoutLarge()
-          : null
-      : null;
+    return this.isMatch ? Layout() : null;
+  }
+
+  private _watchScrubbing() {
+    if (!this._scrubbing()) {
+      listenEvent(this, 'pointerdown', this._onStartScrubbing.bind(this), { capture: true });
+      return;
+    }
+
+    listenEvent(this, 'pointerdown', (e) => e.stopPropagation());
+    listenEvent(window, 'pointerdown', this._onStopScrubbing.bind(this));
+  }
+
+  private _onStartScrubbing(event: Event) {
+    const { target } = event,
+      hasTimeSlider = !!(target instanceof HTMLElement && target.closest('.vds-time-slider'));
+
+    if (!hasTimeSlider) return;
+
+    event.stopImmediatePropagation();
+    this.setAttribute('data-scrubbing', '');
+    this._scrubbing.set(true);
+  }
+
+  private _onStopScrubbing() {
+    this._scrubbing.set(false);
+    this.removeAttribute('data-scrubbing');
   }
 }
 

@@ -215,7 +215,7 @@
     .vds-slider-thumbnail:not([data-hidden]) + .vds-slider-value,
     .vds-slider-chapter-title + .vds-slider-value
   ) {
-  margin-top: var(--media-slider-value-gap, 4px);
+  margin-top: var(--media-slider-value-gap, 6px);
 }
 
 /*

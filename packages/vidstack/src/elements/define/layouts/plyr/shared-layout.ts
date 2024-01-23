@@ -13,7 +13,7 @@ import { i18n, type PlyrLayoutWord } from '../../../../components/layouts/plyr/t
 import { useMediaContext } from '../../../../core/api/media-context';
 import type { MediaSeekingRequestEvent } from '../../../../core/api/media-request-events';
 import { isAudioSrc, isVideoSrc } from '../../../../utils/mime';
-import { $computed, $signal } from '../../../lit/directives/signal';
+import { $signal } from '../../../lit/directives/signal';
 
 export function PlyrAudioLayout() {
   return AudioControls();
@@ -92,7 +92,7 @@ function AudioControls() {
 
 function VideoControls() {
   const { controls } = usePlyrLayoutContext(),
-    $controls = $computed(() => controls().map(Control));
+    $controls = $signal(() => controls().map(Control));
   return html`<div class="plyr__controls">${$controls}</div>`;
 }
 
@@ -356,7 +356,7 @@ function TimeSlider() {
           <div class="plyr__slider__track"></div>
           <div class="plyr__slider__thumb"></div>
           <div class="plyr__slider__buffer"></div>
-          ${$computed(Preview)}${$computed(Markers)}
+          ${$signal(Preview)}${$signal(Markers)}
         </media-time-slider>
       </div>
     </div>
@@ -364,7 +364,7 @@ function TimeSlider() {
 }
 
 function Volume(type: 'mute' | 'volume' | 'mute+volume') {
-  return $computed(() => {
+  return $signal(() => {
     const hasMuteButton = type === 'mute' || type === 'mute+volume',
       hasVolumeSlider = type === 'volume' || type === 'mute+volume';
     return html`
@@ -400,10 +400,10 @@ function CurrentTime() {
   }
 
   function MaybeDuration() {
-    return $computed(() => (displayDuration() ? Duration() : null));
+    return $signal(() => (displayDuration() ? Duration() : null));
   }
 
-  return $computed(() => {
+  return $signal(() => {
     const { streamType } = media.$state,
       $liveText = $i18n(translations, 'LIVE'),
       $currentTimeText = $i18n(translations, 'Current time'),
@@ -448,7 +448,7 @@ function Duration() {
 }
 
 function DownloadButton() {
-  return $computed(() => {
+  return $signal(() => {
     const media = useMediaContext(),
       { translations, download } = usePlyrLayoutContext(),
       { source } = media.$state,
@@ -475,7 +475,7 @@ function DownloadButton() {
 }
 
 function Gestures() {
-  return $computed(() => {
+  return $signal(() => {
     const { clickToPlay, clickToFullscreen } = usePlyrLayoutContext();
     return [
       clickToPlay()

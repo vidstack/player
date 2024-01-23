@@ -5,7 +5,7 @@ import { setAttribute } from 'maverick.js/std';
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { MediaRequestEvents } from '../../../../core/api/media-request-events';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
-import { observeActiveTextTrack } from '../../../../core/tracks/text/utils';
+import { watchActiveTextTrack } from '../../../../core/tracks/text/utils';
 import { setAttributeIfEmpty } from '../../../../utils/dom';
 import { round } from '../../../../utils/number';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
@@ -114,7 +114,7 @@ export class TimeSlider extends Component<
 
   protected override onConnect(el: HTMLElement) {
     effect(this._watchPreviewing.bind(this));
-    observeActiveTextTrack(this._media.textTracks, 'chapters', this._chapter.set);
+    watchActiveTextTrack(this._media.textTracks, 'chapters', this._chapter.set);
   }
 
   private _calcBufferedPercent() {

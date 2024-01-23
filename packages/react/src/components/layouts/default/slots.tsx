@@ -44,10 +44,7 @@ export type DefaultLayoutMenuSlotName =
 
 export interface DefaultLayoutSlots extends Slots<DefaultLayoutSlotName> {}
 
-export interface DefaultAudioLayoutSlots {
-  smallLayout?: DefaultLayoutSlots;
-  largeLayout?: DefaultLayoutSlots;
-}
+export interface DefaultAudioLayoutSlots extends DefaultLayoutSlots {}
 
 export interface DefaultVideoLayoutSlots {
   smallLayout?: DefaultLayoutSlots;

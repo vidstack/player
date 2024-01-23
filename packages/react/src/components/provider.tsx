@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import {
   createReactComponent,
-  useReactContext,
   useSignal,
   useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import { mediaContext, mediaState, type MediaProviderLoader } from 'vidstack';
+import { mediaState, type MediaProviderLoader } from 'vidstack';
 
+import { useMediaContext } from '../hooks/use-media-context';
 import { Icon } from '../icon';
 import { isRemotionProvider } from '../providers/remotion/type-check';
 import { MediaProviderInstance } from './primitives/instances';
@@ -73,7 +73,7 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
       $iosControls: $$iosControls,
       $provider: $$provider,
       $providerSetup: $$providerSetup,
-    } = useReactContext(mediaContext)!,
+    } = useMediaContext(),
     $controls = useSignal(controls),
     $iosControls = useSignal($$iosControls),
     $nativeControls = $controls || $iosControls,

@@ -17,7 +17,7 @@ import {
 import { animationFrameThrottle, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
-import { observeActiveTextTrack } from '../../../../core';
+import { watchActiveTextTrack } from '../../../../core';
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { round } from '../../../../utils/number';
@@ -70,7 +70,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   }
 
   protected override onAttach(el: HTMLElement): void {
-    observeActiveTextTrack(this._media.textTracks, 'chapters', this._setTrack.bind(this));
+    watchActiveTextTrack(this._media.textTracks, 'chapters', this._setTrack.bind(this));
     effect(this._onTrackChange.bind(this));
   }
 
@@ -120,8 +120,11 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   }
 
   private _watchContainerWidths() {
+    const cues = this._$cues();
+
+    if (!cues.length) return;
+
     let cue: VTTCue,
-      cues = this._$cues(),
       { clipStartTime, clipEndTime } = this._media.$state,
       startTime = clipStartTime(),
       endTime = clipEndTime() || cues[cues.length - 1].endTime,
@@ -245,7 +248,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   private _getEndTime(cues: VTTCue[]) {
     const { clipEndTime } = this._media.$state,
       endTime = clipEndTime();
-    return endTime > 0 ? endTime : cues[cues.length - 1].endTime;
+    return endTime > 0 ? endTime : cues[cues.length - 1]?.endTime || 0;
   }
 
   private _calcPercent(cue: VTTCue, percent: number, startTime: number, endTime: number) {
@@ -319,7 +322,13 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     if (!this.scope) return;
 
     const { disabled } = this.$props;
-    if (disabled()) return;
+
+    if (disabled()) {
+      this._$cues.set([]);
+      this._activeIndex.set(0);
+      this._bufferedIndex = 0;
+      return;
+    }
 
     const track = this._$track();
 
@@ -350,9 +359,12 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   private _onCuesChange = debounce(
     () => {
       const track = peek(this._$track);
+
       if (!this.scope || !track || !track.cues.length) return;
+
       this._$cues.set(this._fillGaps(track.cues));
       this._activeIndex.set(0);
+      this._bufferedIndex = 0;
     },
     150,
     true,

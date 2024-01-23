@@ -39,11 +39,20 @@ import {
 
 const MediaLayout = createDefaultMediaLayout({
   type: 'video',
-  smLayoutWhen: ({ width, height }) => width < 576 || height < 380,
-  LoadLayout: DefaultVideoLoadLayout,
-  SmallLayout: DefaultVideoSmallLayout,
-  LargeLayout: DefaultVideoLargeLayout,
-  UnknownStreamType: DefaultBufferingIndicator,
+  smLayoutWhen({ width, height }) {
+    return width < 576 || height < 380;
+  },
+  renderLayout({ streamType, isSmallLayout, isLoadLayout }) {
+    return isLoadLayout ? (
+      <DefaultVideoLoadLayout />
+    ) : streamType === 'unknown' ? (
+      <DefaultBufferingIndicator />
+    ) : isSmallLayout ? (
+      <DefaultVideoSmallLayout />
+    ) : (
+      <DefaultVideoLargeLayout />
+    );
+  },
 });
 
 export interface DefaultVideoLayoutProps extends DefaultLayoutProps<DefaultVideoLayoutSlots> {}

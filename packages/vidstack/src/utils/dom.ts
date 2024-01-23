@@ -4,8 +4,17 @@ import {
   type ComputePositionConfig,
   type Placement,
 } from '@floating-ui/dom';
-import { effect, getScope, onDispose, scoped } from 'maverick.js';
 import {
+  computed,
+  effect,
+  getScope,
+  onDispose,
+  scoped,
+  signal,
+  type ReadSignal,
+} from 'maverick.js';
+import {
+  animationFrameThrottle,
   isKeyboardClick,
   isTouchEvent,
   listenEvent,
@@ -191,4 +200,124 @@ export function createSlot(name: string) {
   const slot = document.createElement('slot');
   slot.name = name;
   return slot;
+}
+
+export function useTransitionActive($el: ReadSignal<Element | null | undefined>) {
+  const $active = signal(false);
+
+  effect(() => {
+    const el = $el();
+    if (!el) return;
+    listenEvent(el, 'transitionstart', () => $active.set(true));
+    listenEvent(el, 'transitionend', () => $active.set(false));
+  });
+
+  return $active;
+}
+
+export function useResizeObserver(
+  $el: ReadSignal<Element | null | undefined>,
+  onResize: () => void,
+) {
+  function onElementChange() {
+    const el = $el();
+    if (!el) return;
+
+    onResize();
+
+    const observer = new ResizeObserver(animationFrameThrottle(onResize));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }
+
+  effect(onElementChange);
+}
+
+export function useSafeTriangle(
+  $root: ReadSignal<Element | null | undefined>,
+  $trigger: ReadSignal<Element | null | undefined>,
+  $popper: ReadSignal<Element | null | undefined>,
+) {
+  effect(() => {
+    const root = $root(),
+      trigger = $trigger(),
+      popper = $popper();
+
+    if (!root || !trigger || !popper) return;
+
+    const $isActive = useMouseEnter($root);
+
+    effect(() => {
+      if (!$isActive()) return;
+      useRectCSSVars($root, $popper, 'safe');
+      listenEvent(trigger, 'mousemove', (event) => {
+        setStyle(root as HTMLElement, '--safe-cursor-x', `${event.clientX}px`);
+        setStyle(root as HTMLElement, '--safe-cursor-y', `${event.clientY}px`);
+      });
+    });
+  });
+}
+
+export function useRectCSSVars(
+  $root: ReadSignal<Element | null | undefined>,
+  $el: ReadSignal<Element | null | undefined>,
+  prefix: string,
+) {
+  useResizeObserver($el, () => {
+    const root = $root(),
+      el = $el();
+
+    if (root && el) setRectCSSVars(root, el, prefix);
+  });
+}
+
+export function setRectCSSVars(root: Element, el: Element, prefix: string) {
+  const rect = el.getBoundingClientRect();
+
+  for (const side of ['top', 'left', 'bottom', 'right']) {
+    setStyle(root as HTMLElement, `--${prefix}-${side}`, `${rect[side]}px`);
+  }
+}
+
+export function useActive($el: ReadSignal<Element | null | undefined>) {
+  const $mouseEnter = useMouseEnter($el),
+    $focusIn = useFocusIn($el);
+
+  return computed(() => $mouseEnter() || $focusIn());
+}
+
+export function useMouseEnter($el: ReadSignal<Element | null | undefined>) {
+  const $enter = signal(false);
+
+  effect(() => {
+    const el = $el();
+
+    if (!el) {
+      $enter.set(false);
+      return;
+    }
+
+    listenEvent(el, 'mouseenter', () => $enter.set(true));
+    listenEvent(el, 'mouseleave', () => $enter.set(false));
+  });
+
+  return $enter;
+}
+
+export function useFocusIn($el: ReadSignal<Element | null | undefined>) {
+  const $focusIn = signal(false);
+
+  effect(() => {
+    const el = $el();
+
+    if (!el) {
+      $focusIn.set(false);
+      return;
+    }
+
+    listenEvent(el, 'focusin', () => $focusIn.set(true));
+    listenEvent(el, 'focusout', () => $focusIn.set(false));
+  });
+
+  return $focusIn;
 }

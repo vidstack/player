@@ -1,12 +1,12 @@
+import { nothing } from 'lit-html';
 import { AsyncDirective, directive, PartType, type PartInfo } from 'lit-html/async-directive.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { computed, effect, type ReadSignal, type StopEffect } from 'maverick.js';
+import { computed, effect, peek, type ReadSignal, type StopEffect } from 'maverick.js';
 
 class SignalDirective extends AsyncDirective {
   protected _signal: ReadSignal<any> | null = null;
-  protected _value: any;
-  protected _stop: StopEffect | null = null;
   protected _isAttr = false;
+  protected _stop: StopEffect | null = null;
 
   constructor(part: PartInfo) {
     super(part);
@@ -20,7 +20,7 @@ class SignalDirective extends AsyncDirective {
       if (this.isConnected) this._watch();
     }
 
-    return this._isAttr ? ifDefined(this._value) : this._value;
+    return this._signal ? this._resolveValue(peek(this._signal)) : nothing;
   }
 
   override reconnected() {
@@ -30,7 +30,6 @@ class SignalDirective extends AsyncDirective {
   override disconnected() {
     this._stop?.();
     this._stop = null;
-    this._value = undefined;
   }
 
   protected _watch() {
@@ -38,10 +37,18 @@ class SignalDirective extends AsyncDirective {
     this._stop = effect(this._onValueChange.bind(this));
   }
 
+  private _resolveValue(value: any) {
+    return this._isAttr ? ifDefined(value) : value;
+  }
+
+  private _setValue(value: any) {
+    this.setValue(this._resolveValue(value));
+  }
+
   protected _onValueChange() {
     if (__DEV__) {
       try {
-        this.setValue((this._value = this._signal?.()));
+        this._setValue(this._signal?.());
       } catch (error) {
         if (
           error instanceof Error &&
@@ -63,13 +70,11 @@ class SignalDirective extends AsyncDirective {
         }
       }
     } else {
-      this.setValue((this._value = this._signal?.()));
+      this._setValue(this._signal?.());
     }
   }
 }
 
-export const $signal = directive(SignalDirective);
-
-export function $computed(compute: () => any) {
-  return $signal(computed(compute)) as any;
+export function $signal(compute: () => any): any {
+  return directive(SignalDirective)(computed(compute));
 }

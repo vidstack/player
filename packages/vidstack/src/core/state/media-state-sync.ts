@@ -1,7 +1,7 @@
 import { effect } from 'maverick.js';
 
-import type { MediaPlayerProps } from '..';
 import { MediaPlayerController } from '../api/player-controller';
+import type { MediaPlayerProps } from '../api/player-props';
 
 /**
  * Sync player props with internal store and dispatch change events.

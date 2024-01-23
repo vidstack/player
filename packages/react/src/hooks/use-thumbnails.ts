@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { scoped, signal } from 'maverick.js';
 import { useReactScope, useSignal } from 'maverick.js/react';
 import {
   ThumbnailsLoader,
@@ -8,6 +7,8 @@ import {
   type ThumbnailImage,
   type ThumbnailSrc,
 } from 'vidstack';
+
+import { createSignal, useScoped } from './use-signals';
 
 /**
  * The function will return the resolved thumbnail images given a thumbnail resource. It's safe to
@@ -18,15 +19,12 @@ import {
  */
 export function useThumbnails(
   src: ThumbnailSrc,
-  crossOrigin?: MediaCrossOrigin | null,
+  crossOrigin: MediaCrossOrigin | null = null,
 ): ThumbnailImage[] {
   const scope = useReactScope(),
-    $src = React.useMemo(() => signal(src), []),
-    $crossOrigin = React.useMemo(() => signal($crossOrigin), []),
-    loader = React.useMemo(
-      () => scoped(() => ThumbnailsLoader.create($src, $crossOrigin), scope)!,
-      [],
-    );
+    $src = createSignal(src),
+    $crossOrigin = createSignal(crossOrigin),
+    loader = useScoped(() => ThumbnailsLoader.create($src, $crossOrigin));
 
   if (__DEV__ && !scope) {
     console.warn(

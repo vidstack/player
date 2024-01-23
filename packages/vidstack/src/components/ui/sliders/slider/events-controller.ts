@@ -1,14 +1,6 @@
 import throttle from 'just-throttle';
 import { effect, ViewController } from 'maverick.js';
-import {
-  DOMEvent,
-  isDOMEvent,
-  isKeyboardEvent,
-  isNull,
-  isNumber,
-  isUndefined,
-  listenEvent,
-} from 'maverick.js/std';
+import { isNull, isNumber, isUndefined, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../../../core';
 import { isTouchPinchEvent } from '../../../../utils/dom';
@@ -153,6 +145,7 @@ export class SliderEventsController extends ViewController<
   }
 
   private _updatePointerValue(value: number, trigger?: Event) {
+    if (trigger?.defaultPrevented) return;
     const { pointerValue, dragging } = this.$state;
     pointerValue.set(value);
     this.dispatch('pointer-value-change', { detail: value, trigger });

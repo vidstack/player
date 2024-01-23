@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { signal } from 'maverick.js';
-import { composeRefs, useReactContext, useSignal } from 'maverick.js/react';
+import { composeRefs, useSignal } from 'maverick.js/react';
 import { isString, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 import {
@@ -9,7 +9,6 @@ import {
   isKeyboardClick,
   isKeyboardEvent,
   isVideoSrc,
-  mediaContext,
   usePlyrLayoutClasses,
   type PlyrControl,
   type PlyrLayoutWord,
@@ -20,6 +19,7 @@ import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { usePlaybackRateOptions } from '../../../hooks/options/use-playback-rate-options';
 import { useVideoQualityOptions } from '../../../hooks/options/use-video-quality-options';
+import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaRemote } from '../../../hooks/use-media-remote';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
@@ -68,7 +68,7 @@ const PlyrLayout = React.forwardRef<HTMLElement, PlyrLayoutElementProps>(
         ...elProps
       } = { ...defaultPlyrLayoutProps, ...userProps },
       ref = React.useRef<HTMLDivElement>(null),
-      media = useReactContext(mediaContext),
+      media = useMediaContext(),
       previewTime = React.useMemo(() => signal(0), []),
       $viewType = useMediaState('viewType');
 
@@ -135,7 +135,7 @@ export { PlyrAudioLayout };
  * -----------------------------------------------------------------------------------------------*/
 
 function PlyrVideoLayout() {
-  const media = useReactContext(mediaContext)!,
+  const media = useMediaContext(),
     { controls } = usePlyrLayoutContext(),
     { load } = media.$props,
     { canLoad } = media.$state,

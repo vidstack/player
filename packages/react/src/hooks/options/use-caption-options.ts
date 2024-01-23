@@ -1,14 +1,16 @@
 import * as React from 'react';
 
-import { useReactContext, useSignal } from 'maverick.js/react';
+import { useSignal } from 'maverick.js/react';
 import { isString } from 'maverick.js/std';
-import { isTrackCaptionKind, mediaContext, type TextTrack } from 'vidstack';
+import { isTrackCaptionKind, type TextTrack } from 'vidstack';
+
+import { useMediaContext } from '../use-media-context';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-caption-options}
  */
 export function useCaptionOptions({ off = true }: UseCaptionOptions = {}): CaptionOptions {
-  const media = useReactContext(mediaContext)!,
+  const media = useMediaContext(),
     { textTracks, textTrack } = media.$state,
     $textTracks = useSignal(textTracks);
 

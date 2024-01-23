@@ -1,11 +1,12 @@
 import * as React from 'react';
 
-import { computed, effect, scoped, useContext } from 'maverick.js';
+import { effect, scoped, useContext } from 'maverick.js';
 import { useReactScope, useSignal } from 'maverick.js/react';
 import { camelToKebabCase } from 'maverick.js/std';
 import { mediaContext, type DefaultLayoutProps } from 'vidstack';
 
 import { useMediaState } from '../../../hooks/use-media-state';
+import { createComputed, createEffect } from '../../../hooks/use-signals';
 import { DefaultLayoutContext, i18n } from './context';
 import type { DefaultLayoutIcons } from './icons';
 
@@ -27,23 +28,16 @@ function DefaultVideoKeyboardActionDisplay() {
 
   const className = React.useMemo(() => `vds-kb-action${!visible ? ' hidden' : ''}`, [visible]);
 
-  const $$text = React.useMemo(() => scoped(() => computed(getText), scope)!, [scope]),
+  const $$text = createComputed(getText),
     $text = useSignal($$text);
 
-  const $$statusLabel = React.useMemo(
-      () => scoped(() => computed(() => getStatusLabel(translations!)), scope)!,
-      [scope, translations],
-    ),
+  const $$statusLabel = createComputed(() => getStatusLabel(translations!), [translations]),
     $statusLabel = useSignal($$statusLabel);
 
-  React.useEffect(() => {
-    scoped(() => {
-      effect(() => {
-        const Icon = getIcon(Icons.KeyboardAction);
-        setIcon(() => Icon);
-      });
-    }, scope);
-  }, [scope, Icons]);
+  createEffect(() => {
+    const Icon = getIcon(Icons.KeyboardAction);
+    setIcon(() => Icon);
+  }, [Icons]);
 
   React.useEffect(() => {
     setVisible(!!$lastKeyboardAction);

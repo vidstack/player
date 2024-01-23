@@ -16,9 +16,12 @@ export function useActiveTextCues(track: TextTrack | null): VTTCue[] {
       return;
     }
 
-    return listenEvent(track, 'cue-change', () => {
-      setActiveCues(track.activeCues as VTTCue[]);
-    });
+    function onCuesChange() {
+      setActiveCues(track!.activeCues as VTTCue[]);
+    }
+
+    onCuesChange();
+    return listenEvent(track, 'cue-change', onCuesChange);
   }, [track]);
 
   return activeCues;

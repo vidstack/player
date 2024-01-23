@@ -26,6 +26,7 @@
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  flex-shrink: 0;
 }
 
 .vds-button {

@@ -1,7 +1,7 @@
-import { Component, provideContext, signal } from 'maverick.js';
+import { Component, effect, provideContext, signal } from 'maverick.js';
 import { listenEvent, setAttribute } from 'maverick.js/std';
 
-import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
+import { $keyboard, FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { Popper } from '../popper/popper';
 import { tooltipContext } from './tooltip-context';
@@ -19,10 +19,11 @@ let id = 0;
  */
 export class Tooltip extends Component<TooltipProps> {
   static props: TooltipProps = {
-    showDelay: 500,
+    showDelay: 700,
   };
 
   private _id = `media-tooltip-${++id}`;
+
   private _trigger = signal<HTMLElement | null>(null);
   private _content = signal<HTMLElement | null>(null);
 
@@ -32,6 +33,7 @@ export class Tooltip extends Component<TooltipProps> {
     new FocusVisibleController();
 
     const { showDelay } = this.$props;
+
     new Popper({
       _trigger: this._trigger,
       _content: this._content,
@@ -41,8 +43,10 @@ export class Tooltip extends Component<TooltipProps> {
           passive: false,
         });
 
-        listenEvent(trigger, 'focus', show);
-        listenEvent(trigger, 'blur', hide);
+        effect(() => {
+          if ($keyboard()) listenEvent(trigger, 'focus', show);
+          listenEvent(trigger, 'blur', hide);
+        });
 
         listenEvent(trigger, 'mouseenter', show);
         listenEvent(trigger, 'mouseleave', hide);

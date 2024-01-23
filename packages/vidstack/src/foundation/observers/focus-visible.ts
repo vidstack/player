@@ -1,7 +1,7 @@
 import { effect, signal, ViewController } from 'maverick.js';
 import { listenEvent, setAttribute } from 'maverick.js/std';
 
-let $keyboard = signal(false);
+export let $keyboard = signal(false);
 
 if (!__SERVER__) {
   listenEvent(document, 'pointerdown', () => {

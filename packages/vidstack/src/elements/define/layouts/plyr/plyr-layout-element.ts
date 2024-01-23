@@ -5,7 +5,7 @@ import { Host } from 'maverick.js/element';
 import { PlyrLayout, usePlyrLayoutClasses } from '../../../../components/layouts/plyr/plyr-layout';
 import type { MediaContext } from '../../../../core';
 import { useMediaContext } from '../../../../core/api/media-context';
-import { $computed } from '../../../lit/directives/signal';
+import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';
 import { PlyrLayoutIconsLoader } from './icons-loader';
@@ -48,7 +48,7 @@ export class MediaPlyrLayoutElement extends Host(LitElement, PlyrLayout) impleme
   }
 
   render() {
-    return html`${$computed(this._render.bind(this))}`;
+    return html`${$signal(this._render.bind(this))}`;
   }
 
   private _render() {

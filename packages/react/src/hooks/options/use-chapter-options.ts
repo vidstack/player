@@ -1,19 +1,20 @@
 import * as React from 'react';
 
 import { effect, type StopEffect } from 'maverick.js';
-import { useReactContext, useSignal } from 'maverick.js/react';
+import { useSignal } from 'maverick.js/react';
 import type { VTTCue } from 'media-captions';
-import { formatSpokenTime, formatTime, mediaContext } from 'vidstack';
+import { formatSpokenTime, formatTime } from 'vidstack';
 
 import { useActiveTextCues } from '../use-active-text-cues';
 import { useActiveTextTrack } from '../use-active-text-track';
+import { useMediaContext } from '../use-media-context';
 import { useTextCues } from '../use-text-cues';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-chapter-options}
  */
 export function useChapterOptions(): ChapterOptions {
-  const media = useReactContext(mediaContext)!,
+  const media = useMediaContext(),
     track = useActiveTextTrack('chapters'),
     cues = useTextCues(track),
     $startTime = useSignal(media.$state.clipStartTime),

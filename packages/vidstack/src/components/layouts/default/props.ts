@@ -10,7 +10,7 @@ export const defaultLayoutProps: DefaultLayoutProps = {
   translations: null,
   menuGroup: 'bottom',
   noModal: false,
-  sliderChaptersMinWidth: 600,
+  sliderChaptersMinWidth: 325,
   disableTimeSlider: false,
   noGestures: false,
   noKeyboardActionDisplay: false,
@@ -52,7 +52,7 @@ export interface DefaultLayoutProps {
    */
   noModal: boolean;
   /**
-   * The minimum width to start displaying slider chapters when available.
+   * The minimum width of the slider to start displaying slider chapters when available.
    */
   sliderChaptersMinWidth: number;
   /**

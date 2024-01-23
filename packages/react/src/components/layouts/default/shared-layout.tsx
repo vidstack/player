@@ -1,17 +1,21 @@
 import * as React from 'react';
 
 import { computed } from 'maverick.js';
-import { useReactContext, useSignal } from 'maverick.js/react';
+import { useSignal } from 'maverick.js/react';
 import { uppercaseFirstChar } from 'maverick.js/std';
-import { isTrackCaptionKind, mediaContext, type TooltipPlacement } from 'vidstack';
+import { isTrackCaptionKind, type TooltipPlacement } from 'vidstack';
 
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { useChapterOptions } from '../../../hooks/options/use-chapter-options';
 import { usePlaybackRateOptions } from '../../../hooks/options/use-playback-rate-options';
 import { useVideoQualityOptions } from '../../../hooks/options/use-video-quality-options';
+import { useResizeObserver } from '../../../hooks/use-dom';
+import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaState } from '../../../hooks/use-media-state';
+import { createComputed } from '../../../hooks/use-signals';
 import { isRemotionSource } from '../../../providers/remotion/type-check';
+import type { TimeSliderInstance } from '../../primitives/instances';
 import { AirPlayButton } from '../../ui/buttons/airplay-button';
 import { CaptionButton } from '../../ui/buttons/caption-button';
 import { FullscreenButton } from '../../ui/buttons/fullscreen-button';
@@ -163,27 +167,29 @@ export { DefaultPlayButton };
  * DefaultMuteButton
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultMuteButton({ tooltip }: DefaultMediaButtonProps) {
-  const { icons: Icons } = useDefaultLayoutContext(),
-    muteText = useDefaultLayoutWord('Mute'),
-    unmuteText = useDefaultLayoutWord('Unmute'),
-    $muted = useMediaState('muted'),
-    $volume = useMediaState('volume'),
-    label = $muted ? unmuteText : muteText;
-  return (
-    <DefaultTooltip content={$muted ? unmuteText : muteText} placement={tooltip}>
-      <MuteButton className="vds-mute-button vds-button" aria-label={label}>
-        {$muted || $volume == 0 ? (
-          <Icons.MuteButton.Mute className="vds-icon" />
-        ) : $volume < 0.5 ? (
-          <Icons.MuteButton.VolumeLow className="vds-icon" />
-        ) : (
-          <Icons.MuteButton.VolumeHigh className="vds-icon" />
-        )}
-      </MuteButton>
-    </DefaultTooltip>
-  );
-}
+const DefaultMuteButton = React.forwardRef<HTMLButtonElement, DefaultMediaButtonProps>(
+  ({ tooltip }, forwardRef) => {
+    const { icons: Icons } = useDefaultLayoutContext(),
+      muteText = useDefaultLayoutWord('Mute'),
+      unmuteText = useDefaultLayoutWord('Unmute'),
+      $muted = useMediaState('muted'),
+      $volume = useMediaState('volume'),
+      label = $muted ? unmuteText : muteText;
+    return (
+      <DefaultTooltip content={$muted ? unmuteText : muteText} placement={tooltip}>
+        <MuteButton className="vds-mute-button vds-button" aria-label={label} ref={forwardRef}>
+          {$muted || $volume == 0 ? (
+            <Icons.MuteButton.Mute className="vds-icon" />
+          ) : $volume < 0.5 ? (
+            <Icons.MuteButton.VolumeLow className="vds-icon" />
+          ) : (
+            <Icons.MuteButton.VolumeHigh className="vds-icon" />
+          )}
+        </MuteButton>
+      </DefaultTooltip>
+    );
+  },
+);
 
 DefaultMuteButton.displayName = 'DefaultMuteButton';
 export { DefaultMuteButton };
@@ -296,10 +302,10 @@ export { DefaultSeekButton };
  * DefaultVolumeSlider
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultVolumeSlider() {
+function DefaultVolumeSlider(props: VolumeSlider.RootProps) {
   const label = useDefaultLayoutWord('Volume');
   return (
-    <VolumeSlider.Root className="vds-volume-slider vds-slider" aria-label={label}>
+    <VolumeSlider.Root className="vds-volume-slider vds-slider" aria-label={label} {...props}>
       <VolumeSlider.Track className="vds-slider-track" />
       <VolumeSlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
       <VolumeSlider.Thumb className="vds-slider-thumb" />
@@ -318,20 +324,30 @@ export { DefaultVolumeSlider };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTimeSlider() {
-  const $src = useMediaState('currentSrc'),
-    $width = useMediaState('width'),
+  const [instance, setInstance] = React.useState<TimeSliderInstance | null>(null),
+    [width, setWidth] = React.useState(0),
+    $src = useMediaState('currentSrc'),
     { thumbnails, sliderChaptersMinWidth, disableTimeSlider } = useDefaultLayoutContext(),
     label = useDefaultLayoutWord('Seek'),
     $RemotionSliderThumbnail = useSignal(RemotionSliderThumbnail);
+
+  const onResize = React.useCallback(() => {
+    const el = instance?.el;
+    el && setWidth(el.clientWidth);
+  }, [instance]);
+
+  useResizeObserver(instance?.el, onResize);
+
   return (
     <TimeSlider.Root
       className="vds-time-slider vds-slider"
       aria-label={label}
       disabled={disableTimeSlider}
+      ref={setInstance}
     >
       <TimeSlider.Chapters
         className="vds-slider-chapters"
-        disabled={$width < sliderChaptersMinWidth!}
+        disabled={width < sliderChaptersMinWidth!}
       >
         {(cues, forwardRef) =>
           cues.map((cue) => (
@@ -405,11 +421,27 @@ interface DefaultTimeGroupSlots {
 }
 
 function DefaultTimeGroup({ slots }: { slots?: DefaultTimeGroupSlots }) {
+  const media = useMediaContext(),
+    showCurrentTime = createComputed(() => {
+      const { started, currentTime, duration } = media.$state;
+      return (started() || currentTime() > 0) && duration();
+    }),
+    $showCurrentTime = useSignal(showCurrentTime),
+    $duration = useMediaState('duration');
+
   return (
     <div className="vds-time-group">
-      {slot(slots, 'currentTime', <Time className="vds-time" type="current" />)}
-      {slot(slots, 'timeSeparator', <div className="vds-time-divider">/</div>)}
-      {slot(slots, 'endTime', <Time className="vds-time" type="duration" />)}
+      {slot(
+        slots,
+        'currentTime',
+        $showCurrentTime ? <Time className="vds-time" type="current" /> : null,
+      )}
+      {slot(
+        slots,
+        'timeSeparator',
+        $showCurrentTime ? <div className="vds-time-divider">/</div> : null,
+      )}
+      {slot(slots, 'endTime', $duration ? <Time className="vds-time" type="duration" /> : null)}
     </div>
   );
 }
@@ -436,6 +468,25 @@ function DefaultTimeInfo({ slots }: { slots?: DefaultTimeInfoSlots }) {
 
 DefaultTimeInfo.displayName = 'DefaultTimeInfo';
 export { DefaultTimeInfo };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultTimeInvert
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultTimeInvert({ slots }: { slots?: DefaultTimeInfoSlots }) {
+  const $live = useMediaState('live'),
+    $duration = useMediaState('duration');
+  return $live
+    ? slot(slots, 'liveButton', <DefaultLiveButton />)
+    : slot(
+        slots,
+        'endTime',
+        $duration ? <Time className="vds-time" type="current" toggle remainder /> : null,
+      );
+}
+
+DefaultTimeInvert.displayName = 'DefaultTimeInvert';
+export { DefaultTimeInvert };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultChaptersMenu
@@ -531,25 +582,21 @@ export { DefaultChaptersMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: DefaultMediaMenuProps) {
-  const { $state } = useReactContext(mediaContext)!,
+  const { $state } = useMediaContext(),
     { showMenuDelay, icons: Icons, isSmallLayout, menuGroup, noModal } = useDefaultLayoutContext(),
     settingsText = useDefaultLayoutWord('Settings'),
     $viewType = useMediaState('viewType'),
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
     // Create as a computed signal to avoid unnecessary re-rendering.
-    $$hasMenuItems = React.useMemo(
-      () =>
-        computed(() => {
-          const { canSetPlaybackRate, canSetQuality, qualities, audioTracks, hasCaptions } = $state;
-          return (
-            canSetPlaybackRate() ||
-            (canSetQuality() && qualities().length) ||
-            audioTracks().length ||
-            hasCaptions()
-          );
-        }),
-      [],
-    ),
+    $$hasMenuItems = createComputed(() => {
+      const { canSetPlaybackRate, canSetQuality, qualities, audioTracks, hasCaptions } = $state;
+      return (
+        canSetPlaybackRate() ||
+        (canSetQuality() && qualities().length) ||
+        audioTracks().length ||
+        hasCaptions()
+      );
+    }),
     $hasMenuItems = useSignal($$hasMenuItems);
 
   if (!$hasMenuItems) return null;

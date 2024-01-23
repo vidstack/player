@@ -46,3 +46,7 @@ export const mediaContext = createContext<MediaContext>();
 export function useMediaContext(): MediaContext {
   return useContext(mediaContext);
 }
+
+export function useMediaState() {
+  return useMediaContext().$state;
+}

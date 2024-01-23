@@ -6,10 +6,10 @@ import { useDefaultLayoutContext } from '../../../../components/layouts/default/
 import { i18n } from '../../../../components/layouts/default/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { createSlot } from '../../../../utils/dom';
-import { $computed, $signal } from '../../../lit/directives/signal';
+import { $signal } from '../../../lit/directives/signal';
 
 export function DefaultVideoKeyboardActionDisplay() {
-  return $computed(() => {
+  return $signal(() => {
     const visible = signal(false),
       media = useMediaContext(),
       { noKeyboardActionDisplay } = useDefaultLayoutContext(),
@@ -55,7 +55,7 @@ export function DefaultVideoKeyboardActionDisplay() {
         <div class="vds-kb-text-wrapper">
           <div class="vds-kb-text">${$signal($text)}</div>
         </div>
-        ${$computed(Icon)}
+        ${$signal(Icon)}
       </div>
     `;
   });

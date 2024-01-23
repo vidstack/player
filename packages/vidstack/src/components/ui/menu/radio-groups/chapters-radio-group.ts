@@ -13,7 +13,7 @@ import type { VTTCue } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
-import { isCueActive, observeActiveTextTrack } from '../../../../core/tracks/text/utils';
+import { isCueActive, watchActiveTextTrack } from '../../../../core/tracks/text/utils';
 import { round } from '../../../../utils/number';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
 import type { ThumbnailSrc } from '../../thumbnails/thumbnail-loader';
@@ -104,7 +104,7 @@ export class ChaptersRadioGroup extends Component<
     effect(this._watchCurrentTime.bind(this));
     effect(this._watchControllerDisabled.bind(this));
     effect(this._watchTrack.bind(this));
-    observeActiveTextTrack(this._media.textTracks, 'chapters', this._track.set);
+    watchActiveTextTrack(this._media.textTracks, 'chapters', this._track.set);
   }
 
   protected _watchTrack() {

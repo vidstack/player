@@ -1,6 +1,8 @@
-import { Component, effect, State } from 'maverick.js';
+import { Component, effect, signal, State } from 'maverick.js';
+import { setAttribute } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
+import { onPress } from '../../utils/dom';
 import { formatTime } from '../../utils/time';
 
 /**
@@ -18,6 +20,7 @@ export class Time extends Component<TimeProps, TimeState> {
     padHours: null,
     padMinutes: null,
     remainder: false,
+    toggle: false,
   };
 
   static state = new State<TimeState>({
@@ -25,36 +28,57 @@ export class Time extends Component<TimeProps, TimeState> {
   });
 
   private _media!: MediaContext;
+  private _invert = signal<boolean | null>(null);
 
   protected override onSetup(): void {
     this._media = useMediaContext();
     this._watchTime();
 
-    const { type, remainder } = this.$props;
+    const { type } = this.$props;
     this.setAttributes({
       'data-type': type,
-      'data-remainder': remainder,
+      'data-remainder': this._shouldInvert.bind(this),
     });
   }
 
   protected override onAttach(el: HTMLElement) {
+    if (!el.hasAttribute('role')) effect(this._watchRole.bind(this));
     effect(this._watchTime.bind(this));
   }
 
+  protected override onConnect(el: HTMLElement): void {
+    effect(() => {
+      if (!this.$props.toggle()) {
+        this._invert.set(null);
+        return;
+      }
+
+      onPress(el, this._onToggle.bind(this));
+    });
+  }
+
   private _watchTime() {
-    const { type, remainder, padHours, padMinutes, showHours } = this.$props,
+    const { type, padHours, padMinutes, showHours } = this.$props,
       seconds = this._getSeconds(type()),
-      duration = this._media.$state.duration();
+      duration = this._media.$state.duration(),
+      shouldInvert = this._shouldInvert();
 
     if (!Number.isFinite(seconds + duration)) {
       this.$state.timeText.set('LIVE');
       return;
     }
 
-    const time = remainder() ? Math.max(0, duration - seconds) : seconds,
+    const time = shouldInvert ? Math.max(0, duration - seconds) : seconds,
       formattedTime = formatTime(time, padHours(), padMinutes(), showHours());
 
-    this.$state.timeText.set((remainder() ? '-' : '') + formattedTime);
+    this.$state.timeText.set((shouldInvert ? '-' : '') + formattedTime);
+  }
+
+  private _watchRole() {
+    if (!this.el) return;
+    const { toggle } = this.$props;
+    setAttribute(this.el, 'role', toggle() ? 'timer' : null);
+    setAttribute(this.el, 'tabindex', toggle() ? 0 : null);
   }
 
   private _getSeconds(type: TimeProps['type']) {
@@ -67,6 +91,19 @@ export class Time extends Component<TimeProps, TimeState> {
       default:
         return currentTime();
     }
+  }
+
+  private _shouldInvert() {
+    return this.$props.remainder() && this._invert() !== false;
+  }
+
+  private _onToggle() {
+    if (this._invert() === null) {
+      this._invert.set(!this.$props.remainder());
+      return;
+    }
+
+    this._invert.set((v) => !v);
   }
 }
 
@@ -100,6 +137,11 @@ export interface TimeProps {
    * @example `duration` - `currentTime`
    */
   remainder: boolean;
+  /**
+   * Whether on press the time should invert showing the remaining time (i.e., toggle the
+   * `remainder` prop).
+   */
+  toggle: boolean;
 }
 
 export interface TimeState {

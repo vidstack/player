@@ -7,9 +7,8 @@ import {
   type WriteSignal,
 } from 'maverick.js';
 import { Host } from 'maverick.js/element';
-import { listenEvent } from 'maverick.js/std';
 
-import { observeActiveTextTrack, type MediaContext } from '../../core';
+import { watchCueTextChange, type MediaContext } from '../../core';
 import { useMediaContext } from '../../core/api/media-context';
 
 class ChapterTitle extends Component {}
@@ -35,20 +34,8 @@ export class MediaChapterTitleElement extends Host(HTMLElement, ChapterTitle) {
   }
 
   protected onConnect() {
-    observeActiveTextTrack(this._media.textTracks, 'chapters', (track) => {
-      if (!track) {
-        this._chapterTitle.set('');
-        return;
-      }
-
-      const onCueChange = () => {
-        const activeCue = track?.activeCues[0];
-        this._chapterTitle.set(activeCue?.text || '');
-      };
-
-      onCueChange();
-      listenEvent(track, 'cue-change', onCueChange);
-    });
+    const tracks = this._media.textTracks;
+    watchCueTextChange(tracks, 'chapters', this._chapterTitle.set);
 
     effect(() => {
       this.textContent = this._title();

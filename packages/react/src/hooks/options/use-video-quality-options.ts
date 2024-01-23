@@ -1,8 +1,10 @@
 import * as React from 'react';
 
-import { useReactContext, useSignal } from 'maverick.js/react';
+import { useSignal } from 'maverick.js/react';
 import { isString } from 'maverick.js/std';
-import { mediaContext, type VideoQuality } from 'vidstack';
+import { type VideoQuality } from 'vidstack';
+
+import { useMediaContext } from '../use-media-context';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-video-quality-options}
@@ -11,7 +13,7 @@ export function useVideoQualityOptions({
   auto = true,
   sort = 'descending',
 }: UseVideoQualityOptions = {}): VideoQualityOptions {
-  const media = useReactContext(mediaContext)!,
+  const media = useMediaContext(),
     { qualities, quality, autoQuality, canSetQuality } = media.$state,
     $qualities = useSignal(qualities);
 

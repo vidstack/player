@@ -111,6 +111,7 @@ export type {
 
 // Hooks
 export * from './hooks/use-state';
+export * from './hooks/use-media-context';
 export * from './hooks/use-media-player';
 export * from './hooks/use-media-provider';
 export * from './hooks/use-media-remote';
@@ -121,6 +122,7 @@ export * from './hooks/use-slider-preview';
 export * from './hooks/use-text-cues';
 export * from './hooks/use-active-text-cues';
 export * from './hooks/use-active-text-track';
+export * from './hooks/use-chapter-title';
 export * from './hooks/create-text-track';
 export * from './hooks/options/use-audio-options';
 export * from './hooks/options/use-caption-options';

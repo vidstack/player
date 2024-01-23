@@ -2,8 +2,8 @@ import { html } from 'lit-html';
 import { computed } from 'maverick.js';
 
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
-import { useMediaContext } from '../../../../core/api/media-context';
-import { $computed } from '../../../lit/directives/signal';
+import { useMediaState } from '../../../../core/api/media-context';
+import { $signal } from '../../../lit/directives/signal';
 import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
 import {
   DefaultAirPlayButton,
@@ -55,14 +55,14 @@ export function DefaultVideoLayoutLarge() {
 }
 
 function DefaultBottomMenuGroup() {
-  return $computed(() => {
+  return $signal(() => {
     const { menuGroup } = useDefaultLayoutContext();
     return menuGroup() === 'bottom' ? DefaultVideoMenus() : null;
   });
 }
 
 function DefaultControlsGroupTop() {
-  return $computed(() => {
+  return $signal(() => {
     const { menuGroup } = useDefaultLayoutContext(),
       children =
         menuGroup() === 'top'
@@ -126,8 +126,8 @@ export function DefaultVideoLoadLayout() {
 }
 
 function StartDuration() {
-  return $computed(() => {
-    const { duration } = useMediaContext().$state;
+  return $signal(() => {
+    const { duration } = useMediaState();
 
     if (duration() === 0) return null;
 
@@ -160,7 +160,7 @@ function DefaultVideoMenus() {
 }
 
 function DefaultVideoGestures() {
-  return $computed(() => {
+  return $signal(() => {
     const { noGestures } = useDefaultLayoutContext();
 
     if (noGestures()) return null;

@@ -1,15 +1,16 @@
 import * as React from 'react';
 
-import { computed } from 'maverick.js';
-import { useReactContext, useSignal } from 'maverick.js/react';
+import { useSignal } from 'maverick.js/react';
 import { isBoolean } from 'maverick.js/std';
 import {
-  mediaContext,
   type DefaultLayoutProps as BaseLayoutProps,
-  type MediaPlayerQueryCallback,
+  type MediaPlayerQuery,
+  type MediaStreamType,
 } from 'vidstack';
 
+import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaState } from '../../../hooks/use-media-state';
+import { createComputed } from '../../../hooks/use-signals';
 import type { PrimitivePropsWithRef } from '../../primitives/nodes';
 import { DefaultLayoutContext } from './context';
 import type { DefaultLayoutIcons } from './icons';
@@ -50,7 +51,7 @@ export interface DefaultLayoutProps<Slots = unknown>
    *
    * @defaultValue `({ width, height }) => width < 576 || height < 380`
    */
-  smallLayoutWhen?: boolean | MediaPlayerQueryCallback;
+  smallLayoutWhen?: boolean | MediaPlayerQuery;
   /**
    * Provide additional content to be inserted in specific positions.
    */
@@ -59,20 +60,18 @@ export interface DefaultLayoutProps<Slots = unknown>
 
 export interface CreateDefaultMediaLayout {
   type: 'audio' | 'video';
-  smLayoutWhen: MediaPlayerQueryCallback;
-  LoadLayout: React.FC;
-  SmallLayout: React.FC;
-  LargeLayout: React.FC;
-  UnknownStreamType?: React.FC;
+  smLayoutWhen: MediaPlayerQuery;
+  renderLayout: (props: {
+    streamType: MediaStreamType;
+    isLoadLayout: boolean;
+    isSmallLayout: boolean;
+  }) => React.ReactNode;
 }
 
 export function createDefaultMediaLayout({
   type,
   smLayoutWhen,
-  LoadLayout,
-  SmallLayout,
-  LargeLayout,
-  UnknownStreamType,
+  renderLayout,
 }: CreateDefaultMediaLayout) {
   const Layout = React.forwardRef<HTMLDivElement, DefaultLayoutProps>(
     (
@@ -82,12 +81,12 @@ export function createDefaultMediaLayout({
         thumbnails = null,
         translations,
         showMenuDelay,
-        showTooltipDelay = type === 'video' ? 500 : 700,
+        showTooltipDelay = 700,
         smallLayoutWhen = smLayoutWhen,
         noModal = false,
         menuGroup = 'bottom',
         hideQualityBitrate = false,
-        sliderChaptersMinWidth = 600,
+        sliderChaptersMinWidth = 325,
         disableTimeSlider = false,
         noGestures = false,
         noKeyboardActionDisplay = false,
@@ -97,15 +96,13 @@ export function createDefaultMediaLayout({
       },
       forwardRef,
     ) => {
-      const media = useReactContext(mediaContext)!,
+      const media = useMediaContext(),
         $load = useSignal(media.$props.load),
         $canLoad = useMediaState('canLoad'),
         $viewType = useMediaState('viewType'),
         $streamType = useMediaState('streamType'),
-        $smallWhen = React.useMemo(() => {
-          return computed(() =>
-            isBoolean(smallLayoutWhen) ? smallLayoutWhen : smallLayoutWhen(media.player.state),
-          );
+        $smallWhen = createComputed(() => {
+          return isBoolean(smallLayoutWhen) ? smallLayoutWhen : smallLayoutWhen(media.player.state);
         }, [smallLayoutWhen]),
         isMatch = $viewType === type,
         isSmallLayout = $smallWhen(),
@@ -123,7 +120,6 @@ export function createDefaultMediaLayout({
           data-size={isSmallLayout ? 'sm' : null}
           ref={forwardRef}
         >
-          {}
           {canRender && isMatch ? (
             <DefaultLayoutContext.Provider
               value={{
@@ -143,17 +139,7 @@ export function createDefaultMediaLayout({
                 translations,
               }}
             >
-              {isLoadLayout ? (
-                <LoadLayout />
-              ) : $streamType === 'unknown' ? (
-                UnknownStreamType ? (
-                  <UnknownStreamType />
-                ) : null
-              ) : isSmallLayout ? (
-                <SmallLayout />
-              ) : (
-                <LargeLayout />
-              )}
+              {renderLayout({ streamType: $streamType, isSmallLayout, isLoadLayout })}
               {children}
             </DefaultLayoutContext.Provider>
           ) : null}

@@ -1,110 +1,133 @@
 import { html } from 'lit-html';
+import { ref } from 'lit-html/directives/ref.js';
+import { effect, signal } from 'maverick.js';
+import { toggleClass } from 'maverick.js/std';
 
-import { useMediaContext } from '../../../../core/api/media-context';
-import { $computed } from '../../../lit/directives/signal';
+import { watchCueTextChange } from '../../../..';
+import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
+import { i18n } from '../../../../components/layouts/default/translations';
+import { useMediaContext, useMediaState } from '../../../../core/api/media-context';
+import {
+  useActive,
+  useMouseEnter,
+  useRectCSSVars,
+  useResizeObserver,
+  useTransitionActive,
+} from '../../../../utils/dom';
+import { $signal } from '../../../lit/directives/signal';
 import {
   DefaultCaptionButton,
   DefaultChaptersMenu,
-  DefaultLiveButton,
   DefaultMuteButton,
   DefaultPlayButton,
   DefaultSeekButton,
   DefaultSettingsMenu,
-  DefaultTimeInfo,
+  DefaultTimeInvert,
   DefaultTimeSlider,
   DefaultVolumeSlider,
 } from './shared-layout';
 
-export function DefaultAudioLayoutLarge() {
-  return html`
-    <media-captions class="vds-captions"></media-captions>
-
-    <media-controls class="vds-controls">
-      <media-controls-group class="vds-controls-group">
-        ${DefaultTimeSlider()}
-      </media-controls-group>
-
-      <media-controls-group class="vds-controls-group">
-        ${[
-          DefaultSeekButton({ seconds: -10, tooltip: 'top start' }),
-          DefaultPlayButton({ tooltip: 'top' }),
-          DefaultSeekButton({ tooltip: 'top', seconds: 10 }),
-          DefaultTimeInfo(),
-          html`<media-chapter-title class="vds-chapter-title"></media-chapter-title>`,
-          DefaultMuteButton({ tooltip: 'top' }),
-          DefaultVolumeSlider(),
-          DefaultCaptionButton({ tooltip: 'top' }),
-          DefaultAudioMenus(),
-        ]}
-      </media-controls-group>
-    </media-controls>
-  `;
+export function DefaultAudioLayout() {
+  return [
+    html`<media-captions class="vds-captions"></media-captions>`,
+    html`
+      <media-controls class="vds-controls">
+        <media-controls-group class="vds-controls-group">
+          ${[
+            DefaultSeekButton({ seconds: -10, tooltip: 'top start' }),
+            DefaultPlayButton({ tooltip: 'top' }),
+            DefaultSeekButton({ seconds: 10, tooltip: 'top' }),
+            DefaultAudioTitle(),
+            DefaultTimeSlider(),
+            DefaultTimeInvert(),
+            DefaultAudioVolume(),
+            DefaultCaptionButton({ tooltip: 'top' }),
+            DefaultAudioMenus(),
+          ]}
+        </media-controls-group>
+      </media-controls>
+    `,
+  ];
 }
 
-export function DefaultAudioLayoutSmall() {
-  return html`
-    <media-captions class="vds-captions"></media-captions>
-    <media-controls class="vds-controls">
-      <media-controls-group class="vds-controls-group">
-        ${[
-          DefaultLivePlayButton(),
-          DefaultMuteButton({ tooltip: 'top start' }),
-          $computed(DefaultLiveButton),
-          html`<media-chapter-title class="vds-chapter-title"></media-chapter-title>`,
-          DefaultCaptionButton({ tooltip: 'top' }),
-          DefaultAudioMenus(),
-        ]}
-      </media-controls-group>
+function DefaultAudioTitle() {
+  return $signal(() => {
+    let $ref = signal<Element | undefined>(undefined),
+      $chapterTitle = signal(''),
+      $isTextOverflowing = signal(false),
+      media = useMediaContext(),
+      { title, started, currentTime, ended } = useMediaState(),
+      { translations } = useDefaultLayoutContext(),
+      $isTransitionActive = useTransitionActive($ref),
+      $isContinued = () => started() || currentTime() > 0;
 
-      <media-controls-group class="vds-controls-group">
-        ${DefaultTimeSlider()}
-      </media-controls-group>
+    const $title = () => {
+      const word = ended() ? 'Replay' : $isContinued() ? 'Continue' : 'Play';
+      return `${i18n(translations, word)}: ${title()}`;
+    };
 
-      ${[DefaultTimeControlsGroup(), DefaultBottomControlsGroup()]}
-    </media-controls>
-  `;
-}
+    const $chapter = () => ($isContinued() ? $chapterTitle() : '');
 
-export function DefaultAudioLoadLayout() {
-  return html`<div class="vds-load-container">${DefaultPlayButton({ tooltip: 'top' })}</div>`;
-}
+    function onResize() {
+      const el = $ref(),
+        isOverflowing =
+          !!el && !$isTransitionActive() && el.clientWidth < el.children[0]!.clientWidth;
 
-function DefaultLivePlayButton() {
-  return $computed(() => {
-    const { live, canSeek } = useMediaContext().$state;
-    return live() && !canSeek() ? DefaultPlayButton({ tooltip: 'top start' }) : null;
+      el && toggleClass(el, 'vds-marquee', isOverflowing);
+
+      $isTextOverflowing.set(isOverflowing);
+    }
+
+    function Title() {
+      return html`
+        <span class="vds-title-text">
+          ${$signal($title)}
+          <span class="vds-chapter-title">${$signal($chapter)}</span>
+        </span>
+      `;
+    }
+
+    useResizeObserver($ref, onResize);
+    watchCueTextChange(media.textTracks, 'chapters', $chapterTitle.set);
+
+    return title()
+      ? html`
+          <span class="vds-title" title=${$signal($title)} ${ref($ref.set)}>
+            ${Title()}${$signal(() =>
+              $isTextOverflowing() && !$isTransitionActive() ? Title() : null,
+            )}
+          </span>
+        `
+      : html`<div class="vds-controls-spacer"></div>`;
   });
 }
 
-function DefaultTimeControlsGroup() {
-  return $computed(() => {
-    const { live } = useMediaContext().$state;
-    return !live()
-      ? html`
-          <media-controls-group class="vds-controls-group">
-            <media-time class="vds-time" type="current"></media-time>
-            <div class="vds-controls-spacer"></div>
-            <media-time class="vds-time" type="duration"></media-time>
-          </media-controls-group>
-        `
-      : null;
-  });
-}
+function DefaultAudioVolume() {
+  return $signal(() => {
+    const { pointer, muted } = useMediaState();
 
-function DefaultBottomControlsGroup() {
-  return $computed(() => {
-    const { canSeek } = useMediaContext().$state;
-    return canSeek()
-      ? html`
-          <media-controls-group class="vds-controls-group">
-            <div class="vds-controls-spacer"></div>
-            ${DefaultSeekButton({ seconds: -10, tooltip: 'top' })}
-            ${DefaultPlayButton({ tooltip: 'top' })}
-            ${DefaultSeekButton({ tooltip: 'top', seconds: 10 })}
-            <div class="vds-controls-spacer"></div>
-          </media-controls-group>
-        `
-      : null;
+    if (pointer() === 'coarse' && !muted()) return null;
+
+    const $rootRef = signal<Element | undefined>(undefined),
+      $triggerRef = signal<Element | undefined>(undefined),
+      $popperRef = signal<Element | undefined>(undefined),
+      $isRootActive = useActive($rootRef),
+      $hasMouseEnteredTrigger = useMouseEnter($triggerRef);
+
+    effect(() => {
+      if (!$hasMouseEnteredTrigger()) return;
+      useRectCSSVars($rootRef, $triggerRef, 'trigger');
+      useRectCSSVars($rootRef, $popperRef, 'popper');
+    });
+
+    return html`
+      <div class="vds-volume" ?data-active=${$signal($isRootActive)} ${ref($rootRef.set)}>
+        ${DefaultMuteButton({ tooltip: 'top', ref: $triggerRef.set })}
+        <div class="vds-volume-popup" ${ref($popperRef.set)}>
+          ${DefaultVolumeSlider({ orientation: 'vertical' })}
+        </div>
+      </div>
+    `;
   });
 }
 

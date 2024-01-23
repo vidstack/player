@@ -1,12 +1,12 @@
 import { html } from 'lit-html';
-import { createContext, onDispose, peek, provideContext, signal, useContext } from 'maverick.js';
+import { createContext, onDispose, provideContext, signal, useContext } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
 import { type DefaultLayoutTranslations, type MediaPlayer } from '../../../../components';
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import { i18n } from '../../../../components/layouts/default/translations';
-import { useMediaContext } from '../../../../core/api/media-context';
-import { $computed, $signal } from '../../../lit/directives/signal';
+import { useMediaContext, useMediaState } from '../../../../core/api/media-context';
+import { $signal } from '../../../lit/directives/signal';
 import { createRadioOptions, renderMenuButton, renderRadioGroup } from './menu-layout';
 
 const COLOR_OPTIONS = ['White', 'Yellow', 'Green', 'Cyan', 'Blue', 'Magenta', 'Red', 'Black'],
@@ -26,8 +26,8 @@ const COLOR_OPTIONS = ['White', 'Yellow', 'Green', 'Cyan', 'Blue', 'Magenta', 'R
 const resetContext = createContext<{ current?(): void; all: Set<() => void> }>();
 
 export function DefaultFontMenu() {
-  return $computed(() => {
-    const { hasCaptions } = useMediaContext().$state,
+  return $signal(() => {
+    const { hasCaptions } = useMediaState(),
       { translations } = useDefaultLayoutContext();
 
     if (!hasCaptions()) return null;
