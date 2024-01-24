@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### Refactor
+
+#### Player
+
+- clean up layout templates ([49bf0a7](https://github.com/vidstack/player/commit/49bf0a71cd35ae7bfa8e9a058e345224b4693865))
+
 ### ✨ Features
 
 #### Core
@@ -36,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - expose cancellable media request events on all components ([b6d84af](https://github.com/vidstack/player/commit/b6d84afed90f249587967b531188536ba81ead92))
 - include `ManagedMediaSource` support check ([ab35874](https://github.com/vidstack/player/commit/ab3587403c9e24f84156845a8539cbe875c64bc5))
 - plyr layout ([622dfda](https://github.com/vidstack/player/commit/622dfda5d99c88668f7196c116878674758efccf))
+- redesign default audio layout ([7ff5e65](https://github.com/vidstack/player/commit/7ff5e65f856dc48a4be903e8d41e55781108a2dd))
 
 #### Player (React)
 
@@ -66,6 +73,7 @@ All notable changes to this project will be documented in this file.
 - add missing load events to all providers ([446a4f4](https://github.com/vidstack/player/commit/446a4f41e7408431c745d4f81a42276666b64169))
 - remove redundant default layout exports ([67de0e9](https://github.com/vidstack/player/commit/67de0e98b92596ca9193e7bfec4ae69071547fa6))
 - replace player query lists with callbacks ([3644a74](https://github.com/vidstack/player/commit/3644a7471e6b58819136b7ef8159e8111f108925))
+- remove player query lists ([6f1129e](https://github.com/vidstack/player/commit/6f1129ec69dc75a1cd3f6c28e1774cce1c5df2e0))
 
 #### Player (React)
 
