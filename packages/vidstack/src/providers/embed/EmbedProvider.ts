@@ -37,9 +37,9 @@ export abstract class EmbedProvider<Message> {
   }
 
   setup() {
-    effect(this._watchSrc.bind(this));
     listenEvent(window, 'message' as any, this._onWindowMessage.bind(this) as any);
     listenEvent(this._iframe, 'load', this._onLoad.bind(this));
+    effect(this._watchSrc.bind(this));
   }
 
   protected _watchSrc() {
@@ -62,7 +62,7 @@ export abstract class EmbedProvider<Message> {
   protected _onWindowMessage(event: MessageEvent) {
     const origin = this._getOrigin(),
       isOriginMatch =
-        event.source === this._iframe?.contentWindow &&
+        (event.source === null || event.source === this._iframe?.contentWindow) &&
         (!isString(origin) || origin === event.origin);
 
     if (!isOriginMatch) return;
