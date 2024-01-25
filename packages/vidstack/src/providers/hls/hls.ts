@@ -97,6 +97,7 @@ export class HLSController {
           label: nonNativeTrack!.label,
           language: init?.lang,
           kind: nonNativeTrack!.kind as TextTrackKind,
+          default: nonNativeTrack.default,
         });
 
       track[TextTrackSymbol._readyState] = 2;
@@ -110,7 +111,6 @@ export class HLSController {
         }
       };
 
-      if (nonNativeTrack.default) track.setMode('showing', event);
       this._ctx.textTracks.add(track, event);
     }
   }
