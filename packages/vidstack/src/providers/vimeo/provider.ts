@@ -291,8 +291,13 @@ export class VimeoProvider
     this._remote('getCurrentTime');
   }
 
+  // Embed will sometimes dispatch 0 at end of playback.
+  private _skipTimeUpdates = false;
+
   protected _onTimeUpdate(time: number, trigger: Event) {
-    const { realCurrentTime, paused, bufferedEnd } = this._ctx.$state;
+    if (this._skipTimeUpdates && time === 0) return;
+
+    const { realCurrentTime, realDuration, paused, bufferedEnd } = this._ctx.$state;
 
     if (realCurrentTime() === time) return;
 
@@ -311,6 +316,14 @@ export class VimeoProvider
       if (!paused() && bufferedEnd() < time) {
         this._notify('waiting', undefined, trigger);
       }
+    }
+
+    if (realDuration() - time < 0.01) {
+      this._notify('end', undefined, trigger);
+      this._skipTimeUpdates = true;
+      setTimeout(() => {
+        this._skipTimeUpdates = false;
+      }, 500);
     }
   }
 
