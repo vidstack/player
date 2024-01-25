@@ -1,4 +1,5 @@
 import { State, tick, type Store } from 'maverick.js';
+import { isNumber } from 'maverick.js/std';
 
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { MediaProviderLoader } from '../../providers/types';
@@ -76,11 +77,15 @@ export const mediaState = new State<MediaState>({
       ? Math.max(0, Math.min(this.realCurrentTime - this.clipStartTime, this.duration))
       : this.realCurrentTime;
   },
+  providedDuration: -1,
   intrinsicDuration: 0,
+  get realDuration() {
+    return this.providedDuration > 0 ? this.providedDuration : this.intrinsicDuration;
+  },
   get duration() {
     return this.clipEndTime > 0
       ? this.clipEndTime - this.clipStartTime
-      : Math.max(0, this.intrinsicDuration - this.clipStartTime);
+      : Math.max(0, this.realDuration - this.clipStartTime);
   },
   get title() {
     return this.providedTitle || this.inferredTitle;
@@ -158,7 +163,7 @@ export const mediaState = new State<MediaState>({
     );
   },
   get live() {
-    return this.streamType.includes('live') || !Number.isFinite(this.intrinsicDuration);
+    return this.streamType.includes('live') || !Number.isFinite(this.realDuration);
   },
   get liveEdgeStart() {
     return this.live && Number.isFinite(this.seekableEnd)
@@ -802,6 +807,10 @@ export interface MediaState {
   providedPoster: string;
   /* @internal */
   intrinsicDuration: number;
+  /* @internal */
+  realDuration: number;
+  /* @internal */
+  providedDuration: number;
   /* @internal */
   inferredPoster: string;
   /* @internal */

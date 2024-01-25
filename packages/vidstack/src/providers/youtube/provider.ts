@@ -339,13 +339,13 @@ export class YouTubeProvider
   protected override _onMessage({ info }: YouTubeMessage, event: MessageEvent) {
     if (!info) return;
 
-    const { title, intrinsicDuration: duration, playbackRate } = this._ctx.$state;
+    const { title, realDuration, playbackRate } = this._ctx.$state;
 
     if (isObject(info.videoData) && info.videoData.title !== title()) {
       this._notify('title-change', info.videoData.title, event);
     }
 
-    if (isNumber(info.duration) && info.duration !== duration()) {
+    if (isNumber(info.duration) && info.duration !== realDuration()) {
       if (isNumber(info.videoLoadedFraction)) {
         const buffered = info.progressState?.loaded ?? info.videoLoadedFraction * info.duration,
           seekable = new TimeRange(0, info.duration);

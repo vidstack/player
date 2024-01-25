@@ -17,6 +17,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   currentTime: 0,
   crossorigin: null,
   crossOrigin: null,
+  duration: -1,
   fullscreenOrientation: 'landscape',
   googleCast: {},
   load: 'visible',
@@ -90,6 +91,11 @@ export interface MediaPlayerProps
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
    */
   crossOrigin: true | MediaState['crossOrigin'];
+  /**
+   * A `double` indicating the total playback length of the media in seconds. If this is not
+   * provided it will be determined when the media loaded.
+   */
+  duration: number;
   /**
    * The URL and optionally type of the current media resource/s to be considered for playback.
    *

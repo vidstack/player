@@ -13,23 +13,25 @@ export class MediaStateSync extends MediaPlayerController {
     if (__SERVER__) return;
 
     if (__DEV__) effect(this._watchLogLevel.bind(this));
-    effect(this._watchProvidedTypes.bind(this));
     effect(this._watchArtist.bind(this));
-    effect(this._watchTitle.bind(this));
     effect(this._watchAutoplay.bind(this));
-    effect(this._watchPoster.bind(this));
-    effect(this._watchLoop.bind(this));
+    effect(this._watchClipTimes.bind(this));
     effect(this._watchControls.bind(this));
     effect(this._watchCrossOrigin.bind(this));
-    effect(this._watchPlaysInline.bind(this));
-    effect(this._watchClipTimes.bind(this));
-    effect(this._watchLiveTolerance.bind(this));
+    effect(this._watchDuration.bind(this));
     effect(this._watchLive.bind(this));
     effect(this._watchLiveEdge.bind(this));
+    effect(this._watchLiveTolerance.bind(this));
+    effect(this._watchLoop.bind(this));
+    effect(this._watchPlaysInline.bind(this));
+    effect(this._watchPoster.bind(this));
+    effect(this._watchProvidedTypes.bind(this));
+    effect(this._watchTitle.bind(this));
   }
 
   private _init() {
     const providedProps = {
+      duration: 'providedDuration',
       poster: 'providedPoster',
       streamType: 'providedStreamType',
       title: 'providedTitle',
@@ -104,6 +106,11 @@ export class MediaStateSync extends MediaPlayerController {
     const _crossOrigin = this.$props.crossOrigin() ?? this.$props.crossorigin(),
       value = _crossOrigin === true ? '' : (_crossOrigin as '');
     this.$state.crossOrigin.set(value);
+  }
+
+  private _watchDuration() {
+    const { providedDuration } = this.$state;
+    providedDuration.set(this.$props.duration());
   }
 
   private _watchPlaysInline() {

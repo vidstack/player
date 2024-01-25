@@ -500,7 +500,7 @@ export class VimeoProvider
         kind: 'chapters',
         default: true,
       }),
-      { intrinsicDuration } = this._ctx.$state;
+      { realDuration } = this._ctx.$state;
 
     for (let i = 0; i < chapters.length; i++) {
       const chapter = chapters[i],
@@ -509,7 +509,7 @@ export class VimeoProvider
       track.addCue(
         new window.VTTCue(
           chapter.startTime,
-          nextChapter?.startTime ?? intrinsicDuration(),
+          nextChapter?.startTime ?? realDuration(),
           chapter.title,
         ),
       );

@@ -7,7 +7,6 @@ import {
   peek,
   prop,
   provideContext,
-  scoped,
   signal,
   type WriteSignalRecord,
 } from 'maverick.js';
