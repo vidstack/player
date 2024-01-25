@@ -507,11 +507,14 @@ function Captions() {
 
   effect(() => {
     const track = media.$state.textTrack();
-    return track
-      ? listenEvent(track, 'cue-change', () => {
-          activeCue.set(track?.activeCues[0]);
-        })
-      : null;
+    if (!track) return;
+
+    function onCueChange() {
+      activeCue.set(track?.activeCues[0]);
+    }
+
+    onCueChange();
+    return listenEvent(track, 'cue-change', onCueChange);
   });
 
   return html`

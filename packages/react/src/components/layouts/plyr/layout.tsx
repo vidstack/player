@@ -752,9 +752,13 @@ function PlyrCaptions() {
 
   React.useEffect(() => {
     if (!$track) return;
-    return listenEvent($track, 'cue-change', () => {
-      setActiveCue($track?.activeCues[0]);
-    });
+
+    function onCueChange() {
+      setActiveCue($track ? $track.activeCues[0] : null);
+    }
+
+    onCueChange();
+    return listenEvent($track, 'cue-change', onCueChange);
   }, [$track]);
 
   return (
