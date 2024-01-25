@@ -3,7 +3,6 @@ import { ref } from 'lit-html/directives/ref.js';
 import { effect, signal } from 'maverick.js';
 import { toggleClass } from 'maverick.js/std';
 
-import { watchCueTextChange } from '../../../..';
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import { i18n } from '../../../../components/layouts/default/translations';
 import { useMediaContext, useMediaState } from '../../../../core/api/media-context';
@@ -66,6 +65,12 @@ function DefaultAudioTitle() {
       const word = ended() ? 'Replay' : $isContinued() ? 'Continue' : 'Play';
       return `${i18n(translations, word)}: ${title()}`;
     };
+
+    effect(() => {
+      if ($isTransitionActive() && document.activeElement === document.body) {
+        media.player.el?.focus();
+      }
+    });
 
     function onResize() {
       const el = $ref(),

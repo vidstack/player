@@ -22,7 +22,8 @@ export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {
 
 const MODIFIER_KEYS = new Set(['Shift', 'Alt', 'Meta', 'Control']),
   BUTTON_SELECTORS = 'button, [role="button"]',
-  IGNORE_SELECTORS = 'input, textarea, select, [contenteditable], [role^="menuitem"]';
+  IGNORE_SELECTORS =
+    'input, textarea, select, [contenteditable], [role^="menuitem"], [role="timer"]';
 
 export class MediaKeyboardController extends MediaPlayerController {
   constructor(private _media: MediaContext) {

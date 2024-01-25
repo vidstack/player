@@ -190,6 +190,12 @@ function DefaultAudioTitle() {
     $chapterTitle = $isContinued ? chapterTitle : '',
     isTransitionActive = useTransitionActive(rootEl);
 
+  React.useEffect(() => {
+    if (isTransitionActive && document.activeElement === document.body) {
+      media.player.el?.focus();
+    }
+  }, []);
+
   const onResize = React.useCallback(() => {
     const el = rootEl,
       isOverflowing = !!el && !isTransitionActive && el.clientWidth < el.children[0]!.clientWidth;
