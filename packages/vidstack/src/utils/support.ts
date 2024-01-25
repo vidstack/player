@@ -55,6 +55,18 @@ export function isReducedMotionPreferred(): boolean {
   );
 }
 
+export function canPlayAudioType(audio: HTMLAudioElement | null, type: string): boolean {
+  if (__SERVER__) return false;
+  if (!audio) audio = document.createElement('audio');
+  return audio.canPlayType(type).length > 0;
+}
+
+export function canPlayVideoType(video: HTMLVideoElement | null, type: string): boolean {
+  if (__SERVER__) return false;
+  if (!video) video = document.createElement('video');
+  return video.canPlayType(type).length > 0;
+}
+
 /**
  * Checks if the native HTML5 video player can play HLS.
  */

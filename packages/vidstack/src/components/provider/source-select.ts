@@ -161,6 +161,7 @@ export class SourceSelection {
       if (loader) {
         newSource = src;
         newLoader = loader;
+        break;
       }
     }
 
@@ -286,8 +287,8 @@ export class SourceSelection {
 }
 
 function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
-  return (isArray(src) ? src : [!isString(src) && 'src' in src ? src : { src }]).map(
-    ({ src, type, ...props }) => ({
+  return (isArray(src) ? src : [!isString(src) && 'src' in src ? src : { src }])
+    .map(({ src, type, ...props }) => ({
       src,
       type:
         type ??
@@ -300,8 +301,8 @@ function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
               ? 'video/vimeo'
               : '?'),
       ...props,
-    }),
-  );
+    }))
+    .sort((a) => (a.type === '?' ? 1 : -1));
 }
 
 export function isSameSrc(a: MediaSrc | undefined | null, b: MediaSrc | undefined | null) {
