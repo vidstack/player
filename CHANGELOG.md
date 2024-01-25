@@ -4,12 +4,6 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
-### Refactor
-
-#### Player
-
-- clean up layout templates ([49bf0a7](https://github.com/vidstack/player/commit/49bf0a71cd35ae7bfa8e9a058e345224b4693865))
-
 ### ✨ Features
 
 #### Core
@@ -43,6 +37,9 @@ All notable changes to this project will be documented in this file.
 - include `ManagedMediaSource` support check ([ab35874](https://github.com/vidstack/player/commit/ab3587403c9e24f84156845a8539cbe875c64bc5))
 - plyr layout ([622dfda](https://github.com/vidstack/player/commit/622dfda5d99c88668f7196c116878674758efccf))
 - redesign default audio layout ([7ff5e65](https://github.com/vidstack/player/commit/7ff5e65f856dc48a4be903e8d41e55781108a2dd))
+- new title component ([764c977](https://github.com/vidstack/player/commit/764c9778ca38c9dd137488d9e5943546adccd70e))
+- new `duration` player prop ([4cf4457](https://github.com/vidstack/player/commit/4cf44577f01594ad1dedbad85050ed244de47a87))
+- new `seekStep` default layout prop ([1d32867](https://github.com/vidstack/player/commit/1d328679a30fdd502c8e671a7684d9fc882da984))
 
 #### Player (React)
 
@@ -74,6 +71,15 @@ All notable changes to this project will be documented in this file.
 - remove redundant default layout exports ([67de0e9](https://github.com/vidstack/player/commit/67de0e98b92596ca9193e7bfec4ae69071547fa6))
 - replace player query lists with callbacks ([3644a74](https://github.com/vidstack/player/commit/3644a7471e6b58819136b7ef8159e8111f108925))
 - remove player query lists ([6f1129e](https://github.com/vidstack/player/commit/6f1129ec69dc75a1cd3f6c28e1774cce1c5df2e0))
+- key events not updating slider value ([a39a6fc](https://github.com/vidstack/player/commit/a39a6fc92acb594607064e8b9366c6480e043435))
+- manage focus when default audio layout transitions ([87340eb](https://github.com/vidstack/player/commit/87340eb1c2d02878c117afc3a097a85f93713bb6))
+- toggle captions on plyr layout should show cue ([1ea562a](https://github.com/vidstack/player/commit/1ea562a9e9a87ac368a03c94b4e590397e8e8372))
+- iframe should not leak outside media provider ([ed93a31](https://github.com/vidstack/player/commit/ed93a317e4fd688a09b229f8da0e016d5430b6ab))
+- switching from youtube to vimeo gets stuck ([597cef7](https://github.com/vidstack/player/commit/597cef7ad37e422a8825d479b82c29cfa9f92228))
+- settings stops working via keyboard after exiting ([f4954d9](https://github.com/vidstack/player/commit/f4954d9ee350f33ff5eb492124e094a9b9c9cf79))
+- vimeo not firing ended event ([fba30c9](https://github.com/vidstack/player/commit/fba30c9d8f9497852bf8bd283b8f8a7e00801575))
+- check whether browser can play audio/video type ([b7ff954](https://github.com/vidstack/player/commit/b7ff954f106b906d2e9100ff91f0b98c83e435be))
+- select default hls captions ([11b0c70](https://github.com/vidstack/player/commit/11b0c70df6197d5559b6d552d7d913e8d733bbe2))
 
 #### Player (React)
 
@@ -136,13 +142,6 @@ All notable changes to this project will be documented in this file.
 - cdn breaking due to mangle cache being created late ([6cd1dee](https://github.com/vidstack/player/commit/6cd1deea0307eddd7b3b28b734ada422021a4fe9))
 
 ## [1.9.3-next](https://github.com/vidstack/player/releases/tag/v1.9.3-next) (2023-12-10)
-
-### 🎨 Styling
-
-#### Player (React)
-
-- refactor player callbacks ([8524a6d](https://github.com/vidstack/player/commit/8524a6d41aa3436cf50bf364513144595c9e5a03))
-- refactor remotion provider ([ccbbff3](https://github.com/vidstack/player/commit/ccbbff3bc52294ed97b60097be1c82205b1f76f9))
 
 ### 🐛 Bug Fixes
 
