@@ -46,6 +46,7 @@
   border-radius: inherit;
   width: 100%;
   aspect-ratio: inherit;
+  overflow: hidden;
 }
 
 [data-media-player]:not([data-view-type='audio']) [data-media-provider],
