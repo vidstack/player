@@ -3,7 +3,7 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { ref as $ref, ref } from 'lit-html/directives/ref.js';
 import type { RefOrCallback } from 'lit-html/directives/ref.js';
 import { computed, effect, signal, type ReadSignal } from 'maverick.js';
-import { isFunction, unwrap, uppercaseFirstChar } from 'maverick.js/std';
+import { isFunction, noop, unwrap, uppercaseFirstChar } from 'maverick.js/std';
 
 import {
   type MenuPlacement,
@@ -92,7 +92,7 @@ export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
 
 export function DefaultMuteButton({
   tooltip,
-  ref,
+  ref = noop,
 }: {
   tooltip: TooltipPlacement;
   ref?: RefOrCallback;
@@ -300,12 +300,14 @@ export function DefaultTimeGroup() {
   return html`
     <div class="vds-time-group">
       ${$signal(() => {
-        const { started, currentTime, duration } = useMediaState(),
-          $showCurrentTime = (started() || currentTime() > 0) && duration();
+        const { duration } = useMediaState();
+
+        if (!duration()) return null;
+
         return [
-          $showCurrentTime && html`<media-time class="vds-time" type="current"></media-time>`,
-          $showCurrentTime && html`<div class="vds-time-divider">/</div>`,
-          duration() && html`<media-time class="vds-time" type="duration"></media-time>`,
+          html`<media-time class="vds-time" type="current"></media-time>`,
+          html`<div class="vds-time-divider">/</div>`,
+          html`<media-time class="vds-time" type="duration"></media-time>`,
         ].filter((f) => (f ? f : null));
       })}
     </div>
@@ -323,6 +325,10 @@ export function DefaultTimeInvert() {
   });
 }
 
+export function DefaultControlsSpacer() {
+  return html`<div class="vds-controls-spacer"></div>`;
+}
+
 export function DefaultTimeInfo(): any {
   return $signal(() => {
     const { live } = useMediaState();
@@ -336,6 +342,18 @@ function MenuPortal(container: HTMLElement | null, template: TemplateResult) {
       ${template}
     </media-menu-portal>
   `;
+}
+
+export function DefaultTitle() {
+  return html`<media-title class="vds-title"></media-title>`;
+}
+
+export function DefaultChapterTitle() {
+  return html`<media-chapter-title class="vds-chapter-title"></media-chapter-title>`;
+}
+
+export function DefaultTitleGroup() {
+  return html`<div class="vds-title-group">${DefaultTitle()}${DefaultChapterTitle()}</div>`;
 }
 
 export function DefaultChaptersMenu({

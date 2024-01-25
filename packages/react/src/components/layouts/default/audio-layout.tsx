@@ -22,6 +22,7 @@ import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layou
 import {
   DefaultCaptionButton,
   DefaultChaptersMenu,
+  DefaultControlsSpacer,
   DefaultMuteButton,
   DefaultPlayButton,
   DefaultSeekButton,
@@ -214,7 +215,7 @@ function DefaultAudioTitle() {
       ) : null}
     </span>
   ) : (
-    <div className="vds-controls-spacer" />
+    <DefaultControlsSpacer />
   );
 }
 
@@ -224,7 +225,7 @@ function AudioTitle({ title, chapterTitle }: { title: string; chapterTitle: stri
   const slots = useDefaultAudioLayoutSlots();
   return (
     <span className="vds-title-text">
-      {title}
+      {slot(slots, 'title', title)}
       {slot(slots, 'chapterTitle', <span className="vds-chapter-title">{chapterTitle}</span>)}
     </span>
   );

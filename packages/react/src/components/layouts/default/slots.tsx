@@ -17,6 +17,7 @@ export type DefaultLayoutSlotName =
   | 'bufferingIndicator'
   | 'captionButton'
   | 'captions'
+  | 'title'
   | 'chapterTitle'
   | 'currentTime'
   | 'endTime'

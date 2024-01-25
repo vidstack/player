@@ -9,6 +9,8 @@ import {
   DefaultAirPlayButton,
   DefaultCaptionButton,
   DefaultChaptersMenu,
+  DefaultChapterTitle,
+  DefaultControlsSpacer,
   DefaultFullscreenButton,
   DefaultGoogleCastButton,
   DefaultMuteButton,
@@ -29,26 +31,32 @@ export function DefaultVideoLayoutLarge() {
     html`<div class="vds-scrim"></div>`,
     html`
       <media-controls class="vds-controls">
-        ${DefaultControlsGroupTop()}
-        <div class="vds-controls-spacer"></div>
-        <media-controls-group class="vds-controls-group">
-          ${DefaultTimeSlider()}
-        </media-controls-group>
-        <media-controls-group class="vds-controls-group">
-          ${[
-            DefaultPlayButton({ tooltip: 'top start' }),
-            DefaultMuteButton({ tooltip: 'top' }),
-            DefaultVolumeSlider(),
-            DefaultTimeInfo(),
-            html`<media-chapter-title class="vds-chapter-title"></media-chapter-title>`,
-            DefaultCaptionButton({ tooltip: 'top' }),
-            DefaultBottomMenuGroup(),
-            DefaultAirPlayButton({ tooltip: 'top' }),
-            DefaultGoogleCastButton({ tooltip: 'top' }),
-            DefaultPIPButton(),
-            DefaultFullscreenButton({ tooltip: 'top end' }),
-          ]}
-        </media-controls-group>
+        ${[
+          DefaultControlsGroupTop(),
+          DefaultControlsSpacer(),
+          html`
+            <media-controls-group class="vds-controls-group">
+              ${DefaultTimeSlider()}
+            </media-controls-group>
+          `,
+          html`
+            <media-controls-group class="vds-controls-group">
+              ${[
+                DefaultPlayButton({ tooltip: 'top start' }),
+                DefaultMuteButton({ tooltip: 'top' }),
+                DefaultVolumeSlider(),
+                DefaultTimeInfo(),
+                DefaultChapterTitle(),
+                DefaultCaptionButton({ tooltip: 'top' }),
+                DefaultBottomMenuGroup(),
+                DefaultAirPlayButton({ tooltip: 'top' }),
+                DefaultGoogleCastButton({ tooltip: 'top' }),
+                DefaultPIPButton(),
+                DefaultFullscreenButton({ tooltip: 'top end' }),
+              ]}
+            </media-controls-group>
+          `,
+        ]}
       </media-controls>
     `,
   ];
@@ -62,20 +70,14 @@ function DefaultBottomMenuGroup() {
 }
 
 function DefaultControlsGroupTop() {
-  return $signal(() => {
-    const { menuGroup } = useDefaultLayoutContext(),
-      children =
-        menuGroup() === 'top'
-          ? html`
-              <div class="vds-controls-spacer"></div>
-              ${DefaultVideoMenus()}
-            `
-          : null;
-
-    return html`
-      <media-controls-group class="vds-controls-group">${children}</media-controls-group>
-    `;
-  });
+  return html`
+    <media-controls-group class="vds-controls-group">
+      ${$signal(() => {
+        const { menuGroup } = useDefaultLayoutContext();
+        return menuGroup() === 'top' ? [DefaultControlsSpacer(), DefaultVideoMenus()] : null;
+      })}
+    </media-controls-group>
+  `;
 }
 
 export function DefaultVideoLayoutSmall() {
@@ -90,7 +92,7 @@ export function DefaultVideoLayoutSmall() {
           ${[
             DefaultAirPlayButton({ tooltip: 'top start' }),
             DefaultGoogleCastButton({ tooltip: 'bottom start' }),
-            html`<div class="vds-controls-spacer"></div>`,
+            DefaultControlsSpacer(),
             DefaultCaptionButton({ tooltip: 'bottom' }),
             DefaultVideoMenus(),
             DefaultMuteButton({ tooltip: 'bottom end' }),
@@ -102,8 +104,7 @@ export function DefaultVideoLayoutSmall() {
         <media-controls-group class="vds-controls-group">
           ${[
             DefaultTimeInfo(),
-            html`<media-chapter-title class="vds-chapter-title"></media-chapter-title>`,
-            html`<div class="vds-controls-spacer"></div>`,
+            DefaultChapterTitle(),
             DefaultFullscreenButton({ tooltip: 'top end' }),
           ]}
         </media-controls-group>

@@ -18,6 +18,8 @@ import { $signal } from '../../../lit/directives/signal';
 import {
   DefaultCaptionButton,
   DefaultChaptersMenu,
+  DefaultChapterTitle,
+  DefaultControlsSpacer,
   DefaultMuteButton,
   DefaultPlayButton,
   DefaultSeekButton,
@@ -53,7 +55,6 @@ export function DefaultAudioLayout() {
 function DefaultAudioTitle() {
   return $signal(() => {
     let $ref = signal<Element | undefined>(undefined),
-      $chapterTitle = signal(''),
       $isTextOverflowing = signal(false),
       media = useMediaContext(),
       { title, started, currentTime, ended } = useMediaState(),
@@ -65,8 +66,6 @@ function DefaultAudioTitle() {
       const word = ended() ? 'Replay' : $isContinued() ? 'Continue' : 'Play';
       return `${i18n(translations, word)}: ${title()}`;
     };
-
-    const $chapter = () => ($isContinued() ? $chapterTitle() : '');
 
     function onResize() {
       const el = $ref(),
@@ -81,24 +80,23 @@ function DefaultAudioTitle() {
     function Title() {
       return html`
         <span class="vds-title-text">
-          ${$signal($title)}
-          <span class="vds-chapter-title">${$signal($chapter)}</span>
+          ${$signal($title)}${$signal(() => ($isContinued() ? DefaultChapterTitle() : null))}
         </span>
       `;
     }
 
     useResizeObserver($ref, onResize);
-    watchCueTextChange(media.textTracks, 'chapters', $chapterTitle.set);
 
     return title()
       ? html`
           <span class="vds-title" title=${$signal($title)} ${ref($ref.set)}>
-            ${Title()}${$signal(() =>
-              $isTextOverflowing() && !$isTransitionActive() ? Title() : null,
-            )}
+            ${[
+              Title(),
+              $signal(() => ($isTextOverflowing() && !$isTransitionActive() ? Title() : null)),
+            ]}
           </span>
         `
-      : html`<div class="vds-controls-spacer"></div>`;
+      : DefaultControlsSpacer();
   });
 }
 

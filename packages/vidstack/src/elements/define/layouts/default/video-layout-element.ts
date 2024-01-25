@@ -73,6 +73,7 @@ export class MediaVideoLayoutElement
   private _render() {
     const { load } = this._media.$props,
       { canLoad, streamType } = this._media.$state;
+
     return this.isMatch
       ? load() === 'play' && !canLoad()
         ? DefaultVideoLoadLayout()

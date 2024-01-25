@@ -15,6 +15,7 @@ import {
   DefaultCaptionButton,
   DefaultChaptersMenu,
   DefaultChapterTitle,
+  DefaultControlsSpacer,
   DefaultFullscreenButton,
   DefaultGoogleCastButton,
   DefaultMuteButton,
@@ -23,6 +24,7 @@ import {
   DefaultSettingsMenu,
   DefaultTimeInfo,
   DefaultTimeSlider,
+  DefaultTitle,
   DefaultVolumeSlider,
 } from './shared-layout';
 import {
@@ -95,11 +97,11 @@ function DefaultVideoLargeLayout() {
       {slot(slots, 'captions', <Captions className="vds-captions" />)}
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
-          <div className="vds-controls-spacer" />
+          <DefaultControlsSpacer />
           {menuGroup === 'top' && <DefaultVideoMenus slots={slots} />}
         </Controls.Group>
 
-        <div className="vds-controls-spacer" />
+        <DefaultControlsSpacer />
 
         <Controls.Group className="vds-controls-group">
           {slot(slots, 'timeSlider', <DefaultTimeSlider />)}
@@ -141,7 +143,7 @@ function DefaultVideoSmallLayout() {
         <Controls.Group className="vds-controls-group">
           {slot(slots, 'airPlayButton', <DefaultAirPlayButton tooltip="top start" />)}
           {slot(slots, 'googleCastButton', <DefaultGoogleCastButton tooltip="top start" />)}
-          <div className="vds-controls-spacer" />
+          <DefaultControlsSpacer />
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="bottom" />)}
           <DefaultVideoMenus slots={slots} />
           {slot(slots, 'muteButton', <DefaultMuteButton tooltip="bottom end" />)}
@@ -152,7 +154,6 @@ function DefaultVideoSmallLayout() {
         <Controls.Group className="vds-controls-group">
           <DefaultTimeInfo slots={slots} />
           {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}
-          <div className="vds-controls-spacer" />
           {slot(slots, 'fullscreenButton', <DefaultFullscreenButton tooltip="top end" />)}
         </Controls.Group>
         <Controls.Group className="vds-controls-group">

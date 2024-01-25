@@ -81,6 +81,7 @@ export type {
 } from './components/ui/menu';
 
 // Display
+export { Title, type TitleProps } from './components/ui/title';
 export { ChapterTitle, type ChapterTitleProps } from './components/ui/chapter-title';
 export { type GestureProps, Gesture } from './components/ui/gesture';
 export { Captions, type CaptionsProps } from './components/ui/captions';

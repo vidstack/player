@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { computed } from 'maverick.js';
 import { useSignal } from 'maverick.js/react';
 import { uppercaseFirstChar } from 'maverick.js/std';
 import { isTrackCaptionKind, type TooltipPlacement } from 'vidstack';
@@ -31,6 +30,7 @@ import * as TimeSlider from '../../ui/sliders/time-slider';
 import * as VolumeSlider from '../../ui/sliders/volume-slider';
 import * as Thumbnail from '../../ui/thumbnail';
 import { Time } from '../../ui/time';
+import { Title } from '../../ui/title';
 import * as Tooltip from '../../ui/tooltip';
 import { RemotionSliderThumbnail, RemotionThumbnail } from '../remotion-ui';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from './context';
@@ -382,6 +382,17 @@ DefaultTimeSlider.displayName = 'DefaultTimeSlider';
 export { DefaultTimeSlider };
 
 /* -------------------------------------------------------------------------------------------------
+ * DefaultTitle
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultTitle() {
+  return <Title className="vds-title" />;
+}
+
+DefaultTitle.displayName = 'DefaultTitle';
+export { DefaultTitle };
+
+/* -------------------------------------------------------------------------------------------------
  * DefaultChapterTitle
  * -----------------------------------------------------------------------------------------------*/
 
@@ -421,33 +432,32 @@ interface DefaultTimeGroupSlots {
 }
 
 function DefaultTimeGroup({ slots }: { slots?: DefaultTimeGroupSlots }) {
-  const media = useMediaContext(),
-    showCurrentTime = createComputed(() => {
-      const { started, currentTime, duration } = media.$state;
-      return (started() || currentTime() > 0) && duration();
-    }),
-    $showCurrentTime = useSignal(showCurrentTime),
-    $duration = useMediaState('duration');
+  const $duration = useMediaState('duration');
+
+  if (!$duration) return null;
 
   return (
     <div className="vds-time-group">
-      {slot(
-        slots,
-        'currentTime',
-        $showCurrentTime ? <Time className="vds-time" type="current" /> : null,
-      )}
-      {slot(
-        slots,
-        'timeSeparator',
-        $showCurrentTime ? <div className="vds-time-divider">/</div> : null,
-      )}
-      {slot(slots, 'endTime', $duration ? <Time className="vds-time" type="duration" /> : null)}
+      {slot(slots, 'currentTime', <Time className="vds-time" type="current" />)}
+      {slot(slots, 'timeSeparator', <div className="vds-time-divider">/</div>)}
+      {slot(slots, 'endTime', <Time className="vds-time" type="duration" />)}
     </div>
   );
 }
 
 DefaultTimeGroup.displayName = 'DefaultTimeGroup';
 export { DefaultTimeGroup };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultControlsSpacer
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultControlsSpacer() {
+  return <div className="vds-controls-spacer" />;
+}
+
+DefaultControlsSpacer.displayName = 'DefaultControlsSpacer';
+export { DefaultControlsSpacer };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultTimeInfo
