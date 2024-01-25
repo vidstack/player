@@ -145,7 +145,6 @@ export class SliderEventsController extends ViewController<
   }
 
   private _updatePointerValue(value: number, trigger?: Event) {
-    if (trigger?.defaultPrevented) return;
     const { pointerValue, dragging } = this.$state;
     pointerValue.set(value);
     this.dispatch('pointer-value-change', { detail: value, trigger });

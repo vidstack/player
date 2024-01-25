@@ -36,6 +36,7 @@
   --media-menu-y-offset: 18px;
   --media-tooltip-y-offset: 18px;
   --media-slider-value-border: var(--audio-slider-value-border, 1px solid rgb(255 255 255 / 0.1));
+  --media-slider-value-gap: var(--audio-slider-value-gap, 6px);
   --media-focus-ring-color: var(--audio-focus-ring-color, rgb(78 156 246));
   --media-focus-ring: var(--audio-focus-ring, 0 0 0 3px var(--media-focus-ring-color));
 }
