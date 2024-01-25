@@ -10,7 +10,7 @@ const FOCUSABLE_ELEMENTS_SELECTOR = /* #__PURE__*/ [
   'select',
   'button',
 ]
-  .map((selector) => `${selector}:not([aria-hidden])`)
+  .map((selector) => `${selector}:not([aria-hidden='true'])`)
   .join(',');
 
 const VALID_KEYS = /* #__PURE__*/ new Set([
