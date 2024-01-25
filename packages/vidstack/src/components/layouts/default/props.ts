@@ -14,6 +14,7 @@ export const defaultLayoutProps: DefaultLayoutProps = {
   disableTimeSlider: false,
   noGestures: false,
   noKeyboardActionDisplay: false,
+  seekStep: 10,
 };
 
 export interface DefaultLayoutProps {
@@ -67,4 +68,9 @@ export interface DefaultLayoutProps {
    * Whether keyboard actions should not be displayed.
    */
   noKeyboardActionDisplay: boolean;
+  /**
+   * The number of seconds to seek forward or backward when pressing the seek button or using
+   * keyboard shortcuts.
+   */
+  seekStep: number;
 }

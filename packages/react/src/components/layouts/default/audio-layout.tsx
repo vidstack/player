@@ -114,17 +114,9 @@ function AudioLayout() {
       <Captions className="vds-captions" />
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
-          {slot(
-            slots,
-            'seekBackwardButton',
-            <DefaultSeekButton seconds={-10} tooltip="top start" />,
-          )}
+          {slot(slots, 'seekBackwardButton', <DefaultSeekButton backward tooltip="top start" />)}
           {slot(slots, 'playButton', <DefaultPlayButton tooltip="top center" />)}
-          {slot(
-            slots,
-            'seekForwardButton',
-            <DefaultSeekButton seconds={10} tooltip="top center" />,
-          )}
+          {slot(slots, 'seekForwardButton', <DefaultSeekButton tooltip="top center" />)}
           <DefaultAudioTitle />
           {slot(slots, 'timeSlider', <DefaultTimeSlider />)}
           <DefaultTimeInvert />

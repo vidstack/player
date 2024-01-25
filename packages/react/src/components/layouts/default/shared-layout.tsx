@@ -277,10 +277,14 @@ export { DefaultFullscreenButton };
  * DefaultSeekButton
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultSeekButton({ seconds, tooltip }: DefaultMediaButtonProps & { seconds: number }) {
-  const { icons: Icons } = useDefaultLayoutContext(),
+function DefaultSeekButton({
+  backward,
+  tooltip,
+}: DefaultMediaButtonProps & { backward?: boolean }) {
+  const { icons: Icons, seekStep } = useDefaultLayoutContext(),
     seekForwardText = useDefaultLayoutWord('Seek Forward'),
     seekBackwardText = useDefaultLayoutWord('Seek Backward'),
+    seconds = (backward ? -1 : 1) * seekStep!,
     label = seconds >= 0 ? seekForwardText : seekBackwardText;
   return (
     <DefaultTooltip content={label} placement={tooltip}>
@@ -327,7 +331,7 @@ function DefaultTimeSlider() {
   const [instance, setInstance] = React.useState<TimeSliderInstance | null>(null),
     [width, setWidth] = React.useState(0),
     $src = useMediaState('currentSrc'),
-    { thumbnails, sliderChaptersMinWidth, disableTimeSlider } = useDefaultLayoutContext(),
+    { thumbnails, sliderChaptersMinWidth, disableTimeSlider, seekStep } = useDefaultLayoutContext(),
     label = useDefaultLayoutWord('Seek'),
     $RemotionSliderThumbnail = useSignal(RemotionSliderThumbnail);
 
@@ -343,6 +347,7 @@ function DefaultTimeSlider() {
       className="vds-time-slider vds-slider"
       aria-label={label}
       disabled={disableTimeSlider}
+      keyStep={seekStep}
       ref={setInstance}
     >
       <TimeSlider.Chapters

@@ -36,9 +36,9 @@ export function DefaultAudioLayout() {
       <media-controls class="vds-controls">
         <media-controls-group class="vds-controls-group">
           ${[
-            DefaultSeekButton({ seconds: -10, tooltip: 'top start' }),
+            DefaultSeekButton({ backward: true, tooltip: 'top start' }),
             DefaultPlayButton({ tooltip: 'top' }),
-            DefaultSeekButton({ seconds: 10, tooltip: 'top' }),
+            DefaultSeekButton({ tooltip: 'top' }),
             DefaultAudioTitle(),
             DefaultTimeSlider(),
             DefaultTimeInvert(),

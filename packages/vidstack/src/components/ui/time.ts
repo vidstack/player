@@ -97,7 +97,9 @@ export class Time extends Component<TimeProps, TimeState> {
     return this.$props.remainder() && this._invert() !== false;
   }
 
-  private _onToggle() {
+  private _onToggle(event: Event) {
+    event.preventDefault();
+
     if (this._invert() === null) {
       this._invert.set(!this.$props.remainder());
       return;

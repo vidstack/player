@@ -190,24 +190,25 @@ export function DefaultFullscreenButton({ tooltip }: { tooltip: TooltipPlacement
 }
 
 export function DefaultSeekButton({
-  seconds,
+  backward,
   tooltip,
 }: {
-  seconds: number;
+  backward?: boolean;
   tooltip: TooltipPlacement;
 }) {
-  const { translations } = useDefaultLayoutContext(),
-    seekText = seconds >= 0 ? 'Seek Forward' : 'Seek Backward',
-    $label = $i18n(translations, seekText);
+  const { translations, seekStep } = useDefaultLayoutContext(),
+    seekText = !backward ? 'Seek Forward' : 'Seek Backward',
+    $label = $i18n(translations, seekText),
+    $seconds = () => (backward ? -1 : 1) * seekStep();
   return html`
     <media-tooltip class="vds-seek-tooltip vds-tooltip">
       <media-tooltip-trigger>
         <media-seek-button
           class="vds-seek-button vds-button"
-          seconds=${seconds}
+          seconds=${$signal($seconds)}
           aria-label=${$label}
         >
-          ${seconds >= 0
+          ${!backward
             ? html`<slot name="seek-forward-icon"></slot>`
             : html`<slot name="seek-backward-icon"></slot>`}
         </media-seek-button>
@@ -241,7 +242,7 @@ export function DefaultVolumeSlider({ orientation }: { orientation?: SliderOrien
 export function DefaultTimeSlider() {
   const $ref = signal<Element | undefined>(undefined),
     $width = signal(0),
-    { thumbnails, translations, sliderChaptersMinWidth, disableTimeSlider } =
+    { thumbnails, translations, sliderChaptersMinWidth, disableTimeSlider, seekStep } =
       useDefaultLayoutContext(),
     $label = $i18n(translations, 'Seek'),
     $isDisabled = $signal(disableTimeSlider),
@@ -257,6 +258,7 @@ export function DefaultTimeSlider() {
     <media-time-slider
       class="vds-time-slider vds-slider"
       aria-label=${$label}
+      key-step=${$signal(seekStep)}
       ?disabled=${$isDisabled}
       ${ref($ref.set)}
     >

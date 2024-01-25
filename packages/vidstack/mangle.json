@@ -766,5 +766,6 @@
   "_scrubbing": "jn",
   "_setValue": "hl",
   "_watchScrubbing": "kn",
-  "_cancelShowing": "nn"
+  "_cancelShowing": "nn",
+  "_watchDuration": "pn"
 }
