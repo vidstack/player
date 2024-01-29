@@ -18,6 +18,7 @@ export class RemotionProviderLoader implements MediaProviderLoader {
   constructor() {
     UI.RemotionThumbnail.set(React.lazy(() => import('./ui/thumbnail')));
     UI.RemotionSliderThumbnail.set(React.lazy(() => import('./ui/slider-thumbnail')));
+    UI.RemotionPoster.set(React.lazy(() => import('./ui/poster')));
   }
 
   canPlay(src: MediaSrc): boolean {

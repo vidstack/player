@@ -3,7 +3,7 @@ import type { PlyrLayoutProps as BaseProps } from 'vidstack';
 import type { PlyrLayoutSlots } from '.';
 import type { PlyrLayoutIcons } from './icons';
 
-export const defaultPlyrLayoutProps: Omit<PlyrLayoutProps, 'icons' | 'slots'> = {
+export const defaultPlyrLayoutProps: Omit<PlyrLayoutProps, 'icons' | 'slots' | 'posterFrame'> = {
   clickToPlay: true,
   clickToFullscreen: true,
   controls: [
@@ -38,4 +38,9 @@ export interface PlyrLayoutProps extends Omit<Partial<BaseProps>, 'customIcons'>
    * Provide additional content to be inserted in specific positions.
    */
   slots?: PlyrLayoutSlots;
+  /**
+   * The frame of the video to use as the poster. This only works with Remotion sources at the
+   * moment.
+   */
+  posterFrame?: number;
 }

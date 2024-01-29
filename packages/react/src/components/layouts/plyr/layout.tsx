@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { signal } from 'maverick.js';
 import { composeRefs, useSignal } from 'maverick.js/react';
-import { isString, listenEvent } from 'maverick.js/std';
+import { isNumber, isString, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 import {
   isAudioSrc,
@@ -19,9 +19,11 @@ import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { usePlaybackRateOptions } from '../../../hooks/options/use-playback-rate-options';
 import { useVideoQualityOptions } from '../../../hooks/options/use-video-quality-options';
+import { useClassName } from '../../../hooks/use-dom';
 import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaRemote } from '../../../hooks/use-media-remote';
 import { useMediaState } from '../../../hooks/use-media-state';
+import { isRemotionSource } from '../../../providers/remotion';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import { AirPlayButton } from '../../ui/buttons/airplay-button';
 import { CaptionButton } from '../../ui/buttons/caption-button';
@@ -37,6 +39,7 @@ import * as TimeSlider from '../../ui/sliders/time-slider';
 import * as VolumeSlider from '../../ui/sliders/volume-slider';
 import * as Thumbnail from '../../ui/thumbnail';
 import { Time } from '../../ui/time';
+import { RemotionPoster, RemotionSliderThumbnail } from '../remotion-ui';
 import { useLayoutName } from '../utils';
 import { i18n, PlyrLayoutContext, usePlyrLayoutContext, usePlyrLayoutWord } from './context';
 import { defaultPlyrLayoutProps, type PlyrLayoutProps } from './props';
@@ -65,20 +68,22 @@ const PlyrLayout = React.forwardRef<HTMLElement, PlyrLayoutElementProps>(
         speed,
         icons,
         slots,
+        posterFrame,
+        className,
         ...elProps
       } = { ...defaultPlyrLayoutProps, ...userProps },
-      ref = React.useRef<HTMLDivElement>(null),
+      [el, setEl] = React.useState<HTMLElement | null>(null),
       media = useMediaContext(),
       previewTime = React.useMemo(() => signal(0), []),
       $viewType = useMediaState('viewType');
 
     useLayoutName('plyr');
+    useClassName(el, className);
 
     React.useEffect(() => {
-      const el = ref.current;
       if (!el || !media) return;
-      usePlyrLayoutClasses(el, media);
-    }, [media]);
+      return usePlyrLayoutClasses(el, media);
+    }, [el, media]);
 
     return (
       <PlyrLayoutContext.Provider
@@ -98,12 +103,15 @@ const PlyrLayout = React.forwardRef<HTMLElement, PlyrLayoutElementProps>(
           previewTime,
           icons,
           slots,
+          posterFrame,
         }}
       >
         <Primitive.div
           {...elProps}
-          className={`plyr plyr--full-ui plyr--${$viewType} ${elProps.className}`}
-          ref={composeRefs(ref, forwardRef) as any}
+          className={
+            __SERVER__ ? `plyr plyr--full-ui plyr--${$viewType} ${className || ''}` : undefined
+          }
+          ref={composeRefs(setEl, forwardRef) as any}
         >
           {$viewType === 'audio' ? (
             <PlyrAudioLayout />
@@ -209,10 +217,19 @@ PlyrPreviewScrubbing.displayName = 'PlyrPreviewScrubbing';
  * -----------------------------------------------------------------------------------------------*/
 
 function PlyrPoster() {
-  const $poster = useMediaState('poster');
+  const $src = useMediaState('source'),
+    $poster = useMediaState('poster'),
+    { posterFrame } = usePlyrLayoutContext(),
+    $RemotionPoster = useSignal(RemotionPoster),
+    $hasRemotionPoster = $RemotionPoster && isRemotionSource($src) && isNumber(posterFrame);
+
   return slot(
     'poster',
-    <div className="plyr__poster" style={{ backgroundImage: `url("${$poster}")` }} />,
+    $hasRemotionPoster ? (
+      <$RemotionPoster frame={posterFrame} className="plyr__poster" />
+    ) : (
+      <div className="plyr__poster" style={{ backgroundImage: `url("${$poster}")` }} />
+    ),
   );
 }
 
@@ -516,9 +533,12 @@ PlyrRewindButton.displayName = 'PlyrRewindButton';
 
 function PlyrTimeSlider() {
   const { markers, thumbnails, seekTime, previewTime } = usePlyrLayoutContext(),
+    $src = useMediaState('source'),
     $duration = useMediaState('duration'),
     seekText = usePlyrLayoutWord('Seek'),
-    [activeMarker, setActiveMarker] = React.useState<PlyrMarker | null>(null);
+    [activeMarker, setActiveMarker] = React.useState<PlyrMarker | null>(null),
+    $RemotionSliderThumbnail = useSignal(RemotionSliderThumbnail),
+    $hasRemotionSliderThumbnail = $RemotionSliderThumbnail && isRemotionSource($src);
 
   function onSeekingRequest(time: number) {
     previewTime.set(time);
@@ -555,11 +575,21 @@ function PlyrTimeSlider() {
           <div className="plyr__slider__thumb"></div>
           <div className="plyr__slider__buffer"></div>
 
-          {!thumbnails ? (
+          {!thumbnails && !$hasRemotionSliderThumbnail ? (
             <span className="plyr__tooltip">
               {markerLabel}
               <TimeSlider.Value />
             </span>
+          ) : $hasRemotionSliderThumbnail ? (
+            <TimeSlider.Preview className="plyr__slider__preview">
+              <div className="plyr__slider__preview__thumbnail">
+                <span className="plyr__slider__preview__time-container">
+                  {markerLabel}
+                  <TimeSlider.Value className="plyr__slider__preview__time" />
+                </span>
+                <$RemotionSliderThumbnail className="plyr__slider__preview__thumbnail" />
+              </div>
+            </TimeSlider.Preview>
           ) : (
             <TimeSlider.Preview className="plyr__slider__preview">
               <TimeSlider.Thumbnail.Root

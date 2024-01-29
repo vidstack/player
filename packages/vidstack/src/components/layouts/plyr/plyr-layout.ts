@@ -1,4 +1,5 @@
 import { Component, effect, provideContext, signal } from 'maverick.js';
+import { createDisposalBin } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { plyrLayoutContext } from './context';
@@ -20,25 +21,24 @@ export class PlyrLayout extends Component<PlyrLayoutProps> {
 }
 
 export function usePlyrLayoutClasses(el: HTMLElement, media: MediaContext) {
-  const { $provider } = media,
-    {
-      fullscreen,
-      canFullscreen,
-      canPictureInPicture,
-      pictureInPicture,
-      hasCaptions,
-      textTrack,
-      canAirPlay,
-      isAirPlayConnected,
-      viewType,
-      playing,
-      paused,
-      controlsVisible,
-      pointer,
-      waiting,
-      currentTime,
-      poster,
-    } = media.$state;
+  const {
+    fullscreen,
+    canFullscreen,
+    canPictureInPicture,
+    pictureInPicture,
+    hasCaptions,
+    textTrack,
+    canAirPlay,
+    isAirPlayConnected,
+    viewType,
+    playing,
+    paused,
+    controlsVisible,
+    pointer,
+    waiting,
+    currentTime,
+    poster,
+  } = media.$state;
 
   el.classList.add('plyr');
   el.classList.add('plyr--full-ui');
@@ -61,23 +61,28 @@ export function usePlyrLayoutClasses(el: HTMLElement, media: MediaContext) {
     'plyr--captions-enabled': hasCaptions,
   };
 
-  for (const key of Object.keys(classes)) {
-    effect(() => void el.classList.toggle(key, !!classes[key]()));
+  const disposal = createDisposalBin();
+
+  for (const token of Object.keys(classes)) {
+    disposal.add(effect(() => void el.classList.toggle(token, !!classes[token]())));
   }
 
-  effect(() => {
-    const token = `plyr--${viewType()}`;
-    el.classList.add(token);
-    return () => el.classList.remove(token);
-  });
+  disposal.add(
+    effect(() => {
+      const token = `plyr--${viewType()}`;
+      el.classList.add(token);
+      return () => el.classList.remove(token);
+    }),
+    effect(() => {
+      const { $provider } = media,
+        type = $provider()?.type,
+        token = `plyr--${isHTMLProvider(type) ? 'html5' : type}`;
+      el.classList.toggle(token, !!type);
+      return () => el.classList.remove(token);
+    }),
+  );
 
-  effect(() => {
-    const { $provider } = media,
-      type = $provider()?.type,
-      token = `plyr--${isHTMLProvider(type) ? 'html5' : type}`;
-    el.classList.toggle(token, !!type);
-    return () => el.classList.remove(token);
-  });
+  return () => disposal.empty();
 }
 
 function isHTMLProvider(type: string | undefined) {

@@ -2,6 +2,19 @@ import * as React from 'react';
 
 import { animationFrameThrottle, createDisposalBin, listenEvent, setStyle } from 'maverick.js/std';
 
+export function useClassName(el: HTMLElement | null, className?: string) {
+  React.useEffect(() => {
+    if (!el || !className) return;
+
+    const tokens = className.split(' ');
+    for (const token of tokens) el.classList.add(token);
+
+    return () => {
+      for (const token of tokens) el.classList.remove(token);
+    };
+  }, [el, className]);
+}
+
 export function useResizeObserver(el: Element | null | undefined, callback: () => void) {
   React.useEffect(() => {
     if (!el) return;
