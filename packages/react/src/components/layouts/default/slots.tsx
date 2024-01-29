@@ -47,7 +47,7 @@ export interface DefaultLayoutSlots extends Slots<DefaultLayoutSlotName> {}
 
 export interface DefaultAudioLayoutSlots extends DefaultLayoutSlots {}
 
-export interface DefaultVideoLayoutSlots {
+export interface DefaultVideoLayoutSlots extends DefaultLayoutSlots {
   smallLayout?: DefaultLayoutSlots;
   largeLayout?: DefaultLayoutSlots;
 }

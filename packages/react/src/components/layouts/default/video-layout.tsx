@@ -88,7 +88,8 @@ export { DefaultVideoLayout };
 
 function DefaultVideoLargeLayout() {
   const { menuGroup } = React.useContext(DefaultLayoutContext),
-    slots = useDefaultVideoLayoutSlots()?.largeLayout;
+    baseSlots = useDefaultVideoLayoutSlots(),
+    slots = { ...baseSlots, ...baseSlots?.largeLayout };
   return (
     <>
       <DefaultVideoGestures />
@@ -133,7 +134,8 @@ export { DefaultVideoLargeLayout };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoSmallLayout() {
-  const slots = useDefaultVideoLayoutSlots()?.smallLayout;
+  const baseSlots = useDefaultVideoLayoutSlots(),
+    slots = { ...baseSlots, ...baseSlots?.smallLayout };
   return (
     <>
       <DefaultVideoGestures />
@@ -270,7 +272,8 @@ DefaultVideoMenus.displayName = 'DefaultVideoMenus';
 
 function DefaultVideoLoadLayout() {
   const { isSmallLayout } = React.useContext(DefaultLayoutContext),
-    slots = useDefaultVideoLayoutSlots()?.[isSmallLayout ? 'smallLayout' : 'largeLayout'];
+    baseSlots = useDefaultVideoLayoutSlots(),
+    slots = { ...baseSlots, ...baseSlots?.[isSmallLayout ? 'smallLayout' : 'largeLayout'] };
   return (
     <div className="vds-load-container">
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
