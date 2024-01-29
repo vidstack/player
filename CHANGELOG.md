@@ -44,6 +44,8 @@ All notable changes to this project will be documented in this file.
 #### Player (React)
 
 - default layout slots ([209d400](https://github.com/vidstack/player/commit/209d40034784f4a8c43729e8ff4efc1730484f59))
+- add remotion support to plyr layout ([9534d68](https://github.com/vidstack/player/commit/9534d68697f01250f225b8cde077bb59975b44b9))
+- allow default video slots to be passed to both sizes ([5abd619](https://github.com/vidstack/player/commit/5abd61928efadf745b11c2d8f5dea7af0065c1ab))
 
 ### 🐛 Bug Fixes
 
@@ -80,6 +82,8 @@ All notable changes to this project will be documented in this file.
 - vimeo not firing ended event ([fba30c9](https://github.com/vidstack/player/commit/fba30c9d8f9497852bf8bd283b8f8a7e00801575))
 - check whether browser can play audio/video type ([b7ff954](https://github.com/vidstack/player/commit/b7ff954f106b906d2e9100ff91f0b98c83e435be))
 - select default hls captions ([11b0c70](https://github.com/vidstack/player/commit/11b0c70df6197d5559b6d552d7d913e8d733bbe2))
+- tweak remote playback tw variants ([e6c506b](https://github.com/vidstack/player/commit/e6c506b4c29189743f214e83689252a1563dc600))
+- support `never` for `small-when` attr ([04955c4](https://github.com/vidstack/player/commit/04955c48c8f5a2b5e039d88b54a47c288e900d9a))
 
 #### Player (React)
 
