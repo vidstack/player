@@ -88,7 +88,7 @@ export class MediaRemoteControl {
   }
 
   /**
-   * Dispatch a request to connect AirPlay.
+   * Dispatch a request to connect to AirPlay.
    *
    * @see {@link https://www.apple.com/au/airplay}
    */
@@ -97,7 +97,7 @@ export class MediaRemoteControl {
   }
 
   /**
-   * Dispatch a request to connect Google Cast.
+   * Dispatch a request to connect to Google Cast.
    *
    * @see {@link https://developers.google.com/cast/docs/overview}
    */

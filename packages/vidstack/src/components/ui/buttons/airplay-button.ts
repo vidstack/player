@@ -14,7 +14,7 @@ export interface AirPlayButtonProps extends ToggleButtonControllerProps {}
 export interface AirPlayButtonEvents extends Pick<MediaRequestEvents, 'media-airplay-request'> {}
 
 /**
- * A button for requesting Apple AirPlay.
+ * A button for requesting remote playback via Apple AirPlay.
  *
  * @attr data-active - Whether AirPlay is connected.
  * @attr data-supported - Whether AirPlay is available.

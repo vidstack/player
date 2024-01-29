@@ -15,7 +15,7 @@ export interface GoogleCastButtonEvents
   extends Pick<MediaRequestEvents, 'media-google-cast-request'> {}
 
 /**
- * A button for requesting Google Cast.
+ * A button for requesting remote playback via Google Cast.
  *
  * @attr data-active - Whether Google Cast is connected.
  * @attr data-supported - Whether Google Cast is available.

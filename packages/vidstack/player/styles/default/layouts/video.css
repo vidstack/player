@@ -330,8 +330,8 @@
 
 :where(.vds-video-layout .vds-load-container .vds-play-button) {
   --size: var(--video-load-button-size, 56px);
-  --color: var(--audio-load-button-color, rgb(0 0 0 / 0.8));
-  --bg-color: var(--audio-load-button-bg, var(--media-brand));
+  --color: var(--video-load-button-color, rgb(0 0 0 / 0.8));
+  --bg-color: var(--video-load-button-bg, var(--media-brand));
 
   --media-button-hover-transform: 0;
   --media-button-border: var(--video-load-button-border, var(--color));

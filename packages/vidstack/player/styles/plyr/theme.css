@@ -161,11 +161,7 @@
 
 .plyr *:focus-visible,
 .plyr *[data-focus] {
-  outline: 2px dashed
-    var(
-      --plyr-focus-visible-color,
-      var(--plyr-color-main, var(--plyr-color-main, hsl(198, 100%, 50%)))
-    );
+  outline: 2px dashed var(--plyr-focus-visible-color, var(--plyr-color-main, hsl(198, 100%, 50%)));
   outline-offset: 2px;
 }
 
@@ -417,7 +413,7 @@ a.plyr__control::before {
 .plyr__menu__container .plyr__control[role='menuitemradio'][aria-checked='true']::before {
   background: var(
     --plyr-control-toggle-checked-background,
-    var(--plyr-color-main, var(--plyr-color-main, hsl(198, 100%, 50%)))
+    var(--plyr-color-main, hsl(198, 100%, 50%))
   );
 }
 
@@ -459,10 +455,7 @@ a.plyr__control::before {
   border: 0;
   border-radius: calc(var(--plyr-range-thumb-height, 13px) * 2);
   contain: layout style;
-  color: var(
-    --plyr-range-fill-background,
-    var(--plyr-color-main, var(--plyr-color-main, hsl(198, 100%, 50%)))
-  );
+  color: var(--plyr-range-fill-background, var(--plyr-color-main, hsl(198, 100%, 50%)));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -527,11 +520,7 @@ a.plyr__control::before {
 
 .plyr .plyr__slider:focus-visible .plyr__slider__track,
 .plyr .plyr__slider[data-focus] .plyr__slider__track {
-  outline: 2px dashed
-    var(
-      --plyr-focus-visible-color,
-      var(--plyr-color-main, var(--plyr-color-main, hsl(198, 100%, 50%)))
-    );
+  outline: 2px dashed var(--plyr-focus-visible-color, var(--plyr-color-main, hsl(198, 100%, 50%)));
   outline-offset: 2px;
 }
 
@@ -669,11 +658,7 @@ a.plyr__control::before {
 }
 
 .plyr__time:focus-visible {
-  outline: 2px dashed
-    var(
-      --plyr-focus-visible-color,
-      var(--plyr-color-main, var(--plyr-color-main, hsl(198, 100%, 50%)))
-    );
+  outline: 2px dashed var(--plyr-focus-visible-color, var(--plyr-color-main, hsl(198, 100%, 50%)));
 }
 
 .plyr__time + .plyr__time::before {
@@ -809,7 +794,7 @@ a.plyr__control::before {
 .plyr--audio .plyr__control[role='button'][aria-expanded='true'] {
   background: var(
     --plyr-audio-control-background-hover,
-    var(--plyr-color-main, var(--plyr-color-main, hsl(198, 100%, 50%)))
+    var(--plyr-color-main, hsl(198, 100%, 50%))
   );
   color: var(--plyr-audio-control-color-hover, #fff);
 }
@@ -895,7 +880,7 @@ a.plyr__control::before {
 .plyr--video .plyr__control[role='button'][aria-expanded='true'] {
   background: var(
     --plyr-video-control-background-hover,
-    var(--plyr-color-main, var(--plyr-color-main, hsl(198, 100%, 50%)))
+    var(--plyr-color-main, hsl(198, 100%, 50%))
   );
   color: var(--plyr-video-control-color-hover, #fff);
 }
@@ -903,7 +888,7 @@ a.plyr__control::before {
 .plyr__control--overlaid {
   background: var(
     --plyr-video-control-background-hover,
-    var(--plyr-color-main, var(--plyr-color-main, hsl(198, 100%, 50%)))
+    var(--plyr-color-main, hsl(198, 100%, 50%))
   );
   border: 0;
   border-radius: 100%;
@@ -1034,9 +1019,9 @@ a.plyr__control::before {
 }
 
 .plyr__slider__preview__thumbnail {
-  --aspect-ratio: calc(var(--plyr-progress-thumbnail-aspect-ratio, 16 / 9));
-  --min-width: var(--plyr-progress-thumbnail-min-width, 140px);
-  --max-width: var(--plyr-progress-thumbnail-max-width, 180px);
+  --aspect-ratio: calc(var(--plyr-thumbnail-aspect-ratio, 16 / 9));
+  --min-width: var(--plyr-thumbnail-min-width, 140px);
+  --max-width: var(--plyr-thumbnail-max-width, 180px);
   background: hsl(216, 15%, 79%);
   border-radius: calc(var(--plyr-menu-radius, 8px) - 1px);
   overflow: hidden;
@@ -1047,15 +1032,9 @@ a.plyr__control::before {
   contain: strict;
   z-index: 0;
   min-width: var(--min-width);
-  min-height: var(
-    --plyr-progress-thumbnail-min-height,
-    calc(var(--min-width) / var(--aspect-ratio))
-  );
+  min-height: var(--plyr-thumbnail-min-height, calc(var(--min-width) / var(--aspect-ratio)));
   max-width: var(--max-width);
-  max-height: var(
-    --plyr-progress-thumbnail-max-height,
-    calc(var(--max-width) / var(--aspect-ratio))
-  );
+  max-height: var(--plyr-thumbnail-max-height, calc(var(--max-width) / var(--aspect-ratio)));
 }
 
 .plyr__slider__preview__thumbnail img,
@@ -1178,8 +1157,8 @@ a.plyr__control::before {
   border-radius: var(--plyr-live-button-border-radius, 2px);
   color: var(--plyr-live-button-color, #161616);
   font-family: var(--plyr-font-family, sans-serif);
-  font-size: var(--plyr-live-button-font-size, 12px);
-  font-weight: var(--plyr-live-button-font-weight, 600);
+  font-size: var(--plyr-font-size-live-button, 12px);
+  font-weight: var(--plyr-font-weight-live-button, 600);
   letter-spacing: var(--plyr-live-button-letter-spacing, 1.5px);
   padding: var(--plyr-live-button-padding, 1px 4px);
   transition: color 0.3s ease;

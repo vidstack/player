@@ -1,13 +1,10 @@
 const createPlugin = require('tailwindcss/plugin');
 
 const mediaAttributes = [
-  'airplay',
   'autoplay-error',
   'autoplay',
   'buffering',
-  'can-airplay',
   'can-fullscreen',
-  'can-google-cast',
   'can-load-poster',
   'can-load',
   'can-pip',
@@ -18,7 +15,6 @@ const mediaAttributes = [
   'ended',
   'error',
   'fullscreen',
-  'google-cast',
   'ios-controls',
   'live-edge',
   'live',
@@ -40,9 +36,9 @@ module.exports = createPlugin.withOptions(function (options) {
     prefix = prefixOpt ? `${prefixOpt}-` : 'media-';
 
   return function ({ addVariant }) {
-    function createVariant(name, attrName = name) {
-      addVariant(`${prefix}${name}`, `${selector}[data-${attrName}] &`);
-      addVariant(`not-${prefix}${name}`, `${selector}:not([data-${attrName}]) &`);
+    function createVariant(name, attrName = name, extend = '') {
+      addVariant(`${prefix}${name}`, `${selector}[data-${attrName}]${extend} &`);
+      addVariant(`not-${prefix}${name}`, `${selector}:not([data-${attrName}]${extend}) &`);
     }
 
     // media-type + view type
@@ -56,7 +52,7 @@ module.exports = createPlugin.withOptions(function (options) {
     // stream type
     const streamTypes = {
       unknown: 'unknown',
-      'on-demand': 'on-demand',
+      demand: 'on-demand',
       live: 'live',
       dvr: 'live:dvr',
       ll: 'll-live',
@@ -72,6 +68,30 @@ module.exports = createPlugin.withOptions(function (options) {
     for (const state of ['connected', 'connecting', 'disconnected']) {
       // e.g, media-remote-connecting: => data-remote-state="connecting"
       createVariant(`remote-${state}`, `remote-state="${state}"`);
+    }
+
+    // remote playback
+    const remoteTypeAlias = { airplay: 'air', 'google-cast': 'cast' };
+
+    for (const attr of ['airplay', 'can-airplay']) {
+      const name = attr.replace('airplay', remoteTypeAlias.airplay);
+      createVariant(name, attr);
+    }
+
+    for (const attr of ['google-cast', 'can-google-cast']) {
+      const name = attr.replace('google-cast', remoteTypeAlias['google-cast']);
+      createVariant(name, attr);
+    }
+
+    for (const type of ['airplay', 'google-cast']) {
+      for (const state of ['connecting', 'disconnected']) {
+        // e.g, media-air-connecting: => [data-remote-type="airplay"][data-remote-state="connecting"]
+        createVariant(
+          `${remoteTypeAlias[type]}-${state}`,
+          `remote-type="${type}"`,
+          `[data-remote-state="${state}"]`,
+        );
+      }
     }
 
     for (const name of mediaAttributes) {

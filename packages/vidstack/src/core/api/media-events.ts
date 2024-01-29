@@ -110,7 +110,7 @@ export interface MediaAudioTrackChangeEvent extends MediaEvent<AudioTrack | null
  */
 export interface MediaAutoPlayChangeEvent extends MediaEvent<boolean> {}
 
-export interface MediaAutoplayFailEventDetail {
+export interface MediaAutoPlayFailEventDetail {
   muted: boolean;
   error: Error;
 }
@@ -119,9 +119,9 @@ export interface MediaAutoplayFailEventDetail {
  * Fired when an auto-play attempt has failed. The event detail contains the error that
  * had occurred on the last auto-play attempt which caused it to fail.
  */
-export interface MediaAutoPlayFailEvent extends MediaEvent<MediaAutoplayFailEventDetail> {}
+export interface MediaAutoPlayFailEvent extends MediaEvent<MediaAutoPlayFailEventDetail> {}
 
-export interface MediaAutoplayEventDetail {
+export interface MediaAutoPlayEventDetail {
   muted: boolean;
 }
 
@@ -129,7 +129,7 @@ export interface MediaAutoplayEventDetail {
  * Fired when an auto-play attempt has successfully been made (ie: media playback has automatically
  * started). The event detail whether media is `muted` before any attempts are made.
  */
-export interface MediaAutoPlayEvent extends MediaEvent<MediaAutoplayEventDetail> {}
+export interface MediaAutoPlayEvent extends MediaEvent<MediaAutoPlayEventDetail> {}
 
 /**
  * Fired when the player can begin loading the current provider and media. This depends on the

@@ -6,13 +6,10 @@ import tailwindcss from 'tailwindcss';
 import vidstackPlugin, { type PluginOptions } from '../tailwind.cjs';
 
 const mediaAttributes = [
-  'airplay',
   'autoplay-error',
   'autoplay',
   'buffering',
-  'can-airplay',
   'can-fullscreen',
-  'can-google-cast',
   'can-load-poster',
   'can-load',
   'can-pip',
@@ -23,7 +20,6 @@ const mediaAttributes = [
   'ended',
   'error',
   'fullscreen',
-  'google-cast',
   'ios-controls',
   'live-edge',
   'live',
@@ -47,15 +43,25 @@ const mediaAttributes = [
   'view-unknown',
   // stream types
   'stream-unknown',
-  'stream-on-demand',
+  'stream-demand',
   'stream-live',
   'stream-dvr',
   'stream-ll',
   'stream-ll-dvr',
+  // remote playback
+  'air',
+  'can-air',
+  'can-cast',
+  'cast',
   // remote playback state
   'remote-connected',
   'remote-connecting',
   'remote-disconnected',
+  // remote playback type + state
+  'air-connecting',
+  'air-disconnected',
+  'cast-connecting',
+  'cast-disconnected',
 ];
 
 async function run(content: string, options?: PluginOptions) {
@@ -97,7 +103,7 @@ it('should create media variants', async () => {
     div[data-stream-type=\\"unknown\\"] .media-stream-unknown\\\\:hidden {
         display: none
     }
-    div[data-stream-type=\\"on-demand\\"] .media-stream-on-demand\\\\:hidden {
+    div[data-stream-type=\\"on-demand\\"] .media-stream-demand\\\\:hidden {
         display: none
     }
     div[data-stream-type=\\"live\\"] .media-stream-live\\\\:hidden {
@@ -121,7 +127,28 @@ it('should create media variants', async () => {
     div[data-remote-state=\\"disconnected\\"] .media-remote-disconnected\\\\:hidden {
         display: none
     }
-    div[data-airplay] .media-airplay\\\\:hidden {
+    div[data-airplay] .media-air\\\\:hidden {
+        display: none
+    }
+    div[data-can-airplay] .media-can-air\\\\:hidden {
+        display: none
+    }
+    div[data-google-cast] .media-cast\\\\:hidden {
+        display: none
+    }
+    div[data-can-google-cast] .media-can-cast\\\\:hidden {
+        display: none
+    }
+    div[data-remote-type=\\"airplay\\"][data-remote-state=\\"connecting\\"] .media-air-connecting\\\\:hidden {
+        display: none
+    }
+    div[data-remote-type=\\"airplay\\"][data-remote-state=\\"disconnected\\"] .media-air-disconnected\\\\:hidden {
+        display: none
+    }
+    div[data-remote-type=\\"google-cast\\"][data-remote-state=\\"connecting\\"] .media-cast-connecting\\\\:hidden {
+        display: none
+    }
+    div[data-remote-type=\\"google-cast\\"][data-remote-state=\\"disconnected\\"] .media-cast-disconnected\\\\:hidden {
         display: none
     }
     div[data-autoplay-error] .media-autoplay-error\\\\:hidden {
@@ -133,13 +160,7 @@ it('should create media variants', async () => {
     div[data-buffering] .media-buffering\\\\:hidden {
         display: none
     }
-    div[data-can-airplay] .media-can-airplay\\\\:hidden {
-        display: none
-    }
     div[data-can-fullscreen] .media-can-fullscreen\\\\:hidden {
-        display: none
-    }
-    div[data-can-google-cast] .media-can-google-cast\\\\:hidden {
         display: none
     }
     div[data-can-load-poster] .media-can-load-poster\\\\:hidden {
@@ -170,9 +191,6 @@ it('should create media variants', async () => {
         display: none
     }
     div[data-fullscreen] .media-fullscreen\\\\:hidden {
-        display: none
-    }
-    div[data-google-cast] .media-google-cast\\\\:hidden {
         display: none
     }
     div[data-ios-controls] .media-ios-controls\\\\:hidden {
@@ -242,7 +260,7 @@ it('should create _not_ media variants', async () => {
     div:not([data-stream-type=\\"unknown\\"]) .not-media-stream-unknown\\\\:hidden {
         display: none
     }
-    div:not([data-stream-type=\\"on-demand\\"]) .not-media-stream-on-demand\\\\:hidden {
+    div:not([data-stream-type=\\"on-demand\\"]) .not-media-stream-demand\\\\:hidden {
         display: none
     }
     div:not([data-stream-type=\\"live\\"]) .not-media-stream-live\\\\:hidden {
@@ -266,7 +284,28 @@ it('should create _not_ media variants', async () => {
     div:not([data-remote-state=\\"disconnected\\"]) .not-media-remote-disconnected\\\\:hidden {
         display: none
     }
-    div:not([data-airplay]) .not-media-airplay\\\\:hidden {
+    div:not([data-airplay]) .not-media-air\\\\:hidden {
+        display: none
+    }
+    div:not([data-can-airplay]) .not-media-can-air\\\\:hidden {
+        display: none
+    }
+    div:not([data-google-cast]) .not-media-cast\\\\:hidden {
+        display: none
+    }
+    div:not([data-can-google-cast]) .not-media-can-cast\\\\:hidden {
+        display: none
+    }
+    div:not([data-remote-type=\\"airplay\\"][data-remote-state=\\"connecting\\"]) .not-media-air-connecting\\\\:hidden {
+        display: none
+    }
+    div:not([data-remote-type=\\"airplay\\"][data-remote-state=\\"disconnected\\"]) .not-media-air-disconnected\\\\:hidden {
+        display: none
+    }
+    div:not([data-remote-type=\\"google-cast\\"][data-remote-state=\\"connecting\\"]) .not-media-cast-connecting\\\\:hidden {
+        display: none
+    }
+    div:not([data-remote-type=\\"google-cast\\"][data-remote-state=\\"disconnected\\"]) .not-media-cast-disconnected\\\\:hidden {
         display: none
     }
     div:not([data-autoplay-error]) .not-media-autoplay-error\\\\:hidden {
@@ -278,13 +317,7 @@ it('should create _not_ media variants', async () => {
     div:not([data-buffering]) .not-media-buffering\\\\:hidden {
         display: none
     }
-    div:not([data-can-airplay]) .not-media-can-airplay\\\\:hidden {
-        display: none
-    }
     div:not([data-can-fullscreen]) .not-media-can-fullscreen\\\\:hidden {
-        display: none
-    }
-    div:not([data-can-google-cast]) .not-media-can-google-cast\\\\:hidden {
         display: none
     }
     div:not([data-can-load-poster]) .not-media-can-load-poster\\\\:hidden {
@@ -315,9 +348,6 @@ it('should create _not_ media variants', async () => {
         display: none
     }
     div:not([data-fullscreen]) .not-media-fullscreen\\\\:hidden {
-        display: none
-    }
-    div:not([data-google-cast]) .not-media-google-cast\\\\:hidden {
         display: none
     }
     div:not([data-ios-controls]) .not-media-ios-controls\\\\:hidden {
