@@ -25,7 +25,7 @@ export interface DefaultLayoutProps {
   /**
    * Determines when the small (e.g., mobile) UI should be displayed.
    */
-  smallWhen: boolean | MediaPlayerQuery;
+  smallWhen: 'never' | boolean | MediaPlayerQuery;
   /**
    * The thumbnails resource.
    *

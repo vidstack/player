@@ -53,7 +53,10 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     });
   }
 
-  protected _matches(query: boolean | MediaPlayerQuery) {
-    return isBoolean(query) ? query : computed(() => query(this._media.player.state))();
+  protected _matches(query: 'never' | boolean | MediaPlayerQuery) {
+    return (
+      query !== 'never' &&
+      (isBoolean(query) ? query : computed(() => query(this._media.player.state))())
+    );
   }
 }

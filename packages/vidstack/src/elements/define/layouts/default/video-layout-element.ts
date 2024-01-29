@@ -1,8 +1,9 @@
 import { html } from 'lit-html';
 import { effect, onDispose } from 'maverick.js';
-import { Host } from 'maverick.js/element';
+import { Host, type Attributes } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
+import type { DefaultLayoutProps } from '../../../../components/layouts/default/props';
 import { DefaultVideoLayout } from '../../../../components/layouts/default/video-layout';
 import type { MediaContext } from '../../../../core';
 import { useMediaContext } from '../../../../core/api/media-context';
@@ -33,6 +34,14 @@ export class MediaVideoLayoutElement
   implements LitRenderer
 {
   static tagName = 'media-video-layout';
+
+  static override attrs: Attributes<DefaultLayoutProps> = {
+    smallWhen: {
+      converter(value) {
+        return value !== 'never' && !!value;
+      },
+    },
+  };
 
   private _media!: MediaContext;
 

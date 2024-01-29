@@ -767,5 +767,6 @@
   "_setValue": "hl",
   "_watchScrubbing": "kn",
   "_cancelShowing": "nn",
-  "_watchDuration": "pn"
+  "_watchDuration": "pn",
+  "_skipTimeUpdates": "qn"
 }

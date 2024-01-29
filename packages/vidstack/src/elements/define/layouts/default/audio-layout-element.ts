@@ -1,9 +1,10 @@
 import { html } from 'lit-html';
 import { effect, onDispose, signal } from 'maverick.js';
-import { Host } from 'maverick.js/element';
+import { Host, type Attributes } from 'maverick.js/element';
 import { listenEvent, setAttribute } from 'maverick.js/std';
 
 import { DefaultAudioLayout } from '../../../../components/layouts/default/audio-layout';
+import type { DefaultLayoutProps } from '../../../../components/layouts/default/props';
 import type { MediaContext } from '../../../../core';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
@@ -28,6 +29,14 @@ export class MediaAudioLayoutElement
   implements LitRenderer
 {
   static tagName = 'media-audio-layout';
+
+  static override attrs: Attributes<DefaultLayoutProps> = {
+    smallWhen: {
+      converter(value) {
+        return value !== 'never' && !!value;
+      },
+    },
+  };
 
   private _media!: MediaContext;
   private _scrubbing = signal(false);
