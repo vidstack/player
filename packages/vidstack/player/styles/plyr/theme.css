@@ -561,7 +561,11 @@ a.plyr__control::before {
 }
 
 [data-live] .plyr__progress .plyr__slider {
-  color: var(--plyr-progress-live-color, var(--plyr-color-main));
+  color: var(--plyr-progress-live-color, white);
+}
+
+[data-live-edge] .plyr__progress .plyr__slider {
+  color: var(--plyr-progress-live-edge-color, var(--plyr-color-main, hsl(198, 100%, 50%)));
 }
 
 .plyr__slider__buffer {
