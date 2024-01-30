@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.1-next](https://github.com/vidstack/player/releases/tag/v1.10.1-next) (2024-01-30)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- plyr layout live button spacing ([ef57fc3](https://github.com/vidstack/player/commit/ef57fc3c4b8e67db024c6f90fc550428e7482587))
+- audio layout play button colors being overriden ([86819b0](https://github.com/vidstack/player/commit/86819b0bf0a1cf3f21d462d90319386da3822656))
+- layout props missing in analysis ([e6c9b83](https://github.com/vidstack/player/commit/e6c9b83f1384db930b38e7357a69f794da028ce9))
+
 ## [1.10.0-next](https://github.com/vidstack/player/releases/tag/v1.10.0-next) (2024-01-30)
 
 ### ✨ Features
