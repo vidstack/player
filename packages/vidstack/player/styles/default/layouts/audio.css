@@ -92,11 +92,14 @@
   width: var(--audio-play-button-size, 32px);
   height: var(--audio-play-button-size, 32px);
   border-radius: var(--audio-play-button-border-radius, 100%);
-  color: var(--color);
-  background-color: var(--bg-color);
   pointer-events: auto;
   margin-bottom: 2px;
   overflow: hidden;
+}
+
+.vds-audio-layout .vds-play-button {
+  color: var(--color);
+  background-color: var(--bg-color);
 }
 
 :where(.vds-audio-layout .vds-caption-button:not([data-active])) {
@@ -268,6 +271,9 @@
   --media-slider-height: var(--audio-volume-height, 96px);
   --media-slider-preview-offset: 6px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 :where(.vds-audio-layout .vds-volume-popup) {
