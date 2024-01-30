@@ -729,5 +729,12 @@
   "_watchArtist": "Bm",
   "_watchCanSetVolume": "Am",
   "_watchPlaysInline": "Ol",
-  "_watchStorage": "Fm"
+  "_watchStorage": "Fm",
+  "_cancelShowing": "Nm",
+  "_invert": "Lm",
+  "_onToggle": "Rm",
+  "_shouldInvert": "Om",
+  "_skipTimeUpdates": "Mm",
+  "_watchDuration": "Pm",
+  "_watchRole": "Qm"
 }
