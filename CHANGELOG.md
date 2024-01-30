@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.2-next](https://github.com/vidstack/player/releases/tag/v1.10.2-next) (2024-01-30)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- include `plugins.js` in package ([f077434](https://github.com/vidstack/player/commit/f077434476dff8214de2e3894905ea5cf53b4369))
+- add progress live edge cssvar to plyr layout ([d2c29a4](https://github.com/vidstack/player/commit/d2c29a49d23970b5e40851dd67162959e6665ca6))
+- inferred title/poster being overwritten by user provided ([083a484](https://github.com/vidstack/player/commit/083a4849d280845dc745e2cb9a7bbc72b7b3ae27))
+
 ## [1.10.1-next](https://github.com/vidstack/player/releases/tag/v1.10.1-next) (2024-01-30)
 
 ### 🐛 Bug Fixes
