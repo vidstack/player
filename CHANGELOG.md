@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [1.10.0-next](https://github.com/vidstack/player/releases/tag/v1.10.0-next) (2024-01-30)
 
 ### ✨ Features
 
