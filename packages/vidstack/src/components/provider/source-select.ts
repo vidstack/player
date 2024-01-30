@@ -7,7 +7,7 @@ import {
   type ReadSignal,
   type WriteSignal,
 } from 'maverick.js';
-import { isArray, isString, noop } from 'maverick.js/std';
+import { DOMEvent, isArray, isString, noop } from 'maverick.js/std';
 
 import type { MediaContext, MediaPlayerProps, MediaSrc } from '../../core';
 import {
@@ -269,15 +269,16 @@ export class SourceSelection {
 
     if (!loader || !loader.loadPoster || !source() || !canLoadPoster()) return;
 
-    const abort = new AbortController();
+    const abort = new AbortController(),
+      trigger = new DOMEvent('source-change', { detail: source });
 
     loader
       .loadPoster(source(), this._media, abort)
       .then((url) => {
-        this._notify('poster-change', url || '');
+        this._notify('poster-change', url || '', trigger);
       })
       .catch(() => {
-        this._notify('poster-change', '');
+        this._notify('poster-change', '', trigger);
       });
 
     return () => {

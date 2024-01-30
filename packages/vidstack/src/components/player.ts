@@ -254,17 +254,12 @@ export class MediaPlayer
 
   private _skipTitleUpdate = false;
   private _watchTitle() {
-    if (this._skipTitleUpdate) {
-      this._skipTitleUpdate = false;
-      return;
-    }
-
-    const { title, live, viewType } = this.$state,
+    const el = this.$el,
+      { title, live, viewType, providedTitle } = this.$state,
       isLive = live(),
       type = uppercaseFirstChar(viewType()),
-      typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media';
-
-    const currentTitle = title();
+      typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media',
+      currentTitle = title();
 
     setAttribute(
       this.el!,
@@ -273,11 +268,10 @@ export class MediaPlayer
     );
 
     // Title attribute is removed to prevent popover interfering with user hovering over player.
-    if (!__SERVER__ && this.el && customElements.get(this.el.localName)) {
+    if (!__SERVER__ && el?.hasAttribute('title')) {
       this._skipTitleUpdate = true;
+      el?.removeAttribute('title');
     }
-
-    this.el?.removeAttribute('title');
   }
 
   private _watchOrientation() {
@@ -417,7 +411,11 @@ export class MediaPlayer
   }
 
   set title(newTitle) {
-    if (this._skipTitleUpdate) return;
+    if (this._skipTitleUpdate) {
+      this._skipTitleUpdate = false;
+      return;
+    }
+
     this.$state.providedTitle.set(newTitle);
   }
 

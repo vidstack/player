@@ -810,12 +810,14 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['title-change'](event: ME.MediaPosterChangeEvent) {
+    if (!event.trigger) return;
     // Fired in media-state-sync by effect.
     event.stopImmediatePropagation();
     this.$state.inferredTitle.set(event.detail);
   }
 
   ['poster-change'](event: ME.MediaPosterChangeEvent) {
+    if (!event.trigger) return;
     // Fired in media-state-sync by effect.
     event.stopImmediatePropagation();
     this.$state.inferredPoster.set(event.detail);

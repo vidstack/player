@@ -1,5 +1,4 @@
 import { State, tick, type Store } from 'maverick.js';
-import { isNumber } from 'maverick.js/std';
 
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { MediaProviderLoader } from '../../providers/types';

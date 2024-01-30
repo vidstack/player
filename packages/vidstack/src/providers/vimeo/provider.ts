@@ -351,8 +351,9 @@ export class VimeoProvider
 
         this._pro.set(pro);
         this._seekableRange = new TimeRange(0, duration);
-        this._notify('poster-change', poster, trigger);
+
         this._notify('title-change', title, trigger);
+        this._notify('poster-change', poster, trigger);
         this._notify('duration-change', duration, trigger);
 
         const detail = {
