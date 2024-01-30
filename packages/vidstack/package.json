@@ -17,6 +17,7 @@
     "dist/",
     "player/",
     "cdn/",
+    "plugins.*",
     "tailwind.*",
     "analyze.json",
     "elements.json",
