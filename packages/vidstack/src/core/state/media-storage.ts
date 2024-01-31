@@ -19,6 +19,9 @@ export interface MediaStorage {
   getCaptions(): Promise<boolean | null>;
   setCaptions?(captions: boolean): Promise<void>;
 
+  getPlaybackRate(): Promise<number | null>;
+  setPlaybackRate?(rate: number): Promise<void>;
+
   /**
    * Called when the `mediaId` has changed. This method can return a function to be called
    * before the next change.
@@ -48,6 +51,7 @@ export class LocalMediaStorage implements MediaStorage {
     time: null,
     lang: null,
     captions: null,
+    rate: null,
   };
 
   async getVolume() {
@@ -95,6 +99,15 @@ export class LocalMediaStorage implements MediaStorage {
     this.save();
   }
 
+  async getPlaybackRate() {
+    return this._data.rate;
+  }
+
+  async setPlaybackRate(rate) {
+    this._data.rate = rate;
+    this.save();
+  }
+
   onChange(src: MediaSrc, mediaId: string | null, playerId = 'vds-player') {
     const savedData = playerId ? localStorage.getItem(playerId) : null,
       savedTime = mediaId ? localStorage.getItem(mediaId) : null;
@@ -131,4 +144,5 @@ interface SavedMediaData {
   time: number | null;
   lang: string | null;
   captions: boolean | null;
+  rate: number | null;
 }

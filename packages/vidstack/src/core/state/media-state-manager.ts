@@ -302,8 +302,15 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['rate-change'](event: ME.MediaRateChangeEvent) {
+    const { storage } = this._media,
+      { canPlay } = this.$state;
+
     this.$state.playbackRate.set(event.detail);
     this._satisfyRequest('media-rate-change-request', event);
+
+    if (canPlay()) {
+      storage?.setPlaybackRate?.(event.detail);
+    }
   }
 
   ['remote-playback-change'](event: ME.MediaRemotePlaybackChangeEvent) {
