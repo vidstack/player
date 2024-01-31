@@ -149,7 +149,7 @@ export class ThumbnailsLoader {
         __DEV__ && `Invalid or missing \`url\` property at index ${i}`,
       );
       assert(
-        img.startTime && isNumber(img.startTime),
+        'startTime' in img && isNumber(img.startTime),
         __DEV__ && `Invalid or missing \`startTime\` property at index ${i}`,
       );
       return {
