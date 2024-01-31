@@ -278,6 +278,8 @@ export class YouTubeProvider
       },
       paused() ? 100 : 0,
     );
+
+    this._pausedSeeking = false;
   }
 
   protected _onEnded(trigger: Event) {
