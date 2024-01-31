@@ -642,14 +642,14 @@ export class MediaStateManager extends MediaPlayerController {
     const { storage } = this._media,
       { canPlay, realCurrentTime } = this.$state;
 
-    if (!canPlay()) return;
-
-    storage?.setTime?.(realCurrentTime());
+    if (canPlay()) {
+      storage?.setTime?.(realCurrentTime());
+    }
   }
 
   ['volume-change'](event: ME.MediaVolumeChangeEvent) {
     const { storage } = this._media,
-      { volume, muted } = this.$state,
+      { volume, muted, canPlay } = this.$state,
       detail = event.detail;
 
     volume.set(detail.volume);
@@ -658,8 +658,10 @@ export class MediaStateManager extends MediaPlayerController {
     this._satisfyRequest('media-volume-change-request', event);
     this._satisfyRequest(detail.muted ? 'media-mute-request' : 'media-unmute-request', event);
 
-    storage?.setVolume?.(volume());
-    storage?.setMuted?.(muted());
+    if (canPlay()) {
+      storage?.setVolume?.(volume());
+      storage?.setMuted?.(muted());
+    }
   }
 
   ['seeking'] = throttle(
