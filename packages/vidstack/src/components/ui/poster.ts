@@ -141,14 +141,15 @@ export class Poster extends Component<PosterProps, PosterState> {
 
   private _watchAlt() {
     const { src } = this.$props,
-      { alt } = this.$state;
-    alt.set(src() ? this.$props.alt() : null);
+      { alt } = this.$state,
+      { poster } = this._media.$state;
+    alt.set(src() || poster() ? this.$props.alt() : null);
   }
 
   private _watchCrossOrigin() {
-    const { src, crossOrigin: crossOriginProp } = this.$props,
+    const { crossOrigin: crossOriginProp } = this.$props,
       { crossOrigin: crossOriginState } = this.$state,
-      { crossOrigin: mediaCrossOrigin } = this._media.$state,
+      { crossOrigin: mediaCrossOrigin, poster: src } = this._media.$state,
       crossOrigin = crossOriginProp() !== null ? crossOriginProp() : mediaCrossOrigin();
 
     crossOriginState.set(
