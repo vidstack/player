@@ -1,3 +1,7 @@
+## Player Release 1.10@next: It's Time for the Big One! (January 2024)
+
+[See release notes](https://github.com/vidstack/player/discussions/1116).
+
 ## Player Release 1.0@next: Watch The Birdie! (September 2023)
 
 [See release notes](https://github.com/vidstack/player/discussions/935).
