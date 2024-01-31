@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.3-next](https://github.com/vidstack/player/releases/tag/v1.10.3-next) (2024-01-31)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- `startTime` failing thumbnails image assertion when 0 ([1bf42cc](https://github.com/vidstack/player/commit/1bf42ccaf0de99b63c7f436fd73720c2bc5a560c))
+- small default video layout controls should be lower ([d2031ca](https://github.com/vidstack/player/commit/d2031ca4337115160b506f1834e6ed4d8fba6751))
+- watch airplay availability ([f7bfe28](https://github.com/vidstack/player/commit/f7bfe28610e42c2dbccf16e4d794c1a61a16ab47))
+- do not set `crossorigin` for youtube/vimeo posters ([1a6f3af](https://github.com/vidstack/player/commit/1a6f3af425d7eb3f98c2edd4719f9be9b4fe3512))
+- embed ui should not be focusable when no native controls ([40cc6a1](https://github.com/vidstack/player/commit/40cc6a1f1b4db634e5045f1f48bc4fa9937085d2))
+- storage not working correctly with embeds ([6f3c18b](https://github.com/vidstack/player/commit/6f3c18b99e84a929a189f5a43c89e9d6394a2d48))
+- do not reset playback rate on source change ([7671c89](https://github.com/vidstack/player/commit/7671c89339f10a635732b68b1b4eb7d0f8cf5239))
+- track playback rate in storage ([a0379ae](https://github.com/vidstack/player/commit/a0379ae75ca056616c979b48c708689f9ab95308))
+- clipped youtube embed requires two plays ([84b574f](https://github.com/vidstack/player/commit/84b574f62177ed44044a1a536bf2563a6aa79084))
+
 ## [1.10.2-next](https://github.com/vidstack/player/releases/tag/v1.10.2-next) (2024-01-30)
 
 ### 🐛 Bug Fixes
