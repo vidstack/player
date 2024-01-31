@@ -210,7 +210,6 @@ const RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'intrinsicDuration',
   'liveSyncPosition',
   'paused',
-  'playbackRate',
   'played',
   'playing',
   'qualities',
