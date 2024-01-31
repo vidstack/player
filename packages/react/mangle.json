@@ -736,5 +736,6 @@
   "_shouldInvert": "Om",
   "_skipTimeUpdates": "Mm",
   "_watchDuration": "Pm",
-  "_watchRole": "Qm"
+  "_watchRole": "Qm",
+  "_watchSupported": "Sm"
 }
