@@ -38,6 +38,8 @@ export abstract class VideoRemotePlaybackAdapter implements MediaRemotePlaybackA
   }
 
   private _watchSupported() {
+    if (!this._supported()) return;
+
     const events = ['connecting', 'connect', 'disconnect'],
       onStateChange = this._onStateChange.bind(this);
 
