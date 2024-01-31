@@ -141,6 +141,7 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
         React.createElement('iframe', {
           className: isYouTubeEmbed ? 'vds-youtube' : 'vds-vimeo',
           suppressHydrationWarning: true,
+          tabIndex: !$nativeControls ? -1 : undefined,
           'aria-hidden': 'true',
           'data-no-controls': !$nativeControls ? '' : undefined,
           ref(el: HTMLElement) {

@@ -126,9 +126,16 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
   }
 
   private _createIFrame() {
-    return this._target instanceof HTMLIFrameElement
-      ? this._target
-      : document.createElement('iframe');
+    const iframe =
+      this._target instanceof HTMLIFrameElement ? this._target : document.createElement('iframe');
+
+    const { controls } = this._media.$state,
+      { $iosControls } = this._media,
+      $nativeControls = computed(() => controls() || $iosControls());
+
+    effect(() => setAttribute(iframe, 'tabindex', !$nativeControls() ? -1 : null));
+
+    return iframe;
   }
 
   private _createGoogleCastContainer() {
