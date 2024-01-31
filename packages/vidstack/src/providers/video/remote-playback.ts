@@ -1,3 +1,4 @@
+import { effect, signal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
@@ -9,27 +10,43 @@ export abstract class VideoRemotePlaybackAdapter implements MediaRemotePlaybackA
   protected abstract readonly _canPrompt: boolean;
 
   protected _state?: RemotePlaybackState;
-  protected _supported?: boolean;
+  protected _supported = signal(false);
 
   get supported() {
-    return !__SERVER__ && (this._supported ??= !!this._video.remote && this._canPrompt);
+    return this._supported();
   }
 
   constructor(
     protected _video: HTMLVideoElement,
     protected _ctx: MediaContext,
   ) {
-    if (!this.supported) return;
+    this._setup();
+  }
 
+  private _setup() {
+    if (__SERVER__ || !this._video.remote || !this._canPrompt) return;
+
+    this._video.remote
+      .watchAvailability((available) => {
+        this._supported.set(available);
+      })
+      .catch(() => {
+        this._supported.set(false);
+      });
+
+    effect(this._watchSupported.bind(this));
+  }
+
+  private _watchSupported() {
     const events = ['connecting', 'connect', 'disconnect'],
       onStateChange = this._onStateChange.bind(this);
 
     onStateChange();
-    listenEvent(_video, 'playing', onStateChange);
+    listenEvent(this._video, 'playing', onStateChange);
 
     for (const type of events) {
       // @ts-expect-error - video remote not typed
-      listenEvent(_video.remote, type, onStateChange);
+      listenEvent(this._video.remote, type, onStateChange);
     }
   }
 
