@@ -75,7 +75,7 @@
 :where(.vds-video-layout .vds-controls-group:nth-last-child(2)) {
   padding: 0 12px;
   z-index: 11;
-  margin-bottom: -15px;
+  margin-bottom: -16px;
 }
 
 :where(.vds-video-layout:not([data-size='sm']) .vds-controls-group:last-child) {
@@ -371,7 +371,7 @@
 :where(.vds-video-layout[data-size='sm'] .vds-controls-group:last-child) {
   z-index: 2;
   margin-top: -2.5px;
-  margin-bottom: -2px;
+  margin-bottom: -6px;
 }
 
 :where([data-fullscreen] .vds-video-layout[data-size='sm'] .vds-controls-group:last-child) {
