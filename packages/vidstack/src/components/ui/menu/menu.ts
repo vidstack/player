@@ -473,9 +473,12 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       }
     }
 
-    requestAnimationFrame(() => {
-      setStyle(content, '--menu-height', height + 'px');
-    });
+    if (parseFloat(styles.height) !== height) {
+      setAttribute(content, 'data-resizing', '');
+      requestAnimationFrame(() => {
+        setStyle(content, '--menu-height', height + 'px');
+      });
+    }
   });
 
   protected _onResizeTransition(event: TransitionEvent) {

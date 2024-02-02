@@ -59,9 +59,11 @@
 }
 
 :where(.vds-menu-items) {
+  --vds-scrollbar-thumb: var(--media-menu-scrollbar-thumb-bg, rgb(245 245 245 / 0.1));
   box-sizing: border-box;
   min-width: var(--media-menu-min-width, 280px);
   scrollbar-width: thin;
+  scrollbar-color: var(--vds-scrollbar-thumb) var(--media-menu-scrollbar-track-bg, transparent);
 }
 
 :where(.vds-menu-items)::-webkit-scrollbar {
@@ -77,12 +79,12 @@
 }
 
 :where(.vds-menu-items)::-webkit-scrollbar-thumb {
-  background-color: var(--media-menu-scrollbar-thumb-bg, rgb(245 245 245 / 0.1));
+  background-color: var(--vds-scrollbar-thumb);
   border-radius: 4px;
 }
 
 :where(.vds-menu-items)::-webkit-scrollbar-corner {
-  background-color: var(--media-menu-scrollbar-thumb-bg, rgb(245 245 245 / 0.1));
+  background-color: var(--vds-scrollbar-thumb);
 }
 
 /*
@@ -162,7 +164,7 @@
   backdrop-filter: blur(4px);
   height: var(--menu-height, auto);
   will-change: width, height;
-  overflow-y: scroll;
+  overflow-y: auto;
   overscroll-behavior: contain;
   opacity: 0;
   z-index: 9999999;
@@ -181,6 +183,7 @@
 :where(.vds-menu-items[data-resizing]) {
   --media-menu-scrollbar-thumb-bg: rgba(0, 0, 0, 0);
   pointer-events: none;
+  overflow: hidden;
 }
 
 /*
