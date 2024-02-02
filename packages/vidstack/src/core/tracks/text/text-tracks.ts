@@ -1,5 +1,5 @@
 import debounce from 'just-debounce-it';
-import { DOMEvent } from 'maverick.js/std';
+import { DOMEvent, isArray } from 'maverick.js/std';
 
 import { List, type ListReadonlyChangeEvent } from '../../../foundation/list/list';
 import { ListSymbol } from '../../../foundation/list/symbols';
@@ -39,6 +39,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
 
   set preferredLang(lang: string | null) {
     this._preferredLang = lang;
+    this._saveLang(lang);
   }
 
   add(init: TextTrackInit | TextTrack, trigger?: Event) {
@@ -49,18 +50,15 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     if (this._defaults[kind] && init.default) delete init.default;
 
     track.addEventListener('mode-change', this._onTrackModeChangeBind);
+
     this[ListSymbol._add](track, trigger);
     track[TextTrackSymbol._crossOrigin] = this[TextTrackSymbol._crossOrigin];
+
     if (this._canLoad) track[TextTrackSymbol._canLoad]();
 
-    if (init.default) {
-      this._defaults[kind] = track;
-      if (kind !== 'captions') {
-        track.mode = 'showing';
-      } else {
-        this._selectCaptions();
-      }
-    }
+    if (init.default) this._defaults[kind] = track;
+
+    this._selectTracks();
 
     return this;
   }
@@ -97,39 +95,52 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     if (this._canLoad) return;
     for (const track of this._items) track[TextTrackSymbol._canLoad]();
     this._canLoad = true;
-    this._selectCaptions();
+    this._selectTracks();
   }
 
-  private _selectCaptions = debounce(async () => {
-    if (!this._canLoad || this.selected || (await this._storage?.getCaptions()) === false) return;
+  private _selectTracks = debounce(async () => {
+    if (!this._canLoad) return;
 
     if (!this._preferredLang && this._storage) {
       this._preferredLang = await this._storage.getLang();
     }
 
-    const preferredTrack =
-        this._preferredLang &&
-        this._items.find(
-          (track) => isTrackCaptionKind(track) && track.language === this._preferredLang,
-        ),
-      defaultTrack = this._defaults.captions;
+    const showCaptions = await this._storage?.getCaptions(),
+      kinds: (TextTrackKind | TextTrackKind[])[] = [
+        ['captions', 'subtitles'],
+        'chapters',
+        'descriptions',
+        'metadata',
+      ];
 
-    if (preferredTrack) {
-      preferredTrack.mode = 'showing';
-    } else if (defaultTrack) {
-      if (defaultTrack) defaultTrack.mode = 'showing';
+    for (const kind of kinds) {
+      const tracks = this.getByKind(kind);
+      if (tracks.find((t) => t.mode === 'showing')) continue;
+
+      const preferredTrack = this._preferredLang
+        ? tracks.find((track) => track.language === this._preferredLang)
+        : null;
+
+      const defaultTrack = isArray(kind)
+        ? this._defaults[kind.find((kind) => this._defaults[kind]) || '']
+        : this._defaults[kind];
+
+      const track = preferredTrack ?? defaultTrack,
+        isCaptionsKind = track && isTrackCaptionKind(track);
+
+      if (track && (!isCaptionsKind || showCaptions !== false)) {
+        track.mode = 'showing';
+        if (isCaptionsKind) this._saveCaptionsTrack(track);
+      }
     }
-
-    this._storage?.setLang?.(this._preferredLang ?? defaultTrack?.language ?? null);
   }, 300);
 
   private _onTrackModeChangeBind = this._onTrackModeChange.bind(this);
   private _onTrackModeChange(event: TextTrackModeChangeEvent) {
     const track = event.detail;
 
-    if (this._storage && isTrackCaptionKind(track)) {
-      this._storage.setCaptions?.(track.mode === 'showing');
-      this._storage?.setLang?.(this._preferredLang ?? track?.language ?? null);
+    if (this._storage && isTrackCaptionKind(track) && track.mode !== 'disabled') {
+      this._saveCaptionsTrack(track);
     }
 
     if (track.mode === 'showing') {
@@ -147,6 +158,15 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
         trigger: event,
       }),
     );
+  }
+
+  private _saveCaptionsTrack(track: TextTrack) {
+    this._saveLang(track.language);
+    this._storage?.setCaptions?.(track.mode === 'showing');
+  }
+
+  private _saveLang(lang: string | null) {
+    this._storage?.setLang?.((this._preferredLang = lang));
   }
 
   setStorage(storage: MediaStorage | null) {
