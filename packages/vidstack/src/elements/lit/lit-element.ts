@@ -1,7 +1,7 @@
-import { render, type RootPart } from 'lit-html';
+import { render } from 'lit-html';
 
 export class LitElement extends HTMLElement {
-  rootPart: RootPart | null = null;
+  rootPart: any = null;
 
   connectedCallback() {
     this.rootPart = render((this as unknown as LitRenderer).render(), this, {

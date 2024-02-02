@@ -95,6 +95,11 @@ function defineTypesBundle() {
                 .join('\n');
 
             for (const file of Object.values(bundle)) {
+              if (file.type === 'chunk') {
+                // Leaking over from lit for some reason.
+                file.code = file.code.replace('/// <reference types="trusted-types" />', '');
+              }
+
               if (files.has(file.fileName) && file.type === 'chunk' && file.isEntry) {
                 file.code = references + `\n\n${file.code}`;
               }
