@@ -29,7 +29,7 @@ export class AudioRadioGroup extends Component<AudioRadioGroupProps, {}, AudioRa
   @prop
   get disabled() {
     const { audioTracks } = this._media.$state;
-    return audioTracks().length === 0;
+    return audioTracks().length <= 1;
   }
 
   constructor() {

@@ -31,7 +31,7 @@ export function useAudioOptions(): AudioOptions {
 
     Object.defineProperty(options, 'disabled', {
       get() {
-        return !options.length;
+        return options.length <= 1;
       },
     });
 
