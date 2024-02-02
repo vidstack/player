@@ -60,6 +60,7 @@ export class TimeSlider extends Component<
     keyStep: 5,
     shiftKeyMultiplier: 2,
     pauseWhileDragging: false,
+    noSwipeGesture: false,
     seekingRequestThrottle: 100,
   };
 
@@ -71,8 +72,10 @@ export class TimeSlider extends Component<
 
   constructor() {
     super();
+
+    const { noSwipeGesture } = this.$props;
     new SliderController({
-      _swipeGesture: true,
+      _swipeGesture: () => !noSwipeGesture(),
       _getStep: this._getStep.bind(this),
       _getKeyStep: this._getKeyStep.bind(this),
       _isDisabled: this._isDisabled.bind(this),
@@ -291,6 +294,12 @@ export interface TimeSliderProps extends SliderControllerProps {
    * The amount of milliseconds to throttle media seeking request events being dispatched.
    */
   seekingRequestThrottle: number;
+  /**
+   * Whether touch swiping left or right on the player canvas should activate the time slider. This
+   * gesture makes it easier for touch users to drag anywhere on the player left or right to
+   * seek backwards or forwards, without directly interacting with time slider.
+   */
+  noSwipeGesture: boolean;
 }
 
 interface ThrottledSeeking {

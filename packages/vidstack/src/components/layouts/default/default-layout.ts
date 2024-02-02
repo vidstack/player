@@ -40,6 +40,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     this.setAttributes({
       'data-match': this._when,
       'data-size': () => (this._smallWhen() ? 'sm' : null),
+      'data-no-scrub-gesture': this.$props.noScrubGesture,
     });
 
     const self = this;

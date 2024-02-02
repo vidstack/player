@@ -400,25 +400,25 @@
   visibility: hidden;
 }
 
-:where([data-preview] .vds-video-layout[data-size='sm'])
-  :where(
-    .vds-button,
-    .vds-slider:not(.vds-time-slider),
-    .vds-time,
-    .vds-chapter-title,
-    .vds-time-divider,
-    .vds-captions,
-    .vds-live-button
-  ) {
-  opacity: 0;
-}
-
 :where(.vds-video-layout[data-size='sm'] .vds-time-slider) {
   transition: transform 0.1s linear;
 }
 
 @media (pointer: coarse) {
-  :where([data-preview] .vds-video-layout[data-size='sm'] .vds-time-slider) {
+  :where([data-preview] .vds-video-layout:not([data-no-scrub-gesture]))
+    :where(
+      .vds-button,
+      .vds-slider:not(.vds-time-slider),
+      .vds-time,
+      .vds-chapter-title,
+      .vds-time-divider,
+      .vds-captions,
+      .vds-live-button
+    ) {
+    opacity: 0;
+  }
+
+  :where([data-preview] .vds-video-layout:not([data-no-scrub-gesture]) .vds-time-slider) {
     --track-height: var(--video-sm-slider-focus-track-height, 12px);
     transform: translateY(-6px);
     transition: transform 0.1s linear;

@@ -3,18 +3,19 @@ import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { DefaultLayoutTranslations } from './translations';
 
 export const defaultLayoutProps: DefaultLayoutProps = {
-  when: false,
-  smallWhen: false,
-  thumbnails: null,
   customIcons: false,
-  translations: null,
-  menuGroup: 'bottom',
-  noModal: false,
-  sliderChaptersMinWidth: 325,
   disableTimeSlider: false,
+  menuGroup: 'bottom',
   noGestures: false,
   noKeyboardActionDisplay: false,
+  noModal: false,
+  noScrubGesture: false,
   seekStep: 10,
+  sliderChaptersMinWidth: 325,
+  smallWhen: false,
+  thumbnails: null,
+  translations: null,
+  when: false,
 };
 
 export interface DefaultLayoutProps {
@@ -52,6 +53,10 @@ export interface DefaultLayoutProps {
    * enabled by default as it provides a better user experience for touch devices.
    */
   noModal: boolean;
+  /**
+   * Whether to disable scrubbing by touch swiping left or right on the player canvas.
+   */
+  noScrubGesture: boolean;
   /**
    * The minimum width of the slider to start displaying slider chapters when available.
    */

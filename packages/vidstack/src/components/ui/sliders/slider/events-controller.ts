@@ -1,10 +1,9 @@
 import throttle from 'just-throttle';
-import { effect, ViewController } from 'maverick.js';
+import { effect, ViewController, type ReadSignal } from 'maverick.js';
 import { isNull, isNumber, isUndefined, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../../../core';
 import { isTouchPinchEvent } from '../../../../utils/dom';
-import { IS_SAFARI } from '../../../../utils/support';
 import type {
   SliderDragEndEvent,
   SliderDragStartEvent,
@@ -31,7 +30,7 @@ const SliderKeyDirection = {
 } as const;
 
 export interface SliderEventDelegate {
-  _swipeGesture?: boolean;
+  _swipeGesture?: ReadSignal<boolean>;
   _isDisabled(): boolean;
   _getStep(): number;
   _getKeyStep(): number;
@@ -57,20 +56,30 @@ export class SliderEventsController extends ViewController<
   protected override onConnect() {
     effect(this._attachEventListeners.bind(this));
     effect(this._attachPointerListeners.bind(this));
-    if (this._delegate._swipeGesture) {
-      const provider = this._media.player.el?.querySelector(
-        'media-provider,[data-media-provider]',
-      ) as HTMLElement | null;
-      if (provider) {
-        this._provider = provider;
-        listenEvent(provider, 'touchstart', this._onTouchStart.bind(this), {
-          passive: true,
-        });
-        listenEvent(provider, 'touchmove', this._onTouchMove.bind(this), {
-          passive: false,
-        });
-      }
+    if (this._delegate._swipeGesture) effect(this._watchSwipeGesture.bind(this));
+  }
+
+  private _watchSwipeGesture() {
+    const { pointer } = this._media.$state;
+
+    if (pointer() !== 'coarse' || !this._delegate._swipeGesture!()) {
+      this._provider = null;
+      return;
     }
+
+    this._provider = this._media.player.el?.querySelector(
+      'media-provider,[data-media-provider]',
+    ) as HTMLElement | null;
+
+    if (!this._provider) return;
+
+    listenEvent(this._provider, 'touchstart', this._onTouchStart.bind(this), {
+      passive: true,
+    });
+
+    listenEvent(this._provider, 'touchmove', this._onTouchMove.bind(this), {
+      passive: false,
+    });
   }
 
   private _provider: HTMLElement | null = null;
@@ -88,11 +97,13 @@ export class SliderEventsController extends ViewController<
       yDiff = touch.clientY - this._touch.clientY,
       isDragging = this.$state.dragging();
 
-    if (!isDragging && Math.abs(yDiff) > 20) {
+    if (!isDragging && Math.abs(yDiff) > 5) {
       return;
     }
 
     if (isDragging) return;
+
+    event.preventDefault();
 
     if (Math.abs(xDiff) > 20) {
       this._touch = touch;
@@ -116,11 +127,9 @@ export class SliderEventsController extends ViewController<
     if (this._delegate._isDisabled() || !this.$state.dragging()) return;
     listenEvent(document, 'pointerup', this._onDocumentPointerUp.bind(this));
     listenEvent(document, 'pointermove', this._onDocumentPointerMove.bind(this));
-    if (IS_SAFARI) {
-      listenEvent(document, 'touchmove', this._onDocumentTouchMove.bind(this), {
-        passive: false,
-      });
-    }
+    listenEvent(document, 'touchmove', this._onDocumentTouchMove.bind(this), {
+      passive: false,
+    });
   }
 
   private _onFocus() {

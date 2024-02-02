@@ -73,6 +73,10 @@ export interface DefaultLayoutProps<Slots = unknown> extends PrimitivePropsWithR
    */
   noModal?: boolean;
   /**
+   * Whether to disable scrubbing by touch swiping left or right on the player canvas.
+   */
+  noScrubGesture: boolean;
+  /**
    * The minimum width of the slider to start displaying slider chapters when available.
    */
   sliderChaptersMinWidth?: number;
@@ -126,6 +130,7 @@ export function createDefaultMediaLayout({
         noGestures = false,
         noKeyboardActionDisplay = false,
         noModal = false,
+        noScrubGesture,
         seekStep = 10,
         showMenuDelay,
         showTooltipDelay = 700,
@@ -160,6 +165,7 @@ export function createDefaultMediaLayout({
           className={`vds-${type}-layout` + (className ? ` ${className}` : '')}
           data-match={isMatch ? '' : null}
           data-size={isSmallLayout ? 'sm' : null}
+          data-no-scrub-gesture={noScrubGesture ? '' : null}
           ref={forwardRef}
         >
           {canRender && isMatch ? (
@@ -173,6 +179,7 @@ export function createDefaultMediaLayout({
                 noGestures,
                 noKeyboardActionDisplay,
                 noModal,
+                noScrubGesture,
                 showMenuDelay,
                 showTooltipDelay,
                 sliderChaptersMinWidth,

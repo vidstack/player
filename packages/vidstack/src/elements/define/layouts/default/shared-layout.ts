@@ -242,8 +242,14 @@ export function DefaultVolumeSlider({ orientation }: { orientation?: SliderOrien
 export function DefaultTimeSlider() {
   const $ref = signal<Element | undefined>(undefined),
     $width = signal(0),
-    { thumbnails, translations, sliderChaptersMinWidth, disableTimeSlider, seekStep } =
-      useDefaultLayoutContext(),
+    {
+      thumbnails,
+      translations,
+      sliderChaptersMinWidth,
+      disableTimeSlider,
+      seekStep,
+      noScrubGesture,
+    } = useDefaultLayoutContext(),
     $label = $i18n(translations, 'Seek'),
     $isDisabled = $signal(disableTimeSlider),
     $isChaptersDisabled = $signal(() => $width() < sliderChaptersMinWidth()),
@@ -260,6 +266,7 @@ export function DefaultTimeSlider() {
       aria-label=${$label}
       key-step=${$signal(seekStep)}
       ?disabled=${$isDisabled}
+      ?no-swipe-gesture=${$signal(noScrubGesture)}
       ${ref($ref.set)}
     >
       <media-slider-chapters class="vds-slider-chapters" ?disabled=${$isChaptersDisabled}>

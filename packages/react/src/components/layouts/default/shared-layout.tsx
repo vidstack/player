@@ -331,7 +331,8 @@ function DefaultTimeSlider() {
   const [instance, setInstance] = React.useState<TimeSliderInstance | null>(null),
     [width, setWidth] = React.useState(0),
     $src = useMediaState('currentSrc'),
-    { thumbnails, sliderChaptersMinWidth, disableTimeSlider, seekStep } = useDefaultLayoutContext(),
+    { thumbnails, sliderChaptersMinWidth, disableTimeSlider, seekStep, noScrubGesture } =
+      useDefaultLayoutContext(),
     label = useDefaultLayoutWord('Seek'),
     $RemotionSliderThumbnail = useSignal(RemotionSliderThumbnail);
 
@@ -347,6 +348,7 @@ function DefaultTimeSlider() {
       className="vds-time-slider vds-slider"
       aria-label={label}
       disabled={disableTimeSlider}
+      noSwipeGesture={noScrubGesture}
       keyStep={seekStep}
       ref={setInstance}
     >
