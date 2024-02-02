@@ -125,18 +125,21 @@ export class Poster extends Component<PosterProps, PosterState> {
     listenEvent(img, 'error', this._onError.bind(this));
   }
 
+  private _prevSrc = '';
   private _watchSrc() {
-    const { canLoadPoster, poster: defaultPoster } = this._media.$state;
+    const { poster: defaultPoster } = this._media.$props,
+      { canLoadPoster, providedPoster, inferredPoster } = this._media.$state;
 
     // Either src set on this poster component, or defined on the player.
-    const src = this.$props.src(),
-      poster = src || defaultPoster();
+    const src = this.$props.src() || '',
+      poster = src || defaultPoster() || inferredPoster();
 
-    if (src && defaultPoster() !== src) {
-      this._media.$state.providedPoster.set(src);
+    if (this._prevSrc === providedPoster()) {
+      providedPoster.set(src);
     }
 
     this.$state.src.set(canLoadPoster() && poster.length ? poster : null);
+    this._prevSrc = src;
   }
 
   private _watchAlt() {
