@@ -1,5 +1,5 @@
 import { peek, type Dispose } from 'maverick.js';
-import { isString } from 'maverick.js/std';
+import { isString, setAttribute } from 'maverick.js/std';
 
 import type { MediaSrc } from '../../core/api/types';
 import { preconnect } from '../../utils/network';
@@ -112,8 +112,23 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
   override async loadSource(src: MediaSrc, preload?: HTMLMediaElement['preload']) {
     if (!isString(src.src)) return;
     this._media.preload = preload || '';
+    this._appendSource(src as MediaSrc<string>);
     this._controller._loadSource(src);
     this._currentSrc = src as MediaSrc<string>;
+  }
+
+  /**
+   * Append source so it works when requesting AirPlay since hls.js will remove it.
+   */
+  private _appendSource(src: MediaSrc<string>) {
+    const prevSource = this.video.querySelector('source[data-vds]'),
+      source = prevSource ?? document.createElement('source');
+
+    setAttribute(source, 'src', src.src);
+    setAttribute(source, 'type', 'application/x-mpegurl');
+    setAttribute(source, 'data-vds', '');
+
+    if (!prevSource) this.video.append(source);
   }
 
   /**

@@ -769,5 +769,11 @@
   "_cancelShowing": "nn",
   "_watchDuration": "pn",
   "_skipTimeUpdates": "qn",
-  "_watchSupported": "rn"
+  "_watchSupported": "rn",
+  "_$$props": "sn",
+  "_prevSrc": "wn",
+  "_saveCaptionsTrack": "vn",
+  "_saveLang": "tn",
+  "_selectTracks": "un",
+  "_watchSwipeGesture": "xn"
 }

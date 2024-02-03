@@ -54,6 +54,11 @@ export abstract class VideoRemotePlaybackAdapter implements MediaRemotePlaybackA
 
   async prompt() {
     if (!this.supported) throw Error('Not supported on this platform.');
+
+    if (this._type === 'airplay' && this._video.webkitShowPlaybackTargetPicker) {
+      return this._video.webkitShowPlaybackTargetPicker();
+    }
+
     return this._video.remote.prompt();
   }
 

@@ -140,6 +140,8 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
       children = this.el!.children;
 
     for (const el of children) {
+      if (el.hasAttribute('data-vds')) continue;
+
       if (el instanceof HTMLSourceElement) {
         sources.push({
           src: el.src,
