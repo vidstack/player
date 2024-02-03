@@ -540,7 +540,7 @@ function DefaultAudioMenu() {
 }
 
 function DefaultSpeedMenu() {
-  const { translations } = useDefaultLayoutContext(),
+  const { translations, playbackRates } = useDefaultLayoutContext(),
     $normalText = $i18n(translations, 'Normal');
   return html`
     <media-menu class="vds-speed-menu vds-menu">
@@ -552,6 +552,7 @@ function DefaultSpeedMenu() {
         <media-speed-radio-group
           class="vds-speed-radio-group vds-radio-group"
           normal-label=${$normalText}
+          .rates=${$signal(playbackRates)}
         >
           <template>
             <media-radio class="vds-speed-radio vds-radio">

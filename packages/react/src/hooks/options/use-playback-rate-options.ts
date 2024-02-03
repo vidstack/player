@@ -4,13 +4,13 @@ import { useSignal } from 'maverick.js/react';
 
 import { useMediaContext } from '../use-media-context';
 
-const DEFAULT_RATES = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+export const DEFAULT_PLAYBACK_RATES = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-playback-rate-options}
  */
 export function usePlaybackRateOptions({
-  rates = DEFAULT_RATES,
+  rates = DEFAULT_PLAYBACK_RATES,
   normalLabel = 'Normal',
 }: UsePlaybackRateOptions = {}): PlaybackRateOptions {
   const media = useMediaContext(),

@@ -1,4 +1,5 @@
 import type { MediaPlayerQuery } from '../../../core/api/player-state';
+import { DEFAULT_PLAYBACK_RATES } from '../../ui/menu/radio-groups/speed-radio-group';
 import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { DefaultLayoutTranslations } from './translations';
 
@@ -10,6 +11,7 @@ export const defaultLayoutProps: DefaultLayoutProps = {
   noKeyboardActionDisplay: false,
   noModal: false,
   noScrubGesture: false,
+  playbackRates: DEFAULT_PLAYBACK_RATES,
   seekStep: 10,
   sliderChaptersMinWidth: 325,
   smallWhen: false,
@@ -73,6 +75,10 @@ export interface DefaultLayoutProps {
    * Whether keyboard actions should not be displayed.
    */
   noKeyboardActionDisplay: boolean;
+  /**
+   * The playback rate options to be displayed in the settings menu.
+   */
+  playbackRates: number[];
   /**
    * The number of seconds to seek forward or backward when pressing the seek button or using
    * keyboard shortcuts.

@@ -93,6 +93,10 @@ export interface DefaultLayoutProps<Slots = unknown> extends PrimitivePropsWithR
    */
   noKeyboardActionDisplay?: boolean;
   /**
+   * The playback rate options to be displayed in the settings menu.
+   */
+  playbackRates?: number[];
+  /**
    * The number of seconds to seek forward or backward when pressing the seek button or using
    * keyboard shortcuts.
    */
@@ -131,6 +135,7 @@ export function createDefaultMediaLayout({
         noKeyboardActionDisplay = false,
         noModal = false,
         noScrubGesture,
+        playbackRates,
         seekStep = 10,
         showMenuDelay,
         showTooltipDelay = 700,
@@ -185,6 +190,7 @@ export function createDefaultMediaLayout({
                 sliderChaptersMinWidth,
                 slots,
                 seekStep,
+                playbackRates,
                 thumbnails,
                 translations,
               }}

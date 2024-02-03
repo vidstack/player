@@ -6,6 +6,8 @@ import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
 
+export const DEFAULT_PLAYBACK_RATES = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
 /**
  * This component manages playback rate radios.
  *
@@ -14,7 +16,7 @@ import { RadioGroupController } from '../radio/radio-group-controller';
 export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRadioGroupEvents> {
   static props: SpeedRadioGroupProps = {
     normalLabel: 'Normal',
-    rates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+    rates: DEFAULT_PLAYBACK_RATES,
   };
 
   private _media!: MediaContext;

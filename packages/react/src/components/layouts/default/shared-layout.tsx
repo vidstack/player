@@ -706,11 +706,12 @@ DefaultAudioSubmenu.displayName = 'DefaultAudioSubmenu';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultSpeedSubmenu() {
-  const { icons: Icons } = useDefaultLayoutContext(),
+  const { icons: Icons, playbackRates } = useDefaultLayoutContext(),
     label = useDefaultLayoutWord('Speed'),
     normalText = useDefaultLayoutWord('Normal'),
     options = usePlaybackRateOptions({
       normalLabel: normalText,
+      rates: playbackRates,
     }),
     hint = options.selectedValue === '1' ? normalText : options.selectedValue + 'x';
   return (
