@@ -775,5 +775,6 @@
   "_saveCaptionsTrack": "vn",
   "_saveLang": "tn",
   "_selectTracks": "un",
-  "_watchSwipeGesture": "xn"
+  "_watchSwipeGesture": "xn",
+  "_appendSource": "yn"
 }

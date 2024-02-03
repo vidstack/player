@@ -208,7 +208,8 @@ export class SourceSelection {
 
     const provider = this._media.$provider(),
       source = this._media.$state.source(),
-      crossOrigin = peek(this._media.$state.crossOrigin);
+      crossOrigin = peek(this._media.$state.crossOrigin),
+      preferNativeHLS = peek(this._media.$props.preferNativeHLS);
 
     if (isSameSrc(provider?.currentSrc, source)) {
       return;
@@ -219,7 +220,7 @@ export class SourceSelection {
 
       if (isHLSSrc(source)) {
         // Determined using `HLSProvider` if `hls.js` supported.
-        if (!isHLSSupported()) {
+        if (preferNativeHLS || !isHLSSupported()) {
           resolveStreamTypeFromHLSManifest(source.src as string, {
             credentials: getRequestCredentials(crossOrigin),
             signal: abort.signal,
