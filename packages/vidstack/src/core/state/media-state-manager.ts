@@ -3,6 +3,7 @@ import throttle from 'just-throttle';
 import { effect, onDispose, peek } from 'maverick.js';
 import { DOMEvent, listenEvent } from 'maverick.js/std';
 
+import { getTimeRangesEnd } from '..';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { canChangeVolume } from '../../utils/support';
 import type { MediaContext } from '../api/media-context';
@@ -411,11 +412,15 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   protected _onCanPlayDetail(detail: ME.MediaCanPlayDetail) {
-    const { seekable, seekableEnd, buffered, intrinsicDuration, canPlay } = this.$state;
+    const { seekable, buffered, intrinsicDuration, canPlay } = this.$state;
+
     canPlay.set(true);
     buffered.set(detail.buffered);
     seekable.set(detail.seekable);
-    intrinsicDuration.set(seekableEnd());
+
+    // Do not fetch `seekableEnd` from `$state` as it might be clipped.
+    const seekableEnd = getTimeRangesEnd(detail.seekable) ?? Infinity;
+    intrinsicDuration.set(seekableEnd);
   }
 
   ['duration-change'](event: ME.MediaDurationChangeEvent) {
@@ -425,16 +430,18 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['progress'](event: ME.MediaProgressEvent) {
-    const { buffered, seekable, live, intrinsicDuration, seekableEnd } = this.$state,
+    const { buffered, seekable, live, intrinsicDuration } = this.$state,
       detail = event.detail;
 
     buffered.set(detail.buffered);
     seekable.set(detail.seekable);
 
     if (live()) {
+      // Do not fetch `seekableEnd` from `$state` as it might be clipped.
+      const seekableEnd = getTimeRangesEnd(detail.seekable) ?? Infinity;
       intrinsicDuration.set(seekableEnd);
       this.dispatch('duration-change', {
-        detail: seekableEnd(),
+        detail: seekableEnd,
         trigger: event,
       });
     }
