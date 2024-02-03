@@ -125,7 +125,7 @@ async function main() {
   step('Generating changelog...');
   await run('pnpm', ['changelog']);
   await runIfNotDry('git', ['add', '-A']);
-  await runIfNotDry('git', ['commit', '-m', 'chore: update changelog']);
+  await runIfNotDry('git', ['commit', '-m', 'chore(release): update changelog']);
 
   step('Pushing to GitHub...');
   await runIfNotDry('git', ['push', 'upstream', `refs/tags/${tag}`]);
