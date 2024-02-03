@@ -65,7 +65,7 @@ export class ThumbnailsLoader {
               const json = await response.json();
 
               if (isArray(json)) {
-                if (json[0] && 'text' in json) {
+                if (json[0] && 'text' in (json[0] as Partial<VTTCue>)) {
                   resolve(this._processVTTCues(json as any));
                 } else {
                   for (let i = 0; i < json.length; i++) {
