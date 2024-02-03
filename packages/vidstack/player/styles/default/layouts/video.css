@@ -388,7 +388,7 @@
     .vds-slider:not(.vds-time-slider),
     .vds-time,
     .vds-time-divider,
-    .vds-chapter-title,
+    .vds-chapter-title
 
   ) {
   transition: opacity 0.15s ease;
