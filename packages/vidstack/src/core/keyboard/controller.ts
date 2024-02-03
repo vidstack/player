@@ -114,14 +114,15 @@ export class MediaKeyboardController extends MediaPlayerController {
       return;
     }
 
-    let { method, value } = this._getMatchingMethod(event);
+    let { method, value } = this._getMatchingMethod(event),
+      isNumberPress = !event.metaKey && /[0-9]/.test(event.key);
 
-    if (!isString(value) && !isArray(value)) {
+    if (!isString(value) && !isArray(value) && !isNumberPress) {
       value?.callback(event);
       return;
     }
 
-    if (!method && !event.metaKey && /[0-9]/.test(event.key)) {
+    if (!method && isNumberPress) {
       event.preventDefault();
       event.stopPropagation();
       this._media.remote.seek((this.$state.duration() / 10) * Number(event.key), event);
