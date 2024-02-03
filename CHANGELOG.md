@@ -2,13 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [1.10.4-next](https://github.com/vidstack/player/releases/tag/v1.10.4-next) (2024-02-03)
 
 ### ✨ Features
 
 #### Player
 
 - new `noScrubGesture` prop on default layout ([5de514f](https://github.com/vidstack/player/commit/5de514f3ccedc22d0d9d2c94a3525e8caae344ab))
+- new `playbackRates` prop on default layout ([2c51d76](https://github.com/vidstack/player/commit/2c51d764c10b022cd73002762d7712cdbe2e72aa))
 
 ### 🐛 Bug Fixes
 
@@ -24,6 +25,10 @@ All notable changes to this project will be documented in this file.
 - player duration prop always returns -1 ([54cbc0c](https://github.com/vidstack/player/commit/54cbc0cb54d8789741ad458284e65be735989628))
 - clipped duration overwriting intrinsic duration ([3bab0d6](https://github.com/vidstack/player/commit/3bab0d626e8ea1ca4bdec0c313452d256060281d))
 - thumbnails vtt json not accepted correctly ([cee73b4](https://github.com/vidstack/player/commit/cee73b4dbafaba807edc5df032eeb6555319435c))
+- 0-9 key seeking stopped working ([79636c1](https://github.com/vidstack/player/commit/79636c1f568c8137f934ea3eb2bed29114b24f3f))
+- airplay not working on macos safari and with hls streams ([2332626](https://github.com/vidstack/player/commit/2332626aa7dbb943d0293060e2672997bca3917b))
+- expected selector error on default video layout css (#1135) ([10758dd](https://github.com/vidstack/player/commit/10758ddb91ebb2a52a265aafdb9fe433863f2378))
+- resolve hls stream type when using `preferNativeHLS` ([ce73b65](https://github.com/vidstack/player/commit/ce73b65939c9487ff4a2da82ceb3fb0a6acad21f))
 
 ## [1.10.3-next](https://github.com/vidstack/player/releases/tag/v1.10.3-next) (2024-01-31)
 
