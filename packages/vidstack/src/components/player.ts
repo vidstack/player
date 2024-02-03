@@ -137,6 +137,10 @@ export class MediaPlayer
     return this._media.$provider() as AnyMediaProvider | null;
   }
 
+  private get _$$props() {
+    return this.$props as unknown as WriteSignalRecord<MediaPlayerProps>;
+  }
+
   constructor() {
     super();
 
@@ -461,6 +465,15 @@ export class MediaPlayer
   }
 
   @prop
+  get duration() {
+    return this.$state.duration();
+  }
+
+  set duration(duration: number) {
+    this._$$props.duration.set(duration);
+  }
+
+  @prop
   get paused() {
     return peek(this.$state.paused);
   }
@@ -485,8 +498,7 @@ export class MediaPlayer
   }
 
   set muted(muted) {
-    const $props = this.$props as unknown as WriteSignalRecord<any>;
-    $props.muted.set(muted);
+    this._$$props.muted.set(muted);
   }
 
   private _watchMuted() {
@@ -537,8 +549,7 @@ export class MediaPlayer
   }
 
   set volume(volume) {
-    const $props = this.$props as unknown as WriteSignalRecord<any>;
-    $props.volume.set(volume);
+    this._$$props.volume.set(volume);
   }
 
   private _watchVolume() {
