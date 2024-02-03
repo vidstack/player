@@ -129,7 +129,12 @@ export * from './hooks/options/use-audio-options';
 export * from './hooks/options/use-caption-options';
 export * from './hooks/options/use-chapter-options';
 export * from './hooks/options/use-video-quality-options';
-export * from './hooks/options/use-playback-rate-options';
+export {
+  usePlaybackRateOptions,
+  type PlaybackRateOptions,
+  type UsePlaybackRateOptions,
+  type PlaybackRateOption,
+} from './hooks/options/use-playback-rate-options';
 
 // Layouts
 export type { DefaultLayoutProps } from './components/layouts/default';

@@ -737,5 +737,12 @@
   "_skipTimeUpdates": "Mm",
   "_watchDuration": "Pm",
   "_watchRole": "Qm",
-  "_watchSupported": "Sm"
+  "_watchSupported": "Sm",
+  "_$$props": "Tm",
+  "_appendSource": "Ym",
+  "_prevSrc": "Xm",
+  "_saveCaptionsTrack": "Wm",
+  "_saveLang": "Um",
+  "_selectTracks": "Vm",
+  "_watchSwipeGesture": "Zm"
 }
