@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### ✨ Features
+
+#### Player
+
+- new `noScrubGesture` prop on default layout ([5de514f](https://github.com/vidstack/player/commit/5de514f3ccedc22d0d9d2c94a3525e8caae344ab))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- watch supported check correctly in remote playback ([5b33c7a](https://github.com/vidstack/player/commit/5b33c7a99fa5c962eaef2a97beb83cfa6a75d430))
+- disable audio menu if only one option ([f464edf](https://github.com/vidstack/player/commit/f464edfd684c25f9100e62472c98417f7f7f3f07))
+- seekable end of clipped videos is incorrect ([4217dfe](https://github.com/vidstack/player/commit/4217dfea2beb27e0cf96708fb048589f06874989))
+- scrollbar styles not applying on chromium 121+ ([6404bfe](https://github.com/vidstack/player/commit/6404bfe75b03e24b598bbee8edaa55ca3ca26266))
+- select text tracks on change and update storage correctly ([195c289](https://github.com/vidstack/player/commit/195c289683a0480c13809d89ade689b08fb6ce82))
+- poster component should use inferred when none provided ([d533263](https://github.com/vidstack/player/commit/d5332639175290b5ad3fcbe8518a44476861221d))
+- remove `trusted-types` from types ([c79d376](https://github.com/vidstack/player/commit/c79d376ff0e10ec07a8475d470c89862b041aa95))
+- player duration prop always returns -1 ([54cbc0c](https://github.com/vidstack/player/commit/54cbc0cb54d8789741ad458284e65be735989628))
+- clipped duration overwriting intrinsic duration ([3bab0d6](https://github.com/vidstack/player/commit/3bab0d626e8ea1ca4bdec0c313452d256060281d))
+- thumbnails vtt json not accepted correctly ([cee73b4](https://github.com/vidstack/player/commit/cee73b4dbafaba807edc5df032eeb6555319435c))
+
 ## [1.10.3-next](https://github.com/vidstack/player/releases/tag/v1.10.3-next) (2024-01-31)
 
 ### 🐛 Bug Fixes
