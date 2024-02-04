@@ -194,8 +194,8 @@ export class RemotionProvider implements MediaProviderAdapter {
     const { fps } = this._src()!,
       frame = time * fps!;
 
-    this._setFrame({ [REMOTION_PROVIDER_ID]: frame });
     this._notify('seeking', time);
+    this._setFrame({ [REMOTION_PROVIDER_ID]: frame });
   }
 
   setVolume(value: React.SetStateAction<number>) {
