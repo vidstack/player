@@ -29,21 +29,6 @@
   word-break: break-word;
 }
 
-@media screen and (min-width: 980px) {
-  :where([data-fullscreen] .vds-captions) {
-    --cue-font-size: var(
-      --media-lg-fullscreen-cue-font-size,
-      calc(var(--overlay-height) / 100 * 3)
-    );
-  }
-}
-
-@media screen and (max-width: 599px) and (orientation: portrait) {
-  :where([data-fullscreen] .vds-captions) {
-    --cue-font-size: 18px;
-  }
-}
-
 :where([data-view-type='audio'] .vds-captions) {
   position: relative;
   margin: 0;
