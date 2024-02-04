@@ -39,7 +39,7 @@ import * as TimeSlider from '../../ui/sliders/time-slider';
 import * as VolumeSlider from '../../ui/sliders/volume-slider';
 import * as Thumbnail from '../../ui/thumbnail';
 import { Time } from '../../ui/time';
-import { RemotionPoster, RemotionSliderThumbnail } from '../remotion-ui';
+import { RemotionPoster, RemotionSliderThumbnail, RemotionThumbnail } from '../remotion-ui';
 import { useLayoutName } from '../utils';
 import { i18n, PlyrLayoutContext, usePlyrLayoutContext, usePlyrLayoutWord } from './context';
 import { defaultPlyrLayoutProps, type PlyrLayoutProps } from './props';
@@ -201,9 +201,15 @@ PlyrPlayLargeButton.displayName = 'PlyrPlayLargeButton';
  * -----------------------------------------------------------------------------------------------*/
 
 function PlyrPreviewScrubbing() {
-  const { thumbnails, previewTime } = usePlyrLayoutContext(),
-    $previewTime = useSignal(previewTime);
-  return (
+  const $src = useMediaState('source'),
+    { thumbnails, previewTime } = usePlyrLayoutContext(),
+    $previewTime = useSignal(previewTime),
+    $RemotionThumbnail = useSignal(RemotionThumbnail),
+    $hasRemotionThumbnail = $RemotionThumbnail && isRemotionSource($src);
+
+  return $hasRemotionThumbnail ? (
+    <$RemotionThumbnail className="plyr__preview-scrubbing" frame={$previewTime * $src.fps!} />
+  ) : (
     <Thumbnail.Root src={thumbnails} className="plyr__preview-scrubbing" time={$previewTime}>
       <Thumbnail.Img />
     </Thumbnail.Root>
