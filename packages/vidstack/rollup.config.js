@@ -27,8 +27,10 @@ const NPM_EXTERNAL_PACKAGES = ['hls.js', 'media-captions', 'media-icons'],
   ],
   CDN_BUNDLES = [
     defineCDNBundle({ dev: true }),
-    defineCDNBundle(),
-    defineCDNBundle({ layouts: true }),
+    defineCDNBundle({ dev: false }),
+    defineCDNBundle({ layout: 'all' }),
+    defineCDNBundle({ layout: 'default' }),
+    defineCDNBundle({ layout: 'plyr' }),
   ],
   PLUGIN_BUNDLES = definePluginsBundle(),
   TYPES_BUNDLES = defineTypesBundle();
@@ -216,13 +218,38 @@ function defineNPMBundle({ target, type, minify }) {
   };
 }
 
-/** @returns {import('rollup').RollupOptions} */
-function defineCDNBundle({ dev = false, layouts = false } = {}) {
-  const input =
-      dev || layouts
-        ? 'src/elements/bundles/cdn/player-with-layouts.ts'
-        : 'src/elements/bundles/cdn/player.ts',
-    output = dev ? `vidstack.dev` : `vidstack`;
+/**
+ * @param {{ dev?: boolean; layout?: 'all' | 'default' | 'plyr' }} options
+ * @returns {import('rollup').RollupOptions}
+ */
+function defineCDNBundle({ dev = false, layout } = {}) {
+  function getInput() {
+    if (!dev && !layout) {
+      return 'src/elements/bundles/cdn/player.ts';
+    } else if (dev || layout === 'all') {
+      return 'src/elements/bundles/cdn/player-with-layouts.ts';
+    } else if (layout === 'default') {
+      return 'src/elements/bundles/cdn/player-with-default.ts';
+    } else if (layout === 'plyr') {
+      return 'src/elements/bundles/cdn/player-with-plyr.ts';
+    }
+  }
+
+  function getOutputDir() {
+    if (dev || !layout) {
+      return 'cdn';
+    } else if (layout === 'all') {
+      return 'cdn/with-layouts';
+    } else if (layout === 'default') {
+      return 'cdn/with-layouts/default';
+    } else if (layout === 'plyr') {
+      return 'cdn/with-layouts/plyr';
+    }
+  }
+
+  const input = getInput(),
+    outputFile = dev ? `vidstack.dev` : `vidstack`;
+
   return {
     ...defineNPMBundle({
       type: dev ? 'dev' : 'prod',
@@ -230,19 +257,19 @@ function defineCDNBundle({ dev = false, layouts = false } = {}) {
       target: 'es2020',
     }),
     input: {
-      [output]: input,
+      [outputFile]: input,
       ...getProviderInputs(),
     },
     output: {
       format: 'esm',
-      dir: dev || !layouts ? 'cdn' : 'cdn/with-layouts',
+      dir: getOutputDir(),
       chunkFileNames: `chunks/vidstack-[hash].js`,
       paths: {
         'media-icons': 'https://cdn.jsdelivr.net/npm/media-icons@next/dist/lazy.js',
         'media-captions': 'https://cdn.jsdelivr.net/npm/media-captions@next/dist/prod.js',
       },
       manualChunks(id) {
-        if (dev) return output; // no chunks in dev
+        if (dev) return outputFile; // no chunks in dev
         if (id.includes('maverick') || id.includes('@floating-ui')) return 'frameworks';
         return null;
       },
