@@ -6,17 +6,21 @@ import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
 
-export const DEFAULT_PLAYBACK_RATES = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+export const DEFAULT_AUDIO_GAINS = [1, 2, 3, 4, 5];
 
 /**
- * This component manages playback rate radios.
+ * This component manages audio gain radios.
  *
- * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/speed-radio-group}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/audio-gain-radio-group}
  */
-export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRadioGroupEvents> {
-  static props: SpeedRadioGroupProps = {
-    normalLabel: 'Normal',
-    rates: DEFAULT_PLAYBACK_RATES,
+export class AudioGainRadioGroup extends Component<
+  AudioGainRadioGroupProps,
+  {},
+  AudioGainRadioGroupEvents
+> {
+  static props: AudioGainRadioGroupProps = {
+    normalLabel: 'Disabled',
+    gains: DEFAULT_AUDIO_GAINS,
   };
 
   private _media!: MediaContext;
@@ -30,9 +34,9 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
 
   @prop
   get disabled() {
-    const { rates } = this.$props,
-      { canSetPlaybackRate } = this._media.$state;
-    return !canSetPlaybackRate() || rates().length === 0;
+    const { gains } = this.$props,
+      { canSetAudioGain } = this._media.$state;
+    return !canSetAudioGain() || gains().length === 0;
   }
 
   constructor() {
@@ -56,10 +60,10 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
 
   @method
   getOptions(): RadioOption[] {
-    const { rates, normalLabel } = this.$props;
-    return rates().map((rate) => ({
-      label: rate === 1 ? normalLabel : rate + '×',
-      value: rate.toString(),
+    const { gains, normalLabel } = this.$props;
+    return gains().map((gain) => ({
+      label: gain === 1 || gain === null ? normalLabel : String(gain * 100) + '%',
+      value: gain.toString(),
     }));
   }
 
@@ -69,9 +73,9 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
 
   private _watchHintText() {
     const { normalLabel } = this.$props,
-      { playbackRate } = this._media.$state,
-      rate = playbackRate();
-    this._menu?._hint.set(rate === 1 ? normalLabel() : rate + '×');
+      { audioGain } = this._media.$state,
+      gain = audioGain();
+    this._menu?._hint.set(gain === 1 || gain == null ? normalLabel() : String(gain * 100) + '%');
   }
 
   private _watchControllerDisabled() {
@@ -79,34 +83,34 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
   }
 
   private _getValue() {
-    const { playbackRate } = this._media.$state;
-    return playbackRate().toString();
+    const { audioGain } = this._media.$state;
+    return audioGain()?.toString() ?? '1';
   }
 
   private _onValueChange(value: string, trigger?: Event) {
     if (this.disabled) return;
-    const rate = +value;
-    this._media.remote.changePlaybackRate(rate, trigger);
-    this.dispatch('change', { detail: rate, trigger });
+    const gain = +value;
+    this._media.remote.changeAudioGain(gain, trigger);
+    this.dispatch('change', { detail: gain, trigger });
   }
 }
 
-export interface SpeedRadioGroupProps {
-  /** The playback rate options to be displayed. */
-  rates: number[];
-  /** The text to display for normal speed (i.e., playback rate of 1). */
+export interface AudioGainRadioGroupProps {
+  /** The audio gain options to be displayed. */
+  gains: number[];
+  /** The text to display for disabled audio gain (i.e., audio gain is 1.0). */
   normalLabel: string;
 }
 
-export interface SpeedRadioGroupEvents {
-  change: SpeedRadioGroupChangeEvent;
+export interface AudioGainRadioGroupEvents {
+  change: AudioGainRadioGroupChangeEvent;
 }
 
 /**
  * Fired when the checked radio changes.
  *
- * @detail speed
+ * @detail gain
  */
-export interface SpeedRadioGroupChangeEvent extends DOMEvent<number> {
-  target: SpeedRadioGroup;
+export interface AudioGainRadioGroupChangeEvent extends DOMEvent<number> {
+  target: AudioGainRadioGroup;
 }

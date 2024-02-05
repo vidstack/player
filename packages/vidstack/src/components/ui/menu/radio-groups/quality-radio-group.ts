@@ -21,7 +21,7 @@ import { RadioGroupController } from '../radio/radio-group-controller';
 /**
  * This component manages video quality radios.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/quality-menu}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/quality-radio-group}
  */
 export class QualityRadioGroup extends Component<
   QualityRadioGroupProps,

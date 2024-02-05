@@ -449,14 +449,22 @@ export function DefaultSettingsMenu({
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
 }) {
   return $signal(() => {
-    const { viewType, canSetPlaybackRate, canSetQuality, qualities, audioTracks, hasCaptions } =
-        useMediaState(),
+    const {
+        viewType,
+        canSetPlaybackRate,
+        canSetAudioGain,
+        canSetQuality,
+        qualities,
+        audioTracks,
+        hasCaptions,
+      } = useMediaState(),
       {
         translations,
         menuContainer,
         noModal,
         menuGroup,
         smallWhen: smWhen,
+        noAudioGainMenu,
       } = useDefaultLayoutContext(),
       $placement = computed(() =>
         noModal() ? unwrap(placement) : !smWhen() ? unwrap(placement) : null,
@@ -469,6 +477,7 @@ export function DefaultSettingsMenu({
           canSetPlaybackRate() ||
           !!(canSetQuality() && qualities().length) ||
           !!audioTracks().length ||
+          (!noAudioGainMenu() && canSetAudioGain()) ||
           hasCaptions()
         );
       });
@@ -483,6 +492,7 @@ export function DefaultSettingsMenu({
       >
         ${[
           DefaultAudioMenu(),
+          DefaultAudioGainMenu(),
           DefaultSpeedMenu(),
           DefaultQualityMenu(),
           DefaultCaptionsMenu(),
@@ -536,6 +546,37 @@ function DefaultAudioMenu() {
             </media-radio>
           </template>
         </media-audio-radio-group>
+      </media-menu-items>
+    </media-menu>
+  `;
+}
+
+function DefaultAudioGainMenu() {
+  const { translations, audioGains, noAudioGainMenu } = useDefaultLayoutContext();
+
+  if (noAudioGainMenu()) return null;
+
+  const $normalText = $i18n(translations, 'Disabled');
+
+  return html`
+    <media-menu class="vds-audio-gain-menu vds-menu">
+      ${renderMenuButton({
+        label: () => i18n(translations, 'Audio Gain'),
+        icon: 'volume-high',
+      })}
+      <media-menu-items class="vds-menu-items">
+        <media-audio-gain-radio-group
+          class="vds-audio-gain-radio-group vds-radio-group"
+          normal-label=${$normalText}
+          .gains=${$signal(audioGains)}
+        >
+          <template>
+            <media-radio class="vds-audio-gain-radio vds-radio">
+              <div class="vds-radio-check"></div>
+              <span class="vds-radio-label" data-part="label"></span>
+            </media-radio>
+          </template>
+        </media-audio-gain-radio-group>
       </media-menu-items>
     </media-menu>
   `;

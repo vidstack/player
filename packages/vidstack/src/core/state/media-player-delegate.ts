@@ -84,8 +84,13 @@ export class MediaPlayerDelegate {
       if (provider) {
         provider.setVolume((await storage?.getVolume()) ?? volume());
         provider.setMuted((await storage?.getMuted()) ?? muted());
+
+        const audioGain = (await storage?.getAudioGain()) ?? 1;
+        if (audioGain > 1) provider.setAudioGain?.(audioGain);
+
         provider.setPlaybackRate?.((await storage?.getPlaybackRate()) ?? playbackRate());
         provider.setPlaysInline?.(playsInline());
+
         if (startTime > 0) provider.setCurrentTime(startTime);
       }
 

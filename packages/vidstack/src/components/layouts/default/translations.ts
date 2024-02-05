@@ -3,6 +3,7 @@ import type { ReadSignal } from 'maverick.js';
 export type DefaultLayoutWord =
   | 'AirPlay'
   | 'Audio'
+  | 'Audio Boost'
   | 'Auto'
   | 'Background Color'
   | 'Background Opacity'
@@ -17,6 +18,7 @@ export type DefaultLayoutWord =
   | 'Connecting'
   | 'Cyan'
   | 'Default'
+  | 'Disabled'
   | 'Disconnected'
   | 'Display Background Color'
   | 'Display Background Opacity'

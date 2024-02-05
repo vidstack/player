@@ -46,6 +46,7 @@ export * from './ui/menu/radio/radio-group';
 export * from './ui/menu/radio/radio';
 export * from './ui/menu/radio-groups/chapters-radio-group';
 export * from './ui/menu/radio-groups/audio-radio-group';
+export * from './ui/menu/radio-groups/audio-gain-radio-group';
 export * from './ui/menu/radio-groups/captions-radio-group';
 export * from './ui/menu/radio-groups/speed-radio-group';
 export * from './ui/menu/radio-groups/quality-radio-group';

@@ -10,7 +10,7 @@ import { RadioGroupController } from '../radio/radio-group-controller';
 /**
  * This component manages audio track radios.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/audio-menu}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/audio-radio-group}
  */
 export class AudioRadioGroup extends Component<AudioRadioGroupProps, {}, AudioRadioGroupEvents> {
   static props: AudioRadioGroupProps = {

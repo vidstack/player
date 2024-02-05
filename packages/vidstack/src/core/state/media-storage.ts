@@ -25,6 +25,9 @@ export interface MediaStorage {
   getVideoQuality(): Promise<SerializedVideoQuality | null>;
   setVideoQuality?(quality: SerializedVideoQuality | null): Promise<void>;
 
+  getAudioGain(): Promise<number | null>;
+  setAudioGain?(gain: number | null): Promise<void>;
+
   /**
    * Called when the `mediaId` has changed. This method can return a function to be called
    * before the next change.
@@ -58,6 +61,7 @@ export class LocalMediaStorage implements MediaStorage {
   private _data: SavedMediaData = {
     volume: null,
     muted: null,
+    audioGain: null,
     time: null,
     lang: null,
     captions: null,
@@ -119,6 +123,15 @@ export class LocalMediaStorage implements MediaStorage {
     this.save();
   }
 
+  async getAudioGain() {
+    return this._data.audioGain;
+  }
+
+  async setAudioGain(gain: number | null) {
+    this._data.audioGain = gain;
+    this.save();
+  }
+
   async getVideoQuality() {
     return this._data.quality;
   }
@@ -138,6 +151,7 @@ export class LocalMediaStorage implements MediaStorage {
     this._data = {
       volume: null,
       muted: null,
+      audioGain: null,
       lang: null,
       captions: null,
       rate: null,
@@ -163,6 +177,7 @@ export class LocalMediaStorage implements MediaStorage {
 interface SavedMediaData {
   volume: number | null;
   muted: boolean | null;
+  audioGain: number | null;
   time: number | null;
   lang: string | null;
   captions: boolean | null;

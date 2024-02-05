@@ -107,6 +107,22 @@ export async function canChangeVolume() {
   return video.volume === 0.5;
 }
 
+export async function canChangeAudioGain() {
+  try {
+    const ctx = new AudioContext();
+    const gain = ctx.createGain();
+
+    gain.gain.value = 2;
+    const ok = gain.gain.value === 2;
+
+    await ctx.close();
+
+    return ok;
+  } catch (e) {
+    return false;
+  }
+}
+
 /**
  * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */

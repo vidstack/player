@@ -1,4 +1,5 @@
 import type { MediaPlayerQuery } from '../../../core/api/player-state';
+import { DEFAULT_AUDIO_GAINS } from '../../ui/menu/radio-groups/audio-gain-radio-group';
 import { DEFAULT_PLAYBACK_RATES } from '../../ui/menu/radio-groups/speed-radio-group';
 import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { DefaultLayoutTranslations } from './translations';
@@ -7,11 +8,13 @@ export const defaultLayoutProps: DefaultLayoutProps = {
   customIcons: false,
   disableTimeSlider: false,
   menuGroup: 'bottom',
+  noAudioGainMenu: false,
   noGestures: false,
   noKeyboardActionDisplay: false,
   noModal: false,
   noScrubGesture: false,
   playbackRates: DEFAULT_PLAYBACK_RATES,
+  audioGains: DEFAULT_AUDIO_GAINS,
   seekStep: 10,
   sliderChaptersMinWidth: 325,
   smallWhen: false,
@@ -50,6 +53,10 @@ export interface DefaultLayoutProps {
    */
   menuGroup: 'top' | 'bottom';
   /**
+   * Disable audio gain submenu in the settings menu.
+   */
+  noAudioGainMenu: boolean;
+  /**
    * Whether modal menus should be disabled when the small layout is active. A modal menu is
    * a floating panel that floats up from the bottom of the screen (outside of the player). It's
    * enabled by default as it provides a better user experience for touch devices.
@@ -79,6 +86,11 @@ export interface DefaultLayoutProps {
    * The playback rate options to be displayed in the settings menu.
    */
   playbackRates: number[];
+
+  /**
+   * The audio gain options to be displayed in the settings menu.
+   */
+  audioGains: number[];
   /**
    * The number of seconds to seek forward or backward when pressing the seek button or using
    * keyboard shortcuts.

@@ -18,6 +18,7 @@ import type {
 export interface MediaEvents {
   'audio-tracks-change': MediaAudioTracksChangeEvent;
   'audio-track-change': MediaAudioTrackChangeEvent;
+  'audio-gain-change': MediaAudioGainChangeEvent;
   'auto-play-change': MediaAutoPlayChangeEvent;
   'auto-play-fail': MediaAutoPlayFailEvent;
   'can-load': MediaCanLoadEvent;
@@ -186,6 +187,13 @@ export interface MediaControlsChangeEvent extends MediaEvent<boolean> {}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ratechange_event}
  */
 export interface MediaRateChangeEvent extends MediaEvent<number> {}
+
+/**
+ * Fired when the audio gain has changed. The event `detail` contains the new gain.
+ *
+ * @detail gain
+ */
+export interface MediaAudioGainChangeEvent extends MediaEvent<number | null> {}
 
 export interface MediaRemotePlaybackChangeEventDetail {
   type: RemotePlaybackType;

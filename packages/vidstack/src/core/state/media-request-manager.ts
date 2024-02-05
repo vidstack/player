@@ -63,11 +63,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this._attachLoadPlayListener();
 
     effect(this._watchProvider.bind(this));
-    effect(this._onControlsDelayChange.bind(this));
-    effect(this._onAirPlaySupportChange.bind(this));
-    effect(this._onGoogleCastSupportChange.bind(this));
-    effect(this._onFullscreenSupportChange.bind(this));
-    effect(this._onPiPSupportChange.bind(this));
+    effect(this._watchControlsDelayChange.bind(this));
+    effect(this._watchAirPlaySupport.bind(this));
+    effect(this._watchGoogleCastSupport.bind(this));
+    effect(this._watchFullscreenSupport.bind(this));
+    effect(this._watchPiPSupport.bind(this));
+    effect(this._watchAudioGainSupport.bind(this));
   }
 
   protected override onDestroy(): void {
@@ -313,32 +314,38 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     );
   }
 
-  private _onControlsDelayChange() {
+  private _watchControlsDelayChange() {
     this._controls.defaultDelay = this.$props.controlsDelay();
   }
 
-  private _onAirPlaySupportChange() {
+  private _watchAirPlaySupport() {
     const { canAirPlay } = this.$state,
       supported = !!this._$provider()?.airPlay?.supported;
     canAirPlay.set(supported);
   }
 
-  private _onGoogleCastSupportChange() {
+  private _watchGoogleCastSupport() {
     const { canGoogleCast, source } = this.$state,
       supported = IS_CHROME && !IS_IOS && canGoogleCastSrc(source());
     canGoogleCast.set(supported);
   }
 
-  private _onFullscreenSupportChange() {
+  private _watchFullscreenSupport() {
     const { canFullscreen } = this.$state,
       supported = this._fullscreen.supported || !!this._$provider()?.fullscreen?.supported;
     canFullscreen.set(supported);
   }
 
-  private _onPiPSupportChange() {
+  private _watchPiPSupport() {
     const { canPictureInPicture } = this.$state,
       supported = !!this._$provider()?.pictureInPicture?.supported;
     canPictureInPicture.set(supported);
+  }
+
+  private _watchAudioGainSupport() {
+    const { canSetAudioGain } = this.$state,
+      supported = !!this._$provider()?.audioGain?.supported;
+    canSetAudioGain.set(supported);
   }
 
   async ['media-airplay-request'](event: RE.MediaAirPlayRequestEvent) {
@@ -617,6 +624,17 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     this._request._queue._enqueue('media-rate-change-request', event);
     provider.setPlaybackRate(event.detail);
+  }
+
+  ['media-audio-gain-change-request'](event: RE.MediaAudioGainChangeRequestEvent) {
+    const { audioGain, canSetAudioGain } = this.$state;
+    if (audioGain() === event.detail || !canSetAudioGain()) return;
+
+    const provider = this._$provider();
+    if (!provider?.setAudioGain) return;
+
+    this._request._queue._enqueue('media-audio-gain-change-request', event);
+    provider.setAudioGain(event.detail);
   }
 
   ['media-quality-change-request'](event: RE.MediaQualityChangeRequestEvent) {

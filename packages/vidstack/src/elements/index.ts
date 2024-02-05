@@ -50,6 +50,7 @@ export { MediaMenuItemElement } from './define/menus/menu-item-element';
 export { MediaMenuItemsElement } from './define/menus/menu-items-element';
 export { MediaChaptersRadioGroupElement } from './define/menus/chapters-radio-group-element';
 export { MediaSpeedRadioGroupElement } from './define/menus/speed-radio-group-element';
+export { MediaAudioGainRadioGroupElement } from './define/menus/audio-gain-group-element';
 export { MediaQualityRadioGroupElement } from './define/menus/quality-radio-group-element';
 export { MediaRadioElement } from './define/menus/radio-element';
 export { MediaRadioGroupElement } from './define/menus/radio-group-element';
