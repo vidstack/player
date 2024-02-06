@@ -1,3 +1,5 @@
+import { isString } from 'maverick.js/std';
+
 import type { MediaSrc, MediaType } from '../../core';
 import type { MediaContext } from '../../core/api/media-context';
 import { isAudioSrc } from '../../utils/mime';
@@ -14,7 +16,12 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
     if (!isAudioSrc(src)) return false;
     // Let this pass through on the server, we can figure out which type to play client-side. The
     // important thing is that the correct provider is loaded.
-    return __SERVER__ || src.type === '?' || canPlayAudioType(this.target, src.type);
+    return (
+      __SERVER__ ||
+      !isString(src.src) ||
+      src.type === '?' ||
+      canPlayAudioType(this.target, src.type)
+    );
   }
 
   mediaType(): MediaType {
