@@ -453,7 +453,7 @@ export class MediaStateManager extends MediaPlayerController {
 
     this._resetPlaybackIfNeeded();
 
-    if (!paused() && !this._request._looping) {
+    if (!paused()) {
       event.stopImmediatePropagation();
       return;
     }
@@ -488,10 +488,6 @@ export class MediaStateManager extends MediaPlayerController {
 
     if (!playsInline() && viewType() === 'video' && pointer() === 'coarse') {
       this._media.remote.enterFullscreen('prefer-media', event);
-    }
-
-    if (this._request._looping) {
-      event.stopImmediatePropagation();
     }
   }
 
@@ -575,7 +571,6 @@ export class MediaStateManager extends MediaPlayerController {
     ended.set(false);
 
     if (this._request._looping) {
-      event.stopImmediatePropagation();
       this._request._looping = false;
       return;
     }
@@ -606,23 +601,19 @@ export class MediaStateManager extends MediaPlayerController {
     const seekedEvent = this._trackedEvents.get('seeked');
     if (seekedEvent) event.triggers.add(seekedEvent);
 
-    if (this._clipEnded) {
-      event.stopImmediatePropagation();
-      this._handle(this.createEvent('end', { trigger: event }));
-      this._clipEnded = false;
-      return;
-    }
-
-    if (this._request._looping) {
-      event.stopImmediatePropagation();
-      return;
-    }
-
-    this._resetTracking();
-
     const { paused, playing } = this.$state;
     paused.set(true);
     playing.set(false);
+
+    if (this._clipEnded) {
+      // Should fire after pause event.
+      setTimeout(() => {
+        this._handle(this.createEvent('end', { trigger: event }));
+        this._clipEnded = false;
+      }, 0);
+    }
+
+    this._resetTracking();
   }
 
   ['time-update'](event: ME.MediaTimeUpdateEvent) {
@@ -644,7 +635,6 @@ export class MediaStateManager extends MediaPlayerController {
     }
 
     if (endTime > 0 && detail.currentTime >= endTime) {
-      if (loop()) this._request._looping = true;
       this._clipEnded = true;
       this.dispatch('media-pause-request', { trigger: event });
     }

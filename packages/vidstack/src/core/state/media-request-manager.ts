@@ -128,7 +128,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (this._handleLoadPlayStrategy(trigger)) return;
 
-    if (!peek(paused) && !this._request._looping) return;
+    if (!peek(paused)) return;
 
     if (trigger) this._request._queue._enqueue('media-play-request', trigger);
 
