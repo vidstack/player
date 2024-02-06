@@ -299,7 +299,7 @@ function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
           ? 'video/object'
           : src.includes('youtube')
             ? 'video/youtube'
-            : src.includes('vimeo')
+            : src.includes('vimeo') && !src.includes('progressive_redirect')
               ? 'video/vimeo'
               : '?'),
       ...props,
