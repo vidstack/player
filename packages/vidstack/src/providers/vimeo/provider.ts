@@ -235,11 +235,12 @@ export class VimeoProvider
       })
       .catch((e) => {
         promise.reject();
-        this._notify('error', {
-          message: `Failed to fetch vimeo video info for id \`${videoId}\`.`,
-          code: 1,
-          error: coerceToError(e),
-        });
+        if (__DEV__) {
+          this._ctx.logger
+            ?.warnGroup(`Failed to fetch vimeo video info for id \`${videoId}\`.`)
+            .labelledLog('Error', e)
+            .dispatch();
+        }
       });
 
     return () => {
@@ -337,52 +338,54 @@ export class VimeoProvider
     this._notify('seeked', time, trigger);
   }
 
-  protected _onReady(trigger: Event) {
+  protected _onLoaded(trigger: Event) {
     const videoId = this._videoId();
-
     this._videoInfoPromise?.promise
       .then((info) => {
         if (!info) return;
 
-        const { title, poster, duration, pro } = info,
-          { $iosControls } = this._ctx,
-          { controls } = this._ctx.$state,
-          showControls = controls() || $iosControls();
+        const { title, poster, duration, pro } = info;
 
         this._pro.set(pro);
-        this._seekableRange = new TimeRange(0, duration);
 
         this._notify('title-change', title, trigger);
         this._notify('poster-change', poster, trigger);
         this._notify('duration-change', duration, trigger);
 
-        const detail = {
-          buffered: new TimeRange(0, 0),
-          seekable: this._seekableRange,
-          duration,
-        };
-
-        this._ctx.delegate._ready(detail, trigger);
-
-        if (!showControls) {
-          this._remote('_hideOverlay');
-        }
-
-        this._remote('getQualities');
-
-        // We can't control visibility of vimeo captions whilst getting complete info on cues.
-        // this._remote('getTextTracks');
-
-        this._remote('getChapters');
+        this._onReady(duration, trigger);
       })
-      .catch((e) => {
+      .catch(() => {
         if (videoId !== this._videoId()) return;
-        this._notify('error', {
-          message: `Failed to fetch oembed data`,
-          code: 2,
-          error: coerceToError(e),
-        });
+        this._remote('getVideoTitle');
+        this._remote('getDuration');
       });
+  }
+
+  private _onReady(duration: number, trigger: Event) {
+    const { $iosControls } = this._ctx,
+      { controls } = this._ctx.$state,
+      showEmbedControls = controls() || $iosControls();
+
+    this._seekableRange = new TimeRange(0, duration);
+
+    const detail = {
+      buffered: new TimeRange(0, 0),
+      seekable: this._seekableRange,
+      duration,
+    };
+
+    this._ctx.delegate._ready(detail, trigger);
+
+    if (!showEmbedControls) {
+      this._remote('_hideOverlay');
+    }
+
+    this._remote('getQualities');
+
+    // We can't control visibility of vimeo captions whilst getting complete info on cues.
+    // this._remote('getTextTracks');
+
+    this._remote('getChapters');
   }
 
   protected _onMethod<T extends keyof VimeoCommandData>(
@@ -391,6 +394,18 @@ export class VimeoProvider
     trigger: Event,
   ) {
     switch (method) {
+      case 'getVideoTitle':
+        const videoTitle = data as string;
+        this._notify('title-change', videoTitle, trigger);
+        break;
+      case 'getDuration':
+        const duration = data as number;
+        if (!this._ctx.$state.canPlay()) {
+          this._onReady(duration, trigger);
+        } else {
+          this._notify('duration-change', duration, trigger);
+        }
+        break;
       case 'getCurrentTime':
         // Why isn't this narrowing type?
         this._onTimeUpdate(data as number, trigger);
@@ -594,7 +609,7 @@ export class VimeoProvider
         this._attachListeners();
         break;
       case 'loaded':
-        this._onReady(trigger);
+        this._onLoaded(trigger);
         break;
       case 'play':
         this._onPlay(trigger);
