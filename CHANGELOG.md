@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.5-next](https://github.com/vidstack/player/releases/tag/v1.10.5-next) (2024-02-06)
+
+### ✨ Features
+
+#### Player
+
+- include separate default and plyr layout cdn imports ([c583cf0](https://github.com/vidstack/player/commit/c583cf0d56f819cefd8b0fca7bec95e4e5744350))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- font size setting not applied in fullscreen ([2a882d0](https://github.com/vidstack/player/commit/2a882d0133e6410ec945a47969b3a80211bcae34))
+- source objects failing provider loader checks ([d243793](https://github.com/vidstack/player/commit/d24379362d8eedcf0c747a46c864bef52bbbbffe))
+- do not prevent f1-f12 keys from working ([6a06b57](https://github.com/vidstack/player/commit/6a06b578b98b2dda82ed9bd5d6b8ec2a6be57593))
+- clipped video can not be replayed ([ad61932](https://github.com/vidstack/player/commit/ad61932d41ec2c26c0552d2a20166f5bc1064a75))
+- vimeo url with `progressive_redirect` is not embed ([1cb9fee](https://github.com/vidstack/player/commit/1cb9fee7e72c965ef495fc43d05243af84cb2cbd))
+- support unlisted vimeo videos ([2bfcce9](https://github.com/vidstack/player/commit/2bfcce9af5575ddc21124b9f1a9c7bbf618f42f8))
+- poster showing broken image icon on load ([2684fc3](https://github.com/vidstack/player/commit/2684fc3949ace4dc2bd899d47d693d921c026c41))
+
+#### Player (React)
+
+- use remotion thumbnail in plyr layout preview scrub ([3651045](https://github.com/vidstack/player/commit/3651045bd53cd76b90b0fb5a9128ff1cb06ef2ce))
+- remotion provider firing seeked before seeking when paused ([cd7e8da](https://github.com/vidstack/player/commit/cd7e8daccb021dccf743bb0222687504790f63ff))
+
 ## [1.10.4-next](https://github.com/vidstack/player/releases/tag/v1.10.4-next) (2024-02-03)
 
 ### ✨ Features
