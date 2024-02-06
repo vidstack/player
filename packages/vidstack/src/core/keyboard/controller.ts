@@ -115,7 +115,7 @@ export class MediaKeyboardController extends MediaPlayerController {
     }
 
     let { method, value } = this._getMatchingMethod(event),
-      isNumberPress = !event.metaKey && /[0-9]/.test(event.key);
+      isNumberPress = !event.metaKey && /^[0-9]$/.test(event.key);
 
     if (!isString(value) && !isArray(value) && !isNumberPress) {
       value?.callback(event);
