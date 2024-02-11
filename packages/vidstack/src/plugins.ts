@@ -138,9 +138,9 @@ export const unplugin = createUnplugin<UserOptions | undefined>((options = {}) =
             elements.has('media-audio-layout') || elements.has('media-video-layout'),
           hasPlyrLayout = elements.has('media-plyr-layout');
 
-        imports.push('import "vidstack/player/styles/base.css";');
-
         if (!hasDefaultLayout) {
+          imports.push('import "vidstack/player/styles/base.css";');
+
           for (const style of styles) {
             imports.push(`import "${style}";`);
           }
