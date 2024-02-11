@@ -22,6 +22,10 @@ Example: steps to reproduce the behavior:
 4. See error...
 -->
 
+**Reproduction Link:** [How to create a repro?][repro]
+
+[repro]: https://github.com/vidstack/player/blob/main/.github/REPRO.md
+
 ### Environment:
 
 <!--
