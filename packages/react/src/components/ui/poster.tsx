@@ -66,10 +66,12 @@ interface PosterImgProps {
 
 const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
   ({ instance, children, ...props }, forwardRef) => {
-    const { src, img, alt, crossOrigin } = instance.$state,
+    const { src, img, alt, crossOrigin, loading, hidden } = instance.$state,
       $src = useSignal(src),
       $alt = useSignal(alt),
-      $crossOrigin = useSignal(crossOrigin);
+      $crossOrigin = useSignal(crossOrigin),
+      $loading = useSignal(loading),
+      $hidden = useSignal(hidden);
     return (
       <Primitive.img
         {...props}
@@ -77,6 +79,7 @@ const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
         alt={$alt || undefined}
         crossOrigin={$crossOrigin || undefined}
         ref={composeRefs(img.set as any, forwardRef)}
+        style={{ display: $loading || $hidden ? 'none' : undefined }}
       >
         {children}
       </Primitive.img>
