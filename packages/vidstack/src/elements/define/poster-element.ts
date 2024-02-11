@@ -38,6 +38,11 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
       setAttribute(this._img, 'crossorigin', crossOrigin());
       setAttribute(this._img, 'src', src() || '');
     });
+
+    effect(() => {
+      const { loading, hidden } = this.$state;
+      this._img.style.display = loading() || hidden() ? 'none' : '';
+    });
   }
 }
 
