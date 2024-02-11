@@ -26,8 +26,8 @@ export interface VTTCueInit
 export interface VTTRegionInit extends Omit<Partial<VTTRegion>, 'id'>, Pick<VTTRegion, 'id'> {}
 
 export interface VTTContent {
-  cues?: VTTCueInit;
-  regions?: VTTRegionInit;
+  cues?: VTTCueInit[];
+  regions?: VTTRegionInit[];
 }
 
 export class TextTrack extends EventsTarget<TextTrackEvents> {
