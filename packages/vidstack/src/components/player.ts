@@ -399,6 +399,10 @@ export class MediaPlayer
     return this._requestMgr._controls;
   }
 
+  set controls(controls: boolean) {
+    this._$$props.controls.set(controls);
+  }
+
   /**
    * Controls the screen orientation of the current browser window and dispatches orientation
    * change events on the player.
