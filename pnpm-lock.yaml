@@ -72,8 +72,8 @@ importers:
         version: 1.0.2
     devDependencies:
       '@maverick-js/cli':
-        specifier: 0.41.3
-        version: 0.41.3
+        specifier: 0.41.4
+        version: 0.41.4
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.0
         version: 15.2.3(rollup@4.10.0)
@@ -93,8 +93,8 @@ importers:
         specifier: ^11.0.0
         version: 11.2.0
       maverick.js:
-        specifier: 0.41.3
-        version: 0.41.3
+        specifier: 0.41.4
+        version: 0.41.4
       media-icons:
         specifier: ^1.0.0
         version: 1.0.0
@@ -142,8 +142,8 @@ importers:
         specifier: ^1.4.4
         version: 1.6.1
       '@maverick-js/cli':
-        specifier: 0.41.3
-        version: 0.41.3
+        specifier: 0.41.4
+        version: 0.41.4
       '@open-wc/semantic-dom-diff':
         specifier: ^0.20.0
         version: 0.20.1
@@ -190,8 +190,8 @@ importers:
         specifier: ^2.7.4
         version: 2.8.0
       maverick.js:
-        specifier: 0.41.3
-        version: 0.41.3
+        specifier: 0.41.4
+        version: 0.41.4
       media-icons:
         specifier: ^1.0.0
         version: 1.0.0
@@ -960,10 +960,10 @@ packages:
       '@lit-labs/ssr-dom-shim': 1.2.0
     dev: true
 
-  /@maverick-js/cli@0.41.3:
+  /@maverick-js/cli@0.41.4:
     resolution:
       {
-        integrity: sha512-u/qBH8uVmLltgesdnl+/HEWZUknzVIdNRVqaPDnbBiZgmUeTqt/p9Syu3MlpOTRAI+QlAd3cz3+pGpR5l0/hEA==,
+        integrity: sha512-2gWclosu0AYpZjBZ50aYi4besI97Fs5sF92+IkSaWLayHS7DpwNBkYLPHeK7MX836vAwd/IBtc1Ju98LeK0vQg==,
       }
     engines: { node: '>=16' }
     hasBin: true
@@ -4304,10 +4304,10 @@ packages:
       semver: 7.6.0
     dev: true
 
-  /maverick.js@0.41.3:
+  /maverick.js@0.41.4:
     resolution:
       {
-        integrity: sha512-Yp9PTtmGznftLx0eC5pbMXVAcnhdHvLDJICRpxoZeK1kNvbTC3ImqtUVFYVTQ7y9FC/OjJEjvC/RipsHwyzm4g==,
+        integrity: sha512-WvVnemNaNqVHat5HkezgNj7Amy6D9aDLf7/qZrGEfXnrwZGF+n8V/KOVmTd5jfZ3KeOVHlkHycsAny/Nj9R/jA==,
       }
     engines: { node: '>=16' }
     dev: true
