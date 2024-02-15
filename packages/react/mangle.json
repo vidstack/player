@@ -744,5 +744,7 @@
   "_saveCaptionsTrack": "Wm",
   "_saveLang": "Um",
   "_selectTracks": "Vm",
-  "_watchSwipeGesture": "Zm"
+  "_watchSwipeGesture": "Zm",
+  "_hintEl": "_m",
+  "_watchHintEl": "$m"
 }
