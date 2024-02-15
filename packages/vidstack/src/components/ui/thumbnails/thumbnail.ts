@@ -92,6 +92,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
 
   private _onLoaded() {
     const { loading, error } = this.$state;
+    this._resize();
     loading.set(false);
     error.set(null);
   }
@@ -124,9 +125,11 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   }
 
   private _onFindActiveThumbnail() {
+    let images = this._loader.$images();
+    if (!images.length) return;
+
     let time = this._getTime(),
       { src, activeThumbnail } = this.$state,
-      images = this._loader.$images(),
       activeIndex = -1,
       activeImage: ThumbnailImage | null = null;
 
@@ -147,14 +150,13 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
   }
 
   private _resize() {
-    if (!this.scope) return;
+    if (!this.scope || this.$state.hidden()) return;
 
     const rootEl = this.el,
       imgEl = this.$state.img(),
-      loading = this.$state.loading(),
       thumbnail = this.$state.activeThumbnail();
 
-    if (!imgEl || !thumbnail || !rootEl || loading) return;
+    if (!imgEl || !thumbnail || !rootEl) return;
 
     let width = thumbnail.width ?? imgEl.naturalWidth,
       height = thumbnail?.height ?? imgEl.naturalHeight,

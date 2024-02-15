@@ -31,6 +31,10 @@
   will-change: width, height, transform;
 }
 
+:where(.vds-thumbnail[data-loading] img) {
+  opacity: 0;
+}
+
 :where(.vds-thumbnail[aria-hidden='true']) {
   display: none !important;
 }
