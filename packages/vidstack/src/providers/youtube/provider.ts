@@ -285,6 +285,7 @@ export class YouTubeProvider
   protected _onEnded(trigger: Event) {
     const { seeking } = this._ctx.$state;
     if (seeking()) this._onSeeked(trigger);
+    this._notify('pause', undefined, trigger);
     this._notify('end', undefined, trigger);
   }
 
