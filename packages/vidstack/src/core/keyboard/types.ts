@@ -1,3 +1,4 @@
+import type { MediaPlayer } from '../../components/player';
 import type { MediaRemoteControl } from '../state/remote-control';
 
 export type MediaKeyTarget = 'document' | 'player';
@@ -21,5 +22,19 @@ export type MediaKeyShortcut = MediaKeysCallback | string | string[] | null;
 
 export interface MediaKeysCallback {
   keys: string | string[];
-  callback(event: KeyboardEvent, remote: MediaRemoteControl): void;
+
+  /** @deprecated - use `onKeyUp` or `onKeyDown` */
+  callback?(event: KeyboardEvent, remote: MediaRemoteControl): void;
+
+  onKeyUp?(context: {
+    event: KeyboardEvent;
+    player: MediaPlayer;
+    remote: MediaRemoteControl;
+  }): void;
+
+  onKeyDown?(context: {
+    event: KeyboardEvent;
+    player: MediaPlayer;
+    remote: MediaRemoteControl;
+  }): void;
 }
