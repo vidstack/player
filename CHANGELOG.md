@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.6-next](https://github.com/vidstack/player/releases/tag/v1.10.6-next) (2024-02-15)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- duplicate `base.css` imports in bundler plugin ([808c490](https://github.com/vidstack/player/commit/808c4900594dac386a1d26219e656f9f88120c6d))
+- `VTTContent` type missing array declarations ([7869e90](https://github.com/vidstack/player/commit/7869e900797689b303c1f4f05572e8a2399a6337))
+- playback rate state not initializing correctly ([231b036](https://github.com/vidstack/player/commit/231b036bec89dd212c7d1cfc90fa326a105cce97))
+- youtube provider should fire pause event on end ([35b1fb9](https://github.com/vidstack/player/commit/35b1fb9a15ca2cdbed7687ffdbb6e69c7309c913))
+- default themed menu not interactable on mobile ([94b25fa](https://github.com/vidstack/player/commit/94b25faaef01c1604c2715127f48e7bf8c2a0750))
+- `controls` prop setter on player instance missing ([9bfa26e](https://github.com/vidstack/player/commit/9bfa26e7576cf7d2636a5b56c5bd7145d6b8256a))
+- watch menu button hint part changes ([a17239a](https://github.com/vidstack/player/commit/a17239a0e202ccd3406b75e4b995f06045c2139e))
+- show thumbnail img once it has loaded ([ab86b55](https://github.com/vidstack/player/commit/ab86b559bb59e2dae3ff4ab27688e8464dafcd8e))
+- pass media remote control to keyboard shortcut callbacks ([cfe2331](https://github.com/vidstack/player/commit/cfe2331ce8317f3c9005788792ef354d756a8da2))
+- add separate key up and down callbacks to shortcuts ([b643602](https://github.com/vidstack/player/commit/b643602ee21abf51f38f3a7fce2f9368c31e2c37))
+
+#### Player (React)
+
+- poster showing broken image icon on load (#1153) ([3f00fbc](https://github.com/vidstack/player/commit/3f00fbcb914661d6803c84b483cff8a10447471e))
+- setting `controls` causes warning ([8f1fe4d](https://github.com/vidstack/player/commit/8f1fe4d60a50f8b0077bd07ad8ea4f30f67e9502))
+
+#### React
+
+- setting prop to `undefined` should use default value ([aaf9b04](https://github.com/vidstack/player/commit/aaf9b04499fe093fd160218461e5a449e8062a0f))
+
 ## [1.10.5-next](https://github.com/vidstack/player/releases/tag/v1.10.5-next) (2024-02-06)
 
 ### ✨ Features
