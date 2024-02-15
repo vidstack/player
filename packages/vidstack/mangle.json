@@ -776,5 +776,7 @@
   "_saveLang": "tn",
   "_selectTracks": "un",
   "_watchSwipeGesture": "xn",
-  "_appendSource": "yn"
+  "_appendSource": "yn",
+  "_hintEl": "zn",
+  "_watchHintEl": "An"
 }

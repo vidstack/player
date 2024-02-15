@@ -59,15 +59,15 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
     resize.observe(el);
 
-    const mutation = new MutationObserver(this._onMutation.bind(this));
-    mutation.observe(el, { attributes: true, childList: true });
+    const mutations = new MutationObserver(this._onMutation.bind(this));
+    mutations.observe(el, { attributes: true, childList: true });
 
     this._onResize();
     this._onMutation();
 
     onDispose(() => {
       resize.disconnect();
-      mutation.disconnect();
+      mutations.disconnect();
     });
   }
 
