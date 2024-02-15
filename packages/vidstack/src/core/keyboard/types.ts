@@ -1,3 +1,5 @@
+import type { MediaRemoteControl } from '../state/remote-control';
+
 export type MediaKeyTarget = 'document' | 'player';
 
 export interface MediaKeyShortcuts {
@@ -19,5 +21,5 @@ export type MediaKeyShortcut = MediaKeysCallback | string | string[] | null;
 
 export interface MediaKeysCallback {
   keys: string | string[];
-  callback(event: KeyboardEvent): void;
+  callback(event: KeyboardEvent, remote: MediaRemoteControl): void;
 }
