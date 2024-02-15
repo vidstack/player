@@ -182,6 +182,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     effect(() => {
       const { height } = this._media.$state,
         content = this._content();
+
       content && setStyle(content, '--player-height', height() + 'px');
     });
 
@@ -245,7 +246,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       const onTransition = this._onResizeTransition.bind(this);
       items.listen('transitionstart', onTransition);
       items.listen('transitionend', onTransition);
-
+      items.listen('animationend', this._onResize);
       items.listen('vds-menu-resize' as any, this._onResize);
     }
   }
@@ -367,6 +368,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _onWindowPointerUp(event: Event) {
     const isTargetNode = event.target instanceof Node;
+
     if (!isTargetNode || this._content()?.contains(event.target)) return;
 
     // A little delay so submenu closing doesn't jump menu size when closing.
@@ -473,12 +475,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       }
     }
 
-    if (parseFloat(styles.height) !== height) {
-      setAttribute(content, 'data-resizing', '');
-      requestAnimationFrame(() => {
-        setStyle(content, '--menu-height', height + 'px');
-      });
-    }
+    setStyle(content, '--menu-height', height + 'px');
   });
 
   protected _onResizeTransition(event: TransitionEvent) {
