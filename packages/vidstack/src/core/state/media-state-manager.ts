@@ -382,8 +382,18 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['error'](event: ME.MediaErrorEvent) {
     this.$state.error.set(event.detail);
+
     const abortEvent = this._trackedEvents.get('abort');
     if (abortEvent) event.triggers.add(abortEvent);
+
+    if (__DEV__) {
+      this._media.logger
+        ?.errorGroup('Media Error')
+        .labelledLog('Error', event.detail)
+        .labelledLog('Event', event)
+        .labelledLog('Context', this._media)
+        .dispatch();
+    }
   }
 
   ['loaded-metadata'](event: ME.MediaLoadedMetadataEvent) {
