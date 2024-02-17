@@ -87,13 +87,19 @@ export { DefaultVideoLayout };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoLargeLayout() {
-  const { menuGroup } = React.useContext(DefaultLayoutContext),
+  const { menuGroup, noKeyboardActionDisplay, icons, translations } =
+      React.useContext(DefaultLayoutContext),
     baseSlots = useDefaultVideoLayoutSlots(),
     slots = { ...baseSlots, ...baseSlots?.largeLayout };
   return (
     <>
       <DefaultVideoGestures />
-      <DefaultVideoKeyboardActionDisplay />
+      {!noKeyboardActionDisplay && icons.KeyboardAction ? (
+        <DefaultVideoKeyboardActionDisplay
+          icons={icons.KeyboardAction}
+          translations={translations}
+        />
+      ) : null}
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
       {slot(slots, 'captions', <Captions className="vds-captions" />)}
       <Controls.Root className="vds-controls">

@@ -103,65 +103,85 @@ export interface DefaultLayoutIcon {
   (props: DefaultLayoutIconProps): React.ReactNode;
 }
 
+export interface DefaultAirPlayButtonIcons {
+  Default: DefaultLayoutIcon;
+  Connecting?: DefaultLayoutIcon;
+  Connected?: DefaultLayoutIcon;
+}
+
+export interface DefaultGoogleCastButtonIcons {
+  Default: DefaultLayoutIcon;
+  Connecting?: DefaultLayoutIcon;
+  Connected?: DefaultLayoutIcon;
+}
+
+export interface DefaultPlayButtonIcons {
+  Play: DefaultLayoutIcon;
+  Pause: DefaultLayoutIcon;
+  Replay: DefaultLayoutIcon;
+}
+
+export interface DefaultMuteButtonIcons {
+  Mute: DefaultLayoutIcon;
+  VolumeLow: DefaultLayoutIcon;
+  VolumeHigh: DefaultLayoutIcon;
+}
+
+export interface DefaultCaptionButtonIcons {
+  On: DefaultLayoutIcon;
+  Off: DefaultLayoutIcon;
+}
+
+export interface DefaultPIPButtonIcons {
+  Enter: DefaultLayoutIcon;
+  Exit: DefaultLayoutIcon;
+}
+
+export interface DefaultFullscreenButtonIcons {
+  Enter: DefaultLayoutIcon;
+  Exit: DefaultLayoutIcon;
+}
+
+export interface DefaultSeekButtonIcons {
+  Backward: DefaultLayoutIcon;
+  Forward: DefaultLayoutIcon;
+}
+
+export interface DefaultMenuIcons {
+  ArrowLeft: DefaultLayoutIcon;
+  ArrowRight: DefaultLayoutIcon;
+  Audio: DefaultLayoutIcon;
+  Chapters: DefaultLayoutIcon;
+  Quality: DefaultLayoutIcon;
+  Captions: DefaultLayoutIcon;
+  Settings: DefaultLayoutIcon;
+  Speed: DefaultLayoutIcon;
+  Font: DefaultLayoutIcon;
+}
+
+export interface DefaultKeyboardActionIcons {
+  Play: DefaultLayoutIcon;
+  Pause: DefaultLayoutIcon;
+  Mute: DefaultLayoutIcon;
+  VolumeUp: DefaultLayoutIcon;
+  VolumeDown: DefaultLayoutIcon;
+  EnterFullscreen: DefaultLayoutIcon;
+  ExitFullscreen: DefaultLayoutIcon;
+  EnterPiP: DefaultLayoutIcon;
+  ExitPiP: DefaultLayoutIcon;
+  CaptionsOn: DefaultLayoutIcon;
+  CaptionsOff: DefaultLayoutIcon;
+}
+
 export interface DefaultLayoutIcons {
-  AirPlayButton: {
-    Default: DefaultLayoutIcon;
-    Connecting?: DefaultLayoutIcon;
-    Connected?: DefaultLayoutIcon;
-  };
-  GoogleCastButton: {
-    Default: DefaultLayoutIcon;
-    Connecting?: DefaultLayoutIcon;
-    Connected?: DefaultLayoutIcon;
-  };
-  PlayButton: {
-    Play: DefaultLayoutIcon;
-    Pause: DefaultLayoutIcon;
-    Replay: DefaultLayoutIcon;
-  };
-  MuteButton: {
-    Mute: DefaultLayoutIcon;
-    VolumeLow: DefaultLayoutIcon;
-    VolumeHigh: DefaultLayoutIcon;
-  };
-  CaptionButton: {
-    On: DefaultLayoutIcon;
-    Off: DefaultLayoutIcon;
-  };
-  PIPButton: {
-    Enter: DefaultLayoutIcon;
-    Exit: DefaultLayoutIcon;
-  };
-  FullscreenButton: {
-    Enter: DefaultLayoutIcon;
-    Exit: DefaultLayoutIcon;
-  };
-  SeekButton: {
-    Backward: DefaultLayoutIcon;
-    Forward: DefaultLayoutIcon;
-  };
-  Menu: {
-    ArrowLeft: DefaultLayoutIcon;
-    ArrowRight: DefaultLayoutIcon;
-    Audio: DefaultLayoutIcon;
-    Chapters: DefaultLayoutIcon;
-    Quality: DefaultLayoutIcon;
-    Captions: DefaultLayoutIcon;
-    Settings: DefaultLayoutIcon;
-    Speed: DefaultLayoutIcon;
-    Font: DefaultLayoutIcon;
-  };
-  KeyboardAction?: {
-    Play: DefaultLayoutIcon;
-    Pause: DefaultLayoutIcon;
-    Mute: DefaultLayoutIcon;
-    VolumeUp: DefaultLayoutIcon;
-    VolumeDown: DefaultLayoutIcon;
-    EnterFullscreen: DefaultLayoutIcon;
-    ExitFullscreen: DefaultLayoutIcon;
-    EnterPiP: DefaultLayoutIcon;
-    ExitPiP: DefaultLayoutIcon;
-    CaptionsOn: DefaultLayoutIcon;
-    CaptionsOff: DefaultLayoutIcon;
-  };
+  AirPlayButton: DefaultAirPlayButtonIcons;
+  GoogleCastButton: DefaultGoogleCastButtonIcons;
+  PlayButton: DefaultPlayButtonIcons;
+  MuteButton: DefaultMuteButtonIcons;
+  CaptionButton: DefaultCaptionButtonIcons;
+  PIPButton: DefaultPIPButtonIcons;
+  FullscreenButton: DefaultFullscreenButtonIcons;
+  SeekButton: DefaultSeekButtonIcons;
+  Menu: DefaultMenuIcons;
+  KeyboardAction?: DefaultKeyboardActionIcons;
 }
