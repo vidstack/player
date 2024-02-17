@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.7-next](https://github.com/vidstack/player/releases/tag/v1.10.7-next) (2024-02-17)
+
+### ✨ Features
+
+#### Player (React)
+
+- export `<DefaultVideoKeyboardActionDisplay />` ([5f5d40a](https://github.com/vidstack/player/commit/5f5d40ab57c8b5c795c4ece80e9bee9221eb4ac1))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- log media errors in dev ([6cf4575](https://github.com/vidstack/player/commit/6cf4575ecdcbae2e63b84a01c685dbbd68052b83))
+- restart keyboard display animations on key press ([2376735](https://github.com/vidstack/player/commit/2376735c556f93f7f71cd98c4ee43bc277010205))
+- include source type attr for html providers ([9ab499e](https://github.com/vidstack/player/commit/9ab499eb630729004fe195d7b60b14210101ce66))
+
 ## [1.10.6-next](https://github.com/vidstack/player/releases/tag/v1.10.6-next) (2024-02-15)
 
 ### 🐛 Bug Fixes
