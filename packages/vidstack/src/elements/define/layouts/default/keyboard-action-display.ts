@@ -1,4 +1,5 @@
 import { html } from 'lit-html';
+import { keyed } from 'lit-html/directives/keyed.js';
 import { computed, effect, signal } from 'maverick.js';
 import { camelToKebabCase } from 'maverick.js/std';
 
@@ -55,7 +56,7 @@ export function DefaultVideoKeyboardActionDisplay() {
         <div class="vds-kb-text-wrapper">
           <div class="vds-kb-text">${$signal($text)}</div>
         </div>
-        ${$signal(Icon)}
+        ${$signal(() => keyed(lastKeyboardAction(), Icon()))}
       </div>
     `;
   });

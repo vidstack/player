@@ -37,7 +37,12 @@ const DefaultVideoKeyboardActionDisplay = React.forwardRef<
 >(({ icons: Icons, translations, ...props }, forwardRef) => {
   const [visible, setVisible] = React.useState(false),
     [Icon, setIcon] = React.useState<any>(null),
+    [count, setCount] = React.useState(0),
     $lastKeyboardAction = useMediaState('lastKeyboardAction');
+
+  React.useEffect(() => {
+    setCount((n) => n + 1);
+  }, [$lastKeyboardAction]);
 
   const actionDataAttr = React.useMemo(() => {
     const action = $lastKeyboardAction?.action;
@@ -76,13 +81,12 @@ const DefaultVideoKeyboardActionDisplay = React.forwardRef<
       className={className}
       data-action={actionDataAttr}
       ref={forwardRef as any}
-      key={$lastKeyboardAction}
     >
       <div className="vds-kb-text-wrapper">
         <div className="vds-kb-text">{$text}</div>
       </div>
       {Icon ? (
-        <div className="vds-kb-bezel" role="status" aria-label={$statusLabel}>
+        <div className="vds-kb-bezel" role="status" aria-label={$statusLabel} key={count}>
           <div className="vds-kb-icon">
             <Icon />
           </div>
