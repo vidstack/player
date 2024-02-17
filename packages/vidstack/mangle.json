@@ -778,5 +778,6 @@
   "_watchSwipeGesture": "xn",
   "_appendSource": "yn",
   "_hintEl": "zn",
-  "_watchHintEl": "An"
+  "_watchHintEl": "An",
+  "_removeSource": "Bn"
 }

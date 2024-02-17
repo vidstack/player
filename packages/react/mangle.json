@@ -746,5 +746,6 @@
   "_selectTracks": "Vm",
   "_watchSwipeGesture": "Zm",
   "_hintEl": "_m",
-  "_watchHintEl": "$m"
+  "_watchHintEl": "$m",
+  "_removeSource": "an"
 }
