@@ -7,7 +7,7 @@ import type { MediaErrorCode } from '../../core/api/types';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { isHLSSrc } from '../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../utils/number';
-import { IS_SAFARI } from '../../utils/support';
+import { IS_IOS, IS_SAFARI } from '../../utils/support';
 import type { HTMLMediaProvider } from './provider';
 
 export class HTMLMediaEvents {
@@ -171,8 +171,8 @@ export class HTMLMediaEvents {
 
     this._notify('loaded-metadata', undefined, event);
 
-    // Native HLS does not reliably fire `canplay` event.
-    if (IS_SAFARI && isHLSSrc(this._ctx.$state.source())) {
+    // iOS Safari and Native HLS do not reliably fire `canplay` event.
+    if (IS_IOS || (IS_SAFARI && isHLSSrc(this._ctx.$state.source()))) {
       this._ctx.delegate._ready(this._getCanPlayDetail(), event);
     }
   }

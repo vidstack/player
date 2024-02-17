@@ -30,8 +30,10 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     if ('audioTracks' in this.media) new NativeAudioTracks(this, this._ctx);
 
     onDispose(() => {
-      // Dispose of media.
-      this._media.setAttribute('src', '');
+      // We need to remove all media sources incase another provider uses the same media element.
+      this._media.srcObject = null;
+      this._media.removeAttribute('src');
+      for (const source of this._media.querySelectorAll('source')) source.remove();
       this._media.load();
     });
   }
@@ -80,12 +82,21 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     this._media.preload = preload || '';
 
     if (isMediaStream(src)) {
+      this._removeSource();
       this._media.srcObject = src;
     } else {
       this._media.srcObject = null;
-      this._media.src = isString(src)
-        ? this._appendMediaFragment(src)
-        : window.URL.createObjectURL(src as MediaSource | Blob);
+      if (isString(src)) {
+        if (type !== '?') {
+          this._appendSource({ src, type });
+        } else {
+          this._removeSource();
+          this._media.src = this._appendMediaFragment(src);
+        }
+      } else {
+        this._removeSource();
+        this._media.src = window.URL.createObjectURL(src as MediaSource | Blob);
+      }
     }
 
     this._media.load();
@@ -96,7 +107,25 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     };
   }
 
-  private _appendMediaFragment(src: string) {
+  /**
+   * Append source so it works when requesting AirPlay since hls.js will remove it.
+   */
+  protected _appendSource(src: MediaSrc<string>, defaultType?: string) {
+    const prevSource = this._media.querySelector('source[data-vds]'),
+      source = prevSource ?? document.createElement('source');
+
+    setAttribute(source, 'src', this._appendMediaFragment(src.src));
+    setAttribute(source, 'type', src.type !== '?' ? src.type : defaultType);
+    setAttribute(source, 'data-vds', '');
+
+    if (!prevSource) this._media.append(source);
+  }
+
+  protected _removeSource() {
+    this._media.querySelector('source[data-vds]')?.remove();
+  }
+
+  protected _appendMediaFragment(src: string) {
     const { clipStartTime, clipEndTime } = this._ctx.$state,
       startTime = clipStartTime(),
       endTime = clipEndTime();

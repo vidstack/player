@@ -110,25 +110,15 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
   }
 
   override async loadSource(src: MediaSrc, preload?: HTMLMediaElement['preload']) {
-    if (!isString(src.src)) return;
+    if (!isString(src.src)) {
+      this._removeSource();
+      return;
+    }
+
     this._media.preload = preload || '';
-    this._appendSource(src as MediaSrc<string>);
+    this._appendSource(src as MediaSrc<string>, 'application/x-mpegurl');
     this._controller._loadSource(src);
     this._currentSrc = src as MediaSrc<string>;
-  }
-
-  /**
-   * Append source so it works when requesting AirPlay since hls.js will remove it.
-   */
-  private _appendSource(src: MediaSrc<string>) {
-    const prevSource = this.video.querySelector('source[data-vds]'),
-      source = prevSource ?? document.createElement('source');
-
-    setAttribute(source, 'src', src.src);
-    setAttribute(source, 'type', 'application/x-mpegurl');
-    setAttribute(source, 'data-vds', '');
-
-    if (!prevSource) this.video.append(source);
   }
 
   /**
