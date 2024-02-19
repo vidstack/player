@@ -51,6 +51,7 @@
   left: 50%;
   top: 45%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: var(--size);
@@ -66,6 +67,17 @@
 
 :where(.vds-kb-bezel:has(slot:empty)) {
   display: none;
+}
+
+:where(.vds-kb-action[data-action='seek-forward'] .vds-kb-bezel) {
+  top: 45%;
+  left: unset;
+  right: 10%;
+}
+
+:where(.vds-kb-action[data-action='seek-backward'] .vds-kb-bezel) {
+  top: 45%;
+  left: 10%;
 }
 
 /*

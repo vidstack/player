@@ -6,6 +6,8 @@ import googleCast from 'media-icons/dist/icons/chromecast.js';
 import ccOn from 'media-icons/dist/icons/closed-captions-on.js';
 import ccOff from 'media-icons/dist/icons/closed-captions.js';
 import menuCaptions from 'media-icons/dist/icons/closed-captions.js';
+import fastBackward from 'media-icons/dist/icons/fast-backward.js';
+import fastForward from 'media-icons/dist/icons/fast-forward.js';
 import fsExit from 'media-icons/dist/icons/fullscreen-exit.js';
 import fsEnter from 'media-icons/dist/icons/fullscreen.js';
 import menuAudio from 'media-icons/dist/icons/music.js';
@@ -62,4 +64,6 @@ export const icons = {
   'kb-pip-exit': pipExit,
   'kb-cc-on': ccOn,
   'kb-cc-off': ccOff,
+  'kb-seek-forward': fastForward,
+  'kb-seek-backward': fastBackward,
 };

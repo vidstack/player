@@ -143,6 +143,10 @@ function getIcon(Icons?: DefaultKeyboardActionIcons) {
       return Icons?.VolumeUp;
     case 'volumeDown':
       return Icons?.VolumeDown;
+    case 'seekForward':
+      return Icons?.SeekForward;
+    case 'seekBackward':
+      return Icons?.SeekBackward;
     default:
       return null;
   }

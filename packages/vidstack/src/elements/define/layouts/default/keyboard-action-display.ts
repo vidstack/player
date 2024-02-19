@@ -102,6 +102,10 @@ function getIconName() {
       return 'kb-volume-up-icon';
     case 'volumeDown':
       return 'kb-volume-down-icon';
+    case 'seekForward':
+      return 'kb-seek-forward-icon';
+    case 'seekBackward':
+      return 'kb-seek-backward-icon';
     default:
       return null;
   }

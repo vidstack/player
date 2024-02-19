@@ -1,12 +1,14 @@
 import * as React from 'react';
 
-import airPlayPaths from 'media-icons/dist/icons/airplay.js';
-import arrowLeftPaths from 'media-icons/dist/icons/arrow-left.js';
+import airPlayIconPaths from 'media-icons/dist/icons/airplay.js';
+import arrowLeftIconPaths from 'media-icons/dist/icons/arrow-left.js';
 import chaptersIconPaths from 'media-icons/dist/icons/chapters.js';
-import arrowRightPaths from 'media-icons/dist/icons/chevron-right.js';
-import googleCastPaths from 'media-icons/dist/icons/chromecast.js';
+import arrowRightIconPaths from 'media-icons/dist/icons/chevron-right.js';
+import googleCastIconPaths from 'media-icons/dist/icons/chromecast.js';
 import ccOnIconPaths from 'media-icons/dist/icons/closed-captions-on.js';
 import ccIconPaths from 'media-icons/dist/icons/closed-captions.js';
+import fastBackwardIconPaths from 'media-icons/dist/icons/fast-backward.js';
+import fastForwardIconPaths from 'media-icons/dist/icons/fast-forward.js';
 import exitFullscreenIconPaths from 'media-icons/dist/icons/fullscreen-exit.js';
 import enterFullscreenIconPaths from 'media-icons/dist/icons/fullscreen.js';
 import musicIconPaths from 'media-icons/dist/icons/music.js';
@@ -37,10 +39,10 @@ function createIcon(paths: string) {
 
 export const defaultLayoutIcons: DefaultLayoutIcons = {
   AirPlayButton: {
-    Default: createIcon(airPlayPaths),
+    Default: createIcon(airPlayIconPaths),
   },
   GoogleCastButton: {
-    Default: createIcon(googleCastPaths),
+    Default: createIcon(googleCastIconPaths),
   },
   PlayButton: {
     Play: createIcon(playIconPaths),
@@ -69,8 +71,8 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
     Forward: createIcon(seekForwardIconPaths),
   },
   Menu: {
-    ArrowLeft: createIcon(arrowLeftPaths),
-    ArrowRight: createIcon(arrowRightPaths),
+    ArrowLeft: createIcon(arrowLeftIconPaths),
+    ArrowRight: createIcon(arrowRightIconPaths),
     Audio: createIcon(musicIconPaths),
     Chapters: createIcon(chaptersIconPaths),
     Quality: createIcon(qualityIconPaths),
@@ -93,6 +95,8 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
     ExitPiP: createIcon(exitPIPIconPaths),
     CaptionsOn: createIcon(ccOnIconPaths),
     CaptionsOff: createIcon(ccIconPaths),
+    SeekForward: createIcon(fastForwardIconPaths),
+    SeekBackward: createIcon(fastBackwardIconPaths),
   },
 };
 
@@ -171,6 +175,8 @@ export interface DefaultKeyboardActionIcons {
   ExitPiP: DefaultLayoutIcon;
   CaptionsOn: DefaultLayoutIcon;
   CaptionsOff: DefaultLayoutIcon;
+  SeekForward: DefaultLayoutIcon;
+  SeekBackward: DefaultLayoutIcon;
 }
 
 export interface DefaultLayoutIcons {
