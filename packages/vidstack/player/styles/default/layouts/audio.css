@@ -125,7 +125,7 @@
 }
 
 @media (pointer: coarse) {
-  :where(.vds-caption-button) {
+  :where(.vds-audio-layout .vds-caption-button) {
     display: none;
   }
 }
