@@ -22,6 +22,7 @@ export class MediaPlayerElement extends Host(HTMLElement, MediaPlayer) {
     crossOrigin: 'crossorigin',
     playsInline: 'playsinline',
     preferNativeHLS: 'prefer-native-hls',
+    minLiveDVRWindow: 'min-live-dvr-window',
   };
 }
 
