@@ -104,8 +104,22 @@ function DefaultVideoLargeLayout() {
       {slot(slots, 'captions', <Captions className="vds-captions" />)}
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
+          {slot(slots, 'topControlsGroupStart', null)}
           <DefaultControlsSpacer />
+          {slot(slots, 'topControlsGroupCenter', null)}
+          <DefaultControlsSpacer />
+          {slot(slots, 'topControlsGroupEnd', null)}
           {menuGroup === 'top' && <DefaultVideoMenus slots={slots} />}
+        </Controls.Group>
+
+        <DefaultControlsSpacer />
+
+        <Controls.Group className="vds-controls-group">
+          {slot(slots, 'centerControlsGroupStart', null)}
+          <DefaultControlsSpacer />
+          {slot(slots, 'centerControlsGroupCenter', null)}
+          <DefaultControlsSpacer />
+          {slot(slots, 'centerControlsGroupEnd', null)}
         </Controls.Group>
 
         <DefaultControlsSpacer />
@@ -149,16 +163,27 @@ function DefaultVideoSmallLayout() {
       {slot(slots, 'captions', <Captions className="vds-captions" />)}
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
+          {slot(slots, 'topControlsGroupStart', null)}
           {slot(slots, 'airPlayButton', <DefaultAirPlayButton tooltip="top start" />)}
           {slot(slots, 'googleCastButton', <DefaultGoogleCastButton tooltip="top start" />)}
+          <DefaultControlsSpacer />
+          {slot(slots, 'topControlsGroupCenter', null)}
           <DefaultControlsSpacer />
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="bottom" />)}
           <DefaultVideoMenus slots={slots} />
           {slot(slots, 'muteButton', <DefaultMuteButton tooltip="bottom end" />)}
+          {slot(slots, 'topControlsGroupEnd', null)}
         </Controls.Group>
-        <div className="vds-controls-group">
+        <DefaultControlsSpacer />
+        <Controls.Group className="vds-controls-group" style={{ pointerEvents: 'none' }}>
+          {slot(slots, 'centerControlsGroupStart', null)}
+          <DefaultControlsSpacer />
+          {slot(slots, 'centerControlsGroupCenter', null)}
           {slot(slots, 'playButton', <DefaultPlayButton tooltip="top" />)}
-        </div>
+          <DefaultControlsSpacer />
+          {slot(slots, 'centerControlsGroupEnd', null)}
+        </Controls.Group>
+        <DefaultControlsSpacer />
         <Controls.Group className="vds-controls-group">
           <DefaultTimeInfo slots={slots} />
           {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}

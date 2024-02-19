@@ -63,14 +63,6 @@
   z-index: 50;
 }
 
-:where(.vds-video-layout .vds-controls-group:nth-child(2)) {
-  display: flex;
-  flex: 1 1 0%;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
 /* second last group */
 :where(.vds-video-layout .vds-controls-group:nth-last-child(2)) {
   padding: 0 12px;
@@ -389,7 +381,6 @@
     .vds-time,
     .vds-time-divider,
     .vds-chapter-title
-
   ) {
   transition: opacity 0.15s ease;
 }
@@ -444,7 +435,7 @@
 :where(
     [data-media-player]:not([data-started])
       .vds-video-layout[data-size='sm']
-      .vds-controls-group:not(:nth-child(2))
+      .vds-controls-group:not(:nth-child(3))
   ) {
   opacity: 0;
   visibility: hidden;

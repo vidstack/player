@@ -34,6 +34,8 @@ export function DefaultVideoLayoutLarge() {
         ${[
           DefaultControlsGroupTop(),
           DefaultControlsSpacer(),
+          html`<media-controls-group class="vds-controls-group"></media-controls-group>`,
+          DefaultControlsSpacer(),
           html`
             <media-controls-group class="vds-controls-group">
               ${DefaultTimeSlider()}
@@ -99,7 +101,17 @@ export function DefaultVideoLayoutSmall() {
           ]}
         </media-controls-group>
 
-        <div class="vds-controls-group">${DefaultPlayButton({ tooltip: 'top' })}</div>
+        ${DefaultControlsSpacer()}
+
+        <media-controls-group class="vds-controls-group" style="pointer-events: none;">
+          ${[
+            DefaultControlsSpacer(),
+            DefaultPlayButton({ tooltip: 'top' }),
+            DefaultControlsSpacer(),
+          ]}
+        </media-controls-group>
+
+        ${DefaultControlsSpacer()}
 
         <media-controls-group class="vds-controls-group">
           ${[

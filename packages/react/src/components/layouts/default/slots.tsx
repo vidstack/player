@@ -35,6 +35,12 @@ export type DefaultLayoutSlotName =
   | 'startDuration'
   | 'timeSlider'
   | 'volumeSlider'
+  | 'topControlsGroupStart'
+  | 'topControlsGroupCenter'
+  | 'topControlsGroupEnd'
+  | 'centerControlsGroupStart'
+  | 'centerControlsGroupCenter'
+  | 'centerControlsGroupEnd'
   | DefaultLayoutMenuSlotName;
 
 export type DefaultLayoutMenuSlotName =
