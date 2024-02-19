@@ -317,7 +317,7 @@ export function DefaultTimeGroup() {
           html`<media-time class="vds-time" type="current"></media-time>`,
           html`<div class="vds-time-divider">/</div>`,
           html`<media-time class="vds-time" type="duration"></media-time>`,
-        ].filter((f) => (f ? f : null));
+        ];
       })}
     </div>
   `;
