@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.8-next](https://github.com/vidstack/player/releases/tag/v1.10.8-next) (2024-02-20)
+
+### ✨ Features
+
+#### Player
+
+- add seek keyboard animation display icons ([ff93604](https://github.com/vidstack/player/commit/ff9360455255b8e1a2e822832996655189cf7039))
+- new `showMs` prop on slider value component ([4e23e26](https://github.com/vidstack/player/commit/4e23e26e3cd1f904f24308fa40abf3ca3572b9b4))
+- save video quality in storage ([c8524dc](https://github.com/vidstack/player/commit/c8524dcbd919565f2e7b2532f494f4d50347ff14))
+
+#### Player (React)
+
+- expose controls group slots ([9e86ef2](https://github.com/vidstack/player/commit/9e86ef2c0db6766f108ff147ad24f27231a93a90))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- video caption button incorrectly hidden on touch input ([dfed2dc](https://github.com/vidstack/player/commit/dfed2dc5b782d95a728d87b9077f569d5ad9b435))
+- seek to live edge on play ([ed5e8ec](https://github.com/vidstack/player/commit/ed5e8ecb9d402f00b021e620627174a4b237a9ad))
+- `min-live-dvr-window` attr not updating ([7491385](https://github.com/vidstack/player/commit/7491385ca5bee0cc63bac5a2275b4243cc32e97c))
+- slider chapters should reset after seeking back on end ([4dd2012](https://github.com/vidstack/player/commit/4dd20127bccf179dcfd924a225de62f49e135308))
+- last slider chapter not filled to end ([e804c19](https://github.com/vidstack/player/commit/e804c193fbe95d5f73a0e96b5fd89e0135216936))
+- do not fetch embed poster if one is provided ([2503c5d](https://github.com/vidstack/player/commit/2503c5dfeb9c1a6787687cbfb0406804ea945b8e))
+- use voice reader friendly labels ([6b9d999](https://github.com/vidstack/player/commit/6b9d99917b07333d8147c8c0272341253c82626c))
+
+#### Player (React)
+
+- throws on build if no player src is provided ([a26fd41](https://github.com/vidstack/player/commit/a26fd416086e3e624c747b16b7fa22e1544f7052))
+- `noScrubGesture` should be optional in default layout ([a2a2f4a](https://github.com/vidstack/player/commit/a2a2f4a9a1e8ff292425dfc6771190765e653c54))
+
 ## [1.10.7-next](https://github.com/vidstack/player/releases/tag/v1.10.7-next) (2024-02-17)
 
 ### ✨ Features
