@@ -33,7 +33,7 @@ export function useChapterOptions(): ChapterOptions {
               cue,
               label: cue.text,
               value: i.toString(),
-              startTimeText: formatTime(Math.max(0, cue.startTime - $startTime), false),
+              startTimeText: formatTime(Math.max(0, cue.startTime - $startTime)),
               durationText: formatSpokenTime(
                 Math.min($endTime, cue.endTime) - Math.max($startTime, cue.startTime),
               ),

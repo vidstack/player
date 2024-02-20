@@ -73,13 +73,17 @@ describe(formatTime.name, function () {
     expect(formatTime(45296)).to.equal('12:34:56');
   });
 
-  it('it should pad hours if `shouldPadHours` is true', function () {
-    expect(formatTime(3600, true)).to.equal('01:00:00');
+  it('it should pad hours', function () {
+    expect(formatTime(3600, { padHrs: true })).to.equal('01:00:00');
   });
 
-  it('it should display hours if `shouldAlwaysShowHours` is true', function () {
-    expect(formatTime(3500, false, false, true)).to.equal('0:58:20');
-    expect(formatTime(3500, true, false, true)).to.equal('00:58:20');
+  it('it should display hours', function () {
+    expect(formatTime(3500, { showHrs: true })).to.equal('0:58:20');
+    expect(formatTime(3500, { showHrs: true, padHrs: true })).to.equal('00:58:20');
+  });
+
+  it('it should display ms', function () {
+    expect(formatTime(2501.5, { showMs: true })).to.equal('41:41.5');
   });
 });
 

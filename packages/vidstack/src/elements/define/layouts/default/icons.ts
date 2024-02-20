@@ -59,7 +59,7 @@ export const icons = {
   'kb-volume-up': volumeHigh,
   'kb-volume-down': volumeLow,
   'kb-fs-enter': fsEnter,
-  'kb-fs-exit': fsEnter,
+  'kb-fs-exit': fsExit,
   'kb-pip-enter': pipEnter,
   'kb-pip-exit': pipExit,
   'kb-cc-on': ccOn,

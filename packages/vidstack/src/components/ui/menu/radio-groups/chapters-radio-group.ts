@@ -88,7 +88,7 @@ export class ChaptersRadioGroup extends Component<
       cue,
       value: i.toString(),
       label: cue.text,
-      startTime: formatTime(Math.max(0, cue.startTime - startTime), false),
+      startTime: formatTime(Math.max(0, cue.startTime - startTime)),
       duration: formatSpokenTime(
         Math.min(endTime, cue.endTime) - Math.max(startTime, cue.startTime),
       ),

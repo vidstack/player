@@ -69,7 +69,11 @@ export class Time extends Component<TimeProps, TimeState> {
     }
 
     const time = shouldInvert ? Math.max(0, duration - seconds) : seconds,
-      formattedTime = formatTime(time, padHours(), padMinutes(), showHours());
+      formattedTime = formatTime(time, {
+        padHrs: padHours(),
+        padMins: padMinutes(),
+        showHrs: showHours(),
+      });
 
     this.$state.timeText.set((shouldInvert ? '-' : '') + formattedTime);
   }

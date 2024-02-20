@@ -8,7 +8,7 @@ import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { watchActiveTextTrack } from '../../../../core/tracks/text/utils';
 import { setAttributeIfEmpty } from '../../../../utils/dom';
 import { round } from '../../../../utils/number';
-import { formatSpokenTime, formatTime } from '../../../../utils/time';
+import { formatSpokenTime, formatTime, type FormatTimeOptions } from '../../../../utils/time';
 import type { SliderCSSVars } from '../slider/api/cssvars';
 import type {
   SliderDragEndEvent,
@@ -261,18 +261,13 @@ export class TimeSlider extends Component<
     return Number.isFinite(time) ? (live() ? time - duration() : time).toFixed(0) : 'LIVE';
   }
 
-  private _formatTime(
-    percent: number,
-    padHours: boolean | null,
-    padMinutes: boolean | null,
-    showHours: boolean,
-  ) {
+  private _formatTime(percent: number, options?: FormatTimeOptions) {
     const time = this._percentToTime(percent),
       { live, duration } = this._media.$state,
       value = live() ? time - duration() : time;
 
     return Number.isFinite(time)
-      ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), padHours, padMinutes, showHours)}`
+      ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), options)}`
       : 'LIVE';
   }
 }
