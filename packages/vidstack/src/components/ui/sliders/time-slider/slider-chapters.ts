@@ -147,7 +147,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   }
 
   private _watchFillPercent() {
-    let { liveEdge, ended, clipStartTime } = this._media.$state,
+    let { liveEdge, clipStartTime } = this._media.$state,
       { fillPercent, value } = this._sliderState,
       cues = this._$cues(),
       isLiveEdge = liveEdge(),
@@ -288,6 +288,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     cues = cues.filter((cue) => cue.startTime <= endTime && cue.endTime >= startTime);
 
     const firstCue = cues[0];
+
     // Fill any time gaps where chapters are missing.
     if (firstCue && firstCue.startTime > startTime) {
       chapters.push(new window.VTTCue(startTime, firstCue.startTime, ''));
@@ -309,11 +310,10 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     const lastCue = cues[cues.length - 1];
     if (lastCue) {
       chapters.push(lastCue);
-      if (
-        duration() >= 0 &&
-        (endTime === 0 || (endTime !== Infinity && lastCue.endTime < endTime)) &&
-        Math.abs(lastCue.endTime - duration()) > 1
-      ) {
+
+      // Fill gap at the end if the last chapter doesn't extend all the way.
+      const endTime = duration();
+      if (endTime >= 0 && endTime - lastCue.endTime > 1) {
         chapters.push(new window.VTTCue(lastCue.endTime, duration(), ''));
       }
     }

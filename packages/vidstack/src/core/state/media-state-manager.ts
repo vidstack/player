@@ -646,7 +646,7 @@ export class MediaStateManager extends MediaPlayerController {
       return;
     }
 
-    const { realCurrentTime, played, waiting, clipEndTime, loop } = this.$state,
+    const { realCurrentTime, played, waiting, clipEndTime } = this.$state,
       endTime = clipEndTime(),
       detail = event.detail;
 

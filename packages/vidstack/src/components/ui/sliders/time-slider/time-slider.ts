@@ -270,6 +270,7 @@ export class TimeSlider extends Component<
     const time = this._percentToTime(percent),
       { live, duration } = this._media.$state,
       value = live() ? time - duration() : time;
+
     return Number.isFinite(time)
       ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), padHours, padMinutes, showHours)}`
       : 'LIVE';
