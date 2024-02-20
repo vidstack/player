@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.9-next](https://github.com/vidstack/player/releases/tag/v1.10.9-next) (2024-02-20)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- correctly resolve current chapter index (#1174) ([275daa2](https://github.com/vidstack/player/commit/275daa2cb398775af556a6ecace52fc6b8f4ba61))
+- external vimeo hls urls are not loading ([c774e5f](https://github.com/vidstack/player/commit/c774e5fb34ccdd476d94d1502b7d9c10196b47db))
+
 ## [1.10.8-next](https://github.com/vidstack/player/releases/tag/v1.10.8-next) (2024-02-20)
 
 ### ✨ Features
