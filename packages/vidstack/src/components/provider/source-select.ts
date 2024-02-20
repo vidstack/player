@@ -266,9 +266,9 @@ export class SourceSelection {
 
   private _onLoadPoster() {
     const loader = this._loader(),
-      { source, canLoadPoster } = this._media.$state;
+      { providedPoster, source, canLoadPoster } = this._media.$state;
 
-    if (!loader || !loader.loadPoster || !source() || !canLoadPoster()) return;
+    if (!loader || !loader.loadPoster || !source() || !canLoadPoster() || providedPoster()) return;
 
     const abort = new AbortController(),
       trigger = new DOMEvent('source-change', { detail: source });
