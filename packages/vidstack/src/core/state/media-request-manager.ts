@@ -430,9 +430,11 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   ['media-audio-track-change-request'](event: RE.MediaAudioTrackChangeRequestEvent) {
-    if (this._media.audioTracks.readonly) {
+    const { logger, audioTracks } = this._media;
+
+    if (audioTracks.readonly) {
       if (__DEV__) {
-        this._media.logger
+        logger
           ?.warnGroup(`[vidstack] attempted to change audio track but it is currently read-only`)
           .labelledLog('Request Event', event)
           .dispatch();
@@ -442,16 +444,16 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     }
 
     const index = event.detail,
-      track = this._media.audioTracks[index];
+      track = audioTracks[index];
 
     if (track) {
       const key = event.type as 'media-audio-track-change-request';
       this._request._queue._enqueue(key, event);
       track.selected = true;
     } else if (__DEV__) {
-      this._media.logger
+      logger
         ?.warnGroup('[vidstack] failed audio track change request (invalid index)')
-        .labelledLog('Audio Tracks', this._media.audioTracks.toArray())
+        .labelledLog('Audio Tracks', audioTracks.toArray())
         .labelledLog('Index', index)
         .labelledLog('Request Event', event)
         .dispatch();
@@ -618,9 +620,11 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   ['media-quality-change-request'](event: RE.MediaQualityChangeRequestEvent) {
-    if (this._media.qualities.readonly) {
+    const { qualities, storage, logger } = this._media;
+
+    if (qualities.readonly) {
       if (__DEV__) {
-        this._media.logger
+        logger
           ?.warnGroup(`[vidstack] attempted to change video quality but it is currently read-only`)
           .labelledLog('Request Event', event)
           .dispatch();
@@ -632,16 +636,26 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this._request._queue._enqueue('media-quality-change-request', event);
 
     const index = event.detail;
+
     if (index < 0) {
-      this._media.qualities.autoSelect(event);
+      qualities.autoSelect(event);
+      if (event.isOriginTrusted) storage?.setVideoQuality?.(null);
     } else {
-      const quality = this._media.qualities[index];
+      const quality = qualities[index];
       if (quality) {
         quality.selected = true;
+        if (event.isOriginTrusted) {
+          storage?.setVideoQuality?.({
+            id: quality.id,
+            width: quality.width,
+            height: quality.height,
+            bitrate: quality.bitrate,
+          });
+        }
       } else if (__DEV__) {
-        this._media.logger
+        logger
           ?.warnGroup('[vidstack] failed quality change request (invalid index)')
-          .labelledLog('Qualities', this._media.qualities.toArray())
+          .labelledLog('Qualities', qualities.toArray())
           .labelledLog('Index', index)
           .labelledLog('Request Event', event)
           .dispatch();

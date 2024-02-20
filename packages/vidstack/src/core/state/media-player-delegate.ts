@@ -3,6 +3,7 @@ import { DOMEvent, type InferEventDetail } from 'maverick.js/std';
 
 import type { MediaContext } from '../api/media-context';
 import type { MediaEvents } from '../api/media-events';
+import type { VideoQuality } from '../quality/video-quality';
 
 let seenAutoplayWarning = false;
 
@@ -72,7 +73,7 @@ export class MediaPlayerDelegate {
       }
 
       let provider = this._media.$provider(),
-        { storage } = this._media,
+        { storage, qualities } = this._media,
         { muted, volume, clipStartTime, playbackRate } = this._media.$props;
 
       const remotePlaybackTime = remotePlaybackInfo()?.savedState?.currentTime,
@@ -86,6 +87,27 @@ export class MediaPlayerDelegate {
         provider.setPlaybackRate?.((await storage?.getPlaybackRate()) ?? playbackRate());
         provider.setPlaysInline?.(playsInline());
         if (startTime > 0) provider.setCurrentTime(startTime);
+      }
+
+      const prefQuality = await storage?.getVideoQuality();
+      if (prefQuality && qualities.length) {
+        let currentQuality: VideoQuality | null = null,
+          currentScore = Infinity;
+
+        for (const quality of qualities) {
+          const score =
+            Math.abs(prefQuality.width - quality.width) +
+            Math.abs(prefQuality.height - quality.height) +
+            (prefQuality.bitrate ? Math.abs(prefQuality.bitrate - quality.bitrate) : 0);
+
+          // Lowest score wins (smallest diff between width/height/bitrate).
+          if (score < currentScore) {
+            currentQuality = quality;
+            currentScore = score;
+          }
+        }
+
+        if (currentQuality) currentQuality.selected = true;
       }
 
       if (canPlay() && shouldAutoPlay && !started()) {

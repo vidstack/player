@@ -22,6 +22,9 @@ export interface MediaStorage {
   getPlaybackRate(): Promise<number | null>;
   setPlaybackRate?(rate: number): Promise<void>;
 
+  getVideoQuality(): Promise<SerializedVideoQuality | null>;
+  setVideoQuality?(quality: SerializedVideoQuality | null): Promise<void>;
+
   /**
    * Called when the `mediaId` has changed. This method can return a function to be called
    * before the next change.
@@ -41,6 +44,13 @@ export interface MediaStorage {
   onDestroy?(): void;
 }
 
+export interface SerializedVideoQuality {
+  id: string;
+  width: number;
+  height: number;
+  bitrate?: number;
+}
+
 export class LocalMediaStorage implements MediaStorage {
   protected playerId = 'vds-player';
   protected mediaId: string | null = null;
@@ -52,6 +62,7 @@ export class LocalMediaStorage implements MediaStorage {
     lang: null,
     captions: null,
     rate: null,
+    quality: null,
   };
 
   async getVolume() {
@@ -108,6 +119,15 @@ export class LocalMediaStorage implements MediaStorage {
     this.save();
   }
 
+  async getVideoQuality() {
+    return this._data.quality;
+  }
+
+  async setVideoQuality(quality: SerializedVideoQuality | null) {
+    this._data.quality = quality;
+    this.save();
+  }
+
   onChange(src: MediaSrc, mediaId: string | null, playerId = 'vds-player') {
     const savedData = playerId ? localStorage.getItem(playerId) : null,
       savedTime = mediaId ? localStorage.getItem(mediaId) : null;
@@ -120,6 +140,8 @@ export class LocalMediaStorage implements MediaStorage {
       muted: null,
       lang: null,
       captions: null,
+      rate: null,
+      quality: null,
       ...(savedData ? JSON.parse(savedData) : {}),
       time: savedTime ? +savedTime : null,
     };
@@ -145,4 +167,5 @@ interface SavedMediaData {
   lang: string | null;
   captions: boolean | null;
   rate: number | null;
+  quality: SerializedVideoQuality | null;
 }
