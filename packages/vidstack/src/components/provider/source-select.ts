@@ -289,7 +289,7 @@ export class SourceSelection {
 }
 
 function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
-  return (isArray(src) ? src : [!isString(src) && 'src' in src ? src : { src }])
+  return (isArray(src) ? src : [src && !isString(src) && 'src' in src ? src : { src: src || '' }])
     .map(({ src, type, ...props }) => ({
       src,
       type:
