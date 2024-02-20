@@ -75,7 +75,7 @@ export interface DefaultLayoutProps<Slots = unknown> extends PrimitivePropsWithR
   /**
    * Whether to disable scrubbing by touch swiping left or right on the player canvas.
    */
-  noScrubGesture: boolean;
+  noScrubGesture?: boolean;
   /**
    * The minimum width of the slider to start displaying slider chapters when available.
    */
