@@ -15,6 +15,7 @@ import {
 } from 'maverick.js';
 import {
   animationFrameThrottle,
+  isFunction,
   isKeyboardClick,
   isTouchEvent,
   listenEvent,
@@ -41,11 +42,16 @@ export function setAttributeIfEmpty(target: Element, name: string, value: string
   if (!target.hasAttribute(name)) target.setAttribute(name, value);
 }
 
-export function setARIALabel(target: Element, $label: () => string | null) {
+export function setARIALabel(target: Element, $label: string | null | ReadSignal<string | null>) {
   if (target.hasAttribute('aria-label') || target.hasAttribute('data-no-label')) return;
 
+  if (!isFunction($label)) {
+    setAttribute(target, 'aria-label', $label);
+    return;
+  }
+
   function updateAriaDescription() {
-    setAttribute(target, 'aria-label', $label());
+    setAttribute(target, 'aria-label', ($label as ReadSignal<string | null>)());
   }
 
   if (__SERVER__) updateAriaDescription();

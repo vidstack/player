@@ -69,14 +69,15 @@ export function DefaultGoogleCastButton({ tooltip }: { tooltip: TooltipPlacement
 
 export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultLayoutContext(),
-    { paused } = useMediaState(),
-    $label = $signal(() => i18n(translations, paused() ? 'Play' : 'Pause')),
     $playText = $i18n(translations, 'Play'),
     $pauseText = $i18n(translations, 'Pause');
   return html`
     <media-tooltip class="vds-play-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-play-button class="vds-play-button vds-button" aria-label=${$label}>
+        <media-play-button
+          class="vds-play-button vds-button"
+          aria-label=${$i18n(translations, 'Play')}
+        >
           <slot name="play-icon" data-class="vds-play-icon"></slot>
           <slot name="pause-icon" data-class="vds-pause-icon"></slot>
           <slot name="replay-icon" data-class="vds-replay-icon"></slot>
@@ -98,14 +99,16 @@ export function DefaultMuteButton({
   ref?: RefOrCallback;
 }) {
   const { translations } = useDefaultLayoutContext(),
-    { muted } = useMediaState(),
-    $label = $signal(() => i18n(translations, muted() ? 'Unmute' : 'Unmute')),
     $muteText = $i18n(translations, 'Mute'),
     $unmuteText = $i18n(translations, 'Unmute');
   return html`
     <media-tooltip class="vds-mute-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-mute-button class="vds-mute-button vds-button" aria-label=${$label} ${$ref(ref)}>
+        <media-mute-button
+          class="vds-mute-button vds-button"
+          aria-label=${$i18n(translations, 'Mute')}
+          ${$ref(ref)}
+        >
           <slot name="mute-icon" data-class="vds-mute-icon"></slot>
           <slot name="volume-low-icon" data-class="vds-volume-low-icon"></slot>
           <slot name="volume-high-icon" data-class="vds-volume-high-icon"></slot>
@@ -121,16 +124,15 @@ export function DefaultMuteButton({
 
 export function DefaultCaptionButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultLayoutContext(),
-    { textTrack } = useMediaState(),
-    $label = $signal(() =>
-      i18n(translations, textTrack() ? 'Closed-Captions Off' : 'Closed-Captions On'),
-    ),
     $ccOnText = $i18n(translations, 'Closed-Captions On'),
     $ccOffText = $i18n(translations, 'Closed-Captions Off');
   return html`
     <media-tooltip class="vds-caption-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-caption-button class="vds-caption-button vds-button" aria-label=${$label}>
+        <media-caption-button
+          class="vds-caption-button vds-button"
+          aria-label=${$i18n(translations, 'Captions')}
+        >
           <slot name="cc-on-icon" data-class="vds-cc-on-icon"></slot>
           <slot name="cc-off-icon" data-class="vds-cc-off-icon"></slot>
         </media-caption-button>
@@ -145,14 +147,15 @@ export function DefaultCaptionButton({ tooltip }: { tooltip: TooltipPlacement })
 
 export function DefaultPIPButton() {
   const { translations } = useDefaultLayoutContext(),
-    { pictureInPicture } = useMediaState(),
-    $label = $signal(() => i18n(translations, pictureInPicture() ? 'Exit PiP' : 'Enter PiP')),
     $enterText = $i18n(translations, 'Enter PiP'),
     $exitText = $i18n(translations, 'Exit PiP');
   return html`
     <media-tooltip class="vds-pip-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-pip-button class="vds-pip-button vds-button" aria-label=${$label}>
+        <media-pip-button
+          class="vds-pip-button vds-button"
+          aria-label=${$i18n(translations, 'PiP')}
+        >
           <slot name="pip-enter-icon" data-class="vds-pip-enter-icon"></slot>
           <slot name="pip-exit-icon" data-class="vds-pip-exit-icon"></slot>
         </media-pip-button>
@@ -167,16 +170,15 @@ export function DefaultPIPButton() {
 
 export function DefaultFullscreenButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultLayoutContext(),
-    { fullscreen } = useMediaState(),
-    $label = $signal(() =>
-      i18n(translations, fullscreen() ? 'Exit Fullscreen' : 'Enter Fullscreen'),
-    ),
     $enterText = $i18n(translations, 'Enter Fullscreen'),
     $exitText = $i18n(translations, 'Exit Fullscreen');
   return html`
     <media-tooltip class="vds-fullscreen-tooltip vds-tooltip">
       <media-tooltip-trigger>
-        <media-fullscreen-button class="vds-fullscreen-button vds-button" aria-label=${$label}>
+        <media-fullscreen-button
+          class="vds-fullscreen-button vds-button"
+          aria-label=${$i18n(translations, 'Fullscreen')}
+        >
           <slot name="fs-enter-icon" data-class="vds-fs-enter-icon"></slot>
           <slot name="fs-exit-icon" data-class="vds-fs-exit-icon"></slot>
         </media-fullscreen-button>

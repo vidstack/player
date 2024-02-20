@@ -51,7 +51,7 @@ export class PIPButton extends Component<PIPButtonProps, {}, PIPButtonEvents> {
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'pip');
-    setARIALabel(el, this._getDefaultLabel.bind(this));
+    setARIALabel(el, 'PiP');
   }
 
   private _onPress(event: Event) {
@@ -67,10 +67,5 @@ export class PIPButton extends Component<PIPButtonProps, {}, PIPButtonEvents> {
   private _isSupported() {
     const { canPictureInPicture } = this._media.$state;
     return canPictureInPicture();
-  }
-
-  private _getDefaultLabel() {
-    const { pictureInPicture } = this._media.$state;
-    return pictureInPicture() ? 'Exit Picture In Picture' : 'Enter Picture In Picture';
   }
 }

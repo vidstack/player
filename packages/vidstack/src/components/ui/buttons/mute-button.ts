@@ -46,7 +46,7 @@ export class MuteButton extends Component<MuteButtonProps, {}, MuteButtonEvents>
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-mute-button', '');
     el.setAttribute('data-media-tooltip', 'mute');
-    setARIALabel(el, this._getDefaultLabel.bind(this));
+    setARIALabel(el, 'Mute');
   }
 
   private _onPress(event: Event) {
@@ -57,10 +57,6 @@ export class MuteButton extends Component<MuteButtonProps, {}, MuteButtonEvents>
   private _isPressed() {
     const { muted, volume } = this._media.$state;
     return muted() || volume() === 0;
-  }
-
-  private _getDefaultLabel() {
-    return this._isPressed() ? 'Unmute' : 'Mute';
   }
 
   private _getState() {

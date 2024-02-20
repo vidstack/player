@@ -143,11 +143,10 @@ function DefaultPlayButton({ tooltip }: DefaultMediaButtonProps) {
     playText = useDefaultLayoutWord('Play'),
     pauseText = useDefaultLayoutWord('Pause'),
     $paused = useMediaState('paused'),
-    $ended = useMediaState('ended'),
-    label = $paused ? playText : pauseText;
+    $ended = useMediaState('ended');
   return (
     <DefaultTooltip content={$paused ? playText : pauseText} placement={tooltip}>
-      <PlayButton className="vds-play-button vds-button" aria-label={label}>
+      <PlayButton className="vds-play-button vds-button" aria-label={playText}>
         {$ended ? (
           <Icons.PlayButton.Replay className="vds-icon" />
         ) : $paused ? (
@@ -173,11 +172,10 @@ const DefaultMuteButton = React.forwardRef<HTMLButtonElement, DefaultMediaButton
       muteText = useDefaultLayoutWord('Mute'),
       unmuteText = useDefaultLayoutWord('Unmute'),
       $muted = useMediaState('muted'),
-      $volume = useMediaState('volume'),
-      label = $muted ? unmuteText : muteText;
+      $volume = useMediaState('volume');
     return (
       <DefaultTooltip content={$muted ? unmuteText : muteText} placement={tooltip}>
-        <MuteButton className="vds-mute-button vds-button" aria-label={label} ref={forwardRef}>
+        <MuteButton className="vds-mute-button vds-button" aria-label={muteText} ref={forwardRef}>
           {$muted || $volume == 0 ? (
             <Icons.MuteButton.Mute className="vds-icon" />
           ) : $volume < 0.5 ? (
@@ -200,14 +198,14 @@ export { DefaultMuteButton };
 
 function DefaultCaptionButton({ tooltip }: DefaultMediaButtonProps) {
   const { icons: Icons } = useDefaultLayoutContext(),
+    captionsText = useDefaultLayoutWord('Captions'),
     onText = useDefaultLayoutWord('Closed-Captions On'),
     offText = useDefaultLayoutWord('Closed-Captions Off'),
     $track = useMediaState('textTrack'),
-    isOn = $track && isTrackCaptionKind($track),
-    label = $track ? offText : onText;
+    isOn = $track && isTrackCaptionKind($track);
   return (
     <DefaultTooltip content={isOn ? onText : offText} placement={tooltip}>
-      <CaptionButton className="vds-caption-button vds-button" aria-label={label}>
+      <CaptionButton className="vds-caption-button vds-button" aria-label={captionsText}>
         {isOn ? (
           <Icons.CaptionButton.On className="vds-icon" />
         ) : (
@@ -227,13 +225,13 @@ export { DefaultCaptionButton };
 
 function DefaultPIPButton({ tooltip }: DefaultMediaButtonProps) {
   const { icons: Icons } = useDefaultLayoutContext(),
+    pipText = useDefaultLayoutWord('PiP'),
     enterText = useDefaultLayoutWord('Enter PiP'),
     exitText = useDefaultLayoutWord('Exit PiP'),
-    $pip = useMediaState('pictureInPicture'),
-    label = $pip ? exitText : enterText;
+    $pip = useMediaState('pictureInPicture');
   return (
     <DefaultTooltip content={$pip ? exitText : enterText} placement={tooltip}>
-      <PIPButton className="vds-pip-button vds-button" aria-label={label}>
+      <PIPButton className="vds-pip-button vds-button" aria-label={pipText}>
         {$pip ? (
           <Icons.PIPButton.Exit className="vds-icon" />
         ) : (
@@ -253,13 +251,13 @@ export { DefaultPIPButton };
 
 function DefaultFullscreenButton({ tooltip }: DefaultMediaButtonProps) {
   const { icons: Icons } = useDefaultLayoutContext(),
+    fullscreenText = useDefaultLayoutWord('Fullscreen'),
     enterText = useDefaultLayoutWord('Enter Fullscreen'),
     exitText = useDefaultLayoutWord('Exit Fullscreen'),
-    $fullscreen = useMediaState('fullscreen'),
-    label = $fullscreen ? exitText : enterText;
+    $fullscreen = useMediaState('fullscreen');
   return (
     <DefaultTooltip content={$fullscreen ? exitText : enterText} placement={tooltip}>
-      <FullscreenButton className="vds-fullscreen-button vds-button" aria-label={label}>
+      <FullscreenButton className="vds-fullscreen-button vds-button" aria-label={fullscreenText}>
         {$fullscreen ? (
           <Icons.FullscreenButton.Exit className="vds-icon" />
         ) : (

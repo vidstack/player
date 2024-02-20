@@ -67,7 +67,7 @@ export class FullscreenButton extends Component<FullscreenButtonProps, {}, Fulls
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'fullscreen');
-    setARIALabel(el, this._getDefaultLabel.bind(this));
+    setARIALabel(el, 'Fullscreen');
   }
 
   private _onPress(event: Event) {
@@ -86,10 +86,5 @@ export class FullscreenButton extends Component<FullscreenButtonProps, {}, Fulls
   private _isSupported() {
     const { canFullscreen } = this._media.$state;
     return canFullscreen();
-  }
-
-  private _getDefaultLabel() {
-    const { fullscreen } = this._media.$state;
-    return fullscreen() ? 'Exit Fullscreen' : 'Enter Fullscreen';
   }
 }

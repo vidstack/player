@@ -47,7 +47,7 @@ export class PlayButton extends Component<PlayButtonProps, {}, PlayButtonEvents>
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'play');
-    setARIALabel(el, this._getDefaultLabel.bind(this));
+    setARIALabel(el, 'Play');
   }
 
   private _onPress(event: Event) {
@@ -58,10 +58,5 @@ export class PlayButton extends Component<PlayButtonProps, {}, PlayButtonEvents>
   private _isPressed() {
     const { paused } = this._media.$state;
     return !paused();
-  }
-
-  private _getDefaultLabel() {
-    const { paused } = this._media.$state;
-    return paused() ? 'Play' : 'Pause';
   }
 }

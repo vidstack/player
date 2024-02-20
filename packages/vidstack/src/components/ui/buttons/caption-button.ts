@@ -48,7 +48,7 @@ export class CaptionButton extends Component<CaptionButtonProps, {}, CaptionButt
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'caption');
-    setARIALabel(el, this._getDefaultLabel.bind(this));
+    setARIALabel(el, 'Captions');
   }
 
   private _onPress(event: Event) {
@@ -64,10 +64,5 @@ export class CaptionButton extends Component<CaptionButtonProps, {}, CaptionButt
   private _isHidden() {
     const { hasCaptions } = this._media.$state;
     return !hasCaptions();
-  }
-
-  private _getDefaultLabel() {
-    const { textTrack } = this._media.$state;
-    return textTrack() ? 'Closed-Captions Off' : 'Closed-Captions On';
   }
 }
