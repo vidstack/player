@@ -32,9 +32,7 @@ export default defineConfig({
     setupFiles: ['src/test-utils/setup.ts'],
     testTimeout: 2500,
   },
-  plugins: [
-    // legacyPlugin()
-  ],
+  plugins: [legacyPlugin()],
 });
 
 function legacyPlugin() {
