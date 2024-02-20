@@ -708,7 +708,7 @@ export class MediaStateManager extends MediaPlayerController {
   );
 
   ['seeked'](event: ME.MediaSeekedEvent) {
-    const { seeking, realCurrentTime, paused, duration, ended } = this.$state;
+    const { seeking, currentTime, realCurrentTime, paused, duration, ended } = this.$state;
 
     if (this._request._seeking) {
       seeking.set(true);
@@ -736,6 +736,10 @@ export class MediaStateManager extends MediaPlayerController {
       if (origin?.isTrusted && !/seek/.test(origin.type)) {
         this['started'](event);
       }
+    }
+
+    if (Math.abs(duration() - currentTime()) >= 0.1) {
+      ended.set(false);
     }
   }
 
