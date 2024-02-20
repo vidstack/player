@@ -147,7 +147,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   }
 
   private _watchFillPercent() {
-    let { liveEdge, clipStartTime } = this._media.$state,
+    let { liveEdge, clipStartTime, duration } = this._media.$state,
       { fillPercent, value } = this._sliderState,
       cues = this._$cues(),
       isLiveEdge = liveEdge(),
@@ -157,7 +157,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     let currentActiveIndex = isLiveEdge
       ? this._$cues.length - 1
       : this._findActiveChapterIndex(
-          currentChapter ? (currentChapter.startTime <= peek(value) ? prevActiveIndex : 0) : 0,
+          currentChapter ? ((currentChapter.startTime / duration() * 100) <= peek(value) ? prevActiveIndex : 0) : 0,
           fillPercent(),
         );
 
