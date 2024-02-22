@@ -26,6 +26,7 @@ export const mediaState = new State<MediaState>({
   audioTracks: [],
   autoPlay: false,
   autoPlayError: null,
+  audioGain: null,
   buffered: new TimeRange(),
   canLoad: false,
   canLoadPoster: false,
@@ -58,6 +59,7 @@ export const mediaState = new State<MediaState>({
   canSetQuality: true,
   canSetPlaybackRate: true,
   canSetVolume: false,
+  canSetAudioGain: false,
   seekable: new TimeRange(),
   seeking: false,
   source: { src: '', type: '' },
@@ -625,6 +627,10 @@ export interface MediaState {
    */
   audioTrack: AudioTrack | null;
   /**
+   * The current audio gain. This will be `null` if audio gain is not supported or is not set.
+   */
+  audioGain: number | null;
+  /**
    * Whether the current video quality list is read-only, meaning quality selections can only
    * be set internally by the media provider. This will only be `false` when working with particular
    * third-party embeds such as YouTube.
@@ -640,6 +646,13 @@ export interface MediaState {
    * environment. It will generally be `false` on mobile devices as it's set by system controls.
    */
   canSetVolume: boolean;
+  /**
+   * Whether the current audio gain can be changed. This depends on the current provider and browser
+   * environment. It generally depends on browser's Web Audio API support.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API}
+   */
+  canSetAudioGain: boolean;
   /**
    * Contains the time ranges that the user is able to seek to, if any. This tells us which parts
    * of the media can be played without delay; this is irrespective of whether that part has

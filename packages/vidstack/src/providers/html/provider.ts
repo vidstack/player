@@ -5,6 +5,7 @@ import type { MediaContext } from '../../core/api/media-context';
 import type { MediaResource, MediaSrc } from '../../core/api/types';
 import { isMediaStream } from '../../utils/mime';
 import type { MediaProviderAdapter } from '../types';
+import { AudioGain } from './audio/audio-gain';
 import { HTMLMediaEvents } from './html–media-events';
 import { NativeAudioTracks } from './native-audio-tracks';
 
@@ -19,6 +20,10 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
 
   protected _currentSrc: MediaSrc<MediaResource> | null = null;
 
+  readonly audioGain = new AudioGain(this._media, (gain) => {
+    this._ctx.delegate._notify('audio-gain-change', gain);
+  });
+
   constructor(
     protected _media: HTMLMediaElement,
     protected _ctx: MediaContext,
@@ -30,10 +35,13 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     if ('audioTracks' in this.media) new NativeAudioTracks(this, this._ctx);
 
     onDispose(() => {
+      this.audioGain.destroy();
+
       // We need to remove all media sources incase another provider uses the same media element.
       this._media.srcObject = null;
       this._media.removeAttribute('src');
       for (const source of this._media.querySelectorAll('source')) source.remove();
+
       this._media.load();
     });
   }

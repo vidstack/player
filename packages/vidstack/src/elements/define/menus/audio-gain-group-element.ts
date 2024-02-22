@@ -1,29 +1,29 @@
 import { Host } from 'maverick.js/element';
 
-import { AudioRadioGroup } from '../../../components';
+import { AudioGainRadioGroup } from '../../../components';
 import { renderMenuItemsTemplate } from './_template';
 
 /**
- * @part label - Contains the audio track option label.
- * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/audio-radio-group}
+ * @part label - Contains the audio gain option label.
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/audio-gain-group}
  * @example
  * ```html
  * <media-menu>
  *   <!-- ... -->
  *   <media-menu-items>
- *     <media-audio-radio-group>
+ *     <media-audio-gain-radio-group>
  *       <template>
  *         <media-radio>
  *           <span data-part="label"></span>
  *         </media-radio>
  *       </template>
- *     </media-audio-radio-group>
+ *     </media-audio-gain-radio-group>
  *   </media-menu-items>
  * </media-menu>
  * ```
  */
-export class MediaAudioRadioGroupElement extends Host(HTMLElement, AudioRadioGroup) {
-  static tagName = 'media-audio-radio-group';
+export class MediaAudioGainRadioGroupElement extends Host(HTMLElement, AudioGainRadioGroup) {
+  static tagName = 'media-audio-gain-radio-group';
 
   protected onConnect(): void {
     renderMenuItemsTemplate(this);
@@ -32,6 +32,6 @@ export class MediaAudioRadioGroupElement extends Host(HTMLElement, AudioRadioGro
 
 declare global {
   interface HTMLElementTagNameMap {
-    'media-audio-radio-group': MediaAudioRadioGroupElement;
+    'media-audio-gain-radio-group': MediaAudioGainRadioGroupElement;
   }
 }

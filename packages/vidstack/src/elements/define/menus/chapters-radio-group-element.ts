@@ -9,7 +9,7 @@ import { renderMenuItemsTemplate } from './_template';
  * @part label - Contains the chapter option title.
  * @part start-time - Contains the chapter option start time.
  * @part duration - Contains the chapter option duration.
- * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/chapters-menu}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/chapters-radio-group}
  * @example
  * ```html
  * <media-menu>

@@ -1,5 +1,6 @@
 import {
   AirPlayButton,
+  AudioGainSlider,
   CaptionButton,
   Captions,
   Controls,
@@ -63,6 +64,7 @@ export class TooltipContentInstance extends TooltipContent {}
 export class SliderInstance extends Slider {}
 export class TimeSliderInstance extends TimeSlider {}
 export class VolumeSliderInstance extends VolumeSlider {}
+export class AudioGainSliderInstance extends AudioGainSlider {}
 export class SliderThumbnailInstance extends SliderThumbnail {}
 export class SliderValueInstance extends SliderValue {}
 export class SliderVideoInstance extends SliderVideo {}

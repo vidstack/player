@@ -7,71 +7,71 @@ import {
   type ReactElementProps,
 } from 'maverick.js/react';
 
-import { VolumeSliderInstance } from '../../primitives/instances';
+import { AudioGainSliderInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
 import { type ValueProps } from './slider';
 import { SliderValueBridge } from './slider-value';
 
 /* -------------------------------------------------------------------------------------------------
- * VolumeSlider
+ * AudioGainSlider
  * -----------------------------------------------------------------------------------------------*/
 
-const VolumeSliderBridge = createReactComponent(VolumeSliderInstance, {
+const AudioGainSliderBridge = createReactComponent(AudioGainSliderInstance, {
   domEventsRegex: /^onMedia/,
 });
 
-export interface RootProps extends ReactElementProps<VolumeSliderInstance> {
+export interface RootProps extends ReactElementProps<AudioGainSliderInstance> {
   asChild?: boolean;
   children?: React.ReactNode;
-  ref?: React.Ref<VolumeSliderInstance>;
+  ref?: React.Ref<AudioGainSliderInstance>;
 }
 
 /**
- * Versatile and user-friendly input volume control designed for seamless cross-browser and provider
+ * Versatile and user-friendly audio boost control designed for seamless cross-browser and provider
  * compatibility and accessibility with ARIA support. It offers a smooth user experience for both
  * mouse and touch interactions and is highly customizable in terms of styling. Users can
- * effortlessly change the volume level within the range 0 (muted) to 100.
+ * effortlessly change the audio gain within the range 0 to 100.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/sliders/volume-slider}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/audio-gain-slider}
  * @example
  * ```tsx
- * <VolumeSlider.Root>
- *   <VolumeSlider.Track>
- *     <VolumeSlider.TrackFill />
- *   </VolumeSlider.Track>
- *   <VolumeSlider.Thumb />
- * </VolumeSlider.Root>
+ * <AudioGainSlider.Root>
+ *   <AudioGainSlider.Track>
+ *     <AudioGainSlider.TrackFill />
+ *   </AudioGainSlider.Track>
+ *   <AudioGainSlider.Thumb />
+ * </AudioGainSlider.Root>
  * ```
  */
-const Root = React.forwardRef<VolumeSliderInstance, RootProps>(
+const Root = React.forwardRef<AudioGainSliderInstance, RootProps>(
   ({ children, ...props }, forwardRef) => {
     return (
-      <VolumeSliderBridge {...props} ref={forwardRef}>
+      <AudioGainSliderBridge {...props} ref={forwardRef}>
         {(props) => <Primitive.div {...props}>{children}</Primitive.div>}
-      </VolumeSliderBridge>
+      </AudioGainSliderBridge>
     );
   },
 );
 
-Root.displayName = 'VolumeSlider';
+Root.displayName = 'AudioGainSlider';
 
 /* -------------------------------------------------------------------------------------------------
  * SliderValue
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Displays the specific numeric representation of the current or pointer value of the volume
+ * Displays the specific numeric representation of the current or pointer value of the audio gain
  * slider. When a user interacts with a slider by moving its thumb along the track, the slider value
- * and volume updates accordingly.
+ * and audio gain updates accordingly.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/volume-slider#value}
+ * @docs {@link https://www.vidstack.io/docs/player/components/audio-gain-slider#value}
  * @example
  * ```tsx
- * <VolumeSlider.Root>
- *   <VolumeSlider.Preview>
- *     <VolumeSlider.Value />
- *   </VolumeSlider.Preview>
- * </VolumeSlider.Root>
+ * <AudioGainSlider.Root>
+ *   <AudioGainSlider.Preview>
+ *     <AudioGainSlider.Value />
+ *   </AudioGainSlider.Preview>
+ * </AudioGainSlider.Root>
  * ```
  */
 const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {

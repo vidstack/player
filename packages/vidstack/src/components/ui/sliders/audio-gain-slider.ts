@@ -1,4 +1,3 @@
-import throttle from 'just-throttle';
 import { Component, effect, provideContext } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
@@ -16,40 +15,52 @@ import { sliderState, type SliderState } from './slider/api/state';
 import { sliderValueFormatContext } from './slider/format';
 import { SliderController, type SliderControllerProps } from './slider/slider-controller';
 
-export interface VolumeSliderProps extends SliderControllerProps {}
+export interface AudioGainSliderProps extends SliderControllerProps {
+  /**
+   * The minimum audio gain boost represented as a percentage.
+   */
+  min: number;
+  /**
+   * The minimum audio gain boost represented as a percentage.
+   */
+  max: number;
+}
 
-export interface VolumeSliderState extends SliderState {}
+export interface AudioGainSliderState extends SliderState {}
 
-export interface VolumeSliderEvents
+export interface AudioGainSliderEvents
   extends SliderEvents,
-    Pick<MediaRequestEvents, 'media-volume-change-request'> {}
+    Pick<MediaRequestEvents, 'media-audio-gain-change-request'> {}
 
-export interface VolumeSliderCSSVars extends SliderCSSVars {}
+export interface AudioGainSliderCSSVars extends SliderCSSVars {}
 
 /**
- * Versatile and user-friendly input volume control designed for seamless cross-browser and provider
+ * Versatile and user-friendly audio boost control designed for seamless cross-browser and provider
  * compatibility and accessibility with ARIA support. It offers a smooth user experience for both
  * mouse and touch interactions and is highly customizable in terms of styling. Users can
- * effortlessly change the volume level within the range 0 (muted) to 100.
+ * effortlessly change the audio gain within the range 0 to 100.
  *
  * @attr data-dragging - Whether slider thumb is being dragged.
  * @attr data-pointing - Whether user's pointing device is over slider.
  * @attr data-active - Whether slider is being interacted with.
  * @attr data-focus - Whether slider is being keyboard focused.
  * @attr data-hocus - Whether slider is being keyboard focused or hovered over.
- * @attr data-supported - Whether volume control is supported.
- * @docs {@link https://www.vidstack.io/docs/player/components/sliders/volume-slider}
+ * @attr data-supported - Whether audio gain is supported.
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/audio-gain-slider}
  */
-export class VolumeSlider extends Component<
-  VolumeSliderProps,
-  VolumeSliderState,
-  VolumeSliderEvents,
-  VolumeSliderCSSVars
+export class AudioGainSlider extends Component<
+  AudioGainSliderProps,
+  AudioGainSliderState,
+  AudioGainSliderEvents,
+  AudioGainSliderCSSVars
 > {
-  static props: VolumeSliderProps = {
+  static props: AudioGainSliderProps = {
     ...SliderController.props,
-    keyStep: 5,
-    shiftKeyMultiplier: 2,
+    step: 0.25,
+    keyStep: 1,
+    shiftKeyMultiplier: 5,
+    min: 0,
+    max: 300,
   };
 
   static state = sliderState;
@@ -59,14 +70,10 @@ export class VolumeSlider extends Component<
   protected override onSetup(): void {
     this._media = useMediaContext();
 
-    const { audioGain } = this._media.$state;
     provideContext(sliderValueFormatContext, {
       default: 'percent',
-      value(value) {
-        return (value * (audioGain() ?? 1)).toFixed(2);
-      },
-      percent(value) {
-        return Math.round(value * (audioGain() ?? 1));
+      percent: (_, decimalPlaces) => {
+        return round(this.$state.value(), decimalPlaces) + '%';
       },
     });
 
@@ -75,63 +82,61 @@ export class VolumeSlider extends Component<
       _getKeyStep: this.$props.keyStep,
       _isDisabled: this.$props.disabled,
       _roundValue: Math.round,
-      _getARIAValueMax: this._getARIAValueMax.bind(this),
       _getARIAValueNow: this._getARIAValueNow.bind(this),
       _getARIAValueText: this._getARIAValueText.bind(this),
       _onDragValueChange: this._onDragValueChange.bind(this),
       _onValueChange: this._onValueChange.bind(this),
     }).attach(this);
 
-    effect(this._watchVolume.bind(this));
+    effect(this._watchMinMax.bind(this));
+    effect(this._watchAudioGain.bind(this));
   }
 
   protected override onAttach(el: HTMLElement) {
-    el.setAttribute('data-media-volume-slider', '');
-    setAttributeIfEmpty(el, 'aria-label', 'Volume');
+    el.setAttribute('data-media-audio-gain-slider', '');
+    setAttributeIfEmpty(el, 'aria-label', 'Audio Boost');
 
-    const { canSetVolume } = this._media.$state;
+    const { canSetAudioGain } = this._media.$state;
     this.setAttributes({
-      'data-supported': canSetVolume,
-      'aria-hidden': $ariaBool(() => !canSetVolume()),
+      'data-supported': canSetAudioGain,
+      'aria-hidden': $ariaBool(() => !canSetAudioGain()),
     });
   }
 
   private _getARIAValueNow() {
-    const { value } = this.$state,
-      { audioGain } = this._media.$state;
-    return Math.round(value() * (audioGain() ?? 1));
+    const { value } = this.$state;
+    return Math.round(value());
   }
 
   private _getARIAValueText() {
-    const { value, max } = this.$state,
-      { audioGain } = this._media.$state;
-    return round((value() / max()) * (audioGain() ?? 1) * 100, 2) + '%';
+    const { value } = this.$state;
+    return value() + '%';
   }
 
-  private _getARIAValueMax() {
-    const { audioGain } = this._media.$state;
-    return this.$state.max() * (audioGain() ?? 1);
+  private _watchMinMax() {
+    const { min, max } = this.$props;
+    this.$state.min.set(min());
+    this.$state.max.set(max());
   }
 
-  private _watchVolume() {
-    const { muted, volume } = this._media.$state;
-    const newValue = muted() ? 0 : volume() * 100;
-    this.$state.value.set(newValue);
-    this.dispatch('value-change', { detail: newValue });
+  private _watchAudioGain() {
+    const { audioGain } = this._media.$state,
+      value = ((audioGain() ?? 1) - 1) * 100;
+    this.$state.value.set(value);
+    this.dispatch('value-change', { detail: value });
   }
 
-  private _throttleVolumeChange = throttle(this._onVolumeChange.bind(this), 25);
-  private _onVolumeChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
+  private _onAudioGainChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
     if (!event.trigger) return;
-    const mediaVolume = round(event.detail / 100, 3);
-    this._media.remote.changeVolume(mediaVolume, event);
+    const gain = round(1 + event.detail / 100, 2);
+    this._media.remote.changeAudioGain(gain, event);
   }
 
   private _onValueChange(event: SliderValueChangeEvent): void {
-    this._throttleVolumeChange(event);
+    this._onAudioGainChange(event);
   }
 
   private _onDragValueChange(event: SliderDragValueChangeEvent): void {
-    this._throttleVolumeChange(event);
+    this._onAudioGainChange(event);
   }
 }

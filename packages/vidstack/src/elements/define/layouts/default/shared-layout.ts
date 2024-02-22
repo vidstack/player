@@ -15,7 +15,7 @@ import {
   type DefaultLayoutContext,
 } from '../../../../components/layouts/default/context';
 import { i18n, type DefaultLayoutWord } from '../../../../components/layouts/default/translations';
-import { useMediaState } from '../../../../core/api/media-context';
+import { useMediaContext, useMediaState } from '../../../../core/api/media-context';
 import { useResizeObserver } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
 import { DefaultFontMenu } from './font-menu';
@@ -449,14 +449,23 @@ export function DefaultSettingsMenu({
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
 }) {
   return $signal(() => {
-    const { viewType, canSetPlaybackRate, canSetQuality, qualities, audioTracks, hasCaptions } =
-        useMediaState(),
+    const {
+        viewType,
+        canSetPlaybackRate,
+        canSetAudioGain,
+        canSetQuality,
+        qualities,
+        audioTracks,
+        hasCaptions,
+      } = useMediaState(),
       {
         translations,
         menuContainer,
         noModal,
         menuGroup,
         smallWhen: smWhen,
+        noAudioGainSlider,
+        playbackRates,
       } = useDefaultLayoutContext(),
       $placement = computed(() =>
         noModal() ? unwrap(placement) : !smWhen() ? unwrap(placement) : null,
@@ -466,9 +475,10 @@ export function DefaultSettingsMenu({
       ),
       $hasMenuItems = computed(() => {
         return (
-          canSetPlaybackRate() ||
+          !!(canSetPlaybackRate() && playbackRates().length) ||
           !!(canSetQuality() && qualities().length) ||
           !!audioTracks().length ||
+          (!noAudioGainSlider() && canSetAudioGain()) ||
           hasCaptions()
         );
       });
@@ -516,61 +526,149 @@ export function DefaultSettingsMenu({
 }
 
 function DefaultAudioMenu() {
-  const { translations } = useDefaultLayoutContext(),
-    $defaultText = $i18n(translations, 'Default');
+  return $signal(() => {
+    const { noAudioGainSlider, translations } = useDefaultLayoutContext(),
+      { audioTracks, canSetAudioGain } = useMediaState(),
+      $disabled = computed(() => {
+        const hasGainSlider = canSetAudioGain() && !noAudioGainSlider();
+        return !hasGainSlider && audioTracks().length <= 1;
+      });
+
+    if ($disabled()) return null;
+
+    return html`
+      <media-menu class="vds-audio-tracks-menu vds-menu">
+        ${renderMenuButton({
+          label: () => i18n(translations, 'Audio'),
+          icon: 'menu-audio',
+        })}
+        <media-menu-items class="vds-menu-items">
+          ${[DefaultMenuAudioGainSlider(), DefaultAudioTracksMenu()]}
+        </media-menu-items>
+      </media-menu>
+    `;
+  });
+}
+
+function DefaultAudioTracksMenu() {
+  return $signal(() => {
+    const { translations } = useDefaultLayoutContext(),
+      { audioTracks } = useMediaState(),
+      $defaultText = $i18n(translations, 'Default'),
+      $disabled = computed(() => audioTracks().length <= 1);
+
+    if ($disabled()) return null;
+
+    return html`
+      <media-menu class="vds-audio-track-menu vds-menu">
+        ${renderMenuButton({
+          label: () => i18n(translations, 'Audio Track'),
+        })}
+        <media-menu-items class="vds-menu-items">
+          <media-audio-radio-group
+            class="vds-audio-radio-group vds-radio-group"
+            empty-label=${$defaultText}
+          >
+            <template>
+              <media-radio class="vds-audio-radio vds-radio">
+                <div class="vds-radio-check"></div>
+                <span class="vds-radio-label" data-part="label"></span>
+              </media-radio>
+            </template>
+          </media-audio-radio-group>
+        </media-menu-items>
+      </media-menu>
+    `;
+  });
+}
+
+function DefaultMenuAudioGainSlider() {
+  return $signal(() => {
+    const { noAudioGainSlider, translations } = useDefaultLayoutContext(),
+      { canSetAudioGain } = useMediaState(),
+      $disabled = computed(() => !canSetAudioGain() || noAudioGainSlider());
+
+    if ($disabled()) return null;
+
+    const { audioGain } = useMediaState(),
+      $label = $i18n(translations, 'Audio Boost'),
+      $value = $signal(() => Math.round(((audioGain() ?? 1) - 1) * 100) + '%');
+
+    return html`
+      <div class="vds-menu-item vds-menu-item-slider">
+        <div class="vds-menu-slider-title">
+          <span class="vds-menu-slider-label">${$label}</span>
+          <span class="vds-menu-slider-value">${$value}</span>
+        </div>
+        <div class="vds-menu-slider-group">
+          <slot name="volume-low-icon"></slot>
+          ${DefaultAudioGainSlider()}
+          <slot name="volume-high-icon"></slot>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function DefaultAudioGainSlider() {
+  const { translations, maxAudioGain } = useDefaultLayoutContext(),
+    $label = $i18n(translations, 'Audio Boost'),
+    $maxAudioGain = $signal(maxAudioGain);
   return html`
-    <media-menu class="vds-audio-menu vds-menu">
-      ${renderMenuButton({
-        label: () => i18n(translations, 'Audio'),
-        icon: 'menu-audio',
-      })}
-      <media-menu-items class="vds-menu-items">
-        <media-audio-radio-group
-          class="vds-audio-radio-group vds-radio-group"
-          empty-label=${$defaultText}
-        >
-          <template>
-            <media-radio class="vds-audio-radio vds-radio">
-              <div class="vds-radio-check"></div>
-              <span class="vds-radio-label" data-part="label"></span>
-            </media-radio>
-          </template>
-        </media-audio-radio-group>
-      </media-menu-items>
-    </media-menu>
+    <media-audio-gain-slider
+      class="vds-audio-gain-slider vds-slider"
+      aria-label=${$label}
+      max=${$maxAudioGain}
+    >
+      <div class="vds-slider-track"></div>
+      <div class="vds-slider-track-fill vds-slider-track"></div>
+      <div class="vds-slider-thumb"></div>
+    </media-audio-gain-slider>
   `;
 }
 
 function DefaultSpeedMenu() {
-  const { translations, playbackRates } = useDefaultLayoutContext(),
-    $normalText = $i18n(translations, 'Normal');
-  return html`
-    <media-menu class="vds-speed-menu vds-menu">
-      ${renderMenuButton({
-        label: () => i18n(translations, 'Speed'),
-        icon: 'menu-speed',
-      })}
-      <media-menu-items class="vds-menu-items">
-        <media-speed-radio-group
-          class="vds-speed-radio-group vds-radio-group"
-          normal-label=${$normalText}
-          .rates=${$signal(playbackRates)}
-        >
-          <template>
-            <media-radio class="vds-speed-radio vds-radio">
-              <div class="vds-radio-check"></div>
-              <span class="vds-radio-label" data-part="label"></span>
-            </media-radio>
-          </template>
-        </media-speed-radio-group>
-      </media-menu-items>
-    </media-menu>
-  `;
+  return $signal(() => {
+    const { translations, playbackRates } = useDefaultLayoutContext(),
+      { $provider } = useMediaContext(),
+      $normalText = $i18n(translations, 'Normal'),
+      $disabled = computed(() => !$provider()?.setPlaybackRate || playbackRates().length === 0);
+
+    if ($disabled()) return null;
+
+    return html`
+      <media-menu class="vds-speed-menu vds-menu">
+        ${renderMenuButton({
+          label: () => i18n(translations, 'Speed'),
+          icon: 'menu-speed',
+        })}
+        <media-menu-items class="vds-menu-items">
+          <media-speed-radio-group
+            class="vds-speed-radio-group vds-radio-group"
+            normal-label=${$normalText}
+            .rates=${$signal(playbackRates)}
+          >
+            <template>
+              <media-radio class="vds-speed-radio vds-radio">
+                <div class="vds-radio-check"></div>
+                <span class="vds-radio-label" data-part="label"></span>
+              </media-radio>
+            </template>
+          </media-speed-radio-group>
+        </media-menu-items>
+      </media-menu>
+    `;
+  });
 }
 
 function DefaultQualityMenu() {
   const { translations } = useDefaultLayoutContext(),
-    $autoText = $i18n(translations, 'Auto');
+    $autoText = $i18n(translations, 'Auto'),
+    { canSetQuality, qualities } = useMediaState(),
+    $disabled = computed(() => !canSetQuality() || qualities().length === 0);
+
+  if ($disabled()) return null;
+
   return html`
     <media-menu class="vds-quality-menu vds-menu">
       ${renderMenuButton({
@@ -596,29 +694,35 @@ function DefaultQualityMenu() {
 }
 
 function DefaultCaptionsMenu() {
-  const { translations } = useDefaultLayoutContext(),
-    $offText = $i18n(translations, 'Off');
-  return html`
-    <media-menu class="vds-captions-menu vds-menu">
-      ${renderMenuButton({
-        label: () => i18n(translations, 'Captions'),
-        icon: 'menu-captions',
-      })}
-      <media-menu-items class="vds-menu-items">
-        <media-captions-radio-group
-          class="vds-captions-radio-group vds-radio-group"
-          off-label=${$offText}
-        >
-          <template>
-            <media-radio class="vds-caption-radio vds-radio">
-              <div class="vds-radio-check"></div>
-              <span class="vds-radio-label" data-part="label"></span>
-            </media-radio>
-          </template>
-        </media-captions-radio-group>
-      </media-menu-items>
-    </media-menu>
-  `;
+  return $signal(() => {
+    const { translations } = useDefaultLayoutContext(),
+      { hasCaptions } = useMediaState(),
+      $offText = $i18n(translations, 'Off');
+
+    if (!hasCaptions()) return null;
+
+    return html`
+      <media-menu class="vds-captions-menu vds-menu">
+        ${renderMenuButton({
+          label: () => i18n(translations, 'Captions'),
+          icon: 'menu-captions',
+        })}
+        <media-menu-items class="vds-menu-items">
+          <media-captions-radio-group
+            class="vds-captions-radio-group vds-radio-group"
+            off-label=${$offText}
+          >
+            <template>
+              <media-radio class="vds-caption-radio vds-radio">
+                <div class="vds-radio-check"></div>
+                <span class="vds-radio-label" data-part="label"></span>
+              </media-radio>
+            </template>
+          </media-captions-radio-group>
+        </media-menu-items>
+      </media-menu>
+    `;
+  });
 }
 
 export function createMenuContainer(className: string) {

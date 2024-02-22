@@ -58,6 +58,16 @@ export function setARIALabel(target: Element, $label: string | null | ReadSignal
   else effect(updateAriaDescription);
 }
 
+export function hasParentElement(node: Element | null, test: (node: Element) => boolean) {
+  if (!node) {
+    return false;
+  } else if (test(node)) {
+    return true;
+  }
+
+  return hasParentElement(node.parentElement, test);
+}
+
 export function isElementParent(
   owner: Element,
   node: Element | null,

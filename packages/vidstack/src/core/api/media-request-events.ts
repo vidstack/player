@@ -20,6 +20,7 @@ export interface MediaRequestEvents {
   'media-play-request': MediaPlayRequestEvent;
   'media-quality-change-request': MediaQualityChangeRequestEvent;
   'media-rate-change-request': MediaRateChangeRequestEvent;
+  'media-audio-gain-change-request': MediaAudioGainChangeRequestEvent;
   'media-resume-controls-request': MediaResumeControlsRequestEvent;
   'media-seek-request': MediaSeekRequestEvent;
   'media-seeking-request': MediaSeekingRequestEvent;
@@ -165,6 +166,15 @@ export interface MediaQualityChangeRequestEvent extends DOMEvent<number> {}
  * @detail rate
  */
 export interface MediaRateChangeRequestEvent extends DOMEvent<number> {}
+
+/**
+ * Fired when requesting to change the current audio gain.
+ *
+ * @bubbles
+ * @composed
+ * @detail gain
+ */
+export interface MediaAudioGainChangeRequestEvent extends DOMEvent<number> {}
 
 /**
  * Fired when requesting media playback to temporarily stop.

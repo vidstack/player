@@ -67,6 +67,14 @@ export interface DefaultLayoutProps<Slots = unknown> extends PrimitivePropsWithR
    */
   menuGroup?: 'top' | 'bottom';
   /**
+   * Disable audio boost slider in the settings menu.
+   */
+  noAudioGainSlider: boolean;
+  /**
+   * The maximum audio gain to be applied. The default is `300` which represents a `300%` boost.
+   */
+  maxAudioGain: number;
+  /**
    * Whether modal menus should be disabled when the small layout is active. A modal menu is
    * a floating panel that floats up from the bottom of the screen (outside of the player). It's
    * enabled by default as it provides a better user experience for touch devices.
@@ -131,6 +139,8 @@ export function createDefaultMediaLayout({
         hideQualityBitrate = false,
         icons,
         menuGroup = 'bottom',
+        noAudioGainSlider = false,
+        maxAudioGain = 300,
         noGestures = false,
         noKeyboardActionDisplay = false,
         noModal = false,
@@ -181,6 +191,8 @@ export function createDefaultMediaLayout({
                 icons: icons,
                 isSmallLayout,
                 menuGroup,
+                maxAudioGain,
+                noAudioGainSlider,
                 noGestures,
                 noKeyboardActionDisplay,
                 noModal,

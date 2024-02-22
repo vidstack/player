@@ -9,3 +9,10 @@ export interface SliderContext {
 }
 
 export const sliderContext = createContext<SliderContext>();
+
+export interface SliderObserverContext {
+  onDragStart?(): void;
+  onDragEnd?(): void;
+}
+
+export const sliderObserverContext = createContext<SliderObserverContext>();

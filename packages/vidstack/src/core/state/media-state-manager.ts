@@ -56,10 +56,12 @@ export class MediaStateManager extends MediaPlayerController {
 
   protected override onConnect(el: HTMLElement) {
     effect(this._watchCanSetVolume.bind(this));
+
     this._addTextTrackListeners();
     this._addQualityListeners();
     this._addAudioTrackListeners();
     this._resumePlaybackOnConnect();
+
     onDispose(this._pausePlaybackOnDisconnect.bind(this));
   }
 
@@ -673,6 +675,16 @@ export class MediaStateManager extends MediaPlayerController {
     if (canPlay()) {
       storage?.setTime?.(realCurrentTime());
     }
+  }
+
+  ['audio-gain-change'](event: ME.MediaAudioGainChangeEvent) {
+    const { storage } = this._media,
+      { canPlay, audioGain } = this.$state;
+
+    audioGain.set(event.detail);
+    this._satisfyRequest('media-audio-gain-change-request', event);
+
+    if (canPlay()) storage?.setAudioGain?.(audioGain());
   }
 
   ['volume-change'](event: ME.MediaVolumeChangeEvent) {

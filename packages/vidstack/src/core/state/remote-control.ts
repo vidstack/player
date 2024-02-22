@@ -287,6 +287,20 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Dispatch a request to change the media audio gain.
+   *
+   * @example
+   * ```ts
+   * remote.changeAudioGain(1); // Disable audio gain (100% of current volume)
+   * remote.changeAudioGain(1.5); // 150% louder than current volume
+   * remote.changeAudioGain(2); // 200% louder than current volume
+   * ```
+   */
+  changeAudioGain(gain: number, trigger?: Event) {
+    this._dispatchRequest('media-audio-gain-change-request', trigger, gain);
+  }
+
+  /**
    * Dispatch a request to resume idle tracking on controls.
    */
   resumeControls(trigger?: Event) {

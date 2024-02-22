@@ -33,6 +33,7 @@ export interface MediaProviderAdapter {
   readonly scope: Scope;
   readonly type: string;
   readonly currentSrc: MediaSrc | null;
+  readonly audioGain?: AudioGainAdapter;
   readonly fullscreen?: MediaFullscreenAdapter;
   readonly pictureInPicture?: MediaPictureInPictureAdapter;
   readonly airPlay?: MediaRemotePlaybackAdapter;
@@ -48,6 +49,13 @@ export interface MediaProviderAdapter {
   setPlaysInline?(inline: boolean): void;
   setPlaybackRate?(rate: number): void;
   loadSource(src: MediaSrc, preload: MediaState['preload']): Promise<void>;
+}
+
+export interface AudioGainAdapter {
+  readonly supported: boolean;
+  readonly currentGain: number | null;
+  setGain(gain: number): void;
+  removeGain(): void;
 }
 
 export interface MediaRemotePlaybackAdapter {

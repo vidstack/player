@@ -10,7 +10,7 @@ import { RadioGroupController } from '../radio/radio-group-controller';
 /**
  * This component manages caption/subtitle track radio options.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/captions-menu-items}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/captions-radio-group}
  */
 export class CaptionsRadioGroup extends Component<
   CaptionsRadioGroupProps,
