@@ -20,7 +20,9 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
 
   protected _currentSrc: MediaSrc<MediaResource> | null = null;
 
-  audioGain!: AudioGain;
+  readonly audioGain = new AudioGain(this._media, (gain) => {
+    this._ctx.delegate._notify('audio-gain-change', gain);
+  });
 
   constructor(
     protected _media: HTMLMediaElement,
@@ -32,11 +34,9 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
 
     if ('audioTracks' in this.media) new NativeAudioTracks(this, this._ctx);
 
-    this.audioGain = new AudioGain(this._media, (gain) => {
-      this._ctx.delegate._notify('audio-gain-change', gain);
-    });
-
     onDispose(() => {
+      this.audioGain.destroy();
+
       // We need to remove all media sources incase another provider uses the same media element.
       this._media.srcObject = null;
       this._media.removeAttribute('src');

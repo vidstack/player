@@ -3,6 +3,7 @@ import type { ReadSignal } from 'maverick.js';
 export type DefaultLayoutWord =
   | 'AirPlay'
   | 'Audio'
+  | 'Audio Track'
   | 'Audio Boost'
   | 'Auto'
   | 'Background Color'

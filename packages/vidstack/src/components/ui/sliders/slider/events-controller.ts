@@ -1,5 +1,11 @@
 import throttle from 'just-throttle';
-import { effect, ViewController, type ReadSignal } from 'maverick.js';
+import {
+  effect,
+  hasProvidedContext,
+  useContext,
+  ViewController,
+  type ReadSignal,
+} from 'maverick.js';
 import { isNull, isNumber, isUndefined, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../../../core';
@@ -12,6 +18,10 @@ import type {
   SliderValueChangeEvent,
 } from './api/events';
 import type { SliderState } from './api/state';
+import {
+  sliderObserverContext,
+  type SliderObserverContext as SliderObserver,
+} from './slider-context';
 import type { SliderControllerProps } from './slider-controller';
 import { getValueFromRate } from './utils';
 
@@ -46,11 +56,19 @@ export class SliderEventsController extends ViewController<
   SliderState,
   SliderEvents
 > {
+  private _observer?: SliderObserver;
+
   constructor(
     private _delegate: SliderEventDelegate,
     private _media: MediaContext,
   ) {
     super();
+  }
+
+  protected override onSetup(): void {
+    if (hasProvidedContext(sliderObserverContext)) {
+      this._observer = useContext(sliderObserverContext);
+    }
   }
 
   protected override onConnect() {
@@ -228,6 +246,7 @@ export class SliderEventsController extends ViewController<
     const event = this.createEvent('drag-start', { detail: value, trigger });
     this.dispatch(event);
     this._delegate._onDragStart?.(event);
+    this._observer?.onDragStart?.();
   }
 
   private _onStopDragging(value: number, trigger: Event) {
@@ -243,6 +262,7 @@ export class SliderEventsController extends ViewController<
     this._delegate._onDragEnd?.(event);
     this._touch = null;
     this._touchStartValue = null;
+    this._observer?.onDragEnd?.();
   }
 
   // -------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 import { peek, type Dispose } from 'maverick.js';
-import { isString, setAttribute } from 'maverick.js/std';
+import { isString } from 'maverick.js/std';
 
 import type { MediaSrc } from '../../core/api/types';
 import { preconnect } from '../../utils/network';

@@ -26,6 +26,7 @@ import type { MediaRequestEvents } from '../../../core/api/media-request-events'
 import { $ariaBool } from '../../../utils/aria';
 import { isElementParent, onPress, setAttributeIfEmpty } from '../../../utils/dom';
 import { Popper } from '../popper/popper';
+import { sliderObserverContext } from '../sliders/slider/slider-context';
 import type { MenuButton } from './menu-button';
 import { menuContext, type MenuContext, type MenuObserver } from './menu-context';
 import { MenuFocusController } from './menu-focus-controller';
@@ -67,6 +68,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _popper: Popper;
   private _focus!: MenuFocusController;
+  private _isSliderActive = false;
 
   /**
    * The menu trigger element.
@@ -133,6 +135,15 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     if (hasProvidedContext(menuContext)) {
       this._parentMenu = useContext(menuContext);
     }
+
+    provideContext(sliderObserverContext, {
+      onDragStart: () => {
+        this._isSliderActive = true;
+      },
+      onDragEnd: () => {
+        this._isSliderActive = false;
+      },
+    });
 
     this.setAttributes({
       'data-open': this._expanded,
@@ -362,11 +373,14 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   }
 
   private _onPointerUp(event: PointerEvent) {
+    if (this._isSliderActive) return;
     // Prevent it bubbling up to window so we can determine when to close dialog.
     event.stopPropagation();
   }
 
   private _onWindowPointerUp(event: Event) {
+    if (this._isSliderActive) return;
+
     const isTargetNode = event.target instanceof Node;
 
     if (!isTargetNode || this._content()?.contains(event.target)) return;

@@ -219,7 +219,7 @@ ChapterTitle.displayName = 'SliderChapterTitle';
  * When a user interacts with a slider by moving its thumb along the track, the slider value
  * and current playback time updates accordingly.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/time-slider#preview}
+ * @docs {@link https://www.vidstack.io/docs/player/components/time-slider#value}
  * @example
  * ```tsx
  * <TimeSlider.Root>

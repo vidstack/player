@@ -64,11 +64,11 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     effect(this._watchProvider.bind(this));
     effect(this._watchControlsDelayChange.bind(this));
+    effect(this._watchAudioGainSupport.bind(this));
     effect(this._watchAirPlaySupport.bind(this));
     effect(this._watchGoogleCastSupport.bind(this));
     effect(this._watchFullscreenSupport.bind(this));
     effect(this._watchPiPSupport.bind(this));
-    effect(this._watchAudioGainSupport.bind(this));
   }
 
   protected override onDestroy(): void {
@@ -318,6 +318,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this._controls.defaultDelay = this.$props.controlsDelay();
   }
 
+  private _watchAudioGainSupport() {
+    const { canSetAudioGain } = this.$state,
+      supported = !!this._$provider()?.audioGain?.supported;
+    canSetAudioGain.set(supported);
+  }
+
   private _watchAirPlaySupport() {
     const { canAirPlay } = this.$state,
       supported = !!this._$provider()?.airPlay?.supported;
@@ -340,12 +346,6 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     const { canPictureInPicture } = this.$state,
       supported = !!this._$provider()?.pictureInPicture?.supported;
     canPictureInPicture.set(supported);
-  }
-
-  private _watchAudioGainSupport() {
-    const { canSetAudioGain } = this.$state,
-      supported = !!this._$provider()?.audioGain?.supported;
-    canSetAudioGain.set(supported);
   }
 
   async ['media-airplay-request'](event: RE.MediaAirPlayRequestEvent) {
@@ -631,10 +631,10 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     if (audioGain() === event.detail || !canSetAudioGain()) return;
 
     const provider = this._$provider();
-    if (!provider?.setAudioGain) return;
+    if (!provider?.audioGain) return;
 
     this._request._queue._enqueue('media-audio-gain-change-request', event);
-    provider.setAudioGain(event.detail);
+    provider.audioGain.setGain(event.detail);
   }
 
   ['media-quality-change-request'](event: RE.MediaQualityChangeRequestEvent) {

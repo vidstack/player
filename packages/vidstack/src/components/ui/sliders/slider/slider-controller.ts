@@ -23,6 +23,8 @@ import { getClampedValue } from './utils';
 export interface SliderDelegate extends Omit<SliderEventDelegate, '_getOrientation'> {
   _getARIAValueNow(): number;
   _getARIAValueText(): string;
+  _getARIAValueMin?(): number;
+  _getARIAValueMax?(): number;
 }
 
 export class SliderController extends ViewController<
@@ -118,8 +120,8 @@ export class SliderController extends ViewController<
       'data-pointing': pointing,
       'data-active': active,
       'aria-disabled': this._getARIADisabled.bind(this),
-      'aria-valuemin': this.$state.min,
-      'aria-valuemax': this.$state.max,
+      'aria-valuemin': this._delegate._getARIAValueMin ?? this.$state.min,
+      'aria-valuemax': this._delegate._getARIAValueMax ?? this.$state.max,
       'aria-valuenow': this._delegate._getARIAValueNow,
       'aria-valuetext': this._delegate._getARIAValueText,
       'aria-orientation': orientation,

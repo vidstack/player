@@ -26,6 +26,7 @@ import { PlayButton } from '../../ui/buttons/play-button';
 import { SeekButton } from '../../ui/buttons/seek-button';
 import { ChapterTitle } from '../../ui/chapter-title';
 import * as Menu from '../../ui/menu';
+import * as AudioGainSlider from '../../ui/sliders/audio-gain-slider';
 import * as TimeSlider from '../../ui/sliders/time-slider';
 import * as VolumeSlider from '../../ui/sliders/volume-slider';
 import * as Thumbnail from '../../ui/thumbnail';
@@ -524,6 +525,8 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
     $RemotionThumbnail = useSignal(RemotionThumbnail);
 
+  if (disabled) return null;
+
   const Content = (
     <Menu.Content
       className="vds-chapters-menu-items vds-menu-items"
@@ -598,20 +601,36 @@ export { DefaultChaptersMenu };
 
 function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: DefaultMediaMenuProps) {
   const { $state } = useMediaContext(),
-    { showMenuDelay, icons: Icons, isSmallLayout, menuGroup, noModal } = useDefaultLayoutContext(),
+    {
+      showMenuDelay,
+      icons: Icons,
+      isSmallLayout,
+      menuGroup,
+      noModal,
+      playbackRates,
+      noAudioGainSlider,
+    } = useDefaultLayoutContext(),
     settingsText = useDefaultLayoutWord('Settings'),
     $viewType = useMediaState('viewType'),
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
     // Create as a computed signal to avoid unnecessary re-rendering.
     $$hasMenuItems = createComputed(() => {
-      const { canSetPlaybackRate, canSetQuality, qualities, audioTracks, hasCaptions } = $state;
+      const {
+        canSetPlaybackRate,
+        canSetQuality,
+        canSetAudioGain,
+        qualities,
+        audioTracks,
+        hasCaptions,
+      } = $state;
       return (
-        canSetPlaybackRate() ||
-        (canSetQuality() && qualities().length) ||
-        audioTracks().length ||
+        !!(canSetPlaybackRate() && playbackRates?.length) ||
+        !!(canSetQuality() && qualities().length) ||
+        !!audioTracks().length ||
+        (!noAudioGainSlider && canSetAudioGain()) ||
         hasCaptions()
       );
-    }),
+    }, [playbackRates, noAudioGainSlider]),
     $hasMenuItems = useSignal($$hasMenuItems);
 
   if (!$hasMenuItems) return null;
@@ -662,13 +681,92 @@ export { DefaultSettingsMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultAudioSubmenu() {
+  const label = useDefaultLayoutWord('Audio'),
+    $canSetAudioGain = useMediaState('canSetAudioGain'),
+    $audioTracks = useMediaState('audioTracks'),
+    { noAudioGainSlider, icons: Icons } = useDefaultLayoutContext(),
+    hasGainSlider = $canSetAudioGain && !noAudioGainSlider,
+    $disabled = !hasGainSlider && !$audioTracks.length;
+
+  if ($disabled) return null;
+
+  return (
+    <Menu.Root className="vds-audio-menu vds-menu">
+      <DefaultSubmenuButton label={label} Icon={Icons.Menu.Audio} />
+      <Menu.Content className="vds-menu-items">
+        {hasGainSlider ? <DefaultMenuAudioGainSlider /> : null}
+        <DefaultAudioTracksSubmenu />
+      </Menu.Content>
+    </Menu.Root>
+  );
+}
+
+DefaultAudioSubmenu.displayName = 'DefaultAudioSubmenu';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultMenuAudioGainSlider
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultMenuAudioGainSlider() {
+  const label = useDefaultLayoutWord('Audio Boost'),
+    $audioGain = useMediaState('audioGain'),
+    value = Math.round((($audioGain ?? 1) - 1) * 100) + '%',
+    { icons: Icons } = useDefaultLayoutContext();
+
+  return (
+    <div className="vds-menu-item vds-menu-item-slider">
+      <div className="vds-menu-slider-title">
+        <span className="vds-menu-slider-label">{label}</span>
+        <span className="vds-menu-slider-value">{value}</span>
+      </div>
+      <div className="vds-menu-slider-group">
+        <Icons.MuteButton.VolumeLow className="vds-icon" />
+        <DefaultAudioGainSlider />
+        <Icons.MuteButton.VolumeHigh className="vds-icon" />
+      </div>
+    </div>
+  );
+}
+
+DefaultMenuAudioGainSlider.displayName = 'DefaultMenuAudioGainSlider';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultAudioGainSlider
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultAudioGainSlider() {
+  const label = useDefaultLayoutWord('Audio Boost'),
+    { maxAudioGain } = useDefaultLayoutContext();
+  return (
+    <AudioGainSlider.Root
+      className="vds-audio-gain-slider vds-slider"
+      aria-label={label}
+      max={maxAudioGain}
+    >
+      <AudioGainSlider.Track className="vds-slider-track" />
+      <AudioGainSlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
+      <AudioGainSlider.Thumb className="vds-slider-thumb" />
+    </AudioGainSlider.Root>
+  );
+}
+
+DefaultAudioGainSlider.displayName = 'DefaultAudioGainSlider';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultAudioTracksSubmenu
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultAudioTracksSubmenu() {
   const { icons: Icons } = useDefaultLayoutContext(),
-    label = useDefaultLayoutWord('Audio'),
+    label = useDefaultLayoutWord('Audio Track'),
     defaultText = useDefaultLayoutWord('Default'),
     $track = useMediaState('audioTrack'),
     options = useAudioOptions();
+
+  if (options.disabled) return null;
+
   return (
-    <Menu.Root className="vds-audio-menu vds-menu">
+    <Menu.Root className="vds-audio-track-menu vds-menu">
       <DefaultSubmenuButton
         label={label}
         hint={$track?.label ?? defaultText}
@@ -697,7 +795,7 @@ function DefaultAudioSubmenu() {
   );
 }
 
-DefaultAudioSubmenu.displayName = 'DefaultAudioSubmenu';
+DefaultAudioTracksSubmenu.displayName = 'DefaultAudioTracksSubmenu';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultSpeedSubmenu
@@ -712,6 +810,9 @@ function DefaultSpeedSubmenu() {
       rates: playbackRates,
     }),
     hint = options.selectedValue === '1' ? normalText : options.selectedValue + 'x';
+
+  if (options.disabled) return null;
+
   return (
     <Menu.Root className="vds-speed-menu vds-menu">
       <DefaultSubmenuButton
@@ -758,6 +859,9 @@ function DefaultQualitySubmenu() {
       options.selectedValue !== 'auto' && currentQuality
         ? `${currentQuality}p`
         : `${autoText}${currentQuality ? ` (${currentQuality}p)` : ''}`;
+
+  if (options.disabled) return null;
+
   return (
     <Menu.Root className="vds-quality-menu vds-menu">
       <DefaultSubmenuButton
@@ -803,6 +907,9 @@ function DefaultCaptionSubmenu() {
     offText = useDefaultLayoutWord('Off'),
     options = useCaptionOptions({ off: offText }),
     hint = options.selectedTrack?.label ?? offText;
+
+  if (options.disabled) return null;
+
   return (
     <Menu.Root className="vds-captions-menu vds-menu">
       <DefaultSubmenuButton

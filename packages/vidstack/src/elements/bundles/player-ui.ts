@@ -30,6 +30,7 @@ import { MediaRadioElement } from '../define/menus/radio-element';
 import { MediaRadioGroupElement } from '../define/menus/radio-group-element';
 import { MediaSpeedRadioGroupElement } from '../define/menus/speed-radio-group-element';
 import { MediaPosterElement } from '../define/poster-element';
+import { MediaAudioGainSliderElement } from '../define/sliders/audio-gain-slider-element';
 import { MediaSliderChaptersElement } from '../define/sliders/slider-chapters-element';
 import { MediaSliderElement } from '../define/sliders/slider-element';
 import { MediaSliderPreviewElement } from '../define/sliders/slider-preview-element';
@@ -66,6 +67,7 @@ defineCustomElement(MediaGoogleCastButtonElement);
 defineCustomElement(MediaToggleButtonElement);
 // Sliders
 defineCustomElement(MediaSliderElement);
+defineCustomElement(MediaAudioGainSliderElement);
 defineCustomElement(MediaVolumeSliderElement);
 defineCustomElement(MediaTimeSliderElement);
 defineCustomElement(MediaSliderChaptersElement);

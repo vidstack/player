@@ -1,4 +1,4 @@
-import { onDispose, signal } from 'maverick.js';
+import { signal } from 'maverick.js';
 
 import { canChangeAudioGain } from '../../../utils/support';
 import type { AudioGainAdapter } from '../../types';
@@ -27,8 +27,9 @@ export class AudioGain implements AudioGainAdapter {
     private _media: HTMLMediaElement,
     private _onChange: (gain: number | null) => void,
   ) {
-    canChangeAudioGain().then((canChange) => this._supported.set(canChange));
-    onDispose(this._destroy.bind(this));
+    canChangeAudioGain().then((canChange) => {
+      this._supported.set(canChange);
+    });
   }
 
   setGain(gain: number) {
@@ -74,7 +75,7 @@ export class AudioGain implements AudioGainAdapter {
     this._onChange(null);
   }
 
-  private _destroy() {
+  destroy() {
     this._destroySrcNode();
     this._destroyGainNode();
   }

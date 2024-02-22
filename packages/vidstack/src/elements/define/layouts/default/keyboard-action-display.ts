@@ -64,20 +64,21 @@ export function DefaultVideoKeyboardActionDisplay() {
 
 function getText() {
   const { $state } = useMediaContext(),
-    action = $state.lastKeyboardAction()?.action;
+    action = $state.lastKeyboardAction()?.action,
+    audioGain = $state.audioGain() ?? 1;
   switch (action) {
     case 'toggleMuted':
-      return $state.muted() ? '0%' : getVolumeText($state.volume());
+      return $state.muted() ? '0%' : getVolumeText($state.volume(), audioGain);
     case 'volumeUp':
     case 'volumeDown':
-      return getVolumeText($state.volume());
+      return getVolumeText($state.volume(), audioGain);
     default:
       return '';
   }
 }
 
-function getVolumeText(volume: number) {
-  return `${Math.round(volume * 100)}%`;
+function getVolumeText(volume: number, gain: number) {
+  return `${Math.round(volume * gain * 100)}%`;
 }
 
 function getIconName() {
@@ -135,7 +136,7 @@ function getStatusText(): any {
     case 'volumeDown':
       return $state.muted() || $state.volume() === 0
         ? 'Mute'
-        : `${Math.round($state.volume() * 100)}% ${translations()?.Volume ?? 'Volume'}`;
+        : `${Math.round($state.volume() * ($state.audioGain() ?? 1) * 100)}% ${translations()?.Volume ?? 'Volume'}`;
     default:
       return null;
   }

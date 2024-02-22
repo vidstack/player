@@ -6,7 +6,7 @@ import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
 
-export const DEFAULT_AUDIO_GAINS = [1, 2, 3, 4, 5];
+export const DEFAULT_AUDIO_GAINS = [1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4];
 
 /**
  * This component manages audio gain radios.

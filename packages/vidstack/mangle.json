@@ -779,5 +779,19 @@
   "_appendSource": "yn",
   "_hintEl": "zn",
   "_watchHintEl": "An",
-  "_removeSource": "Bn"
+  "_removeSource": "Bn",
+  "_destroyGainNode": "En",
+  "_destroySrcNode": "Fn",
+  "_gainNode": "Cn",
+  "_srcAudioNode": "Dn",
+  "_watchAirPlaySupport": "Hn",
+  "_watchAudioGainSupport": "Ln",
+  "_watchControlsDelayChange": "Gn",
+  "_watchFullscreenSupport": "Jn",
+  "_watchGoogleCastSupport": "In",
+  "_watchPiPSupport": "Kn",
+  "_getARIAValueMax": "Mn",
+  "_getARIAValueMin": "Pn",
+  "_onAudioGainChange": "Nn",
+  "_watchAudioGain": "On"
 }

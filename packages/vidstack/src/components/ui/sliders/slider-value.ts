@@ -65,7 +65,7 @@ export class SliderValue extends Component<SliderValueProps> {
         showMs: showMs(),
       });
     } else {
-      return this._format.value?.(value) ?? value.toFixed(2);
+      return this._format.value?.(value) + '' ?? value.toFixed(2);
     }
   }
 }

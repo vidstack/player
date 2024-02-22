@@ -44,6 +44,7 @@ export { type LiveButtonProps, LiveButton } from './components/ui/buttons/live-b
 // Slider
 export * as Slider from './components/ui/sliders/slider';
 export * as VolumeSlider from './components/ui/sliders/volume-slider';
+export * as AudioGainSlider from './components/ui/sliders/audio-gain-slider';
 export * as TimeSlider from './components/ui/sliders/time-slider';
 export type {
   RootProps as SliderProps,
@@ -51,6 +52,7 @@ export type {
   PreviewProps as SliderPreviewProps,
 } from './components/ui/sliders/slider';
 export type { RootProps as VolumeSliderProps } from './components/ui/sliders/volume-slider';
+export type { RootProps as AudioGainSliderProps } from './components/ui/sliders/audio-gain-slider';
 export type {
   RootProps as TimeSliderProps,
   ChaptersProps as SliderChapterProps,
@@ -125,16 +127,12 @@ export * from './hooks/use-active-text-cues';
 export * from './hooks/use-active-text-track';
 export * from './hooks/use-chapter-title';
 export * from './hooks/create-text-track';
+export * from './hooks/options/use-audio-gain-options';
 export * from './hooks/options/use-audio-options';
 export * from './hooks/options/use-caption-options';
 export * from './hooks/options/use-chapter-options';
 export * from './hooks/options/use-video-quality-options';
-export {
-  usePlaybackRateOptions,
-  type PlaybackRateOptions,
-  type UsePlaybackRateOptions,
-  type PlaybackRateOption,
-} from './hooks/options/use-playback-rate-options';
+export * from './hooks/options/use-playback-rate-options';
 
 // Layouts
 export type { DefaultLayoutProps } from './components/layouts/default';

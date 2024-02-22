@@ -8,7 +8,8 @@ export const defaultLayoutProps: DefaultLayoutProps = {
   customIcons: false,
   disableTimeSlider: false,
   menuGroup: 'bottom',
-  noAudioGainMenu: false,
+  noAudioGainSlider: false,
+  maxAudioGain: 300,
   noGestures: false,
   noKeyboardActionDisplay: false,
   noModal: false,
@@ -53,9 +54,13 @@ export interface DefaultLayoutProps {
    */
   menuGroup: 'top' | 'bottom';
   /**
-   * Disable audio gain submenu in the settings menu.
+   * Disable audio boost slider in the settings menu.
    */
-  noAudioGainMenu: boolean;
+  noAudioGainSlider: boolean;
+  /**
+   * The maximum audio gain to be applied. The default is `300` which represents a `300%` boost.
+   */
+  maxAudioGain: number;
   /**
    * Whether modal menus should be disabled when the small layout is active. A modal menu is
    * a floating panel that floats up from the bottom of the screen (outside of the player). It's
