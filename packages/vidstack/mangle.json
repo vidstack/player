@@ -793,5 +793,6 @@
   "_getARIAValueMax": "Mn",
   "_getARIAValueMin": "Pn",
   "_onAudioGainChange": "Nn",
-  "_watchAudioGain": "On"
+  "_watchAudioGain": "On",
+  "_isSliderActive": "Qn"
 }

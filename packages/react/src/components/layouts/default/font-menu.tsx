@@ -41,7 +41,7 @@ FontResetContext.displayName = 'FontResetContext';
 
 function DefaultFontSubmenu() {
   const { icons: Icons } = React.useContext(DefaultLayoutContext),
-    label = useDefaultLayoutWord('Font Styles'),
+    label = useDefaultLayoutWord('Caption Styles'),
     $hasCaptions = useMediaState('hasCaptions'),
     resets = React.useMemo<FontReset>(() => ({ all: new Set() }), []);
 

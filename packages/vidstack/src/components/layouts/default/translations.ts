@@ -1,6 +1,7 @@
 import type { ReadSignal } from 'maverick.js';
 
 export type DefaultLayoutWord =
+  | 'Accessibility'
   | 'AirPlay'
   | 'Audio'
   | 'Audio Track'
@@ -29,7 +30,7 @@ export type DefaultLayoutWord =
   | 'Exit PiP'
   | 'Font Family'
   | 'Font Size'
-  | 'Font Styles'
+  | 'Caption Styles'
   | 'Fullscreen'
   | 'Google Cast'
   | 'Green'

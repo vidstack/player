@@ -642,11 +642,11 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
       offset={$offset}
     >
       {slot(slots, 'settingsMenuStartItems', null)}
+      <DefaultAccessibilitySubmenu />
       <DefaultAudioSubmenu />
       <DefaultSpeedSubmenu />
       <DefaultQualitySubmenu />
       <DefaultCaptionSubmenu />
-      <DefaultFontSubmenu />
       {slot(slots, 'settingsMenuEndItems', null)}
     </Menu.Content>
   );
@@ -675,6 +675,29 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
 
 DefaultSettingsMenu.displayName = 'DefaultSettingsMenu';
 export { DefaultSettingsMenu };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultAccessibilitySubmenu
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultAccessibilitySubmenu() {
+  const $hasCaptions = useMediaState('hasCaptions'),
+    label = useDefaultLayoutWord('Accessibility'),
+    { icons: Icons } = useDefaultLayoutContext();
+
+  if (!$hasCaptions) return null;
+
+  return (
+    <Menu.Root className="vds-accessibility-menu vds-menu">
+      <DefaultSubmenuButton label={label} Icon={Icons.Menu.Accessibility} />
+      <Menu.Content className="vds-menu-items">
+        <DefaultFontSubmenu />
+      </Menu.Content>
+    </Menu.Root>
+  );
+}
+
+DefaultAccessibilitySubmenu.displayName = 'DefaultAccessibilitySubmenu';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAudioSubmenu

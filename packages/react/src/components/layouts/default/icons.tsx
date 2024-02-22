@@ -71,6 +71,9 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
     Forward: createIcon(seekForwardIconPaths),
   },
   Menu: {
+    Accessibility: createIcon(
+      `<path d="M16 8c-.733 0-1.36-.261-1.883-.783a2.573 2.573 0 0 1-.784-1.884c0-.733.262-1.36.784-1.883A2.575 2.575 0 0 1 16 2.667a2.57 2.57 0 0 1 1.884.784c.523.523.784 1.15.783 1.883 0 .733-.261 1.361-.783 1.884A2.561 2.561 0 0 1 16 8Zm-4 20V12H5.333c-.377 0-.694-.128-.949-.384a1.296 1.296 0 0 1-.384-.95c0-.377.128-.694.384-.949s.572-.383.95-.384h21.333c.377 0 .694.128.95.384s.384.573.383.95c0 .377-.128.694-.384.95a1.285 1.285 0 0 1-.95.383H20v16c0 .378-.128.695-.384.95a1.285 1.285 0 0 1-.95.383c-.377 0-.694-.128-.949-.384a1.297 1.297 0 0 1-.384-.95v-6.666h-2.666V28c0 .378-.128.695-.384.95a1.285 1.285 0 0 1-.95.383c-.377 0-.694-.128-.949-.384A1.297 1.297 0 0 1 12 28Z" fill="currentColor"/>`,
+    ),
     ArrowLeft: createIcon(arrowLeftIconPaths),
     ArrowRight: createIcon(arrowRightIconPaths),
     Audio: createIcon(musicIconPaths),
@@ -152,6 +155,7 @@ export interface DefaultSeekButtonIcons {
 }
 
 export interface DefaultMenuIcons {
+  Accessibility: DefaultLayoutIcon;
   ArrowLeft: DefaultLayoutIcon;
   ArrowRight: DefaultLayoutIcon;
   Audio: DefaultLayoutIcon;

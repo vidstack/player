@@ -492,11 +492,11 @@ export function DefaultSettingsMenu({
         offset=${$signal($offset)}
       >
         ${[
+          DefaultAccessibilityMenu(),
           DefaultAudioMenu(),
           DefaultSpeedMenu(),
           DefaultQualityMenu(),
           DefaultCaptionsMenu(),
-          DefaultFontMenu(),
         ]}
       </media-menu-items>
     `;
@@ -520,6 +520,26 @@ export function DefaultSettingsMenu({
           </media-tooltip-content>
         </media-tooltip>
         ${portal ? MenuPortal(menuContainer, items) : items}
+      </media-menu>
+    `;
+  });
+}
+
+function DefaultAccessibilityMenu() {
+  return $signal(() => {
+    const { hasCaptions } = useMediaState(),
+      { translations } = useDefaultLayoutContext(),
+      $disabled = computed(() => !hasCaptions());
+
+    if ($disabled()) return null;
+
+    return html`
+      <media-menu class="vds-accessibility-menu vds-menu">
+        ${renderMenuButton({
+          label: () => i18n(translations, 'Accessibility'),
+          icon: 'menu-accessibility',
+        })}
+        <media-menu-items class="vds-menu-items"> ${[DefaultFontMenu()]} </media-menu-items>
       </media-menu>
     `;
   });

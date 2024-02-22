@@ -39,7 +39,7 @@ export function DefaultFontMenu() {
     return html`
       <media-menu class="vds-font-menu vds-menu">
         ${renderMenuButton({
-          label: () => i18n(translations, 'Font Styles'),
+          label: () => i18n(translations, 'Caption Styles'),
           icon: 'menu-font',
         })}
         <media-menu-items class="vds-menu-items">
