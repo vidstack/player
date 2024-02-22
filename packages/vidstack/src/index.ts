@@ -35,7 +35,6 @@ export { formatTime, formatSpokenTime } from './utils/time';
 export * from './utils/mime';
 export {
   canChangeVolume,
-  canChangeAudioGain,
   canOrientScreen,
   canPlayHLSNatively,
   canUsePictureInPicture,

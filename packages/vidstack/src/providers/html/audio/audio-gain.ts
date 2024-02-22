@@ -1,6 +1,3 @@
-import { signal } from 'maverick.js';
-
-import { canChangeAudioGain } from '../../../utils/support';
 import type { AudioGainAdapter } from '../../types';
 import {
   createElementSource,
@@ -13,24 +10,19 @@ import {
 export class AudioGain implements AudioGainAdapter {
   private _gainNode: GainNode | null = null;
   private _srcAudioNode: MediaElementAudioSourceNode | null = null;
-  private _supported = signal(false);
 
   get currentGain() {
     return this._gainNode?.gain?.value ?? null;
   }
 
   get supported() {
-    return this._supported();
+    return true;
   }
 
   constructor(
     private _media: HTMLMediaElement,
     private _onChange: (gain: number | null) => void,
-  ) {
-    canChangeAudioGain().then((canChange) => {
-      this._supported.set(canChange);
-    });
-  }
+  ) {}
 
   setGain(gain: number) {
     const currGain = this.currentGain;
