@@ -211,6 +211,11 @@ function DefaultFontSettingMenu({
 
   function onReset() {
     onValueChange(defaultValue);
+    notify();
+  }
+
+  function notify() {
+    player.dispatchEvent(new Event('vds-font-change'));
   }
 
   function onOpen() {
@@ -230,6 +235,7 @@ function DefaultFontSettingMenu({
           options: radioOptions,
           onChange({ detail: value }) {
             onValueChange(value);
+            notify();
           },
         })}
       </media-menu-items>

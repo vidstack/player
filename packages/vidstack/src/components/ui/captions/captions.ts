@@ -1,5 +1,5 @@
 import { Component, effect, peek, scoped } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { listenEvent, setAttribute } from 'maverick.js/std';
 import type { CaptionsRenderer } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
@@ -14,6 +14,10 @@ export interface CaptionsProps {
    * - right-to-left (rtl)
    */
   textDir: 'ltr' | 'rtl';
+  /**
+   * The text to be displayed when an example caption is being shown.
+   */
+  exampleText: string;
 }
 
 /**
@@ -25,6 +29,7 @@ export interface CaptionsProps {
 export class Captions extends Component<CaptionsProps> {
   static props: CaptionsProps = {
     textDir: 'ltr',
+    exampleText: 'Captions look like this.',
   };
 
   private _media!: MediaContext;
@@ -44,6 +49,9 @@ export class Captions extends Component<CaptionsProps> {
   }
 
   protected override onConnect(el: HTMLElement) {
+    const player = this._media.player;
+    if (player) listenEvent(player, 'vds-font-change', this._onFontStyleChange.bind(this));
+
     if (this._renderer) {
       effect(this._watchViewType.bind(this));
       return;
@@ -108,15 +116,22 @@ export class Captions extends Component<CaptionsProps> {
   private _onCueChange() {
     this.el!.textContent = '';
 
+    if (this._hideExampleTimer >= 0) {
+      this._removeExample();
+    }
+
     const { realCurrentTime, textTrack } = this._media.$state,
+      { renderVTTCueString } = this._lib,
       time = peek(realCurrentTime),
       activeCues = peek(textTrack)!.activeCues;
 
-    const { renderVTTCueString } = this._lib;
     for (const cue of activeCues) {
-      const cueEl = document.createElement('div');
-      cueEl.setAttribute('data-part', 'cue');
+      const displayEl = this._createCueDisplayElement(),
+        cueEl = this._createCueElement();
+
       cueEl.innerHTML = renderVTTCueString(cue, time);
+
+      displayEl.append(cueEl);
       this.el!.append(cueEl);
     }
   }
@@ -144,7 +159,67 @@ export class Captions extends Component<CaptionsProps> {
 
   private _watchMediaTime() {
     if (this._isHidden()) return;
-    const { realCurrentTime } = this._media.$state;
+
+    const { realCurrentTime, textTrack } = this._media.$state;
     this._renderer.currentTime = realCurrentTime();
+
+    if (this._hideExampleTimer >= 0 && textTrack()?.activeCues[0]) {
+      this._removeExample();
+    }
+  }
+
+  private _onFontStyleChange() {
+    if (this._hideExampleTimer >= 0) {
+      this._hideExample();
+      return;
+    }
+
+    const { textTrack } = this._media.$state;
+
+    if (!textTrack()?.activeCues[0]) {
+      this._showExample();
+    } else {
+      this._renderer?.update(true);
+    }
+  }
+
+  private _showExample() {
+    const display = this._createCueDisplayElement();
+    setAttribute(display, 'data-example', '');
+
+    const cue = this._createCueElement();
+    setAttribute(cue, 'data-example', '');
+    cue.textContent = this.$props.exampleText();
+
+    display?.append(cue);
+    this.el?.append(display);
+
+    this.el?.setAttribute('data-example', '');
+
+    this._hideExample();
+  }
+
+  private _hideExampleTimer = -1;
+  private _hideExample() {
+    window.clearTimeout(this._hideExampleTimer);
+    this._hideExampleTimer = window.setTimeout(this._removeExample.bind(this), 2500);
+  }
+
+  private _removeExample() {
+    this.el?.removeAttribute('data-example');
+    if (this.el?.querySelector('[data-example]')) this.el.textContent = '';
+    this._hideExampleTimer = -1;
+  }
+
+  private _createCueDisplayElement() {
+    const el = document.createElement('div');
+    setAttribute(el, 'data-part', 'cue-display');
+    return el;
+  }
+
+  private _createCueElement() {
+    const el = document.createElement('div');
+    setAttribute(el, 'data-part', 'cue');
+    return el;
   }
 }

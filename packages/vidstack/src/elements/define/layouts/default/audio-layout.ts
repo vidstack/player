@@ -16,6 +16,7 @@ import {
 import { $signal } from '../../../lit/directives/signal';
 import {
   DefaultCaptionButton,
+  DefaultCaptions,
   DefaultChaptersMenu,
   DefaultChapterTitle,
   DefaultControlsSpacer,
@@ -30,7 +31,7 @@ import {
 
 export function DefaultAudioLayout() {
   return [
-    html`<media-captions class="vds-captions"></media-captions>`,
+    DefaultCaptions(),
     html`
       <media-controls class="vds-controls">
         <media-controls-group class="vds-controls-group">

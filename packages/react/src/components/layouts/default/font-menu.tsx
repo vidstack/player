@@ -278,22 +278,38 @@ function DefaultFontSettingSubmenu({
     return i18n(translations, label);
   }, [value, radioOptions]);
 
-  const onChange = React.useCallback((newValue: string) => {
-    setValue(newValue);
-    localStorage.setItem(`vds-player:${key}`, newValue);
-    player?.el?.style.setProperty(
-      `--media-user-${cssVarName}`,
-      getCssVarValue?.(newValue, player) ?? newValue,
-    );
-  }, []);
+  const update = React.useCallback(
+    (newValue: string) => {
+      setValue(newValue);
+      localStorage.setItem(`vds-player:${key}`, newValue);
+      player?.el?.style.setProperty(
+        `--media-user-${cssVarName}`,
+        getCssVarValue?.(newValue, player) ?? newValue,
+      );
+    },
+    [player],
+  );
+
+  const notify = React.useCallback(() => {
+    player?.dispatchEvent(new Event('vds-font-change'));
+  }, [player]);
+
+  const onChange = React.useCallback(
+    (newValue: string) => {
+      update(newValue);
+      notify();
+    },
+    [update, notify],
+  );
 
   const onReset = React.useCallback(() => {
     setValue(defaultValue);
-  }, []);
+    notify();
+  }, [notify]);
 
   React.useEffect(() => {
     const savedValue = localStorage.getItem(`vds-player:${key}`);
-    if (savedValue) onChange(savedValue);
+    if (savedValue) update(savedValue);
 
     resets.all.add(onReset);
     return () => {

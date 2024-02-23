@@ -14,13 +14,13 @@ import {
 import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { createComputed } from '../../../hooks/use-signals';
-import { Captions } from '../../ui/captions';
 import * as Controls from '../../ui/controls';
 import { useLayoutName } from '../utils';
 import { DefaultLayoutContext, i18n, useDefaultLayoutContext } from './context';
 import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
 import {
   DefaultCaptionButton,
+  DefaultCaptions,
   DefaultChaptersMenu,
   DefaultControlsSpacer,
   DefaultMuteButton,
@@ -111,7 +111,7 @@ function AudioLayout() {
   const slots = useDefaultAudioLayoutSlots();
   return (
     <>
-      <Captions className="vds-captions" />
+      <DefaultCaptions />
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
           {slot(slots, 'seekBackwardButton', <DefaultSeekButton backward tooltip="top start" />)}

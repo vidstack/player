@@ -222,6 +222,16 @@ export function DefaultSeekButton({
   `;
 }
 
+export function DefaultCaptions() {
+  const { translations } = useDefaultLayoutContext();
+  return html`
+    <media-captions
+      class="vds-captions"
+      .exampleText=${$i18n(translations, 'Captions look like this')}
+    ></media-captions>
+  `;
+}
+
 export function DefaultVolumeSlider({ orientation }: { orientation?: SliderOrientation } = {}) {
   const { translations } = useDefaultLayoutContext(),
     $label = $i18n(translations, 'Volume');

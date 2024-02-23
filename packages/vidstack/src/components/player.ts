@@ -38,7 +38,6 @@ import {
   type MediaPlayerState,
   type MediaStateAccessors,
   type MediaStore,
-  type RemotePlaybackType,
 } from '../core';
 import { MEDIA_ATTRIBUTES, mediaAttributes } from '../core/api/media-attrs';
 import { mediaContext, type MediaContext } from '../core/api/media-context';

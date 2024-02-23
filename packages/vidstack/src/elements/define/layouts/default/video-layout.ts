@@ -8,6 +8,7 @@ import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
 import {
   DefaultAirPlayButton,
   DefaultCaptionButton,
+  DefaultCaptions,
   DefaultChaptersMenu,
   DefaultChapterTitle,
   DefaultControlsSpacer,
@@ -27,7 +28,7 @@ export function DefaultVideoLayoutLarge() {
     DefaultVideoGestures(),
     DefaultBufferingIndicator(),
     DefaultVideoKeyboardActionDisplay(),
-    html`<media-captions class="vds-captions"></media-captions>`,
+    DefaultCaptions(),
     html`<div class="vds-scrim"></div>`,
     html`
       <media-controls class="vds-controls">
@@ -86,7 +87,7 @@ export function DefaultVideoLayoutSmall() {
   return [
     DefaultVideoGestures(),
     DefaultBufferingIndicator(),
-    html`<media-captions class="vds-captions"></media-captions>`,
+    DefaultCaptions(),
     html`<div class="vds-scrim"></div>`,
     html`
       <media-controls class="vds-controls">

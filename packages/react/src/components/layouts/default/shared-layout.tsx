@@ -24,6 +24,7 @@ import { MuteButton } from '../../ui/buttons/mute-button';
 import { PIPButton } from '../../ui/buttons/pip-button';
 import { PlayButton } from '../../ui/buttons/play-button';
 import { SeekButton } from '../../ui/buttons/seek-button';
+import { Captions } from '../../ui/captions';
 import { ChapterTitle } from '../../ui/chapter-title';
 import * as Menu from '../../ui/menu';
 import * as AudioGainSlider from '../../ui/sliders/audio-gain-slider';
@@ -300,6 +301,18 @@ function DefaultSeekButton({
 
 DefaultSeekButton.displayName = 'DefaultSeekButton';
 export { DefaultSeekButton };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultCaptions
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultCaptions() {
+  const exampleText = useDefaultLayoutWord('Captions look like this');
+  return <Captions className="vds-captions" exampleText={exampleText} />;
+}
+
+DefaultCaptions.displayName = 'DefaultCaptions';
+export { DefaultCaptions };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultVolumeSlider

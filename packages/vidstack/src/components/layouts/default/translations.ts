@@ -58,7 +58,8 @@ export type DefaultLayoutWord =
   | 'Unmute'
   | 'Volume'
   | 'White'
-  | 'Yellow';
+  | 'Yellow'
+  | 'Captions look like this';
 
 export type DefaultLayoutTranslations = {
   [word in DefaultLayoutWord]: string;

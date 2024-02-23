@@ -19,6 +19,8 @@ export interface MediaPlayerEvents
   'media-player-connect': MediaPlayerConnectEvent;
   /* @internal */
   'find-media-player': FindMediaPlayerEvent;
+  /* @internal */
+  'vds-font-change': Event;
 }
 
 /**

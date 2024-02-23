@@ -794,5 +794,12 @@
   "_getARIAValueMin": "Pn",
   "_onAudioGainChange": "Nn",
   "_watchAudioGain": "On",
-  "_isSliderActive": "Qn"
+  "_isSliderActive": "Qn",
+  "_createCueDisplayElement": "Tn",
+  "_createCueElement": "Un",
+  "_hideExample": "Vn",
+  "_hideExampleTimer": "Rn",
+  "_onFontStyleChange": "Wn",
+  "_removeExample": "Sn",
+  "_showExample": "Xn"
 }

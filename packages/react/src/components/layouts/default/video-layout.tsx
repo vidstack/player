@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { useMediaState } from '../../../hooks/use-media-state';
-import { Captions } from '../../ui/captions';
 import * as Controls from '../../ui/controls';
 import { Gesture } from '../../ui/gesture';
 import * as Spinner from '../../ui/spinner';
@@ -13,6 +12,7 @@ import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layou
 import {
   DefaultAirPlayButton,
   DefaultCaptionButton,
+  DefaultCaptions,
   DefaultChaptersMenu,
   DefaultChapterTitle,
   DefaultControlsSpacer,
@@ -24,7 +24,6 @@ import {
   DefaultSettingsMenu,
   DefaultTimeInfo,
   DefaultTimeSlider,
-  DefaultTitle,
   DefaultVolumeSlider,
 } from './shared-layout';
 import {
@@ -101,7 +100,7 @@ function DefaultVideoLargeLayout() {
         />
       ) : null}
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
-      {slot(slots, 'captions', <Captions className="vds-captions" />)}
+      {slot(slots, 'captions', <DefaultCaptions />)}
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
           {slot(slots, 'topControlsGroupStart', null)}
@@ -160,7 +159,7 @@ function DefaultVideoSmallLayout() {
     <>
       <DefaultVideoGestures />
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
-      {slot(slots, 'captions', <Captions className="vds-captions" />)}
+      {slot(slots, 'captions', <DefaultCaptions />)}
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
           {slot(slots, 'topControlsGroupStart', null)}

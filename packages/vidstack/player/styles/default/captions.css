@@ -39,6 +39,23 @@
   visibility: hidden;
 }
 
+.vds-captions[data-example] {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+:where([data-view-type='video'] .vds-captions [data-part='cue-display'][data-example]) {
+  --cue-text-align: center;
+  --cue-width: 100%;
+  --cue-top: 90%;
+  --cue-left: 0%;
+}
+
+:where([data-view-type='audio'] .vds-captions [data-part='cue-display']) {
+  --cue-width: 100%;
+  position: relative !important;
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * VTT Cues
