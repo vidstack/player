@@ -13,10 +13,9 @@ export function DefaultVideoKeyboardActionDisplay() {
   return $signal(() => {
     const visible = signal(false),
       media = useMediaContext(),
-      { noKeyboardActionDisplay } = useDefaultLayoutContext(),
-      { lastKeyboardAction } = media.$state;
-
-    if (noKeyboardActionDisplay()) return null;
+      { noKeyboardAnimations, userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
+      { lastKeyboardAction } = media.$state,
+      $isAnimated = computed(() => !noKeyboardAnimations() && userPrefersKeyboardAnimations());
 
     effect(() => {
       visible.set(!!lastKeyboardAction());
@@ -41,18 +40,23 @@ export function DefaultVideoKeyboardActionDisplay() {
       });
 
     function Icon() {
-      const $slot = $iconSlot();
-      return $slot
-        ? html`
-            <div class="vds-kb-bezel" role="status" aria-label=${$signal($statusLabel)}>
-              <div class="vds-kb-icon">${$iconSlot()}</div>
-            </div>
-          `
-        : null;
+      return html`
+        <div class="vds-kb-bezel" role="status" aria-label=${$signal($statusLabel)}>
+          ${$signal(() => {
+            const $slot = $iconSlot();
+            if (!$isAnimated() || !$slot) return null;
+            return html`<div class="vds-kb-icon">${$slot}</div>`;
+          })}
+        </div>
+      `;
     }
 
     return html`
-      <div class=${$signal($classList)} data-action=${$signal($actionDataAttr)}>
+      <div
+        class=${$signal($classList)}
+        data-action=${$signal($actionDataAttr)}
+        data-animated=${$signal(() => ($isAnimated() ? '' : null))}
+      >
         <div class="vds-kb-text-wrapper">
           <div class="vds-kb-text">${$signal($text)}</div>
         </div>

@@ -16,7 +16,7 @@ import { useMediaState } from '../../../hooks/use-media-state';
 import { createComputed } from '../../../hooks/use-signals';
 import * as Controls from '../../ui/controls';
 import { useLayoutName } from '../utils';
-import { DefaultLayoutContext, i18n, useDefaultLayoutContext } from './context';
+import { i18n, useDefaultLayoutContext } from './context';
 import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
 import {
   DefaultCaptionButton,
@@ -136,7 +136,7 @@ AudioLayout.displayName = 'AudioLayout';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultAudioMenus({ slots }: { slots?: Slots<DefaultLayoutMenuSlotName> }) {
-  const { isSmallLayout, noModal } = React.useContext(DefaultLayoutContext),
+  const { isSmallLayout, noModal } = useDefaultLayoutContext(),
     placement = noModal ? 'top end' : !isSmallLayout ? 'top end' : null;
   return (
     <>

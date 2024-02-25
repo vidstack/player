@@ -1,4 +1,4 @@
-import { Component, computed, prop, provideContext } from 'maverick.js';
+import { Component, computed, prop, provideContext, signal } from 'maverick.js';
 import { isBoolean } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
@@ -48,6 +48,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       ...this.$props,
       when: this._when,
       smallWhen: this._smallWhen,
+      userPrefersKeyboardAnimations: signal(true),
       get menuContainer() {
         return self.menuContainer;
       },

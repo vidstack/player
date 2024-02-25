@@ -1,12 +1,14 @@
 import * as React from 'react';
 
+import { useSignal } from 'maverick.js/react';
+
 import { useMediaState } from '../../../hooks/use-media-state';
 import * as Controls from '../../ui/controls';
 import { Gesture } from '../../ui/gesture';
 import * as Spinner from '../../ui/spinner';
 import { Time } from '../../ui/time';
 import { useLayoutName } from '../utils';
-import { DefaultLayoutContext } from './context';
+import { useDefaultLayoutContext } from './context';
 import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
 import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
 import {
@@ -86,19 +88,13 @@ export { DefaultVideoLayout };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoLargeLayout() {
-  const { menuGroup, noKeyboardActionDisplay, icons, translations } =
-      React.useContext(DefaultLayoutContext),
+  const { menuGroup } = useDefaultLayoutContext(),
     baseSlots = useDefaultVideoLayoutSlots(),
     slots = { ...baseSlots, ...baseSlots?.largeLayout };
   return (
     <>
       <DefaultVideoGestures />
-      {!noKeyboardActionDisplay && icons.KeyboardAction ? (
-        <DefaultVideoKeyboardActionDisplay
-          icons={icons.KeyboardAction}
-          translations={translations}
-        />
-      ) : null}
+      <DefaultKeyboardActionDisplay />
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
       {slot(slots, 'captions', <DefaultCaptions />)}
       <Controls.Root className="vds-controls">
@@ -220,7 +216,7 @@ DefaultVideoStartDuration.displayName = 'DefaultVideoStartDuration';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoGestures() {
-  const { noGestures } = React.useContext(DefaultLayoutContext);
+  const { noGestures } = useDefaultLayoutContext();
 
   if (noGestures) return null;
 
@@ -261,7 +257,7 @@ export { DefaultBufferingIndicator };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoMenus({ slots }: { slots?: Slots<DefaultLayoutMenuSlotName> }) {
-  const { isSmallLayout, noModal, menuGroup } = React.useContext(DefaultLayoutContext),
+  const { isSmallLayout, noModal, menuGroup } = useDefaultLayoutContext(),
     side = menuGroup === 'top' || isSmallLayout ? 'bottom' : ('top' as const),
     tooltip = `${side} end` as const,
     placement = noModal
@@ -301,7 +297,7 @@ DefaultVideoMenus.displayName = 'DefaultVideoMenus';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoLoadLayout() {
-  const { isSmallLayout } = React.useContext(DefaultLayoutContext),
+  const { isSmallLayout } = useDefaultLayoutContext(),
     baseSlots = useDefaultVideoLayoutSlots(),
     slots = { ...baseSlots, ...baseSlots?.[isSmallLayout ? 'smallLayout' : 'largeLayout'] };
   return (
@@ -313,3 +309,23 @@ function DefaultVideoLoadLayout() {
 }
 
 DefaultVideoLoadLayout.displayName = 'DefaultVideoLoadLayout';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultKeyboardActionDisplay
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultKeyboardActionDisplay() {
+  const { noKeyboardAnimations, icons, translations, userPrefersKeyboardAnimations } =
+      useDefaultLayoutContext(),
+    $userPrefersKeyboardAnimations = useSignal(userPrefersKeyboardAnimations);
+
+  return (
+    <DefaultVideoKeyboardActionDisplay
+      icons={icons.KeyboardAction}
+      noAnimations={noKeyboardAnimations || !$userPrefersKeyboardAnimations}
+      translations={translations}
+    />
+  );
+}
+
+DefaultKeyboardActionDisplay.displayName = 'DefaultKeyboardActionDisplay';

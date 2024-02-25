@@ -1,6 +1,6 @@
 import { render, type TemplateResult } from 'lit-html';
 import { onDispose } from 'maverick.js';
-import { animationFrameThrottle } from 'maverick.js/std';
+import { animationFrameThrottle, isDOMNode } from 'maverick.js/std';
 
 export class SlotObserver {
   readonly elements = new Set<HTMLSlotElement>();
@@ -25,7 +25,7 @@ export class SlotObserver {
   }
 
   assign(template: Element | TemplateResult, slot: HTMLSlotElement) {
-    if (template instanceof Node) {
+    if (isDOMNode(template)) {
       slot.textContent = '';
       slot.append(template);
     } else {

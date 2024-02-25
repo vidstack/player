@@ -11,7 +11,7 @@ export const defaultLayoutProps: DefaultLayoutProps = {
   noAudioGainSlider: false,
   maxAudioGain: 300,
   noGestures: false,
-  noKeyboardActionDisplay: false,
+  noKeyboardAnimations: false,
   noModal: false,
   noScrubGesture: false,
   playbackRates: DEFAULT_PLAYBACK_RATES,
@@ -86,7 +86,7 @@ export interface DefaultLayoutProps {
   /**
    * Whether keyboard actions should not be displayed.
    */
-  noKeyboardActionDisplay: boolean;
+  noKeyboardAnimations: boolean;
   /**
    * The playback rate options to be displayed in the settings menu.
    */

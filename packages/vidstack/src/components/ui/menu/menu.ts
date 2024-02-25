@@ -24,7 +24,7 @@ import {
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
-import { isElementParent, onPress, setAttributeIfEmpty } from '../../../utils/dom';
+import { isElementParent, isEventInside, onPress, setAttributeIfEmpty } from '../../../utils/dom';
 import { Popper } from '../popper/popper';
 import { sliderObserverContext } from '../sliders/slider/slider-context';
 import type { MenuButton } from './menu-button';
@@ -216,10 +216,6 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     setAttribute(el, 'aria-expanded', 'false');
     setAttribute(el, 'data-submenu', this.isSubmenu);
 
-    if (!this.isSubmenu) {
-      this._stopClickPropagation(el);
-    }
-
     const watchAttrs = () => {
       setAttribute(el, 'data-open', this._expanded());
       setAttribute(el, 'aria-disabled', isARIADisabled());
@@ -264,11 +260,6 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _attachObserver(observer: MenuObserver) {
     this._menuObserver = observer;
-  }
-
-  private _stopClickPropagation(el: HTMLElement) {
-    listenEvent(el, 'click', (e) => e.stopPropagation());
-    listenEvent(el, 'pointerup', (e) => e.stopPropagation());
   }
 
   private _updateMenuItemsHidden(expanded: boolean) {
@@ -373,17 +364,18 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   }
 
   private _onPointerUp(event: PointerEvent) {
-    if (this._isSliderActive) return;
+    const content = this._content();
+
+    if (this._isSliderActive || (content && isEventInside(content, event))) return;
+
     // Prevent it bubbling up to window so we can determine when to close dialog.
     event.stopPropagation();
   }
 
   private _onWindowPointerUp(event: Event) {
-    if (this._isSliderActive) return;
+    const content = this._content();
 
-    const isTargetNode = event.target instanceof Node;
-
-    if (!isTargetNode || this._content()?.contains(event.target)) return;
+    if (this._isSliderActive || (content && isEventInside(content, event))) return;
 
     // A little delay so submenu closing doesn't jump menu size when closing.
     if (this.isSubmenu) return setTimeout(this.close.bind(this, event), 800);
@@ -436,6 +428,8 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _onSubmenuOpenBind = this._onSubmenuOpen.bind(this);
   private _onSubmenuOpen(event: MenuOpenEvent) {
+    const content = this._content();
+
     if (this.isSubmenu) {
       this.triggerElement?.setAttribute('aria-hidden', 'true');
     }
@@ -447,10 +441,20 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
         }
       }
     }
+
+    if (content) {
+      for (const child of content.children) {
+        if (child !== event.target.el) {
+          child.setAttribute('data-hide', '');
+        }
+      }
+    }
   }
 
   private _onSubmenuCloseBind = this._onSubmenuClose.bind(this);
-  private _onSubmenuClose() {
+  private _onSubmenuClose(event: MenuCloseEvent) {
+    const content = this._content();
+
     if (this.isSubmenu) {
       this.triggerElement?.setAttribute('aria-hidden', 'false');
     }
@@ -458,6 +462,14 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     for (const target of this._submenus) {
       for (const el of [target.el, target.triggerElement]) {
         el?.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    if (content) {
+      for (const child of content.children) {
+        if (child !== event.target.el) {
+          child.removeAttribute('data-hide');
+        }
       }
     }
   }

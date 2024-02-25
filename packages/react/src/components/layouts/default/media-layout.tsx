@@ -11,7 +11,7 @@ import {
 
 import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaState } from '../../../hooks/use-media-state';
-import { createComputed } from '../../../hooks/use-signals';
+import { createComputed, createSignal } from '../../../hooks/use-signals';
 import type { PrimitivePropsWithRef } from '../../primitives/nodes';
 import { DefaultLayoutContext } from './context';
 import type { DefaultLayoutIcons } from './icons';
@@ -99,7 +99,7 @@ export interface DefaultLayoutProps<Slots = unknown> extends PrimitivePropsWithR
   /**
    * Whether keyboard actions should not be displayed.
    */
-  noKeyboardActionDisplay?: boolean;
+  noKeyboardAnimations?: boolean;
   /**
    * The playback rate options to be displayed in the settings menu.
    */
@@ -142,7 +142,7 @@ export function createDefaultMediaLayout({
         noAudioGainSlider = false,
         maxAudioGain = 300,
         noGestures = false,
-        noKeyboardActionDisplay = false,
+        noKeyboardAnimations = false,
         noModal = false,
         noScrubGesture,
         playbackRates,
@@ -166,6 +166,7 @@ export function createDefaultMediaLayout({
         $smallWhen = createComputed(() => {
           return isBoolean(smallLayoutWhen) ? smallLayoutWhen : smallLayoutWhen(media.player.state);
         }, [smallLayoutWhen]),
+        userPrefersKeyboardAnimations = createSignal(true),
         isMatch = $viewType === type,
         isSmallLayout = $smallWhen(),
         isForcedLayout = isBoolean(smallLayoutWhen),
@@ -194,7 +195,7 @@ export function createDefaultMediaLayout({
                 maxAudioGain,
                 noAudioGainSlider,
                 noGestures,
-                noKeyboardActionDisplay,
+                noKeyboardAnimations,
                 noModal,
                 noScrubGesture,
                 showMenuDelay,
@@ -205,6 +206,7 @@ export function createDefaultMediaLayout({
                 playbackRates,
                 thumbnails,
                 translations,
+                userPrefersKeyboardAnimations,
               }}
             >
               {renderLayout({ streamType: $streamType, isSmallLayout, isLoadLayout })}

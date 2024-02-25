@@ -12,6 +12,8 @@ export type DefaultLayoutWord =
   | 'Black'
   | 'Blue'
   | 'Captions'
+  | 'Caption Styles'
+  | 'Captions look like this'
   | 'Chapters'
   | 'Closed-Captions Off'
   | 'Closed-Captions On'
@@ -30,10 +32,10 @@ export type DefaultLayoutWord =
   | 'Exit PiP'
   | 'Font Family'
   | 'Font Size'
-  | 'Caption Styles'
   | 'Fullscreen'
   | 'Google Cast'
   | 'Green'
+  | 'Keyboard Animations'
   | 'LIVE'
   | 'Magenta'
   | 'Mute'
@@ -58,8 +60,7 @@ export type DefaultLayoutWord =
   | 'Unmute'
   | 'Volume'
   | 'White'
-  | 'Yellow'
-  | 'Captions look like this';
+  | 'Yellow';
 
 export type DefaultLayoutTranslations = {
   [word in DefaultLayoutWord]: string;

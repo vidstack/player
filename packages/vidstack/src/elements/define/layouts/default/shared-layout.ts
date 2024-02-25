@@ -2,8 +2,8 @@ import { html, type TemplateResult } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { ref as $ref, ref } from 'lit-html/directives/ref.js';
 import type { RefOrCallback } from 'lit-html/directives/ref.js';
-import { computed, effect, signal, type ReadSignal } from 'maverick.js';
-import { isFunction, noop, unwrap, uppercaseFirstChar } from 'maverick.js/std';
+import { computed, signal, type ReadSignal } from 'maverick.js';
+import { isFunction, isKeyboardClick, noop, unwrap, uppercaseFirstChar } from 'maverick.js/std';
 
 import {
   type MenuPlacement,
@@ -16,6 +16,7 @@ import {
 } from '../../../../components/layouts/default/context';
 import { i18n, type DefaultLayoutWord } from '../../../../components/layouts/default/translations';
 import { useMediaContext, useMediaState } from '../../../../core/api/media-context';
+import { $ariaBool } from '../../../../utils/aria';
 import { useResizeObserver } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
 import { DefaultFontMenu } from './font-menu';
@@ -537,22 +538,95 @@ export function DefaultSettingsMenu({
 
 function DefaultAccessibilityMenu() {
   return $signal(() => {
-    const { hasCaptions } = useMediaState(),
-      { translations } = useDefaultLayoutContext(),
-      $disabled = computed(() => !hasCaptions());
-
-    if ($disabled()) return null;
-
+    const { translations } = useDefaultLayoutContext();
     return html`
       <media-menu class="vds-accessibility-menu vds-menu">
         ${renderMenuButton({
           label: () => i18n(translations, 'Accessibility'),
           icon: 'menu-accessibility',
         })}
-        <media-menu-items class="vds-menu-items"> ${[DefaultFontMenu()]} </media-menu-items>
+        <media-menu-items class="vds-menu-items">
+          ${[DefaultMenuKeyboardAnimationCheckbox(), DefaultFontMenu()]}
+        </media-menu-items>
       </media-menu>
     `;
   });
+}
+
+function DefaultMenuKeyboardAnimationCheckbox() {
+  return $signal(() => {
+    const { translations, userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
+      { viewType } = useMediaState(),
+      label = 'Keyboard Animations',
+      key = 'vds-player::keyboard-animations',
+      $label = $i18n(translations, label),
+      $disabled = computed(() => viewType() !== 'video'),
+      defaultChecked = !!(localStorage.getItem(key) ?? true);
+
+    userPrefersKeyboardAnimations.set(defaultChecked);
+
+    if ($disabled()) return null;
+
+    return html`
+      <div class="vds-menu-item vds-menu-item-checkbox">
+        <div class="vds-menu-checkbox-label">${$label}</div>
+        ${DefaultMenuCheckbox({
+          label,
+          defaultChecked,
+          onChange(checked) {
+            userPrefersKeyboardAnimations.set(checked);
+            localStorage.setItem(key, checked ? '1' : '');
+          },
+        })}
+      </div>
+    `;
+  });
+}
+
+function DefaultMenuCheckbox({
+  label,
+  defaultChecked = false,
+  onChange,
+}: {
+  label: DefaultLayoutWord;
+  defaultChecked?: boolean;
+  onChange(checked: boolean): void;
+}) {
+  const { translations } = useDefaultLayoutContext(),
+    $checked = signal(defaultChecked),
+    $active = signal(false),
+    $ariaChecked = $signal($ariaBool($checked)),
+    $label = $i18n(translations, label);
+
+  function onPress(event?: PointerEvent) {
+    if (event?.button === 1) return;
+    $checked.set((checked) => !checked);
+    onChange($checked());
+    $active.set(false);
+  }
+
+  function onKeyDown(event: KeyboardEvent) {
+    if (isKeyboardClick(event)) onPress();
+  }
+
+  function onActive(event: PointerEvent) {
+    if (event.button !== 0) return;
+    $active.set(true);
+  }
+
+  return html`
+    <div
+      class="vds-menu-checkbox"
+      role="menuitemcheckbox"
+      tabindex="0"
+      aria-label=${$label}
+      aria-checked=${$ariaChecked}
+      data-active=${$signal(() => ($active() ? '' : null))}
+      @pointerup=${onPress}
+      @pointerdown=${onActive}
+      @keydown=${onKeyDown}
+    ></div>
+  `;
 }
 
 function DefaultAudioMenu() {

@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import type { WriteSignal } from 'maverick.js';
+
 import type { DefaultLayoutProps } from './media-layout';
 
 export const DefaultLayoutContext = React.createContext<DefaultLayoutContext>({} as any);
@@ -8,6 +10,7 @@ DefaultLayoutContext.displayName = 'DefaultLayoutContext';
 interface DefaultLayoutContext extends DefaultLayoutProps {
   menuContainer?: React.RefObject<HTMLElement | null>;
   isSmallLayout: boolean;
+  userPrefersKeyboardAnimations: WriteSignal<boolean>;
 }
 
 export function useDefaultLayoutContext() {

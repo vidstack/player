@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { useSignal } from 'maverick.js/react';
-import { uppercaseFirstChar } from 'maverick.js/std';
-import { isTrackCaptionKind, type TooltipPlacement } from 'vidstack';
+import { isKeyboardClick, uppercaseFirstChar } from 'maverick.js/std';
+import { isTrackCaptionKind, type DefaultLayoutWord, type TooltipPlacement } from 'vidstack';
 
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
@@ -694,16 +694,14 @@ export { DefaultSettingsMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultAccessibilitySubmenu() {
-  const $hasCaptions = useMediaState('hasCaptions'),
-    label = useDefaultLayoutWord('Accessibility'),
+  const label = useDefaultLayoutWord('Accessibility'),
     { icons: Icons } = useDefaultLayoutContext();
-
-  if (!$hasCaptions) return null;
 
   return (
     <Menu.Root className="vds-accessibility-menu vds-menu">
       <DefaultSubmenuButton label={label} Icon={Icons.Menu.Accessibility} />
       <Menu.Content className="vds-menu-items">
+        <DefaultMenuKeyboardAnimationCheckbox />
         <DefaultFontSubmenu />
       </Menu.Content>
     </Menu.Root>
@@ -711,6 +709,100 @@ function DefaultAccessibilitySubmenu() {
 }
 
 DefaultAccessibilitySubmenu.displayName = 'DefaultAccessibilitySubmenu';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultMenuKeyboardAnimationCheckbox
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultMenuKeyboardAnimationCheckbox() {
+  const label = 'Keyboard Animations',
+    key = 'vds-player::keyboard-animations',
+    $viewType = useMediaState('viewType'),
+    [defaultChecked, setDefaultChecked] = React.useState(false),
+    { userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
+    translatedLabel = useDefaultLayoutWord(label);
+
+  React.useEffect(() => {
+    const checked = !!(localStorage.getItem(key) ?? true);
+    setDefaultChecked(checked);
+    userPrefersKeyboardAnimations.set(checked);
+  }, []);
+
+  if ($viewType !== 'video') return null;
+
+  function onChange(checked: boolean) {
+    userPrefersKeyboardAnimations.set(checked);
+    localStorage.setItem(key, checked ? '1' : '');
+  }
+
+  return (
+    <div className="vds-menu-item vds-menu-item-checkbox">
+      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+      <DefaultMenuCheckbox label={label} defaultChecked={defaultChecked} onChange={onChange} />
+    </div>
+  );
+}
+
+DefaultMenuKeyboardAnimationCheckbox.displayName = 'DefaultMenuKeyboardAnimationCheckbox';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultMenuCheckbox
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface DefaultMenuCheckboxProps {
+  label: DefaultLayoutWord;
+  defaultChecked?: boolean;
+  onChange?(checked: boolean): void;
+}
+
+function DefaultMenuCheckbox({
+  label,
+  defaultChecked = false,
+  onChange,
+}: DefaultMenuCheckboxProps) {
+  const [isChecked, setIsChecked] = React.useState(defaultChecked),
+    [isActive, setIsActive] = React.useState(false),
+    [isDirty, setIsDirty] = React.useState(false),
+    ariaLabel = useDefaultLayoutWord(label);
+
+  React.useEffect(() => {
+    if (isDirty) return;
+    setIsChecked(defaultChecked);
+  }, [isDirty, defaultChecked]);
+
+  function onPress(event?: React.PointerEvent) {
+    if (event?.button === 1) return;
+    setIsChecked(!isChecked);
+    onChange?.(!isChecked);
+    setIsActive(false);
+    setIsDirty(true);
+  }
+
+  function onActive(event: React.PointerEvent) {
+    if (event.button !== 0) return;
+    setIsActive(true);
+  }
+
+  function onKeyDown(event: React.KeyboardEvent) {
+    if (isKeyboardClick(event.nativeEvent)) onPress();
+  }
+
+  return (
+    <div
+      className="vds-menu-checkbox"
+      role="menuitemcheckbox"
+      tabIndex={0}
+      aria-label={ariaLabel}
+      aria-checked={isChecked ? 'true' : 'false'}
+      data-active={isActive ? '' : null}
+      onPointerUp={onPress}
+      onPointerDown={onActive}
+      onKeyDown={onKeyDown}
+    />
+  );
+}
+
+DefaultMenuCheckbox.displayName = 'DefaultMenuCheckbox';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAudioSubmenu

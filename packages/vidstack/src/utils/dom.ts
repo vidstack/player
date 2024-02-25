@@ -15,6 +15,7 @@ import {
 } from 'maverick.js';
 import {
   animationFrameThrottle,
+  isDOMNode,
   isFunction,
   isKeyboardClick,
   isTouchEvent,
@@ -36,6 +37,10 @@ export function listen(
   if (!target) return;
   // @ts-expect-error - `listenEvent` is not typed to handle this.
   return listenEvent(target, type, handler);
+}
+
+export function isEventInside(el: HTMLElement, event: Event) {
+  return isDOMNode(event.target) && el.contains(event.target);
 }
 
 export function setAttributeIfEmpty(target: Element, name: string, value: string) {

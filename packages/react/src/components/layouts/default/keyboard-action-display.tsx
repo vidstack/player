@@ -26,15 +26,17 @@ export type DefaultVideoKeyboardActionDisplayWords =
 export interface DefaultVideoKeyboardActionDisplayTranslations
   extends Pick<DefaultLayoutTranslations, DefaultVideoKeyboardActionDisplayWords> {}
 
-export interface DefaultVideoKeyboardActionDisplayProps extends PrimitivePropsWithRef<'div'> {
-  icons: DefaultKeyboardActionIcons;
+export interface DefaultVideoKeyboardActionDisplayProps
+  extends Omit<PrimitivePropsWithRef<'div'>, 'disabled'> {
+  icons?: DefaultKeyboardActionIcons;
+  noAnimations?: boolean;
   translations?: Partial<DefaultVideoKeyboardActionDisplayTranslations> | null;
 }
 
 const DefaultVideoKeyboardActionDisplay = React.forwardRef<
   HTMLElement,
   DefaultVideoKeyboardActionDisplayProps
->(({ icons: Icons, translations, ...props }, forwardRef) => {
+>(({ icons: Icons, noAnimations = false, translations, ...props }, forwardRef) => {
   const [visible, setVisible] = React.useState(false),
     [Icon, setIcon] = React.useState<any>(null),
     [count, setCount] = React.useState(0),
@@ -80,18 +82,19 @@ const DefaultVideoKeyboardActionDisplay = React.forwardRef<
       {...props}
       className={className}
       data-action={actionDataAttr}
+      data-animated={!noAnimations ? '' : null}
       ref={forwardRef as any}
     >
       <div className="vds-kb-text-wrapper">
         <div className="vds-kb-text">{$text}</div>
       </div>
-      {Icon ? (
-        <div className="vds-kb-bezel" role="status" aria-label={$statusLabel} key={count}>
+      <div className="vds-kb-bezel" role="status" aria-label={$statusLabel} key={count}>
+        {Icon && !noAnimations ? (
           <div className="vds-kb-icon">
             <Icon />
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </Primitive.div>
   );
 });
