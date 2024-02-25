@@ -11,7 +11,7 @@ import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import { i18n, useDefaultLayoutContext } from './context';
 import type { DefaultKeyboardActionIcons } from './icons';
 
-export type DefaultKeyboardActionDisplayWords =
+export type DefaultKeyboardDisplayWords =
   | 'Play'
   | 'Pause'
   | 'Enter Fullscreen'
@@ -25,79 +25,78 @@ export type DefaultKeyboardActionDisplayWords =
   | 'Seek Forward'
   | 'Seek Backward';
 
-export interface DefaultKeyboardActionDisplayTranslations
-  extends Pick<DefaultLayoutTranslations, DefaultKeyboardActionDisplayWords> {}
+export interface DefaultKeyboardDisplayTranslations
+  extends Pick<DefaultLayoutTranslations, DefaultKeyboardDisplayWords> {}
 
-export interface DefaultKeyboardActionDisplayProps
+export interface DefaultKeyboardDisplayProps
   extends Omit<PrimitivePropsWithRef<'div'>, 'disabled'> {
   icons?: DefaultKeyboardActionIcons;
-  translations?: Partial<DefaultKeyboardActionDisplayTranslations> | null;
+  translations?: Partial<DefaultKeyboardDisplayTranslations> | null;
 }
 
-const DefaultKeyboardActionDisplay = React.forwardRef<
-  HTMLElement,
-  DefaultKeyboardActionDisplayProps
->(({ icons: Icons, translations, ...props }, forwardRef) => {
-  const [visible, setVisible] = React.useState(false),
-    [Icon, setIcon] = React.useState<any>(null),
-    [count, setCount] = React.useState(0),
-    $lastKeyboardAction = useMediaState('lastKeyboardAction');
+const DefaultKeyboardDisplay = React.forwardRef<HTMLElement, DefaultKeyboardDisplayProps>(
+  ({ icons: Icons, translations, ...props }, forwardRef) => {
+    const [visible, setVisible] = React.useState(false),
+      [Icon, setIcon] = React.useState<any>(null),
+      [count, setCount] = React.useState(0),
+      $lastKeyboardAction = useMediaState('lastKeyboardAction');
 
-  React.useEffect(() => {
-    setCount((n) => n + 1);
-  }, [$lastKeyboardAction]);
+    React.useEffect(() => {
+      setCount((n) => n + 1);
+    }, [$lastKeyboardAction]);
 
-  const actionDataAttr = React.useMemo(() => {
-    const action = $lastKeyboardAction?.action;
-    return action && visible ? camelToKebabCase(action) : null;
-  }, [visible, $lastKeyboardAction]);
+    const actionDataAttr = React.useMemo(() => {
+      const action = $lastKeyboardAction?.action;
+      return action && visible ? camelToKebabCase(action) : null;
+    }, [visible, $lastKeyboardAction]);
 
-  const className = React.useMemo(
-    () =>
-      `vds-kb-action${!visible ? ' hidden' : ''}${props.className ? ` ${props.className}` : ''}`,
-    [visible],
-  );
+    const className = React.useMemo(
+      () =>
+        `vds-kb-action${!visible ? ' hidden' : ''}${props.className ? ` ${props.className}` : ''}`,
+      [visible],
+    );
 
-  const $$text = createComputed(getText),
-    $text = useSignal($$text);
+    const $$text = createComputed(getText),
+      $text = useSignal($$text);
 
-  createEffect(() => {
-    const Icon = getIcon(Icons);
-    setIcon(() => Icon);
-  }, [Icons]);
+    createEffect(() => {
+      const Icon = getIcon(Icons);
+      setIcon(() => Icon);
+    }, [Icons]);
 
-  React.useEffect(() => {
-    setVisible(!!$lastKeyboardAction);
-    const id = setTimeout(() => setVisible(false), 500);
-    return () => {
-      setVisible(false);
-      window.clearTimeout(id);
-    };
-  }, [$lastKeyboardAction]);
+    React.useEffect(() => {
+      setVisible(!!$lastKeyboardAction);
+      const id = setTimeout(() => setVisible(false), 500);
+      return () => {
+        setVisible(false);
+        window.clearTimeout(id);
+      };
+    }, [$lastKeyboardAction]);
 
-  return (
-    <Primitive.div
-      {...props}
-      className={className}
-      data-action={actionDataAttr}
-      ref={forwardRef as any}
-    >
-      <div className="vds-kb-text-wrapper">
-        <div className="vds-kb-text">{$text}</div>
-      </div>
-      <DefaultKeyboardStatus className="vds-kb-bezel" key={count}>
-        {Icon ? (
-          <div className="vds-kb-icon">
-            <Icon />
-          </div>
-        ) : null}
-      </DefaultKeyboardStatus>
-    </Primitive.div>
-  );
-});
+    return (
+      <Primitive.div
+        {...props}
+        className={className}
+        data-action={actionDataAttr}
+        ref={forwardRef as any}
+      >
+        <div className="vds-kb-text-wrapper">
+          <div className="vds-kb-text">{$text}</div>
+        </div>
+        <DefaultKeyboardStatus className="vds-kb-bezel" key={count}>
+          {Icon ? (
+            <div className="vds-kb-icon">
+              <Icon />
+            </div>
+          ) : null}
+        </DefaultKeyboardStatus>
+      </Primitive.div>
+    );
+  },
+);
 
-DefaultKeyboardActionDisplay.displayName = 'DefaultKeyboardActionDisplay';
-export { DefaultKeyboardActionDisplay };
+DefaultKeyboardDisplay.displayName = 'DefaultKeyboardDisplay';
+export { DefaultKeyboardDisplay };
 
 function getText() {
   const { $state } = useContext(mediaContext),
@@ -194,12 +193,12 @@ const DefaultKeyboardStatus = React.forwardRef<HTMLDivElement, DefaultKeyboardSt
 DefaultKeyboardStatus.displayName = 'DefaultKeyboardStatus';
 export { DefaultKeyboardStatus };
 
-function getStatusLabel(translations?: Partial<DefaultKeyboardActionDisplayTranslations>) {
+function getStatusLabel(translations?: Partial<DefaultKeyboardDisplayTranslations>) {
   const text = getStatusText(translations);
   return text ? i18n(translations, text) : null;
 }
 
-function getStatusText(translations?: Partial<DefaultKeyboardActionDisplayTranslations>): any {
+function getStatusText(translations?: Partial<DefaultKeyboardDisplayTranslations>): any {
   const { $state } = useContext(mediaContext),
     action = $state.lastKeyboardAction()?.action;
   switch (action) {

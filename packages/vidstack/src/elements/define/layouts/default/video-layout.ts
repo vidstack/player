@@ -4,7 +4,7 @@ import { computed } from 'maverick.js';
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import { useMediaState } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
-import { DefaultKeyboardActionDisplay } from './keyboard-action-display';
+import { DefaultKeyboardDisplay } from './keyboard-action-display';
 import {
   DefaultAirPlayButton,
   DefaultCaptionButton,
@@ -27,7 +27,7 @@ export function DefaultVideoLayoutLarge() {
   return [
     DefaultVideoGestures(),
     DefaultBufferingIndicator(),
-    DefaultKeyboardActionDisplay(),
+    DefaultKeyboardDisplay(),
     DefaultCaptions(),
     html`<div class="vds-scrim"></div>`,
     html`
@@ -88,7 +88,7 @@ export function DefaultVideoLayoutSmall() {
     DefaultVideoGestures(),
     DefaultBufferingIndicator(),
     DefaultCaptions(),
-    DefaultKeyboardActionDisplay(),
+    DefaultKeyboardDisplay(),
     html`<div class="vds-scrim"></div>`,
     html`
       <media-controls class="vds-controls">

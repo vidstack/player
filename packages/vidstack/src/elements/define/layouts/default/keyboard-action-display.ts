@@ -9,7 +9,7 @@ import { useMediaContext } from '../../../../core/api/media-context';
 import { createSlot } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
 
-export function DefaultKeyboardActionDisplay() {
+export function DefaultKeyboardDisplay() {
   return $signal(() => {
     const visible = signal(false),
       media = useMediaContext(),

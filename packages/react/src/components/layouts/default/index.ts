@@ -11,10 +11,10 @@ export * from './icons';
 export * from './context';
 export * from './ui';
 export {
-  DefaultKeyboardActionDisplay,
+  DefaultKeyboardDisplay,
   DefaultKeyboardStatus,
-  type DefaultKeyboardActionDisplayProps,
-  type DefaultKeyboardActionDisplayWords,
-  type DefaultKeyboardActionDisplayTranslations,
+  type DefaultKeyboardDisplayProps,
+  type DefaultKeyboardDisplayWords,
+  type DefaultKeyboardDisplayTranslations,
   type DefaultKeyboardStatusProps,
 } from './keyboard-action-display';
