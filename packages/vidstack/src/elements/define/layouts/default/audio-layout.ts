@@ -14,6 +14,7 @@ import {
   useTransitionActive,
 } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
+import { DefaultKeyboardStatus } from './keyboard-action-display';
 import {
   DefaultCaptionButton,
   DefaultCaptions,
@@ -32,6 +33,7 @@ import {
 export function DefaultAudioLayout() {
   return [
     DefaultCaptions(),
+    DefaultKeyboardStatus({ className: 'vds-sr-only' }),
     html`
       <media-controls class="vds-controls">
         <media-controls-group class="vds-controls-group">

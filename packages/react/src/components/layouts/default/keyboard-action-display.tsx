@@ -8,10 +8,10 @@ import { mediaContext, type DefaultLayoutTranslations } from 'vidstack';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { createComputed, createEffect } from '../../../hooks/use-signals';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
-import { i18n } from './context';
+import { i18n, useDefaultLayoutContext } from './context';
 import type { DefaultKeyboardActionIcons } from './icons';
 
-export type DefaultVideoKeyboardActionDisplayWords =
+export type DefaultKeyboardActionDisplayWords =
   | 'Play'
   | 'Pause'
   | 'Enter Fullscreen'
@@ -21,22 +21,23 @@ export type DefaultVideoKeyboardActionDisplayWords =
   | 'Closed-Captions On'
   | 'Closed-Captions Off'
   | 'Mute'
-  | 'Volume';
+  | 'Volume'
+  | 'Seek Forward'
+  | 'Seek Backward';
 
-export interface DefaultVideoKeyboardActionDisplayTranslations
-  extends Pick<DefaultLayoutTranslations, DefaultVideoKeyboardActionDisplayWords> {}
+export interface DefaultKeyboardActionDisplayTranslations
+  extends Pick<DefaultLayoutTranslations, DefaultKeyboardActionDisplayWords> {}
 
-export interface DefaultVideoKeyboardActionDisplayProps
+export interface DefaultKeyboardActionDisplayProps
   extends Omit<PrimitivePropsWithRef<'div'>, 'disabled'> {
   icons?: DefaultKeyboardActionIcons;
-  noAnimations?: boolean;
-  translations?: Partial<DefaultVideoKeyboardActionDisplayTranslations> | null;
+  translations?: Partial<DefaultKeyboardActionDisplayTranslations> | null;
 }
 
-const DefaultVideoKeyboardActionDisplay = React.forwardRef<
+const DefaultKeyboardActionDisplay = React.forwardRef<
   HTMLElement,
-  DefaultVideoKeyboardActionDisplayProps
->(({ icons: Icons, noAnimations = false, translations, ...props }, forwardRef) => {
+  DefaultKeyboardActionDisplayProps
+>(({ icons: Icons, translations, ...props }, forwardRef) => {
   const [visible, setVisible] = React.useState(false),
     [Icon, setIcon] = React.useState<any>(null),
     [count, setCount] = React.useState(0),
@@ -60,9 +61,6 @@ const DefaultVideoKeyboardActionDisplay = React.forwardRef<
   const $$text = createComputed(getText),
     $text = useSignal($$text);
 
-  const $$statusLabel = createComputed(() => getStatusLabel(translations!), [translations]),
-    $statusLabel = useSignal($$statusLabel);
-
   createEffect(() => {
     const Icon = getIcon(Icons);
     setIcon(() => Icon);
@@ -82,25 +80,24 @@ const DefaultVideoKeyboardActionDisplay = React.forwardRef<
       {...props}
       className={className}
       data-action={actionDataAttr}
-      data-animated={!noAnimations ? '' : null}
       ref={forwardRef as any}
     >
       <div className="vds-kb-text-wrapper">
         <div className="vds-kb-text">{$text}</div>
       </div>
-      <div className="vds-kb-bezel" role="status" aria-label={$statusLabel} key={count}>
-        {Icon && !noAnimations ? (
+      <DefaultKeyboardStatus className="vds-kb-bezel" key={count}>
+        {Icon ? (
           <div className="vds-kb-icon">
             <Icon />
           </div>
         ) : null}
-      </div>
+      </DefaultKeyboardStatus>
     </Primitive.div>
   );
 });
 
-DefaultVideoKeyboardActionDisplay.displayName = 'DefaultVideoKeyboardActionDisplay';
-export { DefaultVideoKeyboardActionDisplay };
+DefaultKeyboardActionDisplay.displayName = 'DefaultKeyboardActionDisplay';
+export { DefaultKeyboardActionDisplay };
 
 function getText() {
   const { $state } = useContext(mediaContext),
@@ -156,12 +153,53 @@ function getIcon(Icons?: DefaultKeyboardActionIcons) {
   }
 }
 
-function getStatusLabel(translations?: Partial<DefaultVideoKeyboardActionDisplayTranslations>) {
+/* -------------------------------------------------------------------------------------------------
+ * DefaultKeyboardStatus
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface DefaultKeyboardStatusProps extends PrimitivePropsWithRef<'div'> {}
+
+const DefaultKeyboardStatus = React.forwardRef<HTMLDivElement, DefaultKeyboardStatusProps>(
+  ({ children, ...props }, forwardRef) => {
+    const { translations } = useDefaultLayoutContext(),
+      [isBusy, setIsBusy] = React.useState(false),
+      $$statusLabel = createComputed(() => getStatusLabel(translations!), [translations]),
+      $statusLabel = useSignal($$statusLabel);
+
+    React.useEffect(() => {
+      setIsBusy(true);
+
+      const id = window.setTimeout(() => {
+        setIsBusy(false);
+      }, 150);
+
+      return () => window.clearTimeout(id);
+    }, [$statusLabel]);
+
+    return (
+      <div
+        role="status"
+        aria-label={$statusLabel}
+        aria-live="assertive"
+        aria-busy={isBusy ? 'true' : undefined}
+        {...props}
+        ref={forwardRef}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
+DefaultKeyboardStatus.displayName = 'DefaultKeyboardStatus';
+export { DefaultKeyboardStatus };
+
+function getStatusLabel(translations?: Partial<DefaultKeyboardActionDisplayTranslations>) {
   const text = getStatusText(translations);
   return text ? i18n(translations, text) : null;
 }
 
-function getStatusText(translations?: Partial<DefaultVideoKeyboardActionDisplayTranslations>): any {
+function getStatusText(translations?: Partial<DefaultKeyboardActionDisplayTranslations>): any {
   const { $state } = useContext(mediaContext),
     action = $state.lastKeyboardAction()?.action;
   switch (action) {
@@ -179,6 +217,10 @@ function getStatusText(translations?: Partial<DefaultVideoKeyboardActionDisplayT
       return $state.muted() || $state.volume() === 0
         ? 'Mute'
         : `${Math.round($state.volume() * ($state.audioGain() ?? 1) * 100)}% ${i18n(translations, 'Volume')}`;
+    case 'seekForward':
+      return 'Seek Forward';
+    case 'seekBackward':
+      return 'Seek Backward';
     default:
       return null;
   }

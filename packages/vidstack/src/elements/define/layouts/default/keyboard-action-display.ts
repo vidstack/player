@@ -9,13 +9,17 @@ import { useMediaContext } from '../../../../core/api/media-context';
 import { createSlot } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
 
-export function DefaultVideoKeyboardActionDisplay() {
+export function DefaultKeyboardActionDisplay() {
   return $signal(() => {
     const visible = signal(false),
       media = useMediaContext(),
       { noKeyboardAnimations, userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
       { lastKeyboardAction } = media.$state,
       $isAnimated = computed(() => !noKeyboardAnimations() && userPrefersKeyboardAnimations());
+
+    if (!$isAnimated()) {
+      return DefaultKeyboardStatus({ className: 'vds-sr-only' });
+    }
 
     effect(() => {
       visible.set(!!lastKeyboardAction());
@@ -33,30 +37,24 @@ export function DefaultVideoKeyboardActionDisplay() {
 
     const $classList = computed(() => `vds-kb-action${!visible() ? ' hidden' : ''}`),
       $text = computed(getText),
-      $statusLabel = computed(getStatusLabel),
       $iconSlot = computed(() => {
         const name = getIconName();
         return name ? createSlot(name) : null;
       });
 
     function Icon() {
-      return html`
-        <div class="vds-kb-bezel" role="status" aria-label=${$signal($statusLabel)}>
-          ${$signal(() => {
-            const $slot = $iconSlot();
-            if (!$isAnimated() || !$slot) return null;
-            return html`<div class="vds-kb-icon">${$slot}</div>`;
-          })}
-        </div>
-      `;
+      return DefaultKeyboardStatus({
+        className: 'vds-kb-bezel',
+        children: $signal(() => {
+          const $slot = $iconSlot();
+          if (!$slot) return null;
+          return html`<div class="vds-kb-icon">${$slot}</div>`;
+        }),
+      });
     }
 
     return html`
-      <div
-        class=${$signal($classList)}
-        data-action=${$signal($actionDataAttr)}
-        data-animated=${$signal(() => ($isAnimated() ? '' : null))}
-      >
+      <div class=${$signal($classList)} data-action=${$signal($actionDataAttr)}>
         <div class="vds-kb-text-wrapper">
           <div class="vds-kb-text">${$signal($text)}</div>
         </div>
@@ -64,6 +62,40 @@ export function DefaultVideoKeyboardActionDisplay() {
       </div>
     `;
   });
+}
+
+export function DefaultKeyboardStatus({
+  className = null,
+  children = null,
+}: {
+  className?: string | null;
+  children?: any;
+} = {}) {
+  const $statusLabel = computed(getStatusLabel),
+    $busy = signal(false);
+
+  effect(() => {
+    $statusLabel();
+    $busy.set(true);
+
+    const id = window.setTimeout(() => {
+      $busy.set(false);
+    }, 150);
+
+    return () => window.clearTimeout(id);
+  });
+
+  return html`
+    <div
+      class=${className}
+      role="status"
+      aria-live="assertive"
+      aria-busy=${$signal(() => ($busy() ? 'true' : null))}
+      aria-label=${$signal($statusLabel)}
+    >
+      ${children}
+    </div>
+  `;
 }
 
 function getText() {
@@ -141,6 +173,10 @@ function getStatusText(): any {
       return $state.muted() || $state.volume() === 0
         ? 'Mute'
         : `${Math.round($state.volume() * ($state.audioGain() ?? 1) * 100)}% ${translations()?.Volume ?? 'Volume'}`;
+    case 'seekForward':
+      return 'Seek Forward';
+    case 'seekBackward':
+      return 'Seek Backward';
     default:
       return null;
   }

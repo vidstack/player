@@ -8,6 +8,14 @@
   opacity: 0;
 }
 
+:where(.vds-sr-only) {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Keyboard Text
@@ -59,15 +67,10 @@
   margin-left: calc(-1 * calc(var(--size) / 2));
   margin-right: calc(-1 * calc(var(--size) / 2));
   z-index: 20;
-  opacity: 0;
-  border-radius: var(--media-kb-bezel-border-radius, calc(var(--size) / 2));
-  pointer-events: none;
-}
-
-:where(.vds-kb-action[data-animated] .vds-kb-bezel) {
-  opacity: 1;
   background: var(--media-kb-bezel-bg, rgba(0, 0, 0, 0.5));
   animation: var(--media-kb-bezel-animation, vds-bezel-fade 0.35s linear 1 normal forwards);
+  border-radius: var(--media-kb-bezel-border-radius, calc(var(--size) / 2));
+  pointer-events: none;
 }
 
 :where(.vds-kb-bezel:has(slot:empty)) {

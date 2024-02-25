@@ -11,8 +11,10 @@ export * from './icons';
 export * from './context';
 export * from './ui';
 export {
-  DefaultVideoKeyboardActionDisplay,
-  type DefaultVideoKeyboardActionDisplayProps,
-  type DefaultVideoKeyboardActionDisplayWords,
-  type DefaultVideoKeyboardActionDisplayTranslations,
+  DefaultKeyboardActionDisplay,
+  DefaultKeyboardStatus,
+  type DefaultKeyboardActionDisplayProps,
+  type DefaultKeyboardActionDisplayWords,
+  type DefaultKeyboardActionDisplayTranslations,
+  type DefaultKeyboardStatusProps,
 } from './keyboard-action-display';

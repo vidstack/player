@@ -9,7 +9,7 @@ import * as Spinner from '../../ui/spinner';
 import { Time } from '../../ui/time';
 import { useLayoutName } from '../utils';
 import { useDefaultLayoutContext } from './context';
-import { DefaultVideoKeyboardActionDisplay } from './keyboard-action-display';
+import { DefaultKeyboardActionDisplay, DefaultKeyboardStatus } from './keyboard-action-display';
 import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
 import {
   DefaultAirPlayButton,
@@ -94,7 +94,7 @@ function DefaultVideoLargeLayout() {
   return (
     <>
       <DefaultVideoGestures />
-      <DefaultKeyboardActionDisplay />
+      <DefaultVideoKeyboardActionDisplay />
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
       {slot(slots, 'captions', <DefaultCaptions />)}
       <Controls.Root className="vds-controls">
@@ -154,6 +154,7 @@ function DefaultVideoSmallLayout() {
   return (
     <>
       <DefaultVideoGestures />
+      <DefaultVideoKeyboardActionDisplay />
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
       {slot(slots, 'captions', <DefaultCaptions />)}
       <Controls.Root className="vds-controls">
@@ -311,21 +312,19 @@ function DefaultVideoLoadLayout() {
 DefaultVideoLoadLayout.displayName = 'DefaultVideoLoadLayout';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultKeyboardActionDisplay
+ * DefaultVideoKeyboardActionDisplay
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultKeyboardActionDisplay() {
+function DefaultVideoKeyboardActionDisplay() {
   const { noKeyboardAnimations, icons, translations, userPrefersKeyboardAnimations } =
       useDefaultLayoutContext(),
-    $userPrefersKeyboardAnimations = useSignal(userPrefersKeyboardAnimations);
-
-  return (
-    <DefaultVideoKeyboardActionDisplay
-      icons={icons.KeyboardAction}
-      noAnimations={noKeyboardAnimations || !$userPrefersKeyboardAnimations}
-      translations={translations}
-    />
+    $userPrefersKeyboardAnimations = useSignal(userPrefersKeyboardAnimations),
+    noAnimations = noKeyboardAnimations || !$userPrefersKeyboardAnimations;
+  return noAnimations ? (
+    <DefaultKeyboardStatus className="vds-sr-only" />
+  ) : (
+    <DefaultKeyboardActionDisplay icons={icons.KeyboardAction} translations={translations} />
   );
 }
 
-DefaultKeyboardActionDisplay.displayName = 'DefaultKeyboardActionDisplay';
+DefaultVideoKeyboardActionDisplay.displayName = 'DefaultVideoKeyboardActionDisplay';

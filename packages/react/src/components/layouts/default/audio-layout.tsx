@@ -17,6 +17,7 @@ import { createComputed } from '../../../hooks/use-signals';
 import * as Controls from '../../ui/controls';
 import { useLayoutName } from '../utils';
 import { i18n, useDefaultLayoutContext } from './context';
+import { DefaultKeyboardStatus } from './keyboard-action-display';
 import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
 import {
   DefaultCaptionButton,
@@ -112,6 +113,7 @@ function AudioLayout() {
   return (
     <>
       <DefaultCaptions />
+      <DefaultKeyboardStatus className="vds-sr-only" />
       <Controls.Root className="vds-controls">
         <Controls.Group className="vds-controls-group">
           {slot(slots, 'seekBackwardButton', <DefaultSeekButton backward tooltip="top start" />)}
