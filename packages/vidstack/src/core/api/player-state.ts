@@ -42,7 +42,9 @@ export const mediaState = new State<MediaState>({
   ended: false,
   error: null,
   fullscreen: false,
-  loop: false,
+  get loop() {
+    return this.providedLoop || this.userPrefersLoop;
+  },
   logLevel: __DEV__ ? 'warn' : 'silent',
   mediaType: 'unknown',
   muted: false,
@@ -187,6 +189,8 @@ export const mediaState = new State<MediaState>({
   autoPlaying: false,
   providedTitle: '',
   inferredTitle: '',
+  providedLoop: false,
+  userPrefersLoop: false,
   providedPoster: '',
   inferredPoster: '',
   inferredViewType: 'unknown',
@@ -469,7 +473,7 @@ export interface MediaState {
    * @defaultValue false
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop}
    */
-  loop: boolean;
+  readonly loop: boolean;
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
    * and `debug`.
@@ -812,6 +816,10 @@ export interface MediaState {
   providedTitle: string;
   /* @internal */
   inferredTitle: string;
+  /* @internal */
+  providedLoop: boolean;
+  /* @internal */
+  userPrefersLoop: boolean;
   /* @internal - Unclipped current time. */
   realCurrentTime: number;
   /* @internal */

@@ -18,6 +18,7 @@ import pauseIconPaths from 'media-icons/dist/icons/pause.js';
 import exitPIPIconPaths from 'media-icons/dist/icons/picture-in-picture-exit.js';
 import enterPIPIconPaths from 'media-icons/dist/icons/picture-in-picture.js';
 import playIconPaths from 'media-icons/dist/icons/play.js';
+import loopIconPaths from 'media-icons/dist/icons/repeat.js';
 import replayIconPaths from 'media-icons/dist/icons/replay.js';
 import seekBackwardIconPaths from 'media-icons/dist/icons/seek-backward-10.js';
 import seekForwardIconPaths from 'media-icons/dist/icons/seek-forward-10.js';
@@ -78,6 +79,7 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
     ArrowRight: createIcon(arrowRightIconPaths),
     Audio: createIcon(musicIconPaths),
     Chapters: createIcon(chaptersIconPaths),
+    Loop: createIcon(loopIconPaths),
     Quality: createIcon(qualityIconPaths),
     Captions: createIcon(ccIconPaths),
     Settings: createIcon(settingsIconPaths),
@@ -160,6 +162,7 @@ export interface DefaultMenuIcons {
   ArrowRight: DefaultLayoutIcon;
   Audio: DefaultLayoutIcon;
   Chapters: DefaultLayoutIcon;
+  Loop: DefaultLayoutIcon;
   Quality: DefaultLayoutIcon;
   Captions: DefaultLayoutIcon;
   Settings: DefaultLayoutIcon;

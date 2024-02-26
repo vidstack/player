@@ -17,6 +17,7 @@ import pause from 'media-icons/dist/icons/pause.js';
 import pipExit from 'media-icons/dist/icons/picture-in-picture-exit.js';
 import pipEnter from 'media-icons/dist/icons/picture-in-picture.js';
 import play from 'media-icons/dist/icons/play.js';
+import menuLoop from 'media-icons/dist/icons/repeat.js';
 import replay from 'media-icons/dist/icons/replay.js';
 import seekBackward from 'media-icons/dist/icons/seek-backward-10.js';
 import seekForward from 'media-icons/dist/icons/seek-forward-10.js';
@@ -51,6 +52,7 @@ export const icons = {
   'menu-arrow-right': menuArrowRight,
   'menu-accessibility': menuAccessibility,
   'menu-audio': menuAudio,
+  'menu-loop': menuLoop,
   'menu-speed': menuSpeed,
   'menu-quality': menuQuality,
   'menu-captions': menuCaptions,

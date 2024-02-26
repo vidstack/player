@@ -655,11 +655,12 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
       offset={$offset}
     >
       {slot(slots, 'settingsMenuStartItems', null)}
+      <DefaultMenuLoopCheckbox />
       <DefaultAccessibilitySubmenu />
       <DefaultAudioSubmenu />
+      <DefaultCaptionSubmenu />
       <DefaultSpeedSubmenu />
       <DefaultQualitySubmenu />
-      <DefaultCaptionSubmenu />
       {slot(slots, 'settingsMenuEndItems', null)}
     </Menu.Content>
   );
@@ -690,6 +691,31 @@ DefaultSettingsMenu.displayName = 'DefaultSettingsMenu';
 export { DefaultSettingsMenu };
 
 /* -------------------------------------------------------------------------------------------------
+ * DefaultMenuLoopCheckbox
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultMenuLoopCheckbox() {
+  const label = 'Loop',
+    { remote } = useMediaContext(),
+    { icons: Icons } = useDefaultLayoutContext(),
+    translatedLabel = useDefaultLayoutWord(label);
+
+  function onChange(checked: boolean, trigger?: Event) {
+    remote.userPrefersLoopChange(checked, trigger);
+  }
+
+  return (
+    <div className="vds-menu-item vds-menu-item-checkbox">
+      <Icons.Menu.Loop className="vds-menu-checkbox-icon" />
+      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+      <DefaultMenuCheckbox label={label} storageKey="vds-player::user-loop" onChange={onChange} />
+    </div>
+  );
+}
+
+DefaultMenuLoopCheckbox.displayName = 'DefaultMenuLoopCheckbox';
+
+/* -------------------------------------------------------------------------------------------------
  * DefaultAccessibilitySubmenu
  * -----------------------------------------------------------------------------------------------*/
 
@@ -716,29 +742,25 @@ DefaultAccessibilitySubmenu.displayName = 'DefaultAccessibilitySubmenu';
 
 function DefaultMenuKeyboardAnimationCheckbox() {
   const label = 'Keyboard Animations',
-    key = 'vds-player::keyboard-animations',
     $viewType = useMediaState('viewType'),
-    [defaultChecked, setDefaultChecked] = React.useState(false),
     { userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
     translatedLabel = useDefaultLayoutWord(label);
-
-  React.useEffect(() => {
-    const checked = !!(localStorage.getItem(key) ?? true);
-    setDefaultChecked(checked);
-    userPrefersKeyboardAnimations.set(checked);
-  }, []);
 
   if ($viewType !== 'video') return null;
 
   function onChange(checked: boolean) {
     userPrefersKeyboardAnimations.set(checked);
-    localStorage.setItem(key, checked ? '1' : '');
   }
 
   return (
     <div className="vds-menu-item vds-menu-item-checkbox">
       <div className="vds-menu-checkbox-label">{translatedLabel}</div>
-      <DefaultMenuCheckbox label={label} defaultChecked={defaultChecked} onChange={onChange} />
+      <DefaultMenuCheckbox
+        label={label}
+        defaultChecked
+        storageKey="vds-player::keyboard-animations"
+        onChange={onChange}
+      />
     </div>
   );
 }
@@ -751,31 +773,39 @@ DefaultMenuKeyboardAnimationCheckbox.displayName = 'DefaultMenuKeyboardAnimation
 
 export interface DefaultMenuCheckboxProps {
   label: DefaultLayoutWord;
+  storageKey?: string;
   defaultChecked?: boolean;
-  onChange?(checked: boolean): void;
+  onChange?(checked: boolean, trigger?: Event): void;
 }
 
 function DefaultMenuCheckbox({
   label,
+  storageKey,
   defaultChecked = false,
   onChange,
 }: DefaultMenuCheckboxProps) {
   const [isChecked, setIsChecked] = React.useState(defaultChecked),
     [isActive, setIsActive] = React.useState(false),
-    [isDirty, setIsDirty] = React.useState(false),
     ariaLabel = useDefaultLayoutWord(label);
 
   React.useEffect(() => {
-    if (isDirty) return;
-    setIsChecked(defaultChecked);
-  }, [isDirty, defaultChecked]);
+    const savedValue = storageKey ? localStorage.getItem(storageKey) : null,
+      checked = !!(savedValue ?? defaultChecked);
+    setIsChecked(checked);
+    onChange?.(checked);
+  }, []);
 
-  function onPress(event?: React.PointerEvent) {
-    if (event?.button === 1) return;
-    setIsChecked(!isChecked);
-    onChange?.(!isChecked);
+  function onPress(event?: React.PointerEvent | React.KeyboardEvent) {
+    if (event && 'button' in event && event?.button === 1) return;
+
+    const toggleCheck = !isChecked;
+
+    setIsChecked(toggleCheck);
+    if (storageKey) localStorage.setItem(storageKey, toggleCheck ? '1' : '');
+
+    onChange?.(toggleCheck, event?.nativeEvent);
+
     setIsActive(false);
-    setIsDirty(true);
   }
 
   function onActive(event: React.PointerEvent) {

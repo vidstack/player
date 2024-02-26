@@ -2,7 +2,7 @@ import { html, type TemplateResult } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { ref as $ref, ref } from 'lit-html/directives/ref.js';
 import type { RefOrCallback } from 'lit-html/directives/ref.js';
-import { computed, signal, type ReadSignal } from 'maverick.js';
+import { computed, peek, signal, type ReadSignal } from 'maverick.js';
 import { isFunction, isKeyboardClick, noop, unwrap, uppercaseFirstChar } from 'maverick.js/std';
 
 import {
@@ -503,11 +503,12 @@ export function DefaultSettingsMenu({
         offset=${$signal($offset)}
       >
         ${[
+          DefaultMenuLoopCheckbox(),
           DefaultAccessibilityMenu(),
           DefaultAudioMenu(),
+          DefaultCaptionsMenu(),
           DefaultSpeedMenu(),
           DefaultQualityMenu(),
-          DefaultCaptionsMenu(),
         ]}
       </media-menu-items>
     `;
@@ -536,6 +537,25 @@ export function DefaultSettingsMenu({
   });
 }
 
+function DefaultMenuLoopCheckbox() {
+  const { remote } = useMediaContext(),
+    { translations } = useDefaultLayoutContext(),
+    $label = $i18n(translations, 'Loop');
+  return html`
+    <div class="vds-menu-item vds-menu-item-checkbox">
+      <slot name="menu-loop-icon" data-class="vds-menu-checkbox-icon"></slot>
+      <div class="vds-menu-checkbox-label">${$label}</div>
+      ${DefaultMenuCheckbox({
+        label: 'Loop',
+        storageKey: 'vds-player::user-loop',
+        onChange(checked, trigger) {
+          remote.userPrefersLoopChange(checked, trigger);
+        },
+      })}
+    </div>
+  `;
+}
+
 function DefaultAccessibilityMenu() {
   return $signal(() => {
     const { translations } = useDefaultLayoutContext();
@@ -557,25 +577,22 @@ function DefaultMenuKeyboardAnimationCheckbox() {
   return $signal(() => {
     const { translations, userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
       { viewType } = useMediaState(),
-      label = 'Keyboard Animations',
-      key = 'vds-player::keyboard-animations',
-      $label = $i18n(translations, label),
-      $disabled = computed(() => viewType() !== 'video'),
-      defaultChecked = !!(localStorage.getItem(key) ?? true);
-
-    userPrefersKeyboardAnimations.set(defaultChecked);
+      $disabled = computed(() => viewType() !== 'video');
 
     if ($disabled()) return null;
+
+    const label = 'Keyboard Animations',
+      $label = $i18n(translations, label);
 
     return html`
       <div class="vds-menu-item vds-menu-item-checkbox">
         <div class="vds-menu-checkbox-label">${$label}</div>
         ${DefaultMenuCheckbox({
           label,
-          defaultChecked,
+          defaultChecked: true,
+          storageKey: 'vds-player::keyboard-animations',
           onChange(checked) {
             userPrefersKeyboardAnimations.set(checked);
-            localStorage.setItem(key, checked ? '1' : '');
           },
         })}
       </div>
@@ -586,22 +603,28 @@ function DefaultMenuKeyboardAnimationCheckbox() {
 function DefaultMenuCheckbox({
   label,
   defaultChecked = false,
+  storageKey,
   onChange,
 }: {
   label: DefaultLayoutWord;
+  storageKey?: string;
   defaultChecked?: boolean;
-  onChange(checked: boolean): void;
+  onChange(checked: boolean, trigger?: Event): void;
 }) {
   const { translations } = useDefaultLayoutContext(),
-    $checked = signal(defaultChecked),
+    savedValue = storageKey ? localStorage.getItem(storageKey) : null,
+    $checked = signal(!!(savedValue ?? defaultChecked)),
     $active = signal(false),
     $ariaChecked = $signal($ariaBool($checked)),
     $label = $i18n(translations, label);
 
+  onChange(peek($checked));
+
   function onPress(event?: PointerEvent) {
     if (event?.button === 1) return;
     $checked.set((checked) => !checked);
-    onChange($checked());
+    if (storageKey) localStorage.setItem(storageKey, $checked() ? '1' : '');
+    onChange($checked(), event);
     $active.set(false);
   }
 

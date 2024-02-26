@@ -32,6 +32,7 @@ export class MediaStateSync extends MediaPlayerController {
   private _init() {
     const providedProps = {
       duration: 'providedDuration',
+      loop: 'providedLoop',
       poster: 'providedPoster',
       streamType: 'providedStreamType',
       title: 'providedTitle',
@@ -56,11 +57,13 @@ export class MediaStateSync extends MediaPlayerController {
   // Sync "provided" props with internal state. Provided props are used to differentiate from
   // provider inferred values.
   private _watchProvidedTypes() {
-    const { viewType, streamType, title, poster } = this.$props;
-    this.$state.providedPoster.set(poster());
-    this.$state.providedStreamType.set(streamType());
-    this.$state.providedViewType.set(viewType());
-    this.$state.providedTitle.set(title());
+    const { viewType, streamType, title, poster, loop } = this.$props,
+      $state = this.$state;
+    $state.providedPoster.set(poster());
+    $state.providedStreamType.set(streamType());
+    $state.providedViewType.set(viewType());
+    $state.providedTitle.set(title());
+    $state.providedLoop.set(loop());
   }
 
   private _watchLogLevel() {
@@ -86,8 +89,7 @@ export class MediaStateSync extends MediaPlayerController {
   }
 
   private _watchLoop() {
-    const loop = this.$props.loop();
-    this.$state.loop.set(loop);
+    const loop = this.$state.loop();
     this.dispatch('loop-change', { detail: loop });
   }
 

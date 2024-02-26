@@ -452,9 +452,15 @@
  */
 
 :where(.vds-menu-item-checkbox) {
-  padding: var(--media-menu-item-padding, 12px);
+  padding: var(--media-menu-item-padding, 10px);
   background-color: var(--media-menu-item-bg, transparent);
   box-sizing: border-box;
+}
+
+:where(.vds-menu-checkbox-icon) {
+  width: var(--media-menu-item-icon-size, 22px);
+  height: var(--media-menu-item-icon-size, 22px);
+  margin-right: var(--media-menu-item-icon-spacing, 6px);
 }
 
 :where(.vds-menu-checkbox-label) {
@@ -466,8 +472,8 @@
 }
 
 :where(.vds-menu-checkbox) {
-  --width: var(--media-menu-checkbox-width, 44px);
-  --height: var(--media-menu-checkbox-width, 20px);
+  --width: var(--media-menu-checkbox-width, 40px);
+  --height: var(--media-menu-checkbox-width, 18px);
   --diameter: var(--media-menu-checkbox-handle-diameter, calc(var(--height) - 2px));
   --top: calc((var(--height) - var(--diameter)) / 2);
   --bg: var(--media-menu-checkbox-bg, #cccccc);

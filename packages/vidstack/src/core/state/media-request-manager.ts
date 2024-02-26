@@ -597,6 +597,10 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     }
   }
 
+  ['media-user-loop-change-request'](event: RE.MediaUserLoopChangeRequestEvent) {
+    this.$state.userPrefersLoop.set(event.detail);
+  }
+
   async ['media-pause-request'](event: RE.MediaPauseRequestEvent) {
     if (this.$state.paused()) return;
     try {

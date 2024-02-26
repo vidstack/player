@@ -37,6 +37,7 @@ export type DefaultLayoutWord =
   | 'Green'
   | 'Keyboard Animations'
   | 'LIVE'
+  | 'Loop'
   | 'Magenta'
   | 'Mute'
   | 'Normal'

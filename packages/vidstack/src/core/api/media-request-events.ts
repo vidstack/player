@@ -12,6 +12,7 @@ export interface MediaRequestEvents {
   'media-google-cast-request': MediaGoogleCastRequestEvent;
   'media-live-edge-request': MediaLiveEdgeRequestEvent;
   'media-loop-request': MediaLoopRequestEvent;
+  'media-user-loop-change-request': MediaUserLoopChangeRequestEvent;
   'media-orientation-lock-request': MediaOrientationLockRequestEvent;
   'media-orientation-unlock-request': MediaOrientationUnlockRequestEvent;
   'media-mute-request': MediaMuteRequestEvent;
@@ -261,10 +262,19 @@ export interface MediaHidePosterRequestEvent extends DOMEvent<void> {}
  * Internal event that is fired by a media provider when requesting media playback to restart after
  * reaching the end. This event also helps notify the player that media will be looping.
  *
+ * @internal
  * @bubbles
  * @composed
  */
 export interface MediaLoopRequestEvent extends DOMEvent<void> {}
+
+/**
+ * Fired when the user loop preference changes.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaUserLoopChangeRequestEvent extends DOMEvent<boolean> {}
 
 /**
  * Fired when requesting the screen orientation to be locked to a certain type.

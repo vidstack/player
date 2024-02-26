@@ -470,6 +470,10 @@ export class MediaRemoteControl {
     }
   }
 
+  userPrefersLoopChange(prefersLoop: boolean, trigger?: Event) {
+    this._dispatchRequest('media-user-loop-change-request', trigger, prefersLoop);
+  }
+
   private _dispatchRequest<EventType extends keyof MediaRequestEvents>(
     type: EventType,
     trigger?: Event,
