@@ -476,7 +476,7 @@
   --height: var(--media-menu-checkbox-width, 18px);
   --diameter: var(--media-menu-checkbox-handle-diameter, calc(var(--height) - 2px));
   --top: calc((var(--height) - var(--diameter)) / 2);
-  --bg: var(--media-menu-checkbox-bg, #cccccc);
+  --bg: var(--media-menu-checkbox-bg, #8c8c8c);
   --bg-active: var(--media-menu-checkbox-bg-active, #1ba13f);
   --gap: var(--media-menu-checkbox-gap, 2.5px);
   position: relative;
@@ -511,7 +511,7 @@
   top: var(--top);
   transform: translateX(var(--gap));
   transition: 0.3s all ease-in-out;
-  border: var(--media-menu-checkbox-handle-border, 1px solid rgba(0 0 0 / 0.25));
+  border: var(--media-menu-checkbox-handle-border);
   box-sizing: border-box;
 }
 

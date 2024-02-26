@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### ✨ Features
+
+#### Player
+
+- audio gain support (#1145) ([c3e08c5](https://github.com/vidstack/player/commit/c3e08c57996a50c403b414b4d79b88b9deb3b0e5))
+- new accessibility settings menu ([0b6470f](https://github.com/vidstack/player/commit/0b6470f0831a9536e405931cbf42790079925cfa))
+- show example captions text on style change ([8ceae6b](https://github.com/vidstack/player/commit/8ceae6bee4e3de29a124f2e74d984f2391a76500))
+- keyboard animations setting in default layout ([b63fa16](https://github.com/vidstack/player/commit/b63fa1624286c152c8e9e755f03a08d9a4b5ac11))
+- loop setting in default layout ([5f07f55](https://github.com/vidstack/player/commit/5f07f55462057f6ff2fc5b6a337477f975fe85c9))
+- media announcer ([533edc5](https://github.com/vidstack/player/commit/533edc5bbd9ff923bf3bb4b5fa31b81afce98062))
+- announcements setting in default layout ([701f7ce](https://github.com/vidstack/player/commit/701f7ce21b895b8cf70972678023ca5193778b49))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- always include keyboard status updates ([82ec4a3](https://github.com/vidstack/player/commit/82ec4a3baf72ad3a350e9f572c6829be0dc53fb4))
+- respect prefers reduced motion in default theme ([208a152](https://github.com/vidstack/player/commit/208a15295fb2c9f9ea8620284a78b57aa7b0639d))
+
+#### Player (React)
+
+- rename `DefaultKeyboardActionDisplay` to `DefaultKeyboardDisplay` ([9d573f9](https://github.com/vidstack/player/commit/9d573f984642629c7595911d2c621da404742b17))
+
 ## [1.10.9-next](https://github.com/vidstack/player/releases/tag/v1.10.9-next) (2024-02-20)
 
 ### 🐛 Bug Fixes
