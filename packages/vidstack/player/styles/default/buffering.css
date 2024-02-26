@@ -47,3 +47,9 @@
     transform: rotate(360deg);
   }
 }
+
+@media (prefers-reduced-motion) {
+  :where([data-buffering]) :where(.vds-buffering-icon, .vds-buffering-spinner) {
+    animation-duration: 8s;
+  }
+}

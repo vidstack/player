@@ -65,7 +65,7 @@
   }
 
   .vds-button:hover {
-    transform: var(--media-button-hover-transform, scale(1));
+    transform: var(--media-button-hover-transform, scale(1.1));
     transition: var(--media-button-hover-transition, transform 0.2s ease-in);
   }
 }

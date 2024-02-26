@@ -94,6 +94,16 @@
   }
 }
 
+@media (prefers-reduced-motion) {
+  :where(.vds-tooltip-content) {
+    animation: none;
+  }
+
+  :where(.vds-tooltip-content[data-visible]) {
+    opacity: 1;
+  }
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * States

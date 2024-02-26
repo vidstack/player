@@ -116,6 +116,12 @@
   justify-content: center;
 }
 
+@media (prefers-reduced-motion) {
+  :where(.vds-menu-button[role='button'] .vds-rotate-icon) {
+    transition: unset;
+  }
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Menu Button Parts
@@ -158,6 +164,12 @@
   font-size: var(--media-menu-font-size, 15px);
   font-weight: var(--media-menu-font-weight, 500);
   transition: height 0.35s ease;
+}
+
+@media (prefers-reduced-motion) {
+  :where(.vds-menu-items) {
+    transition: unset;
+  }
 }
 
 :where(.vds-menu-items:not([data-submenu])) {
@@ -240,6 +252,13 @@
   to {
     opacity: 0;
     transform: var(--exit-transform);
+  }
+}
+
+@media (prefers-reduced-motion) {
+  :where(.vds-menu-items) {
+    animation: none;
+    opacity: 1;
   }
 }
 
@@ -485,8 +504,8 @@
   position: absolute;
   top: var(--top);
   transform: translateX(var(--gap));
-  border: var(--media-menu-checkbox-handle-border, 1px solid rgba(0 0 0 / 0.25));
   transition: 0.3s all ease-in-out;
+  border: var(--media-menu-checkbox-handle-border, 1px solid rgba(0 0 0 / 0.25));
   box-sizing: border-box;
 }
 
@@ -494,8 +513,10 @@
   transform: translateX(calc(var(--width) - var(--diameter) - var(--gap)));
 }
 
-:where(.vds-menu-checkbox[data-active])::after {
-  width: calc(var(--width) - calc(var(--gap) * 2));
+@media (prefers-reduced-motion: no-preference) {
+  :where(.vds-menu-checkbox[data-active])::after {
+    width: calc(var(--width) - calc(var(--gap) * 2));
+  }
 }
 
 :where(.vds-menu-checkbox[aria-checked='true'][data-active])::after {

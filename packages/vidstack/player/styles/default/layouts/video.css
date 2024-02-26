@@ -195,7 +195,7 @@
 
 :where(.vds-video-layout .vds-captions) {
   z-index: 10;
-  transition: var(--video-captions-transition, bottom 0.15s linear);
+  transition: var(--video-captions-transition, bottom 0.3s ease-in-out);
 }
 
 @media (min-width: 980px) {

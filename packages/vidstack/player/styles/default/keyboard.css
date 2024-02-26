@@ -73,6 +73,12 @@
   pointer-events: none;
 }
 
+@media (prefers-reduced-motion) {
+  :where(.vds-kb-bezel) {
+    animation: none;
+  }
+}
+
 :where(.vds-kb-bezel:has(slot:empty)) {
   opacity: 0;
 }
