@@ -166,6 +166,7 @@ export function createDefaultMediaLayout({
         $smallWhen = createComputed(() => {
           return isBoolean(smallLayoutWhen) ? smallLayoutWhen : smallLayoutWhen(media.player.state);
         }, [smallLayoutWhen]),
+        userPrefersAnnouncements = createSignal(true),
         userPrefersKeyboardAnimations = createSignal(true),
         isMatch = $viewType === type,
         isSmallLayout = $smallWhen(),
@@ -206,6 +207,7 @@ export function createDefaultMediaLayout({
                 playbackRates,
                 thumbnails,
                 translations,
+                userPrefersAnnouncements,
                 userPrefersKeyboardAnimations,
               }}
             >

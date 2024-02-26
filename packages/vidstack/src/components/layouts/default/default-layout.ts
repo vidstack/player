@@ -48,6 +48,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       ...this.$props,
       when: this._when,
       smallWhen: this._smallWhen,
+      userPrefersAnnouncements: signal(true),
       userPrefersKeyboardAnimations: signal(true),
       get menuContainer() {
         return self.menuContainer;

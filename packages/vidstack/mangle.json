@@ -801,5 +801,15 @@
   "_hideExampleTimer": "Rn",
   "_onFontStyleChange": "Wn",
   "_removeExample": "Sn",
-  "_showExample": "Xn"
+  "_showExample": "Xn",
+  "_initializing": "_n",
+  "_seekTimer": "ao",
+  "_setLabel": "Yn",
+  "_startedSeekingAt": "Zn",
+  "_translate": "$n",
+  "_watchCaptions": "bo",
+  "_watchFullscreen": "co",
+  "_watchLabel": "go",
+  "_watchPiP": "eo",
+  "_watchSeeking": "fo"
 }

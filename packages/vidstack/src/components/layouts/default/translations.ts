@@ -1,6 +1,7 @@
 import type { ReadSignal } from 'maverick.js';
 
 export type DefaultLayoutWord =
+  | 'Announcements'
   | 'Accessibility'
   | 'AirPlay'
   | 'Audio'

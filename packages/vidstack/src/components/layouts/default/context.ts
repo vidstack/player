@@ -4,6 +4,7 @@ import type { DefaultLayoutProps } from './props';
 
 export interface DefaultLayoutContext extends ReadSignalRecord<DefaultLayoutProps> {
   menuContainer: HTMLElement | null;
+  userPrefersAnnouncements: WriteSignal<boolean>;
   userPrefersKeyboardAnimations: WriteSignal<boolean>;
 }
 

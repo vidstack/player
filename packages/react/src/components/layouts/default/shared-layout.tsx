@@ -61,7 +61,11 @@ interface DefaultMediaMenuProps {
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultAnnouncer() {
-  const { translations } = useDefaultLayoutContext();
+  const { userPrefersAnnouncements, translations } = useDefaultLayoutContext(),
+    $userPrefersAnnouncements = useSignal(userPrefersAnnouncements);
+
+  if (!$userPrefersAnnouncements) return null;
+
   return <MediaAnnouncer translations={translations} />;
 }
 
@@ -740,6 +744,7 @@ function DefaultAccessibilitySubmenu() {
     <Menu.Root className="vds-accessibility-menu vds-menu">
       <DefaultSubmenuButton label={label} Icon={Icons.Menu.Accessibility} />
       <Menu.Content className="vds-menu-items">
+        <DefaultMenuAnnouncementsCheckbox />
         <DefaultMenuKeyboardAnimationCheckbox />
         <DefaultFontSubmenu />
       </Menu.Content>
@@ -748,6 +753,34 @@ function DefaultAccessibilitySubmenu() {
 }
 
 DefaultAccessibilitySubmenu.displayName = 'DefaultAccessibilitySubmenu';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultMenuAnnouncementsCheckbox
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultMenuAnnouncementsCheckbox() {
+  const label = 'Announcements',
+    { userPrefersAnnouncements } = useDefaultLayoutContext(),
+    translatedLabel = useDefaultLayoutWord(label);
+
+  function onChange(checked: boolean) {
+    userPrefersAnnouncements.set(checked);
+  }
+
+  return (
+    <div className="vds-menu-item vds-menu-item-checkbox">
+      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+      <DefaultMenuCheckbox
+        label={label}
+        defaultChecked
+        storageKey="vds-player::announcements"
+        onChange={onChange}
+      />
+    </div>
+  );
+}
+
+DefaultMenuAnnouncementsCheckbox.displayName = 'DefaultMenuAnnouncementsCheckbox';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultMenuKeyboardAnimationCheckbox

@@ -23,8 +23,13 @@ import { DefaultFontMenu } from './font-menu';
 import { renderMenuButton } from './menu-layout';
 
 export function DefaultAnnouncer() {
-  const { translations } = useDefaultLayoutContext();
-  return html`<media-announcer .translations=${$signal(translations)}></media-announcer>`;
+  return $signal(() => {
+    const { translations, userPrefersAnnouncements } = useDefaultLayoutContext();
+
+    if (!userPrefersAnnouncements()) return null;
+
+    return html`<media-announcer .translations=${$signal(translations)}></media-announcer>`;
+  });
 }
 
 export function DefaultAirPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
@@ -545,13 +550,14 @@ export function DefaultSettingsMenu({
 function DefaultMenuLoopCheckbox() {
   const { remote } = useMediaContext(),
     { translations } = useDefaultLayoutContext(),
-    $label = $i18n(translations, 'Loop');
+    label = 'Loop',
+    $label = $i18n(translations, label);
   return html`
     <div class="vds-menu-item vds-menu-item-checkbox">
       <slot name="menu-loop-icon" data-class="vds-menu-checkbox-icon"></slot>
       <div class="vds-menu-checkbox-label">${$label}</div>
       ${DefaultMenuCheckbox({
-        label: 'Loop',
+        label,
         storageKey: 'vds-player::user-loop',
         onChange(checked, trigger) {
           remote.userPrefersLoopChange(checked, trigger);
@@ -571,11 +577,33 @@ function DefaultAccessibilityMenu() {
           icon: 'menu-accessibility',
         })}
         <media-menu-items class="vds-menu-items">
-          ${[DefaultMenuKeyboardAnimationCheckbox(), DefaultFontMenu()]}
+          ${[
+            DefaultMenuAnnouncementsCheckbox(),
+            DefaultMenuKeyboardAnimationCheckbox(),
+            DefaultFontMenu(),
+          ]}
         </media-menu-items>
       </media-menu>
     `;
   });
+}
+
+function DefaultMenuAnnouncementsCheckbox() {
+  const { userPrefersAnnouncements, translations } = useDefaultLayoutContext(),
+    label = 'Announcements',
+    $label = $i18n(translations, label);
+  return html`
+    <div class="vds-menu-item vds-menu-item-checkbox">
+      <div class="vds-menu-checkbox-label">${$label}</div>
+      ${DefaultMenuCheckbox({
+        label,
+        storageKey: 'vds-player::announcements',
+        onChange(checked) {
+          userPrefersAnnouncements.set(checked);
+        },
+      })}
+    </div>
+  `;
 }
 
 function DefaultMenuKeyboardAnimationCheckbox() {
