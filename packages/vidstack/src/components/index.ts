@@ -1,5 +1,6 @@
 export * from './player';
 export * from './provider/provider';
+export * from './aria/announcer';
 
 // Controls
 export * from './ui/controls';

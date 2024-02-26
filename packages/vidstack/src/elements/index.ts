@@ -4,6 +4,7 @@ export { MediaCaptionsElement } from './define/captions-element';
 export { MediaGestureElement } from './define/gesture-element';
 export { MediaProviderElement } from './define/provider-element';
 export { MediaPlayerElement } from './define/player-element';
+export { MediaAnnouncerElement } from './define/announcer-element';
 export { MediaPosterElement } from './define/poster-element';
 export { MediaThumbnailElement } from './define/thumbnail-element';
 export { MediaTimeElement } from './define/time-element';

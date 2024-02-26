@@ -4,9 +4,10 @@ import { computed } from 'maverick.js';
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import { useMediaState } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
-import { DefaultKeyboardDisplay } from './keyboard-action-display';
+import { DefaultKeyboardDisplay } from './keyboard-display';
 import {
   DefaultAirPlayButton,
+  DefaultAnnouncer,
   DefaultCaptionButton,
   DefaultCaptions,
   DefaultChaptersMenu,
@@ -25,6 +26,7 @@ import {
 
 export function DefaultVideoLayoutLarge() {
   return [
+    DefaultAnnouncer(),
     DefaultVideoGestures(),
     DefaultBufferingIndicator(),
     DefaultKeyboardDisplay(),
@@ -85,6 +87,7 @@ function DefaultControlsGroupTop() {
 
 export function DefaultVideoLayoutSmall() {
   return [
+    DefaultAnnouncer(),
     DefaultVideoGestures(),
     DefaultBufferingIndicator(),
     DefaultCaptions(),

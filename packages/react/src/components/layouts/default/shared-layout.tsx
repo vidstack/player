@@ -14,6 +14,7 @@ import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { createComputed } from '../../../hooks/use-signals';
 import { isRemotionSource } from '../../../providers/remotion/type-check';
+import { MediaAnnouncer } from '../../announcer';
 import type { TimeSliderInstance } from '../../primitives/instances';
 import { AirPlayButton } from '../../ui/buttons/airplay-button';
 import { CaptionButton } from '../../ui/buttons/caption-button';
@@ -54,6 +55,18 @@ interface DefaultMediaMenuProps {
   portalClass?: string;
   slots?: Slots<DefaultLayoutMenuSlotName>;
 }
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultAnnouncer
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultAnnouncer() {
+  const { translations } = useDefaultLayoutContext();
+  return <MediaAnnouncer translations={translations} />;
+}
+
+DefaultAnnouncer.displayName = 'DefaultAnnouncer';
+export { DefaultAnnouncer };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultTooltip

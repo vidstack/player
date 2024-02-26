@@ -22,6 +22,11 @@ import { $signal } from '../../../lit/directives/signal';
 import { DefaultFontMenu } from './font-menu';
 import { renderMenuButton } from './menu-layout';
 
+export function DefaultAnnouncer() {
+  const { translations } = useDefaultLayoutContext();
+  return html`<media-announcer .translations=${$signal(translations)}></media-announcer>`;
+}
+
 export function DefaultAirPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
   const { translations } = useDefaultLayoutContext(),
     { remotePlaybackState } = useMediaState(),

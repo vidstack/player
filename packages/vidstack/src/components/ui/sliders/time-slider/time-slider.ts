@@ -184,6 +184,10 @@ export class TimeSlider extends Component<
   }
 
   private _onDragEnd(event: SliderValueChangeEvent | SliderDragEndEvent) {
+    // Ensure a seeking event is always fired before a seeked event for consistency.
+    const { seeking } = this._media.$state;
+    if (!peek(seeking)) this._seeking(this._percentToTime(event.detail), event);
+
     const percent = event.detail;
     this._seek(this._percentToTime(percent), percent, event);
 

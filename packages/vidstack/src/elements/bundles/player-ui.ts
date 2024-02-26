@@ -1,5 +1,6 @@
 import { defineCustomElement } from 'maverick.js/element';
 
+import { MediaAnnouncerElement } from '../define/announcer-element';
 import { MediaAirPlayButtonElement } from '../define/buttons/airplay-button-element';
 import { MediaCaptionButtonElement } from '../define/buttons/caption-button-element';
 import { MediaFullscreenButtonElement } from '../define/buttons/fullscreen-button-element';
@@ -51,6 +52,7 @@ defineCustomElement(MediaLayoutElement);
 defineCustomElement(MediaControlsElement);
 defineCustomElement(MediaControlsGroupElement);
 defineCustomElement(MediaPosterElement);
+defineCustomElement(MediaAnnouncerElement);
 // Tooltips
 defineCustomElement(MediaTooltipElement);
 defineCustomElement(MediaTooltipTriggerElement);

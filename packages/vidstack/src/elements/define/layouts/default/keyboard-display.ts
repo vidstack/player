@@ -4,22 +4,22 @@ import { computed, effect, signal } from 'maverick.js';
 import { camelToKebabCase } from 'maverick.js/std';
 
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
-import { i18n } from '../../../../components/layouts/default/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { createSlot } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
 
 export function DefaultKeyboardDisplay() {
   return $signal(() => {
-    const visible = signal(false),
-      media = useMediaContext(),
+    const media = useMediaContext(),
       { noKeyboardAnimations, userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
-      { lastKeyboardAction } = media.$state,
-      $isAnimated = computed(() => !noKeyboardAnimations() && userPrefersKeyboardAnimations());
+      $disabled = computed(() => noKeyboardAnimations() || !userPrefersKeyboardAnimations());
 
-    if (!$isAnimated()) {
-      return DefaultKeyboardStatus({ className: 'vds-sr-only' });
+    if ($disabled()) {
+      return null;
     }
+
+    const visible = signal(false),
+      { lastKeyboardAction } = media.$state;
 
     effect(() => {
       visible.set(!!lastKeyboardAction());
@@ -43,14 +43,13 @@ export function DefaultKeyboardDisplay() {
       });
 
     function Icon() {
-      return DefaultKeyboardStatus({
-        className: 'vds-kb-bezel',
-        children: $signal(() => {
-          const $slot = $iconSlot();
-          if (!$slot) return null;
-          return html`<div class="vds-kb-icon">${$slot}</div>`;
-        }),
-      });
+      const $slot = $iconSlot();
+      if (!$slot) return null;
+      return html`
+        <div class="vds-kb-bezel">
+          <div class="vds-kb-icon">${$slot}</div>
+        </div>
+      `;
     }
 
     return html`
@@ -62,40 +61,6 @@ export function DefaultKeyboardDisplay() {
       </div>
     `;
   });
-}
-
-export function DefaultKeyboardStatus({
-  className = null,
-  children = null,
-}: {
-  className?: string | null;
-  children?: any;
-} = {}) {
-  const $statusLabel = computed(getStatusLabel),
-    $busy = signal(false);
-
-  effect(() => {
-    $statusLabel();
-    $busy.set(true);
-
-    const id = window.setTimeout(() => {
-      $busy.set(false);
-    }, 150);
-
-    return () => window.clearTimeout(id);
-  });
-
-  return html`
-    <div
-      class=${className}
-      role="status"
-      aria-live="assertive"
-      aria-busy=${$signal(() => ($busy() ? 'true' : null))}
-      aria-label=${$signal($statusLabel)}
-    >
-      ${children}
-    </div>
-  `;
 }
 
 function getText() {
@@ -143,40 +108,6 @@ function getIconName() {
       return 'kb-seek-forward-icon';
     case 'seekBackward':
       return 'kb-seek-backward-icon';
-    default:
-      return null;
-  }
-}
-
-function getStatusLabel() {
-  const $text = getStatusText(),
-    { translations } = useDefaultLayoutContext();
-  return $text ? i18n(translations, $text) : null;
-}
-
-function getStatusText(): any {
-  const { $state } = useMediaContext(),
-    action = $state.lastKeyboardAction()?.action,
-    { translations } = useDefaultLayoutContext();
-  switch (action) {
-    case 'togglePaused':
-      return !$state.paused() ? 'Play' : 'Pause';
-    case 'toggleFullscreen':
-      return $state.fullscreen() ? 'Enter Fullscreen' : 'Exit Fullscreen';
-    case 'togglePictureInPicture':
-      return $state.pictureInPicture() ? 'Enter PiP' : 'Exit PiP';
-    case 'toggleCaptions':
-      return $state.textTrack() ? 'Closed-Captions On' : 'Closed-Captions Off';
-    case 'toggleMuted':
-    case 'volumeUp':
-    case 'volumeDown':
-      return $state.muted() || $state.volume() === 0
-        ? 'Mute'
-        : `${Math.round($state.volume() * ($state.audioGain() ?? 1) * 100)}% ${translations()?.Volume ?? 'Volume'}`;
-    case 'seekForward':
-      return 'Seek Forward';
-    case 'seekBackward':
-      return 'Seek Backward';
     default:
       return null;
   }

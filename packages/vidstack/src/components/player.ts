@@ -267,7 +267,7 @@ export class MediaPlayer
     setAttribute(
       this.el!,
       'aria-label',
-      currentTitle ? `${typeText} - ${currentTitle}` : typeText + ' Player',
+      `${typeText} Player` + (currentTitle ? `- ${currentTitle}` : ''),
     );
 
     // Title attribute is removed to prevent popover interfering with user hovering over player.

@@ -9,6 +9,7 @@ import {
   Gesture,
   GoogleCastButton,
   LiveButton,
+  MediaAnnouncer,
   MediaPlayer,
   MediaProvider,
   Menu,
@@ -42,6 +43,7 @@ import {
 // Core
 export class MediaPlayerInstance extends MediaPlayer {}
 export class MediaProviderInstance extends MediaProvider {}
+export class MediaAnnouncerInstance extends MediaAnnouncer {}
 // Controls
 export class ControlsInstance extends Controls {}
 export class ControlsGroupInstance extends ControlsGroup {}

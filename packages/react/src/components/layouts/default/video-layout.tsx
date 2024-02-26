@@ -9,10 +9,11 @@ import * as Spinner from '../../ui/spinner';
 import { Time } from '../../ui/time';
 import { useLayoutName } from '../utils';
 import { useDefaultLayoutContext } from './context';
-import { DefaultKeyboardDisplay, DefaultKeyboardStatus } from './keyboard-action-display';
+import { DefaultKeyboardDisplay } from './keyboard-display';
 import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
 import {
   DefaultAirPlayButton,
+  DefaultAnnouncer,
   DefaultCaptionButton,
   DefaultCaptions,
   DefaultChaptersMenu,
@@ -93,6 +94,7 @@ function DefaultVideoLargeLayout() {
     slots = { ...baseSlots, ...baseSlots?.largeLayout };
   return (
     <>
+      <DefaultAnnouncer />
       <DefaultVideoGestures />
       <DefaultVideoKeyboardDisplay />
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
@@ -153,6 +155,7 @@ function DefaultVideoSmallLayout() {
     slots = { ...baseSlots, ...baseSlots?.smallLayout };
   return (
     <>
+      <DefaultAnnouncer />
       <DefaultVideoGestures />
       <DefaultVideoKeyboardDisplay />
       {slot(slots, 'bufferingIndicator', <DefaultBufferingIndicator />)}
@@ -316,15 +319,13 @@ DefaultVideoLoadLayout.displayName = 'DefaultVideoLoadLayout';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultVideoKeyboardDisplay() {
-  const { noKeyboardAnimations, icons, translations, userPrefersKeyboardAnimations } =
-      useDefaultLayoutContext(),
+  const { noKeyboardAnimations, icons, userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
     $userPrefersKeyboardAnimations = useSignal(userPrefersKeyboardAnimations),
-    noAnimations = noKeyboardAnimations || !$userPrefersKeyboardAnimations;
-  return noAnimations ? (
-    <DefaultKeyboardStatus className="vds-sr-only" />
-  ) : (
-    <DefaultKeyboardDisplay icons={icons.KeyboardAction} translations={translations} />
-  );
+    disabled = noKeyboardAnimations || !$userPrefersKeyboardAnimations;
+
+  if (disabled || !icons.KeyboardAction) return null;
+
+  return <DefaultKeyboardDisplay icons={icons.KeyboardAction} />;
 }
 
 DefaultVideoKeyboardDisplay.displayName = 'DefaultVideoKeyboardDisplay';
