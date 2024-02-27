@@ -22,19 +22,6 @@ import { sliderValueFormatContext } from '../slider/format';
 import { sliderContext } from '../slider/slider-context';
 import { SliderController, type SliderControllerProps } from '../slider/slider-controller';
 
-export interface TimeSliderState extends SliderState {}
-
-export interface TimeSliderEvents
-  extends SliderEvents,
-    Pick<
-      MediaRequestEvents,
-      | 'media-play-request'
-      | 'media-pause-request'
-      | 'media-seeking-request'
-      | 'media-seek-request'
-      | 'media-live-edge-request'
-    > {}
-
 /**
  * Versatile and user-friendly input time control designed for seamless cross-browser and provider
  * compatibility and accessibility with ARIA support. It offers a smooth user experience for both
@@ -306,3 +293,16 @@ interface ThrottledSeeking {
   (time: number, event: Event): void;
   cancel(): void;
 }
+
+export interface TimeSliderState extends SliderState {}
+
+export interface TimeSliderEvents
+  extends SliderEvents,
+    Pick<
+      MediaRequestEvents,
+      | 'media-play-request'
+      | 'media-pause-request'
+      | 'media-seeking-request'
+      | 'media-seek-request'
+      | 'media-live-edge-request'
+    > {}

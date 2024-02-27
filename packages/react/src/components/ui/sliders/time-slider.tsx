@@ -20,8 +20,6 @@ import {
 } from '../../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import * as ThumbnailBase from '../thumbnail';
-import { type ValueProps } from './slider';
-import { SliderValueBridge } from './slider-value';
 
 /* -------------------------------------------------------------------------------------------------
  * TimeSliderContext
@@ -211,43 +209,6 @@ const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
 ChapterTitle.displayName = 'SliderChapterTitle';
 
 /* -------------------------------------------------------------------------------------------------
- * SliderValue
- * -----------------------------------------------------------------------------------------------*/
-
-/**
- * Displays the specific numeric representation of the current or pointer value of the time slider.
- * When a user interacts with a slider by moving its thumb along the track, the slider value
- * and current playback time updates accordingly.
- *
- * @docs {@link https://www.vidstack.io/docs/player/components/time-slider#value}
- * @example
- * ```tsx
- * <TimeSlider.Root>
- *   <TimeSlider.Preview>
- *     <TimeSlider.Value />
- *   </TimeSlider.Preview>
- * </TimeSlider.Root>
- * ```
- */
-const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
-  return (
-    <SliderValueBridge {...(props as Omit<ValueProps, 'ref'>)}>
-      {(props, instance) => {
-        const $text = useSignal(() => instance.getValueText(), instance);
-        return (
-          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
-            {$text}
-            {children}
-          </Primitive.div>
-        );
-      }}
-    </SliderValueBridge>
-  );
-});
-
-Value.displayName = 'SliderValue';
-
-/* -------------------------------------------------------------------------------------------------
  * SliderProgress
  * -----------------------------------------------------------------------------------------------*/
 
@@ -406,4 +367,4 @@ const VideoProvider = React.forwardRef<HTMLVideoElement, VideoProviderProps>(
 VideoProvider.displayName = 'SliderVideoProvider';
 
 export * from './slider';
-export { Root, Progress, Value, Thumbnail, Video, Chapters, ChapterTitle };
+export { Root, Progress, Thumbnail, Video, Chapters, ChapterTitle };

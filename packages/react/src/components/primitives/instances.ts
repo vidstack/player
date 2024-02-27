@@ -30,6 +30,7 @@ import {
   SliderThumbnail,
   SliderValue,
   SliderVideo,
+  SpeedSlider,
   Thumbnail,
   Time,
   TimeSlider,
@@ -67,6 +68,7 @@ export class SliderInstance extends Slider {}
 export class TimeSliderInstance extends TimeSlider {}
 export class VolumeSliderInstance extends VolumeSlider {}
 export class AudioGainSliderInstance extends AudioGainSlider {}
+export class SpeedSliderInstance extends SpeedSlider {}
 export class SliderThumbnailInstance extends SliderThumbnail {}
 export class SliderValueInstance extends SliderValue {}
 export class SliderVideoInstance extends SliderVideo {}

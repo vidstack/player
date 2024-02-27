@@ -38,6 +38,7 @@ import { MediaSliderPreviewElement } from '../define/sliders/slider-preview-elem
 import { MediaSliderThumbnailElement } from '../define/sliders/slider-thumbnail-element';
 import { MediaSliderValueElement } from '../define/sliders/slider-value-element';
 import { MediaSliderVideoElement } from '../define/sliders/slider-video-element';
+import { MediaSpeedSliderElement } from '../define/sliders/speed-slider-element';
 import { MediaTimeSliderElement } from '../define/sliders/time-slider-element';
 import { MediaVolumeSliderElement } from '../define/sliders/volume-slider-element';
 import { MediaSpinnerElement } from '../define/spinner-element';
@@ -72,6 +73,7 @@ defineCustomElement(MediaSliderElement);
 defineCustomElement(MediaAudioGainSliderElement);
 defineCustomElement(MediaVolumeSliderElement);
 defineCustomElement(MediaTimeSliderElement);
+defineCustomElement(MediaSpeedSliderElement);
 defineCustomElement(MediaSliderChaptersElement);
 defineCustomElement(MediaSliderPreviewElement);
 defineCustomElement(MediaSliderValueElement);

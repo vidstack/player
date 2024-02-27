@@ -40,7 +40,6 @@ export function DefaultFontMenu() {
       <media-menu class="vds-font-menu vds-menu">
         ${renderMenuButton({
           label: () => i18n(translations, 'Caption Styles'),
-          icon: 'menu-font',
         })}
         <media-menu-items class="vds-menu-items">
           ${DefaultFontFamilyMenu()}${DefaultFontSizeMenu()}${DefaultTextColorMenu()}${DefaultTextOpacityMenu()}${DefaultTextShadowMenu()}

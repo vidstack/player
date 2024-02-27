@@ -13,16 +13,14 @@ import exitFullscreenIconPaths from 'media-icons/dist/icons/fullscreen-exit.js';
 import enterFullscreenIconPaths from 'media-icons/dist/icons/fullscreen.js';
 import musicIconPaths from 'media-icons/dist/icons/music.js';
 import muteIconPaths from 'media-icons/dist/icons/mute.js';
-import odometerIconPaths from 'media-icons/dist/icons/odometer.js';
 import pauseIconPaths from 'media-icons/dist/icons/pause.js';
 import exitPIPIconPaths from 'media-icons/dist/icons/picture-in-picture-exit.js';
 import enterPIPIconPaths from 'media-icons/dist/icons/picture-in-picture.js';
 import playIconPaths from 'media-icons/dist/icons/play.js';
-import loopIconPaths from 'media-icons/dist/icons/repeat.js';
+import playbackIconPaths from 'media-icons/dist/icons/playback-speed-circle.js';
 import replayIconPaths from 'media-icons/dist/icons/replay.js';
 import seekBackwardIconPaths from 'media-icons/dist/icons/seek-backward-10.js';
 import seekForwardIconPaths from 'media-icons/dist/icons/seek-forward-10.js';
-import qualityIconPaths from 'media-icons/dist/icons/settings-menu.js';
 import settingsIconPaths from 'media-icons/dist/icons/settings.js';
 import volumeHighIconPaths from 'media-icons/dist/icons/volume-high.js';
 import volumeLowIconPaths from 'media-icons/dist/icons/volume-low.js';
@@ -79,14 +77,13 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
     ArrowRight: createIcon(arrowRightIconPaths),
     Audio: createIcon(musicIconPaths),
     Chapters: createIcon(chaptersIconPaths),
-    Loop: createIcon(loopIconPaths),
-    Quality: createIcon(qualityIconPaths),
     Captions: createIcon(ccIconPaths),
+    Playback: createIcon(playbackIconPaths),
     Settings: createIcon(settingsIconPaths),
-    Speed: createIcon(odometerIconPaths),
-    Font: createIcon(
-      `<path d="M22.6667 10.6667H26.6667V26.6667H28V28H22.6667V26.6667H24V22.6667H18.6667L16.6667 26.6667H18.6667V28H13.3333V26.6667H14.6667L22.6667 10.6667ZM24 12L19.3333 21.3333H24V12ZM6.66667 4H13.3333C14.8133 4 16 5.18667 16 6.66667V21.3333H12V14.6667H8V21.3333H4V6.66667C4 5.18667 5.18667 4 6.66667 4ZM8 6.66667V12H12V6.66667H8Z" fill="currentColor" />`,
-    ),
+    AudioBoostUp: createIcon(volumeHighIconPaths),
+    AudioBoostDown: createIcon(volumeLowIconPaths),
+    SpeedUp: createIcon(fastForwardIconPaths),
+    SpeedDown: createIcon(fastBackwardIconPaths),
   },
   KeyboardAction: {
     Play: createIcon(playIconPaths),
@@ -161,13 +158,14 @@ export interface DefaultMenuIcons {
   ArrowLeft: DefaultLayoutIcon;
   ArrowRight: DefaultLayoutIcon;
   Audio: DefaultLayoutIcon;
+  AudioBoostUp: DefaultLayoutIcon;
+  AudioBoostDown: DefaultLayoutIcon;
   Chapters: DefaultLayoutIcon;
-  Loop: DefaultLayoutIcon;
-  Quality: DefaultLayoutIcon;
   Captions: DefaultLayoutIcon;
+  Playback: DefaultLayoutIcon;
   Settings: DefaultLayoutIcon;
-  Speed: DefaultLayoutIcon;
-  Font: DefaultLayoutIcon;
+  SpeedUp: DefaultLayoutIcon;
+  SpeedDown: DefaultLayoutIcon;
 }
 
 export interface DefaultKeyboardActionIcons {

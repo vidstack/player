@@ -103,7 +103,7 @@ export interface DefaultLayoutProps<Slots = unknown> extends PrimitivePropsWithR
   /**
    * The playback rate options to be displayed in the settings menu.
    */
-  playbackRates?: number[];
+  playbackRates?: number[] | { min: number; max: number; step: number };
   /**
    * The number of seconds to seek forward or backward when pressing the seek button or using
    * keyboard shortcuts.

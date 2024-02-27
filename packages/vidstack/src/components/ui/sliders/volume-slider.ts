@@ -16,16 +16,6 @@ import { sliderState, type SliderState } from './slider/api/state';
 import { sliderValueFormatContext } from './slider/format';
 import { SliderController, type SliderControllerProps } from './slider/slider-controller';
 
-export interface VolumeSliderProps extends SliderControllerProps {}
-
-export interface VolumeSliderState extends SliderState {}
-
-export interface VolumeSliderEvents
-  extends SliderEvents,
-    Pick<MediaRequestEvents, 'media-volume-change-request'> {}
-
-export interface VolumeSliderCSSVars extends SliderCSSVars {}
-
 /**
  * Versatile and user-friendly input volume control designed for seamless cross-browser and provider
  * compatibility and accessibility with ARIA support. It offers a smooth user experience for both
@@ -135,3 +125,13 @@ export class VolumeSlider extends Component<
     this._throttleVolumeChange(event);
   }
 }
+
+export interface VolumeSliderProps extends SliderControllerProps {}
+
+export interface VolumeSliderState extends SliderState {}
+
+export interface VolumeSliderEvents
+  extends SliderEvents,
+    Pick<MediaRequestEvents, 'media-volume-change-request'> {}
+
+export interface VolumeSliderCSSVars extends SliderCSSVars {}

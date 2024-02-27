@@ -40,8 +40,7 @@ FontResetContext.displayName = 'FontResetContext';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultFontSubmenu() {
-  const { icons: Icons } = React.useContext(DefaultLayoutContext),
-    label = useDefaultLayoutWord('Caption Styles'),
+  const label = useDefaultLayoutWord('Caption Styles'),
     $hasCaptions = useMediaState('hasCaptions'),
     resets = React.useMemo<FontReset>(() => ({ all: new Set() }), []);
 
@@ -50,7 +49,7 @@ function DefaultFontSubmenu() {
   return (
     <FontResetContext.Provider value={resets}>
       <Menu.Root className="vds-font-menu vds-menu">
-        <DefaultSubmenuButton label={label} Icon={Icons.Menu.Font} />
+        <DefaultSubmenuButton label={label} />
         <Menu.Content className="vds-font-style-items vds-menu-items">
           <DefaultFontFamilySubmenu />
           <DefaultFontSizeSubmenu />

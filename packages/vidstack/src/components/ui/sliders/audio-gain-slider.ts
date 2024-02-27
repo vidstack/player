@@ -15,25 +15,6 @@ import { sliderState, type SliderState } from './slider/api/state';
 import { sliderValueFormatContext } from './slider/format';
 import { SliderController, type SliderControllerProps } from './slider/slider-controller';
 
-export interface AudioGainSliderProps extends SliderControllerProps {
-  /**
-   * The minimum audio gain boost represented as a percentage.
-   */
-  min: number;
-  /**
-   * The minimum audio gain boost represented as a percentage.
-   */
-  max: number;
-}
-
-export interface AudioGainSliderState extends SliderState {}
-
-export interface AudioGainSliderEvents
-  extends SliderEvents,
-    Pick<MediaRequestEvents, 'media-audio-gain-change-request'> {}
-
-export interface AudioGainSliderCSSVars extends SliderCSSVars {}
-
 /**
  * Versatile and user-friendly audio boost control designed for seamless cross-browser and provider
  * compatibility and accessibility with ARIA support. It offers a smooth user experience for both
@@ -140,3 +121,22 @@ export class AudioGainSlider extends Component<
     this._onAudioGainChange(event);
   }
 }
+
+export interface AudioGainSliderProps extends SliderControllerProps {
+  /**
+   * The minimum audio gain boost represented as a percentage.
+   */
+  min: number;
+  /**
+   * The minimum audio gain boost represented as a percentage.
+   */
+  max: number;
+}
+
+export interface AudioGainSliderState extends SliderState {}
+
+export interface AudioGainSliderEvents
+  extends SliderEvents,
+    Pick<MediaRequestEvents, 'media-audio-gain-change-request'> {}
+
+export interface AudioGainSliderCSSVars extends SliderCSSVars {}

@@ -1,18 +1,16 @@
 import * as React from 'react';
 
 import { useSignal } from 'maverick.js/react';
-import { isKeyboardClick, uppercaseFirstChar } from 'maverick.js/std';
+import { isArray, isKeyboardClick, uppercaseFirstChar } from 'maverick.js/std';
 import { isTrackCaptionKind, type DefaultLayoutWord, type TooltipPlacement } from 'vidstack';
 
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { useChapterOptions } from '../../../hooks/options/use-chapter-options';
-import { usePlaybackRateOptions } from '../../../hooks/options/use-playback-rate-options';
 import { useVideoQualityOptions } from '../../../hooks/options/use-video-quality-options';
 import { useResizeObserver } from '../../../hooks/use-dom';
 import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaState } from '../../../hooks/use-media-state';
-import { createComputed } from '../../../hooks/use-signals';
 import { isRemotionSource } from '../../../providers/remotion/type-check';
 import { MediaAnnouncer } from '../../announcer';
 import type { TimeSliderInstance } from '../../primitives/instances';
@@ -29,6 +27,7 @@ import { Captions } from '../../ui/captions';
 import { ChapterTitle } from '../../ui/chapter-title';
 import * as Menu from '../../ui/menu';
 import * as AudioGainSlider from '../../ui/sliders/audio-gain-slider';
+import * as SpeedSlider from '../../ui/sliders/speed-slider';
 import * as TimeSlider from '../../ui/sliders/time-slider';
 import * as VolumeSlider from '../../ui/sliders/volume-slider';
 import * as Thumbnail from '../../ui/thumbnail';
@@ -630,40 +629,16 @@ export { DefaultChaptersMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: DefaultMediaMenuProps) {
-  const { $state } = useMediaContext(),
-    {
+  const {
       showMenuDelay,
       icons: Icons,
       isSmallLayout,
       menuGroup,
       noModal,
-      playbackRates,
-      noAudioGainSlider,
     } = useDefaultLayoutContext(),
     settingsText = useDefaultLayoutWord('Settings'),
     $viewType = useMediaState('viewType'),
-    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
-    // Create as a computed signal to avoid unnecessary re-rendering.
-    $$hasMenuItems = createComputed(() => {
-      const {
-        canSetPlaybackRate,
-        canSetQuality,
-        canSetAudioGain,
-        qualities,
-        audioTracks,
-        hasCaptions,
-      } = $state;
-      return (
-        !!(canSetPlaybackRate() && playbackRates?.length) ||
-        !!(canSetQuality() && qualities().length) ||
-        !!audioTracks().length ||
-        (!noAudioGainSlider && canSetAudioGain()) ||
-        hasCaptions()
-      );
-    }, [playbackRates, noAudioGainSlider]),
-    $hasMenuItems = useSignal($$hasMenuItems);
-
-  if (!$hasMenuItems) return null;
+    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0;
 
   const Content = (
     <Menu.Content
@@ -672,12 +647,10 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
       offset={$offset}
     >
       {slot(slots, 'settingsMenuStartItems', null)}
-      <DefaultMenuLoopCheckbox />
+      <DefaultPlaybackSubmenu />
       <DefaultAccessibilitySubmenu />
       <DefaultAudioSubmenu />
       <DefaultCaptionSubmenu />
-      <DefaultSpeedSubmenu />
-      <DefaultQualitySubmenu />
       {slot(slots, 'settingsMenuEndItems', null)}
     </Menu.Content>
   );
@@ -708,13 +681,33 @@ DefaultSettingsMenu.displayName = 'DefaultSettingsMenu';
 export { DefaultSettingsMenu };
 
 /* -------------------------------------------------------------------------------------------------
+ * DefaultPlaybackSubmenu
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultPlaybackSubmenu() {
+  const label = useDefaultLayoutWord('Playback'),
+    { icons: Icons } = useDefaultLayoutContext();
+
+  return (
+    <Menu.Root className="vds-accessibility-menu vds-menu">
+      <DefaultSubmenuButton label={label} Icon={Icons.Menu.Playback} />
+      <Menu.Content className="vds-menu-items">
+        <DefaultMenuLoopCheckbox />
+        <DefaultMenuSpeedSlider />
+      </Menu.Content>
+    </Menu.Root>
+  );
+}
+
+DefaultPlaybackSubmenu.displayName = 'DefaultPlaybackSubmenu';
+
+/* -------------------------------------------------------------------------------------------------
  * DefaultMenuLoopCheckbox
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultMenuLoopCheckbox() {
   const label = 'Loop',
     { remote } = useMediaContext(),
-    { icons: Icons } = useDefaultLayoutContext(),
     translatedLabel = useDefaultLayoutWord(label);
 
   function onChange(checked: boolean, trigger?: Event) {
@@ -723,7 +716,6 @@ function DefaultMenuLoopCheckbox() {
 
   return (
     <div className="vds-menu-item vds-menu-item-checkbox">
-      <Icons.Menu.Loop className="vds-menu-checkbox-icon" />
       <div className="vds-menu-checkbox-label">{translatedLabel}</div>
       <DefaultMenuCheckbox label={label} storageKey="vds-player::user-loop" onChange={onChange} />
     </div>
@@ -731,6 +723,61 @@ function DefaultMenuLoopCheckbox() {
 }
 
 DefaultMenuLoopCheckbox.displayName = 'DefaultMenuLoopCheckbox';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultMenuSpeedSlider
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultMenuSpeedSlider() {
+  const { icons: Icons } = useDefaultLayoutContext(),
+    $playbackRate = useMediaState('playbackRate'),
+    label = useDefaultLayoutWord('Speed'),
+    normalText = useDefaultLayoutWord('Normal'),
+    value = $playbackRate === 1 ? normalText : $playbackRate + 'x';
+
+  return (
+    <div className="vds-menu-item vds-menu-item-slider">
+      <div className="vds-menu-slider-title">
+        <span className="vds-menu-slider-label">{label}</span>
+        <span className="vds-menu-slider-value">{value}</span>
+      </div>
+      <div className="vds-menu-slider-group">
+        <Icons.Menu.SpeedDown className="vds-icon" />
+        <DefaultSpeedSlider />
+        <Icons.Menu.SpeedUp className="vds-icon" />
+      </div>
+    </div>
+  );
+}
+
+DefaultMenuSpeedSlider.displayName = 'DefaultMenuSpeedSlider';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultSpeedSlider
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultSpeedSlider() {
+  const label = useDefaultLayoutWord('Speed'),
+    { playbackRates: rates } = useDefaultLayoutContext(),
+    min = (isArray(rates) ? rates[0] : rates?.min) || 0,
+    max = (isArray(rates) ? rates[rates.length - 1] : rates?.max) || 2,
+    step = (isArray(rates) ? rates[1] - rates[0] : rates?.step) || 0.25;
+  return (
+    <SpeedSlider.Root
+      className="vds-speed-slider vds-slider"
+      aria-label={label}
+      min={min}
+      max={max}
+      step={step}
+    >
+      <SpeedSlider.Track className="vds-slider-track" />
+      <SpeedSlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
+      <SpeedSlider.Thumb className="vds-slider-thumb" />
+    </SpeedSlider.Root>
+  );
+}
+
+DefaultSpeedSlider.displayName = 'DefaultSpeedSlider';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAccessibilitySubmenu
@@ -924,9 +971,9 @@ function DefaultMenuAudioGainSlider() {
         <span className="vds-menu-slider-value">{value}</span>
       </div>
       <div className="vds-menu-slider-group">
-        <Icons.MuteButton.VolumeLow className="vds-icon" />
+        <Icons.Menu.AudioBoostDown className="vds-icon" />
         <DefaultAudioGainSlider />
-        <Icons.MuteButton.VolumeHigh className="vds-icon" />
+        <Icons.Menu.AudioBoostUp className="vds-icon" />
       </div>
     </div>
   );
@@ -1002,59 +1049,11 @@ function DefaultAudioTracksSubmenu() {
 DefaultAudioTracksSubmenu.displayName = 'DefaultAudioTracksSubmenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultSpeedSubmenu
- * -----------------------------------------------------------------------------------------------*/
-
-function DefaultSpeedSubmenu() {
-  const { icons: Icons, playbackRates } = useDefaultLayoutContext(),
-    label = useDefaultLayoutWord('Speed'),
-    normalText = useDefaultLayoutWord('Normal'),
-    options = usePlaybackRateOptions({
-      normalLabel: normalText,
-      rates: playbackRates,
-    }),
-    hint = options.selectedValue === '1' ? normalText : options.selectedValue + 'x';
-
-  if (options.disabled) return null;
-
-  return (
-    <Menu.Root className="vds-speed-menu vds-menu">
-      <DefaultSubmenuButton
-        label={label}
-        hint={hint}
-        disabled={options.disabled}
-        Icon={Icons.Menu.Speed}
-      />
-      <Menu.Content className="vds-menu-items">
-        <Menu.RadioGroup
-          className="vds-speed-radio-group vds-radio-group"
-          value={options.selectedValue}
-        >
-          {options.map(({ label, value, select }) => (
-            <Menu.Radio
-              className="vds-speed-radio vds-radio"
-              value={value}
-              onSelect={select}
-              key={value}
-            >
-              <div className="vds-radio-check" />
-              <span className="vds-radio-label">{label}</span>
-            </Menu.Radio>
-          ))}
-        </Menu.RadioGroup>
-      </Menu.Content>
-    </Menu.Root>
-  );
-}
-
-DefaultSpeedSubmenu.displayName = 'DefaultSpeedSubmenu';
-
-/* -------------------------------------------------------------------------------------------------
  * DefaultQualitySubmenu
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultQualitySubmenu() {
-  const { hideQualityBitrate, icons: Icons } = useDefaultLayoutContext(),
+  const { hideQualityBitrate } = useDefaultLayoutContext(),
     label = useDefaultLayoutWord('Quality'),
     autoText = useDefaultLayoutWord('Auto'),
     options = useVideoQualityOptions({ auto: autoText, sort: 'descending' }),
@@ -1068,12 +1067,7 @@ function DefaultQualitySubmenu() {
 
   return (
     <Menu.Root className="vds-quality-menu vds-menu">
-      <DefaultSubmenuButton
-        label={label}
-        hint={hint}
-        disabled={options.disabled}
-        Icon={Icons.Menu.Quality}
-      />
+      <DefaultSubmenuButton label={label} hint={hint} disabled={options.disabled} />
       <Menu.Content className="vds-menu-items">
         <Menu.RadioGroup
           className="vds-quality-radio-group vds-radio-group"

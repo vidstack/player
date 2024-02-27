@@ -45,6 +45,7 @@ export type DefaultLayoutWord =
   | 'Off'
   | 'Pause'
   | 'Play'
+  | 'Playback'
   | 'PiP'
   | 'Quality'
   | 'Red'

@@ -34,6 +34,7 @@ export * from './ui/sliders/slider-value';
 export * from './ui/sliders/slider-preview';
 export * from './ui/sliders/volume-slider';
 export * from './ui/sliders/audio-gain-slider';
+export * from './ui/sliders/speed-slider';
 export * from './ui/sliders/time-slider/time-slider';
 export * from './ui/sliders/time-slider/slider-chapters';
 export { sliderContext, type SliderContext } from './ui/sliders/slider/slider-context';

@@ -1,6 +1,5 @@
 import type { MediaPlayerQuery } from '../../../core/api/player-state';
 import { DEFAULT_AUDIO_GAINS } from '../../ui/menu/radio-groups/audio-gain-radio-group';
-import { DEFAULT_PLAYBACK_RATES } from '../../ui/menu/radio-groups/speed-radio-group';
 import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { DefaultLayoutTranslations } from './translations';
 
@@ -14,7 +13,7 @@ export const defaultLayoutProps: DefaultLayoutProps = {
   noKeyboardAnimations: false,
   noModal: false,
   noScrubGesture: false,
-  playbackRates: DEFAULT_PLAYBACK_RATES,
+  playbackRates: { min: 0, max: 2, step: 0.25 },
   audioGains: DEFAULT_AUDIO_GAINS,
   seekStep: 10,
   sliderChaptersMinWidth: 325,
@@ -90,8 +89,7 @@ export interface DefaultLayoutProps {
   /**
    * The playback rate options to be displayed in the settings menu.
    */
-  playbackRates: number[];
-
+  playbackRates: number[] | { min: number; max: number; step: number };
   /**
    * The audio gain options to be displayed in the settings menu.
    */

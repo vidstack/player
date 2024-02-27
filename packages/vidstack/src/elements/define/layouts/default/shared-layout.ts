@@ -3,7 +3,14 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { ref as $ref, ref } from 'lit-html/directives/ref.js';
 import type { RefOrCallback } from 'lit-html/directives/ref.js';
 import { computed, peek, signal, type ReadSignal } from 'maverick.js';
-import { isFunction, isKeyboardClick, noop, unwrap, uppercaseFirstChar } from 'maverick.js/std';
+import {
+  isArray,
+  isFunction,
+  isKeyboardClick,
+  noop,
+  unwrap,
+  uppercaseFirstChar,
+} from 'maverick.js/std';
 
 import {
   type MenuPlacement,
@@ -470,41 +477,20 @@ export function DefaultSettingsMenu({
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
 }) {
   return $signal(() => {
-    const {
-        viewType,
-        canSetPlaybackRate,
-        canSetAudioGain,
-        canSetQuality,
-        qualities,
-        audioTracks,
-        hasCaptions,
-      } = useMediaState(),
+    const { viewType } = useMediaState(),
       {
         translations,
         menuContainer,
         noModal,
         menuGroup,
         smallWhen: smWhen,
-        noAudioGainSlider,
-        playbackRates,
       } = useDefaultLayoutContext(),
       $placement = computed(() =>
         noModal() ? unwrap(placement) : !smWhen() ? unwrap(placement) : null,
       ),
       $offset = computed(() =>
         !smWhen() && menuGroup() === 'bottom' && viewType() === 'video' ? 26 : 0,
-      ),
-      $hasMenuItems = computed(() => {
-        return (
-          !!(canSetPlaybackRate() && playbackRates().length) ||
-          !!(canSetQuality() && qualities().length) ||
-          !!audioTracks().length ||
-          (!noAudioGainSlider() && canSetAudioGain()) ||
-          hasCaptions()
-        );
-      });
-
-    if (!$hasMenuItems()) return null;
+      );
 
     const items = html`
       <media-menu-items
@@ -513,12 +499,10 @@ export function DefaultSettingsMenu({
         offset=${$signal($offset)}
       >
         ${[
-          DefaultMenuLoopCheckbox(),
+          DefaultPlaybackMenu(),
           DefaultAccessibilityMenu(),
           DefaultAudioMenu(),
           DefaultCaptionsMenu(),
-          DefaultSpeedMenu(),
-          DefaultQualityMenu(),
         ]}
       </media-menu-items>
     `;
@@ -547,6 +531,23 @@ export function DefaultSettingsMenu({
   });
 }
 
+function DefaultPlaybackMenu() {
+  return $signal(() => {
+    const { translations } = useDefaultLayoutContext();
+    return html`
+      <media-menu class="vds-playback-menu vds-menu">
+        ${renderMenuButton({
+          label: () => i18n(translations, 'Playback'),
+          icon: 'menu-playback',
+        })}
+        <media-menu-items class="vds-menu-items">
+          ${[DefaultMenuLoopCheckbox(), DefaultMenuSpeedSlider()]}
+        </media-menu-items>
+      </media-menu>
+    `;
+  });
+}
+
 function DefaultMenuLoopCheckbox() {
   const { remote } = useMediaContext(),
     { translations } = useDefaultLayoutContext(),
@@ -554,7 +555,6 @@ function DefaultMenuLoopCheckbox() {
     $label = $i18n(translations, label);
   return html`
     <div class="vds-menu-item vds-menu-item-checkbox">
-      <slot name="menu-loop-icon" data-class="vds-menu-checkbox-icon"></slot>
       <div class="vds-menu-checkbox-label">${$label}</div>
       ${DefaultMenuCheckbox({
         label,
@@ -564,6 +564,65 @@ function DefaultMenuLoopCheckbox() {
         },
       })}
     </div>
+  `;
+}
+
+function DefaultMenuSpeedSlider() {
+  return $signal(() => {
+    const { translations } = useDefaultLayoutContext(),
+      { canSetPlaybackRate, playbackRate } = useMediaState();
+
+    if (!canSetPlaybackRate()) return null;
+
+    const $label = $i18n(translations, 'Speed'),
+      $value = $signal(() =>
+        playbackRate() === 1 ? i18n(translations, 'Normal') : playbackRate() + 'x',
+      );
+
+    return html`
+      <div class="vds-menu-item vds-menu-item-slider">
+        <div class="vds-menu-slider-title">
+          <span class="vds-menu-slider-label">${$label}</span>
+          <span class="vds-menu-slider-value">${$value}</span>
+        </div>
+        <div class="vds-menu-slider-group">
+          <slot name="menu-speed-down-icon"></slot>
+          ${DefaultSpeedSlider()}
+          <slot name="menu-speed-up-icon"></slot>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function DefaultSpeedSlider() {
+  const { playbackRates, translations } = useDefaultLayoutContext(),
+    $label = $i18n(translations, 'Speed'),
+    $min = () => {
+      const rates = playbackRates();
+      return isArray(rates) ? rates[0] ?? 0 : rates.min;
+    },
+    $max = () => {
+      const rates = playbackRates();
+      return isArray(rates) ? rates[rates.length - 1] ?? 2 : rates.max;
+    },
+    $step = () => {
+      const rates = playbackRates();
+      return isArray(rates) ? rates[1] - rates[0] || 0.25 : rates.step;
+    };
+
+  return html`
+    <media-speed-slider
+      class="vds-speed-slider vds-slider"
+      aria-label=${$label}
+      min=${$signal($min)}
+      max=${$signal($max)}
+      step=${$signal($step)}
+    >
+      <div class="vds-slider-track"></div>
+      <div class="vds-slider-track-fill vds-slider-track"></div>
+      <div class="vds-slider-thumb"></div>
+    </media-speed-slider>
   `;
 }
 
@@ -631,58 +690,6 @@ function DefaultMenuKeyboardAnimationCheckbox() {
       </div>
     `;
   });
-}
-
-function DefaultMenuCheckbox({
-  label,
-  defaultChecked = false,
-  storageKey,
-  onChange,
-}: {
-  label: DefaultLayoutWord;
-  storageKey?: string;
-  defaultChecked?: boolean;
-  onChange(checked: boolean, trigger?: Event): void;
-}) {
-  const { translations } = useDefaultLayoutContext(),
-    savedValue = storageKey ? localStorage.getItem(storageKey) : null,
-    $checked = signal(!!(savedValue ?? defaultChecked)),
-    $active = signal(false),
-    $ariaChecked = $signal($ariaBool($checked)),
-    $label = $i18n(translations, label);
-
-  onChange(peek($checked));
-
-  function onPress(event?: PointerEvent) {
-    if (event?.button === 1) return;
-    $checked.set((checked) => !checked);
-    if (storageKey) localStorage.setItem(storageKey, $checked() ? '1' : '');
-    onChange($checked(), event);
-    $active.set(false);
-  }
-
-  function onKeyDown(event: KeyboardEvent) {
-    if (isKeyboardClick(event)) onPress();
-  }
-
-  function onActive(event: PointerEvent) {
-    if (event.button !== 0) return;
-    $active.set(true);
-  }
-
-  return html`
-    <div
-      class="vds-menu-checkbox"
-      role="menuitemcheckbox"
-      tabindex="0"
-      aria-label=${$label}
-      aria-checked=${$ariaChecked}
-      data-active=${$signal(() => ($active() ? '' : null))}
-      @pointerup=${onPress}
-      @pointerdown=${onActive}
-      @keydown=${onKeyDown}
-    ></div>
-  `;
 }
 
 function DefaultAudioMenu() {
@@ -761,9 +768,9 @@ function DefaultMenuAudioGainSlider() {
           <span class="vds-menu-slider-value">${$value}</span>
         </div>
         <div class="vds-menu-slider-group">
-          <slot name="volume-low-icon"></slot>
+          <slot name="menu-audio-boost-down-icon"></slot>
           ${DefaultAudioGainSlider()}
-          <slot name="volume-high-icon"></slot>
+          <slot name="menu-audio-boost-up-icon"></slot>
         </div>
       </div>
     `;
@@ -785,40 +792,6 @@ function DefaultAudioGainSlider() {
       <div class="vds-slider-thumb"></div>
     </media-audio-gain-slider>
   `;
-}
-
-function DefaultSpeedMenu() {
-  return $signal(() => {
-    const { translations, playbackRates } = useDefaultLayoutContext(),
-      { $provider } = useMediaContext(),
-      $normalText = $i18n(translations, 'Normal'),
-      $disabled = computed(() => !$provider()?.setPlaybackRate || playbackRates().length === 0);
-
-    if ($disabled()) return null;
-
-    return html`
-      <media-menu class="vds-speed-menu vds-menu">
-        ${renderMenuButton({
-          label: () => i18n(translations, 'Speed'),
-          icon: 'menu-speed',
-        })}
-        <media-menu-items class="vds-menu-items">
-          <media-speed-radio-group
-            class="vds-speed-radio-group vds-radio-group"
-            normal-label=${$normalText}
-            .rates=${$signal(playbackRates)}
-          >
-            <template>
-              <media-radio class="vds-speed-radio vds-radio">
-                <div class="vds-radio-check"></div>
-                <span class="vds-radio-label" data-part="label"></span>
-              </media-radio>
-            </template>
-          </media-speed-radio-group>
-        </media-menu-items>
-      </media-menu>
-    `;
-  });
 }
 
 function DefaultQualityMenu() {
@@ -883,6 +856,58 @@ function DefaultCaptionsMenu() {
       </media-menu>
     `;
   });
+}
+
+function DefaultMenuCheckbox({
+  label,
+  defaultChecked = false,
+  storageKey,
+  onChange,
+}: {
+  label: DefaultLayoutWord;
+  storageKey?: string;
+  defaultChecked?: boolean;
+  onChange(checked: boolean, trigger?: Event): void;
+}) {
+  const { translations } = useDefaultLayoutContext(),
+    savedValue = storageKey ? localStorage.getItem(storageKey) : null,
+    $checked = signal(!!(savedValue ?? defaultChecked)),
+    $active = signal(false),
+    $ariaChecked = $signal($ariaBool($checked)),
+    $label = $i18n(translations, label);
+
+  onChange(peek($checked));
+
+  function onPress(event?: PointerEvent) {
+    if (event?.button === 1) return;
+    $checked.set((checked) => !checked);
+    if (storageKey) localStorage.setItem(storageKey, $checked() ? '1' : '');
+    onChange($checked(), event);
+    $active.set(false);
+  }
+
+  function onKeyDown(event: KeyboardEvent) {
+    if (isKeyboardClick(event)) onPress();
+  }
+
+  function onActive(event: PointerEvent) {
+    if (event.button !== 0) return;
+    $active.set(true);
+  }
+
+  return html`
+    <div
+      class="vds-menu-checkbox"
+      role="menuitemcheckbox"
+      tabindex="0"
+      aria-label=${$label}
+      aria-checked=${$ariaChecked}
+      data-active=${$signal(() => ($active() ? '' : null))}
+      @pointerup=${onPress}
+      @pointerdown=${onActive}
+      @keydown=${onKeyDown}
+    ></div>
+  `;
 }
 
 export function createMenuContainer(className: string) {
