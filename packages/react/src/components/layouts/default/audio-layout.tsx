@@ -19,26 +19,25 @@ import { useLayoutName } from '../utils';
 import { i18n, useDefaultLayoutContext } from './context';
 import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
 import {
-  DefaultAnnouncer,
-  DefaultCaptionButton,
-  DefaultCaptions,
-  DefaultChaptersMenu,
-  DefaultControlsSpacer,
-  DefaultMuteButton,
-  DefaultPlayButton,
-  DefaultSeekButton,
-  DefaultSettingsMenu,
-  DefaultTimeInvert,
-  DefaultTimeSlider,
-  DefaultVolumeSlider,
-} from './shared-layout';
-import {
   slot,
   useDefaultAudioLayoutSlots,
   type DefaultAudioLayoutSlots,
   type DefaultLayoutMenuSlotName,
   type Slots,
 } from './slots';
+import { DefaultAnnouncer } from './ui/announcer';
+import {
+  DefaultCaptionButton,
+  DefaultMuteButton,
+  DefaultPlayButton,
+  DefaultSeekButton,
+} from './ui/buttons';
+import { DefaultCaptions } from './ui/captions';
+import { DefaultControlsSpacer } from './ui/controls';
+import { DefaultChaptersMenu } from './ui/menus/chapters-menu';
+import { DefaultSettingsMenu } from './ui/menus/settings-menu';
+import { DefaultTimeSlider, DefaultVolumeSlider } from './ui/sliders';
+import { DefaultTimeInvert } from './ui/time';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAudioLayout

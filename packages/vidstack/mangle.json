@@ -813,5 +813,8 @@
   "_watchPiP": "eo",
   "_watchSeeking": "fo",
   "_onPlaybackRateChange": "io",
-  "_throttledSpeedChange": "ho"
+  "_throttledSpeedChange": "ho",
+  "_throttledQualityChange": "jo",
+  "_watchMax": "ko",
+  "_watchQuality": "lo"
 }

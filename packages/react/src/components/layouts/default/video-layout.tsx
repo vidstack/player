@@ -9,26 +9,7 @@ import * as Spinner from '../../ui/spinner';
 import { Time } from '../../ui/time';
 import { useLayoutName } from '../utils';
 import { useDefaultLayoutContext } from './context';
-import { DefaultKeyboardDisplay } from './keyboard-display';
 import { createDefaultMediaLayout, type DefaultLayoutProps } from './media-layout';
-import {
-  DefaultAirPlayButton,
-  DefaultAnnouncer,
-  DefaultCaptionButton,
-  DefaultCaptions,
-  DefaultChaptersMenu,
-  DefaultChapterTitle,
-  DefaultControlsSpacer,
-  DefaultFullscreenButton,
-  DefaultGoogleCastButton,
-  DefaultMuteButton,
-  DefaultPIPButton,
-  DefaultPlayButton,
-  DefaultSettingsMenu,
-  DefaultTimeInfo,
-  DefaultTimeSlider,
-  DefaultVolumeSlider,
-} from './shared-layout';
 import {
   slot,
   useDefaultVideoLayoutSlots,
@@ -36,6 +17,24 @@ import {
   type DefaultVideoLayoutSlots,
   type Slots,
 } from './slots';
+import { DefaultAnnouncer } from './ui/announcer';
+import {
+  DefaultAirPlayButton,
+  DefaultCaptionButton,
+  DefaultFullscreenButton,
+  DefaultGoogleCastButton,
+  DefaultMuteButton,
+  DefaultPIPButton,
+  DefaultPlayButton,
+} from './ui/buttons';
+import { DefaultCaptions } from './ui/captions';
+import { DefaultControlsSpacer } from './ui/controls';
+import { DefaultKeyboardDisplay } from './ui/keyboard-display';
+import { DefaultChaptersMenu } from './ui/menus/chapters-menu';
+import { DefaultSettingsMenu } from './ui/menus/settings-menu';
+import { DefaultTimeSlider, DefaultVolumeSlider } from './ui/sliders';
+import { DefaultTimeInfo } from './ui/time';
+import { DefaultChapterTitle } from './ui/title';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultVideoLayout

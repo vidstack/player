@@ -10,4 +10,4 @@ export type { DefaultLayoutProps } from './media-layout';
 export * from './icons';
 export * from './context';
 export * from './ui';
-export { DefaultKeyboardDisplay, type DefaultKeyboardDisplayProps } from './keyboard-display';
+export { DefaultKeyboardDisplay, type DefaultKeyboardDisplayProps } from './ui/keyboard-display';

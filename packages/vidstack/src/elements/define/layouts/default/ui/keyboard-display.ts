@@ -3,10 +3,10 @@ import { keyed } from 'lit-html/directives/keyed.js';
 import { computed, effect, signal } from 'maverick.js';
 import { camelToKebabCase } from 'maverick.js/std';
 
-import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
-import { useMediaContext } from '../../../../core/api/media-context';
-import { createSlot } from '../../../../utils/dom';
-import { $signal } from '../../../lit/directives/signal';
+import { useDefaultLayoutContext } from '../../../../../components/layouts/default/context';
+import { useMediaContext } from '../../../../../core/api/media-context';
+import { createSlot } from '../../../../../utils/dom';
+import { $signal } from '../../../../lit/directives/signal';
 
 export function DefaultKeyboardDisplay() {
   return $signal(() => {

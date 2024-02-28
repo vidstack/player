@@ -2,12 +2,12 @@ import { html } from 'lit-html';
 import { createContext, onDispose, provideContext, signal, useContext } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
-import { type DefaultLayoutTranslations, type MediaPlayer } from '../../../../components';
-import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
-import { i18n } from '../../../../components/layouts/default/translations';
-import { useMediaContext, useMediaState } from '../../../../core/api/media-context';
-import { $signal } from '../../../lit/directives/signal';
-import { createRadioOptions, renderMenuButton, renderRadioGroup } from './menu-layout';
+import { type DefaultLayoutTranslations, type MediaPlayer } from '../../../../../../components';
+import { useDefaultLayoutContext } from '../../../../../../components/layouts/default/context';
+import { i18n } from '../../../../../../components/layouts/default/translations';
+import { useMediaContext, useMediaState } from '../../../../../../core/api/media-context';
+import { $signal } from '../../../../../lit/directives/signal';
+import { createRadioOptions, renderMenuButton, renderRadioGroup } from './items/menu-items';
 
 const COLOR_OPTIONS = ['White', 'Yellow', 'Green', 'Cyan', 'Blue', 'Magenta', 'Red', 'Black'],
   OPACITY_OPTIONS = ['0%', '25%', '50%', '75%', '100%'],

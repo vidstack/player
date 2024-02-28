@@ -2,8 +2,8 @@ import { html, type TemplateResult } from 'lit-html';
 import { type ReadSignal } from 'maverick.js';
 import { isArray, isFunction, isString } from 'maverick.js/std';
 
-import type { RadioGroupChangeEvent, RadioOption } from '../../../../components';
-import { $signal } from '../../../lit/directives/signal';
+import type { RadioGroupChangeEvent, RadioOption } from '../../../../../../../components';
+import { $signal } from '../../../../../../lit/directives/signal';
 
 export function renderMenuButton({
   label,

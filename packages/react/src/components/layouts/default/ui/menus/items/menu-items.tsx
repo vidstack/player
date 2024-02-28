@@ -2,27 +2,22 @@ import * as React from 'react';
 
 import { isArray } from 'maverick.js/std';
 
-import * as Menu from '../../ui/menu';
-import { DefaultLayoutContext } from './context';
-import type { DefaultLayoutIcon } from './icons';
+import * as Menu from '../../../../../ui/menu';
+import { DefaultLayoutContext } from '../../../context';
+import type { DefaultLayoutIcon } from '../../../icons';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultSubmenuButton
+ * DefaultMenuButton
  * -----------------------------------------------------------------------------------------------*/
 
-export interface DefaultSubmenuButtonProps {
+export interface DefaultMenuButtonProps {
   label: string;
   hint?: string;
   disabled?: boolean;
   Icon?: DefaultLayoutIcon;
 }
 
-function DefaultSubmenuButton({
-  label,
-  hint = '',
-  Icon,
-  disabled = false,
-}: DefaultSubmenuButtonProps) {
+function DefaultMenuButton({ label, hint = '', Icon, disabled = false }: DefaultMenuButtonProps) {
   const { icons: Icons } = React.useContext(DefaultLayoutContext);
   return (
     <Menu.Button className="vds-menu-button" disabled={disabled}>
@@ -35,8 +30,8 @@ function DefaultSubmenuButton({
   );
 }
 
-DefaultSubmenuButton.displayName = 'DefaultSubmenuButton';
-export { DefaultSubmenuButton };
+DefaultMenuButton.displayName = 'DefaultMenuButton';
+export { DefaultMenuButton };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultMenuRadioGroup

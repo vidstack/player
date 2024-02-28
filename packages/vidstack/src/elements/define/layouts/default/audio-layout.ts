@@ -14,21 +14,20 @@ import {
   useTransitionActive,
 } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
+import { DefaultAnnouncer } from './ui/announcer';
 import {
-  DefaultAnnouncer,
   DefaultCaptionButton,
-  DefaultCaptions,
-  DefaultChaptersMenu,
-  DefaultChapterTitle,
-  DefaultControlsSpacer,
   DefaultMuteButton,
   DefaultPlayButton,
   DefaultSeekButton,
-  DefaultSettingsMenu,
-  DefaultTimeInvert,
-  DefaultTimeSlider,
-  DefaultVolumeSlider,
-} from './shared-layout';
+} from './ui/buttons';
+import { DefaultCaptions } from './ui/captions';
+import { DefaultControlsSpacer } from './ui/controls';
+import { DefaultChaptersMenu } from './ui/menu/chapters-menu';
+import { DefaultSettingsMenu } from './ui/menu/settings-menu';
+import { DefaultTimeSlider, DefaultVolumeSlider } from './ui/slider';
+import { DefaultTimeInvert } from './ui/time';
+import { DefaultChapterTitle } from './ui/title';
 
 export function DefaultAudioLayout() {
   return [

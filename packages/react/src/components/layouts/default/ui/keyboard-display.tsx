@@ -5,10 +5,10 @@ import { useSignal } from 'maverick.js/react';
 import { camelToKebabCase } from 'maverick.js/std';
 import { mediaContext } from 'vidstack';
 
-import { useMediaState } from '../../../hooks/use-media-state';
-import { createComputed, createEffect } from '../../../hooks/use-signals';
-import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
-import type { DefaultKeyboardActionIcons } from './icons';
+import { useMediaState } from '../../../../hooks/use-media-state';
+import { createComputed, createEffect } from '../../../../hooks/use-signals';
+import { Primitive, type PrimitivePropsWithRef } from '../../../primitives/nodes';
+import type { DefaultKeyboardActionIcons } from '../icons';
 
 export interface DefaultKeyboardDisplayProps
   extends Omit<PrimitivePropsWithRef<'div'>, 'disabled'> {

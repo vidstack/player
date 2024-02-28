@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import type { DefaultLayoutTranslations } from 'vidstack';
 
-import { useMediaPlayer } from '../../../hooks/use-media-player';
-import { useMediaState } from '../../../hooks/use-media-state';
-import type { MediaPlayerInstance } from '../../primitives/instances';
-import * as Menu from '../../ui/menu';
-import { DefaultLayoutContext, i18n, useDefaultLayoutWord } from './context';
-import { createRadioOptions, DefaultMenuRadioGroup, DefaultSubmenuButton } from './menu-layout';
+import { useMediaPlayer } from '../../../../../hooks/use-media-player';
+import { useMediaState } from '../../../../../hooks/use-media-state';
+import type { MediaPlayerInstance } from '../../../../primitives/instances';
+import * as Menu from '../../../../ui/menu';
+import { DefaultLayoutContext, i18n, useDefaultLayoutWord } from '../../context';
+import { createRadioOptions, DefaultMenuButton, DefaultMenuRadioGroup } from './items/menu-items';
 
 /* -------------------------------------------------------------------------------------------------
  * Options
@@ -36,10 +36,10 @@ const FontResetContext = React.createContext<FontReset>({ all: new Set() });
 FontResetContext.displayName = 'FontResetContext';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultFontSubmenu
+ * DefaultFontMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultFontSubmenu() {
+function DefaultFontMenu() {
   const label = useDefaultLayoutWord('Caption Styles'),
     $hasCaptions = useMediaState('hasCaptions'),
     resets = React.useMemo<FontReset>(() => ({ all: new Set() }), []);
@@ -49,17 +49,17 @@ function DefaultFontSubmenu() {
   return (
     <FontResetContext.Provider value={resets}>
       <Menu.Root className="vds-font-menu vds-menu">
-        <DefaultSubmenuButton label={label} />
+        <DefaultMenuButton label={label} />
         <Menu.Content className="vds-font-style-items vds-menu-items">
-          <DefaultFontFamilySubmenu />
-          <DefaultFontSizeSubmenu />
-          <DefaultTextColorSubmenu />
-          <DefaultTextOpacitySubmenu />
-          <DefaultTextShadowSubmenu />
-          <DefaultTextBgSubmenu />
-          <DefaultTextBgOpacitySubmenu />
-          <DefaultDisplayBgSubmenu />
-          <DefaultDisplayBgOpacitySubmenu />
+          <DefaultFontFamilyMenu />
+          <DefaultFontSizeMenu />
+          <DefaultTextColorMenu />
+          <DefaultTextOpacityMenu />
+          <DefaultTextShadowMenu />
+          <DefaultTextBgMenu />
+          <DefaultTextBgOpacityMenu />
+          <DefaultDisplayBgMenu />
+          <DefaultDisplayBgOpacityMenu />
           <DefaultResetMenuItem />
         </Menu.Content>
       </Menu.Root>
@@ -67,16 +67,16 @@ function DefaultFontSubmenu() {
   );
 }
 
-DefaultFontSubmenu.displayName = 'DefaultFontSubmenu';
-export { DefaultFontSubmenu };
+DefaultFontMenu.displayName = 'DefaultFontMenu';
+export { DefaultFontMenu };
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultFontFamilySubmenu
+ * DefaultFontFamilyMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultFontFamilySubmenu() {
+function DefaultFontFamilyMenu() {
   return (
-    <DefaultFontSettingSubmenu
+    <DefaultFontSettingMenu
       label="Font Family"
       options={FONT_FAMILY_OPTIONS}
       defaultValue="pro-sans"
@@ -92,15 +92,15 @@ function getFontFamilyCSSVarValue(value: string, player: MediaPlayerInstance) {
   return getFontFamily(value);
 }
 
-DefaultFontFamilySubmenu.displayName = 'DefaultFontFamilySubmenu';
+DefaultFontFamilyMenu.displayName = 'DefaultFontFamilyMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultFontSizeSubmenu
+ * DefaultFontSizeMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultFontSizeSubmenu() {
+function DefaultFontSizeMenu() {
   return (
-    <DefaultFontSettingSubmenu
+    <DefaultFontSettingMenu
       label="Font Size"
       options={FONT_SIZE_OPTIONS}
       defaultValue="100%"
@@ -110,15 +110,15 @@ function DefaultFontSizeSubmenu() {
   );
 }
 
-DefaultFontSizeSubmenu.displayName = 'DefaultFontSizeSubmenu';
+DefaultFontSizeMenu.displayName = 'DefaultFontSizeMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultTextColorSubmenu
+ * DefaultTextColorMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTextColorSubmenu() {
+function DefaultTextColorMenu() {
   return (
-    <DefaultFontSettingSubmenu
+    <DefaultFontSettingMenu
       label="Text Color"
       options={COLOR_OPTIONS}
       defaultValue="white"
@@ -130,15 +130,15 @@ function DefaultTextColorSubmenu() {
   );
 }
 
-DefaultTextColorSubmenu.displayName = 'DefaultTextColorSubmenu';
+DefaultTextColorMenu.displayName = 'DefaultTextColorMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultTextOpacitySubmenu
+ * DefaultTextOpacityMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTextOpacitySubmenu() {
+function DefaultTextOpacityMenu() {
   return (
-    <DefaultFontSettingSubmenu
+    <DefaultFontSettingMenu
       label="Text Opacity"
       options={OPACITY_OPTIONS}
       defaultValue="100%"
@@ -148,15 +148,15 @@ function DefaultTextOpacitySubmenu() {
   );
 }
 
-DefaultTextOpacitySubmenu.displayName = 'DefaultTextOpacitySubmenu';
+DefaultTextOpacityMenu.displayName = 'DefaultTextOpacityMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultTextShadowSubmenu
+ * DefaultTextShadowMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTextShadowSubmenu() {
+function DefaultTextShadowMenu() {
   return (
-    <DefaultFontSettingSubmenu
+    <DefaultFontSettingMenu
       label="Text Shadow"
       options={TEXT_SHADOW_OPTIONS}
       defaultValue="none"
@@ -166,15 +166,15 @@ function DefaultTextShadowSubmenu() {
   );
 }
 
-DefaultTextShadowSubmenu.displayName = 'DefaultTextShadowSubmenu';
+DefaultTextShadowMenu.displayName = 'DefaultTextShadowMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultTextBgSubmenu
+ * DefaultTextBgMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTextBgSubmenu() {
+function DefaultTextBgMenu() {
   return (
-    <DefaultFontSettingSubmenu
+    <DefaultFontSettingMenu
       label="Background Color"
       options={COLOR_OPTIONS}
       defaultValue="black"
@@ -186,15 +186,15 @@ function DefaultTextBgSubmenu() {
   );
 }
 
-DefaultTextBgSubmenu.displayName = 'DefaultTextBgSubmenu';
+DefaultTextBgMenu.displayName = 'DefaultTextBgMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultTextBgOpacitySubmenu
+ * DefaultTextBgOpacityMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTextBgOpacitySubmenu() {
+function DefaultTextBgOpacityMenu() {
   return (
-    <DefaultFontSettingSubmenu
+    <DefaultFontSettingMenu
       label="Background Opacity"
       options={OPACITY_OPTIONS}
       defaultValue="100%"
@@ -204,15 +204,15 @@ function DefaultTextBgOpacitySubmenu() {
   );
 }
 
-DefaultTextBgOpacitySubmenu.displayName = 'DefaultTextBgOpacitySubmenu';
+DefaultTextBgOpacityMenu.displayName = 'DefaultTextBgOpacityMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultDisplayBgSubmenu
+ * DefaultDisplayBgMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultDisplayBgSubmenu() {
+function DefaultDisplayBgMenu() {
   return (
-    <DefaultFontSettingSubmenu
+    <DefaultFontSettingMenu
       label="Display Background Color"
       options={COLOR_OPTIONS}
       defaultValue="black"
@@ -224,15 +224,15 @@ function DefaultDisplayBgSubmenu() {
   );
 }
 
-DefaultDisplayBgSubmenu.displayName = 'DefaultDisplayBgSubmenu';
+DefaultDisplayBgMenu.displayName = 'DefaultDisplayBgMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultDisplayBgOpacitySubmenu
+ * DefaultDisplayBgOpacityMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultDisplayBgOpacitySubmenu() {
+function DefaultDisplayBgOpacityMenu() {
   return (
-    <DefaultFontSettingSubmenu
+    <DefaultFontSettingMenu
       label="Display Background Opacity"
       options={OPACITY_OPTIONS}
       defaultValue="0%"
@@ -242,13 +242,13 @@ function DefaultDisplayBgOpacitySubmenu() {
   );
 }
 
-DefaultDisplayBgOpacitySubmenu.displayName = 'DefaultDisplayBgOpacitySubmenu';
+DefaultDisplayBgOpacityMenu.displayName = 'DefaultDisplayBgOpacityMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultFontSettingSubmenu
+ * DefaultFontSettingMenu
  * -----------------------------------------------------------------------------------------------*/
 
-interface DefaultFontSettingSubmenuProps {
+interface DefaultFontSettingMenuProps {
   label: keyof DefaultLayoutTranslations;
   options: string[] | Record<string, string>;
   cssVarName: string;
@@ -256,13 +256,13 @@ interface DefaultFontSettingSubmenuProps {
   defaultValue: string;
 }
 
-function DefaultFontSettingSubmenu({
+function DefaultFontSettingMenu({
   label,
   options,
   cssVarName,
   getCssVarValue,
   defaultValue,
-}: DefaultFontSettingSubmenuProps) {
+}: DefaultFontSettingMenuProps) {
   const player = useMediaPlayer(),
     radioOptions = createRadioOptions(options),
     key = `${label.toLowerCase().replace(/\s/g, '-')}`,
@@ -326,7 +326,7 @@ function DefaultFontSettingSubmenu({
 
   return (
     <Menu.Root className={`vds-${key}-menu vds-menu`} onOpen={onOpen} onClose={onClose}>
-      <DefaultSubmenuButton label={translatedLabel} hint={hint} />
+      <DefaultMenuButton label={translatedLabel} hint={hint} />
       <Menu.Items className="vds-menu-items">
         <DefaultMenuRadioGroup value={value} options={radioOptions} onChange={onChange} />
       </Menu.Items>
@@ -334,7 +334,7 @@ function DefaultFontSettingSubmenu({
   );
 }
 
-DefaultFontSettingSubmenu.displayName = 'DefaultFontSettingSubmenu';
+DefaultFontSettingMenu.displayName = 'DefaultFontSettingMenu';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultResetMenuItem

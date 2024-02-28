@@ -4,25 +4,24 @@ import { computed } from 'maverick.js';
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import { useMediaState } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
-import { DefaultKeyboardDisplay } from './keyboard-display';
+import { DefaultAnnouncer } from './ui/announcer';
 import {
   DefaultAirPlayButton,
-  DefaultAnnouncer,
   DefaultCaptionButton,
-  DefaultCaptions,
-  DefaultChaptersMenu,
-  DefaultChapterTitle,
-  DefaultControlsSpacer,
   DefaultFullscreenButton,
   DefaultGoogleCastButton,
   DefaultMuteButton,
   DefaultPIPButton,
   DefaultPlayButton,
-  DefaultSettingsMenu,
-  DefaultTimeInfo,
-  DefaultTimeSlider,
-  DefaultVolumeSlider,
-} from './shared-layout';
+} from './ui/buttons';
+import { DefaultCaptions } from './ui/captions';
+import { DefaultControlsSpacer } from './ui/controls';
+import { DefaultKeyboardDisplay } from './ui/keyboard-display';
+import { DefaultChaptersMenu } from './ui/menu/chapters-menu';
+import { DefaultSettingsMenu } from './ui/menu/settings-menu';
+import { DefaultTimeSlider, DefaultVolumeSlider } from './ui/slider';
+import { DefaultTimeInfo } from './ui/time';
+import { DefaultChapterTitle } from './ui/title';
 
 export function DefaultVideoLayoutLarge() {
   return [

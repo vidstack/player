@@ -9,7 +9,7 @@ import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';
 import { PlyrLayoutIconsLoader } from './icons-loader';
-import { PlyrAudioLayout, PlyrVideoLayout } from './shared-layout';
+import { PlyrAudioLayout, PlyrVideoLayout } from './ui';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/layouts/plyr-layout}

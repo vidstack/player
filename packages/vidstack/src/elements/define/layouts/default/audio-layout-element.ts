@@ -12,7 +12,7 @@ import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';
 import { DefaultAudioLayout as Layout } from './audio-layout';
 import { DefaultLayoutIconsLoader } from './icons-loader';
-import { createMenuContainer } from './shared-layout';
+import { createMenuContainer } from './ui/menu/menu-portal';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/layouts/default-layout}
