@@ -46,16 +46,10 @@ function DefaultMenuAudioGainSlider() {
     { icons: Icons } = useDefaultLayoutContext();
 
   return (
-    <div className="vds-menu-item vds-menu-item-slider">
-      <div className="vds-menu-slider-title">
-        <span className="vds-menu-slider-label">{label}</span>
-        <span className="vds-menu-slider-value">{value}</span>
-      </div>
-      <div className="vds-menu-slider-group">
-        <Icons.Menu.AudioBoostDown className="vds-icon" />
-        <DefaultAudioGainSlider />
-        <Icons.Menu.AudioBoostUp className="vds-icon" />
-      </div>
+    <div className="vds-menu-item">
+      <Icons.Menu.AudioBoostDown className="vds-icon" />
+      <DefaultAudioGainSlider />
+      <Icons.Menu.AudioBoostUp className="vds-icon" />
     </div>
   );
 }

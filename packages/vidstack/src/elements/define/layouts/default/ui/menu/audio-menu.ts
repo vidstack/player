@@ -5,9 +5,10 @@ import { useDefaultLayoutContext } from '../../../../../../components/layouts/de
 import { i18n } from '../../../../../../components/layouts/default/translations';
 import { useMediaState } from '../../../../../../core/api/media-context';
 import { $signal } from '../../../../../lit/directives/signal';
+import { IconSlot } from '../../slots';
 import { $i18n } from '../utils';
-import { renderMenuButton } from './items/menu-items';
-import { DefaultMenuSlider, DefaultSliderParts } from './items/menu-slider';
+import { DefaultMenuButton } from './items/menu-items';
+import { DefaultSliderParts } from './items/menu-slider';
 
 export function DefaultAudioMenu() {
   return $signal(() => {
@@ -22,7 +23,7 @@ export function DefaultAudioMenu() {
 
     return html`
       <media-menu class="vds-audio-tracks-menu vds-menu">
-        ${renderMenuButton({
+        ${DefaultMenuButton({
           label: () => i18n(translations, 'Audio'),
           icon: 'menu-audio',
         })}
@@ -45,7 +46,7 @@ function DefaultAudioTracksMenu() {
 
     return html`
       <media-menu class="vds-audio-track-menu vds-menu">
-        ${renderMenuButton({
+        ${DefaultMenuButton({
           label: () => i18n(translations, 'Audio Track'),
         })}
         <media-menu-items class="vds-menu-items">
@@ -54,8 +55,8 @@ function DefaultAudioTracksMenu() {
             empty-label=${$defaultText}
           >
             <template>
-              <media-radio class="vds-audio-radio vds-radio">
-                <div class="vds-radio-check"></div>
+              <media-radio class="vds-audio-radio vds-radio vds-menu-item">
+                <slot name="menu-radio-check-icon" data-class="vds-icon"></slot>
                 <span class="vds-radio-label" data-part="label"></span>
               </media-radio>
             </template>
@@ -78,15 +79,15 @@ function DefaultMenuAudioGainSlider() {
       $label = $i18n(translations, 'Audio Boost'),
       $value = $signal(() => Math.round(((audioGain() ?? 1) - 1) * 100) + '%');
 
-    return DefaultMenuSlider({
-      label: $label,
-      value: $value,
-      children: [
-        html`<slot name="menu-audio-boost-down-icon"></slot>`,
-        DefaultAudioGainSlider(),
-        html`<slot name="menu-audio-boost-up-icon"></slot>`,
-      ],
-    });
+    return html`
+      <div class="vds-menu-item">
+        ${[
+          IconSlot('menu-audio-boost-down'),
+          DefaultAudioGainSlider(),
+          IconSlot('menu-audio-boost-up'),
+        ]}
+      </div>
+    `;
   });
 }
 

@@ -8,24 +8,27 @@ import { useMediaContext, useMediaState } from '../../../../../../core/api/media
 import { $signal } from '../../../../../lit/directives/signal';
 import { $i18n } from '../utils';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
-import { renderMenuButton } from './items/menu-items';
-import { DefaultMenuSlider, DefaultSliderParts } from './items/menu-slider';
+import { DefaultMenuButton, DefaultMenuSection } from './items/menu-items';
+import {
+  DefaultMenuSliderItem,
+  DefaultSliderMarkers,
+  DefaultSliderParts,
+} from './items/menu-slider';
 
 export function DefaultPlaybackMenu() {
   return $signal(() => {
     const { translations } = useDefaultLayoutContext();
     return html`
       <media-menu class="vds-playback-menu vds-menu">
-        ${renderMenuButton({
+        ${DefaultMenuButton({
           label: () => i18n(translations, 'Playback'),
           icon: 'menu-playback',
         })}
         <media-menu-items class="vds-menu-items">
           ${[
-            DefaultMenuLoopCheckbox(),
-            DefaultMenuAutoQualityCheckbox(),
-            DefaultMenuSpeedSlider(),
-            DefaultMenuQualitySlider(),
+            DefaultMenuSection({ children: DefaultMenuLoopCheckbox() }),
+            DefaultMenuSpeedSection(),
+            DefaultMenuQualitySection(),
           ]}
         </media-menu-items>
       </media-menu>
@@ -39,8 +42,8 @@ function DefaultMenuLoopCheckbox() {
     label = 'Loop',
     $label = $i18n(translations, label);
   return html`
-    <div class="vds-menu-item vds-menu-item-checkbox">
-      <div class="vds-menu-checkbox-label">${$label}</div>
+    <div class="vds-menu-item">
+      <div class="vds-menu-item-label">${$label}</div>
       ${DefaultMenuCheckbox({
         label,
         storageKey: 'vds-player::user-loop',
@@ -52,9 +55,9 @@ function DefaultMenuLoopCheckbox() {
   `;
 }
 
-function DefaultMenuSpeedSlider() {
+function DefaultMenuSpeedSection() {
   return $signal(() => {
-    const { translations } = useDefaultLayoutContext(),
+    const { translations, playbackRates } = useDefaultLayoutContext(),
       { canSetPlaybackRate, playbackRate } = useMediaState();
 
     if (!canSetPlaybackRate()) return null;
@@ -64,43 +67,52 @@ function DefaultMenuSpeedSlider() {
         playbackRate() === 1 ? i18n(translations, 'Normal') : playbackRate() + 'x',
       );
 
-    return DefaultMenuSlider({
+    return DefaultMenuSection({
       label: $label,
       value: $value,
       children: [
-        html`<slot name="menu-speed-down-icon"></slot>`,
-        DefaultSpeedSlider(),
-        html`<slot name="menu-speed-up-icon"></slot>`,
+        DefaultMenuSliderItem({
+          upIcon: 'menu-speed-up',
+          downIcon: 'menu-speed-down',
+          slider: DefaultSpeedSlider(),
+          isMin: () => playbackRate() === getSpeedMin(),
+          isMax: () => playbackRate() === getSpeedMax(),
+        }),
       ],
     });
   });
 }
 
+function getSpeedMin() {
+  const { playbackRates } = useDefaultLayoutContext(),
+    rates = playbackRates();
+  return isArray(rates) ? rates[0] ?? 0 : rates.min;
+}
+
+function getSpeedMax() {
+  const { playbackRates } = useDefaultLayoutContext(),
+    rates = playbackRates();
+  return isArray(rates) ? rates[rates.length - 1] ?? 2 : rates.max;
+}
+
 function DefaultSpeedSlider() {
   const { playbackRates, translations } = useDefaultLayoutContext(),
     $label = $i18n(translations, 'Speed'),
-    $min = () => {
-      const rates = playbackRates();
-      return isArray(rates) ? rates[0] ?? 0 : rates.min;
-    },
-    $max = () => {
-      const rates = playbackRates();
-      return isArray(rates) ? rates[rates.length - 1] ?? 2 : rates.max;
-    },
     $step = () => {
       const rates = playbackRates();
       return isArray(rates) ? rates[1] - rates[0] || 0.25 : rates.step;
-    };
+    },
+    $steps = computed(() => (getSpeedMax() - getSpeedMin()) / $step());
 
   return html`
     <media-speed-slider
       class="vds-speed-slider vds-slider"
       aria-label=${$label}
-      min=${$signal($min)}
-      max=${$signal($max)}
+      min=${$signal(getSpeedMin)}
+      max=${$signal(getSpeedMax)}
       step=${$signal($step)}
     >
-      ${DefaultSliderParts()}
+      ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
     </media-speed-slider>
   `;
 }
@@ -108,15 +120,15 @@ function DefaultMenuAutoQualityCheckbox() {
   const { remote, qualities } = useMediaContext(),
     { autoQuality, canSetQuality, qualities: $qualities } = useMediaState(),
     { translations } = useDefaultLayoutContext(),
-    label = 'Auto Select',
+    label = 'Auto',
     $label = $i18n(translations, label),
     $disabled = computed(() => !canSetQuality() || $qualities().length === 0);
 
   if ($disabled()) return null;
 
   return html`
-    <div class="vds-menu-item vds-menu-item-checkbox">
-      <div class="vds-menu-checkbox-label">${$label}</div>
+    <div class="vds-menu-item">
+      <div class="vds-menu-item-label">${$label}</div>
       ${DefaultMenuCheckbox({
         label,
         checked: autoQuality,
@@ -132,7 +144,7 @@ function DefaultMenuAutoQualityCheckbox() {
   `;
 }
 
-function DefaultMenuQualitySlider() {
+function DefaultMenuQualitySection() {
   return $signal(() => {
     const { hideQualityBitrate, translations } = useDefaultLayoutContext(),
       { canSetQuality, qualities, quality } = useMediaState(),
@@ -147,15 +159,22 @@ function DefaultMenuQualitySlider() {
           bitrateText = bitrate && bitrate > 0 ? `${(bitrate / 1000000).toFixed(2)} Mbps` : null,
           autoText = i18n(translations, 'Auto');
         return height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : autoText;
-      });
+      }),
+      isMin = () => qualities()[0] === quality(),
+      isMax = () => qualities().at(-1) === quality();
 
-    return DefaultMenuSlider({
+    return DefaultMenuSection({
       label: $label,
       value: $value,
       children: [
-        html`<slot name="menu-quality-down-icon"></slot>`,
-        DefaultQualitySlider(),
-        html`<slot name="menu-quality-up-icon"></slot>`,
+        DefaultMenuSliderItem({
+          upIcon: 'menu-quality-up',
+          downIcon: 'menu-quality-down',
+          slider: DefaultQualitySlider(),
+          isMin,
+          isMax,
+        }),
+        DefaultMenuAutoQualityCheckbox(),
       ],
     });
   });
@@ -163,10 +182,12 @@ function DefaultMenuQualitySlider() {
 
 function DefaultQualitySlider() {
   const { translations } = useDefaultLayoutContext(),
-    $label = $i18n(translations, 'Quality');
+    { qualities } = useMediaState(),
+    $label = $i18n(translations, 'Quality'),
+    $steps = computed(() => qualities().length - 1);
   return html`
     <media-quality-slider class="vds-quality-slider vds-slider" aria-label=${$label}>
-      ${DefaultSliderParts()}
+      ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
     </media-quality-slider>
   `;
 }

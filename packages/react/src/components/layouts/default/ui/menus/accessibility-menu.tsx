@@ -44,8 +44,8 @@ function DefaultMenuAnnouncementsCheckbox() {
   }
 
   return (
-    <div className="vds-menu-item vds-menu-item-checkbox">
-      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+    <div className="vds-menu-item">
+      <div className="vds-menu-item-label">{translatedLabel}</div>
       <DefaultMenuCheckbox
         label={label}
         defaultChecked
@@ -75,8 +75,8 @@ function DefaultMenuKeyboardAnimationCheckbox() {
   }
 
   return (
-    <div className="vds-menu-item vds-menu-item-checkbox">
-      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+    <div className="vds-menu-item">
+      <div className="vds-menu-item-label">{translatedLabel}</div>
       <DefaultMenuCheckbox
         label={label}
         defaultChecked

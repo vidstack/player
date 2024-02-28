@@ -4,8 +4,33 @@ import { isArray, isFunction, isString } from 'maverick.js/std';
 
 import type { RadioGroupChangeEvent, RadioOption } from '../../../../../../../components';
 import { $signal } from '../../../../../../lit/directives/signal';
+import { IconSlot } from '../../../slots';
 
-export function renderMenuButton({
+let sectionId = 0;
+
+export function DefaultMenuSection({ label = null, value = null, children }) {
+  if (!label) {
+    return html`
+      <div class="vds-menu-section">
+        <div class="vds-menu-section-body">${children}</div>
+      </div>
+    `;
+  }
+
+  const id = `vds-menu-section-${++sectionId}`;
+
+  return html`
+    <section class="vds-menu-section" role="group" aria-labelledby=${id}>
+      <div class="vds-menu-section-title">
+        <header id=${id}>${label}</header>
+        ${value ? html`<div class="vds-menu-section-value">${value}</div>` : null}
+      </div>
+      <div class="vds-menu-section-body">${children}</div>
+    </section>
+  `;
+}
+
+export function DefaultMenuButton({
   label,
   icon,
   hint,
@@ -15,17 +40,17 @@ export function renderMenuButton({
   hint?: ReadSignal<string> | null;
 }) {
   return html`
-    <media-menu-button class="vds-menu-button">
-      <slot name="menu-arrow-left-icon" data-class="vds-menu-button-close-icon"></slot>
-      ${icon ? html`<slot name="${icon}-icon" data-class="vds-menu-button-icon"></slot>` : null}
-      <span class="vds-menu-button-label">${$signal(label)}</span>
-      <span class="vds-menu-button-hint" data-part="hint">${hint ? $signal(hint) : null} </span>
-      <slot name="menu-arrow-right-icon" data-class="vds-menu-button-open-icon"></slot>
+    <media-menu-button class="vds-menu-item">
+      ${IconSlot('menu-arrow-left', 'vds-menu-close-icon')}
+      ${icon ? IconSlot(icon, 'vds-menu-item-icon') : null}
+      <span class="vds-menu-item-label">${$signal(label)}</span>
+      <span class="vds-menu-item-hint" data-part="hint">${hint ? $signal(hint) : null} </span>
+      ${IconSlot('menu-arrow-right', 'vds-menu-open-icon')}
     </media-menu-button>
   `;
 }
 
-export function renderRadioGroup({
+export function DefaultRadioGroup({
   value = null,
   options,
   hideLabel = false,
@@ -41,8 +66,8 @@ export function renderRadioGroup({
   function renderRadio(option: RadioOption) {
     const { value, label: content } = option;
     return html`
-      <media-radio class="vds-radio" value=${value}>
-        <div class="vds-radio-check"></div>
+      <media-radio class="vds-radio vds-menu-item" value=${value}>
+        ${IconSlot('menu-radio-check')}
         ${!hideLabel
           ? html`
               <span class="vds-radio-label" data-part="label">

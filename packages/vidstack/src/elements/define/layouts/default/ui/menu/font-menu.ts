@@ -7,7 +7,7 @@ import { useDefaultLayoutContext } from '../../../../../../components/layouts/de
 import { i18n } from '../../../../../../components/layouts/default/translations';
 import { useMediaContext, useMediaState } from '../../../../../../core/api/media-context';
 import { $signal } from '../../../../../lit/directives/signal';
-import { createRadioOptions, renderMenuButton, renderRadioGroup } from './items/menu-items';
+import { createRadioOptions, DefaultMenuButton, DefaultRadioGroup } from './items/menu-items';
 
 const COLOR_OPTIONS = ['White', 'Yellow', 'Green', 'Cyan', 'Blue', 'Magenta', 'Red', 'Black'],
   OPACITY_OPTIONS = ['0%', '25%', '50%', '75%', '100%'],
@@ -38,7 +38,7 @@ export function DefaultFontMenu() {
 
     return html`
       <media-menu class="vds-font-menu vds-menu">
-        ${renderMenuButton({
+        ${DefaultMenuButton({
           label: () => i18n(translations, 'Caption Styles'),
         })}
         <media-menu-items class="vds-menu-items">
@@ -227,9 +227,9 @@ function DefaultFontSettingMenu({
 
   return html`
     <media-menu class=${`vds-${key}-menu vds-menu`} @open=${onOpen} @close=${onClose}>
-      ${renderMenuButton({ label: $label, hint: $hint })}
+      ${DefaultMenuButton({ label: $label, hint: $hint })}
       <media-menu-items class="vds-menu-items">
-        ${renderRadioGroup({
+        ${DefaultRadioGroup({
           value: $value,
           options: radioOptions,
           onChange({ detail: value }) {

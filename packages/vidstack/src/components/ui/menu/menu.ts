@@ -136,14 +136,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       this._parentMenu = useContext(menuContext);
     }
 
-    provideContext(sliderObserverContext, {
-      onDragStart: () => {
-        this._isSliderActive = true;
-      },
-      onDragEnd: () => {
-        this._isSliderActive = false;
-      },
-    });
+    this._observeSliders();
 
     this.setAttributes({
       'data-open': this._expanded,
@@ -155,6 +148,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       _button: this._trigger,
       _expanded: this._expanded,
       _hint: signal(''),
+      _submenu: !!this._parentMenu,
       _disable: this._disable.bind(this),
       _attachMenuButton: this._attachMenuButton.bind(this),
       _attachMenuItems: this._attachMenuItems.bind(this),
@@ -180,6 +174,29 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._trigger.set(null);
     this._content.set(null);
     this._menuObserver = null;
+  }
+
+  private _observeSliders() {
+    let sliderActiveTimer = -1,
+      parentSliderObserver = hasProvidedContext(sliderObserverContext)
+        ? useContext(sliderObserverContext)
+        : null;
+
+    provideContext(sliderObserverContext, {
+      onDragStart: () => {
+        parentSliderObserver?.onDragStart?.();
+        window.clearTimeout(sliderActiveTimer);
+        sliderActiveTimer = -1;
+        this._isSliderActive = true;
+      },
+      onDragEnd: () => {
+        parentSliderObserver?.onDragEnd?.();
+        sliderActiveTimer = window.setTimeout(() => {
+          this._isSliderActive = false;
+          sliderActiveTimer = -1;
+        }, 300);
+      },
+    });
   }
 
   private _watchExpanded() {
@@ -366,7 +383,9 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   private _onPointerUp(event: PointerEvent) {
     const content = this._content();
 
-    if (this._isSliderActive || (content && isEventInside(content, event))) return;
+    if (this._isSliderActive || (content && isEventInside(content, event))) {
+      return;
+    }
 
     // Prevent it bubbling up to window so we can determine when to close dialog.
     event.stopPropagation();
@@ -375,7 +394,9 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   private _onWindowPointerUp(event: Event) {
     const content = this._content();
 
-    if (this._isSliderActive || (content && isEventInside(content, event))) return;
+    if (this._isSliderActive || (content && isEventInside(content, event))) {
+      return;
+    }
 
     // A little delay so submenu closing doesn't jump menu size when closing.
     if (this.isSubmenu) return setTimeout(this.close.bind(this, event), 800);

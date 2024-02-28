@@ -11,8 +11,8 @@ export abstract class IconsLoader {
 
   readonly slots: SlotObserver;
 
-  constructor(protected _root: HTMLElement) {
-    this.slots = new SlotObserver(_root, this._insertIcons.bind(this));
+  constructor(protected _roots: HTMLElement[]) {
+    this.slots = new SlotObserver(_roots, this._insertIcons.bind(this));
   }
 
   connect() {

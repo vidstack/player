@@ -49,8 +49,8 @@ function DefaultMenuLoopCheckbox() {
   }
 
   return (
-    <div className="vds-menu-item vds-menu-item-checkbox">
-      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+    <div className="vds-menu-item">
+      <div className="vds-menu-item-label">{translatedLabel}</div>
       <DefaultMenuCheckbox label={label} storageKey="vds-player::user-loop" onChange={onChange} />
     </div>
   );
@@ -77,8 +77,8 @@ function DefaultAutoQualityCheckbox() {
   }
 
   return (
-    <div className="vds-menu-item vds-menu-item-checkbox">
-      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+    <div className="vds-menu-item">
+      <div className="vds-menu-item-label">{translatedLabel}</div>
       <DefaultMenuCheckbox label={label} checked={$autoQuality} onChange={onChange} />
     </div>
   );
@@ -106,16 +106,10 @@ function DefaultMenuQualitySlider() {
     value = height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : autoText;
 
   return (
-    <div className="vds-menu-item vds-menu-item-slider">
-      <div className="vds-menu-slider-title">
-        <span className="vds-menu-slider-label">{label}</span>
-        <span className="vds-menu-slider-value">{value}</span>
-      </div>
-      <div className="vds-menu-slider-group">
-        <Icons.Menu.QualityDown className="vds-icon" />
-        <DefaultQualitySlider />
-        <Icons.Menu.QualityUp className="vds-icon" />
-      </div>
+    <div className="vds-menu-item">
+      <Icons.Menu.QualityDown className="vds-icon" />
+      <DefaultQualitySlider />
+      <Icons.Menu.QualityUp className="vds-icon" />
     </div>
   );
 }
@@ -151,21 +145,13 @@ function DefaultMenuSpeedSlider() {
     value = $playbackRate === 1 ? normalText : $playbackRate + 'x';
 
   return (
-    <div className="vds-menu-item vds-menu-item-slider">
-      <div className="vds-menu-slider-title">
-        <span className="vds-menu-slider-label">{label}</span>
-        <span className="vds-menu-slider-value">{value}</span>
-      </div>
-      <div className="vds-menu-slider-group">
-        <Icons.Menu.SpeedDown className="vds-icon" />
-        <DefaultSpeedSlider />
-        <Icons.Menu.SpeedUp className="vds-icon" />
-      </div>
+    <div className="vds-menu-item">
+      <Icons.Menu.SpeedDown className="vds-icon" />
+      <DefaultSpeedSlider />
+      <Icons.Menu.SpeedUp className="vds-icon" />
     </div>
   );
 }
-
-DefaultMenuSpeedSlider.displayName = 'DefaultMenuSpeedSlider';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultSpeedSlider

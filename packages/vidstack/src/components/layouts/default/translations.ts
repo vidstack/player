@@ -8,7 +8,6 @@ export type DefaultLayoutWord =
   | 'Audio Track'
   | 'Audio Boost'
   | 'Auto'
-  | 'Auto Select'
   | 'Background Color'
   | 'Background Opacity'
   | 'Black'

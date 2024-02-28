@@ -8,14 +8,14 @@ import { $signal } from '../../../../../lit/directives/signal';
 import { $i18n } from '../utils';
 import { DefaultFontMenu } from './font-menu';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
-import { renderMenuButton } from './items/menu-items';
+import { DefaultMenuButton } from './items/menu-items';
 
 export function DefaultAccessibilityMenu() {
   return $signal(() => {
     const { translations } = useDefaultLayoutContext();
     return html`
       <media-menu class="vds-accessibility-menu vds-menu">
-        ${renderMenuButton({
+        ${DefaultMenuButton({
           label: () => i18n(translations, 'Accessibility'),
           icon: 'menu-accessibility',
         })}
@@ -37,7 +37,7 @@ function DefaultMenuAnnouncementsCheckbox() {
     $label = $i18n(translations, label);
   return html`
     <div class="vds-menu-item vds-menu-item-checkbox">
-      <div class="vds-menu-checkbox-label">${$label}</div>
+      <div class="vds-menu-item-label">${$label}</div>
       ${DefaultMenuCheckbox({
         label,
         storageKey: 'vds-player::announcements',
@@ -61,8 +61,8 @@ function DefaultMenuKeyboardAnimationCheckbox() {
       $label = $i18n(translations, label);
 
     return html`
-      <div class="vds-menu-item vds-menu-item-checkbox">
-        <div class="vds-menu-checkbox-label">${$label}</div>
+      <div class="vds-menu-item">
+        <div class="vds-menu-item-label">${$label}</div>
         ${DefaultMenuCheckbox({
           label,
           defaultChecked: true,

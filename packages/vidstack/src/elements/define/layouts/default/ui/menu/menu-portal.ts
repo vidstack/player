@@ -1,4 +1,7 @@
 import { html, type TemplateResult } from 'lit-html';
+import { effect } from 'maverick.js';
+
+import { useMediaState } from '../../../../../../core/api/media-context';
 
 export function MenuPortal(container: HTMLElement | null, template: TemplateResult) {
   return html`
@@ -17,6 +20,9 @@ export function createMenuContainer(className: string) {
     container.classList.add(className);
     document.body.append(container);
   }
+
+  const { viewType } = useMediaState();
+  effect(() => container?.setAttribute('data-view-type', viewType()));
 
   return container;
 }

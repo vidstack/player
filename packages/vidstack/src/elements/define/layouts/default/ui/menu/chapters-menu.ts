@@ -7,6 +7,7 @@ import type { MenuPlacement } from '../../../../../../components/ui/menu/menu-it
 import type { TooltipPlacement } from '../../../../../../components/ui/tooltip/tooltip-content';
 import { useMediaState } from '../../../../../../core/api/media-context';
 import { $signal } from '../../../../../lit/directives/signal';
+import { IconSlot } from '../../slots';
 import { $i18n } from '../utils';
 import { MenuPortal } from './menu-portal';
 
@@ -67,7 +68,7 @@ export function DefaultChaptersMenu({
             class="vds-menu-button vds-button"
             aria-label=${$i18n(translations, 'Chapters')}
           >
-            <slot name="menu-chapters-icon"></slot>
+            ${IconSlot('menu-chapters')}
           </media-menu-button>
         </media-tooltip-trigger>
         <media-tooltip-content

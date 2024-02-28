@@ -67,10 +67,11 @@ export class MediaVideoLayoutElement
     onDispose(() => this._media.player.el?.removeAttribute('data-layout'));
 
     effect(() => {
+      const roots = this.menuContainer ? [this, this.menuContainer] : [this];
       if (this.$props.customIcons()) {
-        new SlotManager(this).connect();
+        new SlotManager(roots).connect();
       } else {
-        new DefaultLayoutIconsLoader(this).connect();
+        new DefaultLayoutIconsLoader(roots).connect();
       }
     });
   }

@@ -1,21 +1,63 @@
-import { html } from 'lit-html';
+import { html, type TemplateResult } from 'lit-html';
+import type { ReadSignal } from 'maverick.js';
 
-export function DefaultMenuSlider({ label, value, children }) {
-  return html`
-    <div class="vds-menu-item vds-menu-item-slider">
-      <div class="vds-menu-slider-title">
-        <span class="vds-menu-slider-label">${label}</span>
-        <span class="vds-menu-slider-value">${value}</span>
-      </div>
-      <div class="vds-menu-slider-group">${children}</div>
-    </div>
-  `;
-}
+import { $signal } from '../../../../../../lit/directives/signal';
+import { IconSlot } from '../../../slots';
 
 export function DefaultSliderParts() {
   return html`
     <div class="vds-slider-track"></div>
     <div class="vds-slider-track-fill vds-slider-track"></div>
     <div class="vds-slider-thumb"></div>
+  `;
+}
+
+export function DefaultSliderMarkers(count: ReadSignal<number>) {
+  return html`<div class="vds-slider-markers">
+    ${$signal(() => {
+      const items: TemplateResult[] = [],
+        len = count();
+
+      for (let i = 0; i <= len; i++) items.push(html`<div class="vds-slider-marker"></div>`);
+
+      return items;
+    })}
+  </div> `;
+}
+
+export function DefaultMenuSliderItem({
+  label = null,
+  value = null,
+  upIcon = '',
+  downIcon = '',
+  slider,
+  isMin,
+  isMax,
+}) {
+  const hasTitle = label || value,
+    content = [
+      downIcon ? IconSlot(downIcon, 'down') : null,
+      slider,
+      upIcon ? IconSlot(upIcon, 'up') : null,
+    ];
+
+  return html`
+    <div
+      class=${`vds-menu-item vds-menu-slider-item${hasTitle ? ' group' : ''}`}
+      data-min=${$signal(() => (isMin() ? '' : null))}
+      data-max=${$signal(() => (isMax() ? '' : null))}
+    >
+      ${hasTitle
+        ? html`
+            <div class="vds-menu-slider-title">
+              ${[
+                label ? html`<div>${label}</div>` : null,
+                value ? html`<div>${value}</div>` : null,
+              ]}
+            </div>
+            <div class="vds-menu-slider-body">${content}</div>
+          `
+        : content}
+    </div>
   `;
 }
