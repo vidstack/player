@@ -9,7 +9,12 @@ import * as QualitySlider from '../../../../ui/sliders/quality-slider';
 import * as SpeedSlider from '../../../../ui/sliders/speed-slider';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
-import { DefaultMenuButton } from './items/menu-items';
+import { DefaultMenuButton, DefaultMenuItem, DefaultMenuSection } from './items/menu-items';
+import {
+  DefaultMenuSliderItem,
+  DefaultSliderMarkers,
+  DefaultSliderParts,
+} from './items/menu-slider';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultPlaybackMenu
@@ -23,10 +28,13 @@ function DefaultPlaybackMenu() {
     <Menu.Root className="vds-accessibility-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Playback} />
       <Menu.Content className="vds-menu-items">
-        <DefaultMenuLoopCheckbox />
-        <DefaultAutoQualityCheckbox />
-        <DefaultMenuSpeedSlider />
-        <DefaultMenuQualitySlider />
+        <DefaultMenuSection>
+          <DefaultLoopMenuCheckbox />
+        </DefaultMenuSection>
+
+        <DefaultSpeedMenuSection />
+
+        <DefaultQualityMenuSection />
       </Menu.Content>
     </Menu.Root>
   );
@@ -36,37 +44,34 @@ DefaultPlaybackMenu.displayName = 'DefaultPlaybackMenu';
 export { DefaultPlaybackMenu };
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultMenuLoopCheckbox
+ * DefaultLoopMenuCheckbox
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultMenuLoopCheckbox() {
-  const label = 'Loop',
-    { remote } = useMediaContext(),
-    translatedLabel = useDefaultLayoutWord(label);
+function DefaultLoopMenuCheckbox() {
+  const { remote } = useMediaContext(),
+    label = useDefaultLayoutWord('Loop');
 
   function onChange(checked: boolean, trigger?: Event) {
     remote.userPrefersLoopChange(checked, trigger);
   }
 
   return (
-    <div className="vds-menu-item vds-menu-item-checkbox">
-      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+    <DefaultMenuItem label={label}>
       <DefaultMenuCheckbox label={label} storageKey="vds-player::user-loop" onChange={onChange} />
-    </div>
+    </DefaultMenuItem>
   );
 }
 
-DefaultMenuLoopCheckbox.displayName = 'DefaultMenuLoopCheckbox';
+DefaultLoopMenuCheckbox.displayName = 'DefaultLoopMenuCheckbox';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultAutoQualityCheckbox
+ * DefaultAutoQualityMenuCheckbox
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultAutoQualityCheckbox() {
-  const label = 'Auto Select',
-    { remote, qualities } = useMediaContext(),
+function DefaultAutoQualityMenuCheckbox() {
+  const { remote, qualities } = useMediaContext(),
     $autoQuality = useMediaState('autoQuality'),
-    translatedLabel = useDefaultLayoutWord(label);
+    label = useDefaultLayoutWord('Auto');
 
   function onChange(checked: boolean, trigger?: Event) {
     if (checked) {
@@ -77,62 +82,64 @@ function DefaultAutoQualityCheckbox() {
   }
 
   return (
-    <div className="vds-menu-item vds-menu-item-checkbox">
-      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+    <DefaultMenuItem label={label}>
       <DefaultMenuCheckbox label={label} checked={$autoQuality} onChange={onChange} />
-    </div>
+    </DefaultMenuItem>
   );
 }
 
-DefaultAutoQualityCheckbox.displayName = 'DefaultAutoQualityCheckbox';
+DefaultAutoQualityMenuCheckbox.displayName = 'DefaultAutoQualityMenuCheckbox';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultMenuQualitySlider
+ * DefaultQualityMenuSection
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultMenuQualitySlider() {
+function DefaultQualityMenuSection() {
   const { hideQualityBitrate, icons: Icons } = useDefaultLayoutContext(),
-    $canSetQuality = useMediaState('playbackRate'),
+    $canSetQuality = useMediaState('canSetQuality'),
     $qualities = useMediaState('qualities'),
     $quality = useMediaState('quality'),
     label = useDefaultLayoutWord('Quality'),
     autoText = useDefaultLayoutWord('Auto');
 
-  if (!$canSetQuality || $qualities.length === 0) return null;
+  if (!$canSetQuality || $qualities.length <= 1) return null;
 
   const height = $quality?.height,
     bitrate = !hideQualityBitrate ? $quality?.bitrate : null,
     bitrateText = bitrate && bitrate > 0 ? `${(bitrate / 1000000).toFixed(2)} Mbps` : null,
-    value = height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : autoText;
+    value = height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : autoText,
+    isMin = $qualities[0] === $quality,
+    isMax = $qualities.at(-1) === $quality;
 
   return (
-    <div className="vds-menu-item vds-menu-item-slider">
-      <div className="vds-menu-slider-title">
-        <span className="vds-menu-slider-label">{label}</span>
-        <span className="vds-menu-slider-value">{value}</span>
-      </div>
-      <div className="vds-menu-slider-group">
-        <Icons.Menu.QualityDown className="vds-icon" />
+    <DefaultMenuSection label={label} value={value}>
+      <DefaultMenuSliderItem
+        UpIcon={Icons.Menu.QualityUp}
+        DownIcon={Icons.Menu.QualityDown}
+        isMin={isMin}
+        isMax={isMax}
+      >
         <DefaultQualitySlider />
-        <Icons.Menu.QualityUp className="vds-icon" />
-      </div>
-    </div>
+      </DefaultMenuSliderItem>
+      <DefaultAutoQualityMenuCheckbox />
+    </DefaultMenuSection>
   );
 }
 
-DefaultMenuQualitySlider.displayName = 'DefaultMenuQualitySlider';
+DefaultQualityMenuSection.displayName = 'DefaultQualityMenuSection';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultQualitySlider
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultQualitySlider() {
-  const label = useDefaultLayoutWord('Quality');
+  const label = useDefaultLayoutWord('Quality'),
+    $qualities = useMediaState('qualities'),
+    $steps = $qualities.length - 1;
   return (
     <QualitySlider.Root className="vds-quality-slider vds-slider" aria-label={label}>
-      <QualitySlider.Track className="vds-slider-track" />
-      <QualitySlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
-      <QualitySlider.Thumb className="vds-slider-thumb" />
+      <DefaultSliderParts />
+      <DefaultSliderMarkers count={$steps} />
     </QualitySlider.Root>
   );
 }
@@ -140,32 +147,52 @@ function DefaultQualitySlider() {
 DefaultQualitySlider.displayName = 'DefaultQualitySlider';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultMenuSpeedSlider
+ * DefaultSpeedMenuSection
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultMenuSpeedSlider() {
+function DefaultSpeedMenuSection() {
   const { icons: Icons } = useDefaultLayoutContext(),
     $playbackRate = useMediaState('playbackRate'),
+    $canSetPlaybackRate = useMediaState('canSetPlaybackRate'),
     label = useDefaultLayoutWord('Speed'),
     normalText = useDefaultLayoutWord('Normal'),
+    min = useSpeedMin(),
+    max = useSpeedMax(),
     value = $playbackRate === 1 ? normalText : $playbackRate + 'x';
 
+  if (!$canSetPlaybackRate) return null;
+
   return (
-    <div className="vds-menu-item vds-menu-item-slider">
-      <div className="vds-menu-slider-title">
-        <span className="vds-menu-slider-label">{label}</span>
-        <span className="vds-menu-slider-value">{value}</span>
-      </div>
-      <div className="vds-menu-slider-group">
-        <Icons.Menu.SpeedDown className="vds-icon" />
+    <DefaultMenuSection label={label} value={value}>
+      <DefaultMenuSliderItem
+        UpIcon={Icons.Menu.SpeedUp}
+        DownIcon={Icons.Menu.SpeedDown}
+        isMin={$playbackRate === min}
+        isMax={$playbackRate === max}
+      >
         <DefaultSpeedSlider />
-        <Icons.Menu.SpeedUp className="vds-icon" />
-      </div>
-    </div>
+      </DefaultMenuSliderItem>
+    </DefaultMenuSection>
   );
 }
 
-DefaultMenuSpeedSlider.displayName = 'DefaultMenuSpeedSlider';
+function useSpeedMin() {
+  const { playbackRates } = useDefaultLayoutContext(),
+    rates = playbackRates;
+  return (isArray(rates) ? rates[0] : rates?.min) ?? 0;
+}
+
+function useSpeedMax() {
+  const { playbackRates } = useDefaultLayoutContext(),
+    rates = playbackRates;
+  return (isArray(rates) ? rates[rates.length - 1] : rates?.max) ?? 2;
+}
+
+function useSpeedStep() {
+  const { playbackRates } = useDefaultLayoutContext(),
+    rates = playbackRates;
+  return (isArray(rates) ? rates[1] - rates[0] : rates?.step) || 0.25;
+}
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultSpeedSlider
@@ -173,10 +200,11 @@ DefaultMenuSpeedSlider.displayName = 'DefaultMenuSpeedSlider';
 
 function DefaultSpeedSlider() {
   const label = useDefaultLayoutWord('Speed'),
-    { playbackRates: rates } = useDefaultLayoutContext(),
-    min = (isArray(rates) ? rates[0] : rates?.min) || 0,
-    max = (isArray(rates) ? rates[rates.length - 1] : rates?.max) || 2,
-    step = (isArray(rates) ? rates[1] - rates[0] : rates?.step) || 0.25;
+    min = useSpeedMin(),
+    max = useSpeedMax(),
+    step = useSpeedStep(),
+    steps = (max - min) / step;
+
   return (
     <SpeedSlider.Root
       className="vds-speed-slider vds-slider"
@@ -184,10 +212,10 @@ function DefaultSpeedSlider() {
       min={min}
       max={max}
       step={step}
+      keyStep={step}
     >
-      <SpeedSlider.Track className="vds-slider-track" />
-      <SpeedSlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
-      <SpeedSlider.Thumb className="vds-slider-thumb" />
+      <DefaultSliderParts />
+      <DefaultSliderMarkers count={steps} />
     </SpeedSlider.Root>
   );
 }

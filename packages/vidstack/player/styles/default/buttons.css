@@ -68,6 +68,10 @@
     transform: var(--media-button-hover-transform, scale(1.05));
     transition: var(--media-button-hover-transition, transform 0.2s ease-in);
   }
+
+  .vds-button[aria-expanded='true'] {
+    transform: unset;
+  }
 }
 
 @media (pointer: coarse) {

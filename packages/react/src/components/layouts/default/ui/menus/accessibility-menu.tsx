@@ -5,7 +5,7 @@ import * as Menu from '../../../../ui/menu';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
 import { DefaultFontMenu } from './font-menu';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
-import { DefaultMenuButton } from './items/menu-items';
+import { DefaultMenuButton, DefaultMenuItem, DefaultMenuSection } from './items/menu-items';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAccessibilityMenu
@@ -19,9 +19,14 @@ function DefaultAccessibilityMenu() {
     <Menu.Root className="vds-accessibility-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Accessibility} />
       <Menu.Content className="vds-menu-items">
-        <DefaultMenuAnnouncementsCheckbox />
-        <DefaultMenuKeyboardAnimationCheckbox />
-        <DefaultFontMenu />
+        <DefaultMenuSection>
+          <DefaultAnnouncementsMenuCheckbox />
+          <DefaultKeyboardAnimationsMenuCheckbox />
+        </DefaultMenuSection>
+
+        <DefaultMenuSection>
+          <DefaultFontMenu />
+        </DefaultMenuSection>
       </Menu.Content>
     </Menu.Root>
   );
@@ -31,60 +36,56 @@ DefaultAccessibilityMenu.displayName = 'DefaultAccessibilityMenu';
 export { DefaultAccessibilityMenu };
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultMenuAnnouncementsCheckbox
+ * DefaultAnnouncementsMenuCheckbox
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultMenuAnnouncementsCheckbox() {
-  const label = 'Announcements',
-    { userPrefersAnnouncements } = useDefaultLayoutContext(),
-    translatedLabel = useDefaultLayoutWord(label);
+function DefaultAnnouncementsMenuCheckbox() {
+  const { userPrefersAnnouncements } = useDefaultLayoutContext(),
+    label = useDefaultLayoutWord('Announcements');
 
   function onChange(checked: boolean) {
     userPrefersAnnouncements.set(checked);
   }
 
   return (
-    <div className="vds-menu-item vds-menu-item-checkbox">
-      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+    <DefaultMenuItem label={label}>
       <DefaultMenuCheckbox
         label={label}
         defaultChecked
         storageKey="vds-player::announcements"
         onChange={onChange}
       />
-    </div>
+    </DefaultMenuItem>
   );
 }
 
-DefaultMenuAnnouncementsCheckbox.displayName = 'DefaultMenuAnnouncementsCheckbox';
+DefaultAnnouncementsMenuCheckbox.displayName = 'DefaultAnnouncementsMenuCheckbox';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultMenuKeyboardAnimationCheckbox
+ * DefaultKeyboardAnimationsMenuCheckbox
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultMenuKeyboardAnimationCheckbox() {
-  const label = 'Keyboard Animations',
-    $viewType = useMediaState('viewType'),
-    { userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
-    translatedLabel = useDefaultLayoutWord(label);
+function DefaultKeyboardAnimationsMenuCheckbox() {
+  const $viewType = useMediaState('viewType'),
+    { userPrefersKeyboardAnimations, noKeyboardAnimations } = useDefaultLayoutContext(),
+    label = useDefaultLayoutWord('Keyboard Animations');
 
-  if ($viewType !== 'video') return null;
+  if ($viewType !== 'video' || noKeyboardAnimations) return null;
 
   function onChange(checked: boolean) {
     userPrefersKeyboardAnimations.set(checked);
   }
 
   return (
-    <div className="vds-menu-item vds-menu-item-checkbox">
-      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+    <DefaultMenuItem label={label}>
       <DefaultMenuCheckbox
         label={label}
         defaultChecked
         storageKey="vds-player::keyboard-animations"
         onChange={onChange}
       />
-    </div>
+    </DefaultMenuItem>
   );
 }
 
-DefaultMenuKeyboardAnimationCheckbox.displayName = 'DefaultMenuKeyboardAnimationCheckbox';
+DefaultKeyboardAnimationsMenuCheckbox.displayName = 'DefaultKeyboardAnimationsMenuCheckbox';

@@ -1,12 +1,9 @@
 import * as React from 'react';
 
 import { isBoolean, isKeyboardClick } from 'maverick.js/std';
-import type { DefaultLayoutWord } from 'vidstack';
-
-import { useDefaultLayoutWord } from '../../../context';
 
 export interface DefaultMenuCheckboxProps {
-  label: DefaultLayoutWord;
+  label: string;
   checked?: boolean;
   storageKey?: string;
   defaultChecked?: boolean;
@@ -21,8 +18,7 @@ function DefaultMenuCheckbox({
   onChange,
 }: DefaultMenuCheckboxProps) {
   const [isChecked, setIsChecked] = React.useState(defaultChecked),
-    [isActive, setIsActive] = React.useState(false),
-    ariaLabel = useDefaultLayoutWord(label);
+    [isActive, setIsActive] = React.useState(false);
 
   React.useEffect(() => {
     const savedValue = storageKey ? localStorage.getItem(storageKey) : null,
@@ -62,7 +58,7 @@ function DefaultMenuCheckbox({
       className="vds-menu-checkbox"
       role="menuitemcheckbox"
       tabIndex={0}
-      aria-label={ariaLabel}
+      aria-label={label}
       aria-checked={isChecked ? 'true' : 'false'}
       data-active={isActive ? '' : null}
       onPointerUp={onPress}

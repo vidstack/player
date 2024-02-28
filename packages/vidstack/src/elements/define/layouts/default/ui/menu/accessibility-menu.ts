@@ -8,22 +8,28 @@ import { $signal } from '../../../../../lit/directives/signal';
 import { $i18n } from '../utils';
 import { DefaultFontMenu } from './font-menu';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
-import { renderMenuButton } from './items/menu-items';
+import { DefaultMenuButton, DefaultMenuItem, DefaultMenuSection } from './items/menu-items';
 
 export function DefaultAccessibilityMenu() {
   return $signal(() => {
     const { translations } = useDefaultLayoutContext();
     return html`
       <media-menu class="vds-accessibility-menu vds-menu">
-        ${renderMenuButton({
+        ${DefaultMenuButton({
           label: () => i18n(translations, 'Accessibility'),
           icon: 'menu-accessibility',
         })}
         <media-menu-items class="vds-menu-items">
           ${[
-            DefaultMenuAnnouncementsCheckbox(),
-            DefaultMenuKeyboardAnimationCheckbox(),
-            DefaultFontMenu(),
+            DefaultMenuSection({
+              children: [
+                DefaultAnnouncementsMenuCheckbox(),
+                DefaultKeyboardAnimationsMenuCheckbox(),
+              ],
+            }),
+            DefaultMenuSection({
+              children: [DefaultFontMenu()],
+            }),
           ]}
         </media-menu-items>
       </media-menu>
@@ -31,47 +37,43 @@ export function DefaultAccessibilityMenu() {
   });
 }
 
-function DefaultMenuAnnouncementsCheckbox() {
+function DefaultAnnouncementsMenuCheckbox() {
   const { userPrefersAnnouncements, translations } = useDefaultLayoutContext(),
-    label = 'Announcements',
-    $label = $i18n(translations, label);
-  return html`
-    <div class="vds-menu-item vds-menu-item-checkbox">
-      <div class="vds-menu-checkbox-label">${$label}</div>
-      ${DefaultMenuCheckbox({
-        label,
-        storageKey: 'vds-player::announcements',
-        onChange(checked) {
-          userPrefersAnnouncements.set(checked);
-        },
-      })}
-    </div>
-  `;
+    label = 'Announcements';
+
+  return DefaultMenuItem({
+    label: $i18n(translations, label),
+    children: DefaultMenuCheckbox({
+      label,
+      storageKey: 'vds-player::announcements',
+      onChange(checked) {
+        userPrefersAnnouncements.set(checked);
+      },
+    }),
+  });
 }
 
-function DefaultMenuKeyboardAnimationCheckbox() {
+function DefaultKeyboardAnimationsMenuCheckbox() {
   return $signal(() => {
-    const { translations, userPrefersKeyboardAnimations } = useDefaultLayoutContext(),
+    const { translations, userPrefersKeyboardAnimations, noKeyboardAnimations } =
+        useDefaultLayoutContext(),
       { viewType } = useMediaState(),
-      $disabled = computed(() => viewType() !== 'video');
+      $disabled = computed(() => viewType() !== 'video' || noKeyboardAnimations());
 
     if ($disabled()) return null;
 
-    const label = 'Keyboard Animations',
-      $label = $i18n(translations, label);
+    const label = 'Keyboard Animations';
 
-    return html`
-      <div class="vds-menu-item vds-menu-item-checkbox">
-        <div class="vds-menu-checkbox-label">${$label}</div>
-        ${DefaultMenuCheckbox({
-          label,
-          defaultChecked: true,
-          storageKey: 'vds-player::keyboard-animations',
-          onChange(checked) {
-            userPrefersKeyboardAnimations.set(checked);
-          },
-        })}
-      </div>
-    `;
+    return DefaultMenuItem({
+      label: $i18n(translations, label),
+      children: DefaultMenuCheckbox({
+        label,
+        defaultChecked: true,
+        storageKey: 'vds-player::keyboard-animations',
+        onChange(checked) {
+          userPrefersKeyboardAnimations.set(checked);
+        },
+      }),
+    });
   });
 }

@@ -1,33 +1,38 @@
 import { html } from 'lit-html';
 import { computed } from 'maverick.js';
+import { isArray } from 'maverick.js/std';
 
 import { useDefaultLayoutContext } from '../../../../../../components/layouts/default/context';
 import { i18n } from '../../../../../../components/layouts/default/translations';
 import { useMediaState } from '../../../../../../core/api/media-context';
 import { $signal } from '../../../../../lit/directives/signal';
 import { $i18n } from '../utils';
-import { renderMenuButton } from './items/menu-items';
-import { DefaultMenuSlider, DefaultSliderParts } from './items/menu-slider';
+import { DefaultMenuButton, DefaultMenuSection } from './items/menu-items';
+import {
+  DefaultMenuSliderItem,
+  DefaultSliderMarkers,
+  DefaultSliderParts,
+} from './items/menu-slider';
 
 export function DefaultAudioMenu() {
   return $signal(() => {
-    const { noAudioGainSlider, translations } = useDefaultLayoutContext(),
+    const { noAudioGain, translations } = useDefaultLayoutContext(),
       { audioTracks, canSetAudioGain } = useMediaState(),
       $disabled = computed(() => {
-        const hasGainSlider = canSetAudioGain() && !noAudioGainSlider();
+        const hasGainSlider = canSetAudioGain() && !noAudioGain();
         return !hasGainSlider && audioTracks().length <= 1;
       });
 
     if ($disabled()) return null;
 
     return html`
-      <media-menu class="vds-audio-tracks-menu vds-menu">
-        ${renderMenuButton({
+      <media-menu class="vds-audio-menu vds-menu">
+        ${DefaultMenuButton({
           label: () => i18n(translations, 'Audio'),
           icon: 'menu-audio',
         })}
         <media-menu-items class="vds-menu-items">
-          ${[DefaultMenuAudioGainSlider(), DefaultAudioTracksMenu()]}
+          ${[DefaultAudioTracksMenu(), DefaultAudioBoostSection()]}
         </media-menu-items>
       </media-menu>
     `;
@@ -43,64 +48,93 @@ function DefaultAudioTracksMenu() {
 
     if ($disabled()) return null;
 
-    return html`
-      <media-menu class="vds-audio-track-menu vds-menu">
-        ${renderMenuButton({
-          label: () => i18n(translations, 'Audio Track'),
-        })}
-        <media-menu-items class="vds-menu-items">
-          <media-audio-radio-group
-            class="vds-audio-radio-group vds-radio-group"
-            empty-label=${$defaultText}
-          >
-            <template>
-              <media-radio class="vds-audio-radio vds-radio">
-                <div class="vds-radio-check"></div>
-                <span class="vds-radio-label" data-part="label"></span>
-              </media-radio>
-            </template>
-          </media-audio-radio-group>
-        </media-menu-items>
-      </media-menu>
-    `;
+    return DefaultMenuSection({
+      children: html`
+        <media-menu class="vds-audio-tracks-menu vds-menu">
+          ${DefaultMenuButton({
+            label: () => i18n(translations, 'Track'),
+          })}
+          <media-menu-items class="vds-menu-items">
+            <media-audio-radio-group
+              class="vds-audio-track-radio-group vds-radio-group"
+              empty-label=${$defaultText}
+            >
+              <template>
+                <media-radio class="vds-audio-track-radio vds-radio">
+                  <slot name="menu-radio-check-icon" data-class="vds-icon"></slot>
+                  <span class="vds-radio-label" data-part="label"></span>
+                </media-radio>
+              </template>
+            </media-audio-radio-group>
+          </media-menu-items>
+        </media-menu>
+      `,
+    });
   });
 }
 
-function DefaultMenuAudioGainSlider() {
+function DefaultAudioBoostSection() {
   return $signal(() => {
-    const { noAudioGainSlider, translations } = useDefaultLayoutContext(),
+    const { noAudioGain, translations } = useDefaultLayoutContext(),
       { canSetAudioGain } = useMediaState(),
-      $disabled = computed(() => !canSetAudioGain() || noAudioGainSlider());
+      $disabled = computed(() => !canSetAudioGain() || noAudioGain());
 
     if ($disabled()) return null;
 
-    const { audioGain } = useMediaState(),
-      $label = $i18n(translations, 'Audio Boost'),
-      $value = $signal(() => Math.round(((audioGain() ?? 1) - 1) * 100) + '%');
+    const { audioGain } = useMediaState();
 
-    return DefaultMenuSlider({
-      label: $label,
-      value: $value,
+    return DefaultMenuSection({
+      label: $i18n(translations, 'Boost'),
+      value: $signal(() => Math.round(((audioGain() ?? 1) - 1) * 100) + '%'),
       children: [
-        html`<slot name="menu-audio-boost-down-icon"></slot>`,
-        DefaultAudioGainSlider(),
-        html`<slot name="menu-audio-boost-up-icon"></slot>`,
+        DefaultMenuSliderItem({
+          upIcon: 'menu-audio-boost-up',
+          downIcon: 'menu-audio-boost-down',
+          children: DefaultAudioGainSlider(),
+          isMin: () => ((audioGain() ?? 1) - 1) * 100 <= getGainMin(),
+          isMax: () => ((audioGain() ?? 1) - 1) * 100 === getGainMax(),
+        }),
       ],
     });
   });
 }
 
 function DefaultAudioGainSlider() {
-  const { translations, maxAudioGain } = useDefaultLayoutContext(),
-    $label = $i18n(translations, 'Audio Boost'),
-    $maxAudioGain = $signal(maxAudioGain);
+  const { translations } = useDefaultLayoutContext(),
+    $label = $i18n(translations, 'Boost'),
+    $min = computed(getGainMin),
+    $max = computed(getGainMax),
+    $step = computed(getGainStep),
+    $steps = computed(() => ($max() - $min()) / $step());
+
   return html`
     <media-audio-gain-slider
       class="vds-audio-gain-slider vds-slider"
       aria-label=${$label}
-      max=${$maxAudioGain}
+      min=${$signal($min)}
+      max=${$signal($max)}
+      step=${$signal($step)}
+      key-step=${$signal($step)}
     >
-      ${DefaultSliderParts()}
+      ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
     </media-audio-gain-slider>
   `;
+}
+
+function getGainMin() {
+  const { audioGains } = useDefaultLayoutContext(),
+    gains = audioGains();
+  return isArray(gains) ? gains[0] ?? 0 : gains.min;
+}
+
+function getGainMax() {
+  const { audioGains } = useDefaultLayoutContext(),
+    gains = audioGains();
+  return isArray(gains) ? gains[gains.length - 1] ?? 300 : gains.max;
+}
+
+function getGainStep() {
+  const { audioGains } = useDefaultLayoutContext(),
+    gains = audioGains();
+  return isArray(gains) ? gains[1] - gains[0] || 25 : gains.step;
 }

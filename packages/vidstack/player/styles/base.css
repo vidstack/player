@@ -14,6 +14,10 @@
   user-select: none;
 }
 
+[data-media-player] * {
+  box-sizing: border-box;
+}
+
 :where([data-media-player][data-view-type='video']) {
   aspect-ratio: 16 / 9;
 }

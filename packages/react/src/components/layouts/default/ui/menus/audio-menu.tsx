@@ -1,11 +1,18 @@
 import * as React from 'react';
 
+import { isArray } from 'maverick.js/std';
+
 import { useAudioOptions } from '../../../../../hooks/options/use-audio-options';
 import { useMediaState } from '../../../../../hooks/use-media-state';
 import * as Menu from '../../../../ui/menu';
 import * as AudioGainSlider from '../../../../ui/sliders/audio-gain-slider';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
-import { DefaultMenuButton } from './items/menu-items';
+import { DefaultMenuButton, DefaultMenuSection } from './items/menu-items';
+import {
+  DefaultMenuSliderItem,
+  DefaultSliderMarkers,
+  DefaultSliderParts,
+} from './items/menu-slider';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAudioMenu
@@ -15,9 +22,9 @@ function DefaultAudioMenu() {
   const label = useDefaultLayoutWord('Audio'),
     $canSetAudioGain = useMediaState('canSetAudioGain'),
     $audioTracks = useMediaState('audioTracks'),
-    { noAudioGainSlider, icons: Icons } = useDefaultLayoutContext(),
-    hasGainSlider = $canSetAudioGain && !noAudioGainSlider,
-    $disabled = !hasGainSlider && !$audioTracks.length;
+    { noAudioGain, icons: Icons } = useDefaultLayoutContext(),
+    hasGainSlider = $canSetAudioGain && !noAudioGain,
+    $disabled = !hasGainSlider && $audioTracks.length <= 1;
 
   if ($disabled) return null;
 
@@ -25,8 +32,8 @@ function DefaultAudioMenu() {
     <Menu.Root className="vds-audio-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Audio} />
       <Menu.Content className="vds-menu-items">
-        {hasGainSlider ? <DefaultMenuAudioGainSlider /> : null}
         <DefaultAudioTracksMenu />
+        {hasGainSlider ? <DefaultAudioBoostMenuSection /> : null}
       </Menu.Content>
     </Menu.Root>
   );
@@ -36,31 +43,54 @@ DefaultAudioMenu.displayName = 'DefaultAudioMenu';
 export { DefaultAudioMenu };
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultMenuAudioGainSlider
+ * DefaultAudioBoostSection
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultMenuAudioGainSlider() {
-  const label = useDefaultLayoutWord('Audio Boost'),
-    $audioGain = useMediaState('audioGain'),
+function DefaultAudioBoostMenuSection() {
+  const $audioGain = useMediaState('audioGain'),
+    label = useDefaultLayoutWord('Boost'),
     value = Math.round((($audioGain ?? 1) - 1) * 100) + '%',
-    { icons: Icons } = useDefaultLayoutContext();
+    $canSetAudioGain = useMediaState('canSetAudioGain'),
+    { noAudioGain, icons: Icons } = useDefaultLayoutContext(),
+    $disabled = !$canSetAudioGain || noAudioGain,
+    min = useGainMin(),
+    max = useGainMax();
+
+  if ($disabled) return null;
 
   return (
-    <div className="vds-menu-item vds-menu-item-slider">
-      <div className="vds-menu-slider-title">
-        <span className="vds-menu-slider-label">{label}</span>
-        <span className="vds-menu-slider-value">{value}</span>
-      </div>
-      <div className="vds-menu-slider-group">
-        <Icons.Menu.AudioBoostDown className="vds-icon" />
+    <DefaultMenuSection label={label} value={value}>
+      <DefaultMenuSliderItem
+        UpIcon={Icons.Menu.AudioBoostUp}
+        DownIcon={Icons.Menu.AudioBoostDown}
+        isMin={(($audioGain ?? 1) - 1) * 100 <= min}
+        isMax={(($audioGain ?? 1) - 1) * 100 === max}
+      >
         <DefaultAudioGainSlider />
-        <Icons.Menu.AudioBoostUp className="vds-icon" />
-      </div>
-    </div>
+      </DefaultMenuSliderItem>
+    </DefaultMenuSection>
   );
 }
 
-DefaultMenuAudioGainSlider.displayName = 'DefaultMenuAudioGainSlider';
+DefaultAudioBoostMenuSection.displayName = 'DefaultAudioBoostMenuSection';
+
+function useGainMin() {
+  const { audioGains } = useDefaultLayoutContext(),
+    min = isArray(audioGains) ? audioGains[0] : audioGains?.min;
+  return min ?? 0;
+}
+
+function useGainMax() {
+  const { audioGains } = useDefaultLayoutContext(),
+    max = isArray(audioGains) ? audioGains[audioGains.length - 1] : audioGains?.max;
+  return max ?? 300;
+}
+
+function useGainStep() {
+  const { audioGains } = useDefaultLayoutContext(),
+    step = isArray(audioGains) ? audioGains[1] - audioGains[0] : audioGains?.step;
+  return step || 25;
+}
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAudioGainSlider
@@ -68,16 +98,22 @@ DefaultMenuAudioGainSlider.displayName = 'DefaultMenuAudioGainSlider';
 
 function DefaultAudioGainSlider() {
   const label = useDefaultLayoutWord('Audio Boost'),
-    { maxAudioGain } = useDefaultLayoutContext();
+    min = useGainMin(),
+    max = useGainMax(),
+    step = useGainStep(),
+    steps = max - min / step;
+
   return (
     <AudioGainSlider.Root
       className="vds-audio-gain-slider vds-slider"
       aria-label={label}
-      max={maxAudioGain}
+      min={min}
+      max={max}
+      step={step}
+      keyStep={step}
     >
-      <AudioGainSlider.Track className="vds-slider-track" />
-      <AudioGainSlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
-      <AudioGainSlider.Thumb className="vds-slider-thumb" />
+      <DefaultSliderParts />
+      <DefaultSliderMarkers count={steps} />
     </AudioGainSlider.Root>
   );
 }
@@ -90,7 +126,7 @@ DefaultAudioGainSlider.displayName = 'DefaultAudioGainSlider';
 
 function DefaultAudioTracksMenu() {
   const { icons: Icons } = useDefaultLayoutContext(),
-    label = useDefaultLayoutWord('Audio Track'),
+    label = useDefaultLayoutWord('Track'),
     defaultText = useDefaultLayoutWord('Default'),
     $track = useMediaState('audioTrack'),
     options = useAudioOptions();
@@ -118,6 +154,7 @@ function DefaultAudioTracksMenu() {
               key={value}
             >
               <div className="vds-radio-check" />
+              <Icons.Menu.RadioCheck className="vds-icon" />
               <span className="vds-radio-label">{label}</span>
             </Menu.Radio>
           ))}

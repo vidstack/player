@@ -8,11 +8,11 @@ import { mediaContext } from 'vidstack';
 import { useMediaState } from '../../../../hooks/use-media-state';
 import { createComputed, createEffect } from '../../../../hooks/use-signals';
 import { Primitive, type PrimitivePropsWithRef } from '../../../primitives/nodes';
-import type { DefaultKeyboardActionIcons } from '../icons';
+import type { DefaultKeyboardDisplayIcons } from '../icons';
 
 export interface DefaultKeyboardDisplayProps
   extends Omit<PrimitivePropsWithRef<'div'>, 'disabled'> {
-  icons: DefaultKeyboardActionIcons;
+  icons: DefaultKeyboardDisplayIcons;
 }
 
 const DefaultKeyboardDisplay = React.forwardRef<HTMLElement, DefaultKeyboardDisplayProps>(
@@ -98,7 +98,7 @@ function getVolumeText(volume: number, gain: number) {
   return `${Math.round(volume * gain * 100)}%`;
 }
 
-function getIcon(Icons: DefaultKeyboardActionIcons) {
+function getIcon(Icons: DefaultKeyboardDisplayIcons) {
   const { $state } = useContext(mediaContext),
     action = $state.lastKeyboardAction()?.action;
   switch (action) {

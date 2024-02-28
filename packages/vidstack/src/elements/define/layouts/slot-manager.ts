@@ -9,8 +9,8 @@ let id = 0,
 export class SlotManager {
   readonly slots: SlotObserver;
 
-  constructor(protected _root: HTMLElement) {
-    this.slots = new SlotObserver(_root, this._update.bind(this));
+  constructor(protected _roots: HTMLElement[]) {
+    this.slots = new SlotObserver(_roots, this._update.bind(this));
   }
 
   connect() {
@@ -18,39 +18,41 @@ export class SlotManager {
     this._update();
 
     const mutations = new MutationObserver(this._onMutation);
-    mutations.observe(this._root, { childList: true });
+    for (const root of this._roots) mutations.observe(root, { childList: true });
     onDispose(() => mutations.disconnect());
   }
 
   private _onMutation = animationFrameThrottle(this._update.bind(this));
 
   private _update() {
-    for (const node of this._root.children) {
-      if (node.nodeType !== 1) continue;
+    for (const root of this._roots) {
+      for (const node of root.children) {
+        if (node.nodeType !== 1) continue;
 
-      const name = node.getAttribute('slot');
-      if (!name) continue;
+        const name = node.getAttribute('slot');
+        if (!name) continue;
 
-      (node as HTMLElement).style.display = 'none';
+        (node as HTMLElement).style.display = 'none';
 
-      let slotId = node.getAttribute(slotIdAttr);
-      if (!slotId) {
-        node.setAttribute(slotIdAttr, (slotId = ++id + ''));
-      }
-
-      for (const slot of this.slots.elements) {
-        if (slot.getAttribute('name') !== name || slot.getAttribute(slotIdAttr) === slotId) {
-          continue;
+        let slotId = node.getAttribute(slotIdAttr);
+        if (!slotId) {
+          node.setAttribute(slotIdAttr, (slotId = ++id + ''));
         }
 
-        const clone = document.importNode(node, true);
+        for (const slot of this.slots.elements) {
+          if (slot.getAttribute('name') !== name || slot.getAttribute(slotIdAttr) === slotId) {
+            continue;
+          }
 
-        if (name.includes('-icon')) clone.classList.add('vds-icon');
-        (clone as HTMLElement).style.display = '';
-        clone.removeAttribute('slot');
+          const clone = document.importNode(node, true);
 
-        this.slots.assign(clone, slot);
-        slot.setAttribute(slotIdAttr, slotId);
+          if (name.includes('-icon')) clone.classList.add('vds-icon');
+          (clone as HTMLElement).style.display = '';
+          clone.removeAttribute('slot');
+
+          this.slots.assign(clone, slot);
+          slot.setAttribute(slotIdAttr, slotId);
+        }
       }
     }
   }

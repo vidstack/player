@@ -45,7 +45,7 @@ export class QualityRadioGroup extends Component<
   @prop
   get disabled() {
     const { canSetQuality, qualities } = this._media.$state;
-    return !canSetQuality() || qualities().length === 0;
+    return !canSetQuality() || qualities().length <= 1;
   }
 
   private _sortedQualities = computed(() => {

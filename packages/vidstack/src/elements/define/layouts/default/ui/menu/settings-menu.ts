@@ -7,6 +7,7 @@ import type { MenuPlacement } from '../../../../../../components/ui/menu/menu-it
 import type { TooltipPlacement } from '../../../../../../components/ui/tooltip/tooltip-content';
 import { useMediaState } from '../../../../../../core/api/media-context';
 import { $signal } from '../../../../../lit/directives/signal';
+import { IconSlot } from '../../slots';
 import { $i18n } from '../utils';
 import { DefaultAccessibilityMenu } from './accessibility-menu';
 import { DefaultAudioMenu } from './audio-menu';
@@ -62,7 +63,7 @@ export function DefaultSettingsMenu({
               class="vds-menu-button vds-button"
               aria-label=${$i18n(translations, 'Settings')}
             >
-              <slot name="menu-settings-icon" data-class="vds-rotate-icon"></slot>
+              ${IconSlot('menu-settings', 'vds-rotate-icon')}
             </media-menu-button>
           </media-tooltip-trigger>
           <media-tooltip-content

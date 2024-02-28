@@ -40,9 +40,9 @@ export class MediaPlyrLayoutElement extends Host(LitElement, PlyrLayout) impleme
 
     effect(() => {
       if (this.$props.customIcons()) {
-        new SlotManager(this).connect();
+        new SlotManager([this]).connect();
       } else {
-        new PlyrLayoutIconsLoader(this).connect();
+        new PlyrLayoutIconsLoader([this]).connect();
       }
     });
   }

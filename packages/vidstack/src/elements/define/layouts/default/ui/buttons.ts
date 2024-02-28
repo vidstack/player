@@ -7,6 +7,7 @@ import { i18n } from '../../../../../components/layouts/default/translations';
 import type { TooltipPlacement } from '../../../../../components/ui/tooltip/tooltip-content';
 import { useMediaState } from '../../../../../core/api/media-context';
 import { $signal } from '../../../../lit/directives/signal';
+import { IconSlot, IconSlots } from '../slots';
 import { $i18n } from './utils';
 
 export function DefaultAirPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
@@ -22,7 +23,7 @@ export function DefaultAirPlayButton({ tooltip }: { tooltip: TooltipPlacement })
     <media-tooltip class="vds-airplay-tooltip vds-tooltip">
       <media-tooltip-trigger>
         <media-airplay-button class="vds-airplay-button vds-button" aria-label=${$label}>
-          <slot name="airplay-icon" data-class="vds-airplay-icon"></slot>
+          ${IconSlot('airplay')}
         </media-airplay-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
@@ -45,7 +46,7 @@ export function DefaultGoogleCastButton({ tooltip }: { tooltip: TooltipPlacement
     <media-tooltip class="vds-google-cast-tooltip vds-tooltip">
       <media-tooltip-trigger>
         <media-google-cast-button class="vds-google-cast-button vds-button" aria-label=${$label}>
-          <slot name="google-cast-icon" data-class="vds-google-cast-icon"></slot>
+          ${IconSlot('google-cast')}
         </media-google-cast-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
@@ -66,9 +67,7 @@ export function DefaultPlayButton({ tooltip }: { tooltip: TooltipPlacement }) {
           class="vds-play-button vds-button"
           aria-label=${$i18n(translations, 'Play')}
         >
-          <slot name="play-icon" data-class="vds-play-icon"></slot>
-          <slot name="pause-icon" data-class="vds-pause-icon"></slot>
-          <slot name="replay-icon" data-class="vds-replay-icon"></slot>
+          ${IconSlots(['play', 'pause', 'replay'])}
         </media-play-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
@@ -97,9 +96,7 @@ export function DefaultMuteButton({
           aria-label=${$i18n(translations, 'Mute')}
           ${$ref(ref)}
         >
-          <slot name="mute-icon" data-class="vds-mute-icon"></slot>
-          <slot name="volume-low-icon" data-class="vds-volume-low-icon"></slot>
-          <slot name="volume-high-icon" data-class="vds-volume-high-icon"></slot>
+          ${IconSlots(['mute', 'volume-low', 'volume-high'])}
         </media-mute-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
@@ -121,8 +118,7 @@ export function DefaultCaptionButton({ tooltip }: { tooltip: TooltipPlacement })
           class="vds-caption-button vds-button"
           aria-label=${$i18n(translations, 'Captions')}
         >
-          <slot name="cc-on-icon" data-class="vds-cc-on-icon"></slot>
-          <slot name="cc-off-icon" data-class="vds-cc-off-icon"></slot>
+          ${IconSlots(['cc-on', 'cc-off'])}
         </media-caption-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
@@ -144,8 +140,7 @@ export function DefaultPIPButton() {
           class="vds-pip-button vds-button"
           aria-label=${$i18n(translations, 'PiP')}
         >
-          <slot name="pip-enter-icon" data-class="vds-pip-enter-icon"></slot>
-          <slot name="pip-exit-icon" data-class="vds-pip-exit-icon"></slot>
+          ${IconSlots(['pip-enter', 'pip-exit'])}
         </media-pip-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content">
@@ -167,8 +162,7 @@ export function DefaultFullscreenButton({ tooltip }: { tooltip: TooltipPlacement
           class="vds-fullscreen-button vds-button"
           aria-label=${$i18n(translations, 'Fullscreen')}
         >
-          <slot name="fs-enter-icon" data-class="vds-fs-enter-icon"></slot>
-          <slot name="fs-exit-icon" data-class="vds-fs-exit-icon"></slot>
+          ${IconSlots(['fs-enter', 'fs-exit'])}
         </media-fullscreen-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>
@@ -198,9 +192,7 @@ export function DefaultSeekButton({
           seconds=${$signal($seconds)}
           aria-label=${$label}
         >
-          ${!backward
-            ? html`<slot name="seek-forward-icon"></slot>`
-            : html`<slot name="seek-backward-icon"></slot>`}
+          ${!backward ? IconSlot('seek-forward') : IconSlot('seek-backward')}
         </media-seek-button>
       </media-tooltip-trigger>
       <media-tooltip-content class="vds-tooltip-content" placement=${tooltip}>

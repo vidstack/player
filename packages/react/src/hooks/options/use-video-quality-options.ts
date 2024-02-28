@@ -65,7 +65,7 @@ export function useVideoQualityOptions({
 
     Object.defineProperty(options, 'disabled', {
       get() {
-        return !canSetQuality() || !$qualities.length;
+        return !canSetQuality() || $qualities.length <= 1;
       },
     });
 

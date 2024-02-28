@@ -816,5 +816,8 @@
   "_throttledSpeedChange": "ho",
   "_throttledQualityChange": "jo",
   "_watchMax": "ko",
-  "_watchQuality": "lo"
+  "_watchQuality": "lo",
+  "_observeSliders": "mo",
+  "_roots": "oo",
+  "_submenu": "no"
 }

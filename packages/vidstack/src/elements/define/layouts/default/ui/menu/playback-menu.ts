@@ -8,24 +8,29 @@ import { useMediaContext, useMediaState } from '../../../../../../core/api/media
 import { $signal } from '../../../../../lit/directives/signal';
 import { $i18n } from '../utils';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
-import { renderMenuButton } from './items/menu-items';
-import { DefaultMenuSlider, DefaultSliderParts } from './items/menu-slider';
+import { DefaultMenuButton, DefaultMenuItem, DefaultMenuSection } from './items/menu-items';
+import {
+  DefaultMenuSliderItem,
+  DefaultSliderMarkers,
+  DefaultSliderParts,
+} from './items/menu-slider';
 
 export function DefaultPlaybackMenu() {
   return $signal(() => {
     const { translations } = useDefaultLayoutContext();
     return html`
       <media-menu class="vds-playback-menu vds-menu">
-        ${renderMenuButton({
+        ${DefaultMenuButton({
           label: () => i18n(translations, 'Playback'),
           icon: 'menu-playback',
         })}
         <media-menu-items class="vds-menu-items">
           ${[
-            DefaultMenuLoopCheckbox(),
-            DefaultMenuAutoQualityCheckbox(),
-            DefaultMenuSpeedSlider(),
-            DefaultMenuQualitySlider(),
+            DefaultMenuSection({
+              children: DefaultLoopCheckbox(),
+            }),
+            DefaultSpeedMenuSection(),
+            DefaultQualityMenuSection(),
           ]}
         </media-menu-items>
       </media-menu>
@@ -33,64 +38,73 @@ export function DefaultPlaybackMenu() {
   });
 }
 
-function DefaultMenuLoopCheckbox() {
+function DefaultLoopCheckbox() {
   const { remote } = useMediaContext(),
     { translations } = useDefaultLayoutContext(),
-    label = 'Loop',
-    $label = $i18n(translations, label);
-  return html`
-    <div class="vds-menu-item vds-menu-item-checkbox">
-      <div class="vds-menu-checkbox-label">${$label}</div>
-      ${DefaultMenuCheckbox({
-        label,
-        storageKey: 'vds-player::user-loop',
-        onChange(checked, trigger) {
-          remote.userPrefersLoopChange(checked, trigger);
-        },
-      })}
-    </div>
-  `;
+    label = 'Loop';
+
+  return DefaultMenuItem({
+    label: $i18n(translations, label),
+    children: DefaultMenuCheckbox({
+      label,
+      storageKey: 'vds-player::user-loop',
+      onChange(checked, trigger) {
+        remote.userPrefersLoopChange(checked, trigger);
+      },
+    }),
+  });
 }
 
-function DefaultMenuSpeedSlider() {
+function DefaultSpeedMenuSection() {
   return $signal(() => {
     const { translations } = useDefaultLayoutContext(),
       { canSetPlaybackRate, playbackRate } = useMediaState();
 
     if (!canSetPlaybackRate()) return null;
 
-    const $label = $i18n(translations, 'Speed'),
-      $value = $signal(() =>
+    return DefaultMenuSection({
+      label: $i18n(translations, 'Speed'),
+      value: $signal(() =>
         playbackRate() === 1 ? i18n(translations, 'Normal') : playbackRate() + 'x',
-      );
-
-    return DefaultMenuSlider({
-      label: $label,
-      value: $value,
+      ),
       children: [
-        html`<slot name="menu-speed-down-icon"></slot>`,
-        DefaultSpeedSlider(),
-        html`<slot name="menu-speed-up-icon"></slot>`,
+        DefaultMenuSliderItem({
+          upIcon: 'menu-speed-up',
+          downIcon: 'menu-speed-down',
+          children: DefaultSpeedSlider(),
+          isMin: () => playbackRate() === getSpeedMin(),
+          isMax: () => playbackRate() === getSpeedMax(),
+        }),
       ],
     });
   });
 }
 
+function getSpeedMin() {
+  const { playbackRates } = useDefaultLayoutContext(),
+    rates = playbackRates();
+  return isArray(rates) ? rates[0] ?? 0 : rates.min;
+}
+
+function getSpeedMax() {
+  const { playbackRates } = useDefaultLayoutContext(),
+    rates = playbackRates();
+  return isArray(rates) ? rates[rates.length - 1] ?? 2 : rates.max;
+}
+
+function getSpeedStep() {
+  const { playbackRates } = useDefaultLayoutContext(),
+    rates = playbackRates();
+  return isArray(rates) ? rates[1] - rates[0] || 0.25 : rates.step;
+}
+
 function DefaultSpeedSlider() {
-  const { playbackRates, translations } = useDefaultLayoutContext(),
+  const { translations } = useDefaultLayoutContext(),
     $label = $i18n(translations, 'Speed'),
-    $min = () => {
-      const rates = playbackRates();
-      return isArray(rates) ? rates[0] ?? 0 : rates.min;
-    },
-    $max = () => {
-      const rates = playbackRates();
-      return isArray(rates) ? rates[rates.length - 1] ?? 2 : rates.max;
-    },
-    $step = () => {
-      const rates = playbackRates();
-      return isArray(rates) ? rates[1] - rates[0] || 0.25 : rates.step;
-    };
+    $min = computed(getSpeedMin),
+    $max = computed(getSpeedMax),
+    $step = computed(getSpeedStep),
+    $steps = computed(() => ($max() - $min()) / $step());
 
   return html`
     <media-speed-slider
@@ -99,63 +113,63 @@ function DefaultSpeedSlider() {
       min=${$signal($min)}
       max=${$signal($max)}
       step=${$signal($step)}
+      key-step=${$signal($step)}
     >
-      ${DefaultSliderParts()}
+      ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
     </media-speed-slider>
   `;
 }
-function DefaultMenuAutoQualityCheckbox() {
+function DefaultAutoQualityCheckbox() {
   const { remote, qualities } = useMediaContext(),
     { autoQuality, canSetQuality, qualities: $qualities } = useMediaState(),
     { translations } = useDefaultLayoutContext(),
-    label = 'Auto Select',
-    $label = $i18n(translations, label),
-    $disabled = computed(() => !canSetQuality() || $qualities().length === 0);
+    label = 'Auto',
+    $disabled = computed(() => !canSetQuality() || $qualities().length <= 1);
 
   if ($disabled()) return null;
 
-  return html`
-    <div class="vds-menu-item vds-menu-item-checkbox">
-      <div class="vds-menu-checkbox-label">${$label}</div>
-      ${DefaultMenuCheckbox({
-        label,
-        checked: autoQuality,
-        onChange(checked, trigger) {
-          if (checked) {
-            remote.requestAutoQuality(trigger);
-          } else {
-            remote.changeQuality(qualities.selectedIndex, trigger);
-          }
-        },
-      })}
-    </div>
-  `;
+  return DefaultMenuItem({
+    label: $i18n(translations, label),
+    children: DefaultMenuCheckbox({
+      label,
+      checked: autoQuality,
+      onChange(checked, trigger) {
+        if (checked) {
+          remote.requestAutoQuality(trigger);
+        } else {
+          remote.changeQuality(qualities.selectedIndex, trigger);
+        }
+      },
+    }),
+  });
 }
 
-function DefaultMenuQualitySlider() {
+function DefaultQualityMenuSection() {
   return $signal(() => {
     const { hideQualityBitrate, translations } = useDefaultLayoutContext(),
       { canSetQuality, qualities, quality } = useMediaState(),
-      $disabled = computed(() => !canSetQuality() || qualities().length === 0);
+      $disabled = computed(() => !canSetQuality() || qualities().length <= 1);
 
     if ($disabled()) return null;
 
-    const $label = $i18n(translations, 'Quality'),
-      $value = $signal(() => {
+    return DefaultMenuSection({
+      label: $i18n(translations, 'Quality'),
+      value: $signal(() => {
         const height = quality()?.height,
           bitrate = !hideQualityBitrate() ? quality()?.bitrate : null,
           bitrateText = bitrate && bitrate > 0 ? `${(bitrate / 1000000).toFixed(2)} Mbps` : null,
           autoText = i18n(translations, 'Auto');
         return height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : autoText;
-      });
-
-    return DefaultMenuSlider({
-      label: $label,
-      value: $value,
+      }),
       children: [
-        html`<slot name="menu-quality-down-icon"></slot>`,
-        DefaultQualitySlider(),
-        html`<slot name="menu-quality-up-icon"></slot>`,
+        DefaultMenuSliderItem({
+          upIcon: 'menu-quality-up',
+          downIcon: 'menu-quality-down',
+          children: DefaultQualitySlider(),
+          isMin: () => qualities()[0] === quality(),
+          isMax: () => qualities().at(-1) === quality(),
+        }),
+        DefaultAutoQualityCheckbox(),
       ],
     });
   });
@@ -163,10 +177,12 @@ function DefaultMenuQualitySlider() {
 
 function DefaultQualitySlider() {
   const { translations } = useDefaultLayoutContext(),
-    $label = $i18n(translations, 'Quality');
+    { qualities } = useMediaState(),
+    $label = $i18n(translations, 'Quality'),
+    $steps = computed(() => qualities().length - 1);
   return html`
     <media-quality-slider class="vds-quality-slider vds-slider" aria-label=${$label}>
-      ${DefaultSliderParts()}
+      ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
     </media-quality-slider>
   `;
 }

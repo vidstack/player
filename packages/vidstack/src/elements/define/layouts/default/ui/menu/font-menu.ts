@@ -6,24 +6,61 @@ import { type DefaultLayoutTranslations, type MediaPlayer } from '../../../../..
 import { useDefaultLayoutContext } from '../../../../../../components/layouts/default/context';
 import { i18n } from '../../../../../../components/layouts/default/translations';
 import { useMediaContext, useMediaState } from '../../../../../../core/api/media-context';
+import { hexToRgb } from '../../../../../../utils/color';
 import { $signal } from '../../../../../lit/directives/signal';
-import { createRadioOptions, renderMenuButton, renderRadioGroup } from './items/menu-items';
+import { $i18n } from '../utils';
+import {
+  createRadioOptions,
+  DefaultMenuButton,
+  DefaultMenuItem,
+  DefaultMenuSection,
+  DefaultRadioGroup,
+} from './items/menu-items';
+import {
+  DefaultMenuSliderItem,
+  DefaultSliderMarkers,
+  DefaultSliderParts,
+} from './items/menu-slider';
 
-const COLOR_OPTIONS = ['White', 'Yellow', 'Green', 'Cyan', 'Blue', 'Magenta', 'Red', 'Black'],
-  OPACITY_OPTIONS = ['0%', '25%', '50%', '75%', '100%'],
-  FONT_FAMILY_OPTIONS = {
-    'Monospaced Serif': 'mono-serif',
-    'Proportional Serif': 'pro-serif',
-    'Monospaced Sans-Serif': 'mono-sans',
-    'Proportional Sans-Serif': 'pro-sans',
-    Casual: 'casual',
-    Cursive: 'cursive',
-    'Small Capitals': 'capitals',
+const COLOR_OPTION: FontOption = {
+    type: 'color',
   },
-  FONT_SIZE_OPTIONS = ['50%', '75%', '100%', '150%', '200%', '300%', '400%'],
-  TEXT_SHADOW_OPTIONS = ['None', 'Drop Shadow', 'Raised', 'Depressed', 'Outline'];
+  FONT_FAMILY_OPTION: FontOption = {
+    type: 'radio',
+    values: {
+      'Monospaced Serif': 'mono-serif',
+      'Proportional Serif': 'pro-serif',
+      'Monospaced Sans-Serif': 'mono-sans',
+      'Proportional Sans-Serif': 'pro-sans',
+      Casual: 'casual',
+      Cursive: 'cursive',
+      'Small Capitals': 'capitals',
+    },
+  },
+  FONT_SIZE_OPTION: FontOption = {
+    type: 'slider',
+    min: 0,
+    max: 400,
+    step: 25,
+    upIcon: 'menu-font-size-up',
+    downIcon: 'menu-font-size-down',
+  },
+  OPACITY_OPTION: FontOption = {
+    type: 'slider',
+    min: 0,
+    max: 100,
+    step: 5,
+    upIcon: 'menu-opacity-up',
+    downIcon: 'menu-opacity-down',
+  },
+  TEXT_SHADOW_OPTION: FontOption = {
+    type: 'radio',
+    values: ['None', 'Drop Shadow', 'Raised', 'Depressed', 'Outline'],
+  };
 
-const resetContext = createContext<{ current?(): void; all: Set<() => void> }>();
+const resetContext = createContext<{
+  all: Set<() => void>;
+}>();
 
 export function DefaultFontMenu() {
   return $signal(() => {
@@ -38,13 +75,35 @@ export function DefaultFontMenu() {
 
     return html`
       <media-menu class="vds-font-menu vds-menu">
-        ${renderMenuButton({
+        ${DefaultMenuButton({
           label: () => i18n(translations, 'Caption Styles'),
         })}
         <media-menu-items class="vds-menu-items">
-          ${DefaultFontFamilyMenu()}${DefaultFontSizeMenu()}${DefaultTextColorMenu()}${DefaultTextOpacityMenu()}${DefaultTextShadowMenu()}
-          ${DefaultTextBgMenu()}${DefaultTextBgOpacityMenu()}${DefaultDisplayBgMenu()}
-          ${DefaultDisplayOpacityMenu()}${DefaultResetMenuItem()}
+          ${[
+            DefaultMenuSection({
+              label: $i18n(translations, 'Font'),
+              children: [DefaultFontFamilyMenu(), DefaultFontSizeSlider()],
+            }),
+            DefaultMenuSection({
+              label: $i18n(translations, 'Text'),
+              children: [
+                DefaultTextColorInput(),
+                DefaultTextShadowMenu(),
+                DefaultTextOpacitySlider(),
+              ],
+            }),
+            DefaultMenuSection({
+              label: $i18n(translations, 'Text Background'),
+              children: [DefaultTextBgInput(), DefaultTextBgOpacitySlider()],
+            }),
+            DefaultMenuSection({
+              label: $i18n(translations, 'Display Background'),
+              children: [DefaultDisplayBgInput(), DefaultDisplayOpacitySlider()],
+            }),
+            DefaultMenuSection({
+              children: [DefaultResetMenuItem()],
+            }),
+          ]}
         </media-menu-items>
       </media-menu>
     `;
@@ -52,9 +111,10 @@ export function DefaultFontMenu() {
 }
 
 function DefaultFontFamilyMenu() {
-  return DefaultFontSettingMenu({
-    label: 'Font Family',
-    options: FONT_FAMILY_OPTIONS,
+  return DefaultFontSetting({
+    group: 'font',
+    label: 'Family',
+    option: FONT_FAMILY_OPTION,
     defaultValue: 'pro-sans',
     cssVarName: 'font-family',
     getCssVarValue(value, player) {
@@ -65,32 +125,35 @@ function DefaultFontFamilyMenu() {
   });
 }
 
-function DefaultFontSizeMenu() {
-  return DefaultFontSettingMenu({
-    label: 'Font Size',
-    options: FONT_SIZE_OPTIONS,
+function DefaultFontSizeSlider() {
+  return DefaultFontSetting({
+    group: 'font',
+    label: 'Size',
+    option: FONT_SIZE_OPTION,
     defaultValue: '100%',
     cssVarName: 'font-size',
     getCssVarValue: percentToRatio,
   });
 }
 
-function DefaultTextColorMenu() {
-  return DefaultFontSettingMenu({
-    label: 'Text Color',
-    options: COLOR_OPTIONS,
-    defaultValue: 'white',
+function DefaultTextColorInput() {
+  return DefaultFontSetting({
+    group: 'text',
+    label: 'Color',
+    option: COLOR_OPTION,
+    defaultValue: '#ffffff',
     cssVarName: 'text-color',
     getCssVarValue(value) {
-      return `rgb(${toRGB(value)} / var(--media-user-text-opacity, 1))`;
+      return `rgb(${hexToRgb(value)} / var(--media-user-text-opacity, 1))`;
     },
   });
 }
 
-function DefaultTextOpacityMenu() {
-  return DefaultFontSettingMenu({
-    label: 'Text Opacity',
-    options: OPACITY_OPTIONS,
+function DefaultTextOpacitySlider() {
+  return DefaultFontSetting({
+    group: 'text',
+    label: 'Opacity',
+    option: OPACITY_OPTION,
     defaultValue: '100%',
     cssVarName: 'text-opacity',
     getCssVarValue: percentToRatio,
@@ -98,53 +161,58 @@ function DefaultTextOpacityMenu() {
 }
 
 function DefaultTextShadowMenu() {
-  return DefaultFontSettingMenu({
-    label: 'Text Shadow',
-    options: TEXT_SHADOW_OPTIONS,
+  return DefaultFontSetting({
+    group: 'text',
+    label: 'Shadow',
+    option: TEXT_SHADOW_OPTION,
     defaultValue: 'none',
     cssVarName: 'text-shadow',
     getCssVarValue: getTextShadowCssVarValue,
   });
 }
 
-function DefaultTextBgMenu() {
-  return DefaultFontSettingMenu({
-    label: 'Background Color',
-    options: COLOR_OPTIONS,
-    defaultValue: 'black',
+function DefaultTextBgInput() {
+  return DefaultFontSetting({
+    group: 'text-bg',
+    label: 'Color',
+    option: COLOR_OPTION,
+    defaultValue: '#000000',
     cssVarName: 'text-bg',
     getCssVarValue(value) {
-      return `rgb(${toRGB(value)} / var(--media-user-text-bg-opacity, 1))`;
+      return `rgb(${hexToRgb(value)} / var(--media-user-text-bg-opacity, 1))`;
     },
   });
 }
 
-function DefaultTextBgOpacityMenu() {
-  return DefaultFontSettingMenu({
-    label: 'Background Opacity',
-    options: OPACITY_OPTIONS,
+function DefaultTextBgOpacitySlider() {
+  return DefaultFontSetting({
+    group: 'text-bg',
+    label: 'Opacity',
+    option: OPACITY_OPTION,
     defaultValue: '100%',
     cssVarName: 'text-bg-opacity',
     getCssVarValue: percentToRatio,
   });
 }
 
-function DefaultDisplayBgMenu() {
-  return DefaultFontSettingMenu({
-    label: 'Display Background Color',
-    options: COLOR_OPTIONS,
-    defaultValue: 'black',
+function DefaultDisplayBgInput() {
+  return DefaultFontSetting({
+    group: 'display',
+    label: 'Color',
+    option: COLOR_OPTION,
+    defaultValue: '#000000',
     cssVarName: 'display-bg',
     getCssVarValue(value) {
-      return `rgb(${toRGB(value)} / var(--media-user-display-bg-opacity, 1))`;
+      return `rgb(${hexToRgb(value)} / var(--media-user-display-bg-opacity, 1))`;
     },
   });
 }
 
-function DefaultDisplayOpacityMenu() {
-  return DefaultFontSettingMenu({
-    label: 'Display Background Opacity',
-    options: OPACITY_OPTIONS,
+function DefaultDisplayOpacitySlider() {
+  return DefaultFontSetting({
+    group: 'display',
+    label: 'Opacity',
+    option: OPACITY_OPTION,
     defaultValue: '0%',
     cssVarName: 'display-bg-opacity',
     getCssVarValue: percentToRatio,
@@ -157,41 +225,59 @@ function DefaultResetMenuItem() {
     resets = useContext(resetContext);
 
   function onClick() {
-    resets.current ? resets.current() : resets.all.forEach((reset) => reset());
+    resets.all.forEach((reset) => reset());
   }
 
   return html`
-    <button class="vds-menu-button" role="menuitem" @click=${onClick}>
-      <span class="vds-menu-button-label">${$signal($label)}</span>
+    <button class="vds-menu-item" role="menuitem" @click=${onClick}>
+      <span class="vds-menu-item-label">${$signal($label)}</span>
     </button>
   `;
 }
 
-function DefaultFontSettingMenu({
-  label,
-  options,
-  defaultValue,
-  cssVarName,
-  getCssVarValue,
-}: {
+interface FontRadioOption {
+  type: 'radio';
+  values: string[] | Record<string, string>;
+}
+
+interface FontSliderOption {
+  type: 'slider';
+  min: number;
+  max: number;
+  step: number;
+  upIcon: string;
+  downIcon: string;
+}
+
+interface FontColorOption {
+  type: 'color';
+}
+
+type FontOption = FontRadioOption | FontSliderOption | FontColorOption;
+
+interface DefaultFontSettingProps {
+  group: string;
   label: keyof DefaultLayoutTranslations;
-  options: string[] | Record<string, string>;
+  option: FontOption;
   cssVarName: string;
   getCssVarValue?(value: string, player: MediaPlayer): string;
   defaultValue: string;
-}) {
+}
+
+function DefaultFontSetting({
+  group,
+  label,
+  option,
+  defaultValue,
+  cssVarName,
+  getCssVarValue,
+}: DefaultFontSettingProps) {
   const { player } = useMediaContext(),
     { translations } = useDefaultLayoutContext(),
     resets = useContext(resetContext),
-    radioOptions = createRadioOptions(options),
-    key = `${label.toLowerCase().replace(/\s/g, '-')}`,
+    key = `${group}-${label.toLowerCase()}`,
     $value = signal(defaultValue),
-    $label = () => i18n(translations, label),
-    $hint = () => {
-      const value = $value(),
-        label = radioOptions.find((radio) => radio.value === value)?.label || '';
-      return i18n(translations, isString(label) ? label : label());
-    };
+    $label = () => i18n(translations, label);
 
   const savedValue = localStorage.getItem(`vds-player:${key}`);
   if (savedValue) onValueChange(savedValue);
@@ -217,19 +303,71 @@ function DefaultFontSettingMenu({
     player.dispatchEvent(new Event('vds-font-change'));
   }
 
-  function onOpen() {
-    resets.current = onReset;
+  if (option.type === 'color') {
+    function onColorChange(event) {
+      onValueChange(event.target.value);
+      notify();
+    }
+
+    return DefaultMenuItem({
+      label: $signal($label),
+      children: html`
+        <input
+          class="vds-color-picker"
+          type="color"
+          value=${$signal($value)}
+          @input=${onColorChange}
+        />
+      `,
+    });
   }
 
-  function onClose() {
-    resets.current = undefined;
+  if (option.type === 'slider') {
+    const { min, max, step, upIcon, downIcon } = option,
+      $steps = () => (max - min) / step;
+
+    function onSliderValueChange(event) {
+      onValueChange(event.detail + '%');
+      notify();
+    }
+
+    return DefaultMenuSliderItem({
+      label: $signal($label),
+      value: $signal($value),
+      upIcon,
+      downIcon,
+      isMin: () => $value() === min + '%',
+      isMax: () => $value() === max + '%',
+      children: html`
+        <media-slider
+          class="vds-slider"
+          min=${min}
+          max=${max}
+          step=${step}
+          key-step=${step}
+          .value=${$signal(() => parseInt($value()))}
+          aria-label=${$signal($label)}
+          @value-change=${onSliderValueChange}
+          @drag-value-change=${onSliderValueChange}
+        >
+          ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
+        </media-slider>
+      `,
+    });
   }
+
+  const radioOptions = createRadioOptions(option.values),
+    $hint = () => {
+      const value = $value(),
+        label = radioOptions.find((radio) => radio.value === value)?.label || '';
+      return i18n(translations, isString(label) ? label : label());
+    };
 
   return html`
-    <media-menu class=${`vds-${key}-menu vds-menu`} @open=${onOpen} @close=${onClose}>
-      ${renderMenuButton({ label: $label, hint: $hint })}
+    <media-menu class=${`vds-${key}-menu vds-menu`}>
+      ${DefaultMenuButton({ label: $label, hint: $hint })}
       <media-menu-items class="vds-menu-items">
-        ${renderRadioGroup({
+        ${DefaultRadioGroup({
           value: $value,
           options: radioOptions,
           onChange({ detail: value }) {
@@ -244,27 +382,6 @@ function DefaultFontSettingMenu({
 
 function percentToRatio(value: string) {
   return (parseInt(value) / 100).toString();
-}
-
-function toRGB(color: string) {
-  switch (color) {
-    case 'white':
-      return '255 255 255';
-    case 'yellow':
-      return '255 255 0';
-    case 'green':
-      return '0 128 0';
-    case 'cyan':
-      return '0 255 255';
-    case 'blue':
-      return '0 0 255';
-    case 'magenta':
-      return '255 0 255';
-    case 'red':
-      return '255 0 0';
-    case 'black':
-      return '0 0 0';
-  }
 }
 
 function getFontFamilyCSSVarValue(value: string) {

@@ -6,29 +6,59 @@ import { useMediaPlayer } from '../../../../../hooks/use-media-player';
 import { useMediaState } from '../../../../../hooks/use-media-state';
 import type { MediaPlayerInstance } from '../../../../primitives/instances';
 import * as Menu from '../../../../ui/menu';
-import { DefaultLayoutContext, i18n, useDefaultLayoutWord } from '../../context';
-import { createRadioOptions, DefaultMenuButton, DefaultMenuRadioGroup } from './items/menu-items';
+import * as Slider from '../../../../ui/sliders/slider';
+import { i18n, useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
+import type { DefaultLayoutIcon } from '../../icons';
+import {
+  createRadioOptions,
+  DefaultMenuButton,
+  DefaultMenuItem,
+  DefaultMenuRadioGroup,
+  DefaultMenuSection,
+} from './items/menu-items';
+import {
+  DefaultMenuSliderItem,
+  DefaultSliderMarkers,
+  DefaultSliderParts,
+} from './items/menu-slider';
 
 /* -------------------------------------------------------------------------------------------------
  * Options
  * -----------------------------------------------------------------------------------------------*/
 
-const COLOR_OPTIONS = ['White', 'Yellow', 'Green', 'Cyan', 'Blue', 'Magenta', 'Red', 'Black'],
-  OPACITY_OPTIONS = ['0%', '25%', '50%', '75%', '100%'],
-  FONT_FAMILY_OPTIONS = {
-    'Monospaced Serif': 'mono-serif',
-    'Proportional Serif': 'pro-serif',
-    'Monospaced Sans-Serif': 'mono-sans',
-    'Proportional Sans-Serif': 'pro-sans',
-    Casual: 'casual',
-    Cursive: 'cursive',
-    'Small Capitals': 'capitals',
-  },
-  FONT_SIZE_OPTIONS = ['50%', '75%', '100%', '150%', '200%', '300%', '400%'],
-  TEXT_SHADOW_OPTIONS = ['None', 'Drop Shadow', 'Raised', 'Depressed', 'Outline'];
+const COLOR_OPTION = {
+    type: 'color',
+  } as const,
+  FONT_FAMILY_OPTION = {
+    type: 'radio',
+    values: {
+      'Monospaced Serif': 'mono-serif',
+      'Proportional Serif': 'pro-serif',
+      'Monospaced Sans-Serif': 'mono-sans',
+      'Proportional Sans-Serif': 'pro-sans',
+      Casual: 'casual',
+      Cursive: 'cursive',
+      'Small Capitals': 'capitals',
+    },
+  } as const,
+  FONT_SIZE_OPTION = {
+    type: 'slider',
+    min: 0,
+    max: 400,
+    step: 25,
+  } as const,
+  OPACITY_OPTION = {
+    type: 'slider',
+    min: 0,
+    max: 100,
+    step: 5,
+  } as const,
+  TEXT_SHADOW_OPTION = {
+    type: 'radio',
+    values: ['None', 'Drop Shadow', 'Raised', 'Depressed', 'Outline'] as string[],
+  } as const;
 
 interface FontReset {
-  current?(): void;
   all: Set<() => void>;
 }
 
@@ -42,7 +72,11 @@ FontResetContext.displayName = 'FontResetContext';
 function DefaultFontMenu() {
   const label = useDefaultLayoutWord('Caption Styles'),
     $hasCaptions = useMediaState('hasCaptions'),
-    resets = React.useMemo<FontReset>(() => ({ all: new Set() }), []);
+    resets = React.useMemo<FontReset>(() => ({ all: new Set() }), []),
+    fontSectionLabel = useDefaultLayoutWord('Font'),
+    textSectionLabel = useDefaultLayoutWord('Text'),
+    textBgSectionLabel = useDefaultLayoutWord('Text Background'),
+    displayBgSectionLabel = useDefaultLayoutWord('Display Background');
 
   if (!$hasCaptions) return null;
 
@@ -51,16 +85,30 @@ function DefaultFontMenu() {
       <Menu.Root className="vds-font-menu vds-menu">
         <DefaultMenuButton label={label} />
         <Menu.Content className="vds-font-style-items vds-menu-items">
-          <DefaultFontFamilyMenu />
-          <DefaultFontSizeMenu />
-          <DefaultTextColorMenu />
-          <DefaultTextOpacityMenu />
-          <DefaultTextShadowMenu />
-          <DefaultTextBgMenu />
-          <DefaultTextBgOpacityMenu />
-          <DefaultDisplayBgMenu />
-          <DefaultDisplayBgOpacityMenu />
-          <DefaultResetMenuItem />
+          <DefaultMenuSection label={fontSectionLabel}>
+            <DefaultFontFamilyMenu />
+            <DefaultFontSizeSlider />
+          </DefaultMenuSection>
+
+          <DefaultMenuSection label={textSectionLabel}>
+            <DefaultTextColorInput />
+            <DefaultTextShadowMenu />
+            <DefaultTextOpacitySlider />
+          </DefaultMenuSection>
+
+          <DefaultMenuSection label={textBgSectionLabel}>
+            <DefaultTextBgInput />
+            <DefaultTextBgOpacitySlider />
+          </DefaultMenuSection>
+
+          <DefaultMenuSection label={displayBgSectionLabel}>
+            <DefaultDisplayBgInput />
+            <DefaultDisplayBgOpacitySlider />
+          </DefaultMenuSection>
+
+          <DefaultMenuSection>
+            <DefaultResetMenuItem />
+          </DefaultMenuSection>
         </Menu.Content>
       </Menu.Root>
     </FontResetContext.Provider>
@@ -76,9 +124,10 @@ export { DefaultFontMenu };
 
 function DefaultFontFamilyMenu() {
   return (
-    <DefaultFontSettingMenu
-      label="Font Family"
-      options={FONT_FAMILY_OPTIONS}
+    <DefaultFontSetting
+      group="font"
+      label="Family"
+      option={FONT_FAMILY_OPTION}
       defaultValue="pro-sans"
       cssVarName="font-family"
       getCssVarValue={getFontFamilyCSSVarValue}
@@ -95,14 +144,20 @@ function getFontFamilyCSSVarValue(value: string, player: MediaPlayerInstance) {
 DefaultFontFamilyMenu.displayName = 'DefaultFontFamilyMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultFontSizeMenu
+ * DefaultFontSizeSlider
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultFontSizeMenu() {
+function DefaultFontSizeSlider() {
+  const { icons: Icons } = useDefaultLayoutContext();
   return (
-    <DefaultFontSettingMenu
-      label="Font Size"
-      options={FONT_SIZE_OPTIONS}
+    <DefaultFontSetting
+      group="font"
+      label="Size"
+      option={{
+        ...FONT_SIZE_OPTION,
+        UpIcon: Icons.Menu.FontSizeUp,
+        DownIcon: Icons.Menu.FontSizeDown,
+      }}
       defaultValue="100%"
       cssVarName="font-size"
       getCssVarValue={percentToRatio}
@@ -110,37 +165,44 @@ function DefaultFontSizeMenu() {
   );
 }
 
-DefaultFontSizeMenu.displayName = 'DefaultFontSizeMenu';
+DefaultFontSizeSlider.displayName = 'DefaultFontSizeSlider';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultTextColorMenu
+ * DefaultTextColoInput
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTextColorMenu() {
+function DefaultTextColorInput() {
   return (
-    <DefaultFontSettingMenu
-      label="Text Color"
-      options={COLOR_OPTIONS}
-      defaultValue="white"
+    <DefaultFontSetting
+      group="text"
+      label="Color"
+      option={COLOR_OPTION}
+      defaultValue="#ffffff"
       cssVarName="text-color"
       getCssVarValue={(value) => {
-        return `rgb(${toRGB(value)} / var(--media-user-text-opacity, 1))`;
+        return `rgb(${hexToRGB(value)} / var(--media-user-text-opacity, 1))`;
       }}
     />
   );
 }
 
-DefaultTextColorMenu.displayName = 'DefaultTextColorMenu';
+DefaultTextColorInput.displayName = 'DefaultTextColorInput';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultTextOpacityMenu
+ * DefaultTextOpacitySlider
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTextOpacityMenu() {
+function DefaultTextOpacitySlider() {
+  const { icons: Icons } = useDefaultLayoutContext();
   return (
-    <DefaultFontSettingMenu
-      label="Text Opacity"
-      options={OPACITY_OPTIONS}
+    <DefaultFontSetting
+      group="text"
+      label="Opacity"
+      option={{
+        ...OPACITY_OPTION,
+        UpIcon: Icons.Menu.OpacityUp,
+        DownIcon: Icons.Menu.OpacityDown,
+      }}
       defaultValue="100%"
       cssVarName="text-opacity"
       getCssVarValue={percentToRatio}
@@ -148,7 +210,7 @@ function DefaultTextOpacityMenu() {
   );
 }
 
-DefaultTextOpacityMenu.displayName = 'DefaultTextOpacityMenu';
+DefaultTextOpacitySlider.displayName = 'DefaultTextOpacitySlider';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultTextShadowMenu
@@ -156,9 +218,10 @@ DefaultTextOpacityMenu.displayName = 'DefaultTextOpacityMenu';
 
 function DefaultTextShadowMenu() {
   return (
-    <DefaultFontSettingMenu
-      label="Text Shadow"
-      options={TEXT_SHADOW_OPTIONS}
+    <DefaultFontSetting
+      group="text"
+      label="Shadow"
+      option={TEXT_SHADOW_OPTION}
       defaultValue="none"
       cssVarName="text-shadow"
       getCssVarValue={getTextShadowCssVarValue}
@@ -169,34 +232,37 @@ function DefaultTextShadowMenu() {
 DefaultTextShadowMenu.displayName = 'DefaultTextShadowMenu';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultTextBgMenu
+ * DefaultTextBgInput
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTextBgMenu() {
+function DefaultTextBgInput() {
   return (
-    <DefaultFontSettingMenu
-      label="Background Color"
-      options={COLOR_OPTIONS}
-      defaultValue="black"
+    <DefaultFontSetting
+      group="text-bg"
+      label="Color"
+      option={COLOR_OPTION}
+      defaultValue="#000000"
       cssVarName="text-bg"
       getCssVarValue={(value) => {
-        return `rgb(${toRGB(value)} / var(--media-user-text-bg-opacity, 1))`;
+        return `rgb(${hexToRGB(value)} / var(--media-user-text-bg-opacity, 1))`;
       }}
     />
   );
 }
 
-DefaultTextBgMenu.displayName = 'DefaultTextBgMenu';
+DefaultTextBgInput.displayName = 'DefaultTextBgInput';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultTextBgOpacityMenu
+ * DefaultTextBgOpacitySlider
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultTextBgOpacityMenu() {
+function DefaultTextBgOpacitySlider() {
+  const { icons: Icons } = useDefaultLayoutContext();
   return (
-    <DefaultFontSettingMenu
-      label="Background Opacity"
-      options={OPACITY_OPTIONS}
+    <DefaultFontSetting
+      group="text-bg"
+      label="Opacity"
+      option={{ ...OPACITY_OPTION, UpIcon: Icons.Menu.OpacityUp, DownIcon: Icons.Menu.OpacityDown }}
       defaultValue="100%"
       cssVarName="text-bg-opacity"
       getCssVarValue={percentToRatio}
@@ -204,37 +270,44 @@ function DefaultTextBgOpacityMenu() {
   );
 }
 
-DefaultTextBgOpacityMenu.displayName = 'DefaultTextBgOpacityMenu';
+DefaultTextBgOpacitySlider.displayName = 'DefaultTextBgOpacitySlider';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultDisplayBgMenu
+ * DefaultDisplayBgInput
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultDisplayBgMenu() {
+function DefaultDisplayBgInput() {
   return (
-    <DefaultFontSettingMenu
-      label="Display Background Color"
-      options={COLOR_OPTIONS}
-      defaultValue="black"
+    <DefaultFontSetting
+      group="display-bg"
+      label="Color"
+      option={COLOR_OPTION}
+      defaultValue="#000000"
       cssVarName="display-bg"
       getCssVarValue={(value) => {
-        return `rgb(${toRGB(value)} / var(--media-user-display-bg-opacity, 1))`;
+        return `rgb(${hexToRGB(value)} / var(--media-user-display-bg-opacity, 1))`;
       }}
     />
   );
 }
 
-DefaultDisplayBgMenu.displayName = 'DefaultDisplayBgMenu';
+DefaultDisplayBgInput.displayName = 'DefaultDisplayBgInput';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultDisplayBgOpacityMenu
+ * DefaultDisplayBgOpacitySlider
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultDisplayBgOpacityMenu() {
+function DefaultDisplayBgOpacitySlider() {
+  const { icons: Icons } = useDefaultLayoutContext();
   return (
-    <DefaultFontSettingMenu
-      label="Display Background Opacity"
-      options={OPACITY_OPTIONS}
+    <DefaultFontSetting
+      group="display-bg"
+      label="Opacity"
+      option={{
+        ...OPACITY_OPTION,
+        UpIcon: Icons.Menu.OpacityUp,
+        DownIcon: Icons.Menu.OpacityDown,
+      }}
       defaultValue="0%"
       cssVarName="display-bg-opacity"
       getCssVarValue={percentToRatio}
@@ -242,45 +315,60 @@ function DefaultDisplayBgOpacityMenu() {
   );
 }
 
-DefaultDisplayBgOpacityMenu.displayName = 'DefaultDisplayBgOpacityMenu';
+DefaultDisplayBgOpacitySlider.displayName = 'DefaultDisplayBgOpacitySlider';
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultFontSettingMenu
+ * DefaultFontSetting
  * -----------------------------------------------------------------------------------------------*/
 
-interface DefaultFontSettingMenuProps {
+interface FontRadioOption {
+  type: 'radio';
+  values: string[] | Record<string, string>;
+}
+
+interface FontSliderOption {
+  type: 'slider';
+  min: number;
+  max: number;
+  step: number;
+  UpIcon?: DefaultLayoutIcon;
+  DownIcon?: DefaultLayoutIcon;
+}
+
+interface FontColorOption {
+  type: 'color';
+}
+
+type FontOption = FontRadioOption | FontSliderOption | FontColorOption;
+
+interface DefaultFontSettingProps {
+  group: string;
   label: keyof DefaultLayoutTranslations;
-  options: string[] | Record<string, string>;
+  option: FontOption;
   cssVarName: string;
   getCssVarValue?(value: string, player: MediaPlayerInstance): string;
   defaultValue: string;
 }
 
-function DefaultFontSettingMenu({
+function DefaultFontSetting({
+  group,
   label,
-  options,
+  option,
   cssVarName,
   getCssVarValue,
   defaultValue,
-}: DefaultFontSettingMenuProps) {
+}: DefaultFontSettingProps) {
   const player = useMediaPlayer(),
-    radioOptions = createRadioOptions(options),
-    key = `${label.toLowerCase().replace(/\s/g, '-')}`,
-    { translations } = React.useContext(DefaultLayoutContext),
+    id = `${group}-${label.toLowerCase()}`,
     translatedLabel = useDefaultLayoutWord(label),
     resets = React.useContext(FontResetContext);
 
   const [value, setValue] = React.useState(defaultValue);
 
-  const hint = React.useMemo(() => {
-    const label = radioOptions.find((radio) => radio.value === value)?.label || '';
-    return i18n(translations, label);
-  }, [value, radioOptions]);
-
   const update = React.useCallback(
     (newValue: string) => {
       setValue(newValue);
-      localStorage.setItem(`vds-player:${key}`, newValue);
+      localStorage.setItem(`vds-player:${id}`, newValue);
       player?.el?.style.setProperty(
         `--media-user-${cssVarName}`,
         getCssVarValue?.(newValue, player) ?? newValue,
@@ -302,31 +390,106 @@ function DefaultFontSettingMenu({
   );
 
   const onReset = React.useCallback(() => {
-    setValue(defaultValue);
-    notify();
-  }, [notify]);
+    onChange(defaultValue);
+  }, [onChange]);
 
   React.useEffect(() => {
-    const savedValue = localStorage.getItem(`vds-player:${key}`);
+    const savedValue = localStorage.getItem(`vds-player:${id}`);
     if (savedValue) update(savedValue);
-
-    resets.all.add(onReset);
-    return () => {
-      resets.all.delete(onReset);
-    };
   }, []);
 
-  function onOpen() {
-    resets.current = onReset;
+  React.useEffect(() => {
+    resets.all.add(onReset);
+    return () => void resets.all.delete(onReset);
+  }, [onReset]);
+
+  if (option.type === 'color') {
+    function onColorChange(event) {
+      onChange(event.target.value);
+    }
+
+    return (
+      <DefaultMenuItem label={translatedLabel}>
+        <input className="vds-color-picker" type="color" value={value} onChange={onColorChange} />
+      </DefaultMenuItem>
+    );
   }
 
-  function onClose() {
-    resets.current = undefined;
+  if (option.type === 'slider') {
+    const { min, max, step, UpIcon, DownIcon } = option,
+      steps = (max - min) / step;
+
+    function onSliderValueChange(value) {
+      onChange(value + '%');
+    }
+
+    return (
+      <DefaultMenuSliderItem
+        label={translatedLabel}
+        value={value}
+        UpIcon={UpIcon}
+        DownIcon={DownIcon}
+        isMin={value === min + '%'}
+        isMax={value === max + '%'}
+      >
+        <Slider.Root
+          className="vds-slider"
+          min={min}
+          max={max}
+          step={step}
+          keyStep={step}
+          value={parseInt(value)}
+          aria-label={translatedLabel}
+          onValueChange={onSliderValueChange}
+          onDragValueChange={onSliderValueChange}
+        >
+          <DefaultSliderParts />
+          <DefaultSliderMarkers count={steps} />
+        </Slider.Root>
+      </DefaultMenuSliderItem>
+    );
   }
+
+  if (option.type === 'radio') {
+    return (
+      <DefaultFontRadioGroup
+        id={id}
+        label={translatedLabel}
+        value={value}
+        values={option.values}
+        onChange={onChange}
+      />
+    );
+  }
+
+  return null;
+}
+
+DefaultFontSetting.displayName = 'DefaultFontSetting';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultFontRadioGroup
+ * -----------------------------------------------------------------------------------------------*/
+
+interface DefaultFontRadioGroupProps {
+  id: string;
+  label: string;
+  value: string;
+  values: FontRadioOption['values'];
+  onChange: (value: string) => void;
+}
+
+function DefaultFontRadioGroup({ id, label, value, values, onChange }: DefaultFontRadioGroupProps) {
+  const radioOptions = createRadioOptions(values),
+    { translations } = useDefaultLayoutContext(),
+    hint = React.useMemo(() => {
+      const label = radioOptions.find((radio) => radio.value === value)?.label || '';
+      return i18n(translations, label);
+    }, [value, radioOptions]);
 
   return (
-    <Menu.Root className={`vds-${key}-menu vds-menu`} onOpen={onOpen} onClose={onClose}>
-      <DefaultMenuButton label={translatedLabel} hint={hint} />
+    <Menu.Root className={`vds-${id}-menu vds-menu`}>
+      <DefaultMenuButton label={label} hint={hint} />
       <Menu.Items className="vds-menu-items">
         <DefaultMenuRadioGroup value={value} options={radioOptions} onChange={onChange} />
       </Menu.Items>
@@ -334,7 +497,7 @@ function DefaultFontSettingMenu({
   );
 }
 
-DefaultFontSettingMenu.displayName = 'DefaultFontSettingMenu';
+DefaultFontRadioGroup.displayName = 'DefaultFontRadioGroup';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultResetMenuItem
@@ -345,12 +508,12 @@ function DefaultResetMenuItem() {
     resets = React.useContext(FontResetContext);
 
   function onClick() {
-    resets.current ? resets.current() : resets.all.forEach((reset) => reset());
+    resets.all.forEach((reset) => reset());
   }
 
   return (
-    <button className="vds-menu-button" role="menuitem" onClick={onClick}>
-      <span className="vds-menu-button-label">{resetText}</span>
+    <button className="vds-menu-item" role="menuitem" onClick={onClick}>
+      <span className="vds-menu-item-label">{resetText}</span>
     </button>
   );
 }
@@ -365,25 +528,10 @@ function percentToRatio(value: string) {
   return (parseInt(value) / 100).toString();
 }
 
-function toRGB(color: string) {
-  switch (color) {
-    case 'white':
-      return '255 255 255';
-    case 'yellow':
-      return '255 255 0';
-    case 'green':
-      return '0 128 0';
-    case 'cyan':
-      return '0 255 255';
-    case 'blue':
-      return '0 0 255';
-    case 'magenta':
-      return '255 0 255';
-    case 'red':
-      return '255 0 0';
-    case 'black':
-      return '0 0 0';
-  }
+function hexToRGB(hex: string) {
+  const { style } = new Option();
+  style.color = hex;
+  return style.color.match(/\((.*?)\)/)![1].replace(/,/g, ' ');
 }
 
 function getFontFamily(value: string) {
@@ -404,6 +552,7 @@ function getFontFamily(value: string) {
       return '"Times New Roman", Times, Georgia, Cambria, "PT Serif Caption", serif';
   }
 }
+
 function getTextShadowCssVarValue(value: string) {
   switch (value) {
     case 'drop shadow':

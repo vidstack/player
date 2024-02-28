@@ -37,9 +37,9 @@ export class AudioGainSlider extends Component<
 > {
   static props: AudioGainSliderProps = {
     ...SliderController.props,
-    step: 0.25,
-    keyStep: 1,
-    shiftKeyMultiplier: 5,
+    step: 25,
+    keyStep: 25,
+    shiftKeyMultiplier: 2,
     min: 0,
     max: 300,
   };

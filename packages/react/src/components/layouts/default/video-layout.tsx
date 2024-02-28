@@ -322,9 +322,9 @@ function DefaultVideoKeyboardDisplay() {
     $userPrefersKeyboardAnimations = useSignal(userPrefersKeyboardAnimations),
     disabled = noKeyboardAnimations || !$userPrefersKeyboardAnimations;
 
-  if (disabled || !icons.KeyboardAction) return null;
+  if (disabled || !icons.KeyboardDisplay) return null;
 
-  return <DefaultKeyboardDisplay icons={icons.KeyboardAction} />;
+  return <DefaultKeyboardDisplay icons={icons.KeyboardDisplay} />;
 }
 
 DefaultVideoKeyboardDisplay.displayName = 'DefaultVideoKeyboardDisplay';

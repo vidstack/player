@@ -106,7 +106,7 @@ export class QualitySlider extends Component<
   private _isDisabled() {
     const { disabled } = this.$props,
       { qualities, canSetQuality } = this._media.$state;
-    return disabled() || qualities().length === 0 || !canSetQuality();
+    return disabled() || qualities().length <= 1 || !canSetQuality();
   }
 
   private _throttledQualityChange = throttle(this._onQualityChange.bind(this), 25);
