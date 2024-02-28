@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
 - loop setting in default layout ([5f07f55](https://github.com/vidstack/player/commit/5f07f55462057f6ff2fc5b6a337477f975fe85c9))
 - media announcer ([533edc5](https://github.com/vidstack/player/commit/533edc5bbd9ff923bf3bb4b5fa31b81afce98062))
 - announcements setting in default layout ([701f7ce](https://github.com/vidstack/player/commit/701f7ce21b895b8cf70972678023ca5193778b49))
+- new speed slider component ([cd413ba](https://github.com/vidstack/player/commit/cd413ba578a7c8535a0fbbcb77f4566e9b1bcc22))
+- new quality slider component ([e6d801a](https://github.com/vidstack/player/commit/e6d801a86fa3f0c505dffe83823d7ffe41ffaaf9))
 
 ### 🐛 Bug Fixes
 
