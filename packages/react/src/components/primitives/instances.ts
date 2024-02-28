@@ -21,6 +21,7 @@ import {
   PIPButton,
   PlayButton,
   Poster,
+  QualitySlider,
   Radio,
   RadioGroup,
   SeekButton,
@@ -69,6 +70,7 @@ export class TimeSliderInstance extends TimeSlider {}
 export class VolumeSliderInstance extends VolumeSlider {}
 export class AudioGainSliderInstance extends AudioGainSlider {}
 export class SpeedSliderInstance extends SpeedSlider {}
+export class QualitySliderInstance extends QualitySlider {}
 export class SliderThumbnailInstance extends SliderThumbnail {}
 export class SliderValueInstance extends SliderValue {}
 export class SliderVideoInstance extends SliderVideo {}

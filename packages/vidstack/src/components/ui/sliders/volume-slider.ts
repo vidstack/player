@@ -63,8 +63,8 @@ export class VolumeSlider extends Component<
     new SliderController({
       _getStep: this.$props.step,
       _getKeyStep: this.$props.keyStep,
-      _isDisabled: this.$props.disabled,
       _roundValue: Math.round,
+      _isDisabled: this._isDisabled.bind(this),
       _getARIAValueMax: this._getARIAValueMax.bind(this),
       _getARIAValueNow: this._getARIAValueNow.bind(this),
       _getARIAValueText: this._getARIAValueText.bind(this),
@@ -101,6 +101,12 @@ export class VolumeSlider extends Component<
   private _getARIAValueMax() {
     const { audioGain } = this._media.$state;
     return this.$state.max() * (audioGain() ?? 1);
+  }
+
+  private _isDisabled() {
+    const { disabled } = this.$props,
+      { canSetVolume } = this._media.$state;
+    return disabled() || !canSetVolume();
   }
 
   private _watchVolume() {

@@ -65,8 +65,8 @@ export class TimeSlider extends Component<
       _swipeGesture: () => !noSwipeGesture(),
       _getStep: this._getStep.bind(this),
       _getKeyStep: this._getKeyStep.bind(this),
-      _isDisabled: this._isDisabled.bind(this),
       _roundValue: this._roundValue,
+      _isDisabled: this._isDisabled.bind(this),
       _getARIAValueNow: this._getARIAValueNow.bind(this),
       _getARIAValueText: this._getARIAValueText.bind(this),
       _onDragStart: this._onDragStart.bind(this),
@@ -210,8 +210,9 @@ export class TimeSlider extends Component<
   }
 
   private _isDisabled() {
-    const { canSeek } = this._media.$state;
-    return this.$props.disabled() || !canSeek();
+    const { disabled } = this.$props,
+      { canSeek } = this._media.$state;
+    return disabled() || !canSeek();
   }
 
   // -------------------------------------------------------------------------------------------

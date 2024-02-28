@@ -17,6 +17,7 @@ export const defaultLayoutProps: DefaultLayoutProps = {
   audioGains: DEFAULT_AUDIO_GAINS,
   seekStep: 10,
   sliderChaptersMinWidth: 325,
+  hideQualityBitrate: false,
   smallWhen: false,
   thumbnails: null,
   translations: null,
@@ -86,6 +87,12 @@ export interface DefaultLayoutProps {
    * Whether keyboard actions should not be displayed.
    */
   noKeyboardAnimations: boolean;
+  /**
+   * Whether the bitrate should be hidden in the settings quality hint.
+   *
+   * @defaultValue false
+   */
+  hideQualityBitrate: boolean;
   /**
    * The playback rate options to be displayed in the settings menu.
    */

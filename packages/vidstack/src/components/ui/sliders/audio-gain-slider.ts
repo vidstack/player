@@ -61,8 +61,8 @@ export class AudioGainSlider extends Component<
     new SliderController({
       _getStep: this.$props.step,
       _getKeyStep: this.$props.keyStep,
-      _isDisabled: this.$props.disabled,
       _roundValue: Math.round,
+      _isDisabled: this._isDisabled.bind(this),
       _getARIAValueNow: this._getARIAValueNow.bind(this),
       _getARIAValueText: this._getARIAValueText.bind(this),
       _onDragValueChange: this._onDragValueChange.bind(this),
@@ -105,6 +105,12 @@ export class AudioGainSlider extends Component<
       value = ((audioGain() ?? 1) - 1) * 100;
     this.$state.value.set(value);
     this.dispatch('value-change', { detail: value });
+  }
+
+  private _isDisabled() {
+    const { disabled } = this.$props,
+      { canSetAudioGain } = this._media.$state;
+    return disabled() || !canSetAudioGain();
   }
 
   private _onAudioGainChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {

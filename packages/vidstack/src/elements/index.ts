@@ -66,4 +66,5 @@ export { MediaSliderPreviewElement } from './define/sliders/slider-preview-eleme
 export { MediaVolumeSliderElement } from './define/sliders/volume-slider-element';
 export { MediaAudioGainSliderElement } from './define/sliders/audio-gain-slider-element';
 export { MediaSpeedSliderElement } from './define/sliders/speed-slider-element';
+export { MediaQualitySliderElement } from './define/sliders/quality-slider-element';
 export { MediaSliderChaptersElement } from './define/sliders/slider-chapters-element';

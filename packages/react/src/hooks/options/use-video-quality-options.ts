@@ -31,7 +31,7 @@ export function useVideoQualityOptions({
           label: _quality.height + 'p',
           value: getQualityValue(_quality),
           bitrateText:
-            _quality.bitrate >= 0 ? `${(_quality.bitrate / 1000000).toFixed(2)} Mbps` : null,
+            _quality.bitrate > 0 ? `${(_quality.bitrate / 1000000).toFixed(2)} Mbps` : null,
           get selected() {
             return _quality === quality();
           },

@@ -1,7 +1,9 @@
 import * as React from 'react';
 
 import airPlayIconPaths from 'media-icons/dist/icons/airplay.js';
+import arrowDownIconPaths from 'media-icons/dist/icons/arrow-down.js';
 import arrowLeftIconPaths from 'media-icons/dist/icons/arrow-left.js';
+import arrowUpIconPaths from 'media-icons/dist/icons/arrow-up.js';
 import chaptersIconPaths from 'media-icons/dist/icons/chapters.js';
 import arrowRightIconPaths from 'media-icons/dist/icons/chevron-right.js';
 import googleCastIconPaths from 'media-icons/dist/icons/chromecast.js';
@@ -84,6 +86,8 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
     AudioBoostDown: createIcon(volumeLowIconPaths),
     SpeedUp: createIcon(fastForwardIconPaths),
     SpeedDown: createIcon(fastBackwardIconPaths),
+    QualityUp: createIcon(arrowUpIconPaths),
+    QualityDown: createIcon(arrowDownIconPaths),
   },
   KeyboardAction: {
     Play: createIcon(playIconPaths),
@@ -166,6 +170,8 @@ export interface DefaultMenuIcons {
   Settings: DefaultLayoutIcon;
   SpeedUp: DefaultLayoutIcon;
   SpeedDown: DefaultLayoutIcon;
+  QualityUp: DefaultLayoutIcon;
+  QualityDown: DefaultLayoutIcon;
 }
 
 export interface DefaultKeyboardActionIcons {

@@ -1,13 +1,12 @@
 import * as React from 'react';
 
 import { useSignal } from 'maverick.js/react';
-import { isArray, isKeyboardClick, uppercaseFirstChar } from 'maverick.js/std';
+import { isArray, isBoolean, isKeyboardClick, uppercaseFirstChar } from 'maverick.js/std';
 import { isTrackCaptionKind, type DefaultLayoutWord, type TooltipPlacement } from 'vidstack';
 
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { useChapterOptions } from '../../../hooks/options/use-chapter-options';
-import { useVideoQualityOptions } from '../../../hooks/options/use-video-quality-options';
 import { useResizeObserver } from '../../../hooks/use-dom';
 import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaState } from '../../../hooks/use-media-state';
@@ -27,6 +26,7 @@ import { Captions } from '../../ui/captions';
 import { ChapterTitle } from '../../ui/chapter-title';
 import * as Menu from '../../ui/menu';
 import * as AudioGainSlider from '../../ui/sliders/audio-gain-slider';
+import * as QualitySlider from '../../ui/sliders/quality-slider';
 import * as SpeedSlider from '../../ui/sliders/speed-slider';
 import * as TimeSlider from '../../ui/sliders/time-slider';
 import * as VolumeSlider from '../../ui/sliders/volume-slider';
@@ -693,7 +693,9 @@ function DefaultPlaybackSubmenu() {
       <DefaultSubmenuButton label={label} Icon={Icons.Menu.Playback} />
       <Menu.Content className="vds-menu-items">
         <DefaultMenuLoopCheckbox />
+        <DefaultAutoQualityCheckbox />
         <DefaultMenuSpeedSlider />
+        <DefaultMenuQualitySlider />
       </Menu.Content>
     </Menu.Root>
   );
@@ -723,6 +725,87 @@ function DefaultMenuLoopCheckbox() {
 }
 
 DefaultMenuLoopCheckbox.displayName = 'DefaultMenuLoopCheckbox';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultAutoQualityCheckbox
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultAutoQualityCheckbox() {
+  const label = 'Auto Select',
+    { remote, qualities } = useMediaContext(),
+    $autoQuality = useMediaState('autoQuality'),
+    translatedLabel = useDefaultLayoutWord(label);
+
+  function onChange(checked: boolean, trigger?: Event) {
+    if (checked) {
+      remote.requestAutoQuality(trigger);
+    } else {
+      remote.changeQuality(qualities.selectedIndex, trigger);
+    }
+  }
+
+  return (
+    <div className="vds-menu-item vds-menu-item-checkbox">
+      <div className="vds-menu-checkbox-label">{translatedLabel}</div>
+      <DefaultMenuCheckbox label={label} checked={$autoQuality} onChange={onChange} />
+    </div>
+  );
+}
+
+DefaultAutoQualityCheckbox.displayName = 'DefaultAutoQualityCheckbox';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultMenuQualitySlider
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultMenuQualitySlider() {
+  const { hideQualityBitrate, icons: Icons } = useDefaultLayoutContext(),
+    $canSetQuality = useMediaState('playbackRate'),
+    $qualities = useMediaState('qualities'),
+    $quality = useMediaState('quality'),
+    label = useDefaultLayoutWord('Quality'),
+    autoText = useDefaultLayoutWord('Auto');
+
+  if (!$canSetQuality || $qualities.length === 0) return null;
+
+  const height = $quality?.height,
+    bitrate = !hideQualityBitrate ? $quality?.bitrate : null,
+    bitrateText = bitrate && bitrate > 0 ? `${(bitrate / 1000000).toFixed(2)} Mbps` : null,
+    value = height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : autoText;
+
+  return (
+    <div className="vds-menu-item vds-menu-item-slider">
+      <div className="vds-menu-slider-title">
+        <span className="vds-menu-slider-label">{label}</span>
+        <span className="vds-menu-slider-value">{value}</span>
+      </div>
+      <div className="vds-menu-slider-group">
+        <Icons.Menu.QualityDown className="vds-icon" />
+        <DefaultQualitySlider />
+        <Icons.Menu.QualityUp className="vds-icon" />
+      </div>
+    </div>
+  );
+}
+
+DefaultMenuQualitySlider.displayName = 'DefaultMenuQualitySlider';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultQualitySlider
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultQualitySlider() {
+  const label = useDefaultLayoutWord('Quality');
+  return (
+    <QualitySlider.Root className="vds-quality-slider vds-slider" aria-label={label}>
+      <QualitySlider.Track className="vds-slider-track" />
+      <QualitySlider.TrackFill className="vds-slider-track-fill vds-slider-track" />
+      <QualitySlider.Thumb className="vds-slider-thumb" />
+    </QualitySlider.Root>
+  );
+}
+
+DefaultQualitySlider.displayName = 'DefaultQualitySlider';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultMenuSpeedSlider
@@ -866,6 +949,7 @@ DefaultMenuKeyboardAnimationCheckbox.displayName = 'DefaultMenuKeyboardAnimation
 
 export interface DefaultMenuCheckboxProps {
   label: DefaultLayoutWord;
+  checked?: boolean;
   storageKey?: string;
   defaultChecked?: boolean;
   onChange?(checked: boolean, trigger?: Event): void;
@@ -873,6 +957,7 @@ export interface DefaultMenuCheckboxProps {
 
 function DefaultMenuCheckbox({
   label,
+  checked,
   storageKey,
   defaultChecked = false,
   onChange,
@@ -888,15 +973,19 @@ function DefaultMenuCheckbox({
     onChange?.(checked);
   }, []);
 
+  React.useEffect(() => {
+    if (isBoolean(checked)) setIsChecked(checked);
+  }, [checked]);
+
   function onPress(event?: React.PointerEvent | React.KeyboardEvent) {
     if (event && 'button' in event && event?.button === 1) return;
 
-    const toggleCheck = !isChecked;
+    const toggledCheck = !isChecked;
 
-    setIsChecked(toggleCheck);
-    if (storageKey) localStorage.setItem(storageKey, toggleCheck ? '1' : '');
+    setIsChecked(toggledCheck);
+    if (storageKey) localStorage.setItem(storageKey, toggledCheck ? '1' : '');
 
-    onChange?.(toggleCheck, event?.nativeEvent);
+    onChange?.(toggledCheck, event?.nativeEvent);
 
     setIsActive(false);
   }
@@ -1047,53 +1136,6 @@ function DefaultAudioTracksSubmenu() {
 }
 
 DefaultAudioTracksSubmenu.displayName = 'DefaultAudioTracksSubmenu';
-
-/* -------------------------------------------------------------------------------------------------
- * DefaultQualitySubmenu
- * -----------------------------------------------------------------------------------------------*/
-
-function DefaultQualitySubmenu() {
-  const { hideQualityBitrate } = useDefaultLayoutContext(),
-    label = useDefaultLayoutWord('Quality'),
-    autoText = useDefaultLayoutWord('Auto'),
-    options = useVideoQualityOptions({ auto: autoText, sort: 'descending' }),
-    currentQuality = options.selectedQuality?.height,
-    hint =
-      options.selectedValue !== 'auto' && currentQuality
-        ? `${currentQuality}p`
-        : `${autoText}${currentQuality ? ` (${currentQuality}p)` : ''}`;
-
-  if (options.disabled) return null;
-
-  return (
-    <Menu.Root className="vds-quality-menu vds-menu">
-      <DefaultSubmenuButton label={label} hint={hint} disabled={options.disabled} />
-      <Menu.Content className="vds-menu-items">
-        <Menu.RadioGroup
-          className="vds-quality-radio-group vds-radio-group"
-          value={options.selectedValue}
-        >
-          {options.map(({ label, value, bitrateText, select }) => (
-            <Menu.Radio
-              className="vds-quality-radio vds-radio"
-              value={value}
-              onSelect={select}
-              key={value}
-            >
-              <div className="vds-radio-check" />
-              <span className="vds-radio-label">{label}</span>
-              {!hideQualityBitrate && bitrateText ? (
-                <span className="vds-radio-hint">{bitrateText}</span>
-              ) : null}
-            </Menu.Radio>
-          ))}
-        </Menu.RadioGroup>
-      </Menu.Content>
-    </Menu.Root>
-  );
-}
-
-DefaultQualitySubmenu.displayName = 'DefaultQualitySubmenu';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultCaptionSubmenu

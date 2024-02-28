@@ -45,6 +45,7 @@ export { type LiveButtonProps, LiveButton } from './components/ui/buttons/live-b
 // Slider
 export * as Slider from './components/ui/sliders/slider';
 export * as VolumeSlider from './components/ui/sliders/volume-slider';
+export * as QualitySlider from './components/ui/sliders/quality-slider';
 export * as AudioGainSlider from './components/ui/sliders/audio-gain-slider';
 export * as SpeedSlider from './components/ui/sliders/speed-slider';
 export * as TimeSlider from './components/ui/sliders/time-slider';
@@ -56,6 +57,7 @@ export type {
 export type { RootProps as VolumeSliderProps } from './components/ui/sliders/volume-slider';
 export type { RootProps as AudioGainSliderProps } from './components/ui/sliders/audio-gain-slider';
 export type { RootProps as SpeedSliderProps } from './components/ui/sliders/speed-slider';
+export type { RootProps as QualitySliderProps } from './components/ui/sliders/quality-slider';
 export type {
   RootProps as TimeSliderProps,
   ChaptersProps as SliderChapterProps,

@@ -2,7 +2,7 @@ import { html, type TemplateResult } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { ref as $ref, ref } from 'lit-html/directives/ref.js';
 import type { RefOrCallback } from 'lit-html/directives/ref.js';
-import { computed, peek, signal, type ReadSignal } from 'maverick.js';
+import { computed, effect, peek, signal, type ReadSignal } from 'maverick.js';
 import {
   isArray,
   isFunction,
@@ -541,7 +541,12 @@ function DefaultPlaybackMenu() {
           icon: 'menu-playback',
         })}
         <media-menu-items class="vds-menu-items">
-          ${[DefaultMenuLoopCheckbox(), DefaultMenuSpeedSlider()]}
+          ${[
+            DefaultMenuLoopCheckbox(),
+            DefaultMenuAutoQualityCheckbox(),
+            DefaultMenuSpeedSlider(),
+            DefaultMenuQualitySlider(),
+          ]}
         </media-menu-items>
       </media-menu>
     `;
@@ -579,19 +584,15 @@ function DefaultMenuSpeedSlider() {
         playbackRate() === 1 ? i18n(translations, 'Normal') : playbackRate() + 'x',
       );
 
-    return html`
-      <div class="vds-menu-item vds-menu-item-slider">
-        <div class="vds-menu-slider-title">
-          <span class="vds-menu-slider-label">${$label}</span>
-          <span class="vds-menu-slider-value">${$value}</span>
-        </div>
-        <div class="vds-menu-slider-group">
-          <slot name="menu-speed-down-icon"></slot>
-          ${DefaultSpeedSlider()}
-          <slot name="menu-speed-up-icon"></slot>
-        </div>
-      </div>
-    `;
+    return DefaultMenuSlider({
+      label: $label,
+      value: $value,
+      children: [
+        html`<slot name="menu-speed-down-icon"></slot>`,
+        DefaultSpeedSlider(),
+        html`<slot name="menu-speed-up-icon"></slot>`,
+      ],
+    });
   });
 }
 
@@ -619,10 +620,74 @@ function DefaultSpeedSlider() {
       max=${$signal($max)}
       step=${$signal($step)}
     >
-      <div class="vds-slider-track"></div>
-      <div class="vds-slider-track-fill vds-slider-track"></div>
-      <div class="vds-slider-thumb"></div>
+      ${DefaultSliderParts()}
     </media-speed-slider>
+  `;
+}
+function DefaultMenuAutoQualityCheckbox() {
+  const { remote, qualities } = useMediaContext(),
+    { autoQuality, canSetQuality, qualities: $qualities } = useMediaState(),
+    { translations } = useDefaultLayoutContext(),
+    label = 'Auto Select',
+    $label = $i18n(translations, label),
+    $disabled = computed(() => !canSetQuality() || $qualities().length === 0);
+
+  if ($disabled()) return null;
+
+  return html`
+    <div class="vds-menu-item vds-menu-item-checkbox">
+      <div class="vds-menu-checkbox-label">${$label}</div>
+      ${DefaultMenuCheckbox({
+        label,
+        checked: autoQuality,
+        onChange(checked, trigger) {
+          if (checked) {
+            remote.requestAutoQuality(trigger);
+          } else {
+            remote.changeQuality(qualities.selectedIndex, trigger);
+          }
+        },
+      })}
+    </div>
+  `;
+}
+
+function DefaultMenuQualitySlider() {
+  return $signal(() => {
+    const { hideQualityBitrate, translations } = useDefaultLayoutContext(),
+      { canSetQuality, qualities, quality } = useMediaState(),
+      $disabled = computed(() => !canSetQuality() || qualities().length === 0);
+
+    if ($disabled()) return null;
+
+    const $label = $i18n(translations, 'Quality'),
+      $value = $signal(() => {
+        const height = quality()?.height,
+          bitrate = !hideQualityBitrate() ? quality()?.bitrate : null,
+          bitrateText = bitrate && bitrate > 0 ? `${(bitrate / 1000000).toFixed(2)} Mbps` : null,
+          autoText = i18n(translations, 'Auto');
+        return height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : autoText;
+      });
+
+    return DefaultMenuSlider({
+      label: $label,
+      value: $value,
+      children: [
+        html`<slot name="menu-quality-down-icon"></slot>`,
+        DefaultQualitySlider(),
+        html`<slot name="menu-quality-up-icon"></slot>`,
+      ],
+    });
+  });
+}
+
+function DefaultQualitySlider() {
+  const { translations } = useDefaultLayoutContext(),
+    $label = $i18n(translations, 'Quality');
+  return html`
+    <media-quality-slider class="vds-quality-slider vds-slider" aria-label=${$label}>
+      ${DefaultSliderParts()}
+    </media-quality-slider>
   `;
 }
 
@@ -761,19 +826,15 @@ function DefaultMenuAudioGainSlider() {
       $label = $i18n(translations, 'Audio Boost'),
       $value = $signal(() => Math.round(((audioGain() ?? 1) - 1) * 100) + '%');
 
-    return html`
-      <div class="vds-menu-item vds-menu-item-slider">
-        <div class="vds-menu-slider-title">
-          <span class="vds-menu-slider-label">${$label}</span>
-          <span class="vds-menu-slider-value">${$value}</span>
-        </div>
-        <div class="vds-menu-slider-group">
-          <slot name="menu-audio-boost-down-icon"></slot>
-          ${DefaultAudioGainSlider()}
-          <slot name="menu-audio-boost-up-icon"></slot>
-        </div>
-      </div>
-    `;
+    return DefaultMenuSlider({
+      label: $label,
+      value: $value,
+      children: [
+        html`<slot name="menu-audio-boost-down-icon"></slot>`,
+        DefaultAudioGainSlider(),
+        html`<slot name="menu-audio-boost-up-icon"></slot>`,
+      ],
+    });
   });
 }
 
@@ -787,42 +848,8 @@ function DefaultAudioGainSlider() {
       aria-label=${$label}
       max=${$maxAudioGain}
     >
-      <div class="vds-slider-track"></div>
-      <div class="vds-slider-track-fill vds-slider-track"></div>
-      <div class="vds-slider-thumb"></div>
+      ${DefaultSliderParts()}
     </media-audio-gain-slider>
-  `;
-}
-
-function DefaultQualityMenu() {
-  const { translations } = useDefaultLayoutContext(),
-    $autoText = $i18n(translations, 'Auto'),
-    { canSetQuality, qualities } = useMediaState(),
-    $disabled = computed(() => !canSetQuality() || qualities().length === 0);
-
-  if ($disabled()) return null;
-
-  return html`
-    <media-menu class="vds-quality-menu vds-menu">
-      ${renderMenuButton({
-        label: () => i18n(translations, 'Quality'),
-        icon: 'menu-quality',
-      })}
-      <media-menu-items class="vds-menu-items">
-        <media-quality-radio-group
-          class="vds-quality-radio-group vds-radio-group"
-          auto-label=${$autoText}
-        >
-          <template>
-            <media-radio class="vds-quality-radio vds-radio">
-              <div class="vds-radio-check"></div>
-              <span class="vds-radio-label" data-part="label"></span>
-              <span class="vds-radio-hint" data-part="bitrate"></span>
-            </media-radio>
-          </template>
-        </media-quality-radio-group>
-      </media-menu-items>
-    </media-menu>
   `;
 }
 
@@ -860,12 +887,14 @@ function DefaultCaptionsMenu() {
 
 function DefaultMenuCheckbox({
   label,
+  checked,
   defaultChecked = false,
   storageKey,
   onChange,
 }: {
-  label: DefaultLayoutWord;
+  label: string;
   storageKey?: string;
+  checked?: ReadSignal<boolean>;
   defaultChecked?: boolean;
   onChange(checked: boolean, trigger?: Event): void;
 }) {
@@ -874,9 +903,13 @@ function DefaultMenuCheckbox({
     $checked = signal(!!(savedValue ?? defaultChecked)),
     $active = signal(false),
     $ariaChecked = $signal($ariaBool($checked)),
-    $label = $i18n(translations, label);
+    $label = $i18n(translations, label as DefaultLayoutWord);
 
-  onChange(peek($checked));
+  if (storageKey) onChange(peek($checked));
+
+  if (checked) {
+    effect(() => void $checked.set(checked()));
+  }
 
   function onPress(event?: PointerEvent) {
     if (event?.button === 1) return;
@@ -907,6 +940,26 @@ function DefaultMenuCheckbox({
       @pointerdown=${onActive}
       @keydown=${onKeyDown}
     ></div>
+  `;
+}
+
+function DefaultMenuSlider({ label, value, children }) {
+  return html`
+    <div class="vds-menu-item vds-menu-item-slider">
+      <div class="vds-menu-slider-title">
+        <span class="vds-menu-slider-label">${label}</span>
+        <span class="vds-menu-slider-value">${value}</span>
+      </div>
+      <div class="vds-menu-slider-group">${children}</div>
+    </div>
+  `;
+}
+
+function DefaultSliderParts() {
+  return html`
+    <div class="vds-slider-track"></div>
+    <div class="vds-slider-track-fill vds-slider-track"></div>
+    <div class="vds-slider-thumb"></div>
   `;
 }
 

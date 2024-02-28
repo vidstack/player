@@ -1,5 +1,7 @@
 import airplay from 'media-icons/dist/icons/airplay.js';
+import arrowDown from 'media-icons/dist/icons/arrow-down.js';
 import menuArrowLeft from 'media-icons/dist/icons/arrow-left.js';
+import arrowUp from 'media-icons/dist/icons/arrow-up.js';
 import chapters from 'media-icons/dist/icons/chapters.js';
 import menuArrowRight from 'media-icons/dist/icons/chevron-right.js';
 import googleCast from 'media-icons/dist/icons/chromecast.js';
@@ -55,6 +57,8 @@ export const icons = {
   'menu-speed-up': fastForward,
   'menu-speed-down': fastBackward,
   'menu-captions': menuCaptions,
+  'menu-quality-up': arrowUp,
+  'menu-quality-down': arrowDown,
   'kb-play': play,
   'kb-pause': pause,
   'kb-mute': mute,

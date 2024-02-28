@@ -53,8 +53,8 @@ export class SpeedSlider extends Component<
     new SliderController({
       _getStep: this.$props.step,
       _getKeyStep: this.$props.keyStep,
-      _isDisabled: this.$props.disabled,
-      _roundValue: (v) => round(v, 2),
+      _roundValue: this._roundValue,
+      _isDisabled: this._isDisabled.bind(this),
       _getARIAValueNow: this._getARIAValueNow.bind(this),
       _getARIAValueText: this._getARIAValueText.bind(this),
       _onDragValueChange: this._onDragValueChange.bind(this),
@@ -97,6 +97,16 @@ export class SpeedSlider extends Component<
     const newValue = playbackRate();
     this.$state.value.set(newValue);
     this.dispatch('value-change', { detail: newValue });
+  }
+
+  private _roundValue(value: number) {
+    return round(value, 2);
+  }
+
+  private _isDisabled() {
+    const { disabled } = this.$props,
+      { canSetPlaybackRate } = this._media.$state;
+    return disabled() || !canSetPlaybackRate();
   }
 
   private _throttledSpeedChange = throttle(this._onPlaybackRateChange.bind(this), 25);

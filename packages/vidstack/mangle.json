@@ -811,5 +811,7 @@
   "_watchFullscreen": "co",
   "_watchLabel": "go",
   "_watchPiP": "eo",
-  "_watchSeeking": "fo"
+  "_watchSeeking": "fo",
+  "_onPlaybackRateChange": "io",
+  "_throttledSpeedChange": "ho"
 }
