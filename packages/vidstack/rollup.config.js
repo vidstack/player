@@ -264,6 +264,9 @@ function defineCDNBundle({ dev = false, layout } = {}) {
       format: 'esm',
       dir: getOutputDir(),
       chunkFileNames: `chunks/vidstack-[hash].js`,
+      entryFileNames: (chunk) => {
+        return chunk.name.startsWith('vidstack') ? `[name].js` : `[name]-[hash].js`;
+      },
       paths: {
         'media-icons': 'https://cdn.jsdelivr.net/npm/media-icons@next/dist/lazy.js',
         'media-captions': 'https://cdn.jsdelivr.net/npm/media-captions@next/dist/prod.js',
