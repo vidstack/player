@@ -9,6 +9,7 @@ import {
 
 import { SliderInstance, SliderPreviewInstance } from '../../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
+import { sliderCallbacks } from './slider-callbacks';
 import { SliderValueBridge, type SliderValueProps } from './slider-value';
 
 /* -------------------------------------------------------------------------------------------------
@@ -16,13 +17,7 @@ import { SliderValueBridge, type SliderValueProps } from './slider-value';
  * -----------------------------------------------------------------------------------------------*/
 
 const SliderBridge = createReactComponent(SliderInstance, {
-  events: [
-    'onDragStart',
-    'onDragEnd',
-    'onDragValueChange',
-    'onValueChange',
-    'onPointerValueChange',
-  ],
+  events: sliderCallbacks,
 });
 
 export interface RootProps extends ReactElementProps<SliderInstance> {

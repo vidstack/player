@@ -20,6 +20,7 @@ import {
 } from '../../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import * as ThumbnailBase from '../thumbnail';
+import { sliderCallbacks } from './slider-callbacks';
 
 /* -------------------------------------------------------------------------------------------------
  * TimeSliderContext
@@ -40,6 +41,7 @@ TimeSliderContext.displayName = 'TimeSliderContext';
  * -----------------------------------------------------------------------------------------------*/
 
 const TimeSliderBridge = createReactComponent(TimeSliderInstance, {
+  events: sliderCallbacks,
   domEventsRegex: /^onMedia/,
 });
 

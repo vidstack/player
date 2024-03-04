@@ -4,12 +4,14 @@ import { createReactComponent, type ReactElementProps } from 'maverick.js/react'
 
 import { QualitySliderInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
+import { sliderCallbacks } from './slider-callbacks';
 
 /* -------------------------------------------------------------------------------------------------
  * QualitySlider
  * -----------------------------------------------------------------------------------------------*/
 
 const QualitySliderBridge = createReactComponent(QualitySliderInstance, {
+  events: sliderCallbacks,
   domEventsRegex: /^onMedia/,
 });
 

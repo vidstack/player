@@ -4,12 +4,14 @@ import { createReactComponent, type ReactElementProps } from 'maverick.js/react'
 
 import { SpeedSliderInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
+import { sliderCallbacks } from './slider-callbacks';
 
 /* -------------------------------------------------------------------------------------------------
  * SpeedSlider
  * -----------------------------------------------------------------------------------------------*/
 
 const SpeedSliderBridge = createReactComponent(SpeedSliderInstance, {
+  events: sliderCallbacks,
   domEventsRegex: /^onMedia/,
 });
 

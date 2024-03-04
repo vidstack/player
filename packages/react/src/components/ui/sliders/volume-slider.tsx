@@ -4,12 +4,14 @@ import { createReactComponent, type ReactElementProps } from 'maverick.js/react'
 
 import { VolumeSliderInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
+import { sliderCallbacks } from './slider-callbacks';
 
 /* -------------------------------------------------------------------------------------------------
  * VolumeSlider
  * -----------------------------------------------------------------------------------------------*/
 
 const VolumeSliderBridge = createReactComponent(VolumeSliderInstance, {
+  events: sliderCallbacks,
   domEventsRegex: /^onMedia/,
 });
 

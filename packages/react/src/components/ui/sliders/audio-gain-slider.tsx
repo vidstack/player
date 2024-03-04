@@ -4,12 +4,14 @@ import { createReactComponent, type ReactElementProps } from 'maverick.js/react'
 
 import { AudioGainSliderInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
+import { sliderCallbacks } from './slider-callbacks';
 
 /* -------------------------------------------------------------------------------------------------
  * AudioGainSlider
  * -----------------------------------------------------------------------------------------------*/
 
 const AudioGainSliderBridge = createReactComponent(AudioGainSliderInstance, {
+  events: sliderCallbacks,
   domEventsRegex: /^onMedia/,
 });
 
