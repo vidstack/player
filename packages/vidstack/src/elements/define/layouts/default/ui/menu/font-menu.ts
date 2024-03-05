@@ -315,7 +315,7 @@ function DefaultFontSetting({
         <input
           class="vds-color-picker"
           type="color"
-          value=${$signal($value)}
+          .value=${$signal($value)}
           @input=${onColorChange}
         />
       `,

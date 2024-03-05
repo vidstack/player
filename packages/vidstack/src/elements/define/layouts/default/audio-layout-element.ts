@@ -65,8 +65,11 @@ export class MediaAudioLayoutElement
   }
 
   protected onConnect() {
-    this._media.player.el?.setAttribute('data-layout', 'audio');
-    onDispose(() => this._media.player.el?.removeAttribute('data-layout'));
+    effect(() => {
+      const { el } = this._media.player;
+      el && setAttribute(el, 'data-layout', this.isMatch && 'audio');
+      return () => el?.removeAttribute('data-layout');
+    });
 
     effect(() => {
       const roots = this.menuContainer ? [this, this.menuContainer] : [this];

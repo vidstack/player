@@ -63,8 +63,11 @@ export class MediaVideoLayoutElement
   }
 
   protected onConnect() {
-    this._media.player.el?.setAttribute('data-layout', 'video');
-    onDispose(() => this._media.player.el?.removeAttribute('data-layout'));
+    effect(() => {
+      const { el } = this._media.player;
+      el && setAttribute(el, 'data-layout', this.isMatch && 'video');
+      return () => el?.removeAttribute('data-layout');
+    });
 
     effect(() => {
       const roots = this.menuContainer ? [this, this.menuContainer] : [this];
