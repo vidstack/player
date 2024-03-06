@@ -1,11 +1,12 @@
 import { html } from 'lit-html';
 import { ref as $ref, type RefOrCallback } from 'lit-html/directives/ref.js';
-import { noop, uppercaseFirstChar } from 'maverick.js/std';
+import { isNil, noop, uppercaseFirstChar } from 'maverick.js/std';
 
 import { useDefaultLayoutContext } from '../../../../../components/layouts/default/context';
 import { i18n } from '../../../../../components/layouts/default/translations';
 import type { TooltipPlacement } from '../../../../../components/ui/tooltip/tooltip-content';
 import { useMediaState } from '../../../../../core/api/media-context';
+import { getDownloadFile } from '../../../../../utils/network';
 import { $signal } from '../../../../lit/directives/signal';
 import { IconSlot, IconSlots } from '../slots';
 import { $i18n } from './utils';
@@ -214,4 +215,43 @@ export function DefaultLiveButton() {
         </media-live-button>
       `
     : null;
+}
+
+export function DefaultDownloadButton() {
+  return $signal(() => {
+    const { download, translations } = useDefaultLayoutContext(),
+      $download = download();
+
+    if (isNil($download)) return null;
+
+    const { source, title } = useMediaState(),
+      $src = source(),
+      file = getDownloadFile({
+        title: title(),
+        src: $src,
+        download: $download,
+      });
+
+    return file
+      ? html`
+          <media-tooltip class="vds-download-tooltip vds-tooltip">
+            <media-tooltip-trigger>
+              <a
+                role="button"
+                class="vds-download-button vds-button"
+                aria-label=${$i18n(translations, 'Download')}
+                href=${file.url + `?download=${file.name}`}
+                download=${file.name}
+                target="_blank"
+              >
+                <slot name="download-icon" data-class="vds-icon" />
+              </a>
+            </media-tooltip-trigger>
+            <media-tooltip-content class="vds-tooltip-content" placement="top">
+              ${$i18n(translations, 'Download')}
+            </media-tooltip-content>
+          </media-tooltip>
+        `
+      : null;
+  });
 }

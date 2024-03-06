@@ -1,4 +1,13 @@
-import { deferredPromise, isNull, isString, type DeferredPromise } from 'maverick.js/std';
+import {
+  deferredPromise,
+  isBoolean,
+  isNull,
+  isString,
+  type DeferredPromise,
+} from 'maverick.js/std';
+
+import type { MediaSrc } from '../core/api/types';
+import { isAudioSrc, isVideoSrc } from './mime';
 
 export function appendParamsToURL(baseUrl: string, params: Record<string, any>) {
   const searchParams = new URLSearchParams();
@@ -63,4 +72,45 @@ export function getRequestCredentials(crossOrigin?: string | null): RequestCrede
     : isString(crossOrigin)
       ? 'same-origin'
       : undefined;
+}
+
+export type FileDownloadInfo = boolean | string | { url: string; filename: string } | null;
+
+export function getDownloadFile({
+  title,
+  src,
+  download,
+}: {
+  src: MediaSrc;
+  title: string;
+  download?: FileDownloadInfo;
+}) {
+  const url =
+    isBoolean(download) || download === ''
+      ? src.src
+      : isString(download)
+        ? download
+        : download?.url;
+
+  if (!isValidFileDownload({ url, src, download })) return null;
+
+  return {
+    url,
+    name:
+      (!isBoolean(download) && !isString(download) && download?.filename) ||
+      title.toLowerCase() ||
+      'media',
+  };
+}
+
+function isValidFileDownload({
+  url,
+  src,
+  download,
+}: {
+  url: unknown;
+  src: MediaSrc;
+  download?: FileDownloadInfo;
+}) {
+  return isString(url) && ((download && download !== true) || isAudioSrc(src) || isVideoSrc(src));
 }

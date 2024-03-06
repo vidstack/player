@@ -20,7 +20,12 @@ import {
   type Slots,
 } from './slots';
 import { DefaultAnnouncer } from './ui/announcer';
-import { DefaultCaptionButton, DefaultPlayButton, DefaultSeekButton } from './ui/buttons';
+import {
+  DefaultCaptionButton,
+  DefaultDownloadButton,
+  DefaultPlayButton,
+  DefaultSeekButton,
+} from './ui/buttons';
 import { DefaultCaptions } from './ui/captions';
 import { DefaultControlsSpacer } from './ui/controls';
 import { DefaultChaptersMenu } from './ui/menus/chapters-menu';
@@ -112,6 +117,7 @@ function AudioLayout() {
           <DefaultTimeInvert />
           <DefaultVolumePopup orientation="vertical" slots={slots} />
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top center" />)}
+          {slot(slots, 'downloadButton', <DefaultDownloadButton />)}
           <DefaultAudioMenus slots={slots} />
         </Controls.Group>
       </Controls.Root>

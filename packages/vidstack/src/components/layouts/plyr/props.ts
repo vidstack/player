@@ -1,3 +1,4 @@
+import type { FileDownloadInfo } from '../../../utils/network';
 import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { PlyrLayoutTranslations } from './translations';
 
@@ -55,7 +56,7 @@ export interface PlyrLayoutProps {
    * Sets the download URL and filename for the download button. The download button must be
    * included in the `controls` prop for this to take effect.
    */
-  download: string | { url: string; filename: string } | null;
+  download: FileDownloadInfo;
   /**
    * Points on the time slider which should be visually marked for the user.
    */

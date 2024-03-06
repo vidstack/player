@@ -4,6 +4,7 @@ import { useSignal } from 'maverick.js/react';
 import { isBoolean } from 'maverick.js/std';
 import {
   type DefaultLayoutTranslations,
+  type FileDownloadInfo,
   type MediaPlayerQuery,
   type MediaStreamType,
   type ThumbnailSrc,
@@ -33,6 +34,10 @@ export interface DefaultLayoutProps<Slots = unknown> extends PrimitivePropsWithR
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme}
    */
   colorScheme?: 'light' | 'dark' | null;
+  /**
+   * Sets the download URL and filename for the download button.
+   */
+  download?: FileDownloadInfo;
   /**
    * Specifies the number of milliseconds to wait before tooltips are visible after interacting
    * with a control.
@@ -146,6 +151,7 @@ export function createDefaultMediaLayout({
         hideQualityBitrate = false,
         icons,
         colorScheme = null,
+        download = null,
         menuGroup = 'bottom',
         noAudioGain = false,
         audioGains = { min: 0, max: 300, step: 25 },
@@ -204,6 +210,7 @@ export function createDefaultMediaLayout({
                 hideQualityBitrate,
                 icons: icons,
                 colorScheme,
+                download,
                 isSmallLayout,
                 menuGroup,
                 noAudioGain,

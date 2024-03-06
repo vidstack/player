@@ -20,6 +20,7 @@ export {
   isKeyboardClick,
   isKeyboardEvent,
 } from 'maverick.js/std';
+export { getDownloadFile, type FileDownloadInfo } from './utils/network';
 
 // Core
 export * from './core';

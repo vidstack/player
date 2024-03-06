@@ -1,7 +1,7 @@
 import { html, type TemplateResult } from 'lit-html';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { computed, effect, peek, signal, type ReadSignal } from 'maverick.js';
-import { isKeyboardClick, isKeyboardEvent, isString, listenEvent } from 'maverick.js/std';
+import { isKeyboardClick, isKeyboardEvent, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import {
@@ -12,7 +12,7 @@ import type { PlyrControl, PlyrMarker } from '../../../../components/layouts/ply
 import { i18n, type PlyrLayoutWord } from '../../../../components/layouts/plyr/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import type { MediaSeekingRequestEvent } from '../../../../core/api/media-request-events';
-import { isAudioSrc, isVideoSrc } from '../../../../utils/mime';
+import { getDownloadFile } from '../../../../utils/network';
 import { $signal } from '../../../lit/directives/signal';
 
 export function PlyrAudioLayout() {
@@ -451,19 +451,22 @@ function DownloadButton() {
   return $signal(() => {
     const media = useMediaContext(),
       { translations, download } = usePlyrLayoutContext(),
-      { source } = media.$state,
-      src = source(),
-      info = download(),
-      url = isString(info) ? info : info?.url,
-      filename = (!isString(info) ? info?.filename : null) || 'media',
+      { title, source } = media.$state,
+      $src = source(),
+      $download = download(),
+      file = getDownloadFile({
+        title: title(),
+        src: $src,
+        download: $download,
+      }),
       $downloadText = $i18n(translations, 'Download');
 
-    return url || isAudioSrc(src) || isVideoSrc(src)
+    return file
       ? html`
           <a
             class="plyr__controls__item plyr__control"
-            href=${url || src.src + `?download=${filename}`}
-            download=${filename}
+            href=${file.url + `?download=${file.name}`}
+            download=${file.name}
             target="_blank"
           >
             <slot name="download-icon" />

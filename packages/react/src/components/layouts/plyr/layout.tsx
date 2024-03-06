@@ -2,19 +2,18 @@ import * as React from 'react';
 
 import { signal } from 'maverick.js';
 import { composeRefs, useSignal } from 'maverick.js/react';
-import { isNumber, isString, listenEvent } from 'maverick.js/std';
+import { isNumber, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 import {
-  isAudioSrc,
   isKeyboardClick,
   isKeyboardEvent,
-  isVideoSrc,
   usePlyrLayoutClasses,
   type PlyrControl,
   type PlyrLayoutWord,
   type PlyrMarker,
 } from 'vidstack';
 
+import { getDownloadFile } from '../../../../../vidstack/src/utils/network';
 import { useAudioOptions } from '../../../hooks/options/use-audio-options';
 import { useCaptionOptions } from '../../../hooks/options/use-caption-options';
 import { usePlaybackRateOptions } from '../../../hooks/options/use-playback-rate-options';
@@ -736,17 +735,22 @@ PlyrDuration.displayName = 'PlyrDuration';
 
 function PlyrDownloadButton() {
   const { download } = usePlyrLayoutContext(),
-    $source = useMediaState('source'),
-    url = isString(download) ? download : download?.url,
-    filename = (!isString(download) ? download?.filename : null) || 'media',
+    $src = useMediaState('source'),
+    $title = useMediaState('title'),
+    file = getDownloadFile({
+      title: $title,
+      src: $src,
+      download,
+    }),
     downloadText = usePlyrLayoutWord('Download');
+
   return slot(
     'download',
-    url || isAudioSrc($source) || isVideoSrc($source) ? (
+    file ? (
       <a
         className="plyr__controls__item plyr__control"
-        href={url || $source.src + `?download=${filename}`}
-        download={filename}
+        href={file.url + `?download=${file.name}`}
+        download={file.name}
         target="_blank"
       >
         <slot name="download-icon" />

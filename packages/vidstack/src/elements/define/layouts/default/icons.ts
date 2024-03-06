@@ -8,6 +8,7 @@ import googleCast from 'media-icons/dist/icons/chromecast.js';
 import ccOn from 'media-icons/dist/icons/closed-captions-on.js';
 import ccOff from 'media-icons/dist/icons/closed-captions.js';
 import menuCaptions from 'media-icons/dist/icons/closed-captions.js';
+import download from 'media-icons/dist/icons/download.js';
 import fastBackward from 'media-icons/dist/icons/fast-backward.js';
 import fastForward from 'media-icons/dist/icons/fast-forward.js';
 import fsExit from 'media-icons/dist/icons/fullscreen-exit.js';
@@ -35,6 +36,7 @@ const menuAccessibility = `<path d="M16 8c-.733 0-1.36-.261-1.883-.783a2.573 2.5
 
 export const icons = {
   airplay,
+  download,
   play,
   pause,
   replay,

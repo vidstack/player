@@ -20,6 +20,7 @@ export type DefaultLayoutWord =
   | 'Disabled'
   | 'Disconnected'
   | 'Display Background'
+  | 'Download'
   | 'Enter Fullscreen'
   | 'Enter PiP'
   | 'Exit Fullscreen'

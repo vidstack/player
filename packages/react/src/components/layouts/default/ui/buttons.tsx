@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { uppercaseFirstChar } from 'maverick.js/std';
-import { isTrackCaptionKind } from 'vidstack';
+import { getDownloadFile, isTrackCaptionKind } from 'vidstack';
 
 import { useMediaState } from '../../../../hooks/use-media-state';
 import { AirPlayButton } from '../../../ui/buttons/airplay-button';
@@ -264,3 +264,37 @@ function DefaultLiveButton() {
 
 DefaultLiveButton.displayName = 'DefaultLiveButton';
 export { DefaultLiveButton };
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultDownloadButton
+ * -----------------------------------------------------------------------------------------------*/
+
+function DefaultDownloadButton() {
+  const { download, icons: Icons } = useDefaultLayoutContext(),
+    $src = useMediaState('source'),
+    $title = useMediaState('title'),
+    file = getDownloadFile({
+      title: $title,
+      src: $src,
+      download,
+    }),
+    downloadText = useDefaultLayoutWord('Download');
+
+  return file ? (
+    <DefaultTooltip content={downloadText} placement="top">
+      <a
+        role="button"
+        className="vds-download-button vds-button"
+        aria-label={downloadText}
+        href={file.url + `?download=${file.name}`}
+        download={file.name}
+        target="_blank"
+      >
+        {Icons.DownloadButton ? <Icons.DownloadButton.Default className="vds-icon" /> : null}
+      </a>
+    </DefaultTooltip>
+  ) : null;
+}
+
+DefaultDownloadButton.displayName = 'DefaultDownloadButton';
+export { DefaultDownloadButton };

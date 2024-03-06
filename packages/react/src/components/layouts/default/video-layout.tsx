@@ -21,6 +21,7 @@ import { DefaultAnnouncer } from './ui/announcer';
 import {
   DefaultAirPlayButton,
   DefaultCaptionButton,
+  DefaultDownloadButton,
   DefaultFullscreenButton,
   DefaultGoogleCastButton,
   DefaultMuteButton,
@@ -133,6 +134,7 @@ function DefaultVideoLargeLayout() {
           {menuGroup === 'bottom' && <DefaultVideoMenus slots={slots} />}
           {slot(slots, 'airPlayButton', <DefaultAirPlayButton tooltip="top" />)}
           {slot(slots, 'googleCastButton', <DefaultGoogleCastButton tooltip="top" />)}
+          {slot(slots, 'downloadButton', <DefaultDownloadButton />)}
           {slot(slots, 'pipButton', <DefaultPIPButton tooltip="top" />)}
           {slot(slots, 'fullscreenButton', <DefaultFullscreenButton tooltip="top end" />)}
         </Controls.Group>
@@ -167,6 +169,7 @@ function DefaultVideoSmallLayout() {
           {slot(slots, 'topControlsGroupCenter', null)}
           <DefaultControlsSpacer />
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="bottom" />)}
+          {slot(slots, 'downloadButton', <DefaultDownloadButton />)}
           <DefaultVideoMenus slots={slots} />
           {slot(slots, 'muteButton', <DefaultMuteButton tooltip="bottom end" />)}
           {slot(slots, 'topControlsGroupEnd', null)}

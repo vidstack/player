@@ -9,7 +9,12 @@ import { useMediaContext, useMediaState } from '../../../../core/api/media-conte
 import { useResizeObserver, useTransitionActive } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
 import { DefaultAnnouncer } from './ui/announcer';
-import { DefaultCaptionButton, DefaultPlayButton, DefaultSeekButton } from './ui/buttons';
+import {
+  DefaultCaptionButton,
+  DefaultDownloadButton,
+  DefaultPlayButton,
+  DefaultSeekButton,
+} from './ui/buttons';
 import { DefaultCaptions } from './ui/captions';
 import { DefaultControlsSpacer } from './ui/controls';
 import { DefaultChaptersMenu } from './ui/menu/chapters-menu';
@@ -34,6 +39,7 @@ export function DefaultAudioLayout() {
             DefaultTimeInvert(),
             DefaultVolumePopup({ orientation: 'vertical' }),
             DefaultCaptionButton({ tooltip: 'top' }),
+            DefaultDownloadButton(),
             DefaultAudioMenus(),
           ]}
         </media-controls-group>

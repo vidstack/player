@@ -1,4 +1,10 @@
-import type { PlyrControl, PlyrLayoutTranslations, PlyrMarker, ThumbnailSrc } from 'vidstack';
+import type {
+  FileDownloadInfo,
+  PlyrControl,
+  PlyrLayoutTranslations,
+  PlyrMarker,
+  ThumbnailSrc,
+} from 'vidstack';
 
 import type { PlyrLayoutIcons } from './icons';
 import type { PlyrLayoutSlots } from './slots';
@@ -60,7 +66,7 @@ export interface PlyrLayoutProps {
    * Sets the download URL and filename for the download button. The download button must be
    * included in the `controls` prop for this to take effect.
    */
-  download?: string | { url: string; filename: string } | null;
+  download?: FileDownloadInfo;
   /**
    * Points on the time slider which should be visually marked for the user.
    */

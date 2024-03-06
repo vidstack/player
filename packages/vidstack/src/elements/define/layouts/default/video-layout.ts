@@ -8,6 +8,7 @@ import { DefaultAnnouncer } from './ui/announcer';
 import {
   DefaultAirPlayButton,
   DefaultCaptionButton,
+  DefaultDownloadButton,
   DefaultFullscreenButton,
   DefaultGoogleCastButton,
   DefaultMuteButton,
@@ -54,6 +55,7 @@ export function DefaultVideoLayoutLarge() {
                 DefaultBottomMenuGroup(),
                 DefaultAirPlayButton({ tooltip: 'top' }),
                 DefaultGoogleCastButton({ tooltip: 'top' }),
+                DefaultDownloadButton(),
                 DefaultPIPButton(),
                 DefaultFullscreenButton({ tooltip: 'top end' }),
               ]}
@@ -99,6 +101,7 @@ export function DefaultVideoLayoutSmall() {
             DefaultGoogleCastButton({ tooltip: 'bottom start' }),
             DefaultControlsSpacer(),
             DefaultCaptionButton({ tooltip: 'bottom' }),
+            DefaultDownloadButton(),
             DefaultVideoMenus(),
             DefaultMuteButton({ tooltip: 'bottom end' }),
           ]}
