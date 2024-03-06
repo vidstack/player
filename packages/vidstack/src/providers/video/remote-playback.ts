@@ -24,7 +24,7 @@ export abstract class VideoRemotePlaybackAdapter implements MediaRemotePlaybackA
   }
 
   private _setup() {
-    if (__SERVER__ || !this._video.remote || !this._canPrompt) return;
+    if (__SERVER__ || !this._video?.remote || !this._canPrompt) return;
 
     this._video.remote
       .watchAvailability((available) => {

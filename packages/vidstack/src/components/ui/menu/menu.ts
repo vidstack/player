@@ -24,7 +24,13 @@ import {
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
-import { isElementParent, isEventInside, onPress, setAttributeIfEmpty } from '../../../utils/dom';
+import {
+  isElementParent,
+  isElementVisible,
+  isEventInside,
+  onPress,
+  setAttributeIfEmpty,
+} from '../../../utils/dom';
 import { Popper } from '../popper/popper';
 import { sliderObserverContext } from '../sliders/slider/slider-context';
 import type { MenuButton } from './menu-button';
@@ -515,8 +521,8 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       } else if (child.nodeType === 3) {
         height += parseFloat(getComputedStyle(child).fontSize);
       } else if (child instanceof HTMLElement) {
+        if (!isElementVisible(child)) continue;
         const style = getComputedStyle(child);
-        if (style.display === 'none') continue;
         height +=
           child.offsetHeight +
           (parseFloat(style.marginTop) || 0) +

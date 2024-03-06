@@ -19,7 +19,7 @@ import { DefaultControlsSpacer } from './ui/controls';
 import { DefaultKeyboardDisplay } from './ui/keyboard-display';
 import { DefaultChaptersMenu } from './ui/menu/chapters-menu';
 import { DefaultSettingsMenu } from './ui/menu/settings-menu';
-import { DefaultTimeSlider, DefaultVolumeSlider } from './ui/slider';
+import { DefaultTimeSlider, DefaultVolumePopup } from './ui/slider';
 import { DefaultTimeInfo } from './ui/time';
 import { DefaultChapterTitle } from './ui/title';
 
@@ -47,8 +47,7 @@ export function DefaultVideoLayoutLarge() {
             <media-controls-group class="vds-controls-group">
               ${[
                 DefaultPlayButton({ tooltip: 'top start' }),
-                DefaultMuteButton({ tooltip: 'top' }),
-                DefaultVolumeSlider(),
+                DefaultVolumePopup({ orientation: 'horizontal' }),
                 DefaultTimeInfo(),
                 DefaultChapterTitle(),
                 DefaultCaptionButton({ tooltip: 'top' }),

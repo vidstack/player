@@ -48,7 +48,7 @@ export function useTransitionActive(el: Element | null) {
 }
 
 export function useMouseEnter(el: Element | null) {
-  const [hasEntered, setHasEntered] = React.useState(false);
+  const [isMouseEnter, setIsMouseEnter] = React.useState(false);
 
   React.useEffect(() => {
     if (!el) return;
@@ -56,14 +56,14 @@ export function useMouseEnter(el: Element | null) {
     const disposal = createDisposalBin();
 
     disposal.add(
-      listenEvent(el, 'mouseenter', () => setHasEntered(true)),
-      listenEvent(el, 'mouseleave', () => setHasEntered(false)),
+      listenEvent(el, 'mouseenter', () => setIsMouseEnter(true)),
+      listenEvent(el, 'mouseleave', () => setIsMouseEnter(false)),
     );
 
     return () => disposal.empty();
   }, [el]);
 
-  return hasEntered;
+  return isMouseEnter;
 }
 
 export function useFocusIn(el: Element | null) {
@@ -86,10 +86,14 @@ export function useFocusIn(el: Element | null) {
 }
 
 export function useActive(el: Element | null) {
-  const hasMouseEntered = useMouseEnter(el),
-    isFocusIn = useFocusIn(el);
+  const isMouseEnter = useMouseEnter(el),
+    isFocusIn = useFocusIn(el),
+    prevMouseEnter = React.useRef(false);
 
-  return hasMouseEntered || isFocusIn;
+  if (prevMouseEnter.current && !isMouseEnter) return false;
+
+  prevMouseEnter.current = isMouseEnter;
+  return isMouseEnter || isFocusIn;
 }
 
 export function useRectCSSVars(root: Element | null, el: Element | null, prefix: string) {

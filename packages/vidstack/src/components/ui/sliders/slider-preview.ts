@@ -56,8 +56,10 @@ export class SliderPreview extends Component<SliderPreviewProps> {
 
     if (_disabled()) return;
 
-    const el = this.el!,
+    const el = this.el,
       { offset, noClamp } = this.$props;
+
+    if (!el) return;
 
     updateSliderPreviewPlacement(el, {
       clamp: !noClamp(),

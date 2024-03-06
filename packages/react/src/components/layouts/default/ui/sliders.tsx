@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import { useSignal } from 'maverick.js/react';
+import type { SliderOrientation } from 'vidstack';
 
-import { useResizeObserver } from '../../../../hooks/use-dom';
+import { useActive, useResizeObserver } from '../../../../hooks/use-dom';
 import { useMediaState } from '../../../../hooks/use-media-state';
 import { isRemotionSource } from '../../../../providers/remotion/type-check';
 import type { TimeSliderInstance } from '../../../primitives/instances';
@@ -10,6 +11,36 @@ import * as TimeSlider from '../../../ui/sliders/time-slider';
 import * as VolumeSlider from '../../../ui/sliders/volume-slider';
 import { RemotionSliderThumbnail } from '../../remotion-ui';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../context';
+import { slot, type DefaultLayoutSlots } from '../slots';
+import { DefaultMuteButton } from './buttons';
+
+/* -------------------------------------------------------------------------------------------------
+ * DefaultVolumePopup
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface DefaultVolumePopupProps {
+  slots?: DefaultLayoutSlots;
+  orientation: SliderOrientation;
+}
+
+function DefaultVolumePopup({ orientation, slots }: DefaultVolumePopupProps) {
+  const $pointer = useMediaState('pointer'),
+    $muted = useMediaState('muted'),
+    [rootEl, setRootEl] = React.useState<HTMLElement | null>(null),
+    isRootActive = useActive(rootEl);
+
+  return $pointer === 'coarse' && !$muted ? null : (
+    <div className="vds-volume" data-active={isRootActive ? '' : null} ref={setRootEl}>
+      {slot(slots, 'muteButton', <DefaultMuteButton tooltip="top center" />)}
+      <div className="vds-volume-popup">
+        {slot(slots, 'volumeSlider', <DefaultVolumeSlider orientation={orientation} />)}
+      </div>
+    </div>
+  );
+}
+
+DefaultVolumePopup.displayName = 'DefaultVolumePopup';
+export { DefaultVolumePopup };
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultVolumeSlider

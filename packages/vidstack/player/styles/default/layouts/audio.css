@@ -302,6 +302,7 @@
 :where(.vds-audio-layout .vds-volume) {
   --media-slider-height: var(--audio-volume-height, 96px);
   --media-slider-preview-offset: 6px;
+  --gap: var(--audio-volume-gap, 16px);
   position: relative;
   display: flex;
   align-items: center;
@@ -310,7 +311,7 @@
 
 :where(.vds-audio-layout .vds-volume-popup) {
   position: absolute;
-  bottom: calc(100% + 16px);
+  bottom: calc(100% + var(--gap));
   left: 50%;
   opacity: 0;
   transform: translateX(-50%);
@@ -324,29 +325,23 @@
   visibility: hidden;
 }
 
+/* safe area. */
+.vds-audio-layout .vds-volume-popup::after {
+  content: '';
+  position: fixed;
+  bottom: calc(-1 * var(--gap));
+  right: 0;
+  width: 100%;
+  height: var(--gap);
+  z-index: 1;
+  pointer-events: auto;
+}
+
 @media (prefers-color-scheme: light) {
   :where(.vds-audio-layout .vds-volume-popup) {
     border: var(--audio-volume-border, 1px solid rgb(10 10 10 / 0.1));
     background-color: var(--audio-volume-bg, var(--media-menu-bg, rgb(250 250 250)));
   }
-}
-
-/* safe triangle. */
-.vds-audio-layout .vds-volume::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  pointer-events: auto;
-  clip-path: polygon(
-    var(--trigger-left, 0) var(--trigger-top, 0),
-    var(--popper-left, 0) var(--popper-bottom, 0),
-    var(--popper-right, 0) var(--popper-bottom, 0),
-    var(--trigger-right, 0) var(--trigger-top, 0)
-  );
 }
 
 :where(.vds-audio-layout .vds-volume[data-active] .vds-volume-popup),

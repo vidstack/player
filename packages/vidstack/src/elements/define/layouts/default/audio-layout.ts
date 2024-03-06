@@ -6,26 +6,15 @@ import { toggleClass } from 'maverick.js/std';
 import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import { i18n } from '../../../../components/layouts/default/translations';
 import { useMediaContext, useMediaState } from '../../../../core/api/media-context';
-import {
-  useActive,
-  useMouseEnter,
-  useRectCSSVars,
-  useResizeObserver,
-  useTransitionActive,
-} from '../../../../utils/dom';
+import { useResizeObserver, useTransitionActive } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
 import { DefaultAnnouncer } from './ui/announcer';
-import {
-  DefaultCaptionButton,
-  DefaultMuteButton,
-  DefaultPlayButton,
-  DefaultSeekButton,
-} from './ui/buttons';
+import { DefaultCaptionButton, DefaultPlayButton, DefaultSeekButton } from './ui/buttons';
 import { DefaultCaptions } from './ui/captions';
 import { DefaultControlsSpacer } from './ui/controls';
 import { DefaultChaptersMenu } from './ui/menu/chapters-menu';
 import { DefaultSettingsMenu } from './ui/menu/settings-menu';
-import { DefaultTimeSlider, DefaultVolumeSlider } from './ui/slider';
+import { DefaultTimeSlider, DefaultVolumePopup } from './ui/slider';
 import { DefaultTimeInvert } from './ui/time';
 import { DefaultChapterTitle } from './ui/title';
 
@@ -43,7 +32,7 @@ export function DefaultAudioLayout() {
             DefaultAudioTitle(),
             DefaultTimeSlider(),
             DefaultTimeInvert(),
-            DefaultAudioVolume(),
+            DefaultVolumePopup({ orientation: 'vertical' }),
             DefaultCaptionButton({ tooltip: 'top' }),
             DefaultAudioMenus(),
           ]}
@@ -104,35 +93,6 @@ function DefaultAudioTitle() {
           </span>
         `
       : DefaultControlsSpacer();
-  });
-}
-
-function DefaultAudioVolume() {
-  return $signal(() => {
-    const { pointer, muted } = useMediaState();
-
-    if (pointer() === 'coarse' && !muted()) return null;
-
-    const $rootRef = signal<Element | undefined>(undefined),
-      $triggerRef = signal<Element | undefined>(undefined),
-      $popperRef = signal<Element | undefined>(undefined),
-      $isRootActive = useActive($rootRef),
-      $hasMouseEnteredTrigger = useMouseEnter($triggerRef);
-
-    effect(() => {
-      if (!$hasMouseEnteredTrigger()) return;
-      useRectCSSVars($rootRef, $triggerRef, 'trigger');
-      useRectCSSVars($rootRef, $popperRef, 'popper');
-    });
-
-    return html`
-      <div class="vds-volume" ?data-active=${$signal($isRootActive)} ${ref($rootRef.set)}>
-        ${DefaultMuteButton({ tooltip: 'top', ref: $triggerRef.set })}
-        <div class="vds-volume-popup" ${ref($popperRef.set)}>
-          ${DefaultVolumeSlider({ orientation: 'vertical' })}
-        </div>
-      </div>
-    `;
   });
 }
 

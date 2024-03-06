@@ -4,13 +4,7 @@ import { useSignal } from 'maverick.js/react';
 import { listenEvent, toggleClass } from 'maverick.js/std';
 
 import { useChapterTitle } from '../../../hooks/use-chapter-title';
-import {
-  useActive,
-  useMouseEnter,
-  useRectCSSVars,
-  useResizeObserver,
-  useTransitionActive,
-} from '../../../hooks/use-dom';
+import { useResizeObserver, useTransitionActive } from '../../../hooks/use-dom';
 import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { createComputed } from '../../../hooks/use-signals';
@@ -26,17 +20,12 @@ import {
   type Slots,
 } from './slots';
 import { DefaultAnnouncer } from './ui/announcer';
-import {
-  DefaultCaptionButton,
-  DefaultMuteButton,
-  DefaultPlayButton,
-  DefaultSeekButton,
-} from './ui/buttons';
+import { DefaultCaptionButton, DefaultPlayButton, DefaultSeekButton } from './ui/buttons';
 import { DefaultCaptions } from './ui/captions';
 import { DefaultControlsSpacer } from './ui/controls';
 import { DefaultChaptersMenu } from './ui/menus/chapters-menu';
 import { DefaultSettingsMenu } from './ui/menus/settings-menu';
-import { DefaultTimeSlider, DefaultVolumeSlider } from './ui/sliders';
+import { DefaultTimeSlider, DefaultVolumePopup } from './ui/sliders';
 import { DefaultTimeInvert } from './ui/time';
 
 /* -------------------------------------------------------------------------------------------------
@@ -121,7 +110,7 @@ function AudioLayout() {
           <DefaultAudioTitle />
           {slot(slots, 'timeSlider', <DefaultTimeSlider />)}
           <DefaultTimeInvert />
-          <DefaultAudioVolume />
+          <DefaultVolumePopup orientation="vertical" slots={slots} />
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top center" />)}
           <DefaultAudioMenus slots={slots} />
         </Controls.Group>
@@ -231,32 +220,3 @@ function AudioTitle({ title, chapterTitle }: { title: string; chapterTitle: stri
 }
 
 AudioTitle.displayName = 'AudioTitle';
-
-/* -------------------------------------------------------------------------------------------------
- * DefaultAudioVolume
- * -----------------------------------------------------------------------------------------------*/
-
-function DefaultAudioVolume() {
-  const $pointer = useMediaState('pointer'),
-    $muted = useMediaState('muted'),
-    [rootEl, setRootEl] = React.useState<HTMLElement | null>(null),
-    [triggerEl, setTriggerEl] = React.useState<HTMLElement | null>(null),
-    [popperEl, setPopperEl] = React.useState<HTMLDivElement | null>(null),
-    isRootActive = useActive(rootEl),
-    hasMouseEnteredTrigger = useMouseEnter(triggerEl),
-    slots = useDefaultAudioLayoutSlots();
-
-  useRectCSSVars(rootEl, hasMouseEnteredTrigger ? triggerEl : null, 'trigger');
-  useRectCSSVars(rootEl, hasMouseEnteredTrigger ? popperEl : null, 'popper');
-
-  return $pointer === 'coarse' && !$muted ? null : (
-    <div className="vds-volume" data-active={isRootActive ? '' : null} ref={setRootEl}>
-      {slot(slots, 'muteButton', <DefaultMuteButton tooltip="top center" ref={setTriggerEl} />)}
-      <div className="vds-volume-popup" ref={setPopperEl}>
-        {slot(slots, 'volumeSlider', <DefaultVolumeSlider orientation="vertical" />)}
-      </div>
-    </div>
-  );
-}
-
-DefaultAudioVolume.displayName = 'DefaultAudioVolume';

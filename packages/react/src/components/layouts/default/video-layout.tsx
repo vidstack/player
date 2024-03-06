@@ -32,7 +32,7 @@ import { DefaultControlsSpacer } from './ui/controls';
 import { DefaultKeyboardDisplay } from './ui/keyboard-display';
 import { DefaultChaptersMenu } from './ui/menus/chapters-menu';
 import { DefaultSettingsMenu } from './ui/menus/settings-menu';
-import { DefaultTimeSlider, DefaultVolumeSlider } from './ui/sliders';
+import { DefaultTimeSlider, DefaultVolumePopup } from './ui/sliders';
 import { DefaultTimeInfo } from './ui/time';
 import { DefaultChapterTitle } from './ui/title';
 
@@ -126,8 +126,7 @@ function DefaultVideoLargeLayout() {
 
         <Controls.Group className="vds-controls-group">
           {slot(slots, 'playButton', <DefaultPlayButton tooltip="top start" />)}
-          {slot(slots, 'muteButton', <DefaultMuteButton tooltip="top" />)}
-          {slot(slots, 'volumeSlider', <DefaultVolumeSlider />)}
+          <DefaultVolumePopup orientation="horizontal" slots={slots} />
           <DefaultTimeInfo slots={slots} />
           {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top" />)}

@@ -5,9 +5,29 @@ import { signal } from 'maverick.js';
 
 import { useDefaultLayoutContext } from '../../../../../components/layouts/default/context';
 import type { SliderOrientation } from '../../../../../components/ui/sliders/slider/types';
-import { useResizeObserver } from '../../../../../utils/dom';
+import { useMediaState } from '../../../../../core/api/media-context';
+import { useActive, useResizeObserver } from '../../../../../utils/dom';
 import { $signal } from '../../../../lit/directives/signal';
+import { DefaultMuteButton } from './buttons';
 import { $i18n } from './utils';
+
+export function DefaultVolumePopup({ orientation }: { orientation: SliderOrientation }) {
+  return $signal(() => {
+    const { pointer, muted } = useMediaState();
+
+    if (pointer() === 'coarse' && !muted()) return null;
+
+    const $rootRef = signal<Element | undefined>(undefined),
+      $isRootActive = useActive($rootRef);
+
+    return html`
+      <div class="vds-volume" ?data-active=${$signal($isRootActive)} ${ref($rootRef.set)}>
+        ${DefaultMuteButton({ tooltip: 'top' })}
+        <div class="vds-volume-popup">${DefaultVolumeSlider({ orientation })}</div>
+      </div>
+    `;
+  });
+}
 
 export function DefaultVolumeSlider({ orientation }: { orientation?: SliderOrientation } = {}) {
   const { translations } = useDefaultLayoutContext(),
