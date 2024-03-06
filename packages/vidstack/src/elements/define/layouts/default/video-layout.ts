@@ -21,7 +21,7 @@ import { DefaultChaptersMenu } from './ui/menu/chapters-menu';
 import { DefaultSettingsMenu } from './ui/menu/settings-menu';
 import { DefaultTimeSlider, DefaultVolumePopup } from './ui/slider';
 import { DefaultTimeInfo } from './ui/time';
-import { DefaultChapterTitle } from './ui/title';
+import { DefaultTitle } from './ui/title';
 
 export function DefaultVideoLayoutLarge() {
   return [
@@ -49,7 +49,7 @@ export function DefaultVideoLayoutLarge() {
                 DefaultPlayButton({ tooltip: 'top start' }),
                 DefaultVolumePopup({ orientation: 'horizontal' }),
                 DefaultTimeInfo(),
-                DefaultChapterTitle(),
+                DefaultTitle(),
                 DefaultCaptionButton({ tooltip: 'top' }),
                 DefaultBottomMenuGroup(),
                 DefaultAirPlayButton({ tooltip: 'top' }),
@@ -117,11 +117,7 @@ export function DefaultVideoLayoutSmall() {
         ${DefaultControlsSpacer()}
 
         <media-controls-group class="vds-controls-group">
-          ${[
-            DefaultTimeInfo(),
-            DefaultChapterTitle(),
-            DefaultFullscreenButton({ tooltip: 'top end' }),
-          ]}
+          ${[DefaultTimeInfo(), DefaultTitle(), DefaultFullscreenButton({ tooltip: 'top end' })]}
         </media-controls-group>
 
         <media-controls-group class="vds-controls-group">

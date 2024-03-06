@@ -7,7 +7,12 @@ import { Primitive, type PrimitivePropsWithRef } from '../primitives/nodes';
  * Chapter Title
  * -----------------------------------------------------------------------------------------------*/
 
-export interface ChapterTitleProps extends PrimitivePropsWithRef<'span'> {}
+export interface ChapterTitleProps extends PrimitivePropsWithRef<'span'> {
+  /**
+   * Specify text to be displayed when no chapter title is available.
+   */
+  defaultText?: string;
+}
 
 /**
  * This component is used to load and display the current chapter title based on the text tracks
@@ -20,11 +25,11 @@ export interface ChapterTitleProps extends PrimitivePropsWithRef<'span'> {}
  * ```
  */
 const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
-  ({ children, ...props }, forwardRef) => {
+  ({ defaultText = '', children, ...props }, forwardRef) => {
     const $chapterTitle = useChapterTitle();
     return (
       <Primitive.span {...props} ref={forwardRef as any}>
-        {$chapterTitle}
+        {$chapterTitle || defaultText}
         {children}
       </Primitive.span>
     );

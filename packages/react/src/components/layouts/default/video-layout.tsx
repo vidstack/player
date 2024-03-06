@@ -34,7 +34,7 @@ import { DefaultChaptersMenu } from './ui/menus/chapters-menu';
 import { DefaultSettingsMenu } from './ui/menus/settings-menu';
 import { DefaultTimeSlider, DefaultVolumePopup } from './ui/sliders';
 import { DefaultTimeInfo } from './ui/time';
-import { DefaultChapterTitle } from './ui/title';
+import { DefaultTitle } from './ui/title';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultVideoLayout
@@ -128,7 +128,7 @@ function DefaultVideoLargeLayout() {
           {slot(slots, 'playButton', <DefaultPlayButton tooltip="top start" />)}
           <DefaultVolumePopup orientation="horizontal" slots={slots} />
           <DefaultTimeInfo slots={slots} />
-          {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}
+          {slot(slots, 'chapterTitle', <DefaultTitle />)}
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top" />)}
           {menuGroup === 'bottom' && <DefaultVideoMenus slots={slots} />}
           {slot(slots, 'airPlayButton', <DefaultAirPlayButton tooltip="top" />)}
@@ -183,7 +183,7 @@ function DefaultVideoSmallLayout() {
         <DefaultControlsSpacer />
         <Controls.Group className="vds-controls-group">
           <DefaultTimeInfo slots={slots} />
-          {slot(slots, 'chapterTitle', <DefaultChapterTitle />)}
+          {slot(slots, 'chapterTitle', <DefaultTitle />)}
           {slot(slots, 'fullscreenButton', <DefaultFullscreenButton tooltip="top end" />)}
         </Controls.Group>
         <Controls.Group className="vds-controls-group">

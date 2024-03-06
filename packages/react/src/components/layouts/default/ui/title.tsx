@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { useActiveTextTrack } from '../../../../hooks/use-active-text-track';
+import { useMediaState } from '../../../../hooks/use-media-state';
 import { ChapterTitle } from '../../../ui/chapter-title';
 import { Title } from '../../../ui/title';
 
@@ -8,19 +10,15 @@ import { Title } from '../../../ui/title';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTitle() {
-  return <Title className="vds-title" />;
+  const $started = useMediaState('started'),
+    $title = useMediaState('title'),
+    $hasChapters = useActiveTextTrack('chapters');
+  return $hasChapters && ($started || !$title) ? (
+    <ChapterTitle className="vds-chapter-title" />
+  ) : (
+    <Title className="vds-chapter-title" />
+  );
 }
 
 DefaultTitle.displayName = 'DefaultTitle';
 export { DefaultTitle };
-
-/* -------------------------------------------------------------------------------------------------
- * DefaultChapterTitle
- * -----------------------------------------------------------------------------------------------*/
-
-function DefaultChapterTitle() {
-  return <ChapterTitle className="vds-chapter-title" />;
-}
-
-DefaultChapterTitle.displayName = 'DefaultChapterTitle';
-export { DefaultChapterTitle };

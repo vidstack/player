@@ -819,5 +819,7 @@
   "_watchQuality": "lo",
   "_observeSliders": "mo",
   "_roots": "oo",
-  "_submenu": "no"
+  "_submenu": "no",
+  "_watchChapterTitle": "po",
+  "_watchColorScheme": "qo"
 }
