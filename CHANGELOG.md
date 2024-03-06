@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
 - announcements setting in default layout ([701f7ce](https://github.com/vidstack/player/commit/701f7ce21b895b8cf70972678023ca5193778b49))
 - new speed slider component ([cd413ba](https://github.com/vidstack/player/commit/cd413ba578a7c8535a0fbbcb77f4566e9b1bcc22))
 - new quality slider component ([e6d801a](https://github.com/vidstack/player/commit/e6d801a86fa3f0c505dffe83823d7ffe41ffaaf9))
+- new default layout settings controls ([4718669](https://github.com/vidstack/player/commit/4718669117598423ae97647f33a78037a1d6d10e))
+- support color preference in default theme ([0a96ec6](https://github.com/vidstack/player/commit/0a96ec6da17cda4c4bd6183b52c7c6d223fe8562))
+- specify default theme color scheme ([9a10613](https://github.com/vidstack/player/commit/9a10613c9312326b00b4ec7bc4bfa0b16c76ce8e))
+- add download button to default layout ([80488b6](https://github.com/vidstack/player/commit/80488b624aba6c38fa85f804496af34fc243bc5c))
 
 ### 🐛 Bug Fixes
 
@@ -24,10 +28,16 @@ All notable changes to this project will be documented in this file.
 
 - always include keyboard status updates ([82ec4a3](https://github.com/vidstack/player/commit/82ec4a3baf72ad3a350e9f572c6829be0dc53fb4))
 - respect prefers reduced motion in default theme ([208a152](https://github.com/vidstack/player/commit/208a15295fb2c9f9ea8620284a78b57aa7b0639d))
+- include provider file name hashes in cdn bundle ([5c76bbc](https://github.com/vidstack/player/commit/5c76bbc9f2e13ff23e2f061423a830cf07cc216c))
+- improve volume slider popups ([07ebc12](https://github.com/vidstack/player/commit/07ebc129a295f70873e88184fb1c6116f4cc2da5))
+- show title in default layout ([6adb7f4](https://github.com/vidstack/player/commit/6adb7f4f91dd93950a16c959eafb737963edc196))
+- add deno to node exports ([22afcea](https://github.com/vidstack/player/commit/22afcea2ca4ab36647c1d706f75f9d2775ae54b1))
+- add bun to node exports ([17afddd](https://github.com/vidstack/player/commit/17afdddcc13d014f3a84f78479cd09644dc12da1))
 
 #### Player (React)
 
 - rename `DefaultKeyboardActionDisplay` to `DefaultKeyboardDisplay` ([9d573f9](https://github.com/vidstack/player/commit/9d573f984642629c7595911d2c621da404742b17))
+- slider callbacks not firing ([a4fe4e0](https://github.com/vidstack/player/commit/a4fe4e0b8dd748dd6bc04a5372bd4d816f212197))
 
 ## [1.10.9-next](https://github.com/vidstack/player/releases/tag/v1.10.9-next) (2024-02-20)
 
