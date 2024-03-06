@@ -3,6 +3,7 @@ import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { DefaultLayoutTranslations } from './translations';
 
 export const defaultLayoutProps: DefaultLayoutProps = {
+  colorScheme: null,
   customIcons: false,
   disableTimeSlider: false,
   menuGroup: 'bottom',
@@ -37,6 +38,13 @@ export interface DefaultLayoutProps {
    * @see {@link https://www.vidstack.io/docs/wc/player/core-concepts/loading#thumbnails}
    */
   thumbnails: ThumbnailSrc;
+  /**
+   * Whether light or dark color theme should be active. Defaults to user operating system
+   * preference.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme}
+   */
+  colorScheme: 'light' | 'dark' | null;
   /**
    * Whether the default icons should _not_ be loaded. Set this to `true` when providing your own
    * icons.

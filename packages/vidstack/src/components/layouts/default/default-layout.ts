@@ -1,4 +1,4 @@
-import { Component, computed, prop, provideContext, signal } from 'maverick.js';
+import { Component, computed, effect, prop, provideContext, signal } from 'maverick.js';
 import { isBoolean } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
@@ -54,6 +54,15 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
         return self.menuContainer;
       },
     });
+  }
+
+  protected override onAttach(): void {
+    effect(this._watchColorScheme.bind(this));
+  }
+
+  private _watchColorScheme() {
+    const { colorScheme } = this.$props;
+    this.el?.classList.toggle('light', colorScheme() === 'light');
   }
 
   protected _matches(query: 'never' | boolean | MediaPlayerQuery) {

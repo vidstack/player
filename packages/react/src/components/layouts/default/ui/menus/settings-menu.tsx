@@ -25,6 +25,7 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
       isSmallLayout,
       menuGroup,
       noModal,
+      colorScheme,
     } = useDefaultLayoutContext(),
     settingsText = useDefaultLayoutWord('Settings'),
     $viewType = useMediaState('viewType'),
@@ -56,9 +57,10 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
         Content
       ) : (
         <Menu.Portal
-          className={portalClass}
+          className={`${portalClass}${colorScheme === 'light' ? ' light' : ''}`}
           disabled="fullscreen"
           data-size={isSmallLayout ? 'sm' : null}
+          data-view-type={$viewType}
         >
           {Content}
         </Menu.Portal>

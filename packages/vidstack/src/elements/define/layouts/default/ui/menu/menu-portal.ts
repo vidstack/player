@@ -1,6 +1,8 @@
 import { html, type TemplateResult } from 'lit-html';
 import { effect } from 'maverick.js';
+import { setAttribute } from 'maverick.js/std';
 
+import { useDefaultLayoutContext } from '../../../../../../components/layouts/default/context';
 import { useMediaState } from '../../../../../../core/api/media-context';
 
 export function MenuPortal(container: HTMLElement | null, template: TemplateResult) {
@@ -21,8 +23,14 @@ export function createMenuContainer(className: string) {
     document.body.append(container);
   }
 
-  const { viewType } = useMediaState();
-  effect(() => container?.setAttribute('data-view-type', viewType()));
+  const { viewType } = useMediaState(),
+    { colorScheme } = useDefaultLayoutContext();
+
+  effect(() => {
+    if (!container) return;
+    setAttribute(container, 'data-view-type', viewType());
+    container.classList.toggle('light', colorScheme() === 'light');
+  });
 
   return container;
 }

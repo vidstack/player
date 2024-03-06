@@ -41,6 +41,15 @@
   }
 }
 
+:where(.light .vds-tooltip-content) {
+  color: var(--media-tooltip-color, #1a1a1a);
+  background-color: var(--media-tooltip-bg-color, white);
+}
+
+.light .vds-tooltip-content {
+  border: var(--media-tooltip-border, 1px solid rgb(0 0 0 / 0.2));
+}
+
 :where(.vds-menu .vds-menu-button[role='button'][data-pressed] .vds-tooltip-content) {
   opacity: 0;
   display: none;

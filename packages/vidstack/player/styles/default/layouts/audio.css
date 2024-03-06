@@ -67,6 +67,21 @@
   }
 }
 
+:where(.vds-audio-layout.light, .light .vds-audio-layout) {
+  --media-brand: var(--audio-brand, rgb(10 10 10));
+  --media-controls-color: var(--audio-controls-color, rgb(10 10 10));
+  --media-slider-track-bg: var(--audio-slider-track-bg, rgb(50 50 50 / 0.1));
+  --media-slider-track-progress-bg: var(--audio-slider-progress-bg, rgb(10 10 10 / 0.2));
+
+  color: var(--audio-controls-color, rgb(10 10 10));
+  background-color: var(--audio-bg, rgb(250 250 250));
+}
+
+.vds-audio-layout.light,
+.light .vds-audio-layout {
+  border: var(--audio-border, 1px solid rgb(100 100 100 /0.2));
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Controls
@@ -127,6 +142,10 @@
   :where(.vds-audio-layout .vds-play-button) {
     --color: var(--audio-play-button-color, #f5f5f5);
   }
+}
+
+:where(.vds-audio-layout.light .vds-play-button, .light .vds-audio-layout .vds-play-button) {
+  --color: var(--audio-play-button-color, #f5f5f5);
 }
 
 .vds-audio-layout .vds-play-button {
@@ -342,6 +361,11 @@
     border: var(--audio-volume-border, 1px solid rgb(10 10 10 / 0.1));
     background-color: var(--audio-volume-bg, var(--media-menu-bg, rgb(250 250 250)));
   }
+}
+
+:where(.vds-audio-layout.light .vds-volume-popup, .light .vds-audio-layout .vds-volume-popup) {
+  border: var(--audio-volume-border, 1px solid rgb(10 10 10 / 0.1));
+  background-color: var(--audio-volume-bg, var(--media-menu-bg, rgb(250 250 250)));
 }
 
 :where(.vds-audio-layout .vds-volume[data-active] .vds-volume-popup),

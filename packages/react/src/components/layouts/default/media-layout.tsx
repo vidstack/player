@@ -27,6 +27,13 @@ export interface DefaultLayoutProps<Slots = unknown> extends PrimitivePropsWithR
    */
   icons: DefaultLayoutIcons;
   /**
+   * Whether light or dark color theme should be active. Defaults to user operating system
+   * preference.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme}
+   */
+  colorScheme?: 'light' | 'dark' | null;
+  /**
    * Specifies the number of milliseconds to wait before tooltips are visible after interacting
    * with a control.
    *
@@ -138,6 +145,7 @@ export function createDefaultMediaLayout({
         disableTimeSlider = false,
         hideQualityBitrate = false,
         icons,
+        colorScheme = null,
         menuGroup = 'bottom',
         noAudioGain = false,
         audioGains = { min: 0, max: 300, step: 25 },
@@ -179,7 +187,11 @@ export function createDefaultMediaLayout({
       return (
         <div
           {...props}
-          className={`vds-${type}-layout` + (className ? ` ${className}` : '')}
+          className={
+            `vds-${type}-layout` +
+            (colorScheme === 'light' ? ' light' : '') +
+            (className ? ` ${className}` : '')
+          }
           data-match={isMatch ? '' : null}
           data-size={isSmallLayout ? 'sm' : null}
           data-no-scrub-gesture={noScrubGesture ? '' : null}
@@ -191,6 +203,7 @@ export function createDefaultMediaLayout({
                 disableTimeSlider,
                 hideQualityBitrate,
                 icons: icons,
+                colorScheme,
                 isSmallLayout,
                 menuGroup,
                 noAudioGain,
