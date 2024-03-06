@@ -102,48 +102,56 @@
     ".": {
       "types": "./index.d.ts",
       "node": "./dist/server/vidstack.js",
+      "deno": "./dist/server/vidstack.js",
       "development": "./dist/dev/vidstack.js",
       "default": "./dist/prod/vidstack.js"
     },
     "./elements": {
       "types": "./elements.d.ts",
       "node": "./dist/server/vidstack-elements.js",
+      "deno": "./dist/server/vidstack-elements.js",
       "development": "./dist/dev/vidstack-elements.js",
       "default": "./dist/prod/vidstack-elements.js"
     },
     "./icons": {
       "types": "./icons.d.ts",
       "node": "./dist/server/define/vidstack-icons.js",
+      "deno": "./dist/server/define/vidstack-icons.js",
       "development": "./dist/dev/define/vidstack-icons.js",
       "default": "./dist/prod/define/vidstack-icons.js"
     },
     "./player": {
       "types": "./player/index.d.ts",
       "node": "./dist/server/define/vidstack-player.js",
+      "deno": "./dist/server/define/vidstack-player.js",
       "development": "./dist/dev/define/vidstack-player.js",
       "default": "./dist/prod/define/vidstack-player.js"
     },
     "./player/ui": {
       "types": "./player/ui.d.ts",
       "node": "./dist/server/define/vidstack-player-ui.js",
+      "deno": "./dist/server/define/vidstack-player-ui.js",
       "development": "./dist/dev/define/vidstack-player-ui.js",
       "default": "./dist/prod/define/vidstack-player-ui.js"
     },
     "./player/layouts": {
       "types": "./player/layouts/index.d.ts",
       "node": "./dist/server/define/vidstack-player-layouts.js",
+      "deno": "./dist/server/define/vidstack-player-layouts.js",
       "development": "./dist/dev/define/vidstack-player-layouts.js",
       "default": "./dist/prod/define/vidstack-player-layouts.js"
     },
     "./player/layouts/default": {
       "types": "./player/layouts/default.d.ts",
       "node": "./dist/server/define/vidstack-player-default-layout.js",
+      "deno": "./dist/server/define/vidstack-player-default-layout.js",
       "development": "./dist/dev/define/vidstack-player-default-layout.js",
       "default": "./dist/prod/define/vidstack-player-default-layout.js"
     },
     "./player/layouts/plyr": {
       "types": "./player/layouts/plyr.d.ts",
       "node": "./dist/server/define/vidstack-player-plyr-layout.js",
+      "deno": "./dist/server/define/vidstack-player-plyr-layout.js",
       "development": "./dist/dev/define/vidstack-player-plyr-layout.js",
       "default": "./dist/prod/define/vidstack-player-plyr-layout.js"
     },
