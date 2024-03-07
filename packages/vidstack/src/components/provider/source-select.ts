@@ -112,8 +112,9 @@ export class SourceSelection {
       console.warn(
         '[vidstack] could not find a loader for any of the given media sources,' +
           ' consider providing `type`:' +
-          `\n\n<media-provider>\n  <source src="${source.src}" type="video/mp4" />\n</media-provider>"` +
-          '\n\nFalling back to fetching source headers...',
+          `\n\n--- HTML ---\n\n<media-provider>\n  <source src="${source.src}" type="video/mp4" />\n</media-provider>"` +
+          `\n\n--- React ---\n\n<MediaPlayer src={{ src: "${source.src}", type: "video/mp4" }}>` +
+          '\n\n---\n\nFalling back to fetching source headers...',
       );
       warned!.add(newSource.src);
     }
