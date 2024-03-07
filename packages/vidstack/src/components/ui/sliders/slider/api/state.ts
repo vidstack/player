@@ -4,6 +4,7 @@ export const sliderState = new State<SliderState>({
   min: 0,
   max: 100,
   value: 0,
+  step: 1,
   pointerValue: 0,
   focused: false,
   dragging: false,
@@ -50,6 +51,10 @@ export interface SliderState {
    * The maximum slider value.
    */
   max: number;
+  /**
+   * The granularity that the slider value must adhere to.
+   */
+  step: number;
   /**
    * Whether the slider has keyboard focus.
    */

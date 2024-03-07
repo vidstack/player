@@ -67,6 +67,7 @@ export class SliderController extends ViewController<
     });
 
     effect(this._watchValue.bind(this));
+    effect(this._watchStep.bind(this));
     effect(this._watchDisabled.bind(this));
 
     this._setupAttrs();
@@ -90,6 +91,10 @@ export class SliderController extends ViewController<
     const { dragging, value, min, max } = this.$state;
     if (peek(dragging)) return;
     value.set(getClampedValue(min(), max(), value(), this._delegate._getStep()));
+  }
+
+  private _watchStep() {
+    this.$state.step.set(this._delegate._getStep());
   }
 
   private _watchDisabled() {

@@ -8,11 +8,7 @@ import { useMediaState } from '../../../../../../core/api/media-context';
 import { $signal } from '../../../../../lit/directives/signal';
 import { $i18n } from '../utils';
 import { DefaultMenuButton, DefaultMenuSection } from './items/menu-items';
-import {
-  DefaultMenuSliderItem,
-  DefaultSliderMarkers,
-  DefaultSliderParts,
-} from './items/menu-slider';
+import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from './items/menu-slider';
 
 export function DefaultAudioMenu() {
   return $signal(() => {
@@ -102,10 +98,9 @@ function DefaultAudioBoostSection() {
 function DefaultAudioGainSlider() {
   const { translations } = useDefaultLayoutContext(),
     $label = $i18n(translations, 'Boost'),
-    $min = computed(getGainMin),
-    $max = computed(getGainMax),
-    $step = computed(getGainStep),
-    $steps = computed(() => ($max() - $min()) / $step());
+    $min = getGainMin,
+    $max = getGainMax,
+    $step = getGainStep;
 
   return html`
     <media-audio-gain-slider
@@ -116,7 +111,7 @@ function DefaultAudioGainSlider() {
       step=${$signal($step)}
       key-step=${$signal($step)}
     >
-      ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
+      ${DefaultSliderParts()}${DefaultSliderSteps()}
     </media-audio-gain-slider>
   `;
 }

@@ -77,22 +77,16 @@ DefaultSliderParts.displayName = 'DefaultSliderParts';
 export { DefaultSliderParts };
 
 /* -------------------------------------------------------------------------------------------------
- * DefaultSliderMarkers
+ * DefaultSliderSteps
  * -----------------------------------------------------------------------------------------------*/
 
-export interface DefaultSliderMarkersProps {
-  count: number;
-}
-
-function DefaultSliderMarkers({ count }: DefaultSliderMarkersProps) {
+function DefaultSliderSteps() {
   return (
-    <div className="vds-slider-markers">
-      {Array.from({ length: Math.floor(count) + 1 }).map((_, i) => (
-        <div className="vds-slider-marker" key={i + ''}></div>
-      ))}
-    </div>
+    <Slider.Steps className="vds-slider-steps">
+      {(step) => <div className="vds-slider-step" key={String(step)} />}
+    </Slider.Steps>
   );
 }
 
-DefaultSliderMarkers.displayName = 'DefaultSliderMarkers';
-export { DefaultSliderMarkers };
+DefaultSliderSteps.displayName = 'DefaultSliderSteps';
+export { DefaultSliderSteps };

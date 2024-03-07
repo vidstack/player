@@ -8,11 +8,7 @@ import * as Menu from '../../../../ui/menu';
 import * as AudioGainSlider from '../../../../ui/sliders/audio-gain-slider';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
 import { DefaultMenuButton, DefaultMenuSection } from './items/menu-items';
-import {
-  DefaultMenuSliderItem,
-  DefaultSliderMarkers,
-  DefaultSliderParts,
-} from './items/menu-slider';
+import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from './items/menu-slider';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultAudioMenu
@@ -100,9 +96,7 @@ function DefaultAudioGainSlider() {
   const label = useDefaultLayoutWord('Audio Boost'),
     min = useGainMin(),
     max = useGainMax(),
-    step = useGainStep(),
-    steps = max - min / step;
-
+    step = useGainStep();
   return (
     <AudioGainSlider.Root
       className="vds-audio-gain-slider vds-slider"
@@ -113,7 +107,7 @@ function DefaultAudioGainSlider() {
       keyStep={step}
     >
       <DefaultSliderParts />
-      <DefaultSliderMarkers count={steps} />
+      <DefaultSliderSteps />
     </AudioGainSlider.Root>
   );
 }

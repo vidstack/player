@@ -10,11 +10,7 @@ import * as SpeedSlider from '../../../../ui/sliders/speed-slider';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
 import { DefaultMenuButton, DefaultMenuItem, DefaultMenuSection } from './items/menu-items';
-import {
-  DefaultMenuSliderItem,
-  DefaultSliderMarkers,
-  DefaultSliderParts,
-} from './items/menu-slider';
+import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from './items/menu-slider';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultPlaybackMenu
@@ -133,13 +129,11 @@ DefaultQualityMenuSection.displayName = 'DefaultQualityMenuSection';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultQualitySlider() {
-  const label = useDefaultLayoutWord('Quality'),
-    $qualities = useMediaState('qualities'),
-    $steps = $qualities.length - 1;
+  const label = useDefaultLayoutWord('Quality');
   return (
     <QualitySlider.Root className="vds-quality-slider vds-slider" aria-label={label}>
       <DefaultSliderParts />
-      <DefaultSliderMarkers count={$steps} />
+      <DefaultSliderSteps />
     </QualitySlider.Root>
   );
 }
@@ -202,8 +196,7 @@ function DefaultSpeedSlider() {
   const label = useDefaultLayoutWord('Speed'),
     min = useSpeedMin(),
     max = useSpeedMax(),
-    step = useSpeedStep(),
-    steps = (max - min) / step;
+    step = useSpeedStep();
 
   return (
     <SpeedSlider.Root
@@ -215,7 +208,7 @@ function DefaultSpeedSlider() {
       keyStep={step}
     >
       <DefaultSliderParts />
-      <DefaultSliderMarkers count={steps} />
+      <DefaultSliderSteps />
     </SpeedSlider.Root>
   );
 }

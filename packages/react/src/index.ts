@@ -53,6 +53,7 @@ export type {
   RootProps as SliderProps,
   ValueProps as SliderValueProps,
   PreviewProps as SliderPreviewProps,
+  StepsProps as SliderStepsProps,
 } from './components/ui/sliders/slider';
 export type { RootProps as VolumeSliderProps } from './components/ui/sliders/volume-slider';
 export type { RootProps as AudioGainSliderProps } from './components/ui/sliders/audio-gain-slider';

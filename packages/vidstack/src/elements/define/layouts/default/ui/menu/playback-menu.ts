@@ -9,11 +9,7 @@ import { $signal } from '../../../../../lit/directives/signal';
 import { $i18n } from '../utils';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
 import { DefaultMenuButton, DefaultMenuItem, DefaultMenuSection } from './items/menu-items';
-import {
-  DefaultMenuSliderItem,
-  DefaultSliderMarkers,
-  DefaultSliderParts,
-} from './items/menu-slider';
+import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from './items/menu-slider';
 
 export function DefaultPlaybackMenu() {
   return $signal(() => {
@@ -101,10 +97,9 @@ function getSpeedStep() {
 function DefaultSpeedSlider() {
   const { translations } = useDefaultLayoutContext(),
     $label = $i18n(translations, 'Speed'),
-    $min = computed(getSpeedMin),
-    $max = computed(getSpeedMax),
-    $step = computed(getSpeedStep),
-    $steps = computed(() => ($max() - $min()) / $step());
+    $min = getSpeedMin,
+    $max = getSpeedMax,
+    $step = getSpeedStep;
 
   return html`
     <media-speed-slider
@@ -115,7 +110,7 @@ function DefaultSpeedSlider() {
       step=${$signal($step)}
       key-step=${$signal($step)}
     >
-      ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
+      ${DefaultSliderParts()}${DefaultSliderSteps()}
     </media-speed-slider>
   `;
 }
@@ -177,12 +172,10 @@ function DefaultQualityMenuSection() {
 
 function DefaultQualitySlider() {
   const { translations } = useDefaultLayoutContext(),
-    { qualities } = useMediaState(),
-    $label = $i18n(translations, 'Quality'),
-    $steps = computed(() => qualities().length - 1);
+    $label = $i18n(translations, 'Quality');
   return html`
     <media-quality-slider class="vds-quality-slider vds-slider" aria-label=${$label}>
-      ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
+      ${DefaultSliderParts()}${DefaultSliderSteps()}
     </media-quality-slider>
   `;
 }

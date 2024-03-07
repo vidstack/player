@@ -1,5 +1,4 @@
-import { html, type TemplateResult } from 'lit-html';
-import type { ReadSignal } from 'maverick.js';
+import { html } from 'lit-html';
 
 import { $signal } from '../../../../../../lit/directives/signal';
 import { IconSlot } from '../../../slots';
@@ -12,18 +11,13 @@ export function DefaultSliderParts() {
   `;
 }
 
-export function DefaultSliderMarkers(count: ReadSignal<number>) {
+export function DefaultSliderSteps() {
   return html`
-    <div class="vds-slider-markers">
-      ${$signal(() => {
-        const items: TemplateResult[] = [],
-          len = Math.floor(count());
-
-        for (let i = 0; i <= len; i++) items.push(html`<div class="vds-slider-marker"></div>`);
-
-        return items;
-      })}
-    </div>
+    <media-slider-steps class="vds-slider-steps">
+      <template>
+        <div class="vds-slider-step"></div>
+      </template>
+    </media-slider-steps>
   `;
 }
 

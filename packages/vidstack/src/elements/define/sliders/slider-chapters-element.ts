@@ -21,7 +21,6 @@ import { cloneTemplate, requestScopedAnimationFrame } from '../../../utils/dom';
  *   </media-slider-chapters>
  * </media-time-slider>
  * ```
- * ```
  */
 export class MediaSliderChaptersElement extends Host(HTMLElement, SliderChapters) {
   static tagName = 'media-slider-chapters';

@@ -16,11 +16,7 @@ import {
   DefaultMenuSection,
   DefaultRadioGroup,
 } from './items/menu-items';
-import {
-  DefaultMenuSliderItem,
-  DefaultSliderMarkers,
-  DefaultSliderParts,
-} from './items/menu-slider';
+import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from './items/menu-slider';
 
 const COLOR_OPTION: FontOption = {
     type: 'color',
@@ -323,8 +319,7 @@ function DefaultFontSetting({
   }
 
   if (option.type === 'slider') {
-    const { min, max, step, upIcon, downIcon } = option,
-      $steps = () => (max - min) / step;
+    const { min, max, step, upIcon, downIcon } = option;
 
     function onSliderValueChange(event) {
       onValueChange(event.detail + '%');
@@ -350,7 +345,7 @@ function DefaultFontSetting({
           @value-change=${onSliderValueChange}
           @drag-value-change=${onSliderValueChange}
         >
-          ${DefaultSliderParts()}${DefaultSliderMarkers($steps)}
+          ${DefaultSliderParts()}${DefaultSliderSteps()}
         </media-slider>
       `,
     });

@@ -7,6 +7,7 @@ import {
   type ReactElementProps,
 } from 'maverick.js/react';
 
+import { useSliderState } from '../../../hooks/use-slider-state';
 import { SliderInstance, SliderPreviewInstance } from '../../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import { sliderCallbacks } from './slider-callbacks';
@@ -212,4 +213,39 @@ const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props },
 
 Value.displayName = 'SliderValue';
 
-export { Root, Thumb, Track, TrackFill, Preview, Value };
+/* -------------------------------------------------------------------------------------------------
+ * SliderSteps
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface StepsProps extends Omit<PrimitivePropsWithRef<'div'>, 'children'> {
+  children: (step: number) => React.ReactNode;
+}
+
+/**
+ * Visual markers that can be used to indicate value steps on the slider track.
+ *
+ * @example
+ * ```tsx
+ * <Slider.Root>
+ *   <Slider.Steps className="steps">
+ *     {(step) => <div className="step" key={String(step)}></div>}
+ *   </Slider.Steps>
+ * </Slider.Root>
+ * ```
+ */
+const Steps = React.forwardRef<HTMLElement, StepsProps>(({ children, ...props }, forwardRef) => {
+  const $min = useSliderState('min'),
+    $max = useSliderState('max'),
+    $step = useSliderState('step'),
+    steps = ($max - $min) / $step;
+
+  return (
+    <Primitive.div {...props} ref={forwardRef as any}>
+      {Array.from({ length: Math.floor(steps) + 1 }).map((_, step) => children(step))}
+    </Primitive.div>
+  );
+});
+
+Steps.displayName = 'SliderSteps';
+
+export { Root, Thumb, Track, TrackFill, Preview, Value, Steps };

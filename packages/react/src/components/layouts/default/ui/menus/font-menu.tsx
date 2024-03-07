@@ -16,11 +16,7 @@ import {
   DefaultMenuRadioGroup,
   DefaultMenuSection,
 } from './items/menu-items';
-import {
-  DefaultMenuSliderItem,
-  DefaultSliderMarkers,
-  DefaultSliderParts,
-} from './items/menu-slider';
+import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from './items/menu-slider';
 
 /* -------------------------------------------------------------------------------------------------
  * Options
@@ -416,8 +412,7 @@ function DefaultFontSetting({
   }
 
   if (option.type === 'slider') {
-    const { min, max, step, UpIcon, DownIcon } = option,
-      steps = (max - min) / step;
+    const { min, max, step, UpIcon, DownIcon } = option;
 
     function onSliderValueChange(value) {
       onChange(value + '%');
@@ -444,7 +439,7 @@ function DefaultFontSetting({
           onDragValueChange={onSliderValueChange}
         >
           <DefaultSliderParts />
-          <DefaultSliderMarkers count={steps} />
+          <DefaultSliderSteps />
         </Slider.Root>
       </DefaultMenuSliderItem>
     );

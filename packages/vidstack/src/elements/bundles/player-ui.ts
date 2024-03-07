@@ -36,6 +36,7 @@ import { MediaQualitySliderElement } from '../define/sliders/quality-slider-elem
 import { MediaSliderChaptersElement } from '../define/sliders/slider-chapters-element';
 import { MediaSliderElement } from '../define/sliders/slider-element';
 import { MediaSliderPreviewElement } from '../define/sliders/slider-preview-element';
+import { MediaSliderStepsElement } from '../define/sliders/slider-steps-element';
 import { MediaSliderThumbnailElement } from '../define/sliders/slider-thumbnail-element';
 import { MediaSliderValueElement } from '../define/sliders/slider-value-element';
 import { MediaSliderVideoElement } from '../define/sliders/slider-video-element';
@@ -77,6 +78,7 @@ defineCustomElement(MediaTimeSliderElement);
 defineCustomElement(MediaSpeedSliderElement);
 defineCustomElement(MediaQualitySliderElement);
 defineCustomElement(MediaSliderChaptersElement);
+defineCustomElement(MediaSliderStepsElement);
 defineCustomElement(MediaSliderPreviewElement);
 defineCustomElement(MediaSliderValueElement);
 defineCustomElement(MediaSliderThumbnailElement);

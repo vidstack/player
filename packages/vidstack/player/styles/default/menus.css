@@ -665,7 +665,7 @@
   }
 }
 
-:where(.vds-slider-markers) {
+:where(.vds-slider-steps) {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -676,15 +676,15 @@
   left: 0;
 }
 
-:where(.vds-slider-marker) {
+:where(.vds-slider-step) {
   width: 2.5px;
   height: 6px;
-  background-color: var(--media-menu-slider-marker-color, rgb(124, 124, 124));
+  background-color: var(--media-menu-slider-step-color, rgb(124, 124, 124));
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-:where(.vds-slider[data-active] .vds-slider-marker) {
+:where(.vds-slider[data-active] .vds-slider-step) {
   opacity: 1;
 }
 
