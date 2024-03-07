@@ -59,7 +59,9 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
         <Menu.Portal
           className={`${portalClass}${colorScheme === 'light' ? ' light' : ''}`}
           disabled="fullscreen"
-          data-size={isSmallLayout ? 'sm' : null}
+          data-sm={isSmallLayout ? '' : null}
+          data-lg={!isSmallLayout ? '' : null}
+          data-size={isSmallLayout ? 'sm' : 'lg'}
           data-view-type={$viewType}
         >
           {Content}

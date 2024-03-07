@@ -11,7 +11,6 @@ import {
   DefaultDownloadButton,
   DefaultFullscreenButton,
   DefaultGoogleCastButton,
-  DefaultMuteButton,
   DefaultPIPButton,
   DefaultPlayButton,
 } from './ui/buttons';
@@ -48,7 +47,7 @@ export function DefaultVideoLayoutLarge() {
             <media-controls-group class="vds-controls-group">
               ${[
                 DefaultPlayButton({ tooltip: 'top start' }),
-                DefaultVolumePopup({ orientation: 'horizontal' }),
+                DefaultVolumePopup({ orientation: 'horizontal', tooltip: 'top' }),
                 DefaultTimeInfo(),
                 DefaultTitle(),
                 DefaultCaptionButton({ tooltip: 'top' }),
@@ -103,7 +102,7 @@ export function DefaultVideoLayoutSmall() {
             DefaultCaptionButton({ tooltip: 'bottom' }),
             DefaultDownloadButton(),
             DefaultVideoMenus(),
-            DefaultMuteButton({ tooltip: 'bottom end' }),
+            DefaultVolumePopup({ orientation: 'vertical', tooltip: 'bottom end' }),
           ]}
         </media-controls-group>
 

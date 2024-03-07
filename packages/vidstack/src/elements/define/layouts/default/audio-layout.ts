@@ -37,7 +37,7 @@ export function DefaultAudioLayout() {
             DefaultAudioTitle(),
             DefaultTimeSlider(),
             DefaultTimeInvert(),
-            DefaultVolumePopup({ orientation: 'vertical' }),
+            DefaultVolumePopup({ orientation: 'vertical', tooltip: 'top' }),
             DefaultCaptionButton({ tooltip: 'top' }),
             DefaultDownloadButton(),
             DefaultAudioMenus(),

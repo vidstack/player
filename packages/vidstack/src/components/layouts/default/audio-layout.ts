@@ -7,7 +7,9 @@ import type { DefaultLayoutProps } from './props';
  * more out of the box.
  *
  * @attr data-match - Whether this layout is being used (query match).
- * @attr data-size - The active layout size.
+ * @attr data-sm - The small layout is active
+ * @attr data-lg - The large layout is active.
+ * @attr data-size - The active layout size (sm or lg).
  */
 export class DefaultAudioLayout extends DefaultLayout {
   static override props: DefaultLayoutProps = {

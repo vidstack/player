@@ -24,7 +24,6 @@ import {
   DefaultDownloadButton,
   DefaultFullscreenButton,
   DefaultGoogleCastButton,
-  DefaultMuteButton,
   DefaultPIPButton,
   DefaultPlayButton,
 } from './ui/buttons';
@@ -67,7 +66,9 @@ export interface DefaultVideoLayoutProps extends DefaultLayoutProps<DefaultVideo
  * previews, captions, audio/quality settings, live streams, and more out of the box.
  *
  * @attr data-match - Whether this layout is being used.
- * @attr data-size - The active layout size.
+ * @attr data-sm - The small layout is active
+ * @attr data-lg - The large layout is active.
+ * @attr data-size - The active layout size (sm or lg).
  * @example
  * ```tsx
  * <MediaPlayer src="video.mp4">
@@ -127,7 +128,7 @@ function DefaultVideoLargeLayout() {
 
         <Controls.Group className="vds-controls-group">
           {slot(slots, 'playButton', <DefaultPlayButton tooltip="top start" />)}
-          <DefaultVolumePopup orientation="horizontal" slots={slots} />
+          <DefaultVolumePopup orientation="horizontal" tooltip="top" slots={slots} />
           <DefaultTimeInfo slots={slots} />
           {slot(slots, 'chapterTitle', <DefaultTitle />)}
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top" />)}
@@ -171,7 +172,7 @@ function DefaultVideoSmallLayout() {
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="bottom" />)}
           {slot(slots, 'downloadButton', <DefaultDownloadButton />)}
           <DefaultVideoMenus slots={slots} />
-          {slot(slots, 'muteButton', <DefaultMuteButton tooltip="bottom end" />)}
+          <DefaultVolumePopup orientation="vertical" tooltip="bottom end" slots={slots} />,
           {slot(slots, 'topControlsGroupEnd', null)}
         </Controls.Group>
         <DefaultControlsSpacer />

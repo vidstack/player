@@ -39,7 +39,9 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
 
     this.setAttributes({
       'data-match': this._when,
-      'data-size': () => (this._smallWhen() ? 'sm' : null),
+      'data-sm': () => (this._smallWhen() ? '' : null),
+      'data-lg': () => (!this._smallWhen() ? '' : null),
+      'data-size': () => (this._smallWhen() ? 'sm' : 'lg'),
       'data-no-scrub-gesture': this.$props.noScrubGesture,
     });
 

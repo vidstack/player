@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useSignal } from 'maverick.js/react';
-import type { SliderOrientation } from 'vidstack';
+import type { SliderOrientation, TooltipPlacement } from 'vidstack';
 
 import { useActive, useResizeObserver } from '../../../../hooks/use-dom';
 import { useMediaState } from '../../../../hooks/use-media-state';
@@ -20,18 +20,25 @@ import { DefaultMuteButton } from './buttons';
 
 export interface DefaultVolumePopupProps {
   slots?: DefaultLayoutSlots;
+  tooltip: TooltipPlacement;
   orientation: SliderOrientation;
 }
 
-function DefaultVolumePopup({ orientation, slots }: DefaultVolumePopupProps) {
+function DefaultVolumePopup({ tooltip, orientation, slots }: DefaultVolumePopupProps) {
   const $pointer = useMediaState('pointer'),
     $muted = useMediaState('muted'),
+    $canSetVolume = useMediaState('canSetVolume'),
     [rootEl, setRootEl] = React.useState<HTMLElement | null>(null),
-    isRootActive = useActive(rootEl);
+    isRootActive = useActive(rootEl),
+    muteButton = slot(slots, 'muteButton', <DefaultMuteButton tooltip={tooltip} />);
+
+  if (!$canSetVolume) {
+    return muteButton;
+  }
 
   return $pointer === 'coarse' && !$muted ? null : (
     <div className="vds-volume" data-active={isRootActive ? '' : null} ref={setRootEl}>
-      {slot(slots, 'muteButton', <DefaultMuteButton tooltip="top center" />)}
+      {muteButton}
       <div className="vds-volume-popup">
         {slot(slots, 'volumeSlider', <DefaultVolumeSlider orientation={orientation} />)}
       </div>

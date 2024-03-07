@@ -199,7 +199,9 @@ export function createDefaultMediaLayout({
             (className ? ` ${className}` : '')
           }
           data-match={isMatch ? '' : null}
-          data-size={isSmallLayout ? 'sm' : null}
+          data-sm={isSmallLayout ? '' : null}
+          data-lg={!isSmallLayout ? '' : null}
+          data-size={isSmallLayout ? 'sm' : 'lg'}
           data-no-scrub-gesture={noScrubGesture ? '' : null}
           ref={forwardRef}
         >

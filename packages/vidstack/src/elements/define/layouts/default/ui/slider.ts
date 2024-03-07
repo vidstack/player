@@ -5,24 +5,35 @@ import { signal } from 'maverick.js';
 
 import { useDefaultLayoutContext } from '../../../../../components/layouts/default/context';
 import type { SliderOrientation } from '../../../../../components/ui/sliders/slider/types';
+import type { TooltipPlacement } from '../../../../../components/ui/tooltip/tooltip-content';
 import { useMediaState } from '../../../../../core/api/media-context';
 import { useActive, useResizeObserver } from '../../../../../utils/dom';
 import { $signal } from '../../../../lit/directives/signal';
 import { DefaultMuteButton } from './buttons';
 import { $i18n } from './utils';
 
-export function DefaultVolumePopup({ orientation }: { orientation: SliderOrientation }) {
+export function DefaultVolumePopup({
+  orientation,
+  tooltip,
+}: {
+  orientation: SliderOrientation;
+  tooltip: TooltipPlacement;
+}) {
   return $signal(() => {
-    const { pointer, muted } = useMediaState();
+    const { pointer, muted, canSetVolume } = useMediaState();
 
     if (pointer() === 'coarse' && !muted()) return null;
+
+    if (!canSetVolume()) {
+      return DefaultMuteButton({ tooltip });
+    }
 
     const $rootRef = signal<Element | undefined>(undefined),
       $isRootActive = useActive($rootRef);
 
     return html`
       <div class="vds-volume" ?data-active=${$signal($isRootActive)} ${ref($rootRef.set)}>
-        ${DefaultMuteButton({ tooltip: 'top' })}
+        ${DefaultMuteButton({ tooltip })}
         <div class="vds-volume-popup">${DefaultVolumeSlider({ orientation })}</div>
       </div>
     `;

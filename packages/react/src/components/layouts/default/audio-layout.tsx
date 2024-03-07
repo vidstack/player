@@ -53,7 +53,9 @@ export interface DefaultAudioLayoutProps extends DefaultLayoutProps<DefaultAudio
  * and more out of the box.
  *
  * @attr data-match - Whether this layout is being used.
- * @attr data-size - The active layout size.
+ * @attr data-sm - The small layout is active
+ * @attr data-lg - The large layout is active.
+ * @attr data-size - The active layout size (sm or lg).
  * @example
  * ```tsx
  * <MediaPlayer src="audio.mp3">
@@ -115,7 +117,7 @@ function AudioLayout() {
           <DefaultAudioTitle />
           {slot(slots, 'timeSlider', <DefaultTimeSlider />)}
           <DefaultTimeInvert />
-          <DefaultVolumePopup orientation="vertical" slots={slots} />
+          <DefaultVolumePopup orientation="vertical" tooltip="top" slots={slots} />
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top center" />)}
           {slot(slots, 'downloadButton', <DefaultDownloadButton />)}
           <DefaultAudioMenus slots={slots} />

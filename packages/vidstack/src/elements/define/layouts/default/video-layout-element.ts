@@ -1,7 +1,6 @@
 import { html } from 'lit-html';
 import { effect, onDispose } from 'maverick.js';
 import { Host, type Attributes } from 'maverick.js/element';
-import { setAttribute } from 'maverick.js/std';
 
 import type { DefaultLayoutProps } from '../../../../components/layouts/default/props';
 import { DefaultVideoLayout } from '../../../../components/layouts/default/video-layout';
@@ -9,6 +8,7 @@ import type { MediaContext } from '../../../../core';
 import { useMediaContext } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
+import { setLayoutName } from '../layout-name';
 import { SlotManager } from '../slot-manager';
 import { DefaultLayoutIconsLoader } from './icons-loader';
 import { createMenuContainer } from './ui/menu/menu-portal';
@@ -52,22 +52,13 @@ export class MediaVideoLayoutElement
     this._media = useMediaContext();
 
     this.classList.add('vds-video-layout');
-    this.menuContainer = createMenuContainer('vds-video-layout');
-
-    effect(() => {
-      if (!this.menuContainer) return;
-      setAttribute(this.menuContainer, 'data-size', this.isSmallLayout && 'sm');
-    });
+    this.menuContainer = createMenuContainer('vds-video-layout', () => this.isSmallLayout);
 
     onDispose(() => this.menuContainer?.remove());
   }
 
   protected onConnect() {
-    effect(() => {
-      const { el } = this._media.player;
-      el && setAttribute(el, 'data-layout', this.isMatch && 'video');
-      return () => el?.removeAttribute('data-layout');
-    });
+    setLayoutName('video', () => this.isMatch);
 
     effect(() => {
       const roots = this.menuContainer ? [this, this.menuContainer] : [this];

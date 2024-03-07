@@ -7,6 +7,8 @@ import type { DefaultLayoutProps } from './props';
  * previews, captions, audio/quality settings, live streams, and much more out of the box.
  *
  * @attr data-match - Whether this layout is being used (query match).
+ * @attr data-sm - The small layout is active
+ * @attr data-lg - The large layout is active.
  * @attr data-size - The active layout size.
  */
 export class DefaultVideoLayout extends DefaultLayout {

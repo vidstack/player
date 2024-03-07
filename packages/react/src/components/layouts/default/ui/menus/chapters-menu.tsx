@@ -91,7 +91,9 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
         <Menu.Portal
           className={portalClass}
           disabled="fullscreen"
-          data-size={isSmallLayout ? 'sm' : null}
+          data-sm={isSmallLayout ? '' : null}
+          data-lg={!isSmallLayout ? '' : null}
+          data-size={isSmallLayout ? 'sm' : 'lg'}
         >
           {Content}
         </Menu.Portal>
