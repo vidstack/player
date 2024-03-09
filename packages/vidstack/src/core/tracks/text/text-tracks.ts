@@ -90,6 +90,10 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     return this._items.filter((track) => kinds.includes(track.kind));
   }
 
+  indexOf(track: TextTrack) {
+    return this._items.indexOf(track);
+  }
+
   /* @internal */
   [TextTrackSymbol._canLoad]() {
     if (this._canLoad) return;

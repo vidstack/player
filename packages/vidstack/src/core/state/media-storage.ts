@@ -51,7 +51,7 @@ export interface SerializedVideoQuality {
   id: string;
   width: number;
   height: number;
-  bitrate?: number;
+  bitrate?: number | null;
 }
 
 export class LocalMediaStorage implements MediaStorage {

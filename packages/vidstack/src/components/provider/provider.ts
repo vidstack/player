@@ -1,5 +1,5 @@
 import { Component, method, onDispose, peek, signal, State, tick } from 'maverick.js';
-import { animationFrameThrottle, setStyle } from 'maverick.js/std';
+import { animationFrameThrottle, isString, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
 import type { MediaSrc, TextTrackInit } from '../../core';
@@ -119,14 +119,14 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   private _onResize() {
     if (!this.el) return;
 
-    const player = this._media.player,
+    const { player, $state } = this._media,
       width = this.el.offsetWidth,
       height = this.el.offsetHeight;
 
     if (!player) return;
 
-    player.$state.mediaWidth.set(width);
-    player.$state.mediaHeight.set(height);
+    $state.mediaWidth.set(width);
+    $state.mediaHeight.set(height);
 
     if (player.el) {
       setStyle(player.el, '--media-width', width + 'px');
@@ -143,10 +143,19 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
       if (el.hasAttribute('data-vds')) continue;
 
       if (el instanceof HTMLSourceElement) {
-        sources.push({
+        const src = {
+          id: el.id,
           src: el.src,
           type: el.type,
-        });
+        };
+
+        // <source src="..." type="..." data-width="1920" data-height="1080" ... />
+        for (const prop of ['id', 'src', 'width', 'height', 'bitrate', 'codec']) {
+          const value = el.getAttribute(`data-${prop}`);
+          if (isString(value)) src[prop] = /id|src|codec/.test(prop) ? value : Number(value);
+        }
+
+        sources.push(src);
       } else if (el instanceof HTMLTrackElement) {
         tracks.push({
           id: el.id,

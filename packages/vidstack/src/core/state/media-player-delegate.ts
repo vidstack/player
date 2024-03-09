@@ -49,6 +49,7 @@ export class MediaPlayerDelegate {
           buffered,
           remotePlaybackInfo,
           playsInline,
+          savedState,
         } = this._media.$state;
 
       if (canPlay()) return;
@@ -76,17 +77,18 @@ export class MediaPlayerDelegate {
         { storage, qualities } = this._media,
         { muted, volume, clipStartTime, playbackRate } = this._media.$props;
 
-      const remotePlaybackTime = remotePlaybackInfo()?.savedState?.currentTime,
-        wasRemotePlaying = remotePlaybackInfo()?.savedState?.paused === false,
-        startTime = remotePlaybackTime ?? (await storage?.getTime()) ?? clipStartTime(),
-        shouldAutoPlay = wasRemotePlaying || autoPlay();
+      const savedPlaybackTime = savedState()?.currentTime,
+        savedPlayingState = savedState()?.paused === false,
+        startTime = savedPlaybackTime ?? (await storage?.getTime()) ?? clipStartTime(),
+        shouldAutoPlay =
+          savedPlayingState || (savedPlayingState !== false && !started() && autoPlay());
 
       if (provider) {
         provider.setVolume((await storage?.getVolume()) ?? volume());
         provider.setMuted((await storage?.getMuted()) ?? muted());
 
         const audioGain = (await storage?.getAudioGain()) ?? 1;
-        if (audioGain > 1) provider.setAudioGain?.(audioGain);
+        if (audioGain > 1) provider.audioGain?.setGain?.(audioGain);
 
         provider.setPlaybackRate?.((await storage?.getPlaybackRate()) ?? playbackRate());
         provider.setPlaysInline?.(playsInline());
@@ -103,7 +105,7 @@ export class MediaPlayerDelegate {
           const score =
             Math.abs(prefQuality.width - quality.width) +
             Math.abs(prefQuality.height - quality.height) +
-            (prefQuality.bitrate ? Math.abs(prefQuality.bitrate - quality.bitrate) : 0);
+            (prefQuality.bitrate ? Math.abs(prefQuality.bitrate - (quality.bitrate ?? 0)) : 0);
 
           // Lowest score wins (smallest diff between width/height/bitrate).
           if (score < currentScore) {
@@ -115,7 +117,7 @@ export class MediaPlayerDelegate {
         if (currentQuality) currentQuality.selected = true;
       }
 
-      if (canPlay() && shouldAutoPlay && !started()) {
+      if (canPlay() && shouldAutoPlay) {
         await this._attemptAutoplay(trigger);
       }
 

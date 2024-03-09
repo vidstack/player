@@ -21,6 +21,7 @@ export * from './tracks/text/text-tracks';
 export * from './tracks/audio-tracks';
 export * from './tracks/text/utils';
 export * from './quality/video-quality';
+export * from './quality/utils';
 
 // Keyboard
 export type * from './keyboard/types';

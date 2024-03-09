@@ -227,18 +227,16 @@ export class GoogleCastProvider implements MediaProviderAdapter {
     const resumeSessionEvent = new DOMEvent('resume-session', { detail: this.session! });
     this._onMediaLoadedChange(resumeSessionEvent);
 
-    const { muted, volume, remotePlaybackInfo } = this._ctx.$state,
-      localState = remotePlaybackInfo();
+    const { muted, volume, savedState } = this._ctx.$state,
+      localState = savedState();
 
     // Set time to whatever is further ahead (local/remote).
-    this.setCurrentTime(
-      Math.max(this._player.currentTime, localState?.savedState?.currentTime ?? 0),
-    );
+    this.setCurrentTime(Math.max(this._player.currentTime, localState?.currentTime ?? 0));
 
     this.setMuted(muted());
     this.setVolume(volume());
 
-    if (localState?.savedState?.paused === false) this.play();
+    if (localState?.paused === false) this.play();
   }
 
   protected _endSession() {
@@ -248,11 +246,11 @@ export class GoogleCastProvider implements MediaProviderAdapter {
   }
 
   protected _disconnectFromReceiver() {
-    this._ctx.$state.remotePlaybackInfo.set({
-      savedState: {
-        paused: this._player.isPaused,
-        currentTime: this._player.currentTime,
-      },
+    const { savedState } = this._ctx.$state;
+
+    savedState.set({
+      paused: this._player.isPaused,
+      currentTime: this._player.currentTime,
     });
 
     this._endSession();
@@ -466,10 +464,10 @@ export class GoogleCastProvider implements MediaProviderAdapter {
   protected _buildLoadRequest(src: MediaSrc<string>) {
     const mediaInfo = this._buildMediaInfo(src),
       request = new chrome.cast.media.LoadRequest(mediaInfo),
-      info = this._ctx.$state.remotePlaybackInfo();
+      savedState = this._ctx.$state.savedState();
 
-    request.autoplay = (this._reloadInfo?.paused ?? info?.savedState?.paused) === false;
-    request.currentTime = this._reloadInfo?.time ?? info?.savedState?.currentTime ?? 0;
+    request.autoplay = (this._reloadInfo?.paused ?? savedState?.paused) === false;
+    request.currentTime = this._reloadInfo?.time ?? savedState?.currentTime ?? 0;
 
     return request;
   }

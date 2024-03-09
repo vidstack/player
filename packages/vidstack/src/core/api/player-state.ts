@@ -198,41 +198,43 @@ export const mediaState = new State<MediaState>({
   providedStreamType: 'unknown',
   inferredStreamType: 'unknown',
   liveSyncPosition: null,
+  savedState: null,
 });
 
-const RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
-  'audioTrack',
-  'audioTracks',
+const RESET_ON_SRC_QUALITY_CHANGE = new Set<keyof MediaState>([
   'autoPlayError',
   'autoPlaying',
-  'autoQuality',
   'buffered',
   'canPlay',
-  'ended',
   'error',
+  'paused',
+  'played',
+  'playing',
+  'seekable',
+  'seeking',
+  'waiting',
+]);
+
+const RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
+  ...RESET_ON_SRC_QUALITY_CHANGE,
+  'ended',
   'inferredPoster',
   'inferredStreamType',
   'inferredTitle',
   'intrinsicDuration',
   'liveSyncPosition',
-  'paused',
-  'played',
-  'playing',
-  'qualities',
-  'quality',
   'realCurrentTime',
-  'seekable',
-  'seeking',
+  'savedState',
   'started',
   'userBehindLiveEdge',
-  'waiting',
 ]);
 
 /**
  * Resets all media state and leaves general player state intact.
  */
-export function softResetMediaState($media: MediaStore) {
-  mediaState.reset($media, (prop) => RESET_ON_SRC_CHANGE.has(prop));
+export function softResetMediaState($media: MediaStore, isSourceQualityChange = false) {
+  const filter = isSourceQualityChange ? RESET_ON_SRC_QUALITY_CHANGE : RESET_ON_SRC_CHANGE;
+  mediaState.reset($media, (prop) => filter.has(prop));
   tick();
 }
 
@@ -842,6 +844,8 @@ export interface MediaState {
   inferredStreamType: MediaStreamType;
   /* @internal */
   liveSyncPosition: number | null;
+  /** @internal */
+  savedState: { paused?: boolean; currentTime?: number } | null;
 }
 
 export interface MediaPlayerQuery {

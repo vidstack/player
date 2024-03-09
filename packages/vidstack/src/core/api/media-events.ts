@@ -212,7 +212,10 @@ export interface MediaRemotePlaybackChangeEvent
  *
  * @detail src
  */
-export interface MediaSourceChangeEvent extends MediaEvent<MediaSrc> {}
+export interface MediaSourceChangeEvent extends MediaEvent<MediaSrc> {
+  /** Whether this source change was due to a quality change. */
+  isQualityChange?: boolean;
+}
 
 /**
  * Fired when the player is manually destroyed by calling the `destroy()` method.

@@ -283,7 +283,6 @@ export class HLSController {
 
   _destroy() {
     this._clearRetryTimer();
-    if (this._ctx) this._ctx.qualities[QualitySymbol._enableAuto] = undefined;
     this._instance?.destroy();
     this._instance = null;
     this._stopLiveSync?.();

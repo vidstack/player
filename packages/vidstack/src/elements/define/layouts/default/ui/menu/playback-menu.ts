@@ -5,6 +5,7 @@ import { isArray } from 'maverick.js/std';
 import { useDefaultLayoutContext } from '../../../../../../components/layouts/default/context';
 import { i18n } from '../../../../../../components/layouts/default/translations';
 import { useMediaContext, useMediaState } from '../../../../../../core/api/media-context';
+import { sortVideoQualities } from '../../../../../../core/quality/utils';
 import { $signal } from '../../../../../lit/directives/signal';
 import { $i18n } from '../utils';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
@@ -143,7 +144,8 @@ function DefaultQualityMenuSection() {
   return $signal(() => {
     const { hideQualityBitrate, translations } = useDefaultLayoutContext(),
       { canSetQuality, qualities, quality } = useMediaState(),
-      $disabled = computed(() => !canSetQuality() || qualities().length <= 1);
+      $disabled = computed(() => !canSetQuality() || qualities().length <= 1),
+      $sortedQualities = computed(() => sortVideoQualities(qualities()));
 
     if ($disabled()) return null;
 
@@ -161,8 +163,8 @@ function DefaultQualityMenuSection() {
           upIcon: 'menu-quality-up',
           downIcon: 'menu-quality-down',
           children: DefaultQualitySlider(),
-          isMin: () => qualities()[0] === quality(),
-          isMax: () => qualities().at(-1) === quality(),
+          isMin: () => $sortedQualities()[0] === quality(),
+          isMax: () => $sortedQualities().at(-1) === quality(),
         }),
         DefaultAutoQualityCheckbox(),
       ],

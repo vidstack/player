@@ -1,20 +1,24 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
-import { effect, onDispose, peek } from 'maverick.js';
+import { effect, onDispose, peek, untrack, type StopEffect } from 'maverick.js';
 import { DOMEvent, listenEvent } from 'maverick.js/std';
 
-import { getTimeRangesEnd } from '..';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { canChangeVolume } from '../../utils/support';
 import type { MediaContext } from '../api/media-context';
 import * as ME from '../api/media-events';
 import { MediaPlayerController } from '../api/player-controller';
 import { softResetMediaState } from '../api/player-state';
+import type { MediaSrc } from '../api/types';
+import { QualitySymbol } from '../quality/symbols';
+import { isMediaSrcQuality } from '../quality/utils';
 import type {
+  VideoQuality,
   VideoQualityAddEvent,
   VideoQualityChangeEvent,
   VideoQualityRemoveEvent,
 } from '../quality/video-quality';
+import { getTimeRangesEnd } from '../time-ranges';
 import type {
   AudioTrackAddEvent,
   AudioTrackChangeEvent,
@@ -65,10 +69,19 @@ export class MediaStateManager extends MediaPlayerController {
     onDispose(this._pausePlaybackOnDisconnect.bind(this));
   }
 
+  protected override onDestroy(): void {
+    const { audioTracks, qualities, textTracks } = this._media;
+    audioTracks[ListSymbol._reset]();
+    qualities[ListSymbol._reset]();
+    textTracks[ListSymbol._reset]();
+
+    this._stopWatchingQualityResize();
+  }
+
   _handle(event: Event) {
     if (!this.scope) return;
     const type = event.type as keyof ME.MediaEvents;
-    this[event.type]?.(event);
+    untrack(() => this[event.type]?.(event));
     if (!__SERVER__) {
       if (TRACKED_EVENT.has(type)) this._trackedEvents.set(type, event as ME.MediaEvent);
       this.dispatch(event);
@@ -90,7 +103,7 @@ export class MediaStateManager extends MediaPlayerController {
   private _pausePlaybackOnDisconnect() {
     // It might already be set in `pause` handler.
     if (this._isPlayingOnDisconnect) return;
-    this._isPlayingOnDisconnect = !this._media.$state.paused();
+    this._isPlayingOnDisconnect = !this.$state.paused();
     this._media.$provider()?.pause();
   }
 
@@ -203,7 +216,49 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   private _onAutoQualityChange() {
-    this.$state.autoQuality.set(this._media.qualities.auto);
+    const { qualities } = this._media,
+      isAuto = qualities.auto;
+
+    this.$state.autoQuality.set(isAuto);
+
+    if (!isAuto) this._stopWatchingQualityResize();
+  }
+
+  private _stopQualityResizeEffect: StopEffect | null = null;
+  private _watchQualityResize() {
+    this._stopWatchingQualityResize();
+    this._stopQualityResizeEffect = effect(() => {
+      const { qualities } = this._media,
+        { mediaWidth, mediaHeight } = this.$state,
+        w = mediaWidth(),
+        h = mediaHeight();
+
+      if (w === 0 || h === 0) return;
+
+      let selectedQuality: VideoQuality | null = null,
+        minScore = Infinity;
+
+      for (const quality of qualities) {
+        const score = Math.abs(quality.width - w) + Math.abs(quality.height - h);
+        if (score < minScore) {
+          minScore = score;
+          selectedQuality = quality;
+        }
+      }
+
+      if (selectedQuality) {
+        qualities[ListSymbol._select](
+          selectedQuality,
+          true,
+          new DOMEvent('resize', { detail: { width: w, height: h } }),
+        );
+      }
+    });
+  }
+
+  private _stopWatchingQualityResize() {
+    this._stopQualityResizeEffect?.();
+    this._stopQualityResizeEffect = null;
   }
 
   private _onCanSetQualityChange() {
@@ -232,7 +287,9 @@ export class MediaStateManager extends MediaPlayerController {
     prevProvider?.scope?.dispose();
     this._media.$provider.set(event.detail);
 
-    if (prevProvider && event.detail === null) this._resetMediaState(event);
+    if (prevProvider && event.detail === null) {
+      this._resetMediaState(event);
+    }
   }
 
   ['provider-loader-change'](event: ME.MediaProviderLoaderChangeEvent) {
@@ -339,32 +396,98 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['sources-change'](event: ME.MediaSourcesChangeEvent) {
-    this.$state.sources.set(event.detail);
+    const prevSources = this.$state.sources(),
+      newSources = event.detail;
+
+    this.$state.sources.set(newSources);
+
+    this._onSourceQualitiesChange(prevSources, newSources, event);
+  }
+
+  private _onSourceQualitiesChange(
+    prevSources: MediaSrc[],
+    newSources: MediaSrc[],
+    trigger?: Event,
+  ) {
+    let { qualities } = this._media,
+      added = false,
+      removed = false;
+
+    // Remove old qualities.
+    for (const prevSrc of prevSources) {
+      if (!isMediaSrcQuality(prevSrc)) continue;
+      const exists = newSources.some((s) => s.src === prevSrc.src);
+      if (!exists) {
+        const quality = qualities.getBySrc(prevSrc.src);
+        if (quality) {
+          qualities[ListSymbol._remove](quality, trigger);
+          removed = true;
+        }
+      }
+    }
+
+    // Do a complete reset if source qualities has changed.
+    if (removed && !qualities.length) {
+      this.$state.savedState.set(null);
+      qualities[ListSymbol._reset](trigger);
+    }
+
+    // Add new qualities.
+    for (const src of newSources) {
+      if (!isMediaSrcQuality(src) || qualities.getBySrc(src.src)) continue;
+
+      const quality = {
+        id: src.id ?? src.height + 'p',
+        bitrate: null,
+        codec: null,
+        ...src,
+        selected: false,
+      };
+
+      qualities[ListSymbol._add](quality, trigger);
+      added = true;
+    }
+
+    if (added && !qualities[QualitySymbol._enableAuto]) {
+      // Logic for this is inside `onAutoQualityChange` method.
+      this._watchQualityResize();
+      qualities[QualitySymbol._enableAuto] = this._watchQualityResize.bind(this);
+      qualities[QualitySymbol._setAuto](true, trigger);
+    }
   }
 
   ['source-change'](event: ME.MediaSourceChangeEvent) {
-    const sourcesChangeEvent = this._trackedEvents.get('sources-change');
-    if (sourcesChangeEvent) event.triggers.add(sourcesChangeEvent);
+    event.isQualityChange = event.originEvent?.type === 'quality-change';
 
-    this._resetMediaState(event);
+    const source = event.detail;
+
+    this._resetMediaState(event, event.isQualityChange);
     this._trackedEvents.set(event.type, event);
 
-    this.$state.source.set(event.detail);
+    this.$state.source.set(source);
     this.el?.setAttribute('aria-busy', 'true');
 
     if (__DEV__) {
       this._media.logger
         ?.infoGroup('📼 Media source change')
-        .labelledLog('Source', event.detail)
+        .labelledLog('Source', source)
         .dispatch();
     }
   }
 
-  private _resetMediaState(event: Event) {
-    this._media.audioTracks[ListSymbol._reset](event);
-    this._media.qualities[ListSymbol._reset](event);
+  private _resetMediaState(event: Event, isSourceQualityChange = false) {
+    const { audioTracks, qualities } = this._media;
+
+    if (!isSourceQualityChange) {
+      audioTracks[ListSymbol._reset](event);
+      qualities[ListSymbol._reset](event);
+      softResetMediaState(this.$state, isSourceQualityChange);
+      this._resetTracking();
+      return;
+    }
+
+    softResetMediaState(this.$state, isSourceQualityChange);
     this._resetTracking();
-    softResetMediaState(this._media.$state);
   }
 
   ['abort'](event: ME.MediaAbortEvent) {

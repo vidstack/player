@@ -1,8 +1,9 @@
 import throttle from 'just-throttle';
-import { Component, computed, effect } from 'maverick.js';
+import { Component, computed, effect, peek } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaRequestEvents } from '../../../core/api/media-request-events';
+import { sortVideoQualities } from '../../../core/quality/utils';
 import { $ariaBool } from '../../../utils/aria';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import type { SliderCSSVars } from './slider/api/cssvars';
@@ -43,6 +44,11 @@ export class QualitySlider extends Component<
   static state = sliderState;
 
   private _media!: MediaContext;
+
+  private _sortedQualities = computed(() => {
+    const { qualities } = this._media.$state;
+    return sortVideoQualities(qualities());
+  });
 
   protected override onSetup(): void {
     this._media = useMediaContext();
@@ -86,33 +92,38 @@ export class QualitySlider extends Component<
     if (!quality()) return '';
 
     const { height, bitrate } = quality()!,
-      bitrateText = bitrate > 0 ? `${(bitrate / 1000000).toFixed(2)} Mbps` : null;
+      bitrateText = bitrate && bitrate > 0 ? `${(bitrate / 1000000).toFixed(2)} Mbps` : null;
 
     return height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : 'Auto';
   }
 
   private _watchMax() {
-    const { qualities } = this._media.$state;
-    this.$state.max.set(Math.max(0, qualities().length - 1));
+    const $qualities = this._sortedQualities();
+    this.$state.max.set(Math.max(0, $qualities.length - 1));
   }
 
   private _watchQuality() {
-    let { qualities, quality } = this._media.$state,
-      value = Math.max(0, qualities().indexOf(quality()!));
+    let { quality } = this._media.$state,
+      $qualities = this._sortedQualities(),
+      value = Math.max(0, $qualities.indexOf(quality()!));
     this.$state.value.set(value);
     this.dispatch('value-change', { detail: value });
   }
 
   private _isDisabled() {
     const { disabled } = this.$props,
-      { qualities, canSetQuality } = this._media.$state;
+      { canSetQuality, qualities } = this._media.$state;
     return disabled() || qualities().length <= 1 || !canSetQuality();
   }
 
   private _throttledQualityChange = throttle(this._onQualityChange.bind(this), 25);
   private _onQualityChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
     if (!event.trigger) return;
-    this._media.remote.changeQuality(event.detail, event);
+
+    const { qualities } = this._media,
+      quality = peek(this._sortedQualities)[event.detail];
+
+    this._media.remote.changeQuality(qualities.indexOf(quality), event);
   }
 
   private _onValueChange(event: SliderValueChangeEvent): void {

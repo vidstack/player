@@ -104,7 +104,7 @@ export class CaptionsRadioGroup extends Component<
       const track = this._media.textTracks.selected;
 
       if (track) {
-        const index = this._media.textTracks.toArray().indexOf(track);
+        const index = this._media.textTracks.indexOf(track);
         this._media.remote.changeTextTrackMode(index, 'disabled', trigger);
         this.dispatch('change', { detail: null, trigger });
       }

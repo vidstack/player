@@ -5,7 +5,13 @@ import { MEDIA_KEY_SHORTCUTS } from '../keyboard/controller';
 import type { MediaKeyShortcuts, MediaKeyTarget } from '../keyboard/types';
 import type { MediaStorage } from '../state/media-storage';
 import type { MediaState } from './player-state';
-import type { MediaLoadingStrategy, MediaPosterLoadingStrategy, MediaResource } from './types';
+import type {
+  MediaLoadingStrategy,
+  MediaPosterLoadingStrategy,
+  MediaResource,
+  MediaSrcQuality,
+  MediaSrcType,
+} from './types';
 
 export const mediaPlayerProps: MediaPlayerProps = {
   artist: '',
@@ -52,8 +58,12 @@ export interface MediaStateAccessors
 
 export type PlayerSrc =
   | MediaResource
-  | { src: MediaResource; type?: string }
-  | { src: MediaResource; type?: string }[];
+  | OptionalTypeProp<MediaSrcType<MediaResource>>
+  | OptionalTypeProp<MediaSrcQuality<MediaResource>>
+  | Array<OptionalTypeProp<MediaSrcType<MediaResource>>>
+  | Array<OptionalTypeProp<MediaSrcQuality<MediaResource>>>;
+
+export type OptionalTypeProp<T> = Omit<T, 'type'> & { type?: string };
 
 export interface MediaPlayerProps
   // Prefer picking off the `MediaStore` type to ensure docs are kept in-sync.

@@ -36,7 +36,7 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
   }
 
   /* @internal */
-  [QualitySymbol._enableAuto]?: () => void;
+  [QualitySymbol._enableAuto]?: (trigger?: Event) => void;
 
   /* @internal */
   protected override [ListSymbol._onUserSelect]() {
@@ -45,6 +45,7 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
 
   /* @internal */
   protected override [ListSymbol._onReset](trigger?: Event) {
+    this[QualitySymbol._enableAuto] = undefined;
     this[QualitySymbol._setAuto](false, trigger);
   }
 
@@ -54,8 +55,20 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
    */
   autoSelect(trigger?: Event): void {
     if (this.readonly || this._auto || !this[QualitySymbol._enableAuto]) return;
-    this[QualitySymbol._enableAuto]?.();
+    this[QualitySymbol._enableAuto]?.(trigger);
     this[QualitySymbol._setAuto](true, trigger);
+  }
+
+  indexOf(quality: VideoQuality) {
+    return this._items.indexOf(quality);
+  }
+
+  getById(id: string) {
+    return this._items.find((quality) => quality.id === id);
+  }
+
+  getBySrc(src: unknown) {
+    return this._items.find((quality) => quality.src === src);
   }
 
   /* @internal */
@@ -73,10 +86,11 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
 
 export interface VideoQuality extends SelectListItem {
   readonly id: string;
+  readonly src?: unknown;
   readonly width: number;
   readonly height: number;
-  readonly bitrate: number;
-  readonly codec: string;
+  readonly bitrate: number | null;
+  readonly codec: string | null;
 }
 
 export interface VideoQualityListEvents {

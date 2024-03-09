@@ -9,7 +9,12 @@ import {
 } from 'maverick.js';
 import { DOMEvent, isArray, isString, noop } from 'maverick.js/std';
 
-import type { MediaContext, MediaPlayerProps, MediaSrc } from '../../core';
+import {
+  isMediaSrcQuality,
+  type MediaContext,
+  type MediaPlayerProps,
+  type MediaSrc,
+} from '../../core';
 import {
   AudioProviderLoader,
   HLSProviderLoader,
@@ -155,7 +160,9 @@ export class SourceSelection {
   protected _findNewSource(currentSource: MediaSrc, sources: MediaSrc[]) {
     let newSource: MediaSrc = { src: '', type: '' },
       newLoader: MediaProviderLoader | null = null,
-      loaders = this._loaders();
+      triggerEvent: DOMEvent = new DOMEvent('sources-change', { detail: { sources } }),
+      loaders = this._loaders(),
+      { started, paused, currentTime, quality, savedState } = this._media.$state;
 
     for (const src of sources) {
       const loader = loaders.find((loader) => loader.canPlay(src));
@@ -166,28 +173,53 @@ export class SourceSelection {
       }
     }
 
+    if (isMediaSrcQuality(newSource)) {
+      const currentQuality = quality(),
+        sourceQuality = sources.find((s) => s.src === currentQuality?.src)!;
+
+      if (peek(started)) {
+        savedState.set({
+          paused: peek(paused),
+          currentTime: peek(currentTime),
+        });
+      } else {
+        savedState.set(null);
+      }
+
+      if (sourceQuality) {
+        newSource = sourceQuality;
+        triggerEvent = new DOMEvent('quality-change', {
+          detail: { quality: currentQuality },
+        });
+      }
+    }
+
     if (!isSameSrc(currentSource, newSource)) {
-      this._notifySourceChange(newSource, newLoader);
+      this._notifySourceChange(newSource, newLoader, triggerEvent);
     }
 
     if (newLoader !== peek(this._loader)) {
-      this._notifyLoaderChange(newLoader);
+      this._notifyLoaderChange(newLoader, triggerEvent);
     }
 
     return newSource;
   }
 
-  protected _notifySourceChange(src: MediaSrc, loader: MediaProviderLoader | null) {
-    this._notify('source-change', src);
-    this._notify('media-type-change', loader?.mediaType(src) || 'unknown');
+  protected _notifySourceChange(
+    src: MediaSrc,
+    loader: MediaProviderLoader | null,
+    trigger?: Event,
+  ) {
+    this._notify('source-change', src, trigger);
+    this._notify('media-type-change', loader?.mediaType(src) || 'unknown', trigger);
   }
 
-  protected _notifyLoaderChange(loader: MediaProviderLoader | null) {
+  protected _notifyLoaderChange(loader: MediaProviderLoader | null, trigger?: Event) {
     this._media.$providerSetup.set(false);
-    this._notify('provider-change', null);
+    this._notify('provider-change', null, trigger);
     loader && peek(() => loader!.preconnect?.(this._media));
     this._loader.set(loader);
-    this._notify('provider-loader-change', loader);
+    this._notify('provider-loader-change', loader, trigger);
   }
 
   private _onSetup() {

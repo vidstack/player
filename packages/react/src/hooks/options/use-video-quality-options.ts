@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { useSignal } from 'maverick.js/react';
 import { isString } from 'maverick.js/std';
-import { type VideoQuality } from 'vidstack';
+import { sortVideoQualities, type VideoQuality } from 'vidstack';
 
 import { useMediaContext } from '../use-media-context';
 
@@ -23,15 +23,16 @@ export function useVideoQualityOptions({
   useSignal(canSetQuality);
 
   return React.useMemo(() => {
-    const options = [...$qualities]
-      .sort(sort === 'descending' ? sortDescending : sortAscending)
-      .map<VideoQualityOption>((_quality) => {
+    const sortedQualities = sortVideoQualities($qualities, sort === 'descending'),
+      options = sortedQualities.map<VideoQualityOption>((_quality) => {
         return {
           quality: _quality,
           label: _quality.height + 'p',
           value: getQualityValue(_quality),
           bitrateText:
-            _quality.bitrate > 0 ? `${(_quality.bitrate / 1000000).toFixed(2)} Mbps` : null,
+            _quality.bitrate && _quality.bitrate > 0
+              ? `${(_quality.bitrate / 1000000).toFixed(2)} Mbps`
+              : null,
           get selected() {
             return _quality === quality();
           },
@@ -117,14 +118,6 @@ export interface VideoQualityOption {
   readonly autoSelected: boolean;
   readonly bitrateText: string | null;
   select(trigger?: Event): void;
-}
-
-function sortAscending(a: VideoQuality, b: VideoQuality) {
-  return a.height === b.height ? a.bitrate - b.bitrate : a.height - b.height;
-}
-
-function sortDescending(a: VideoQuality, b: VideoQuality) {
-  return b.height === a.height ? b.bitrate - a.bitrate : b.height - a.height;
 }
 
 function getQualityValue(quality: VideoQuality) {

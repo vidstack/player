@@ -556,9 +556,7 @@ export class VimeoProvider
 
   protected _onQualitiesChange(qualities: VimeoQuality[], trigger: Event) {
     this._ctx.qualities[QualitySymbol._enableAuto] = qualities.some((q) => q.id === 'auto')
-      ? () => {
-          this._remote('setQuality', 'auto');
-        }
+      ? () => this._remote('setQuality', 'auto')
       : undefined;
 
     for (const quality of qualities) {
@@ -589,7 +587,7 @@ export class VimeoProvider
     if (!id) return;
 
     const isAuto = id === 'auto',
-      newQuality = this._ctx.qualities.toArray().find((q) => q.id === id);
+      newQuality = this._ctx.qualities.getById(id);
 
     if (isAuto) {
       this._ctx.qualities[QualitySymbol._setAuto](isAuto, trigger);

@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { isArray } from 'maverick.js/std';
+import { sortVideoQualities } from 'vidstack';
 
 import { useMediaContext } from '../../../../../hooks/use-media-context';
 import { useMediaState } from '../../../../../hooks/use-media-state';
@@ -96,7 +97,8 @@ function DefaultQualityMenuSection() {
     $qualities = useMediaState('qualities'),
     $quality = useMediaState('quality'),
     label = useDefaultLayoutWord('Quality'),
-    autoText = useDefaultLayoutWord('Auto');
+    autoText = useDefaultLayoutWord('Auto'),
+    sortedQualities = React.useMemo(() => sortVideoQualities($qualities), [$qualities]);
 
   if (!$canSetQuality || $qualities.length <= 1) return null;
 
@@ -104,8 +106,8 @@ function DefaultQualityMenuSection() {
     bitrate = !hideQualityBitrate ? $quality?.bitrate : null,
     bitrateText = bitrate && bitrate > 0 ? `${(bitrate / 1000000).toFixed(2)} Mbps` : null,
     value = height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : autoText,
-    isMin = $qualities[0] === $quality,
-    isMax = $qualities.at(-1) === $quality;
+    isMin = sortedQualities[0] === $quality,
+    isMax = sortedQualities.at(-1) === $quality;
 
   return (
     <DefaultMenuSection label={label} value={value}>

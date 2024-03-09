@@ -12,6 +12,7 @@ import {
 import type { DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
+import { sortVideoQualities } from '../../../../core/quality/utils';
 import type { VideoQuality } from '../../../../core/quality/video-quality';
 import { round } from '../../../../utils/number';
 import { menuContext, type MenuContext } from '../menu-context';
@@ -31,6 +32,7 @@ export class QualityRadioGroup extends Component<
   static props: QualityRadioGroupProps = {
     autoLabel: 'Auto',
     hideBitrate: false,
+    sort: 'descending',
   };
 
   private _media!: MediaContext;
@@ -49,10 +51,9 @@ export class QualityRadioGroup extends Component<
   }
 
   private _sortedQualities = computed(() => {
-    const { qualities } = this._media.$state;
-    return [...qualities()].sort((a, b) =>
-      b.height === a.height ? b.bitrate - a.bitrate : b.height - a.height,
-    );
+    const { sort } = this.$props,
+      { qualities } = this._media.$state;
+    return sortVideoQualities(qualities(), sort() === 'descending');
   });
 
   constructor() {
@@ -80,12 +81,16 @@ export class QualityRadioGroup extends Component<
     return [
       { value: 'auto', label: autoLabel },
       ...this._sortedQualities().map((quality) => {
-        const rate = quality.bitrate >= 0 ? `${round(quality.bitrate / 1000000, 2)} Mbps` : null;
+        const bitrate =
+          quality.bitrate && quality.bitrate >= 0
+            ? `${round(quality.bitrate / 1000000, 2)} Mbps`
+            : null;
+
         return {
           quality,
           label: quality.height + 'p',
           value: this._getQualityId(quality),
-          bitrate: () => (!hideBitrate() ? rate : null),
+          bitrate: () => (!hideBitrate() ? bitrate : null),
         };
       }),
     ];
@@ -147,6 +152,14 @@ export interface QualityRadioGroupProps {
   autoLabel: string;
   /** Whether the bitrate should _not_ be displayed next to each quality radio option. */
   hideBitrate: boolean;
+  /**
+   * Specifies how the options should be sorted. The sorting algorithm looks at both the quality
+   * resolution and bitrate.
+   *
+   * - Ascending: 480p, 720p, 720p (higher bitrate), 1080p
+   * - Descending: 1080p, 720p (higher bitrate), 720p, 480p
+   */
+  sort: 'ascending' | 'descending';
 }
 
 export interface QualityRadioOption extends RadioOption {
