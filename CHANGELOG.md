@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - specify default theme color scheme ([9a10613](https://github.com/vidstack/player/commit/9a10613c9312326b00b4ec7bc4bfa0b16c76ce8e))
 - add download button to default layout ([80488b6](https://github.com/vidstack/player/commit/80488b624aba6c38fa85f804496af34fc243bc5c))
 - new slider steps component ([5623c98](https://github.com/vidstack/player/commit/5623c985b9b654cdf5d9695dbe19830c9302f24a))
+- source qualities ([837daa0](https://github.com/vidstack/player/commit/837daa0be8230c68efdd39e2fc470c2487652746))
 
 ### 🐛 Bug Fixes
 
@@ -36,6 +37,9 @@ All notable changes to this project will be documented in this file.
 - add bun to node exports ([17afddd](https://github.com/vidstack/player/commit/17afdddcc13d014f3a84f78479cd09644dc12da1))
 - show volume slider when available in small default layout ([20b9eab](https://github.com/vidstack/player/commit/20b9eab945fdcb177f665976d94dc728bbc3922a))
 - include react example in source selection warning ([a3d6eb1](https://github.com/vidstack/player/commit/a3d6eb1ca16d62b00ad4e7669cd91cfaaf287efc))
+- add workerd to node exports (#1198) ([dedd706](https://github.com/vidstack/player/commit/dedd706e761afaf681866e1f70155187a359b9bc))
+- stop expensive updates when not visible ([be96bd2](https://github.com/vidstack/player/commit/be96bd29206b25b75a49dccba4e80e46fbdc2253))
+- narrow player src types ([82988ca](https://github.com/vidstack/player/commit/82988ca75d42efc143688a2154fa6009b8e237a9))
 
 #### Player (React)
 
