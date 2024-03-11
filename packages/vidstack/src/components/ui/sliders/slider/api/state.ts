@@ -9,6 +9,7 @@ export const sliderState = new State<SliderState>({
   focused: false,
   dragging: false,
   pointing: false,
+  hidden: false,
   get active() {
     return this.dragging || this.focused || this.pointing;
   },
@@ -67,6 +68,8 @@ export interface SliderState {
    * Whether a device pointer is within the slider bounds.
    */
   pointing: boolean;
+  /** Whether the slider is not visible. */
+  hidden: boolean;
   /**
    * Whether the slider is being interacted with via keyboard or pointer device.
    */

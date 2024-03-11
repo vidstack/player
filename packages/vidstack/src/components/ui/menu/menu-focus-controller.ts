@@ -44,11 +44,11 @@ export class MenuFocusController {
 
   _attachMenu(el: HTMLElement) {
     listenEvent(el, 'focus', this._onFocus.bind(this));
+
     this._el = el;
     onDispose(() => {
       this._el = null;
     });
-    return this;
   }
 
   _listen() {
@@ -81,23 +81,30 @@ export class MenuFocusController {
     }
   }
 
+  _focusActive() {
+    const index = this._findActiveIndex();
+    this._focusAt(index >= 0 ? index : 0);
+  }
+
   protected _focusAt(index: number) {
     this._index = index;
-    this._elements[index]?.focus();
-    this._scroll(index);
+    if (this._elements[index]) {
+      this._elements[index].focus();
+      this._scroll(index);
+    } else {
+      this._el?.focus();
+    }
   }
 
   protected _findActiveIndex() {
-    return this._elements.findIndex((el) => el.getAttribute('aria-checked') === 'true');
+    return this._elements.findIndex(
+      (el) => document.activeElement === el || el.getAttribute('aria-checked') === 'true',
+    );
   }
 
   protected _onFocus() {
     this._update();
-    // Timeout to allow size to be updated via transition.
-    setTimeout(() => {
-      const index = this._findActiveIndex();
-      this._focusAt(index >= 0 ? index : 0);
-    }, 100);
+    this._focusActive();
   }
 
   protected _onKeyUp(event: KeyboardEvent) {

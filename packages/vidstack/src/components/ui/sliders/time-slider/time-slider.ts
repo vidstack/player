@@ -125,9 +125,12 @@ export class TimeSlider extends Component<
   }
 
   private _watchCurrentTime() {
+    if (this.$state.hidden()) return;
+
     const { currentTime } = this._media.$state,
       { value, dragging } = this.$state,
       newValue = this._timeToPercent(currentTime());
+
     if (!peek(dragging)) {
       value.set(newValue);
       this.dispatch('value-change', { detail: newValue });

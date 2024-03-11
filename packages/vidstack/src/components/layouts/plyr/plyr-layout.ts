@@ -22,22 +22,22 @@ export class PlyrLayout extends Component<PlyrLayoutProps> {
 
 export function usePlyrLayoutClasses(el: HTMLElement, media: MediaContext) {
   const {
-    fullscreen,
+    canAirPlay,
     canFullscreen,
     canPictureInPicture,
-    pictureInPicture,
-    hasCaptions,
-    textTrack,
-    canAirPlay,
-    isAirPlayConnected,
-    viewType,
-    playing,
-    paused,
-    controlsVisible,
-    pointer,
-    waiting,
+    controlsHidden,
     currentTime,
+    fullscreen,
+    hasCaptions,
+    isAirPlayConnected,
+    paused,
+    pictureInPicture,
+    playing,
+    pointer,
     poster,
+    textTrack,
+    viewType,
+    waiting,
   } = media.$state;
 
   el.classList.add('plyr');
@@ -48,7 +48,7 @@ export function usePlyrLayoutClasses(el: HTMLElement, media: MediaContext) {
     'plyr--airplay-supported': canAirPlay,
     'plyr--fullscreen-active': fullscreen,
     'plyr--fullscreen-enabled': canFullscreen,
-    'plyr--hide-controls': () => !controlsVisible(),
+    'plyr--hide-controls': controlsHidden,
     'plyr--is-touch': () => pointer() === 'coarse',
     'plyr--loading': waiting,
     'plyr--paused': paused,

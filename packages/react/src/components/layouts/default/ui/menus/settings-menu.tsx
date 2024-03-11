@@ -29,7 +29,16 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
     } = useDefaultLayoutContext(),
     settingsText = useDefaultLayoutWord('Settings'),
     $viewType = useMediaState('viewType'),
-    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0;
+    $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
+    [isOpen, setIsOpen] = React.useState(false);
+
+  function onOpen() {
+    setIsOpen(true);
+  }
+
+  function onClose() {
+    setIsOpen(false);
+  }
 
   const Content = (
     <Menu.Content
@@ -37,17 +46,26 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
       placement={placement}
       offset={$offset}
     >
-      {slot(slots, 'settingsMenuStartItems', null)}
-      <DefaultPlaybackMenu />
-      <DefaultAccessibilityMenu />
-      <DefaultAudioMenu />
-      <DefaultCaptionMenu />
-      {slot(slots, 'settingsMenuEndItems', null)}
+      {isOpen ? (
+        <>
+          {slot(slots, 'settingsMenuStartItems', null)}
+          <DefaultPlaybackMenu />
+          <DefaultAccessibilityMenu />
+          <DefaultAudioMenu />
+          <DefaultCaptionMenu />
+          {slot(slots, 'settingsMenuEndItems', null)}
+        </>
+      ) : null}
     </Menu.Content>
   );
 
   return (
-    <Menu.Root className="vds-settings-menu vds-menu" showDelay={showMenuDelay}>
+    <Menu.Root
+      className="vds-settings-menu vds-menu"
+      showDelay={showMenuDelay}
+      onOpen={onOpen}
+      onClose={onClose}
+    >
       <DefaultTooltip content={settingsText} placement={tooltip}>
         <Menu.Button className="vds-menu-button vds-button" aria-label={settingsText}>
           <Icons.Menu.Settings className="vds-icon vds-rotate-icon" />

@@ -173,7 +173,7 @@ function DefaultVideoMenus() {
   ];
 }
 
-function DefaultVideoGestures() {
+export function DefaultVideoGestures() {
   return $signal(() => {
     const { noGestures } = useDefaultLayoutContext();
 

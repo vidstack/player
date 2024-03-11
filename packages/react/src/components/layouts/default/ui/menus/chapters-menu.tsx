@@ -31,9 +31,18 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
     $src = useMediaState('currentSrc'),
     $viewType = useMediaState('viewType'),
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
-    $RemotionThumbnail = useSignal(RemotionThumbnail);
+    $RemotionThumbnail = useSignal(RemotionThumbnail),
+    [isOpen, setIsOpen] = React.useState(false);
 
   if (disabled) return null;
+
+  function onOpen() {
+    setIsOpen(true);
+  }
+
+  function onClose() {
+    setIsOpen(false);
+  }
 
   const Content = (
     <Menu.Content
@@ -41,41 +50,48 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
       placement={placement}
       offset={$offset}
     >
-      <Menu.RadioGroup
-        className="vds-chapters-radio-group vds-radio-group"
-        value={options.selectedValue}
-        data-thumbnails={thumbnails ? '' : null}
-      >
-        {options.map(
-          ({ cue, label, value, startTimeText, durationText, select, setProgressVar }) => (
-            <Menu.Radio
-              className="vds-chapter-radio vds-radio"
-              value={value}
-              key={value}
-              onSelect={select}
-              ref={setProgressVar}
-            >
-              {thumbnails ? (
-                <Thumbnail.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
-                  <Thumbnail.Img />
-                </Thumbnail.Root>
-              ) : $RemotionThumbnail && isRemotionSource($src) ? (
-                <$RemotionThumbnail className="vds-thumbnail" frame={cue.startTime * $src.fps!} />
-              ) : null}
-              <div className="vds-chapter-radio-content">
-                <span className="vds-chapter-radio-label">{label}</span>
-                <span className="vds-chapter-radio-start-time">{startTimeText}</span>
-                <span className="vds-chapter-radio-duration">{durationText}</span>
-              </div>
-            </Menu.Radio>
-          ),
-        )}
-      </Menu.RadioGroup>
+      {isOpen ? (
+        <Menu.RadioGroup
+          className="vds-chapters-radio-group vds-radio-group"
+          value={options.selectedValue}
+          data-thumbnails={thumbnails ? '' : null}
+        >
+          {options.map(
+            ({ cue, label, value, startTimeText, durationText, select, setProgressVar }) => (
+              <Menu.Radio
+                className="vds-chapter-radio vds-radio"
+                value={value}
+                key={value}
+                onSelect={select}
+                ref={setProgressVar}
+              >
+                {thumbnails ? (
+                  <Thumbnail.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
+                    <Thumbnail.Img />
+                  </Thumbnail.Root>
+                ) : $RemotionThumbnail && isRemotionSource($src) ? (
+                  <$RemotionThumbnail className="vds-thumbnail" frame={cue.startTime * $src.fps!} />
+                ) : null}
+                <div className="vds-chapter-radio-content">
+                  <span className="vds-chapter-radio-label">{label}</span>
+                  <span className="vds-chapter-radio-start-time">{startTimeText}</span>
+                  <span className="vds-chapter-radio-duration">{durationText}</span>
+                </div>
+              </Menu.Radio>
+            ),
+          )}
+        </Menu.RadioGroup>
+      ) : null}
     </Menu.Content>
   );
 
   return (
-    <Menu.Root className="vds-chapters-menu vds-menu" showDelay={showMenuDelay}>
+    <Menu.Root
+      className="vds-chapters-menu vds-menu"
+      showDelay={showMenuDelay}
+      onOpen={onOpen}
+      onClose={onClose}
+    >
       <DefaultTooltip content={chaptersText} placement={tooltip}>
         <Menu.Button
           className="vds-menu-button vds-button"

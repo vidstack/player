@@ -131,18 +131,23 @@ export class SliderEventsController extends ViewController<
   }
 
   private _attachEventListeners() {
-    if (this._delegate._isDisabled()) return;
+    const { hidden } = this.$props;
+
     this.listen('focus', this._onFocus.bind(this));
+    this.listen('keydown', this._onKeyDown.bind(this));
+    this.listen('keyup', this._onKeyUp.bind(this));
+
+    if (hidden() || this._delegate._isDisabled()) return;
+
     this.listen('pointerenter', this._onPointerEnter.bind(this));
     this.listen('pointermove', this._onPointerMove.bind(this));
     this.listen('pointerleave', this._onPointerLeave.bind(this));
     this.listen('pointerdown', this._onPointerDown.bind(this));
-    this.listen('keydown', this._onKeyDown.bind(this));
-    this.listen('keyup', this._onKeyUp.bind(this));
   }
 
   private _attachPointerListeners() {
     if (this._delegate._isDisabled() || !this.$state.dragging()) return;
+
     listenEvent(document, 'pointerup', this._onDocumentPointerUp.bind(this));
     listenEvent(document, 'pointermove', this._onDocumentPointerMove.bind(this));
     listenEvent(document, 'touchmove', this._onDocumentTouchMove.bind(this), {

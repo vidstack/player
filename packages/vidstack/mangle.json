@@ -822,5 +822,15 @@
   "_submenu": "no",
   "_watchChapterTitle": "po",
   "_watchColorScheme": "qo",
-  "_watchStep": "ro"
+  "_watchStep": "ro",
+  "_onSourceQualitiesChange": "vo",
+  "_stopQualityResizeEffect": "to",
+  "_stopWatchingQualityResize": "so",
+  "_watchQualityResize": "uo",
+  "_watchSource": "wo",
+  "_focusActive": "Ao",
+  "_isSubmenuOpen": "zo",
+  "_isTransitionActive": "yo",
+  "_updateFocus": "Bo",
+  "_wasKeyboardExpand": "xo"
 }

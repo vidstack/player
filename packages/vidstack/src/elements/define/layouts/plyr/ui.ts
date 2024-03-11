@@ -329,7 +329,9 @@ function TimeSlider() {
 
   function Markers() {
     const endTime = duration();
+
     if (!Number.isFinite(endTime)) return null;
+
     return markers()?.map(
       (marker) => html`
         <span

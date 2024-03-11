@@ -166,7 +166,6 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   protected override onAttach(el: HTMLElement) {
     el.style.setProperty('display', 'contents');
-    this._focus._attachMenu(el);
   }
 
   protected override onConnect(el: HTMLElement) {
@@ -294,7 +293,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._isTriggerDisabled.set(disabled);
   }
 
+  private _wasKeyboardExpand = false;
   private _onExpandedChange(isExpanded: boolean, event?: Event) {
+    this._wasKeyboardExpand = isKeyboardEvent(event);
+
     event?.stopPropagation();
 
     if (this._expanded() === isExpanded) return;
@@ -325,12 +327,9 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._toggleMediaControls(event);
     tick();
 
-    if (isKeyboardEvent(event)) {
-      if (isExpanded) {
-        content?.focus();
-      } else {
-        trigger?.focus();
-      }
+    if (this._wasKeyboardExpand) {
+      if (isExpanded) content?.focus();
+      else trigger?.focus();
 
       for (const el of [this.el, content]) {
         el && el.setAttribute('data-keyboard', '');
@@ -352,10 +351,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       this._menuObserver?._onOpen?.(event);
     } else {
       if (this.isSubmenu) {
-        // A little delay so submenu closing doesn't jump menu size when closing.
-        setTimeout(() => {
-          for (const el of this._submenus) el.close(event);
-        }, 300);
+        for (const el of this._submenus) el.close(event);
       } else {
         this._media.activeMenu = null;
       }
@@ -363,15 +359,16 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       this._menuObserver?._onClose?.(event);
     }
 
-    if (isExpanded && !isKeyboardEvent(event)) {
-      requestAnimationFrame(() => {
-        this._focus._update();
-        // Timeout to allow size to be updated via transition.
-        setTimeout(() => {
-          this._focus._scroll();
-        }, 100);
-      });
+    if (isExpanded) {
+      requestAnimationFrame(this._updateFocus.bind(this));
     }
+  }
+
+  private _updateFocus() {
+    if (this._isTransitionActive || this._isSubmenuOpen) return;
+    this._focus._update();
+    if (this._wasKeyboardExpand) this._focus._focusActive();
+    this._focus._scroll();
   }
 
   private _isExpanded() {
@@ -404,9 +401,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       return;
     }
 
-    // A little delay so submenu closing doesn't jump menu size when closing.
-    if (this.isSubmenu) return setTimeout(this.close.bind(this, event), 800);
-    else this.close(event);
+    this.close(event);
   }
 
   private _getCloseTarget() {
@@ -453,8 +448,11 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._submenus.delete(menu);
   }
 
+  private _isSubmenuOpen = false;
   private _onSubmenuOpenBind = this._onSubmenuOpen.bind(this);
   private _onSubmenuOpen(event: MenuOpenEvent) {
+    this._isSubmenuOpen = true;
+
     const content = this._content();
 
     if (this.isSubmenu) {
@@ -483,6 +481,8 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _onSubmenuCloseBind = this._onSubmenuClose.bind(this);
   private _onSubmenuClose(event: MenuCloseEvent) {
+    this._isSubmenuOpen = false;
+
     const content = this._content();
 
     if (this.isSubmenu) {
@@ -533,11 +533,15 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     setStyle(content, '--menu-height', height + 'px');
   });
 
+  protected _isTransitionActive = false;
   protected _onResizeTransition(event: TransitionEvent) {
     const content = this._content();
     if (content && event.propertyName === 'height') {
-      const hasStarted = event.type === 'transitionstart';
-      setAttribute(content, 'data-resizing', hasStarted);
+      this._isTransitionActive = event.type === 'transitionstart';
+
+      setAttribute(content, 'data-resizing', this._isTransitionActive);
+
+      if (this._expanded()) this._updateFocus();
     }
   }
 

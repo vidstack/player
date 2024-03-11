@@ -1,5 +1,5 @@
 import { html } from 'lit-html';
-import { computed, type ReadSignal } from 'maverick.js';
+import { computed, signal, type ReadSignal } from 'maverick.js';
 import { isFunction, unwrap } from 'maverick.js/std';
 
 import { useDefaultLayoutContext } from '../../../../../../components/layouts/default/context';
@@ -38,7 +38,16 @@ export function DefaultSettingsMenu({
       ),
       $offset = computed(() =>
         !smWhen() && menuGroup() === 'bottom' && viewType() === 'video' ? 26 : 0,
-      );
+      ),
+      $isOpen = signal(false);
+
+    function onOpen() {
+      $isOpen.set(true);
+    }
+
+    function onClose() {
+      $isOpen.set(false);
+    }
 
     const items = html`
       <media-menu-items
@@ -46,17 +55,20 @@ export function DefaultSettingsMenu({
         placement=${$signal($placement)}
         offset=${$signal($offset)}
       >
-        ${[
-          DefaultPlaybackMenu(),
-          DefaultAccessibilityMenu(),
-          DefaultAudioMenu(),
-          DefaultCaptionsMenu(),
-        ]}
+        ${$signal(() => {
+          if (!$isOpen()) return null;
+          return [
+            DefaultPlaybackMenu(),
+            DefaultAccessibilityMenu(),
+            DefaultAudioMenu(),
+            DefaultCaptionsMenu(),
+          ];
+        })}
       </media-menu-items>
     `;
 
     return html`
-      <media-menu class="vds-settings-menu vds-menu">
+      <media-menu class="vds-settings-menu vds-menu" @open=${onOpen} @close=${onClose}>
         <media-tooltip class="vds-tooltip">
           <media-tooltip-trigger>
             <media-menu-button

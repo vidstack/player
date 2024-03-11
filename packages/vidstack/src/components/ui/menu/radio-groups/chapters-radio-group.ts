@@ -14,6 +14,7 @@ import type { VTTCue } from 'media-captions';
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { isCueActive, watchActiveTextTrack } from '../../../../core/tracks/text/utils';
+import { requestScopedAnimationFrame } from '../../../../utils/dom';
 import { round } from '../../../../utils/number';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
 import type { ThumbnailSrc } from '../../thumbnails/thumbnail-loader';
@@ -40,7 +41,6 @@ export class ChaptersRadioGroup extends Component<
   private _menu?: MenuContext;
   private _controller: RadioGroupController;
 
-  private _index = signal(0);
   private _track = signal<TextTrack | null>(null);
   private _cues = signal<readonly VTTCue[]>([]);
 
@@ -100,7 +100,6 @@ export class ChaptersRadioGroup extends Component<
   }
 
   protected override onConnect(el: HTMLElement) {
-    effect(this._watchValue.bind(this));
     effect(this._watchCurrentTime.bind(this));
     effect(this._watchControllerDisabled.bind(this));
     effect(this._watchTrack.bind(this));
@@ -131,17 +130,13 @@ export class ChaptersRadioGroup extends Component<
     );
   }
 
-  private _watchValue() {
-    this._controller.value = this._getValue();
-  }
-
   private _watchCurrentTime() {
     if (!this._menu?._expanded()) return;
 
     const track = this._track();
 
     if (!track) {
-      this._index.set(-1);
+      this._controller.value = '-1';
       return;
     }
 
@@ -151,25 +146,23 @@ export class ChaptersRadioGroup extends Component<
       time = realCurrentTime(),
       activeCueIndex = this._cues().findIndex((cue) => isCueActive(cue, time));
 
-    this._index.set(activeCueIndex);
+    this._controller.value = activeCueIndex.toString();
 
     if (activeCueIndex >= 0) {
-      const cue = this._cues()[activeCueIndex],
-        radio = this.el!.querySelector(`[aria-checked='true']`),
-        cueStartTime = Math.max(startTime, cue.startTime),
-        duration = Math.min(endTime, cue.endTime) - cueStartTime,
-        playedPercent = (Math.max(0, time - cueStartTime) / duration) * 100;
+      requestScopedAnimationFrame(() => {
+        const cue = this._cues()[activeCueIndex],
+          radio = this.el!.querySelector(`[aria-checked='true']`),
+          cueStartTime = Math.max(startTime, cue.startTime),
+          duration = Math.min(endTime, cue.endTime) - cueStartTime,
+          playedPercent = (Math.max(0, time - cueStartTime) / duration) * 100;
 
-      radio && setStyle(radio as HTMLElement, '--progress', round(playedPercent, 3) + '%');
+        radio && setStyle(radio as HTMLElement, '--progress', round(playedPercent, 3) + '%');
+      });
     }
   }
 
   private _watchControllerDisabled() {
     this._menu?._disable(this.disabled);
-  }
-
-  private _getValue() {
-    return this._index().toString();
   }
 
   private _onValueChange(value: string, trigger?: Event) {
@@ -180,7 +173,7 @@ export class ChaptersRadioGroup extends Component<
       { clipStartTime } = this._media.$state;
 
     if (isNumber(index) && cues?.[index]) {
-      this._index.set(index);
+      this._controller.value = index.toString();
       this._media.remote.seek(cues[index].startTime - clipStartTime(), trigger);
       this.dispatch('change', { detail: cues[index], trigger });
     }

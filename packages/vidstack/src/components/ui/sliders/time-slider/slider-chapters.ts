@@ -113,6 +113,14 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
 
   private _watch() {
     if (!this._refs.length) return;
+
+    effect(this._watchUpdates.bind(this));
+  }
+  private _watchUpdates() {
+    const { hidden } = this._sliderState;
+
+    if (hidden()) return;
+
     effect(this._watchContainerWidths.bind(this));
     effect(this._watchFillPercent.bind(this));
     effect(this._watchPointerPercent.bind(this));

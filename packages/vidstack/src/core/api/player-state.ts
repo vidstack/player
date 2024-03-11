@@ -38,6 +38,9 @@ export const mediaState = new State<MediaState>({
   clipEndTime: 0,
   controls: false,
   controlsVisible: false,
+  get controlsHidden() {
+    return !this.controlsVisible;
+  },
   crossOrigin: null,
   ended: false,
   error: null,
@@ -461,6 +464,10 @@ export interface MediaState {
    * @defaultValue false
    */
   controlsVisible: boolean;
+  /**
+   * Whether controls are hidden.
+   */
+  readonly controlsHidden: boolean;
   /**
    * Whether the user has intentionally seeked behind the live edge. The user must've seeked
    * roughly 2 or more seconds behind during a live stream for this to be considered true.

@@ -45,6 +45,19 @@ export function isEventInside(el: HTMLElement, event: Event) {
   return isDOMNode(event.target) && el.contains(event.target);
 }
 
+const intervalJobs = new Set<() => void>();
+
+if (!__SERVER__) {
+  window.setInterval(() => {
+    for (const job of intervalJobs) job();
+  }, 1000);
+}
+
+export function scheduleIntervalJob(job: () => void) {
+  intervalJobs.add(job);
+  return () => intervalJobs.delete(job);
+}
+
 export function setAttributeIfEmpty(target: Element, name: string, value: string) {
   if (!target.hasAttribute(name)) target.setAttribute(name, value);
 }
@@ -78,6 +91,14 @@ export function hasParentElement(node: Element | null, test: (node: Element) => 
 export function isElementVisible(el: HTMLElement) {
   const style = getComputedStyle(el);
   return style.display !== 'none' && parseInt(style.opacity) > 0;
+}
+
+export function checkVisibility(el: HTMLElement | null) {
+  return !!el && el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
+}
+
+export function observeVisibility(el: HTMLElement, callback: (isVisible: boolean) => void) {
+  return scheduleIntervalJob(() => callback(checkVisibility(el)));
 }
 
 export function isElementParent(
