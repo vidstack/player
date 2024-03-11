@@ -1,11 +1,4 @@
-import { isNumber } from 'maverick.js/std';
-
-import type { MediaSrc, MediaSrcQuality } from '../api/types';
 import type { VideoQuality } from './video-quality';
-
-export function isMediaSrcQuality<T>(src: MediaSrc<T>): src is MediaSrcQuality<T> {
-  return 'height' in src && !!src.src && isNumber(src.width) && isNumber(src.height);
-}
 
 export function sortVideoQualities(qualities: VideoQuality[], desc?: boolean) {
   return [...qualities].sort(desc ? compareVideoQualityDesc : compareVideoQualityAsc);

@@ -9,12 +9,7 @@ import {
 } from 'maverick.js';
 import { DOMEvent, isArray, isString, noop } from 'maverick.js/std';
 
-import {
-  isMediaSrcQuality,
-  type MediaContext,
-  type MediaPlayerProps,
-  type MediaSrc,
-} from '../../core';
+import { isVideoQualitySrc, type MediaContext, type MediaPlayerProps, type Src } from '../../core';
 import {
   AudioProviderLoader,
   HLSProviderLoader,
@@ -41,7 +36,7 @@ export class SourceSelection {
   }
 
   constructor(
-    private _domSources: ReadSignal<MediaSrc[]>,
+    private _domSources: ReadSignal<Src[]>,
     private _media: MediaContext,
     private _loader: WriteSignal<MediaProviderLoader | null>,
     customLoaders: MediaProviderLoader[] = [],
@@ -157,8 +152,8 @@ export class SourceSelection {
     tick();
   }
 
-  protected _findNewSource(currentSource: MediaSrc, sources: MediaSrc[]) {
-    let newSource: MediaSrc = { src: '', type: '' },
+  protected _findNewSource(currentSource: Src, sources: Src[]) {
+    let newSource: Src = { src: '', type: '' },
       newLoader: MediaProviderLoader | null = null,
       triggerEvent: DOMEvent = new DOMEvent('sources-change', { detail: { sources } }),
       loaders = this._loaders(),
@@ -173,7 +168,7 @@ export class SourceSelection {
       }
     }
 
-    if (isMediaSrcQuality(newSource)) {
+    if (isVideoQualitySrc(newSource)) {
       const currentQuality = quality(),
         sourceQuality = sources.find((s) => s.src === currentQuality?.src)!;
 
@@ -205,11 +200,7 @@ export class SourceSelection {
     return newSource;
   }
 
-  protected _notifySourceChange(
-    src: MediaSrc,
-    loader: MediaProviderLoader | null,
-    trigger?: Event,
-  ) {
+  protected _notifySourceChange(src: Src, loader: MediaProviderLoader | null, trigger?: Event) {
     this._notify('source-change', src, trigger);
     this._notify('media-type-change', loader?.mediaType(src) || 'unknown', trigger);
   }
@@ -321,27 +312,44 @@ export class SourceSelection {
   }
 }
 
-function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
-  return (isArray(src) ? src : [src && !isString(src) && 'src' in src ? src : { src: src || '' }])
-    .map(({ src, type, ...props }) => ({
-      src,
-      type:
-        type ??
-        (isString(src) ? sourceTypes.get(src) : null) ??
-        (!isString(src) || src.startsWith('blob:')
-          ? 'video/object'
-          : src.includes('youtube')
-            ? 'video/youtube'
-            : src.includes('vimeo') &&
-                !src.includes('progressive_redirect') &&
-                !src.includes('.m3u8')
-              ? 'video/vimeo'
-              : '?'),
-      ...props,
-    }))
+function normalizeSrc(src: MediaPlayerProps['src']): Src[] {
+  return (isArray(src) ? src : [src])
+    .map((src) => {
+      if (isString(src)) {
+        return {
+          src,
+          type: '?',
+        };
+      } else {
+        return {
+          ...src,
+          type: inferType(src.src, src.type),
+        };
+      }
+    })
     .sort((a) => (a.type === '?' ? 1 : -1));
 }
 
-export function isSameSrc(a: MediaSrc | undefined | null, b: MediaSrc | undefined | null) {
+function inferType(src: unknown, type?: string) {
+  if (isString(type) && type.length) {
+    return type;
+  } else if (isString(src) && sourceTypes.has(src)) {
+    return sourceTypes.get(src)!;
+  } else if (!isString(src) || src.startsWith('blob:')) {
+    return 'video/object';
+  } else if (src.includes('youtube')) {
+    return 'video/youtube';
+  } else if (
+    src.includes('vimeo') &&
+    !src.includes('progressive_redirect') &&
+    !src.includes('.m3u8')
+  ) {
+    return 'video/vimeo';
+  }
+
+  return '?';
+}
+
+export function isSameSrc(a: Src | undefined | null, b: Src | undefined | null) {
   return a?.src === b?.src && a?.type === b?.type;
 }

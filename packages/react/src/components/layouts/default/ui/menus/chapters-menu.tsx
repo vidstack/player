@@ -4,7 +4,7 @@ import { useSignal } from 'maverick.js/react';
 
 import { useChapterOptions } from '../../../../../hooks/options/use-chapter-options';
 import { useMediaState } from '../../../../../hooks/use-media-state';
-import { isRemotionSource } from '../../../../../providers/remotion/type-check';
+import { isRemotionSrc } from '../../../../../providers/remotion/type-check';
 import * as Menu from '../../../../ui/menu';
 import * as Thumbnail from '../../../../ui/thumbnail';
 import { RemotionThumbnail } from '../../../remotion-ui';
@@ -69,7 +69,7 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
                   <Thumbnail.Root src={thumbnails} className="vds-thumbnail" time={cue.startTime}>
                     <Thumbnail.Img />
                   </Thumbnail.Root>
-                ) : $RemotionThumbnail && isRemotionSource($src) ? (
+                ) : $RemotionThumbnail && isRemotionSrc($src) ? (
                   <$RemotionThumbnail className="vds-thumbnail" frame={cue.startTime * $src.fps!} />
                 ) : null}
                 <div className="vds-chapter-radio-content">

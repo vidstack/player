@@ -1,6 +1,6 @@
 import { isString } from 'maverick.js/std';
 
-import type { MediaSrc, MediaType } from '../../core';
+import type { MediaType, Src } from '../../core';
 import type { MediaContext } from '../../core/api/media-context';
 import { isVideoSrc } from '../../utils/mime';
 import { canPlayVideoType } from '../../utils/support';
@@ -12,7 +12,7 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
 
   target!: HTMLVideoElement;
 
-  canPlay(src: MediaSrc) {
+  canPlay(src: Src) {
     if (!isVideoSrc(src)) return false;
     // Let this pass through on the server, we can figure out which type to play client-side. The
     // important thing is that the correct provider is loaded.

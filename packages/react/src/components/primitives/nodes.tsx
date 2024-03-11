@@ -3,6 +3,7 @@
  * -----------------------------------------------------------------------------------------------*/
 
 import * as React from 'react';
+
 import { Slot } from './slot';
 
 /* -------------------------------------------------------------------------------------------------
@@ -42,15 +43,16 @@ export type ComponentPropsWithoutRef<T extends React.ElementType> = PropsWithout
 type Primitives = { [E in (typeof NODES)[number]]: PrimitiveForwardRefComponent<E> };
 
 export type PrimitivePropsWithRef<E extends React.ElementType> = Omit<
-  React.ComponentPropsWithRef<E>,
+  React.ComponentProps<E>,
   'style'
-> & {
-  asChild?: boolean;
-  style?:
-    | React.CSSProperties
-    | (React.CSSProperties & Record<`--${string}`, string | null | undefined>)
-    | undefined;
-};
+> &
+  React.Attributes & {
+    asChild?: boolean;
+    style?:
+      | React.CSSProperties
+      | (React.CSSProperties & Record<`--${string}`, string | null | undefined>)
+      | undefined;
+  };
 
 interface PrimitiveForwardRefComponent<E extends React.ElementType>
   extends React.ForwardRefExoticComponent<PrimitivePropsWithRef<E>> {}

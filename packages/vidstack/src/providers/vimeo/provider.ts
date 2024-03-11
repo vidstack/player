@@ -7,7 +7,7 @@ import {
   type DeferredPromise,
 } from 'maverick.js/std';
 
-import { TextTrack, TimeRange, type MediaContext, type MediaSrc } from '../../core';
+import { TextTrack, TimeRange, type MediaContext, type Src } from '../../core';
 import { QualitySymbol } from '../../core/quality/symbols';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
@@ -62,7 +62,7 @@ export class VimeoProvider
   protected _videoId = signal('');
   protected _pro = signal(false);
   protected _hash: string | null = null;
-  protected _currentSrc: MediaSrc<string> | null = null;
+  protected _currentSrc: Src<string> | null = null;
   protected _currentCue: VTTCue | null = null;
   protected _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
   private _chaptersTrack: TextTrack | null = null;
@@ -94,7 +94,7 @@ export class VimeoProvider
     return 'vimeo';
   }
 
-  get currentSrc(): MediaSrc<string> | null {
+  get currentSrc(): Src<string> | null {
     return this._currentSrc;
   }
 
@@ -190,7 +190,7 @@ export class VimeoProvider
     this._remote('setPlaybackRate', rate);
   }
 
-  async loadSource(src: MediaSrc) {
+  async loadSource(src: Src) {
     if (!isString(src.src)) {
       this._currentSrc = null;
       this._hash = null;
@@ -202,7 +202,7 @@ export class VimeoProvider
     this._videoId.set(videoId ?? '');
     this._hash = hash ?? null;
 
-    this._currentSrc = src as MediaSrc<string>;
+    this._currentSrc = src as Src<string>;
   }
 
   protected _watchVideoId() {

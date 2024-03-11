@@ -9,9 +9,8 @@ import type { MediaContext } from '../api/media-context';
 import * as ME from '../api/media-events';
 import { MediaPlayerController } from '../api/player-controller';
 import { softResetMediaState } from '../api/player-state';
-import type { MediaSrc } from '../api/types';
+import { isVideoQualitySrc, type Src } from '../api/src-types';
 import { QualitySymbol } from '../quality/symbols';
-import { isMediaSrcQuality } from '../quality/utils';
 import type {
   VideoQuality,
   VideoQualityAddEvent,
@@ -404,18 +403,14 @@ export class MediaStateManager extends MediaPlayerController {
     this._onSourceQualitiesChange(prevSources, newSources, event);
   }
 
-  private _onSourceQualitiesChange(
-    prevSources: MediaSrc[],
-    newSources: MediaSrc[],
-    trigger?: Event,
-  ) {
+  private _onSourceQualitiesChange(prevSources: Src[], newSources: Src[], trigger?: Event) {
     let { qualities } = this._media,
       added = false,
       removed = false;
 
     // Remove old qualities.
     for (const prevSrc of prevSources) {
-      if (!isMediaSrcQuality(prevSrc)) continue;
+      if (!isVideoQualitySrc(prevSrc)) continue;
       const exists = newSources.some((s) => s.src === prevSrc.src);
       if (!exists) {
         const quality = qualities.getBySrc(prevSrc.src);
@@ -434,7 +429,7 @@ export class MediaStateManager extends MediaPlayerController {
 
     // Add new qualities.
     for (const src of newSources) {
-      if (!isMediaSrcQuality(src) || qualities.getBySrc(src.src)) continue;
+      if (!isVideoQualitySrc(src) || qualities.getBySrc(src.src)) continue;
 
       const quality = {
         id: src.id ?? src.height + 'p',

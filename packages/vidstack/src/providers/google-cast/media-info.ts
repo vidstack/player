@@ -1,10 +1,11 @@
-import type { MediaSrc, MediaStreamType } from '../../core/api/types';
+import type { Src } from '../../core/api/src-types';
+import type { MediaStreamType } from '../../core/api/types';
 import type { TextTrack } from '../../core/tracks/text/text-track';
 
 export class GoogleCastMediaInfoBuilder {
   protected _info: chrome.cast.media.MediaInfo;
 
-  constructor(src: MediaSrc<string>) {
+  constructor(src: Src<string>) {
     this._info = new chrome.cast.media.MediaInfo(src.src, src.type);
   }
 

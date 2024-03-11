@@ -1,6 +1,7 @@
 export type * from './api/media-events';
 export type * from './api/media-request-events';
 export type * from './api/types';
+export * from './api/src-types';
 export * from './api/player-state';
 export * from './api/player-events';
 export * from './time-ranges';

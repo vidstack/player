@@ -37,7 +37,10 @@ const AirPlayButton = React.forwardRef<HTMLButtonElement, AirPlayButtonProps>(
     return (
       <AirPlayButtonBridge {...(props as Omit<AirPlayButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.button>
         )}

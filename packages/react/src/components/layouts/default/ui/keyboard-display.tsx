@@ -59,7 +59,7 @@ const DefaultKeyboardDisplay = React.forwardRef<HTMLElement, DefaultKeyboardDisp
         {...props}
         className={className}
         data-action={actionDataAttr}
-        ref={forwardRef as any}
+        ref={forwardRef as React.Ref<any>}
       >
         <div className="vds-kb-text-wrapper">
           <div className="vds-kb-text">{$text}</div>

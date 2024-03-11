@@ -1,7 +1,7 @@
 import throttle from 'just-throttle';
 import type { MaybeStopEffect } from 'maverick.js';
 
-import type { MediaSrc } from '../api/types';
+import type { Src } from '../api/src-types';
 
 export interface MediaStorage {
   getVolume(): Promise<number | null>;
@@ -38,7 +38,7 @@ export interface MediaStorage {
    * - The `playerId` is the string provided to the player `storage` prop (if set), or the `id`
    *   set on the player element, otherwise `undefined`.
    */
-  onChange?(src: MediaSrc, mediaId: string | null, playerId?: string): MaybeStopEffect;
+  onChange?(src: Src, mediaId: string | null, playerId?: string): MaybeStopEffect;
 
   /**
    * Called when storage is being destroyed either because the `storage` property on the player
@@ -141,7 +141,7 @@ export class LocalMediaStorage implements MediaStorage {
     this.save();
   }
 
-  onChange(src: MediaSrc, mediaId: string | null, playerId = 'vds-player') {
+  onChange(src: Src, mediaId: string | null, playerId = 'vds-player') {
     const savedData = playerId ? localStorage.getItem(playerId) : null,
       savedTime = mediaId ? localStorage.getItem(mediaId) : null;
 

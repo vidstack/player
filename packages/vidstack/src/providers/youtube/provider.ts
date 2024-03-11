@@ -1,7 +1,7 @@
 import { createScope, effect, signal } from 'maverick.js';
 import { isBoolean, isNumber, isObject, isString, type DeferredPromise } from 'maverick.js/std';
 
-import { TimeRange, type MediaContext, type MediaSrc } from '../../core';
+import { TimeRange, type MediaContext, type Src } from '../../core';
 import { preconnect } from '../../utils/network';
 import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
@@ -38,7 +38,7 @@ export class YouTubeProvider
   protected _pausedSeeking = false;
   protected _played = 0;
   protected _playedRange = new TimeRange(0, 0);
-  protected _currentSrc: MediaSrc<string> | null = null;
+  protected _currentSrc: Src<string> | null = null;
   protected _playPromise: DeferredPromise<void, string> | null = null;
   protected _pausePromise: DeferredPromise<void, string> | null = null;
 
@@ -75,7 +75,7 @@ export class YouTubeProvider
    */
   cookies = false;
 
-  get currentSrc(): MediaSrc<string> | null {
+  get currentSrc(): Src<string> | null {
     return this._currentSrc;
   }
 
@@ -146,7 +146,7 @@ export class YouTubeProvider
     this._remote('setPlaybackRate', rate);
   }
 
-  async loadSource(src: MediaSrc) {
+  async loadSource(src: Src) {
     if (!isString(src.src)) {
       this._currentSrc = null;
       this._videoId.set('');
@@ -156,7 +156,7 @@ export class YouTubeProvider
     const videoId = resolveYouTubeVideoId(src.src);
     this._videoId.set(videoId ?? '');
 
-    this._currentSrc = src as MediaSrc<string>;
+    this._currentSrc = src as Src<string>;
   }
 
   protected override _getOrigin() {

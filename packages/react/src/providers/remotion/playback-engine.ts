@@ -1,6 +1,6 @@
 import { createDisposalBin, listenEvent } from 'maverick.js/std';
 
-import type { RemotionMediaResource } from './types';
+import type { RemotionSrc } from './types';
 
 export class RemotionPlaybackEngine {
   protected _disposal = createDisposalBin();
@@ -23,7 +23,7 @@ export class RemotionPlaybackEngine {
   }
 
   constructor(
-    protected _src: RemotionMediaResource,
+    protected _src: RemotionSrc,
     protected _onFrameChange: (frame: number) => void,
     protected _onEnd: () => void,
   ) {

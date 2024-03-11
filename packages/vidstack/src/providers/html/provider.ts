@@ -2,7 +2,7 @@ import { createScope, onDispose } from 'maverick.js';
 import { isString, setAttribute } from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
-import type { MediaResource, MediaSrc } from '../../core/api/types';
+import type { HTMLMediaSrc, Src } from '../../core/api/src-types';
 import { isMediaStream } from '../../utils/mime';
 import type { MediaProviderAdapter } from '../types';
 import { AudioGain } from './audio/audio-gain';
@@ -18,7 +18,7 @@ import { NativeAudioTracks } from './native-audio-tracks';
 export class HTMLMediaProvider implements MediaProviderAdapter {
   readonly scope = createScope();
 
-  protected _currentSrc: MediaSrc<MediaResource> | null = null;
+  protected _currentSrc: Src<HTMLMediaSrc> | null = null;
 
   readonly audioGain = new AudioGain(this._media, (gain) => {
     this._ctx.delegate._notify('audio-gain-change', gain);
@@ -86,7 +86,7 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     setAttribute(this._media, 'playsinline', inline);
   }
 
-  async loadSource({ src, type }: MediaSrc, preload?: HTMLMediaElement['preload']) {
+  async loadSource({ src, type }: Src, preload?: HTMLMediaElement['preload']) {
     this._media.preload = preload || '';
 
     if (isMediaStream(src)) {
@@ -108,17 +108,13 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     }
 
     this._media.load();
-
-    this._currentSrc = {
-      src: src as MediaResource,
-      type,
-    };
+    this._currentSrc = { src: src as HTMLMediaSrc, type };
   }
 
   /**
    * Append source so it works when requesting AirPlay since hls.js will remove it.
    */
-  protected _appendSource(src: MediaSrc<string>, defaultType?: string) {
+  protected _appendSource(src: Src<string>, defaultType?: string) {
     const prevSource = this._media.querySelector('source[data-vds]'),
       source = prevSource ?? document.createElement('source');
 

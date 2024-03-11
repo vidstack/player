@@ -36,7 +36,7 @@ const Root = React.forwardRef<SVGElement | SVGSVGElement, RootProps>(
         aria-hidden="true"
         data-part="root"
         {...props}
-        ref={forwardRef as any}
+        ref={forwardRef as React.Ref<any>}
       >
         {children}
       </svg>

@@ -72,7 +72,10 @@ const Item = React.forwardRef<HTMLElement, ItemProps>(({ children, ...props }, f
   return (
     <ItemBridge {...(props as Omit<ItemProps, 'ref'>)}>
       {(props) => (
-        <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+        <Primitive.div
+          {...props}
+          ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+        >
           {children}
         </Primitive.div>
       )}

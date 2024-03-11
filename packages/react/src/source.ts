@@ -1,5 +1,5 @@
 import type { PlayerSrc as BasePlayerSrc } from 'vidstack';
 
-import type { RemotionMediaResource } from './providers/remotion/types';
+import type { RemotionSrc } from './providers/remotion/types';
 
-export type PlayerSrc = BasePlayerSrc | RemotionMediaResource;
+export type PlayerSrc = BasePlayerSrc | RemotionSrc;

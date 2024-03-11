@@ -6,12 +6,8 @@ import { Internals, random, type TimelineContextValue } from 'remotion';
 import { Primitive, type PrimitivePropsWithRef } from '../../../components/primitives/nodes';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { RemotionLayoutEngine } from '../layout-engine';
-import { isRemotionSource } from '../type-check';
-import type {
-  RemotionErrorRenderer,
-  RemotionLoadingRenderer,
-  RemotionMediaResource,
-} from '../types';
+import { isRemotionSrc } from '../type-check';
+import type { RemotionErrorRenderer, RemotionLoadingRenderer, RemotionSrc } from '../types';
 import { REMOTION_PROVIDER_ID, RemotionContextProvider } from './context';
 import { ErrorBoundary } from './error-boundary';
 
@@ -50,7 +46,7 @@ const RemotionThumbnail = React.forwardRef<HTMLElement, RemotionThumbnailProps>(
       layoutEngine = React.useMemo(() => new RemotionLayoutEngine(), []);
 
     // Initialize defaults.
-    if (isRemotionSource($src) && !$src.compositionWidth) {
+    if (isRemotionSrc($src) && !$src.compositionWidth) {
       $src = {
         compositionWidth: 1920,
         compositionHeight: 1080,
@@ -60,12 +56,12 @@ const RemotionThumbnail = React.forwardRef<HTMLElement, RemotionThumbnailProps>(
     }
 
     React.useEffect(() => {
-      layoutEngine.setSrc(isRemotionSource($src) ? $src : null);
+      layoutEngine.setSrc(isRemotionSrc($src) ? $src : null);
       return () => void layoutEngine.setSrc(null);
     }, [$src]);
 
     const Component = Internals.useLazyComponent({
-      component: $src.src as RemotionMediaResource['src'],
+      component: $src.src as RemotionSrc['src'],
     }) as React.LazyExoticComponent<React.ComponentType<unknown>>;
 
     const thumbnailId = React.useMemo(() => String(random(null)), []),
@@ -103,7 +99,7 @@ const RemotionThumbnail = React.forwardRef<HTMLElement, RemotionThumbnailProps>(
       _update(1);
     }, []);
 
-    if (!isRemotionSource($src)) return null;
+    if (!isRemotionSrc($src)) return null;
 
     return (
       <RemotionContextProvider
@@ -141,7 +137,7 @@ export default RemotionThumbnail;
 
 interface RemotionThumbnailUIProps
   extends Pick<RemotionThumbnailProps, 'renderLoading' | 'errorFallback' | 'onError'> {
-  inputProps?: RemotionMediaResource['inputProps'];
+  inputProps?: RemotionSrc['inputProps'];
 }
 
 function RemotionThumbnailUI({

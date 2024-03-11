@@ -21,7 +21,7 @@ export interface TitleProps extends PrimitivePropsWithRef<'span'> {}
 const Title = React.forwardRef<HTMLElement, TitleProps>(({ children, ...props }, forwardRef) => {
   const $title = useMediaState('title');
   return (
-    <Primitive.span {...props} ref={forwardRef as any}>
+    <Primitive.span {...props} ref={forwardRef as React.Ref<any>}>
       {$title}
       {children}
     </Primitive.span>

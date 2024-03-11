@@ -39,7 +39,10 @@ const SeekButton = React.forwardRef<HTMLButtonElement, SeekButtonProps>(
     return (
       <SeekButtonBridge {...(props as Omit<SeekButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.button>
         )}

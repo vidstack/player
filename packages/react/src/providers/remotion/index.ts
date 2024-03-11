@@ -7,4 +7,4 @@ export {
 export { RemotionProviderLoader } from './loader';
 export type { RemotionProvider } from './provider';
 export type * from './types';
-export { isRemotionProvider, isRemotionSource } from './type-check';
+export { isRemotionProvider, isRemotionSrc as isRemotionSource, isRemotionSrc } from './type-check';

@@ -5,7 +5,7 @@ import type { SliderOrientation, TooltipPlacement } from 'vidstack';
 
 import { useActive, useResizeObserver } from '../../../../hooks/use-dom';
 import { useMediaState } from '../../../../hooks/use-media-state';
-import { isRemotionSource } from '../../../../providers/remotion/type-check';
+import { isRemotionSrc } from '../../../../providers/remotion/type-check';
 import type { TimeSliderInstance } from '../../../primitives/instances';
 import * as TimeSlider from '../../../ui/sliders/time-slider';
 import * as VolumeSlider from '../../../ui/sliders/volume-slider';
@@ -122,7 +122,7 @@ function DefaultTimeSlider() {
           >
             <TimeSlider.Thumbnail.Img />
           </TimeSlider.Thumbnail.Root>
-        ) : $RemotionSliderThumbnail && isRemotionSource($src) ? (
+        ) : $RemotionSliderThumbnail && isRemotionSrc($src) ? (
           <$RemotionSliderThumbnail className="vds-slider-thumbnail vds-thumbnail" />
         ) : null}
         <TimeSlider.ChapterTitle className="vds-slider-chapter-title" />

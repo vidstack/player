@@ -1,7 +1,7 @@
 import { peek, type Dispose } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
-import type { MediaSrc } from '../../core/api/types';
+import type { Src } from '../../core/api/src-types';
 import { preconnect } from '../../utils/network';
 import { isHLSSupported } from '../../utils/support';
 import type { MediaProviderAdapter } from '../types';
@@ -109,16 +109,16 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
     });
   }
 
-  override async loadSource(src: MediaSrc, preload?: HTMLMediaElement['preload']) {
+  override async loadSource(src: Src, preload?: HTMLMediaElement['preload']) {
     if (!isString(src.src)) {
       this._removeSource();
       return;
     }
 
     this._media.preload = preload || '';
-    this._appendSource(src as MediaSrc<string>, 'application/x-mpegurl');
+    this._appendSource(src as Src<string>, 'application/x-mpegurl');
     this._controller._loadSource(src);
-    this._currentSrc = src as MediaSrc<string>;
+    this._currentSrc = src as Src<string>;
   }
 
   /**

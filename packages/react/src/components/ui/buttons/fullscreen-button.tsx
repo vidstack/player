@@ -39,7 +39,10 @@ const FullscreenButton = React.forwardRef<HTMLButtonElement, FullscreenButtonPro
     return (
       <FullscreenButtonBridge {...(props as Omit<FullscreenButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.button>
         )}

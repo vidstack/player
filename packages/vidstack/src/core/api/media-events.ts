@@ -6,9 +6,9 @@ import type { MediaProviderAdapter, MediaProviderLoader } from '../../providers/
 import type { VideoQuality } from '../quality/video-quality';
 import type { AudioTrack } from '../tracks/audio-tracks';
 import type { TextTrack } from '../tracks/text/text-track';
+import type { Src } from './src-types';
 import type {
   MediaErrorDetail,
-  MediaSrc,
   MediaStreamType,
   MediaType,
   MediaViewType,
@@ -212,7 +212,7 @@ export interface MediaRemotePlaybackChangeEvent
  *
  * @detail src
  */
-export interface MediaSourceChangeEvent extends MediaEvent<MediaSrc> {
+export interface MediaSourceChangeEvent extends MediaEvent<Src> {
   /** Whether this source change was due to a quality change. */
   isQualityChange?: boolean;
 }
@@ -483,7 +483,7 @@ export interface MediaSeekingEvent extends MediaEvent<number> {}
  *
  * @detail src
  */
-export interface MediaSourcesChangeEvent extends MediaEvent<MediaSrc[]> {}
+export interface MediaSourcesChangeEvent extends MediaEvent<Src[]> {}
 
 /**
  * Fired when the user agent is trying to fetch media data, but data is unexpectedly not

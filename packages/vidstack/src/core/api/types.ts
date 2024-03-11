@@ -67,20 +67,3 @@ export interface MediaErrorDetail {
   error?: Error;
   mediaError?: MediaError;
 }
-
-export type MediaResource = string | MediaStream | MediaSource | Blob;
-
-export type MediaSrc<T = unknown> = MediaSrcQuality<T> | MediaSrcType<T>;
-
-export interface MediaSrcType<T = unknown> {
-  src: T;
-  type: string;
-}
-
-export interface MediaSrcQuality<T = unknown> extends MediaSrcType<T> {
-  id?: string;
-  width: number;
-  height: number;
-  bitrate?: number;
-  codec?: string;
-}

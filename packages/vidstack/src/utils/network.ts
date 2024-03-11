@@ -6,7 +6,7 @@ import {
   type DeferredPromise,
 } from 'maverick.js/std';
 
-import type { MediaSrc } from '../core/api/types';
+import type { Src } from '../core/api/src-types';
 import { isAudioSrc, isVideoSrc } from './mime';
 
 export function appendParamsToURL(baseUrl: string, params: Record<string, any>) {
@@ -81,7 +81,7 @@ export function getDownloadFile({
   src,
   download,
 }: {
-  src: MediaSrc;
+  src: Src;
   title: string;
   download?: FileDownloadInfo;
 }) {
@@ -109,7 +109,7 @@ function isValidFileDownload({
   download,
 }: {
   url: unknown;
-  src: MediaSrc;
+  src: Src;
   download?: FileDownloadInfo;
 }) {
   return isString(url) && ((download && download !== true) || isAudioSrc(src) || isVideoSrc(src));

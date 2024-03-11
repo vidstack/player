@@ -1,7 +1,7 @@
 import { peek } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 
-import type { MediaSrc, MediaType } from '../../core';
+import type { MediaType, Src } from '../../core';
 import type { MediaContext } from '../../core/api/media-context';
 import { coerceToError } from '../../utils/error';
 import { canGoogleCastSrc } from '../../utils/mime';
@@ -39,7 +39,7 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
     return 'video';
   }
 
-  canPlay(src: MediaSrc) {
+  canPlay(src: Src) {
     // Casting is not supported on iOS.
     return IS_CHROME && !IS_IOS && canGoogleCastSrc(src);
   }

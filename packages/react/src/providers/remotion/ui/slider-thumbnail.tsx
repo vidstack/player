@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { useMediaState } from '../../../hooks/use-media-state';
 import { useSliderState } from '../../../hooks/use-slider-state';
-import { isRemotionSource } from '../type-check';
+import { isRemotionSrc } from '../type-check';
 import RemotionThumbnail, { type RemotionThumbnailProps } from './thumbnail';
 
 export interface RemotionSliderThumbnailProps extends Omit<RemotionThumbnailProps, 'frame'> {}
@@ -23,7 +23,7 @@ const RemotionSliderThumbnail = React.forwardRef<HTMLElement, RemotionSliderThum
     const $src = useMediaState('currentSrc'),
       $percent = useSliderState('pointerPercent');
 
-    if (!isRemotionSource($src)) return null;
+    if (!isRemotionSrc($src)) return null;
 
     return (
       <RemotionThumbnail

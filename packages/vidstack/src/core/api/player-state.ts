@@ -7,10 +7,10 @@ import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
 import type { AudioTrack } from '../tracks/audio-tracks';
 import { isTrackCaptionKind, type TextTrack } from '../tracks/text/text-track';
+import type { Src } from './src-types';
 import type {
   MediaCrossOrigin,
   MediaErrorDetail,
-  MediaSrc,
   MediaStreamType,
   MediaType,
   MediaViewType,
@@ -717,16 +717,16 @@ export interface MediaState {
    *
    * @defaultValue []
    */
-  sources: MediaSrc[];
+  sources: Src[];
   /**
    * The chosen media resource. Defaults to `{ src: '', type: '' }` if no media has been loaded.
    *
    * @defaultValue { src: '', type: '' }
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc}
    */
-  source: MediaSrc;
+  source: Src;
   /** Alias for `source`. */
-  currentSrc: MediaSrc;
+  currentSrc: Src;
   /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    *

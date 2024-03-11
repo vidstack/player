@@ -72,7 +72,7 @@ export interface ThumbProps extends PrimitivePropsWithRef<'div'> {}
  * ```
  */
 const Thumb = React.forwardRef<HTMLElement, ThumbProps>((props, forwardRef) => (
-  <Primitive.div {...props} ref={forwardRef as any} />
+  <Primitive.div {...props} ref={forwardRef as React.Ref<any>} />
 ));
 
 Thumb.displayName = 'SliderThumb';
@@ -99,7 +99,7 @@ export interface TrackProps extends PrimitivePropsWithRef<'div'> {}
  * ```
  */
 const Track = React.forwardRef<HTMLElement, TrackProps>((props, forwardRef) => (
-  <Primitive.div {...props} ref={forwardRef as any} />
+  <Primitive.div {...props} ref={forwardRef as React.Ref<any>} />
 ));
 
 Track.displayName = 'SliderTrack';
@@ -126,7 +126,7 @@ export interface TrackFillProps extends PrimitivePropsWithRef<'div'> {}
  * ```
  */
 const TrackFill = React.forwardRef<HTMLElement, TrackFillProps>((props, forwardRef) => (
-  <Primitive.div {...props} ref={forwardRef as any} />
+  <Primitive.div {...props} ref={forwardRef as React.Ref<any>} />
 ));
 
 TrackFill.displayName = 'SliderTrackFill';
@@ -163,7 +163,10 @@ const Preview = React.forwardRef<HTMLElement, PreviewProps>(
     return (
       <PreviewBridge {...(props as Omit<PreviewProps, 'ref'>)}>
         {(props) => (
-          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.div
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.div>
         )}
@@ -201,7 +204,7 @@ const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props },
       {(props, instance) => {
         const $text = useSignal(() => instance.getValueText(), instance);
         return (
-          <Primitive.div {...props} ref={forwardRef as any}>
+          <Primitive.div {...props} ref={forwardRef as React.Ref<any>}>
             {$text}
             {children}
           </Primitive.div>
@@ -240,7 +243,7 @@ const Steps = React.forwardRef<HTMLElement, StepsProps>(({ children, ...props },
     steps = ($max - $min) / $step;
 
   return (
-    <Primitive.div {...props} ref={forwardRef as any}>
+    <Primitive.div {...props} ref={forwardRef as React.Ref<any>}>
       {Array.from({ length: Math.floor(steps) + 1 }).map((_, step) => children(step))}
     </Primitive.div>
   );

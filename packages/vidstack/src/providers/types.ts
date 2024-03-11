@@ -1,8 +1,9 @@
 import type { Scope } from 'maverick.js';
 
+import type { Src } from '../core';
 import type { MediaContext } from '../core/api/media-context';
 import type { MediaState } from '../core/api/player-state';
-import type { MediaSrc, MediaType } from '../core/api/types';
+import type { MediaType } from '../core/api/types';
 import type { FullscreenAdapter } from '../foundation/fullscreen/controller';
 import type { AudioProvider } from './audio/provider';
 import type { GoogleCastProvider } from './google-cast/provider';
@@ -22,17 +23,17 @@ export type AnyMediaProvider =
 export interface MediaProviderLoader<Provider extends MediaProviderAdapter = MediaProviderAdapter> {
   readonly name: string;
   target: HTMLElement | null;
-  canPlay(src: MediaSrc): boolean;
-  mediaType(src?: MediaSrc): MediaType;
+  canPlay(src: Src): boolean;
+  mediaType(src?: Src): MediaType;
   preconnect?(ctx: MediaContext): void;
   load(ctx: MediaContext): Promise<Provider>;
-  loadPoster?(src: MediaSrc, ctx: MediaContext, abort: AbortController): Promise<string | null>;
+  loadPoster?(src: Src, ctx: MediaContext, abort: AbortController): Promise<string | null>;
 }
 
 export interface MediaProviderAdapter {
   readonly scope: Scope;
   readonly type: string;
-  readonly currentSrc: MediaSrc | null;
+  readonly currentSrc: Src | null;
   readonly audioGain?: AudioGainAdapter;
   readonly fullscreen?: MediaFullscreenAdapter;
   readonly pictureInPicture?: MediaPictureInPictureAdapter;
@@ -48,7 +49,7 @@ export interface MediaProviderAdapter {
   setVolume(volume: number): void;
   setPlaysInline?(inline: boolean): void;
   setPlaybackRate?(rate: number): void;
-  loadSource(src: MediaSrc, preload: MediaState['preload']): Promise<void>;
+  loadSource(src: Src, preload: MediaState['preload']): Promise<void>;
 }
 
 export interface AudioGainAdapter {

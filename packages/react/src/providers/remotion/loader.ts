@@ -4,8 +4,8 @@ import type {
   MediaContext,
   MediaProviderAdapter,
   MediaProviderLoader,
-  MediaSrc,
   MediaType,
+  Src,
 } from 'vidstack';
 
 import * as UI from '../../components/layouts/remotion-ui';
@@ -21,7 +21,7 @@ export class RemotionProviderLoader implements MediaProviderLoader {
     UI.RemotionPoster.set(React.lazy(() => import('./ui/poster')));
   }
 
-  canPlay(src: MediaSrc): boolean {
+  canPlay(src: Src): boolean {
     return src.type === 'video/remotion';
   }
 

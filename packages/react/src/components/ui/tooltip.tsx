@@ -75,7 +75,10 @@ const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(
     return (
       <TriggerBridge {...(props as Omit<TriggerProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.button>
         )}
@@ -115,7 +118,10 @@ const Content = React.forwardRef<HTMLElement, ContentProps>(
     return (
       <ContentBridge {...(props as Omit<ContentProps, 'ref'>)}>
         {(props) => (
-          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.div
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.div>
         )}

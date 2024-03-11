@@ -2,7 +2,7 @@ import { Component, method, onDispose, peek, signal, State, tick } from 'maveric
 import { animationFrameThrottle, isString, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
-import type { MediaSrc, TextTrackInit } from '../../core';
+import type { Src, TextTrackInit } from '../../core';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import type { MediaProviderLoader } from '../../providers';
 import { SourceSelection } from './source-select';
@@ -33,7 +33,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
   private _media!: MediaContext;
   private _sources!: SourceSelection;
-  private _domSources = signal<MediaSrc[]>([]);
+  private _domSources = signal<Src[]>([]);
   private _domTracks = signal<TextTrackInit[]>([]);
 
   private _loader: MediaProviderLoader | null = null;
@@ -135,7 +135,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   private _onMutation() {
-    const sources: MediaSrc[] = [],
+    const sources: Src[] = [],
       tracks: TextTrackInit[] = [],
       children = this.el!.children;
 

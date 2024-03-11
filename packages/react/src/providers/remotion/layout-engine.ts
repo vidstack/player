@@ -1,9 +1,9 @@
 import { animationFrameThrottle, createDisposalBin } from 'maverick.js/std';
 
-import type { RemotionMediaResource } from './types';
+import type { RemotionSrc } from './types';
 
 export class RemotionLayoutEngine {
-  protected _src: RemotionMediaResource | null = null;
+  protected _src: RemotionSrc | null = null;
   protected _viewport: HTMLElement | null = null;
   protected _canvas: HTMLElement | null = null;
   protected _container: HTMLElement | null = null;
@@ -11,7 +11,7 @@ export class RemotionLayoutEngine {
 
   constructor() {}
 
-  setSrc(src: RemotionMediaResource | null) {
+  setSrc(src: RemotionSrc | null) {
     this._src = src;
     this.setContainer(this._container);
   }

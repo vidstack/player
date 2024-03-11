@@ -1,4 +1,4 @@
-import type { MediaSrc } from '../../core';
+import type { Src } from '../../core';
 import { isHLSSrc } from '../../utils/mime';
 import { isHLSSupported } from '../../utils/support';
 import type { MediaProviderLoader } from '../types';
@@ -13,7 +13,7 @@ export class HLSProviderLoader
 
   override readonly name = 'hls';
 
-  override canPlay(src: MediaSrc) {
+  override canPlay(src: Src) {
     return HLSProviderLoader.supported && isHLSSrc(src);
   }
 

@@ -42,7 +42,11 @@ const Poster = React.forwardRef<HTMLImageElement, PosterProps>(
     return (
       <PosterBridge {...(props as Omit<PosterProps, 'ref'>)}>
         {(props, instance) => (
-          <PosterImg {...props} instance={instance} ref={composeRefs(props.ref, forwardRef)}>
+          <PosterImg
+            {...props}
+            instance={instance}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as any)}
+          >
             {children}
           </PosterImg>
         )}
@@ -61,7 +65,7 @@ export { Poster };
 interface PosterImgProps {
   instance: PosterInstance;
   children?: React.ReactNode;
-  ref?: React.Ref<HTMLImageElement>;
+  ref?: React.LegacyRef<HTMLImageElement>;
 }
 
 const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
@@ -78,7 +82,7 @@ const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
         src={$src || ''}
         alt={$alt || undefined}
         crossOrigin={$crossOrigin || undefined}
-        ref={composeRefs(img.set as any, forwardRef)}
+        ref={composeRefs(img.set as React.Ref<HTMLImageElement>, forwardRef)}
         style={{ display: $loading || $hidden ? 'none' : undefined }}
       >
         {children}

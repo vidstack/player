@@ -28,7 +28,7 @@ const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
   ({ defaultText = '', children, ...props }, forwardRef) => {
     const $chapterTitle = useChapterTitle();
     return (
-      <Primitive.span {...props} ref={forwardRef as any}>
+      <Primitive.span {...props} ref={forwardRef as React.Ref<any>}>
         {$chapterTitle || defaultText}
         {children}
       </Primitive.span>

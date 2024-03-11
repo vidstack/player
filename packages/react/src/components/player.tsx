@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { createReactComponent, type ReactElementProps } from 'maverick.js/react';
+import type { MediaSrc } from 'vidstack';
 
 import type { PlayerSrc } from '../source';
 import { playerCallbacks } from './player-callbacks';
@@ -49,7 +50,7 @@ const MediaPlayer = React.forwardRef<MediaPlayerInstance, MediaPlayerProps>(
     return (
       <MediaPlayerBridge
         {...props}
-        src={props.src as any}
+        src={props.src as MediaSrc}
         ref={forwardRef}
         style={{
           aspectRatio,

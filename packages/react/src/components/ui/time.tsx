@@ -36,7 +36,11 @@ const Time = React.forwardRef<HTMLElement, TimeProps>(({ children, ...props }, f
   return (
     <TimeBridge {...(props as Omit<TimeProps, 'ref'>)}>
       {(props, instance) => (
-        <TimeText {...props} instance={instance} ref={composeRefs(props.ref, forwardRef)}>
+        <TimeText
+          {...props}
+          instance={instance}
+          ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+        >
           {children}
         </TimeText>
       )}
@@ -62,7 +66,7 @@ const TimeText = React.forwardRef<HTMLElement, TimeTextProps>(
     const { timeText } = instance.$state,
       $timeText = useSignal(timeText);
     return (
-      <Primitive.div {...props} ref={forwardRef as any}>
+      <Primitive.div {...props} ref={forwardRef as React.Ref<any>}>
         {$timeText}
         {children}
       </Primitive.div>

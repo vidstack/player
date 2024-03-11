@@ -2,7 +2,7 @@ import { isNil, isNull, isNumber, isUndefined } from 'maverick.js/std';
 import { Composition } from 'remotion';
 import { NoReactInternals } from 'remotion/no-react';
 
-import type { RemotionMediaResource } from './types';
+import type { RemotionSrc } from './types';
 
 export function validateRemotionResource({
   src,
@@ -14,7 +14,7 @@ export function validateRemotionResource({
   inFrame,
   outFrame,
   numberOfSharedAudioTags,
-}: RemotionMediaResource) {
+}: RemotionSrc) {
   if (!__DEV__) return;
 
   validateComponent(src);
@@ -202,7 +202,7 @@ export function validatePlaybackRate(playbackRate: number) {
   }
 }
 
-export function validateComponent(src: RemotionMediaResource['src']) {
+export function validateComponent(src: RemotionSrc['src']) {
   if (!__DEV__) return;
 
   // @ts-expect-error

@@ -8,12 +8,12 @@ import {
   type TimelineContextValue,
 } from 'remotion';
 
-import type { RemotionMediaResource } from '../types';
+import type { RemotionSrc } from '../types';
 
 export const REMOTION_PROVIDER_ID = 'vds-remotion-provider';
 
 export interface RemotionContextProviderProps {
-  src: RemotionMediaResource;
+  src: RemotionSrc;
   component: React.LazyExoticComponent<React.ComponentType<unknown>>;
   timeline: TimelineContextValue;
   mediaVolume: MediaVolumeContextValue;

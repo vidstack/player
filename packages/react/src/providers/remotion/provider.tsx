@@ -11,12 +11,12 @@ import {
   type SetTimelineContextValue,
   type TimelineContextValue,
 } from 'remotion';
-import { TimeRange, type MediaContext, type MediaProviderAdapter, type MediaSrc } from 'vidstack';
+import { TimeRange, type MediaContext, type MediaProviderAdapter, type Src } from 'vidstack';
 
 import { RemotionLayoutEngine } from './layout-engine';
 import { RemotionPlaybackEngine } from './playback-engine';
-import { isRemotionSource } from './type-check';
-import type { RemotionMediaResource } from './types';
+import { isRemotionSrc } from './type-check';
+import type { RemotionSrc } from './types';
 import { REMOTION_PROVIDER_ID, RemotionContextProvider } from './ui/context';
 import { ErrorBoundary } from './ui/error-boundary';
 import { validatePlaybackRate, validateRemotionResource } from './validate';
@@ -26,7 +26,7 @@ export class RemotionProvider implements MediaProviderAdapter {
 
   readonly scope = createScope();
 
-  protected _src = signal<RemotionMediaResource | null>(null);
+  protected _src = signal<RemotionSrc | null>(null);
   protected _setup = false;
   protected _loadStart = false;
   protected _played = 0;
@@ -232,11 +232,11 @@ export class RemotionProvider implements MediaProviderAdapter {
       : (this._playedRange = new TimeRange(0, (this._played = time)));
   }
 
-  async loadSource(src: MediaSrc) {
-    if (!isRemotionSource(src)) return;
+  async loadSource(src: Src) {
+    if (!isRemotionSrc(src)) return;
 
     const onUserError = src.onError,
-      resolvedSrc: RemotionMediaResource = {
+      resolvedSrc: RemotionSrc = {
         compositionWidth: 1920,
         compositionHeight: 1080,
         fps: 30,
@@ -279,7 +279,7 @@ export class RemotionProvider implements MediaProviderAdapter {
     this.changeSrc(null);
   }
 
-  changeSrc(src: RemotionMediaResource | null) {
+  changeSrc(src: RemotionSrc | null) {
     this._playbackEngine?.destroy();
 
     this._played = 0;
@@ -318,7 +318,7 @@ export class RemotionProvider implements MediaProviderAdapter {
     }
 
     React.useEffect(() => {
-      if (!isRemotionSource($src)) return;
+      if (!isRemotionSrc($src)) return;
       validateRemotionResource($src);
 
       const rafId = requestAnimationFrame(() => {
@@ -371,7 +371,7 @@ export class RemotionProvider implements MediaProviderAdapter {
     );
   };
 
-  renderVideo = ({ src }: { src: RemotionMediaResource }): React.ReactNode => {
+  renderVideo = ({ src }: { src: RemotionSrc }): React.ReactNode => {
     const video = Internals.useVideo(),
       Video = video ? video.component : null,
       audioContext = React.useContext(Internals.SharedAudioContext);
@@ -402,7 +402,7 @@ export class RemotionProvider implements MediaProviderAdapter {
     return <React.Suspense fallback={LoadingContent}>{Content}</React.Suspense>;
   };
 
-  protected _ready(src: RemotionMediaResource | null) {
+  protected _ready(src: RemotionSrc | null) {
     if (!src) return;
 
     const { outFrame, inFrame, fps } = src,

@@ -3,7 +3,7 @@ import { effect, peek } from 'maverick.js';
 import { camelToKebabCase, DOMEvent, isString, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
-import type { MediaSrc } from '../../core/api/types';
+import type { Src } from '../../core/api/src-types';
 import { QualitySymbol } from '../../core/quality/symbols';
 import { TextTrackSymbol } from '../../core/tracks/text/symbols';
 import { TextTrack } from '../../core/tracks/text/text-track';
@@ -275,7 +275,7 @@ export class HLSController {
     }
   }
 
-  _loadSource(src: MediaSrc) {
+  _loadSource(src: Src) {
     if (!isString(src.src)) return;
     this._clearRetryTimer();
     this._instance?.loadSource(src.src);

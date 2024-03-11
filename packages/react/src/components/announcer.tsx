@@ -33,7 +33,7 @@ const MediaAnnouncer = React.forwardRef<HTMLElement, MediaAnnouncerProps>(
           <Primitive.div
             {...props}
             style={{ display: 'contents', ...style }}
-            ref={composeRefs(props.ref, forwardRef)}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
           >
             {children}
           </Primitive.div>

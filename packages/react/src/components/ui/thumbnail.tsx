@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import type { WriteSignal } from 'maverick.js';
 import {
   composeRefs,
   createReactComponent,
@@ -39,7 +40,10 @@ const Root = React.forwardRef<HTMLElement, RootProps>(({ children, ...props }, f
   return (
     <ThumbnailBridge {...(props as Omit<RootProps, 'ref'>)}>
       {(props) => (
-        <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+        <Primitive.div
+          {...props}
+          ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+        >
           {children}
         </Primitive.div>
       )}

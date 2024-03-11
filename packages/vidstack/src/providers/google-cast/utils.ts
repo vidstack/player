@@ -1,4 +1,4 @@
-import type { MediaSrc } from '../../core/api/types';
+import type { Src } from '../../core/api/src-types';
 import { listen } from '../../utils/dom';
 
 export function getCastFrameworkURL() {
@@ -47,7 +47,7 @@ export function getCastSessionMedia() {
   return getCastSession()?.getSessionObj().media[0];
 }
 
-export function hasActiveCastSession(src: MediaSrc | undefined | null) {
+export function hasActiveCastSession(src: Src | undefined | null) {
   const contentId = getCastSessionMedia()?.media.contentId;
   return contentId === src?.src;
 }

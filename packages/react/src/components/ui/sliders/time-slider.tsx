@@ -121,7 +121,10 @@ const Chapters = React.forwardRef<HTMLDivElement, ChaptersProps>(
     return (
       <SliderChaptersBridge {...props}>
         {(props, instance) => (
-          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.div
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             <ChapterTracks instance={instance}>{children}</ChapterTracks>
           </Primitive.div>
         )}
@@ -200,7 +203,7 @@ const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
     }, []);
 
     return (
-      <Primitive.div {...props} ref={forwardRef as any}>
+      <Primitive.div {...props} ref={forwardRef as React.Ref<any>}>
         {title}
         {children}
       </Primitive.div>
@@ -230,7 +233,7 @@ export interface ProgressProps extends PrimitivePropsWithRef<'div'> {}
  * ```
  */
 const Progress = React.forwardRef<HTMLElement, ProgressProps>((props, forwardRef) => (
-  <Primitive.div {...props} ref={forwardRef as any} />
+  <Primitive.div {...props} ref={forwardRef as React.Ref<any>} />
 ));
 
 Progress.displayName = 'SliderProgress';
@@ -272,7 +275,7 @@ const ThumbnailRoot = React.forwardRef<HTMLElement, ThumbnailProps>(
     return (
       <SliderThumbnailBridge {...(props as Omit<ThumbnailProps, 'ref'>)}>
         {(props) => (
-          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.div {...props} ref={composeRefs(props.ref as React.Ref<any>, forwardRef)}>
             {children}
           </Primitive.div>
         )}
@@ -322,7 +325,11 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     return (
       <VideoBridge {...(props as Omit<VideoProps, 'ref'>)}>
         {(props, instance) => (
-          <VideoProvider {...props} instance={instance} ref={composeRefs(props.ref, forwardRef)}>
+          <VideoProvider
+            {...props}
+            instance={instance}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef)}
+          >
             {children}
           </VideoProvider>
         )}
@@ -358,7 +365,7 @@ const VideoProvider = React.forwardRef<HTMLVideoElement, VideoProviderProps>(
         playsInline
         preload={$canLoad ? 'auto' : 'none'}
         crossOrigin={$crossOrigin || undefined}
-        ref={composeRefs(video.set as any, forwardRef)}
+        ref={composeRefs(video.set as React.Ref<HTMLVideoElement>, forwardRef)}
       >
         {children}
       </Primitive.video>
