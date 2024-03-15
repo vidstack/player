@@ -7,6 +7,7 @@ import { DefaultAudioLayout } from '../../../../components/layouts/default/audio
 import type { DefaultLayoutProps } from '../../../../components/layouts/default/props';
 import type { MediaContext } from '../../../../core';
 import { useMediaContext } from '../../../../core/api/media-context';
+import { isHTMLElement } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { setLayoutName } from '../layout-name';
@@ -93,7 +94,7 @@ export class MediaAudioLayoutElement
 
   private _onStartScrubbing(event: Event) {
     const { target } = event,
-      hasTimeSlider = !!(target instanceof HTMLElement && target.closest('.vds-time-slider'));
+      hasTimeSlider = !!(isHTMLElement(target) && target.closest('.vds-time-slider'));
 
     if (!hasTimeSlider) return;
 

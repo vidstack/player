@@ -199,6 +199,7 @@ function PIPButton() {
     $exitText = $i18n(translations, 'Exit PiP');
   return html`
     <media-pip-button class="plyr__controls__item plyr__control" data-no-label data-plyr="pip">
+      <slot name="pip-icon"></slot>
       <slot name="enter-pip-icon" data-class="icon--pressed"></slot>
       <slot name="exit-pip-icon" data-class="icon--not-pressed"></slot>
       <span class="label--pressed plyr__tooltip">${$exitText}</span>

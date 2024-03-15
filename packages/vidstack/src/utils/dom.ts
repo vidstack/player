@@ -377,3 +377,7 @@ export function useFocusIn($el: ReadSignal<Element | null | undefined>) {
 
   return $isFocusIn;
 }
+
+export function isHTMLElement(el: any): el is HTMLElement {
+  return el instanceof HTMLElement;
+}

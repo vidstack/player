@@ -25,8 +25,9 @@ export class SlotObserver {
   }
 
   assign(template: Element | TemplateResult, slot: HTMLSlotElement) {
+    slot.textContent = '';
+
     if (isDOMNode(template)) {
-      slot.textContent = '';
       slot.append(template);
     } else {
       render(template, slot);

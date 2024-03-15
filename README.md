@@ -2,7 +2,6 @@
 
 [![package-badge]][package]
 [![discord-badge]][discord]
-[![jsdelivr-badge]][jsdelivr]
 
 Build and ship a production-ready video or audio player! Robust, customizable, and accessible. The
 successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
@@ -58,8 +57,6 @@ accounts:
 [docs-player]: https://www.vidstack.io/docs/player
 [package]: https://www.npmjs.com/package/vidstack
 [package-badge]: https://img.shields.io/npm/v/vidstack/next?style=flat-square
-[jsdelivr]: https://www.jsdelivr.com/package/npm/vidstack
-[jsdelivr-badge]: https://data.jsdelivr.com/v1/package/npm/vidstack/badge
 [discord]: https://discord.gg/QAjfh2gZE4
 [discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white&style=flat-square
 [discussions]: https://github.com/vidstack/player/discussions

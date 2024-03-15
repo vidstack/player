@@ -1,3 +1,5 @@
+import type { Writable } from 'type-fest';
+
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { ScreenOrientationLockType } from '../../foundation/orientation/types';
 import type { GoogleCastOptions } from '../../providers/google-cast/types';
@@ -56,7 +58,7 @@ export type PlayerSrc = MediaSrc | MediaSrc[];
 export interface MediaPlayerProps
   // Prefer picking off the `MediaStore` type to ensure docs are kept in-sync.
   extends Pick<
-    MediaState,
+    Writable<MediaState>,
     | 'artist'
     | 'autoPlay'
     | 'clipStartTime'

@@ -28,6 +28,7 @@ import {
   isElementParent,
   isElementVisible,
   isEventInside,
+  isHTMLElement,
   onPress,
   setAttributeIfEmpty,
 } from '../../../utils/dom';
@@ -516,11 +517,11 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     }
 
     for (const child of children) {
-      if (child instanceof HTMLElement && child.style.display === 'contents') {
+      if (isHTMLElement(child) && child.style.display === 'contents') {
         children.push(...child.children);
       } else if (child.nodeType === 3) {
         height += parseFloat(getComputedStyle(child).fontSize);
-      } else if (child instanceof HTMLElement) {
+      } else if (isHTMLElement(child)) {
         if (!isElementVisible(child)) continue;
         const style = getComputedStyle(child);
         height +=

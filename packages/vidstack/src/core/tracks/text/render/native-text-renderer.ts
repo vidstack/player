@@ -1,3 +1,4 @@
+import { isHTMLElement } from '../../../../utils/dom';
 import { TextTrackSymbol } from '../symbols';
 import type { TextTrack as VdsTextTrack } from '../text-track';
 import type { TextRenderer } from './text-renderer';
@@ -56,7 +57,7 @@ export class NativeTextRenderer implements TextRenderer {
   private _attachTrack(track: VdsTextTrack): void {
     if (!this._video) return;
     const el = (track[TextTrackSymbol._native] ??= this._createTrackElement(track));
-    if (el instanceof HTMLElement) {
+    if (isHTMLElement(el)) {
       this._video.append(el);
       el.track.mode = el.default ? 'showing' : 'hidden';
     }
@@ -68,7 +69,7 @@ export class NativeTextRenderer implements TextRenderer {
       isSupported = track.src && track.type === 'vtt';
 
     el.id = track.id;
-    el.src = isSupported ? track.src! : 'https://cdn.jsdelivr.net/npm/vidstack@next/empty.vtt';
+    el.src = isSupported ? track.src! : '';
     el.label = track.label;
     el.kind = track.kind;
     el.default = isDefault;

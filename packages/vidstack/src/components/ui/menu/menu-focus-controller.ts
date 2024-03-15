@@ -1,7 +1,7 @@
 import { onDispose } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
-import { isElementParent } from '../../../utils/dom';
+import { isElementParent, isHTMLElement } from '../../../utils/dom';
 
 const FOCUSABLE_ELEMENTS_SELECTOR = /* #__PURE__*/ [
   'a[href]',
@@ -162,7 +162,7 @@ export class MenuFocusController {
     for (const el of focusableElements) {
       // Filter out elements that belong to child submenus.
       if (
-        el instanceof HTMLElement &&
+        isHTMLElement(el) &&
         el.offsetParent !== null && // does not have display: none
         isElementParent(this._el, el, is)
       ) {

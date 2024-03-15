@@ -4,6 +4,7 @@ import { isBoolean } from 'maverick.js/std';
 
 import { type MediaPlayerQuery } from '../../../core';
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import { isHTMLElement } from '../../../utils/dom';
 
 class MediaLayout extends Component<MediaLayoutProps> {
   static props: MediaLayoutProps = {
@@ -48,7 +49,6 @@ export class MediaLayoutElement extends Host(HTMLElement, MediaLayout) {
   private _watchWhen() {
     const root = this.firstElementChild,
       isTemplate = root?.localName === 'template',
-      isHTMLElement = root instanceof HTMLElement,
       when = this.$props.when(),
       matches = isBoolean(when) ? when : computed(() => when(this._media.player.state))();
 
@@ -56,7 +56,7 @@ export class MediaLayoutElement extends Host(HTMLElement, MediaLayout) {
       if (isTemplate) {
         this.textContent = '';
         this.appendChild(root);
-      } else if (isHTMLElement) {
+      } else if (isHTMLElement(root)) {
         root.style.display = 'none';
       }
 
@@ -65,7 +65,7 @@ export class MediaLayoutElement extends Host(HTMLElement, MediaLayout) {
 
     if (isTemplate) {
       this.append((root as HTMLTemplateElement).content.cloneNode(true));
-    } else if (isHTMLElement) {
+    } else if (isHTMLElement(root)) {
       root.style.display = '';
     }
   }

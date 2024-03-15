@@ -132,6 +132,9 @@ export class MediaPlayer
   @prop
   readonly canPlayQueue = new RequestQueue();
 
+  @prop
+  readonly remoteControl: MediaRemoteControl;
+
   private get _provider() {
     return this._media.$provider() as AnyMediaProvider | null;
   }
@@ -164,7 +167,9 @@ export class MediaPlayer
     }
 
     if (__DEV__) context.logger = new Logger();
-    context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
+    context.remote = this.remoteControl = new MediaRemoteControl(
+      __DEV__ ? context.logger : undefined,
+    );
     context.remote.setPlayer(this);
     context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList();
@@ -267,7 +272,7 @@ export class MediaPlayer
     setAttribute(
       this.el!,
       'aria-label',
-      `${typeText} Player` + (currentTitle ? `- ${currentTitle}` : ''),
+      `${typeText} Player` + (currentTitle ? ` - ${currentTitle}` : ''),
     );
 
     // Title attribute is removed to prevent popover interfering with user hovering over player.

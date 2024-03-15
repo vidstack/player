@@ -412,6 +412,37 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Show captions.
+   */
+  showCaptions(trigger?: Event) {
+    const player = this.getPlayer(trigger?.target);
+
+    if (!player) {
+      if (__DEV__) this._noPlayerWarning(this.showCaptions.name);
+      return;
+    }
+
+    let tracks = player.state.textTracks,
+      index = this._prevTrackIndex;
+
+    if (!tracks[index] || !isTrackCaptionKind(tracks[index])) {
+      index = -1;
+    }
+
+    if (index === -1) {
+      index = tracks.findIndex((track) => isTrackCaptionKind(track) && track.default);
+    }
+
+    if (index === -1) {
+      index = tracks.findIndex((track) => isTrackCaptionKind(track));
+    }
+
+    if (index >= 0) this.changeTextTrackMode(index, 'showing', trigger);
+
+    this._prevTrackIndex = -1;
+  }
+
+  /**
    * Turn captions off.
    */
   disableCaptions(trigger?: Event) {
@@ -428,6 +459,7 @@ export class MediaRemoteControl {
     if (track) {
       const index = tracks.indexOf(track);
       this.changeTextTrackMode(index, 'disabled', trigger);
+      this._prevTrackIndex = index;
     }
   }
 
@@ -442,31 +474,10 @@ export class MediaRemoteControl {
       return;
     }
 
-    const tracks = player.state.textTracks,
-      track = player.state.textTrack;
-
-    if (track) {
-      const index = tracks.indexOf(track);
-      this.changeTextTrackMode(index, 'disabled', trigger);
-      this._prevTrackIndex = index;
+    if (player.state.textTrack) {
+      this.disableCaptions();
     } else {
-      let index = this._prevTrackIndex;
-
-      if (!tracks[index] || !isTrackCaptionKind(tracks[index])) {
-        index = -1;
-      }
-
-      if (index === -1) {
-        index = tracks.findIndex((track) => isTrackCaptionKind(track) && track.default);
-      }
-
-      if (index === -1) {
-        index = tracks.findIndex((track) => isTrackCaptionKind(track));
-      }
-
-      if (index >= 0) this.changeTextTrackMode(index, 'showing', trigger);
-
-      this._prevTrackIndex = -1;
+      this.showCaptions();
     }
   }
 

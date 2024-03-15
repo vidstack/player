@@ -67,6 +67,11 @@
   width: 100%;
 }
 
+:where(video:not([width]):not([height]), iframe:not([width]):not([height])) {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
 :where([data-media-provider] video),
 :where([data-media-provider] iframe) {
   aspect-ratio: inherit;

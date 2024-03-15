@@ -832,5 +832,15 @@
   "_isSubmenuOpen": "zo",
   "_isTransitionActive": "yo",
   "_updateFocus": "Bo",
-  "_wasKeyboardExpand": "xo"
+  "_wasKeyboardExpand": "xo",
+  "_isIntersecting": "Do",
+  "_isVisible": "Co",
+  "_onIntersectionChange": "Eo",
+  "_watchToggle": "Go",
+  "_watchUpdates": "Fo",
+  "_canIdle": "Ho",
+  "_listeners": "Io",
+  "_plyr": "Lo",
+  "_ratio": "Ko",
+  "_source": "Jo"
 }

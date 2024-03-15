@@ -97,7 +97,6 @@
   "bugs": {
     "url": "https://github.com/vidstack/player/issues"
   },
-  "jsdelivr": "./cdn/with-layouts/vidstack.js",
   "exports": {
     ".": {
       "types": "./index.d.ts",
@@ -116,6 +115,24 @@
       "workerd": "./dist/server/vidstack-elements.js",
       "development": "./dist/dev/vidstack-elements.js",
       "default": "./dist/prod/vidstack-elements.js"
+    },
+    "./enhance/player": {
+      "types": "./enhance/player.d.ts",
+      "node": "./dist/server/enhance/vidstack-player.js",
+      "deno": "./dist/server/enhance/vidstack-player.js",
+      "bun": "./dist/server/enhance/vidstack-player.js",
+      "workerd": "./dist/server/enhance/vidstack-player.js",
+      "development": "./dist/dev/enhance/vidstack-player.js",
+      "default": "./dist/prod/enhance/vidstack-player.js"
+    },
+    "./enhance/plyr": {
+      "types": "./enhance/plyr.d.ts",
+      "node": "./dist/server/enhance/plyr.js",
+      "deno": "./dist/server/enhance/plyr.js",
+      "bun": "./dist/server/enhance/plyr.js",
+      "workerd": "./dist/server/enhance/plyr.js",
+      "development": "./dist/dev/enhance/plyr.js",
+      "default": "./dist/prod/enhance/plyr.js"
     },
     "./icons": {
       "types": "./icons.d.ts",

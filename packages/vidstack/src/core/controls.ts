@@ -10,6 +10,7 @@ export class MediaControls extends MediaPlayerController {
   private _hideOnMouseLeave = signal(false);
   private _isMouseOutside = signal(false);
   private _focusedItem: HTMLElement | null = null;
+  private _canIdle = signal(true);
 
   /**
    * The default amount of delay in milliseconds while media playback is progressing without user
@@ -18,6 +19,18 @@ export class MediaControls extends MediaPlayerController {
    * @defaultValue 2000
    */
   defaultDelay = 2000;
+
+  /**
+   * Whether controls can hide after a delay in user interaction. If this is false, controls will
+   * not hide and be user controlled.
+   */
+  get canIdle() {
+    return this._canIdle();
+  }
+
+  set canIdle(canIdle: boolean) {
+    this._canIdle.set(canIdle);
+  }
 
   /**
    * Whether controls visibility should be toggled when the mouse enters and leaves the player
@@ -77,6 +90,12 @@ export class MediaControls extends MediaPlayerController {
   }
 
   protected override onConnect() {
+    effect(this._init.bind(this));
+  }
+
+  private _init() {
+    if (!this._canIdle()) return;
+
     effect(this._watchMouse.bind(this));
     effect(this._watchPaused.bind(this));
 

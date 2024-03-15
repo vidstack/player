@@ -33,6 +33,11 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     return track ?? null;
   }
 
+  get selectedIndex() {
+    const selected = this.selected;
+    return selected ? this.indexOf(selected) : -1;
+  }
+
   get preferredLang() {
     return this._preferredLang;
   }

@@ -20,6 +20,7 @@ packages/*/local/
 packages/*/dist/
 packages/*/cdn/
 packages/*/elements/
+packages/*/enhance/
 packages/*/types/
 packages/*/sandbox/
 packages/*/stats.html
