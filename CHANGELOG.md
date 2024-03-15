@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - add download button to default layout ([80488b6](https://github.com/vidstack/player/commit/80488b624aba6c38fa85f804496af34fc243bc5c))
 - new slider steps component ([5623c98](https://github.com/vidstack/player/commit/5623c985b9b654cdf5d9695dbe19830c9302f24a))
 - source qualities ([837daa0](https://github.com/vidstack/player/commit/837daa0be8230c68efdd39e2fc470c2487652746))
+- new js player constructors ([2876c73](https://github.com/vidstack/player/commit/2876c737bf564fa891d3221d667f87fec7b2b5e8))
 
 ### 🐛 Bug Fixes
 
