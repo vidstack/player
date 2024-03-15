@@ -128,8 +128,8 @@ export class MediaPlayerDelegate {
   private async _attemptAutoplay(trigger?: Event) {
     const {
       player,
-      $state: { autoPlaying, muted },
-      $ads
+      $state: { autoPlaying, muted, adsLoaded },
+      $ads,
     } = this._media;
 
     autoPlaying.set(true);
@@ -137,7 +137,7 @@ export class MediaPlayerDelegate {
     const attemptEvent = new DOMEvent<void>('auto-play-attempt', { trigger });
 
     try {
-      $state.adsLoaded() ? await $ads()!.play() : await player.play(attemptEvent);
+      adsLoaded() ? await $ads()!.play() : await player.play(attemptEvent);
     } catch (error) {
       if (__DEV__ && !seenAutoplayWarning) {
         const muteMsg = !muted()

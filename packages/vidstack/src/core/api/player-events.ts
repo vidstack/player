@@ -15,6 +15,7 @@ export interface MediaPlayerEvents
     MediaUserEvents,
     LoggerEvents,
     VideoPresentationEvents,
+    HLSProviderEvents,
     AdEvents,
     GoogleCastEvents {
   'media-player-connect': MediaPlayerConnectEvent;

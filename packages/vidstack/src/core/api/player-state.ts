@@ -205,7 +205,7 @@ export const mediaState = new State<MediaState>({
     );
   },
   playedPreroll: false,
-  autoplaying: false,
+  autoPlaying: false,
   providedTitle: '',
   inferredTitle: '',
   providedLoop: false,

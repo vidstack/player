@@ -85,8 +85,10 @@ export class ImaSdkLoader {
       }),
     );
 
-    this._context.delegate._dispatch('error', {
-      detail: { message: error.message, code: 4 },
+    this._context.delegate._notify('error', {
+      message: error.message,
+      code: 4,
+      error: error,
     });
   }
 }

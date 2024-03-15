@@ -47,7 +47,6 @@ export const mediaPlayerProps: MediaPlayerProps = {
   keyDisabled: false,
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
-  title: '',
   adsUrl: '',
   storage: null,
 };

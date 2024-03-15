@@ -40,8 +40,6 @@ import {
   type MediaStore,
 } from '../core';
 import { AdsController } from '../core/ads/controller';
-import { ImaSdkLoader } from '../core/ads/lib-loader';
-import type { ImaSdk } from '../core/ads/types';
 import { MEDIA_ATTRIBUTES, mediaAttributes } from '../core/api/media-attrs';
 import { mediaContext, type MediaContext } from '../core/api/media-context';
 import { mediaPlayerProps } from '../core/api/player-props';
@@ -198,8 +196,6 @@ export class MediaPlayer
       this._stateMgr._handle.bind(this._stateMgr),
       context,
     );
-
-    new MediaLoadController(this.startLoading.bind(this));
 
     if (!this.ads && isString(this.$props.adsUrl()) && this.$props.viewType() !== 'audio') {
       this.ads = new AdsController(context);

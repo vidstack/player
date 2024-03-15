@@ -151,7 +151,7 @@ export class AdsController extends MediaPlayerController {
     this._adsRequest.forceNonLinearFullSlot = false;
 
     this._adsRequest.setAdWillPlayMuted(this.$state.muted());
-    this._adsRequest.setAdWillAutoPlay(this.$state.autoplay());
+    this._adsRequest.setAdWillAutoPlay(this.$state.autoPlay());
 
     // Pass the request to the adsLoader to request ads
     this._adsLoader.requestAds(this._adsRequest);
@@ -331,7 +331,7 @@ export class AdsController extends MediaPlayerController {
   }
 
   private _onAdBuffering() {
-    this._media.delegate._dispatch('waiting');
+    this._media.delegate._notify('waiting');
   }
 
   private _onContentPauseRequested() {
@@ -354,7 +354,7 @@ export class AdsController extends MediaPlayerController {
       // so we put the state into paused again so we can trigger media play request
       // and start the content
       // @ts-ignore
-      this._media.delegate._dispatch('pause', { trigger: adEvent });
+      this._media.delegate._notify('pause', null, adEvent);
       this._media.remote.play();
     }
     console.log('Ad Loaded');
@@ -369,13 +369,10 @@ export class AdsController extends MediaPlayerController {
       this._previousPlaybackPosition.set(this.$state.currentTime());
       this._previousPlayedTimeranges.set(this.$state.played());
 
-      this._media.delegate._dispatch('duration-change', {
-        detail: ad?.getDuration() || 0,
-        // @ts-ignore
-        trigger: adEvent,
-      });
       // @ts-ignore
-      this._media.delegate._dispatch('play', { trigger: adEvent });
+      this._media.delegate._notify('duration-change', ad?.getDuration() ?? 0, adEvent);
+      // @ts-ignore
+      this._media.delegate._notify('play', undefined, adEvent);
       this.$state.adStarted.set(true);
     } else {
       this._playingNonLinear.set(true);
@@ -389,14 +386,12 @@ export class AdsController extends MediaPlayerController {
    */
   private _onAdComplete() {
     console.log('on ad complete');
-    this._media.delegate._dispatch('duration-change', { detail: this.$state.seekableEnd() });
-    this._media.delegate._dispatch('time-update', {
-      detail: {
-        currentTime: this._previousPlaybackPosition(),
-        played: this._previousPlayedTimeranges() || new TimeRange(0, 0),
-      },
+    this._media.delegate._notify('duration-change', this.$state.seekableEnd());
+    this._media.delegate._notify('time-update', {
+      currentTime: this._previousPlaybackPosition(),
+      played: this._previousPlayedTimeranges() || new TimeRange(0, 0),
     });
-    this._media.delegate._dispatch('ad-ended');
+    this._media.delegate._notify('ad-ended');
   }
 
   private _onAdSkip() {
@@ -422,17 +417,15 @@ export class AdsController extends MediaPlayerController {
     const { duration } = this.$state;
     const remainingTime = this._adsManager?.getRemainingTime() || 0;
     const currentTime = duration() - remainingTime;
-    this._media.delegate._dispatch('time-update', {
-      detail: {
-        currentTime,
-        played: new TimeRange(0, currentTime),
-      },
+    this._media.delegate._notify('time-update', {
+      currentTime,
+      played: new TimeRange(0, currentTime),
     });
   }
 
   private _onAdClick() {
     // the ad gets paused on click so we want to update our state accordingly
-    this._media.delegate._dispatch('pause');
+    this._media.delegate._notify('pause');
   }
 
   private _onAdEvent(adEvent: google.ima.AdEvent, mapping: keyof AdEvents) {
@@ -478,7 +471,7 @@ export interface AdEvents extends MediaEvents {
 }
 
 export interface AdEvent extends DOMEvent<void> {
-  trigger?: Event;
+  trigger: Event;
 }
 
 type EventHandlerMapping = Partial<{
