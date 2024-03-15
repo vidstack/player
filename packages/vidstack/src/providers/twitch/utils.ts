@@ -1,3 +1,6 @@
+import type { VideoQuality } from '../../core';
+import type { TwitchQuality } from './embed/event';
+
 /**
  * Matches channel names:
  * https://www.twitch.tv/example
@@ -38,4 +41,24 @@ export function resolveTwitchSource(src: string): {
   }
 
   return {};
+}
+
+/**
+ * Convert a Twitch quality object to a native VideoQuality object.
+ * @param input Twitch quality
+ * @param activeQuality name (id) of the currently active quality
+ * @returns Vidstack-compatible quality object
+ */
+export function twitchQualityToVideoQuality(
+  quality: TwitchQuality,
+  activeQuality?: string,
+): VideoQuality {
+  return {
+    id: quality.name,
+    width: quality.width,
+    height: quality.height,
+    bitrate: quality.bitrate,
+    codec: quality.codecs,
+    selected: activeQuality === quality.name,
+  };
 }

@@ -1,8 +1,7 @@
 import { createScope, effect, signal } from 'maverick.js';
 import { isString, type DeferredPromise } from 'maverick.js/std';
 
-import { TimeRange, type MediaContext, type Src, type VideoQuality } from '../../core';
-import { ListSymbol } from '../../foundation/list/symbols';
+import { TimeRange, type MediaContext, type Src } from '../../core';
 import { preconnect } from '../../utils/network';
 import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
@@ -12,7 +11,7 @@ import { TwitchCommand } from './embed/command';
 import type { TwitchEvent, TwitchEventPayload, TwitchState } from './embed/event';
 import type { TwitchCommandMessage, TwitchMessage } from './embed/message';
 import type { TwitchParams } from './embed/params';
-import { resolveTwitchSource } from './utils';
+import { resolveTwitchSource, twitchQualityToVideoQuality } from './utils';
 
 export class TwitchProvider
   extends EmbedProvider<TwitchMessage<TwitchEvent>>
@@ -194,6 +193,10 @@ export class TwitchProvider
     this._ctx.delegate._ready(undefined, trigger);
   }
 
+  protected _onPlaying(trigger: Event) {
+    this._notify('playing', undefined, trigger);
+  }
+
   protected _onPlay(trigger: Event) {
     this._notify('play', undefined, trigger);
     this._playPromise?.resolve();
@@ -206,47 +209,10 @@ export class TwitchProvider
     this._notify('pause', undefined, trigger);
   }
 
-  protected _onTimeUpdate(time: number, trigger: Event) {
-    const { duration, realCurrentTime } = this._ctx.$state,
-      hasEnded = this._state === 'Ended',
-      boundTime = hasEnded ? duration() : time,
-      detail = {
-        currentTime: boundTime,
-        played: this._getPlayedRange(boundTime),
-      };
-
-    this._notify('time-update', detail, trigger);
-
-    // // This is the only way to detect `seeking`.
-    if (!hasEnded && Math.abs(boundTime - realCurrentTime()) > 1) {
-      this._notify('seeking', boundTime, trigger);
-    }
-  }
-
   protected _getPlayedRange(time: number) {
     return this._played >= time
       ? this._playedRange
       : (this._playedRange = new TimeRange(0, (this._played = time)));
-  }
-
-  protected _onProgress(buffered: number, seekable: TimeRange, trigger: Event) {
-    const detail = {
-      buffered: new TimeRange(0, buffered),
-      seekable,
-    };
-
-    this._notify('progress', detail, trigger);
-
-    const { seeking, realCurrentTime } = this._ctx.$state;
-
-    /**
-     * This is the only way to detect `seeked`. Unfortunately while the player is `paused` `seeking`
-     * and `seeked` will fire at the same time, there are no updates in-between -_-. We need an
-     * artificial delay between the two events.
-     */
-    if (seeking() && buffered > realCurrentTime()) {
-      this._onSeeked(trigger);
-    }
   }
 
   protected _onSeeked(trigger: Event) {
@@ -273,51 +239,38 @@ export class TwitchProvider
   }
 
   protected _onStateUpdate(state: TwitchState, trigger: Event) {
-    const { intrinsicDuration, volume, muted, qualities } = this._ctx.$state;
+    const { intrinsicDuration, volume, muted, quality, autoQuality, qualities, currentTime } =
+      this._ctx.$state;
 
     if (intrinsicDuration() !== state.duration) {
       this._notify('duration-change', state.duration, trigger);
     }
+    if (currentTime() !== state.currentTime) {
+      const boundTime = state.playback === 'Ended' ? state.duration : state.currentTime;
+      const detail = {
+        currentTime: boundTime,
+        played: this._getPlayedRange(boundTime),
+      };
+
+      this._notify('time-update', detail, trigger);
+    }
     if (volume() !== state.volume || muted() !== state.muted) {
       this._notify('volume-change', { muted: state.muted, volume: state.volume }, trigger);
     }
-
-    this._notify(
-      'time-update',
-      { currentTime: state.currentTime, played: this._playedRange },
-      trigger,
-    );
-
-    const parsedQualities: VideoQuality[] = state.qualitiesAvailable.map((q) => ({
-      id: q.name,
-      width: q.width,
-      height: q.height,
-      bitrate: q.bitrate,
-      codec: q.codecs,
-      selected: state.quality === q.name,
-    }));
-    this._notify('quality-change', parsedQualities.find((q) => q.id === state.quality)!, trigger);
-    this._notify('qualities-change', parsedQualities, trigger);
-
-    // TODO: ids?, playback, ended
-
-    // if (info.progressState) {
-    //   const {
-    //     current,
-    //     seekableStart,
-    //     seekableEnd,
-    //     loaded,
-    //     duration: _duration,
-    //   } = info.progressState;
-    //   this._onTimeUpdate(current, event);
-    //   this._onProgress(loaded, new TimeRange(seekableStart, seekableEnd), event);
-    //   if (_duration !== intrinsicDuration()) {
-    //     this._notify('duration-change', _duration, event);
-    //   }
-    // }
-    // if (isNumber(info.playerState) && info.playerState !== this._state) {
-    //   this._onStateChange(info.playerState, event);
-    // }
+    if (qualities().length === 0) {
+      this._notify(
+        'qualities-change',
+        state.qualitiesAvailable.map((q) => twitchQualityToVideoQuality(q)),
+        trigger,
+      );
+    }
+    if (quality()?.id !== state.quality) {
+      const activeQuality = state.qualitiesAvailable.find((q) => q.name === state.quality)!;
+      this._notify('quality-change', twitchQualityToVideoQuality(activeQuality), trigger);
+      if (activeQuality.isDefault) {
+        autoQuality.set(true);
+      }
+    }
   }
 
   protected _onMethod<T extends keyof TwitchEventPayload>(
@@ -327,6 +280,7 @@ export class TwitchProvider
   ) {
     switch (event) {
       case 'UPDATE_STATE':
+        // TODO: fix this
         //@ts-expect-error
         this._onStateUpdate(params, trigger);
         break;
@@ -340,13 +294,13 @@ export class TwitchProvider
         this._onPlay(trigger);
         break;
       case 'playing':
-        // TODO
+        this._onPlaying(trigger);
         break;
       case 'ready':
         this._onReady(trigger);
         break;
       case 'seek':
-        // TODO
+        this._onSeeked(trigger);
         break;
       default:
         break;
