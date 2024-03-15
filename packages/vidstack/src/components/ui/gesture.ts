@@ -18,6 +18,7 @@ import { isTouchPinchEvent } from '../../utils/dom';
  */
 export class Gesture extends Component<GestureProps, {}, GestureEvents> {
   static props: GestureProps = {
+    disabled: false,
     event: undefined,
     action: undefined,
   };
@@ -47,9 +48,10 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
   }
 
   private _attachListener() {
-    let eventType = this.$props.event();
+    let eventType = this.$props.event(),
+      disabled = this.$props.disabled();
 
-    if (!this._provider || !eventType) return;
+    if (!this._provider || !eventType || disabled) return;
 
     if (/^dbl/.test(eventType)) {
       eventType = eventType.split(/^dbl/)[1] as keyof HTMLElementEventMap;
@@ -75,6 +77,7 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
 
   private _acceptEvent(event: Event) {
     if (
+      this.$props.disabled() ||
       (isPointerEvent(event) && (event.button !== 0 || this._media.activeMenu)) ||
       (isTouchEvent(event) && this._media.activeMenu) ||
       isTouchPinchEvent(event) ||
@@ -190,6 +193,10 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
 }
 
 export interface GestureProps {
+  /**
+   * Whether this gesture should not be triggered.
+   */
+  disabled: boolean;
   /**
    * The DOM event type that will trigger this gesture. It can be any valid DOM event type. Any
    * event can be prefixed with `dbl` to ensure it occurs twice in succession (max 200ms gap).

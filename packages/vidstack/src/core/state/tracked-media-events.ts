@@ -1,8 +1,8 @@
 import type { MediaEvents } from '../api/media-events';
 
 export const TRACKED_EVENT = new Set<keyof MediaEvents>([
-  'autoplay',
-  'autoplay-fail',
+  'auto-play',
+  'auto-play-fail',
   'can-load',
   'sources-change',
   'source-change',

@@ -6,15 +6,17 @@ import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
 
+export const DEFAULT_PLAYBACK_RATES = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
 /**
  * This component manages playback rate radios.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/playback-rate-menu}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/speed-radio-group}
  */
 export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRadioGroupEvents> {
   static props: SpeedRadioGroupProps = {
     normalLabel: 'Normal',
-    rates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+    rates: DEFAULT_PLAYBACK_RATES,
   };
 
   private _media!: MediaContext;
@@ -24,6 +26,13 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
   @prop
   get value() {
     return this._controller.value;
+  }
+
+  @prop
+  get disabled() {
+    const { rates } = this.$props,
+      { canSetPlaybackRate } = this._media.$state;
+    return !canSetPlaybackRate() || rates().length === 0;
   }
 
   constructor() {
@@ -41,9 +50,8 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
 
   protected override onConnect(el: HTMLElement) {
     effect(this._watchValue.bind(this));
-    // TODO: when we add embeds we'll need to manage disabling.
-    // effect(this._watchControllerDisabled.bind(this));
     effect(this._watchHintText.bind(this));
+    effect(this._watchControllerDisabled.bind(this));
   }
 
   @method
@@ -51,7 +59,7 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
     const { rates, normalLabel } = this.$props;
     return rates().map((rate) => ({
       label: rate === 1 ? normalLabel : rate + '×',
-      value: rate + '',
+      value: rate.toString(),
     }));
   }
 
@@ -66,12 +74,17 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
     this._menu?._hint.set(rate === 1 ? normalLabel() : rate + '×');
   }
 
+  private _watchControllerDisabled() {
+    this._menu?._disable(this.disabled);
+  }
+
   private _getValue() {
     const { playbackRate } = this._media.$state;
-    return playbackRate() + '';
+    return playbackRate().toString();
   }
 
   private _onValueChange(value: string, trigger?: Event) {
+    if (this.disabled) return;
     const rate = +value;
     this._media.remote.changePlaybackRate(rate, trigger);
     this.dispatch('change', { detail: rate, trigger });

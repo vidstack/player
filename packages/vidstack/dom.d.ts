@@ -4,6 +4,7 @@ declare global {
   interface Window {
     readonly chrome: boolean;
     readonly safari: any;
+    readonly ManagedMediaSource: typeof MediaSource | undefined;
     readonly WebKitMediaSource: typeof MediaSource | undefined;
     readonly WebKitSourceBuffer: typeof SourceBuffer | undefined;
   }
@@ -77,6 +78,11 @@ declare global {
      * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631224-webkitsetpresentationmode}
      */
     webkitSetPresentationMode?(mode: WebKitPresentationMode): Promise<void>;
+
+    /**
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlmediaelement/1632172-webkitshowplaybacktargetpicker}
+     */
+    webkitShowPlaybackTargetPicker?(): void;
   }
 }
 

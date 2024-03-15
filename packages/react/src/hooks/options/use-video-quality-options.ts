@@ -1,8 +1,10 @@
 import * as React from 'react';
 
-import { useReactContext, useSignal } from 'maverick.js/react';
+import { useSignal } from 'maverick.js/react';
 import { isString } from 'maverick.js/std';
-import { mediaContext, type VideoQuality } from 'vidstack';
+import { sortVideoQualities, type VideoQuality } from 'vidstack';
+
+import { useMediaContext } from '../use-media-context';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-video-quality-options}
@@ -11,23 +13,26 @@ export function useVideoQualityOptions({
   auto = true,
   sort = 'descending',
 }: UseVideoQualityOptions = {}): VideoQualityOptions {
-  const media = useReactContext(mediaContext)!,
-    { qualities, quality, autoQuality } = media.$state,
+  const media = useMediaContext(),
+    { qualities, quality, autoQuality, canSetQuality } = media.$state,
     $qualities = useSignal(qualities);
 
   // Trigger updates.
   useSignal(quality);
   useSignal(autoQuality);
+  useSignal(canSetQuality);
 
   return React.useMemo(() => {
-    const options = [...$qualities]
-      .sort(sort === 'descending' ? sortDescending : sortAscending)
-      .map<VideoQualityOption>((_quality) => {
+    const sortedQualities = sortVideoQualities($qualities, sort === 'descending'),
+      options = sortedQualities.map<VideoQualityOption>((_quality) => {
         return {
           quality: _quality,
           label: _quality.height + 'p',
           value: getQualityValue(_quality),
-          bitrateText: `${(_quality.bitrate / 1000000).toFixed(2)} Mbps`,
+          bitrateText:
+            _quality.bitrate && _quality.bitrate > 0
+              ? `${(_quality.bitrate / 1000000).toFixed(2)} Mbps`
+              : null,
           get selected() {
             return _quality === quality();
           },
@@ -61,7 +66,7 @@ export function useVideoQualityOptions({
 
     Object.defineProperty(options, 'disabled', {
       get() {
-        return !$qualities.length;
+        return !canSetQuality() || $qualities.length <= 1;
       },
     });
 
@@ -113,14 +118,6 @@ export interface VideoQualityOption {
   readonly autoSelected: boolean;
   readonly bitrateText: string | null;
   select(trigger?: Event): void;
-}
-
-function sortAscending(a: VideoQuality, b: VideoQuality) {
-  return a.height === b.height ? a.bitrate - b.bitrate : a.height - b.height;
-}
-
-function sortDescending(a: VideoQuality, b: VideoQuality) {
-  return b.height === a.height ? b.bitrate - a.bitrate : b.height - a.height;
 }
 
 function getQualityValue(quality: VideoQuality) {

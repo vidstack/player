@@ -20,7 +20,7 @@ const Root = React.forwardRef<HTMLElement, RootProps>(({ children, ...props }, f
       aria-live="off"
       aria-atomic="true"
       {...props}
-      ref={forwardRef as any}
+      ref={forwardRef as React.Ref<any>}
     >
       {children}
     </Primitive.div>
@@ -61,7 +61,7 @@ const Text = React.forwardRef<HTMLElement, TextProps>((props, forwardRef) => {
       dangerouslySetInnerHTML={{
         __html: activeCue?.text || '',
       }}
-      ref={forwardRef as any}
+      ref={forwardRef as React.Ref<any>}
     />
   );
 });

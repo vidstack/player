@@ -1,6 +1,7 @@
 import { Component } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { setARIALabel } from '../../../utils/dom';
 import {
   ToggleButtonController,
@@ -9,6 +10,9 @@ import {
 
 export interface MuteButtonProps extends ToggleButtonControllerProps {}
 
+export interface MuteButtonEvents
+  extends Pick<MediaRequestEvents, 'media-mute-request' | 'media-unmute-request'> {}
+
 /**
  * A button for toggling the muted state of the player.
  *
@@ -16,7 +20,7 @@ export interface MuteButtonProps extends ToggleButtonControllerProps {}
  * @attr data-state - Current volume setting (low/high/muted).
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/mute-button}
  */
-export class MuteButton extends Component<MuteButtonProps> {
+export class MuteButton extends Component<MuteButtonProps, {}, MuteButtonEvents> {
   static props: MuteButtonProps = ToggleButtonController.props;
 
   private _media!: MediaContext;
@@ -42,7 +46,7 @@ export class MuteButton extends Component<MuteButtonProps> {
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-mute-button', '');
     el.setAttribute('data-media-tooltip', 'mute');
-    setARIALabel(el, this._getLabel.bind(this));
+    setARIALabel(el, 'Mute');
   }
 
   private _onPress(event: Event) {
@@ -53,10 +57,6 @@ export class MuteButton extends Component<MuteButtonProps> {
   private _isPressed() {
     const { muted, volume } = this._media.$state;
     return muted() || volume() === 0;
-  }
-
-  private _getLabel() {
-    return this._isPressed() ? 'Unmute' : 'Mute';
   }
 
   private _getState() {

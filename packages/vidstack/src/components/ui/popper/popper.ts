@@ -1,5 +1,6 @@
 import { effect, peek, ViewController, type Dispose, type ReadSignal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
+
 import { hasAnimation } from '../../../utils/dom';
 
 export interface PopperDelegate {
@@ -36,6 +37,7 @@ export class Popper extends ViewController {
 
     const show = this.show.bind(this),
       hide = this.hide.bind(this);
+
     this._delegate._listen(trigger, show, hide);
   }
 
@@ -44,41 +46,42 @@ export class Popper extends ViewController {
   private _stopAnimationEndListener: Dispose | null = null;
 
   show(trigger?: Event) {
+    this._cancelShowing();
+
     window.cancelAnimationFrame(this._hideRafId);
     this._hideRafId = -1;
 
     this._stopAnimationEndListener?.();
     this._stopAnimationEndListener = null;
 
-    this._showTimerId = window.setTimeout(
-      () => {
-        this._showTimerId = -1;
+    this._showTimerId = window.setTimeout(() => {
+      this._showTimerId = -1;
 
-        const content = this._delegate._content();
-        if (content) content.style.removeProperty('display');
+      const content = this._delegate._content();
+      if (content) content.style.removeProperty('display');
 
-        peek(() => this._delegate._onChange(true, trigger));
-      },
-      this._delegate._showDelay?.() ?? 0,
-    );
+      peek(() => this._delegate._onChange(true, trigger));
+    }, this._delegate._showDelay?.() ?? 0);
   }
 
   hide(trigger?: Event) {
-    window.clearTimeout(this._showTimerId);
-    this._showTimerId = -1;
+    this._cancelShowing();
 
     peek(() => this._delegate._onChange(false, trigger));
 
     this._hideRafId = requestAnimationFrame(() => {
+      this._cancelShowing();
       this._hideRafId = -1;
-      const content = this._delegate._content();
-      if (content) {
-        const isAnimated = hasAnimation(content);
 
+      const content = this._delegate._content();
+
+      if (content) {
         const onHide = () => {
           content.style.display = 'none';
           this._stopAnimationEndListener = null;
         };
+
+        const isAnimated = hasAnimation(content);
 
         if (isAnimated) {
           this._stopAnimationEndListener?.();
@@ -89,5 +92,10 @@ export class Popper extends ViewController {
         }
       }
     });
+  }
+
+  private _cancelShowing() {
+    window.clearTimeout(this._showTimerId);
+    this._showTimerId = -1;
   }
 }

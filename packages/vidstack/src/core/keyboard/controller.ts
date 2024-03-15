@@ -22,7 +22,8 @@ export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {
 
 const MODIFIER_KEYS = new Set(['Shift', 'Alt', 'Meta', 'Control']),
   BUTTON_SELECTORS = 'button, [role="button"]',
-  IGNORE_SELECTORS = 'input, textarea, select, [contenteditable], [role^="menuitem"]';
+  IGNORE_SELECTORS =
+    'input, textarea, select, [contenteditable], [role^="menuitem"], [role="timer"]';
 
 export class MediaKeyboardController extends MediaPlayerController {
   constructor(private _media: MediaContext) {
@@ -73,7 +74,14 @@ export class MediaKeyboardController extends MediaPlayerController {
     let { method, value } = this._getMatchingMethod(event);
 
     if (!isString(value) && !isArray(value)) {
-      value?.callback(event);
+      value?.onKeyUp?.({
+        event,
+        player: this._media.player,
+        remote: this._media.remote,
+      });
+
+      value?.callback?.(event, this._media.remote);
+
       return;
     }
 
@@ -113,14 +121,22 @@ export class MediaKeyboardController extends MediaPlayerController {
       return;
     }
 
-    let { method, value } = this._getMatchingMethod(event);
+    let { method, value } = this._getMatchingMethod(event),
+      isNumberPress = !event.metaKey && /^[0-9]$/.test(event.key);
 
-    if (!isString(value) && !isArray(value)) {
-      value?.callback(event);
+    if (!isString(value) && !isArray(value) && !isNumberPress) {
+      value?.onKeyDown?.({
+        event,
+        player: this._media.player,
+        remote: this._media.remote,
+      });
+
+      value?.callback?.(event, this._media.remote);
+
       return;
     }
 
-    if (!method && !event.metaKey && /[0-9]/.test(event.key)) {
+    if (!method && isNumberPress) {
       event.preventDefault();
       event.stopPropagation();
       this._media.remote.seek((this.$state.duration() / 10) * Number(event.key), event);
@@ -170,6 +186,11 @@ export class MediaKeyboardController extends MediaPlayerController {
       default:
         this._media.remote[method]?.(event);
     }
+
+    this.$state.lastKeyboardAction.set({
+      action: method,
+      event,
+    });
   }
 
   private _onPreventVideoKeys(event: KeyboardEvent) {

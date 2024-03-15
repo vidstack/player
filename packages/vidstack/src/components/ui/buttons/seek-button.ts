@@ -1,6 +1,7 @@
 import { Component } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { $ariaBool } from '../../../utils/aria';
 import { onPress, setARIALabel, setAttributeIfEmpty } from '../../../utils/dom';
@@ -17,6 +18,8 @@ export interface SeekButtonProps {
   seconds: number;
 }
 
+export interface SeekButtonEvents extends Pick<MediaRequestEvents, 'media-seek-request'> {}
+
 /**
  * A button for seeking the current media playback forwards or backwards by a specified amount.
  *
@@ -26,7 +29,7 @@ export interface SeekButtonProps {
  * @attr data-hocus - Whether button is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/seek-button}
  */
-export class SeekButton extends Component<SeekButtonProps> {
+export class SeekButton extends Component<SeekButtonProps, {}, SeekButtonEvents> {
   static props: SeekButtonProps = {
     disabled: false,
     seconds: 30,
@@ -59,7 +62,7 @@ export class SeekButton extends Component<SeekButtonProps> {
     setAttributeIfEmpty(el, 'role', 'button');
     setAttributeIfEmpty(el, 'type', 'button');
     el.setAttribute('data-media-tooltip', 'seek');
-    setARIALabel(el, this._getLabel.bind(this));
+    setARIALabel(el, this._getDefaultLabel.bind(this));
   }
 
   protected override onConnect(el: HTMLElement) {
@@ -71,7 +74,7 @@ export class SeekButton extends Component<SeekButtonProps> {
     return canSeek();
   }
 
-  protected _getLabel() {
+  protected _getDefaultLabel() {
     const { seconds } = this.$props;
     return `Seek ${seconds() > 0 ? 'forward' : 'backward'} ${seconds()} seconds`;
   }

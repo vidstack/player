@@ -1,15 +1,18 @@
 import type { DOMEvent } from 'maverick.js/std';
 
-import type { ScreenOrientationLockType } from '../..';
+import type { ScreenOrientationLockType } from '../../foundation/orientation/types';
 
 export interface MediaRequestEvents {
+  'media-airplay-request': MediaAirPlayRequestEvent;
   'media-audio-track-change-request': MediaAudioTrackChangeRequestEvent;
   'media-enter-fullscreen-request': MediaEnterFullscreenRequestEvent;
   'media-exit-fullscreen-request': MediaExitFullscreenRequestEvent;
   'media-enter-pip-request': MediaEnterPIPRequestEvent;
   'media-exit-pip-request': MediaExitPIPRequestEvent;
+  'media-google-cast-request': MediaGoogleCastRequestEvent;
   'media-live-edge-request': MediaLiveEdgeRequestEvent;
   'media-loop-request': MediaLoopRequestEvent;
+  'media-user-loop-change-request': MediaUserLoopChangeRequestEvent;
   'media-orientation-lock-request': MediaOrientationLockRequestEvent;
   'media-orientation-unlock-request': MediaOrientationUnlockRequestEvent;
   'media-mute-request': MediaMuteRequestEvent;
@@ -18,23 +21,33 @@ export interface MediaRequestEvents {
   'media-play-request': MediaPlayRequestEvent;
   'media-quality-change-request': MediaQualityChangeRequestEvent;
   'media-rate-change-request': MediaRateChangeRequestEvent;
+  'media-audio-gain-change-request': MediaAudioGainChangeRequestEvent;
   'media-resume-controls-request': MediaResumeControlsRequestEvent;
   'media-seek-request': MediaSeekRequestEvent;
   'media-seeking-request': MediaSeekingRequestEvent;
   'media-start-loading': MediaStartLoadingRequestEvent;
+  'media-poster-start-loading': MediaPosterStartLoadingRequestEvent;
   'media-text-track-change-request': MediaTextTrackChangeRequestEvent;
   'media-unmute-request': MediaUnmuteRequestEvent;
   'media-volume-change-request': MediaVolumeChangeRequestEvent;
 }
 
 /**
- * Fired when requesting media to begin loading. This will only take effect if the `loading`
- * strategy on the provider is set to `custom`.
+ * Fired when requesting the AirPlay picker to open.
  *
  * @bubbles
  * @composed
  */
-export interface MediaStartLoadingRequestEvent extends DOMEvent<void> {}
+export interface MediaAirPlayRequestEvent extends DOMEvent<void> {}
+
+/**
+ * Fired when requesting the media poster to begin loading. This will only take effect if the
+ * `posterLoad` strategy on the player is set to `custom`.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaPosterStartLoadingRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting to change the `mode` on a text track at the given index in the
@@ -115,6 +128,14 @@ export interface MediaEnterPIPRequestEvent extends DOMEvent<void> {}
 export interface MediaExitPIPRequestEvent extends DOMEvent<void> {}
 
 /**
+ * Fired when requesting Google Cast.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaGoogleCastRequestEvent extends DOMEvent<void> {}
+
+/**
  * Fired when requesting media to seek to the live edge (i.e., set the current time to the current
  * live time).
  */
@@ -148,6 +169,15 @@ export interface MediaQualityChangeRequestEvent extends DOMEvent<number> {}
 export interface MediaRateChangeRequestEvent extends DOMEvent<number> {}
 
 /**
+ * Fired when requesting to change the current audio gain.
+ *
+ * @bubbles
+ * @composed
+ * @detail gain
+ */
+export interface MediaAudioGainChangeRequestEvent extends DOMEvent<number> {}
+
+/**
  * Fired when requesting media playback to temporarily stop.
  *
  * @bubbles
@@ -172,6 +202,15 @@ export interface MediaSeekRequestEvent extends DOMEvent<number> {}
  * @detail time
  */
 export interface MediaSeekingRequestEvent extends DOMEvent<number> {}
+
+/**
+ * Fired when requesting media to begin loading. This will only take effect if the `load`
+ * strategy on the player is set to `custom`.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaStartLoadingRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the media volume to be set to a new level.
@@ -223,10 +262,19 @@ export interface MediaHidePosterRequestEvent extends DOMEvent<void> {}
  * Internal event that is fired by a media provider when requesting media playback to restart after
  * reaching the end. This event also helps notify the player that media will be looping.
  *
+ * @internal
  * @bubbles
  * @composed
  */
 export interface MediaLoopRequestEvent extends DOMEvent<void> {}
+
+/**
+ * Fired when the user loop preference changes.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaUserLoopChangeRequestEvent extends DOMEvent<boolean> {}
 
 /**
  * Fired when requesting the screen orientation to be locked to a certain type.

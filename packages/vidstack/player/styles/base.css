@@ -14,12 +14,20 @@
   user-select: none;
 }
 
+[data-media-player] * {
+  box-sizing: border-box;
+}
+
+:where([data-media-player][data-view-type='video']) {
+  aspect-ratio: 16 / 9;
+}
+
 [data-media-player]:focus,
 [data-media-player]:focus-visible {
   outline: none;
 }
 
-[data-media-player][data-view-type='video']:not([data-controls]) {
+[data-media-player][data-view-type='video'][data-started]:not([data-controls]) {
   pointer-events: auto;
   cursor: none;
 }
@@ -39,7 +47,10 @@
   position: relative;
   box-sizing: border-box;
   align-items: center;
+  border-radius: inherit;
   width: 100%;
+  aspect-ratio: inherit;
+  overflow: hidden;
 }
 
 [data-media-player]:not([data-view-type='audio']) [data-media-provider],
@@ -56,20 +67,52 @@
   width: 100%;
 }
 
-[data-media-provider] video {
-  display: inline-block;
+:where(video:not([width]):not([height]), iframe:not([width]):not([height])) {
   width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+:where([data-media-provider] video),
+:where([data-media-provider] iframe) {
+  aspect-ratio: inherit;
+  display: inline-block;
   height: auto;
   object-fit: contain;
   touch-action: manipulation;
+  border-radius: inherit;
+  width: 100%;
 }
 
-[data-media-player][data-view-type='audio'] video {
+[data-media-provider] iframe {
+  height: 100%;
+}
+
+[data-media-player][data-view-type='audio'] video,
+[data-media-player][data-view-type='audio'] iframe {
   display: none;
 }
 
 [data-media-player][data-fullscreen] video {
   height: 100%;
+}
+
+iframe.vds-youtube[data-no-controls] {
+  height: 1000%;
+}
+
+.vds-blocker {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: inherit;
+  pointer-events: auto;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+[data-ended] .vds-blocker {
+  background-color: black;
 }
 
 .vds-icon:focus {
@@ -96,4 +139,33 @@
 :where(media-ads[data-ads-started='true']),
 :where(media-ads[data-non-linear='true']) {
   pointer-events: auto;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Google Cast
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+.vds-google-cast {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #dedede;
+  font-family: sans-serif;
+  font-weight: 500;
+}
+
+.vds-google-cast svg {
+  --size: max(18%, 40px);
+  width: var(--size);
+  height: var(--size);
+  margin-bottom: 8px;
+}
+
+.vds-google-cast-info {
+  font-size: calc(var(--media-height) / 100 * 6);
 }

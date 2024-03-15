@@ -1,6 +1,8 @@
+@import '../../vidstack/player/styles/base.css';
 @import '../../vidstack/player/styles/default/theme.css';
 @import '../../vidstack/player/styles/default/layouts/audio.css';
 @import '../../vidstack/player/styles/default/layouts/video.css';
+@import '../../vidstack/player/styles/plyr/theme.css';
 
 .player {
   --brand-color: #f5f5f5;
@@ -17,6 +19,10 @@
   /* 👉 https://vidstack.io/docs/player/components/layouts/default#css-variables for more. */
 
   width: 100%;
+}
+
+.player[data-view-type='audio'] .vds-poster {
+  display: none;
 }
 
 .player[data-view-type='video'] {

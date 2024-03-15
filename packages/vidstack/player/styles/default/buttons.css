@@ -26,6 +26,7 @@
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  flex-shrink: 0;
 }
 
 .vds-button {
@@ -64,8 +65,12 @@
   }
 
   .vds-button:hover {
-    transform: var(--media-button-hover-transform, scale(1));
+    transform: var(--media-button-hover-transform, scale(1.05));
     transition: var(--media-button-hover-transition, transform 0.2s ease-in);
+  }
+
+  .vds-button[aria-expanded='true'] {
+    transform: unset;
   }
 }
 
@@ -80,7 +85,7 @@
   outline: none;
 }
 
-:where(.vds-button[data-focus]) {
+:where(.vds-button[data-focus], .vds-button:focus-visible) {
   box-shadow: var(--media-focus-ring);
 }
 

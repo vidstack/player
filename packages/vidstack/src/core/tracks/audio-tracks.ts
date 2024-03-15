@@ -11,6 +11,10 @@ export class AudioTrackList extends SelectList<AudioTrack, AudioTrackListEvents>
     if (id === '') return null;
     return this._items.find((track) => track.id === id) ?? null;
   }
+
+  indexOf(track: AudioTrack) {
+    return this._items.indexOf(track);
+  }
 }
 
 /**

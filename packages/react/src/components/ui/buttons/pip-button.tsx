@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * PIPButton
  * -----------------------------------------------------------------------------------------------*/
 
-const PIPButtonBridge = createReactComponent(PIPButtonInstance);
+const PIPButtonBridge = createReactComponent(PIPButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface PIPButtonProps extends ReactElementProps<PIPButtonInstance, HTMLButtonElement> {
   asChild?: boolean;
@@ -36,7 +38,10 @@ const PIPButton = React.forwardRef<HTMLButtonElement, PIPButtonProps>(
     return (
       <PIPButtonBridge {...(props as Omit<PIPButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.button>
         )}

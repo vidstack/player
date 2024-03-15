@@ -1,26 +1,34 @@
 import { isString } from 'maverick.js/std';
 
-import type { MediaSrc, MediaType } from '../../core';
-import { AUDIO_EXTENSIONS, AUDIO_TYPES } from '../../utils/mime';
+import type { MediaType, Src } from '../../core';
+import type { MediaContext } from '../../core/api/media-context';
+import { isAudioSrc } from '../../utils/mime';
+import { canPlayAudioType } from '../../utils/support';
 import type { MediaProviderLoader } from '../types';
 import type { AudioProvider } from './provider';
 
 export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
+  readonly name = 'audio';
+
   target!: HTMLAudioElement;
 
-  canPlay({ src, type }: MediaSrc) {
-    return isString(src)
-      ? AUDIO_EXTENSIONS.test(src) ||
-          AUDIO_TYPES.has(type) ||
-          (src.startsWith('blob:') && type === 'audio/object')
-      : type === 'audio/object';
+  canPlay(src: Src) {
+    if (!isAudioSrc(src)) return false;
+    // Let this pass through on the server, we can figure out which type to play client-side. The
+    // important thing is that the correct provider is loaded.
+    return (
+      __SERVER__ ||
+      !isString(src.src) ||
+      src.type === '?' ||
+      canPlayAudioType(this.target, src.type)
+    );
   }
 
   mediaType(): MediaType {
     return 'audio';
   }
 
-  async load() {
+  async load(ctx: MediaContext) {
     if (__SERVER__) {
       throw Error('[vidstack] can not load audio provider server-side');
     }
@@ -31,6 +39,6 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
       );
     }
 
-    return new (await import('./provider')).AudioProvider(this.target);
+    return new (await import('./provider')).AudioProvider(this.target, ctx);
   }
 }

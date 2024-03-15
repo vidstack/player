@@ -23,7 +23,7 @@ export class MediaRemoteControl {
 
   /**
    * Set the target from which to dispatch media requests events from. The events should bubble
-   * up from this target to the `<media-player>` element.
+   * up from this target to the player element.
    *
    * @example
    * ```ts
@@ -37,7 +37,7 @@ export class MediaRemoteControl {
   }
 
   /**
-   * Returns the current `<media-player>` element. This method will attempt to find the player by
+   * Returns the current player element. This method will attempt to find the player by
    * searching up from either the given `target` or default target set via `remote.setTarget`.
    *
    * @example
@@ -60,7 +60,7 @@ export class MediaRemoteControl {
   }
 
   /**
-   * Set the current `<media-player>` element so the remote can support toggle methods such as
+   * Set the current player element so the remote can support toggle methods such as
    * `togglePaused` as they rely on the current media state.
    */
   setPlayer(player: MediaPlayer | null) {
@@ -69,12 +69,40 @@ export class MediaRemoteControl {
 
   /**
    * Dispatch a request to start the media loading process. This will only work if the media
-   * player has been initialized with a custom loading strategy `<media-player load="custom">`.
+   * player has been initialized with a custom loading strategy `load="custom">`.
    *
    * @docs {@link https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
    */
   startLoading(trigger?: Event) {
     this._dispatchRequest('media-start-loading', trigger);
+  }
+
+  /**
+   * Dispatch a request to start the poster loading process. This will only work if the media
+   * player has been initialized with a custom poster loading strategy `posterLoad="custom">`.
+   *
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   */
+  startLoadingPoster(trigger?: Event) {
+    this._dispatchRequest('media-poster-start-loading', trigger);
+  }
+
+  /**
+   * Dispatch a request to connect to AirPlay.
+   *
+   * @see {@link https://www.apple.com/au/airplay}
+   */
+  requestAirPlay(trigger?: Event) {
+    this._dispatchRequest('media-airplay-request', trigger);
+  }
+
+  /**
+   * Dispatch a request to connect to Google Cast.
+   *
+   * @see {@link https://developers.google.com/cast/docs/overview}
+   */
+  requestGoogleCast(trigger?: Event) {
+    this._dispatchRequest('media-google-cast-request', trigger);
   }
 
   /**
@@ -259,6 +287,20 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Dispatch a request to change the media audio gain.
+   *
+   * @example
+   * ```ts
+   * remote.changeAudioGain(1); // Disable audio gain (100% of current volume)
+   * remote.changeAudioGain(1.5); // 150% louder than current volume
+   * remote.changeAudioGain(2); // 200% louder than current volume
+   * ```
+   */
+  changeAudioGain(gain: number, trigger?: Event) {
+    this._dispatchRequest('media-audio-gain-change-request', trigger, gain);
+  }
+
+  /**
    * Dispatch a request to resume idle tracking on controls.
    */
   resumeControls(trigger?: Event) {
@@ -370,6 +412,37 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Show captions.
+   */
+  showCaptions(trigger?: Event) {
+    const player = this.getPlayer(trigger?.target);
+
+    if (!player) {
+      if (__DEV__) this._noPlayerWarning(this.showCaptions.name);
+      return;
+    }
+
+    let tracks = player.state.textTracks,
+      index = this._prevTrackIndex;
+
+    if (!tracks[index] || !isTrackCaptionKind(tracks[index])) {
+      index = -1;
+    }
+
+    if (index === -1) {
+      index = tracks.findIndex((track) => isTrackCaptionKind(track) && track.default);
+    }
+
+    if (index === -1) {
+      index = tracks.findIndex((track) => isTrackCaptionKind(track));
+    }
+
+    if (index >= 0) this.changeTextTrackMode(index, 'showing', trigger);
+
+    this._prevTrackIndex = -1;
+  }
+
+  /**
    * Turn captions off.
    */
   disableCaptions(trigger?: Event) {
@@ -386,6 +459,7 @@ export class MediaRemoteControl {
     if (track) {
       const index = tracks.indexOf(track);
       this.changeTextTrackMode(index, 'disabled', trigger);
+      this._prevTrackIndex = index;
     }
   }
 
@@ -400,32 +474,15 @@ export class MediaRemoteControl {
       return;
     }
 
-    const tracks = player.state.textTracks,
-      track = player.state.textTrack;
-
-    if (track) {
-      const index = tracks.indexOf(track);
-      this.changeTextTrackMode(index, 'disabled', trigger);
-      this._prevTrackIndex = index;
+    if (player.state.textTrack) {
+      this.disableCaptions();
     } else {
-      let index = this._prevTrackIndex;
-
-      if (!tracks[index] || !isTrackCaptionKind(tracks[index])) {
-        index = -1;
-      }
-
-      if (index === -1) {
-        index = tracks.findIndex((track) => isTrackCaptionKind(track) && track.default);
-      }
-
-      if (index === -1) {
-        index = tracks.findIndex((track) => isTrackCaptionKind(track));
-      }
-
-      if (index >= 0) this.changeTextTrackMode(index, 'showing', trigger);
-
-      this._prevTrackIndex = -1;
+      this.showCaptions();
     }
+  }
+
+  userPrefersLoopChange(prefersLoop: boolean, trigger?: Event) {
+    this._dispatchRequest('media-user-loop-change-request', trigger, prefersLoop);
   }
 
   private _dispatchRequest<EventType extends keyof MediaRequestEvents>(
@@ -436,6 +493,7 @@ export class MediaRemoteControl {
     const request = new DOMEvent<any>(type, {
       bubbles: true,
       composed: true,
+      cancelable: true,
       detail,
       trigger,
     });
@@ -463,7 +521,12 @@ export class MediaRemoteControl {
     }
 
     if (this._player) {
-      this._player.canPlayQueue._enqueue(type, () => target?.dispatchEvent(request));
+      // Special case if the player load strategy is set to `play`.
+      if (type === 'media-play-request' && !this._player.state.canLoad) {
+        target?.dispatchEvent(request);
+      } else {
+        this._player.canPlayQueue._enqueue(type, () => target?.dispatchEvent(request));
+      }
     } else {
       target?.dispatchEvent(request);
     }

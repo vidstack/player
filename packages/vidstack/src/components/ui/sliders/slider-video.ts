@@ -2,6 +2,7 @@ import { Component, effect, prop, State, useState, type StateContext } from 'mav
 import { isNull, listenEvent, type DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaCrossOrigin } from '../../../core/api/types';
 import { $ariaBool } from '../../../utils/aria';
 import { Slider } from './slider/slider';
 
@@ -18,11 +19,13 @@ import { Slider } from './slider/slider';
 export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, SliderVideoEvents> {
   static props: SliderVideoProps = {
     src: null,
+    crossOrigin: null,
   };
 
   static state = new State<SliderVideoState>({
     video: null,
     src: null,
+    crossOrigin: null,
     canPlay: false,
     error: null,
     hidden: false,
@@ -39,6 +42,9 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
   protected override onSetup(): void {
     this._media = useMediaContext();
     this._slider = useState(Slider.state);
+
+    this._watchCrossOrigin();
+
     this.setAttributes({
       'data-loading': this._isLoading.bind(this),
       'data-hidden': this.$state.hidden,
@@ -50,6 +56,7 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
   protected override onAttach(el: HTMLElement) {
     effect(this._watchVideo.bind(this));
     effect(this._watchSrc.bind(this));
+    effect(this._watchCrossOrigin.bind(this));
     effect(this._watchHidden.bind(this));
 
     effect(this._onSrcChange.bind(this));
@@ -70,6 +77,14 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
     const { src } = this.$state,
       { canLoad } = this._media.$state;
     src.set(canLoad() ? this.$props.src() : null);
+  }
+
+  private _watchCrossOrigin() {
+    const { crossOrigin: crossOriginProp } = this.$props,
+      { crossOrigin: crossOriginState } = this.$state,
+      { crossOrigin: mediaCrossOrigin } = this._media.$state,
+      crossOrigin = crossOriginProp() !== null ? crossOriginProp() : mediaCrossOrigin();
+    crossOriginState.set(crossOrigin === true ? 'anonymous' : crossOrigin);
   }
 
   private _isLoading() {
@@ -130,11 +145,19 @@ export interface SliderVideoProps {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    */
   src: string | null;
+  /**
+   * Defines how the media handles cross-origin requests, thereby enabling the
+   * configuration of the CORS requests for the element's fetched data.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
+   */
+  crossOrigin: true | MediaCrossOrigin | null;
 }
 
 export interface SliderVideoState {
   video: HTMLVideoElement | null;
   src: string | null;
+  crossOrigin: MediaCrossOrigin | null;
   canPlay: boolean;
   error: ErrorEvent | null;
   hidden: boolean;
@@ -154,7 +177,7 @@ export interface SliderVideoEvents {
 export interface SliderVideoCanPlayEvent extends DOMEvent<void> {
   target: SliderVideo;
   /** The `canplay` media event. */
-  trigger?: Event;
+  readonly trigger: Event;
 }
 
 /**
@@ -169,5 +192,5 @@ export interface SliderVideoCanPlayEvent extends DOMEvent<void> {
 export interface SliderVideoErrorEvent extends DOMEvent<void> {
   target: SliderVideo;
   /** The `error` media event. */
-  trigger: Event;
+  readonly trigger: Event;
 }

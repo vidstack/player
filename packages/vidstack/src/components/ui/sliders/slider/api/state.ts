@@ -4,10 +4,12 @@ export const sliderState = new State<SliderState>({
   min: 0,
   max: 100,
   value: 0,
+  step: 1,
   pointerValue: 0,
   focused: false,
   dragging: false,
   pointing: false,
+  hidden: false,
   get active() {
     return this.dragging || this.focused || this.pointing;
   },
@@ -51,6 +53,10 @@ export interface SliderState {
    */
   max: number;
   /**
+   * The granularity that the slider value must adhere to.
+   */
+  step: number;
+  /**
    * Whether the slider has keyboard focus.
    */
   focused: boolean;
@@ -62,6 +68,8 @@ export interface SliderState {
    * Whether a device pointer is within the slider bounds.
    */
   pointing: boolean;
+  /** Whether the slider is not visible. */
+  hidden: boolean;
   /**
    * Whether the slider is being interacted with via keyboard or pointer device.
    */

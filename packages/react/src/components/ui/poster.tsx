@@ -4,10 +4,8 @@ import {
   composeRefs,
   createReactComponent,
   useSignal,
-  useStateContext,
   type ReactElementProps,
 } from 'maverick.js/react';
-import { mediaState } from 'vidstack';
 
 import { PosterInstance } from '../primitives/instances';
 import { Primitive } from '../primitives/nodes';
@@ -44,7 +42,11 @@ const Poster = React.forwardRef<HTMLImageElement, PosterProps>(
     return (
       <PosterBridge {...(props as Omit<PosterProps, 'ref'>)}>
         {(props, instance) => (
-          <PosterImg {...props} instance={instance} ref={composeRefs(props.ref, forwardRef)}>
+          <PosterImg
+            {...props}
+            instance={instance}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as any)}
+          >
             {children}
           </PosterImg>
         )}
@@ -63,23 +65,25 @@ export { Poster };
 interface PosterImgProps {
   instance: PosterInstance;
   children?: React.ReactNode;
-  ref?: React.Ref<HTMLImageElement>;
+  ref?: React.LegacyRef<HTMLImageElement>;
 }
 
 const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
   ({ instance, children, ...props }, forwardRef) => {
-    const { crossorigin } = useStateContext(mediaState),
-      { src, alt, img } = instance.$state,
-      $crossorigin = useSignal(crossorigin),
+    const { src, img, alt, crossOrigin, loading, hidden } = instance.$state,
       $src = useSignal(src),
-      $alt = useSignal(alt);
+      $alt = useSignal(alt),
+      $crossOrigin = useSignal(crossOrigin),
+      $loading = useSignal(loading),
+      $hidden = useSignal(hidden);
     return (
       <Primitive.img
         {...props}
-        src={$src || undefined}
+        src={$src || ''}
         alt={$alt || undefined}
-        crossOrigin={$crossorigin as '' | undefined}
-        ref={composeRefs(img.set as any, forwardRef)}
+        crossOrigin={$crossOrigin || undefined}
+        ref={composeRefs(img.set as React.Ref<HTMLImageElement>, forwardRef)}
+        style={{ display: $loading || $hidden ? 'none' : undefined }}
       >
         {children}
       </Primitive.img>

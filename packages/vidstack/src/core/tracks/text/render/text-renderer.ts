@@ -77,17 +77,12 @@ export class TextRenderers {
   }
 
   private _update() {
-    if (!this._video) {
-      this._detach();
-      return;
-    }
-
     const currentTrack = this._textTracks.selected;
 
     // We identify text tracks that were embedded in HLS playlists and loaded natively (e.g., iOS
     // Safari) because we can't toggle mode to hidden and still get cue updates for some reason.
     // See `native-hls-text-tracks.ts` for discovery.
-    if (this._nativeDisplay || currentTrack?.[TextTrackSymbol._nativeHLS]) {
+    if (this._video && (this._nativeDisplay || currentTrack?.[TextTrackSymbol._nativeHLS])) {
       this._customRenderer?.changeTrack(null);
       this._nativeRenderer?.setDisplay(true);
       this._nativeRenderer?.changeTrack(currentTrack);
@@ -104,7 +99,7 @@ export class TextRenderers {
 
     const customRenderer = this._renderers
       .sort((a, b) => a.priority - b.priority)
-      .find((loader) => loader.canRender(currentTrack));
+      .find((renderer) => renderer.canRender(currentTrack, this._video));
 
     if (this._customRenderer !== customRenderer) {
       this._customRenderer?.detach();
@@ -125,8 +120,8 @@ export class TextRenderers {
 
 export interface TextRenderer {
   readonly priority: number;
-  canRender(track: TextTrack): boolean;
-  attach(video: HTMLVideoElement);
+  canRender(track: TextTrack, video: HTMLVideoElement | null): boolean;
+  attach(video: HTMLVideoElement | null);
   detach(): void;
   changeTrack(track: TextTrack | null): void;
 }

@@ -1,97 +1,111 @@
 import { html } from 'lit-html';
+import { ref } from 'lit-html/directives/ref.js';
+import { effect, signal } from 'maverick.js';
+import { toggleClass } from 'maverick.js/std';
 
-import { useMediaContext } from '../../../../core/api/media-context';
-import { $computed } from '../../../lit/directives/signal';
+import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
+import { i18n } from '../../../../components/layouts/default/translations';
+import { useMediaContext, useMediaState } from '../../../../core/api/media-context';
+import { useResizeObserver, useTransitionActive } from '../../../../utils/dom';
+import { $signal } from '../../../lit/directives/signal';
+import { DefaultAnnouncer } from './ui/announcer';
 import {
   DefaultCaptionButton,
-  DefaultChaptersMenu,
-  DefaultLiveButton,
-  DefaultMuteButton,
+  DefaultDownloadButton,
   DefaultPlayButton,
   DefaultSeekButton,
-  DefaultSettingsMenu,
-  DefaultTimeInfo,
-  DefaultTimeSlider,
-  DefaultVolumeSlider,
-} from './shared-layout';
+} from './ui/buttons';
+import { DefaultCaptions } from './ui/captions';
+import { DefaultControlsSpacer } from './ui/controls';
+import { DefaultChaptersMenu } from './ui/menu/chapters-menu';
+import { DefaultSettingsMenu } from './ui/menu/settings-menu';
+import { DefaultTimeSlider, DefaultVolumePopup } from './ui/slider';
+import { DefaultTimeInvert } from './ui/time';
+import { DefaultChapterTitle } from './ui/title';
 
-export function DefaultAudioLayoutLarge() {
-  return html`
-    <media-captions class="vds-captions"></media-captions>
-
-    <media-controls class="vds-controls">
-      <media-controls-group class="vds-controls-group">${DefaultTimeSlider()}</media-controls-group>
-
-      <media-controls-group class="vds-controls-group">
-        ${DefaultSeekButton({ seconds: -10, tooltip: 'top start' })}
-        ${DefaultPlayButton({ tooltip: 'top' })}${DefaultSeekButton({
-          tooltip: 'top',
-          seconds: 10,
-        })}
-        ${$computed(DefaultTimeInfo)}
-        <media-chapter-title class="vds-chapter-title"></media-chapter-title>
-        ${DefaultMuteButton({ tooltip: 'top' })}
-        ${DefaultVolumeSlider()}${DefaultCaptionButton({ tooltip: 'top' })} ${DefaultAudioMenus()}
-      </media-controls-group>
-    </media-controls>
-  `;
-}
-
-export function DefaultAudioLayoutSmall() {
-  return html`
-    <media-captions class="vds-captions"></media-captions>
-    <media-controls class="vds-controls">
-      <media-controls-group class="vds-controls-group">
-        ${$computed(DefaultLivePlayButton)}
-        ${DefaultMuteButton({ tooltip: 'top start' })}${$computed(DefaultLiveButton)}
-        <media-chapter-title class="vds-chapter-title"></media-chapter-title>
-        ${DefaultCaptionButton({ tooltip: 'top' })}${DefaultAudioMenus()}
-      </media-controls-group>
-
-      <media-controls-group class="vds-controls-group">${DefaultTimeSlider()}</media-controls-group>
-
-      ${$computed(DefaultTimeControlsGroup)}${$computed(DefaultBottomControlsGroup)}
-    </media-controls>
-  `;
-}
-
-function DefaultLivePlayButton() {
-  const { live, canSeek } = useMediaContext().$state;
-  return live() && !canSeek() ? DefaultPlayButton({ tooltip: 'top start' }) : null;
-}
-
-function DefaultTimeControlsGroup() {
-  const { live } = useMediaContext().$state;
-  return !live()
-    ? html`
+export function DefaultAudioLayout() {
+  return [
+    DefaultAnnouncer(),
+    DefaultCaptions(),
+    html`
+      <media-controls class="vds-controls">
         <media-controls-group class="vds-controls-group">
-          <media-time class="vds-time" type="current"></media-time>
-          <div class="vds-controls-spacer"></div>
-          <media-time class="vds-time" type="duration"></media-time>
+          ${[
+            DefaultSeekButton({ backward: true, tooltip: 'top start' }),
+            DefaultPlayButton({ tooltip: 'top' }),
+            DefaultSeekButton({ tooltip: 'top' }),
+            DefaultAudioTitle(),
+            DefaultTimeSlider(),
+            DefaultTimeInvert(),
+            DefaultVolumePopup({ orientation: 'vertical', tooltip: 'top' }),
+            DefaultCaptionButton({ tooltip: 'top' }),
+            DefaultDownloadButton(),
+            DefaultAudioMenus(),
+          ]}
         </media-controls-group>
-      `
-    : null;
+      </media-controls>
+    `,
+  ];
 }
 
-function DefaultBottomControlsGroup() {
-  const { canSeek } = useMediaContext().$state;
-  return canSeek()
-    ? html`
-        <media-controls-group class="vds-controls-group">
-          <div class="vds-controls-spacer"></div>
-          ${DefaultSeekButton({ seconds: -10, tooltip: 'top' })}
-          ${DefaultPlayButton({ tooltip: 'top' })}
-          ${DefaultSeekButton({ tooltip: 'top', seconds: 10 })}
-          <div class="vds-controls-spacer"></div>
-        </media-controls-group>
-      `
-    : null;
+function DefaultAudioTitle() {
+  return $signal(() => {
+    let $ref = signal<Element | undefined>(undefined),
+      $isTextOverflowing = signal(false),
+      media = useMediaContext(),
+      { title, started, currentTime, ended } = useMediaState(),
+      { translations } = useDefaultLayoutContext(),
+      $isTransitionActive = useTransitionActive($ref),
+      $isContinued = () => started() || currentTime() > 0;
+
+    const $title = () => {
+      const word = ended() ? 'Replay' : $isContinued() ? 'Continue' : 'Play';
+      return `${i18n(translations, word)}: ${title()}`;
+    };
+
+    effect(() => {
+      if ($isTransitionActive() && document.activeElement === document.body) {
+        media.player.el?.focus();
+      }
+    });
+
+    function onResize() {
+      const el = $ref(),
+        isOverflowing =
+          !!el && !$isTransitionActive() && el.clientWidth < el.children[0]!.clientWidth;
+
+      el && toggleClass(el, 'vds-marquee', isOverflowing);
+
+      $isTextOverflowing.set(isOverflowing);
+    }
+
+    function Title() {
+      return html`
+        <span class="vds-title-text">
+          ${$signal($title)}${$signal(() => ($isContinued() ? DefaultChapterTitle() : null))}
+        </span>
+      `;
+    }
+
+    useResizeObserver($ref, onResize);
+
+    return title()
+      ? html`
+          <span class="vds-title" title=${$signal($title)} ${ref($ref.set)}>
+            ${[
+              Title(),
+              $signal(() => ($isTextOverflowing() && !$isTransitionActive() ? Title() : null)),
+            ]}
+          </span>
+        `
+      : DefaultControlsSpacer();
+  });
 }
 
 function DefaultAudioMenus() {
   const placement = 'top end';
-  return html`
-    ${DefaultChaptersMenu({ tooltip: 'top', placement, portal: true })}
-    ${DefaultSettingsMenu({ tooltip: 'top end', placement, portal: true })}
-  `;
+  return [
+    DefaultChaptersMenu({ tooltip: 'top', placement, portal: true }),
+    DefaultSettingsMenu({ tooltip: 'top end', placement, portal: true }),
+  ];
 }

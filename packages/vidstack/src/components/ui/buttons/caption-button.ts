@@ -1,6 +1,7 @@
 import { Component } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { isTrackCaptionKind } from '../../../core/tracks/text/text-track';
 import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
@@ -11,6 +12,9 @@ import {
 
 export interface CaptionButtonProps extends ToggleButtonControllerProps {}
 
+export interface CaptionButtonEvents
+  extends Pick<MediaRequestEvents, 'media-text-track-change-request'> {}
+
 /**
  * A button for toggling the showing state of the captions.
  *
@@ -18,7 +22,7 @@ export interface CaptionButtonProps extends ToggleButtonControllerProps {}
  * @attr data-active - Whether closed captions or subtitles are on.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/caption-button}
  */
-export class CaptionButton extends Component<CaptionButtonProps> {
+export class CaptionButton extends Component<CaptionButtonProps, {}, CaptionButtonEvents> {
   static props: CaptionButtonProps = ToggleButtonController.props;
 
   private _media!: MediaContext;
@@ -44,7 +48,7 @@ export class CaptionButton extends Component<CaptionButtonProps> {
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'caption');
-    setARIALabel(el, this._getLabel.bind(this));
+    setARIALabel(el, 'Captions');
   }
 
   private _onPress(event: Event) {
@@ -58,12 +62,7 @@ export class CaptionButton extends Component<CaptionButtonProps> {
   }
 
   private _isHidden() {
-    const { textTracks } = this._media.$state;
-    return textTracks().filter(isTrackCaptionKind).length == 0;
-  }
-
-  private _getLabel() {
-    const { textTrack } = this._media.$state;
-    return textTrack() ? 'Closed-Captions Off' : 'Closed-Captions On';
+    const { hasCaptions } = this._media.$state;
+    return !hasCaptions();
   }
 }

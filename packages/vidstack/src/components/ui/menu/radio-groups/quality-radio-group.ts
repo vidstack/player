@@ -12,6 +12,7 @@ import {
 import type { DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
+import { sortVideoQualities } from '../../../../core/quality/utils';
 import type { VideoQuality } from '../../../../core/quality/video-quality';
 import { round } from '../../../../utils/number';
 import { menuContext, type MenuContext } from '../menu-context';
@@ -21,7 +22,7 @@ import { RadioGroupController } from '../radio/radio-group-controller';
 /**
  * This component manages video quality radios.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/quality-menu}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/quality-radio-group}
  */
 export class QualityRadioGroup extends Component<
   QualityRadioGroupProps,
@@ -31,6 +32,7 @@ export class QualityRadioGroup extends Component<
   static props: QualityRadioGroupProps = {
     autoLabel: 'Auto',
     hideBitrate: false,
+    sort: 'descending',
   };
 
   private _media!: MediaContext;
@@ -45,14 +47,13 @@ export class QualityRadioGroup extends Component<
   @prop
   get disabled() {
     const { canSetQuality, qualities } = this._media.$state;
-    return !canSetQuality() || qualities().length === 0;
+    return !canSetQuality() || qualities().length <= 1;
   }
 
   private _sortedQualities = computed(() => {
-    const { qualities } = this._media.$state;
-    return [...qualities()].sort((a, b) =>
-      b.height === a.height ? b.bitrate - a.bitrate : b.height - a.height,
-    );
+    const { sort } = this.$props,
+      { qualities } = this._media.$state;
+    return sortVideoQualities(qualities(), sort() === 'descending');
   });
 
   constructor() {
@@ -80,12 +81,16 @@ export class QualityRadioGroup extends Component<
     return [
       { value: 'auto', label: autoLabel },
       ...this._sortedQualities().map((quality) => {
-        const rate = `${round(quality.bitrate / 1000000, 2)} Mbps`;
+        const bitrate =
+          quality.bitrate && quality.bitrate >= 0
+            ? `${round(quality.bitrate / 1000000, 2)} Mbps`
+            : null;
+
         return {
           quality,
           label: quality.height + 'p',
           value: this._getQualityId(quality),
-          bitrate: () => (!hideBitrate() ? rate : null),
+          bitrate: () => (!hideBitrate() ? bitrate : null),
         };
       }),
     ];
@@ -100,12 +105,13 @@ export class QualityRadioGroup extends Component<
       { autoQuality, quality } = this._media.$state,
       qualityText = quality() ? quality()!.height + 'p' : '';
 
-    this._menu?._hint.set(!autoQuality() ? qualityText : autoLabel() + ` (${qualityText})`);
+    this._menu?._hint.set(
+      !autoQuality() ? qualityText : autoLabel() + (qualityText ? ` (${qualityText})` : ''),
+    );
   }
 
   private _watchControllerDisabled() {
-    const { qualities } = this._media.$state;
-    this._menu?._disable(qualities().length === 0);
+    this._menu?._disable(this.disabled);
   }
 
   private _onValueChange(value: string, trigger?: Event) {
@@ -146,6 +152,14 @@ export interface QualityRadioGroupProps {
   autoLabel: string;
   /** Whether the bitrate should _not_ be displayed next to each quality radio option. */
   hideBitrate: boolean;
+  /**
+   * Specifies how the options should be sorted. The sorting algorithm looks at both the quality
+   * resolution and bitrate.
+   *
+   * - Ascending: 480p, 720p, 720p (higher bitrate), 1080p
+   * - Descending: 1080p, 720p (higher bitrate), 720p, 480p
+   */
+  sort: 'ascending' | 'descending';
 }
 
 export interface QualityRadioOption extends RadioOption {

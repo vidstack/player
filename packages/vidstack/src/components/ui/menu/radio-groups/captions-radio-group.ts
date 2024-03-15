@@ -10,7 +10,7 @@ import { RadioGroupController } from '../radio/radio-group-controller';
 /**
  * This component manages caption/subtitle track radio options.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/menu/captions-menu-items}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/captions-radio-group}
  */
 export class CaptionsRadioGroup extends Component<
   CaptionsRadioGroupProps,
@@ -32,8 +32,8 @@ export class CaptionsRadioGroup extends Component<
 
   @prop
   get disabled() {
-    const { textTracks } = this._media.$state;
-    return textTracks().filter(isTrackCaptionKind).length === 0;
+    const { hasCaptions } = this._media.$state;
+    return !hasCaptions();
   }
 
   constructor() {
@@ -67,7 +67,7 @@ export class CaptionsRadioGroup extends Component<
         .map((track) => ({
           track,
           label: track.label,
-          value: track.label.toLowerCase(),
+          value: this._getTrackValue(track),
         })),
     ];
   }
@@ -93,7 +93,7 @@ export class CaptionsRadioGroup extends Component<
     const { textTrack } = this._media.$state,
       track = textTrack();
     return track && isTrackCaptionKind(track) && track.mode === 'showing'
-      ? track.label.toLowerCase()
+      ? this._getTrackValue(track)
       : 'off';
   }
 
@@ -104,7 +104,7 @@ export class CaptionsRadioGroup extends Component<
       const track = this._media.textTracks.selected;
 
       if (track) {
-        const index = this._media.textTracks.toArray().indexOf(track);
+        const index = this._media.textTracks.indexOf(track);
         this._media.remote.changeTextTrackMode(index, 'disabled', trigger);
         this.dispatch('change', { detail: null, trigger });
       }
@@ -114,13 +114,17 @@ export class CaptionsRadioGroup extends Component<
 
     const index = this._media.textTracks
       .toArray()
-      .findIndex((track) => track.label.toLowerCase() === value);
+      .findIndex((track) => this._getTrackValue(track) === value);
 
     if (index >= 0) {
       const track = this._media.textTracks[index]!;
       this._media.remote.changeTextTrackMode(index, 'showing', trigger);
       this.dispatch('change', { detail: track, trigger });
     }
+  }
+
+  private _getTrackValue(track: TextTrack) {
+    return track.id + ':' + track.kind + '-' + track.label.toLowerCase();
   }
 }
 

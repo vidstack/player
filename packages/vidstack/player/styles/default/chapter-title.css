@@ -2,11 +2,11 @@
   --color: var(--media-chapter-title-color, rgba(255 255 255 / 0.64));
   display: inline-block;
   font-family: var(--media-font-family, sans-serif);
-  font-size: var(--media-chapter-title-font-size, 14px);
-  font-weight: var(--media-chapter-title-font-weight, 500);
+  font-size: var(--media-chapter-title-font-size, 16px);
+  font-weight: var(--media-chapter-title-font-weight, 400);
   color: var(--color);
   flex: 1 1 0%;
-  padding-inline: 8px;
+  padding-inline: 6px;
   overflow: hidden;
   text-align: start;
   white-space: nowrap;

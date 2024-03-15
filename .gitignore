@@ -1,6 +1,5 @@
 dist/
 dist-*/
-sandbox/
 
 .tsbuildinfo
 tsconfig.build.tsbuildinfo
@@ -21,6 +20,7 @@ packages/*/local/
 packages/*/dist/
 packages/*/cdn/
 packages/*/elements/
+packages/*/enhance/
 packages/*/types/
 packages/*/sandbox/
 packages/*/stats.html
@@ -32,11 +32,15 @@ packages/vidstack/icons.d.ts
 packages/vidstack/vue.d.ts
 packages/vidstack/svelte.d.ts
 packages/vidstack/solid.d.ts
+packages/vidstack/plugins.js
+packages/vidstack/plugins.d.ts
 packages/vidstack/player/styles/default/theme.css
 
 packages/react/src/icons.ts
 packages/react/index.d.ts
 packages/react/icons.d.ts
+packages/react/dom.d.ts
+packages/react/google-cast.d.ts
 packages/react/player/
 packages/react/tailwind*
 

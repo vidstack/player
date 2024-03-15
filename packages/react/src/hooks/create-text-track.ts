@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { useReactContext } from 'maverick.js/react';
-import { mediaContext, TextTrack, type TextTrackInit } from 'vidstack';
+import { TextTrack, type TextTrackInit } from 'vidstack';
+
+import { useMediaContext } from './use-media-context';
 
 /**
  * Creates a new `TextTrack` object and adds it to the player.
@@ -9,7 +10,7 @@ import { mediaContext, TextTrack, type TextTrackInit } from 'vidstack';
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/create-text-track}
  */
 export function createTextTrack(init: TextTrackInit) {
-  const media = useReactContext(mediaContext)!,
+  const media = useMediaContext(),
     track = React.useMemo(() => new TextTrack(init), Object.values(init));
 
   React.useEffect(() => {

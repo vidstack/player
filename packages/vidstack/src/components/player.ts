@@ -2,14 +2,13 @@ import {
   Component,
   computed,
   effect,
-  getScope,
   method,
   onDispose,
   peek,
   prop,
   provideContext,
-  scoped,
   signal,
+  type WriteSignalRecord,
 } from 'maverick.js';
 import type { ElementAttributesRecord } from 'maverick.js/element';
 import {
@@ -28,7 +27,6 @@ import {
   MediaControls,
   MediaRemoteControl,
   mediaState,
-  PlayerQueryList,
   TextRenderers,
   TextTrackList,
   VideoQualityList,
@@ -54,6 +52,8 @@ import { MediaPlayerDelegate } from '../core/state/media-player-delegate';
 import { MediaRequestContext, MediaRequestManager } from '../core/state/media-request-manager';
 import { MediaStateManager } from '../core/state/media-state-manager';
 import { MediaStateSync } from '../core/state/media-state-sync';
+import { LocalMediaStorage, type MediaStorage } from '../core/state/media-storage';
+import { NavigatorMediaSession } from '../core/state/navigator-media-session';
 import { TextTrackSymbol } from '../core/tracks/text/symbols';
 import { canFullscreen } from '../foundation/fullscreen/controller';
 import { Logger } from '../foundation/logger/controller';
@@ -61,10 +61,10 @@ import { LogPrinter } from '../foundation/logger/log-printer';
 import { FocusVisibleController } from '../foundation/observers/focus-visible';
 import { ScreenOrientationController } from '../foundation/orientation/controller';
 import { RequestQueue } from '../foundation/queue/request-queue';
-import type { AnyMediaProvider } from '../providers';
+import type { AnyMediaProvider, MediaProviderAdapter } from '../providers';
 import { setAttributeIfEmpty } from '../utils/dom';
 import { clampNumber } from '../utils/number';
-import { canChangeVolume, IS_IPHONE } from '../utils/support';
+import { IS_IPHONE } from '../utils/support';
 
 declare global {
   interface HTMLElementEventMap {
@@ -79,10 +79,13 @@ declare global {
  * requests, and expose media state through HTML attributes and CSS properties for styling
  * purposes.
  *
+ * @attr data-airplay - Whether AirPlay is connected.
  * @attr data-autoplay - Autoplay has successfully started.
  * @attr data-autoplay-error - Autoplay has failed to start.
  * @attr data-buffering - Media is not ready for playback or waiting for more data.
+ * @attr data-can-airplay - Whether AirPlay is available.
  * @attr data-can-fullscreen - Fullscreen mode is available.
+ * @attr data-can-google-cast - Whether Google Cast is available.
  * @attr data-can-load - Media can now begin loading.
  * @attr data-can-pip - Picture-in-Picture mode is available.
  * @attr data-can-play - Media is ready for playback.
@@ -92,7 +95,9 @@ declare global {
  * @attr data-ended - Playback has ended.
  * @attr data-error - Issue with media loading/playback.
  * @attr data-fullscreen - Fullscreen mode is active.
+ * @attr data-google-cast - Whether Google Cast is connected.
  * @attr data-ios-controls - iOS controls are visible.
+ * @attr data-load - Specified load strategy.
  * @attr data-live - Media is live stream.
  * @attr data-live-edge - Playback is at the live edge.
  * @attr data-loop - Media is set to replay on end.
@@ -105,6 +110,8 @@ declare global {
  * @attr data-playsinline - Media should play inline by default (iOS).
  * @attr data-pointer - The user's pointer device type (coarse/fine).
  * @attr data-preview - The user is interacting with the time slider.
+ * @attr data-remote-type - The remote playback type (airplay/google-cast).
+ * @attr data-remote-state - The remote playback state (connecting/connected/disconnected).
  * @attr data-seeking - User is seeking to a new playback position.
  * @attr data-started - Media playback has started.
  * @attr data-stream-type - Current stream type.
@@ -128,22 +135,29 @@ export class MediaPlayer
   @prop
   readonly canPlayQueue = new RequestQueue();
 
+  @prop
+  readonly remoteControl: MediaRemoteControl;
+
   private get _provider() {
     return this._media.$provider() as AnyMediaProvider | null;
+  }
+
+  private get _$$props() {
+    return this.$props as unknown as WriteSignalRecord<MediaPlayerProps>;
   }
 
   constructor() {
     super();
 
-    this._initState();
     new MediaStateSync();
 
     const context = {
       player: this,
-      scope: getScope(),
       qualities: new VideoQualityList(),
       audioTracks: new AudioTrackList(),
+      storage: null,
       $provider: signal<MediaProvider | null>(null),
+      $providerSetup: signal(false),
       $props: this.$props,
       $state: this.$state as MediaStore,
       $ads: signal<AdsController | null>(null),
@@ -157,11 +171,13 @@ export class MediaPlayer
     }
 
     if (__DEV__) context.logger = new Logger();
-    context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
+    context.remote = this.remoteControl = new MediaRemoteControl(
+      __DEV__ ? context.logger : undefined,
+    );
     context.remote.setPlayer(this);
     context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList();
-    context.textTracks[TextTrackSymbol._crossorigin] = this.$state.crossorigin;
+    context.textTracks[TextTrackSymbol._crossOrigin] = this.$state.crossOrigin;
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
 
@@ -189,17 +205,19 @@ export class MediaPlayer
       this.ads = new AdsController(context);
       this._media.$ads.set(this.ads);
     }
+    new NavigatorMediaSession();
+    new MediaLoadController('load', this.startLoading.bind(this));
+    new MediaLoadController('posterLoad', this.startLoadingPoster.bind(this));
   }
 
   protected override onSetup(): void {
     this._setupMediaAttributes();
-
     effect(this._watchCanPlay.bind(this));
     effect(this._watchMuted.bind(this));
     effect(this._watchPaused.bind(this));
     effect(this._watchVolume.bind(this));
     effect(this._watchCurrentTime.bind(this));
-    effect(this._watchPlaysinline.bind(this));
+    effect(this._watchPlaysInline.bind(this));
     effect(this._watchPlaybackRate.bind(this));
   }
 
@@ -207,6 +225,8 @@ export class MediaPlayer
     el.setAttribute('data-media-player', '');
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'region');
+
+    effect(this._watchStorage.bind(this));
 
     if (__SERVER__) this._watchTitle();
     else effect(this._watchTitle.bind(this));
@@ -219,8 +239,6 @@ export class MediaPlayer
 
   protected override onConnect(el: HTMLElement) {
     if (IS_IPHONE) setAttribute(el, 'data-iphone', '');
-
-    canChangeVolume().then(this.$state.canSetVolume.set);
 
     const pointerQuery = window.matchMedia('(pointer: coarse)');
     this._onPointerChange(pointerQuery);
@@ -252,43 +270,26 @@ export class MediaPlayer
     this.canPlayQueue._reset();
   }
 
-  private _initState() {
-    const providedProps = {
-      viewType: 'providedViewType',
-      streamType: 'providedStreamType',
-    };
-
-    for (const prop of Object.keys(this.$props)) {
-      this.$state[providedProps[prop] ?? prop]?.set(this.$props[prop]());
-    }
-
-    if (__SERVER__) this._onProvidedTypesChange();
-    else effect(this._onProvidedTypesChange.bind(this));
-
-    this.$state.muted.set(this.$props.muted() || this.$props.volume() === 0);
-  }
-
+  private _skipTitleUpdate = false;
   private _watchTitle() {
-    const { title } = this.$props,
-      { live, viewType } = this.$state,
+    const el = this.$el,
+      { title, live, viewType, providedTitle } = this.$state,
       isLive = live(),
       type = uppercaseFirstChar(viewType()),
-      typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media';
-
-    const newTitle = title();
-    if (newTitle) {
-      this.el?.setAttribute('data-title', newTitle);
-      this.el?.removeAttribute('title');
-    }
-
-    const currentTitle = this.el?.getAttribute('data-title') || '';
-    this.$state.title.set(currentTitle);
+      typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media',
+      currentTitle = title();
 
     setAttribute(
       this.el!,
       'aria-label',
-      currentTitle ? `${typeText} - ${currentTitle}` : typeText + ' Player',
+      `${typeText} Player` + (currentTitle ? ` - ${currentTitle}` : ''),
     );
+
+    // Title attribute is removed to prevent popover interfering with user hovering over player.
+    if (!__SERVER__ && el?.hasAttribute('title')) {
+      this._skipTitleUpdate = true;
+      el?.removeAttribute('title');
+    }
   }
 
   private _watchOrientation() {
@@ -303,11 +304,6 @@ export class MediaPlayer
     else this.canPlayQueue._stop();
   }
 
-  private _onProvidedTypesChange() {
-    this.$state.providedViewType.set(this.$props.viewType());
-    this.$state.providedStreamType.set(this.$props.streamType());
-  }
-
   private _setupMediaAttributes() {
     if (MediaPlayer[MEDIA_ATTRIBUTES]) {
       this.setAttributes(MediaPlayer[MEDIA_ATTRIBUTES]);
@@ -315,6 +311,9 @@ export class MediaPlayer
     }
 
     const $attrs: ElementAttributesRecord = {
+      'data-load': function (this: MediaPlayer) {
+        return this.$props.load();
+      },
       'data-captions': function (this: MediaPlayer) {
         const track = this.$state.textTrack();
         return !!track && isTrackCaptionKind(track);
@@ -326,22 +325,29 @@ export class MediaPlayer
         return this.controls.showing;
       },
       'data-buffering': function (this: MediaPlayer) {
-        const { canPlay, waiting } = this.$state;
-        return !canPlay() || waiting();
+        const { canLoad, canPlay, waiting } = this.$state;
+        return canLoad() && (!canPlay() || waiting());
       },
       'data-error': function (this: MediaPlayer) {
         const { error } = this.$state;
         return !!error();
       },
       'data-autoplay-error': function (this: MediaPlayer) {
-        const { autoplayError } = this.$state;
-        return !!autoplayError();
+        const { autoPlayError } = this.$state;
+        return !!autoPlayError();
       },
     };
 
-    const alias = {
+    const alias: Partial<Record<keyof MediaPlayerState, string>> = {
+      autoPlay: 'autoplay',
+      canAirPlay: 'can-airplay',
       canPictureInPicture: 'can-pip',
       pictureInPicture: 'pip',
+      playsInline: 'playsinline',
+      remotePlaybackState: 'remote-state',
+      remotePlaybackType: 'remote-type',
+      isAirPlayConnected: 'airplay',
+      isGoogleCastConnected: 'google-cast',
     };
 
     for (const prop of mediaAttributes) {
@@ -382,12 +388,12 @@ export class MediaPlayer
   }
 
   private _isIOSControls() {
-    const { playsinline, fullscreen } = this.$state;
+    const { playsInline, fullscreen } = this.$state;
     return (
       IS_IPHONE &&
       !canFullscreen() &&
       this.$state.mediaType() === 'video' &&
-      (!playsinline() || fullscreen())
+      (!playsInline() || fullscreen())
     );
   }
 
@@ -407,12 +413,33 @@ export class MediaPlayer
     return this._requestMgr._controls;
   }
 
+  set controls(controls: boolean) {
+    this._$$props.controls.set(controls);
+  }
+
   /**
    * Controls the screen orientation of the current browser window and dispatches orientation
    * change events on the player.
    */
   @prop
   readonly orientation: ScreenOrientationController;
+
+  /**
+   * The title of the current media.
+   */
+  @prop
+  get title() {
+    return peek(this.$state.providedTitle);
+  }
+
+  set title(newTitle) {
+    if (this._skipTitleUpdate) {
+      this._skipTitleUpdate = false;
+      return;
+    }
+
+    this.$state.providedTitle.set(newTitle);
+  }
 
   /**
    * A list of all `VideoQuality` objects representing the set of available video renditions.
@@ -456,8 +483,17 @@ export class MediaPlayer
   }
 
   @prop
+  get duration() {
+    return this.$state.duration();
+  }
+
+  set duration(duration: number) {
+    this._$$props.duration.set(duration);
+  }
+
+  @prop
   get paused() {
-    return this._provider?.paused ?? true;
+    return peek(this.$state.paused);
   }
 
   set paused(paused) {
@@ -476,11 +512,11 @@ export class MediaPlayer
 
   @prop
   get muted() {
-    return this._provider?.muted ?? false;
+    return peek(this.$state.muted);
   }
 
   set muted(muted) {
-    this._queueMutedUpdate(muted);
+    this._$$props.muted.set(muted);
   }
 
   private _watchMuted() {
@@ -488,12 +524,14 @@ export class MediaPlayer
   }
 
   private _queueMutedUpdate(muted: boolean) {
-    this.canPlayQueue._enqueue('muted', () => (this._provider!.muted = muted));
+    this.canPlayQueue._enqueue('muted', () => {
+      if (this._provider) this._provider.setMuted(muted);
+    });
   }
 
   @prop
   get currentTime() {
-    return this._provider?.currentTime ?? 0;
+    return peek(this.$state.currentTime);
   }
 
   set currentTime(time) {
@@ -506,27 +544,30 @@ export class MediaPlayer
 
   private _queueCurrentTimeUpdate(time: number) {
     this.canPlayQueue._enqueue('currentTime', () => {
-      const adapter = this._provider;
-      if (time !== adapter!.currentTime) {
-        peek(() => {
-          const boundTime = Math.min(
-            Math.max(this.$state.seekableStart() + 0.1, time),
-            this.$state.seekableEnd() - 0.1,
-          );
+      const { currentTime, clipStartTime, seekableStart, seekableEnd } = this.$state;
 
-          if (Number.isFinite(boundTime)) adapter!.currentTime = boundTime;
-        });
-      }
+      if (time === peek(currentTime)) return;
+
+      peek(() => {
+        if (!this._provider) return;
+
+        const boundTime = Math.min(
+          Math.max(seekableStart() + 0.1, time + clipStartTime()),
+          seekableEnd() - 0.1,
+        );
+
+        if (Number.isFinite(boundTime)) this._provider.setCurrentTime(boundTime);
+      });
     });
   }
 
   @prop
   get volume() {
-    return this._provider?.volume ?? 1;
+    return peek(this.$state.volume);
   }
 
   set volume(volume) {
-    this._queueVolumeUpdate(volume);
+    this._$$props.volume.set(volume);
   }
 
   private _watchVolume() {
@@ -535,12 +576,14 @@ export class MediaPlayer
 
   private _queueVolumeUpdate(volume: number) {
     const clampedVolume = clampNumber(0, volume, 1);
-    this.canPlayQueue._enqueue('volume', () => (this._provider!.volume = clampedVolume));
+    this.canPlayQueue._enqueue('volume', () => {
+      if (this._provider) this._provider.setVolume(clampedVolume);
+    });
   }
 
   @prop
   get playbackRate() {
-    return this._provider?.playbackRate ?? 1;
+    return peek(this.$state.playbackRate);
   }
 
   set playbackRate(rate) {
@@ -552,15 +595,50 @@ export class MediaPlayer
   }
 
   private _queuePlaybackRateUpdate(rate: number) {
-    this.canPlayQueue._enqueue('rate', () => (this._provider!.playbackRate = rate));
+    this.canPlayQueue._enqueue('rate', () => {
+      if (this._provider) (this._provider as MediaProviderAdapter).setPlaybackRate?.(rate);
+    });
   }
 
-  private _watchPlaysinline() {
-    this._queuePlaysinlineUpdate(this.$props.playsinline());
+  private _watchPlaysInline() {
+    this._queuePlaysInlineUpdate(this.$props.playsInline());
   }
 
-  private _queuePlaysinlineUpdate(inline: boolean) {
-    this.canPlayQueue._enqueue('playsinline', () => (this._provider!.playsinline = inline));
+  private _queuePlaysInlineUpdate(inline: boolean) {
+    this.canPlayQueue._enqueue('playsinline', () => {
+      if (this._provider) (this._provider as MediaProviderAdapter).setPlaysInline?.(inline);
+    });
+  }
+
+  private _watchStorage() {
+    let storageValue = this.$props.storage(),
+      storage: MediaStorage | null = isString(storageValue)
+        ? new LocalMediaStorage()
+        : storageValue;
+
+    if (storage?.onChange) {
+      const { source } = this.$state,
+        playerId = isString(storageValue) ? storageValue : this.el?.id,
+        mediaId = computed(this._computeMediaId.bind(this));
+
+      effect(() => storage!.onChange!(source(), mediaId(), playerId));
+    }
+
+    this._media.storage = storage;
+    this._media.textTracks.setStorage(storage);
+
+    onDispose(() => {
+      storage?.onDestroy?.();
+      this._media.storage = null;
+      this._media.textTracks.setStorage(null);
+    });
+  }
+
+  private _computeMediaId() {
+    const { clipStartTime, clipEndTime } = this.$props,
+      { source } = this.$state,
+      src = source();
+    return src.src ? `${src.src}:${clipStartTime()}:${clipEndTime()}` : null;
   }
 
   /**
@@ -656,35 +734,34 @@ export class MediaPlayer
    */
   @method
   startLoading(trigger?: Event): void {
-    this._media.delegate._dispatch('can-load', { trigger });
+    this._media.delegate._notify('can-load', undefined, trigger);
   }
 
   /**
-   * Returns a new `PlayerQueryList` object that can then be used to determine if the
-   * player and document matches the query string, as well as to monitor any changes to detect
-   * when it matches (or stops matching) that query.
+   * Called when the poster image can begin loading. Calling it more than once has no effect.
    *
-   * A player query supports the same syntax as media queries and allows media state properties
-   * to be used like so:
-   *
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList}
-   * @example
-   * ```ts
-   * const queryList = player.matchQuery("(width < 680) and (streamType: on-demand)");
-   *
-   * if (queryList.matches) {
-   *  // ...
-   * }
-   *
-   * // Listen for match changes.
-   * queryList.addEventListener("change", () => {
-   *   // ...
-   * });
-   * ```
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
    */
   @method
-  matchQuery(query: string) {
-    return scoped(() => PlayerQueryList.create(query), this.scope)!;
+  startLoadingPoster(trigger?: Event) {
+    this._media.delegate._notify('can-load-poster', undefined, trigger);
+  }
+
+  /**
+   * Request Apple AirPlay picker to open.
+   */
+  @method
+  requestAirPlay(trigger?: Event) {
+    return this._requestMgr._requestAirPlay(trigger);
+  }
+
+  /**
+   * Request Google Cast device picker to open. The Google Cast framework will be loaded if it
+   * hasn't yet.
+   */
+  @method
+  requestGoogleCast(trigger?: Event) {
+    return this._requestMgr._requestGoogleCast(trigger);
   }
 
   override destroy() {

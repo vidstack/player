@@ -6,6 +6,7 @@ globals.d.ts
 *.mp3
 *.vtt
 *.ico
+*.toml
 
 **/partials/markup
 **/partials/import
@@ -15,3 +16,4 @@ globals.d.ts
 .gitkeep
 .prettierignore
 
+mangle.json

@@ -1,29 +1,24 @@
-import { listenEvent } from 'maverick.js/std';
+import { onDispose } from 'maverick.js';
 
-import type { MediaPlayerElement } from '../../player-element';
+import { useMediaContext } from '../../../../core/api/media-context';
 import { IconsLoader } from './icons-loader';
 
 export abstract class LayoutIconsLoader extends IconsLoader {
   override connect() {
-    const player = this._findPlayerElement();
-    if (!player) return;
-
     super.connect();
 
-    if (player.$state.canLoad()) {
-      this.load();
-    } else {
-      listenEvent(player, 'can-load' as any, () => this.load(), { once: true });
-    }
-  }
+    const { player } = useMediaContext();
+    if (!player.el) return;
 
-  protected _findPlayerElement() {
-    let node = this._root.parentElement;
+    let dispose: (() => void) | undefined,
+      observer = new IntersectionObserver((entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        dispose?.();
+        dispose = undefined;
+        this.load();
+      });
 
-    while (node && node.localName !== 'media-player') {
-      node = node.parentElement;
-    }
-
-    return node as MediaPlayerElement | null;
+    observer.observe(player.el);
+    dispose = onDispose(() => observer.disconnect());
   }
 }

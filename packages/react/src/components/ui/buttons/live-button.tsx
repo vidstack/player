@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * LiveButton
  * -----------------------------------------------------------------------------------------------*/
 
-const LiveButtonBridge = createReactComponent(LiveButtonInstance);
+const LiveButtonBridge = createReactComponent(LiveButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface LiveButtonProps extends ReactElementProps<LiveButtonInstance, HTMLButtonElement> {
   asChild?: boolean;
@@ -38,7 +40,10 @@ const LiveButton = React.forwardRef<HTMLButtonElement, LiveButtonProps>(
     return (
       <LiveButtonBridge {...(props as Omit<LiveButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.button>
         )}

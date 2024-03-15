@@ -1,13 +1,15 @@
 import * as React from 'react';
 
-import { useReactContext, useSignal } from 'maverick.js/react';
-import { mediaContext, type AudioTrack } from 'vidstack';
+import { useSignal } from 'maverick.js/react';
+import { type AudioTrack } from 'vidstack';
+
+import { useMediaContext } from '../use-media-context';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/player/api/hooks/use-audio-options}
  */
 export function useAudioOptions(): AudioOptions {
-  const media = useReactContext(mediaContext)!,
+  const media = useMediaContext(),
     { audioTracks, audioTrack } = media.$state,
     $audioTracks = useSignal(audioTracks);
 
@@ -29,7 +31,7 @@ export function useAudioOptions(): AudioOptions {
 
     Object.defineProperty(options, 'disabled', {
       get() {
-        return !options.length;
+        return options.length <= 1;
       },
     });
 

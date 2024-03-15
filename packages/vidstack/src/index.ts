@@ -1,5 +1,5 @@
 if (__DEV__) {
-  console.warn('[vidstack]: dev mode!');
+  console.warn('[vidstack] dev mode!');
 }
 
 // Foundation
@@ -20,6 +20,7 @@ export {
   isKeyboardClick,
   isKeyboardEvent,
 } from 'maverick.js/std';
+export { getDownloadFile, type FileDownloadInfo } from './utils/network';
 
 // Core
 export * from './core';
@@ -32,6 +33,7 @@ export * from './components';
 
 // Utils
 export { formatTime, formatSpokenTime } from './utils/time';
+export * from './utils/mime';
 export {
   canChangeVolume,
   canOrientScreen,

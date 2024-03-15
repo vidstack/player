@@ -9,6 +9,6 @@ export function getValueFromRate(min: number, max: number, rate: number, step: n
     range = max - min,
     fill = range * boundRate,
     stepRatio = fill / step,
-    steps = step * stepRatio;
+    steps = step * Math.round(stepRatio);
   return min + steps;
 }

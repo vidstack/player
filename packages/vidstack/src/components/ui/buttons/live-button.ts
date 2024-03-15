@@ -1,6 +1,7 @@
 import { Component } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { $ariaBool } from '../../../utils/aria';
 import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
@@ -13,6 +14,8 @@ export interface LiveButtonProps {
   disabled: boolean;
 }
 
+export interface LiveButtonEvents extends Pick<MediaRequestEvents, 'media-live-edge-request'> {}
+
 /**
  * This component displays the current live status of the stream. This includes whether it's
  * live, at the live edge, or not live. In addition, when this button is pressed it will skip
@@ -24,7 +27,7 @@ export interface LiveButtonProps {
  * @attr data-hocus - Whether button is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/live-button}
  */
-export class LiveButton extends Component<LiveButtonProps> {
+export class LiveButton extends Component<LiveButtonProps, {}, LiveButtonEvents> {
   static props: LiveButtonProps = {
     disabled: false,
   };

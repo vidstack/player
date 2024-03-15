@@ -33,17 +33,17 @@ export class MediaSliderVideoElement extends Host(HTMLElement, SliderVideo) {
   }
 
   protected onConnect(): void {
-    const { crossorigin, canLoad } = this._media.$state,
-      { src } = this.$state;
+    const { canLoad } = this._media.$state,
+      { src, crossOrigin } = this.$state;
 
     if (this._video.parentNode !== this) {
       this.prepend(this._video);
     }
 
     effect(() => {
-      setAttribute(this._video, 'src', src());
-      setAttribute(this._video, 'crossorigin', crossorigin());
+      setAttribute(this._video, 'crossorigin', crossOrigin());
       setAttribute(this._video, 'preload', canLoad() ? 'auto' : 'none');
+      setAttribute(this._video, 'src', src());
     });
   }
 

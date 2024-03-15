@@ -7,39 +7,26 @@
 :where(.vds-captions) {
   /* Recommended settings in the WebVTT spec (https://www.w3.org/TR/webvtt1). */
   --overlay-padding: var(--media-captions-padding, 1%);
-  --cue-color: var(--media-cue-color, white);
-  --cue-bg-color: var(--media-cue-bg, rgba(0, 0, 0, 0.7));
-  --cue-font-size: var(--media-cue-font-size, calc(var(--overlay-height) / 100 * 4.5));
+  --cue-color: var(--media-user-text-color, var(--media-cue-color, white));
+  --cue-bg-color: var(--media-user-text-bg, var(--media-cue-bg, rgba(0, 0, 0, 0.7)));
+  --cue-default-font-size: var(--media-cue-font-size, calc(var(--overlay-height) / 100 * 4.5));
+  --cue-font-size: calc(var(--cue-default-font-size) * var(--media-user-font-size, 1));
   --cue-line-height: var(--media-cue-line-height, calc(var(--cue-font-size) * 1.2));
   --cue-padding-x: var(--media-cue-padding-x, calc(var(--cue-font-size) * 0.6));
   --cue-padding-y: var(--media-cue-padding-x, calc(var(--cue-font-size) * 0.4));
+  --cue-padding: var(--cue-padding-y) var(--cue-padding-x);
   position: absolute;
   inset: 0;
   z-index: 1;
   contain: layout style;
   margin: var(--overlay-padding);
   font-size: var(--cue-font-size);
-  font-family: sans-serif;
+  font-family: var(--media-user-font-family, sans-serif);
   box-sizing: border-box;
   pointer-events: none;
   user-select: none;
   word-spacing: normal;
   word-break: break-word;
-}
-
-@media screen and (min-width: 980px) {
-  :where([data-fullscreen] .vds-captions) {
-    --cue-font-size: var(
-      --media-lg-fullscreen-cue-font-size,
-      calc(var(--overlay-height) / 100 * 3)
-    );
-  }
-}
-
-@media screen and (max-width: 599px) and (orientation: portrait) {
-  :where([data-fullscreen] .vds-captions) {
-    --cue-font-size: 18px;
-  }
 }
 
 :where([data-view-type='audio'] .vds-captions) {
@@ -50,6 +37,23 @@
 :where(.vds-captions[aria-hidden='true']) {
   opacity: 0;
   visibility: hidden;
+}
+
+.vds-captions[data-example] {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+:where([data-view-type='video'] .vds-captions [data-part='cue-display'][data-example]) {
+  --cue-text-align: center;
+  --cue-width: 100%;
+  --cue-top: 90%;
+  --cue-left: 0%;
+}
+
+:where([data-view-type='audio'] .vds-captions [data-part='cue-display']) {
+  --cue-width: 100%;
+  position: relative !important;
 }
 
 /*
@@ -78,7 +82,7 @@
   min-width: min-content;
   min-height: min-content;
   padding: var(--media-cue-display-padding);
-  background-color: var(--media-cue-display-bg);
+  background-color: var(--media-user-display-bg, var(--media-cue-display-bg));
   border-radius: var(--media-cue-display-border-radius);
 }
 
@@ -89,10 +93,11 @@
 :where(.vds-captions [data-part='cue']) {
   display: inline-block;
   contain: content;
+  font-variant: var(--media-user-font-variant);
   border: var(--media-cue-border, unset);
   border-radius: var(--media-cue-border-radius, 2px);
   backdrop-filter: var(--media-cue-backdrop, blur(8px));
-  padding: var(--cue-padding-y) var(--cue-padding-x);
+  padding: var(--cue-padding);
   line-height: var(--cue-line-height);
   background-color: var(--cue-bg-color);
   box-sizing: border-box;
@@ -100,11 +105,11 @@
   box-shadow: var(--media-cue-box-shadow, var(--cue-box-shadow));
   white-space: var(--cue-white-space, pre-wrap);
   outline: var(--cue-outline);
-  text-shadow: var(--cue-text-shadow);
+  text-shadow: var(--media-user-text-shadow, var(--cue-text-shadow));
 }
 
 :where(.vds-captions [data-part='cue-display'][data-vertical] [data-part='cue']) {
-  padding: var(--cue-padding-x) var(--cue-padding-y);
+  --cue-padding: var(--cue-padding-x) var(--cue-padding-y);
 }
 
 /*
@@ -114,6 +119,13 @@
  */
 
 :where(.vds-captions [data-part='region']) {
+  --anchor-x-percent: calc(var(--region-anchor-x) / 100);
+  --anchor-x: calc(var(--region-width) * var(--anchor-x-percent));
+  --anchor-y-percent: calc(var(--region-anchor-y) / 100);
+  --anchor-y: calc(var(--region-height) * var(--anchor-y-percent));
+  --vp-anchor-x: calc(var(--region-viewport-anchor-x) * 1%);
+  --vp-anchor-y-percent: calc(var(--region-viewport-anchor-y) / 100);
+  --vp-anchor-y: calc(var(--overlay-height) * var(--vp-anchor-y-percent));
   position: absolute;
   display: inline-flex;
   flex-flow: column;
@@ -123,22 +135,8 @@
   min-height: 0px;
   max-height: var(--region-height);
   writing-mode: horizontal-tb;
-  top: calc(
-    var(
-      --region-top,
-      calc(
-        calc(calc(var(--overlay-height) * var(--region-viewport-anchor-y)) / 100) -
-          calc(var(--region-height) * calc(var(--region-anchor-y) / 100))
-      )
-    )
-  );
-  left: var(
-    --region-left,
-    calc(
-      calc(var(--region-viewport-anchor-x) * 1%) -
-        calc(var(--region-width) * var(--region-anchor-x) / 100)
-    )
-  );
+  top: var(--region-top, calc(var(--vp-anchor-y) - var(--anchor-y)));
+  left: var(--region-left, calc(var(--vp-anchor-x) - var(--anchor-x)));
   right: var(--region-right);
   bottom: var(--region-bottom);
   overflow: hidden;

@@ -1,4 +1,4 @@
-import { ViewController } from 'maverick.js';
+import { onDispose, ViewController } from 'maverick.js';
 
 export class IntersectionObserverController extends ViewController {
   private _observer: IntersectionObserver | undefined;
@@ -11,8 +11,10 @@ export class IntersectionObserverController extends ViewController {
     this._observer = new IntersectionObserver((entries) => {
       this._init.callback?.(entries, this._observer!);
     }, this._init);
+
     this._observer.observe(el);
-    return this._disconnect.bind(this);
+
+    onDispose(this._disconnect.bind(this));
   }
 
   /**

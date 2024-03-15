@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * CaptionButton
  * -----------------------------------------------------------------------------------------------*/
 
-const CaptionButtonBridge = createReactComponent(CaptionButtonInstance);
+const CaptionButtonBridge = createReactComponent(CaptionButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface CaptionButtonProps
   extends ReactElementProps<CaptionButtonInstance, HTMLButtonElement> {
@@ -37,7 +39,10 @@ const CaptionButton = React.forwardRef<HTMLButtonElement, CaptionButtonProps>(
     return (
       <CaptionButtonBridge {...(props as Omit<CaptionButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.button>
         )}

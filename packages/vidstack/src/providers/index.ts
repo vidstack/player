@@ -1,17 +1,23 @@
 export type {
   AnyMediaProvider,
   MediaProviderAdapter,
-  MediaSetupContext,
   MediaFullscreenAdapter,
   MediaProviderLoader,
 } from './types';
-export type { AudioProvider } from './audio/provider';
-export type { VideoProvider } from './video/provider';
-export type { HLSProvider } from './hls/provider';
 export { AudioProviderLoader } from './audio/loader';
-export { VideoProviderLoader } from './video/loader';
+export type { GoogleCastLoader } from './google-cast/loader';
 export { HLSProviderLoader } from './hls/loader';
-export type * from './video/presentation/events';
+export { VideoProviderLoader } from './video/loader';
+export { VimeoProviderLoader } from './vimeo/loader';
+export { YouTubeProviderLoader } from './youtube/loader';
+export type { AudioProvider } from './audio/provider';
+export type { GoogleCastProvider } from './google-cast/provider';
+export type { HLSProvider } from './hls/provider';
+export type { VideoProvider } from './video/provider';
+export type { VimeoProvider } from './vimeo/provider';
+export type { YouTubeProvider } from './youtube/provider';
+export * from './type-check';
+export type * from './google-cast/events';
 export type * from './hls/events';
 export type * from './hls/types';
-export * from './type-check';
+export type * from './video/presentation/events';

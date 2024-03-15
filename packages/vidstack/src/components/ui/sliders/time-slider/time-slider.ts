@@ -3,11 +3,12 @@ import { Component, effect, peek, provideContext, signal, useContext } from 'mav
 import { setAttribute } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../../core/api/media-request-events';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
-import { observeActiveTextTrack } from '../../../../core/tracks/text/utils';
+import { watchActiveTextTrack } from '../../../../core/tracks/text/utils';
 import { setAttributeIfEmpty } from '../../../../utils/dom';
 import { round } from '../../../../utils/number';
-import { formatSpokenTime, formatTime } from '../../../../utils/time';
+import { formatSpokenTime, formatTime, type FormatTimeOptions } from '../../../../utils/time';
 import type { SliderCSSVars } from '../slider/api/cssvars';
 import type {
   SliderDragEndEvent,
@@ -36,8 +37,8 @@ import { SliderController, type SliderControllerProps } from '../slider/slider-c
  */
 export class TimeSlider extends Component<
   TimeSliderProps,
-  SliderState,
-  SliderEvents,
+  TimeSliderState,
+  TimeSliderEvents,
   TimeSliderCSSVars
 > {
   static props: TimeSliderProps = {
@@ -46,6 +47,7 @@ export class TimeSlider extends Component<
     keyStep: 5,
     shiftKeyMultiplier: 2,
     pauseWhileDragging: false,
+    noSwipeGesture: false,
     seekingRequestThrottle: 100,
   };
 
@@ -57,12 +59,14 @@ export class TimeSlider extends Component<
 
   constructor() {
     super();
+
+    const { noSwipeGesture } = this.$props;
     new SliderController({
-      _swipeGesture: true,
+      _swipeGesture: () => !noSwipeGesture(),
       _getStep: this._getStep.bind(this),
       _getKeyStep: this._getKeyStep.bind(this),
-      _isDisabled: this._isDisabled.bind(this),
       _roundValue: this._roundValue,
+      _isDisabled: this._isDisabled.bind(this),
       _getARIAValueNow: this._getARIAValueNow.bind(this),
       _getARIAValueText: this._getARIAValueText.bind(this),
       _onDragStart: this._onDragStart.bind(this),
@@ -100,7 +104,7 @@ export class TimeSlider extends Component<
 
   protected override onConnect(el: HTMLElement) {
     effect(this._watchPreviewing.bind(this));
-    observeActiveTextTrack(this._media.textTracks, 'chapters', this._chapter.set);
+    watchActiveTextTrack(this._media.textTracks, 'chapters', this._chapter.set);
   }
 
   private _calcBufferedPercent() {
@@ -126,9 +130,12 @@ export class TimeSlider extends Component<
   }
 
   private _watchCurrentTime() {
+    if (this.$state.hidden()) return;
+
     const { currentTime } = this._media.$state,
       { value, dragging } = this.$state,
       newValue = this._timeToPercent(currentTime());
+
     if (!peek(dragging)) {
       value.set(newValue);
       this.dispatch('value-change', { detail: newValue });
@@ -172,6 +179,10 @@ export class TimeSlider extends Component<
   }
 
   private _onDragEnd(event: SliderValueChangeEvent | SliderDragEndEvent) {
+    // Ensure a seeking event is always fired before a seeked event for consistency.
+    const { seeking } = this._media.$state;
+    if (!peek(seeking)) this._seeking(this._percentToTime(event.detail), event);
+
     const percent = event.detail;
     this._seek(this._percentToTime(percent), percent, event);
 
@@ -207,8 +218,9 @@ export class TimeSlider extends Component<
   }
 
   private _isDisabled() {
-    const { canSeek, adStarted } = this._media.$state;
-    return this.$props.disabled() || !canSeek() || adStarted();
+    const { disabled } = this.$props,
+      { canSeek, adStarted } = this._media.$state;
+    return disabled() || !canSeek() || adStarted();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -234,7 +246,7 @@ export class TimeSlider extends Component<
 
   private _percentToTime(percent: number) {
     const { duration } = this._media.$state;
-    return Math.round((percent / 100) * duration());
+    return round((percent / 100) * duration(), 5);
   }
 
   private _timeToPercent(time: number) {
@@ -249,17 +261,13 @@ export class TimeSlider extends Component<
     return Number.isFinite(time) ? (live() ? time - duration() : time).toFixed(0) : 'LIVE';
   }
 
-  private _formatTime(
-    percent: number,
-    padHours: boolean | null,
-    padMinutes: boolean | null,
-    showHours: boolean,
-  ) {
+  private _formatTime(percent: number, options?: FormatTimeOptions) {
     const time = this._percentToTime(percent),
       { live, duration } = this._media.$state,
       value = live() ? time - duration() : time;
+
     return Number.isFinite(time)
-      ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), padHours, padMinutes, showHours)}`
+      ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), options)}`
       : 'LIVE';
   }
 }
@@ -282,9 +290,28 @@ export interface TimeSliderProps extends SliderControllerProps {
    * The amount of milliseconds to throttle media seeking request events being dispatched.
    */
   seekingRequestThrottle: number;
+  /**
+   * Whether touch swiping left or right on the player canvas should activate the time slider. This
+   * gesture makes it easier for touch users to drag anywhere on the player left or right to
+   * seek backwards or forwards, without directly interacting with time slider.
+   */
+  noSwipeGesture: boolean;
 }
 
 interface ThrottledSeeking {
   (time: number, event: Event): void;
   cancel(): void;
 }
+
+export interface TimeSliderState extends SliderState {}
+
+export interface TimeSliderEvents
+  extends SliderEvents,
+    Pick<
+      MediaRequestEvents,
+      | 'media-play-request'
+      | 'media-pause-request'
+      | 'media-seeking-request'
+      | 'media-seek-request'
+      | 'media-live-edge-request'
+    > {}

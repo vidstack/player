@@ -1,12 +1,12 @@
 {
   "name": "vidstack",
-  "version": "1.5.6",
+  "version": "1.10.9",
   "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
   "types": "index.d.ts",
   "sideEffects": [
-    "./src/elements/bundles/*.ts",
+    "./src/elements/bundles/**/*.ts",
     "./dist/*/define/*.js"
   ],
   "engines": {
@@ -17,8 +17,10 @@
     "dist/",
     "player/",
     "cdn/",
+    "plugins.*",
     "tailwind.*",
     "analyze.json",
+    "elements.json",
     "empty.vtt",
     "vscode.html-data.json"
   ],
@@ -27,6 +29,7 @@
     "dev": "pnpm clean && pnpm build:types && pnpm watch",
     "build": "rollup -c",
     "build:cdn": "rollup -c --config-cdn",
+    "build:plugins": "rollup -c --config-plugins",
     "build:types": "tsc -p tsconfig.build.json",
     "types": "pnpm build:types && rollup -c --config-types",
     "clean": "rimraf dist cdn",
@@ -43,17 +46,18 @@
   },
   "dependencies": {
     "@alugha/ima": "^2.2.1",
-    "media-captions": "^1.0.1"
+    "media-captions": "^1.0.1",
+    "unplugin": "^1.6.0"
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.4.4",
-    "@maverick-js/cli": "0.40.11",
-    "@open-wc/semantic-dom-diff": "^0.19.5",
-    "@open-wc/testing-helpers": "^2.1.2",
-    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@maverick-js/cli": "0.41.4",
+    "@open-wc/semantic-dom-diff": "^0.20.0",
+    "@open-wc/testing-helpers": "^3.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.0",
     "@types/fscreen": "^1.0.1",
     "autoprefixer": "^10.4.2",
-    "es-module-lexer": "^1.3.0",
+    "es-module-lexer": "^1.4.0",
     "esbuild": "^0.19.4",
     "esbuild-minify-templates": "^0.11.0",
     "fscreen": "^1.2.0",
@@ -63,22 +67,22 @@
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
-    "maverick.js": "0.40.11",
+    "maverick.js": "0.41.4",
     "media-icons": "^1.0.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
-    "rollup": "^3.25.1",
-    "rollup-plugin-dts": "^5.3.0",
+    "rollup": "^4.0.0",
+    "rollup-plugin-dts": "^6.0.0",
     "rollup-plugin-esbuild": "^6.1.0",
-    "rollup-plugin-visualizer": "^5.9.2",
+    "rollup-pluginutils": "^2.8.2",
     "solid-js": "^1.7.11",
     "svelte": "^4.2.1",
     "tailwindcss": "^3.2.0",
-    "tslib": "^2.5.0",
+    "tslib": "^2.6.0",
     "type-fest": "^3.8.0",
-    "typescript": "^5.2.2",
-    "vite": "^4.2.0",
-    "vitest": "^0.30.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "vitest": "^0.34.0",
     "vue": "^3.3.4"
   },
   "contributors": [
@@ -94,43 +98,96 @@
   "bugs": {
     "url": "https://github.com/vidstack/player/issues"
   },
-  "jsdelivr": "./cdn/with-layouts/vidstack.js",
   "exports": {
     ".": {
       "types": "./index.d.ts",
       "node": "./dist/server/vidstack.js",
+      "deno": "./dist/server/vidstack.js",
+      "bun": "./dist/server/vidstack.js",
+      "workerd": "./dist/server/vidstack.js",
       "development": "./dist/dev/vidstack.js",
       "default": "./dist/prod/vidstack.js"
     },
     "./elements": {
       "types": "./elements.d.ts",
       "node": "./dist/server/vidstack-elements.js",
+      "deno": "./dist/server/vidstack-elements.js",
+      "bun": "./dist/server/vidstack-elements.js",
+      "workerd": "./dist/server/vidstack-elements.js",
       "development": "./dist/dev/vidstack-elements.js",
       "default": "./dist/prod/vidstack-elements.js"
+    },
+    "./enhance/player": {
+      "types": "./enhance/player.d.ts",
+      "node": "./dist/server/enhance/vidstack-player.js",
+      "deno": "./dist/server/enhance/vidstack-player.js",
+      "bun": "./dist/server/enhance/vidstack-player.js",
+      "workerd": "./dist/server/enhance/vidstack-player.js",
+      "development": "./dist/dev/enhance/vidstack-player.js",
+      "default": "./dist/prod/enhance/vidstack-player.js"
+    },
+    "./enhance/plyr": {
+      "types": "./enhance/plyr.d.ts",
+      "node": "./dist/server/enhance/plyr.js",
+      "deno": "./dist/server/enhance/plyr.js",
+      "bun": "./dist/server/enhance/plyr.js",
+      "workerd": "./dist/server/enhance/plyr.js",
+      "development": "./dist/dev/enhance/plyr.js",
+      "default": "./dist/prod/enhance/plyr.js"
     },
     "./icons": {
       "types": "./icons.d.ts",
       "node": "./dist/server/define/vidstack-icons.js",
+      "deno": "./dist/server/define/vidstack-icons.js",
+      "bun": "./dist/server/define/vidstack-icons.js",
+      "workerd": "./dist/server/define/vidstack-icons.js",
       "development": "./dist/dev/define/vidstack-icons.js",
       "default": "./dist/prod/define/vidstack-icons.js"
     },
     "./player": {
       "types": "./player/index.d.ts",
       "node": "./dist/server/define/vidstack-player.js",
+      "deno": "./dist/server/define/vidstack-player.js",
+      "bun": "./dist/server/define/vidstack-player.js",
+      "workerd": "./dist/server/define/vidstack-player.js",
       "development": "./dist/dev/define/vidstack-player.js",
       "default": "./dist/prod/define/vidstack-player.js"
     },
     "./player/ui": {
       "types": "./player/ui.d.ts",
       "node": "./dist/server/define/vidstack-player-ui.js",
+      "deno": "./dist/server/define/vidstack-player-ui.js",
+      "bun": "./dist/server/define/vidstack-player-ui.js",
+      "workerd": "./dist/server/define/vidstack-player-ui.js",
       "development": "./dist/dev/define/vidstack-player-ui.js",
       "default": "./dist/prod/define/vidstack-player-ui.js"
     },
     "./player/layouts": {
-      "types": "./player/layouts.d.ts",
+      "types": "./player/layouts/index.d.ts",
       "node": "./dist/server/define/vidstack-player-layouts.js",
+      "deno": "./dist/server/define/vidstack-player-layouts.js",
+      "bun": "./dist/server/define/vidstack-player-layouts.js",
+      "workerd": "./dist/server/define/vidstack-player-layouts.js",
       "development": "./dist/dev/define/vidstack-player-layouts.js",
       "default": "./dist/prod/define/vidstack-player-layouts.js"
+    },
+    "./player/layouts/default": {
+      "types": "./player/layouts/default.d.ts",
+      "node": "./dist/server/define/vidstack-player-default-layout.js",
+      "deno": "./dist/server/define/vidstack-player-default-layout.js",
+      "bun": "./dist/server/define/vidstack-player-default-layout.js",
+      "workerd": "./dist/server/define/vidstack-player-default-layout.js",
+      "development": "./dist/dev/define/vidstack-player-default-layout.js",
+      "default": "./dist/prod/define/vidstack-player-default-layout.js"
+    },
+    "./player/layouts/plyr": {
+      "types": "./player/layouts/plyr.d.ts",
+      "node": "./dist/server/define/vidstack-player-plyr-layout.js",
+      "deno": "./dist/server/define/vidstack-player-plyr-layout.js",
+      "bun": "./dist/server/define/vidstack-player-plyr-layout.js",
+      "workerd": "./dist/server/define/vidstack-player-plyr-layout.js",
+      "development": "./dist/dev/define/vidstack-player-plyr-layout.js",
+      "default": "./dist/prod/define/vidstack-player-plyr-layout.js"
     },
     "./dist/types/*": "./dist/types/*",
     "./player/styles/*": "./player/styles/*",
@@ -143,6 +200,7 @@
       "types": "./analyze.json.d.ts",
       "default": "./analyze.json"
     },
+    "./elements.json": "./elements.json",
     "./vue": {
       "types": "./vue.d.ts",
       "default": "./vue.d.ts"
@@ -155,6 +213,16 @@
       "types": "./solid.d.ts",
       "default": "./solid.d.ts"
     },
+    "./bundle": {
+      "types": "./bundle.d.ts",
+      "default": "./bundle.d.ts"
+    },
+    "./plugins": {
+      "types": "./plugins.d.ts",
+      "default": "./plugins.js"
+    },
+    "./dom.d.ts": "./dom.d.ts",
+    "./google-cast.d.ts": "./google-cast.d.ts",
     "./vscode.html-data.json": "./vscode.html-data.json"
   },
   "publishConfig": {

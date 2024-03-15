@@ -51,6 +51,13 @@ export function parseTime(duration: number): ParsedTime {
   };
 }
 
+export interface FormatTimeOptions {
+  padHrs?: boolean | null;
+  padMins?: boolean | null;
+  showHrs?: boolean;
+  showMs?: boolean;
+}
+
 /**
  * Formats the given `duration` into a human readable form that can be displayed to the user.
  *
@@ -65,23 +72,17 @@ export function parseTime(duration: number): ParsedTime {
  */
 export function formatTime(
   duration: number,
-  shouldPadHours: boolean | null = null,
-  shouldPadMinutes: boolean | null = null,
-  shouldAlwaysShowHours = false,
+  { padHrs = null, padMins = null, showHrs = false, showMs = false }: FormatTimeOptions = {},
 ): string {
-  const { hours, minutes, seconds } = parseTime(duration),
-    paddedHours = shouldPadHours ? padNumberWithZeroes(hours, 2) : hours,
+  const { hours, minutes, seconds, fraction } = parseTime(duration),
+    paddedHours = padHrs ? padNumberWithZeroes(hours, 2) : hours,
     paddedMinutes =
-      shouldPadMinutes || (isNull(shouldPadMinutes) && duration >= 3600)
-        ? padNumberWithZeroes(minutes, 2)
-        : minutes,
-    paddedSeconds = padNumberWithZeroes(seconds, 2);
+      padMins || (isNull(padMins) && duration >= 3600) ? padNumberWithZeroes(minutes, 2) : minutes,
+    paddedSeconds = padNumberWithZeroes(seconds, 2),
+    paddedMs = showMs && fraction > 0 ? `.${String(fraction).replace(/^0?\./, '')}` : '',
+    time = `${paddedMinutes}:${paddedSeconds}${paddedMs}`;
 
-  if (hours > 0 || shouldAlwaysShowHours) {
-    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
-  }
-
-  return `${paddedMinutes}:${paddedSeconds}`;
+  return hours > 0 || showHrs ? `${paddedHours}:${time}` : time;
 }
 
 /**

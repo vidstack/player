@@ -1,0 +1,51 @@
+[changelog]
+header = """
+# Changelog\n
+All notable changes to this project will be documented in this file.\n
+"""
+# https://keats.github.io/tera/docs/#introduction
+body = """
+{% if version %}\
+    ## [{{ version | trim_start_matches(pat="v") }}](https://github.com/vidstack/player/releases/tag/{{ version }}) ({{ timestamp | date(format="%Y-%m-%d") }})
+{% else %}\
+    ## [unreleased]
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | upper_first }}
+    {% for group, commits in commits | group_by(attribute="scope") %}
+        #### {{ group | upper_first | replace(from="/react", to=" (React)") }}
+        {% for commit in commits %}
+            - {{ commit.message }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/vidstack/player/commit/{{ commit.id }}))\
+        {% endfor %}
+    {% endfor %}\
+{% endfor %}\n
+"""
+trim = true
+footer = ""
+postprocessors = []
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+commit_preprocessors = []
+commit_parsers = [
+  { message = "^feat", group = "✨ Features" },
+  { message = "^fix", group = "🐛 Bug Fixes" },
+  { message = "^perf", group = "🏎️ Performance" },
+  { message = "^refactor", group = "Refactor", skip=true },
+  { message = "^style", group = "Styling", skip=true },
+  { message = "^test", group = "Testing", skip=true },
+  { message = "^chore", skip = true },
+  { message = "^docs", skip = true },
+  { body = ".*security", group = "🔒 Security" },
+  { message = "^revert", group = "⏪ Revert" },
+]
+protect_breaking_commits = false
+filter_commits = false
+tag_pattern = "v[0-9].*"
+
+skip_tags = "v0"
+ignore_tags = ""
+topo_order = false
+sort_commits = "oldest"

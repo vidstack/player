@@ -1,10 +1,10 @@
 import { peek, type Dispose } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
-import type { MediaSrc } from '../../core/api/types';
+import type { Src } from '../../core/api/src-types';
 import { preconnect } from '../../utils/network';
 import { isHLSSupported } from '../../utils/support';
-import type { MediaProviderAdapter, MediaSetupContext } from '../types';
+import type { MediaProviderAdapter } from '../types';
 import { VideoProvider } from '../video/provider';
 import { HLSController } from './hls';
 import { HLSLibLoader } from './lib-loader';
@@ -34,7 +34,7 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
   protected override $$PROVIDER_TYPE = 'HLS';
 
   private _ctor: HLSConstructor | null = null;
-  private readonly _controller = new HLSController(this.video);
+  private readonly _controller = new HLSController(this.video, this._ctx);
 
   /**
    * The `hls.js` constructor.
@@ -63,7 +63,7 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
     return true;
   }
 
-  protected _library: HLSLibrary = `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls${
+  protected _library: HLSLibrary = `${JS_DELIVR_CDN}/npm/hls.js@^1.5.0/dist/hls${
     __DEV__ ? '.js' : '.min.js'
   }`;
 
@@ -98,22 +98,27 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
     preconnect(this._library);
   }
 
-  override setup(context: MediaSetupContext) {
-    super.setup(context);
-    new HLSLibLoader(this._library, context, (ctor) => {
+  override setup() {
+    super.setup();
+    new HLSLibLoader(this._library, this._ctx, (ctor) => {
       this._ctor = ctor;
-      this._controller.setup(ctor, context);
-      context.delegate._dispatch('provider-setup', { detail: this });
-      const src = peek(context.$state.source);
+      this._controller.setup(ctor);
+      this._ctx.delegate._notify('provider-setup', this);
+      const src = peek(this._ctx.$state.source);
       if (src) this.loadSource(src);
     });
   }
 
-  override async loadSource(src: MediaSrc, preload?: HTMLMediaElement['preload']) {
-    if (!isString(src.src)) return;
+  override async loadSource(src: Src, preload?: HTMLMediaElement['preload']) {
+    if (!isString(src.src)) {
+      this._removeSource();
+      return;
+    }
+
     this._media.preload = preload || '';
-    this._controller.instance?.loadSource(src.src);
-    this._currentSrc = src;
+    this._appendSource(src as Src<string>, 'application/x-mpegurl');
+    this._controller._loadSource(src);
+    this._currentSrc = src as Src<string>;
   }
 
   /**

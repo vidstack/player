@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
@@ -79,6 +79,7 @@ export default [
       });
     },
   }),
+  elementsManifest(),
   checkElementExports(),
   vueJSXTypesPlugin({
     imports: [`import type { IconType } from "./icons";`],
@@ -95,6 +96,21 @@ export default [
     components: [`"media-icon": JSX.HTMLAttributes<HTMLElement> & { type: IconType };`],
   }),
 ];
+
+function elementsManifest(): AnalyzePlugin {
+  return {
+    name: 'elements.json',
+    async transform({ customElements }) {
+      const manifest = {};
+
+      for (const el of customElements) {
+        manifest[el.tag.name] = el.name;
+      }
+
+      writeFileSync('elements.json', JSON.stringify(manifest, null, 2));
+    },
+  };
+}
 
 function checkElementExports(): AnalyzePlugin {
   return {

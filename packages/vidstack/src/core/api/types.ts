@@ -14,6 +14,14 @@ export type MediaStreamType =
   | 'll-live'
   | 'll-live:dvr';
 
+export type MediaCrossOrigin = '' | 'anonymous' | 'use-credentials';
+
+export type RemotePlaybackType = 'airplay' | 'google-cast' | 'none';
+
+export interface RemotePlaybackInfo {
+  deviceName?: string;
+}
+
 /**
  * Indicates the current view type which determines how the media will be presented.
  */
@@ -24,7 +32,14 @@ export type MediaViewType = 'unknown' | 'audio' | 'video';
  *
  * @docs {@see https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
  */
-export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
+export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom' | 'play';
+
+/**
+ * Indicates the type of strategy that should be used to initiate the poster loading process.
+ *
+ * @docs {@see https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+ */
+export type MediaPosterLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
 
 /**
  * A number which represents the general type of error that occurred.
@@ -48,13 +63,7 @@ export type MediaErrorCode = 1 | 2 | 3 | 4;
 
 export interface MediaErrorDetail {
   message: string;
-  code: MediaErrorCode;
+  code?: MediaErrorCode;
+  error?: Error;
   mediaError?: MediaError;
 }
-
-export type MediaResource = string | MediaStream | MediaSource | Blob;
-
-export type MediaSrc = {
-  src: MediaResource;
-  type: string;
-};

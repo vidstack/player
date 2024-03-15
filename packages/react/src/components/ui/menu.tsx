@@ -20,6 +20,7 @@ import { Primitive } from '../primitives/nodes';
 
 const MenuBridge = createReactComponent(MenuInstance, {
   events: ['onOpen', 'onClose'],
+  domEventsRegex: /^onMedia/,
 });
 
 export interface RootProps extends ReactElementProps<MenuInstance> {
@@ -90,7 +91,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <ButtonBridge {...(props as Omit<ButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.button>
         )}
@@ -135,7 +139,7 @@ const Portal = React.forwardRef<HTMLElement, PortalProps>(
           <Primitive.div
             {...props}
             style={{ display: 'contents', ...props.style }}
-            ref={forwardRef as any}
+            ref={forwardRef as React.Ref<any>}
           >
             {children}
           </Primitive.div>,
@@ -174,7 +178,10 @@ const Items = React.forwardRef<HTMLElement, ItemsProps>(({ children, ...props },
   return (
     <ItemsBridge {...(props as Omit<ItemsProps, 'ref'>)}>
       {(props) => (
-        <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+        <Primitive.div
+          {...props}
+          ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+        >
           {children}
         </Primitive.div>
       )}
@@ -215,7 +222,10 @@ const Item = React.forwardRef<HTMLElement, ItemProps>(({ children, ...props }, f
   return (
     <ItemBridge {...(props as Omit<ItemProps, 'ref'>)}>
       {(props) => (
-        <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+        <Primitive.div
+          {...props}
+          ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+        >
           {children}
         </Primitive.div>
       )}

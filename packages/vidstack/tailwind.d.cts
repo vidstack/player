@@ -9,6 +9,7 @@ declare namespace plugin {
 export = plugin;
 
 export interface PluginOptions {
+  selector?: string;
   prefix?: string;
   webComponents?: boolean;
 }

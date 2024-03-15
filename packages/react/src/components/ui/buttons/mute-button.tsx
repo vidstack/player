@@ -9,7 +9,9 @@ import { Primitive } from '../../primitives/nodes';
  * MuteButton
  * -----------------------------------------------------------------------------------------------*/
 
-const MuteButtonBridge = createReactComponent(MuteButtonInstance);
+const MuteButtonBridge = createReactComponent(MuteButtonInstance, {
+  domEventsRegex: /^onMedia/,
+});
 
 export interface MuteButtonProps extends ReactElementProps<MuteButtonInstance, HTMLButtonElement> {
   asChild?: boolean;
@@ -42,7 +44,10 @@ const MuteButton = React.forwardRef<HTMLButtonElement, MuteButtonProps>(
     return (
       <MuteButtonBridge {...(props as Omit<MuteButtonProps, 'ref'>)}>
         {(props) => (
-          <Primitive.button {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.button
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.button>
         )}

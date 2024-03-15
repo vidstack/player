@@ -20,10 +20,10 @@ export interface IconComponent extends React.ForwardRefExoticComponent<IconProps
 const Icon: IconComponent = /* #__PURE__*/ React.forwardRef((props, ref) => {
   const { width, height, size = null, paths, ...restProps } = props;
   return React.createElement('svg', {
+    viewBox: '0 0 32 32',
     ...restProps,
     width: width ?? size,
     height: height ?? size,
-    viewBox: '0 0 32 32',
     fill: 'none',
     'aria-hidden': 'true',
     focusable: 'false',

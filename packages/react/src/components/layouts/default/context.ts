@@ -1,25 +1,28 @@
 import * as React from 'react';
 
-import type { DefaultLayoutTranslations } from 'vidstack';
+import type { WriteSignal } from 'maverick.js';
 
-import type { DefaultLayoutIcons } from './icons';
+import type { DefaultLayoutProps } from './media-layout';
 
 export const DefaultLayoutContext = React.createContext<DefaultLayoutContext>({} as any);
+DefaultLayoutContext.displayName = 'DefaultLayoutContext';
 
-interface DefaultLayoutContext {
-  thumbnails?: string;
+interface DefaultLayoutContext extends DefaultLayoutProps {
   menuContainer?: React.RefObject<HTMLElement | null>;
-  translations?: DefaultLayoutTranslations | null;
   isSmallLayout: boolean;
-  showMenuDelay?: number;
-  showTooltipDelay?: number;
-  hideQualityBitrate?: boolean;
-  menuGroup: 'top' | 'bottom';
-  noModal: boolean;
-  Icons: DefaultLayoutIcons;
+  userPrefersAnnouncements: WriteSignal<boolean>;
+  userPrefersKeyboardAnimations: WriteSignal<boolean>;
 }
 
-export function useDefaultLayoutLang(word: keyof DefaultLayoutTranslations) {
-  const { translations } = React.useContext(DefaultLayoutContext);
+export function useDefaultLayoutContext() {
+  return React.useContext(DefaultLayoutContext);
+}
+
+export function useDefaultLayoutWord(word: string) {
+  const { translations } = useDefaultLayoutContext();
+  return i18n(translations, word);
+}
+
+export function i18n(translations: any, word: string) {
   return translations?.[word] ?? word;
 }

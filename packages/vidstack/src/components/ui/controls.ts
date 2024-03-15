@@ -15,13 +15,14 @@ import { setAttributeIfEmpty } from '../../utils/dom';
 export class Controls extends Component<ControlsProps, {}, ControlsEvents> {
   static props: ControlsProps = {
     hideDelay: 2000,
+    hideOnMouseLeave: false,
   };
 
   private _media!: MediaContext;
 
   protected override onSetup(): void {
     this._media = useMediaContext();
-    effect(this._watchHideDelay.bind(this));
+    effect(this._watchProps.bind(this));
   }
 
   protected override onAttach(el: HTMLElement): void {
@@ -61,12 +62,13 @@ export class Controls extends Component<ControlsProps, {}, ControlsEvents> {
     setStyle(this.el, 'display', isHidden ? 'none' : null);
   }
 
-  private _watchHideDelay() {
+  private _watchProps() {
     const { controls } = this._media.player,
-      { hideDelay } = this.$props;
+      { hideDelay, hideOnMouseLeave } = this.$props;
 
     // Use controls delay prop on player if this is the default value.
     controls.defaultDelay = hideDelay() === 2000 ? this._media.$props.controlsDelay() : hideDelay();
+    controls.hideOnMouseLeave = hideOnMouseLeave();
   }
 
   private _isShowing() {
@@ -81,6 +83,11 @@ export interface ControlsProps {
    * activity to hide the controls.
    */
   hideDelay: number;
+  /**
+   * Whether controls visibility should be toggled when the mouse enters and leaves the player
+   * container.
+   */
+  hideOnMouseLeave: boolean;
 }
 
 export interface ControlsEvents {

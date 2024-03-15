@@ -5,7 +5,7 @@ import { renderMenuItemsTemplate } from './_template';
 
 /**
  * @part label - Contains the caption/subtitle option label.
- * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/captions-menu-items}
+ * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/captions-radio-group}
  * @example
  * ```html
  * <media-menu>

@@ -2,24 +2,33 @@ import { Component, effect, State } from 'maverick.js';
 import { isNull, listenEvent, setAttribute } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
+import type { MediaCrossOrigin } from '../../core/api/types';
 import { preconnect } from '../../utils/network';
 
 export interface PosterProps {
   /**
    * The URL of the poster image resource.
    */
-  src: string | undefined;
+  src: string | null;
   /**
    * ♿ **ARIA:** Provides alternative information for a poster image if a user for some reason
    * cannot view it.
    */
-  alt: string | undefined;
+  alt: string | null;
+  /**
+   * Defines how the img handles cross-origin requests, thereby enabling the
+   * configuration of the CORS requests for the element's fetched data.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
+   */
+  crossOrigin: true | MediaCrossOrigin | null;
 }
 
 export interface PosterState {
   img: HTMLImageElement | null;
   src: string | null;
-  alt: string | null | undefined;
+  alt: string | null;
+  crossOrigin: MediaCrossOrigin | null;
   loading: boolean;
   error: ErrorEvent | null;
   hidden: boolean;
@@ -37,14 +46,16 @@ export interface PosterState {
  */
 export class Poster extends Component<PosterProps, PosterState> {
   static props: PosterProps = {
-    src: undefined,
-    alt: undefined,
+    src: null,
+    alt: null,
+    crossOrigin: null,
   };
 
   static state = new State<PosterState>({
     img: null,
     src: null,
     alt: null,
+    crossOrigin: null,
     loading: true,
     error: null,
     hidden: false,
@@ -54,8 +65,9 @@ export class Poster extends Component<PosterProps, PosterState> {
 
   protected override onSetup(): void {
     this._media = useMediaContext();
-    this._watchImgSrc();
-    this._watchImgAlt();
+    this._watchSrc();
+    this._watchAlt();
+    this._watchCrossOrigin();
     this._watchHidden();
   }
 
@@ -63,13 +75,14 @@ export class Poster extends Component<PosterProps, PosterState> {
     el.style.setProperty('pointer-events', 'none');
 
     effect(this._watchImg.bind(this));
-    effect(this._watchImgSrc.bind(this));
-    effect(this._watchImgAlt.bind(this));
+    effect(this._watchSrc.bind(this));
+    effect(this._watchAlt.bind(this));
+    effect(this._watchCrossOrigin.bind(this));
     effect(this._watchHidden.bind(this));
 
     const { started } = this._media.$state;
     this.setAttributes({
-      'data-visible': () => !started(),
+      'data-visible': () => !started() && !this.$state.hidden(),
       'data-loading': this._isLoading.bind(this),
       'data-error': this._hasError.bind(this),
       'data-hidden': this.$state.hidden,
@@ -77,18 +90,18 @@ export class Poster extends Component<PosterProps, PosterState> {
   }
 
   protected override onConnect(el: HTMLElement) {
-    const { canLoad, poster } = this._media.$state;
-
-    window.requestAnimationFrame(() => {
-      if (!canLoad()) preconnect(poster());
-    });
-
+    effect(this._onPreconnect.bind(this));
     effect(this._onLoadStart.bind(this));
   }
 
   private _hasError() {
     const { error } = this.$state;
     return !isNull(error());
+  }
+
+  private _onPreconnect() {
+    const { canLoadPoster, poster } = this._media.$state;
+    if (!canLoadPoster() && poster()) preconnect(poster(), 'preconnect');
   }
 
   private _watchHidden() {
@@ -112,32 +125,49 @@ export class Poster extends Component<PosterProps, PosterState> {
     listenEvent(img, 'error', this._onError.bind(this));
   }
 
-  private _watchImgSrc() {
-    const { src: _src } = this.$props,
-      { src } = this.$state,
-      { canLoad, poster } = this._media.$state;
+  private _prevSrc = '';
+  private _watchSrc() {
+    const { poster: defaultPoster } = this._media.$props,
+      { canLoadPoster, providedPoster, inferredPoster } = this._media.$state;
 
     // Either src set on this poster component, or defined on the player.
-    const _poster = _src() || poster();
+    const src = this.$props.src() || '',
+      poster = src || defaultPoster() || inferredPoster();
 
-    if (poster() !== _poster) {
-      this._media.delegate._dispatch('poster-change', {
-        detail: _poster,
-      });
+    if (this._prevSrc === providedPoster()) {
+      providedPoster.set(src);
     }
 
-    src.set(canLoad() && _poster.length ? _poster : null);
+    this.$state.src.set(canLoadPoster() && poster.length ? poster : null);
+    this._prevSrc = src;
   }
 
-  private _watchImgAlt() {
-    const { src, alt } = this.$state;
-    alt.set(src() ? this.$props.alt() : null);
+  private _watchAlt() {
+    const { src } = this.$props,
+      { alt } = this.$state,
+      { poster } = this._media.$state;
+    alt.set(src() || poster() ? this.$props.alt() : null);
+  }
+
+  private _watchCrossOrigin() {
+    const { crossOrigin: crossOriginProp } = this.$props,
+      { crossOrigin: crossOriginState } = this.$state,
+      { crossOrigin: mediaCrossOrigin, poster: src } = this._media.$state,
+      crossOrigin = crossOriginProp() !== null ? crossOriginProp() : mediaCrossOrigin();
+
+    crossOriginState.set(
+      /ytimg\.com|vimeo/.test(src() || '')
+        ? null
+        : crossOrigin === true
+          ? 'anonymous'
+          : crossOrigin,
+    );
   }
 
   private _onLoadStart() {
     const { loading, error } = this.$state,
-      { canLoad, poster } = this._media.$state;
-    loading.set(canLoad() && !!poster());
+      { canLoadPoster, poster } = this._media.$state;
+    loading.set(canLoadPoster() && !!poster());
     error.set(null);
   }
 

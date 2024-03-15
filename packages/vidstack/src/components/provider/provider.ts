@@ -1,14 +1,17 @@
 import { Component, method, onDispose, peek, signal, State, tick } from 'maverick.js';
-import { animationFrameThrottle, setStyle } from 'maverick.js/std';
+import { animationFrameThrottle, isString, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
-import type { MediaSrc, TextTrackInit } from '../../core';
+import type { Src, TextTrackInit } from '../../core';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import type { MediaProviderLoader } from '../../providers';
 import { SourceSelection } from './source-select';
 import { Tracks } from './tracks';
 
-export interface MediaProviderProps {}
+export interface MediaProviderProps {
+  /** @internal */
+  loaders: MediaProviderLoader[];
+}
 
 export interface MediaProviderState {
   loader: MediaProviderLoader | null;
@@ -20,20 +23,29 @@ export interface MediaProviderState {
  * @docs {@link https://www.vidstack.io/docs/player/components/media/provider}
  */
 export class MediaProvider extends Component<MediaProviderProps, MediaProviderState> {
+  static props: MediaProviderProps = {
+    loaders: [],
+  };
+
   static state = new State<MediaProviderState>({
     loader: null,
   });
 
   private _media!: MediaContext;
   private _sources!: SourceSelection;
-  private _domSources = signal<MediaSrc[]>([]);
+  private _domSources = signal<Src[]>([]);
   private _domTracks = signal<TextTrackInit[]>([]);
 
   private _loader: MediaProviderLoader | null = null;
 
   protected override onSetup() {
     this._media = useMediaContext();
-    this._sources = new SourceSelection(this._domSources, this._media, this.$state.loader);
+    this._sources = new SourceSelection(
+      this._domSources,
+      this._media,
+      this.$state.loader,
+      this.$props.loaders(),
+    );
   }
 
   protected override onAttach(el: HTMLElement) {
@@ -47,15 +59,15 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
     resize.observe(el);
 
-    const mutation = new MutationObserver(this._onMutation.bind(this));
-    mutation.observe(el, { attributes: true, childList: true });
+    const mutations = new MutationObserver(this._onMutation.bind(this));
+    mutations.observe(el, { attributes: true, childList: true });
 
     this._onResize();
     this._onMutation();
 
     onDispose(() => {
       resize.disconnect();
-      mutation.disconnect();
+      mutations.disconnect();
     });
   }
 
@@ -91,19 +103,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
       // The src/loader might've changed by the time we load the provider.
       if (peek(this.$state.loader) !== loader) return;
 
-      // Initialize some props.
-      if (provider) {
-        peek(() => {
-          const { muted, volume, playsinline } = this._media.$state;
-          provider.muted = muted();
-          provider.volume = volume();
-          provider.playsinline = playsinline();
-        });
-      }
-
-      this._media.delegate._dispatch('provider-change', {
-        detail: provider,
-      });
+      this._media.delegate._notify('provider-change', provider);
     });
   }
 
@@ -113,20 +113,20 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   private _destroyProvider() {
-    this._media.delegate._dispatch('provider-change', { detail: null });
+    this._media.delegate._notify('provider-change', null);
   }
 
   private _onResize() {
     if (!this.el) return;
 
-    const player = this._media.player,
+    const { player, $state } = this._media,
       width = this.el.offsetWidth,
       height = this.el.offsetHeight;
 
     if (!player) return;
 
-    player.$state.mediaWidth.set(width);
-    player.$state.mediaHeight.set(height);
+    $state.mediaWidth.set(width);
+    $state.mediaHeight.set(height);
 
     if (player.el) {
       setStyle(player.el, '--media-width', width + 'px');
@@ -135,16 +135,27 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   private _onMutation() {
-    const sources: MediaSrc[] = [],
+    const sources: Src[] = [],
       tracks: TextTrackInit[] = [],
       children = this.el!.children;
 
     for (const el of children) {
+      if (el.hasAttribute('data-vds')) continue;
+
       if (el instanceof HTMLSourceElement) {
-        sources.push({
+        const src = {
+          id: el.id,
           src: el.src,
           type: el.type,
-        });
+        };
+
+        // <source src="..." type="..." data-width="1920" data-height="1080" ... />
+        for (const prop of ['id', 'src', 'width', 'height', 'bitrate', 'codec']) {
+          const value = el.getAttribute(`data-${prop}`);
+          if (isString(value)) src[prop] = /id|src|codec/.test(prop) ? value : Number(value);
+        }
+
+        sources.push(src);
       } else if (el instanceof HTMLTrackElement) {
         tracks.push({
           id: el.id,

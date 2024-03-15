@@ -12,6 +12,7 @@ import {
   useContext,
 } from 'maverick.js';
 import {
+  animationFrameThrottle,
   ariaBool,
   DOMEvent,
   isKeyboardEvent,
@@ -21,9 +22,18 @@ import {
 } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
-import { isElementParent, onPress, setAttributeIfEmpty } from '../../../utils/dom';
+import {
+  isElementParent,
+  isElementVisible,
+  isEventInside,
+  isHTMLElement,
+  onPress,
+  setAttributeIfEmpty,
+} from '../../../utils/dom';
 import { Popper } from '../popper/popper';
+import { sliderObserverContext } from '../sliders/slider/slider-context';
 import type { MenuButton } from './menu-button';
 import { menuContext, type MenuContext, type MenuObserver } from './menu-context';
 import { MenuFocusController } from './menu-focus-controller';
@@ -65,6 +75,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _popper: Popper;
   private _focus!: MenuFocusController;
+  private _isSliderActive = false;
 
   /**
    * The menu trigger element.
@@ -132,6 +143,8 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       this._parentMenu = useContext(menuContext);
     }
 
+    this._observeSliders();
+
     this.setAttributes({
       'data-open': this._expanded,
       'data-submenu': this.isSubmenu,
@@ -142,6 +155,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       _button: this._trigger,
       _expanded: this._expanded,
       _hint: signal(''),
+      _submenu: !!this._parentMenu,
       _disable: this._disable.bind(this),
       _attachMenuButton: this._attachMenuButton.bind(this),
       _attachMenuItems: this._attachMenuItems.bind(this),
@@ -153,15 +167,13 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   protected override onAttach(el: HTMLElement) {
     el.style.setProperty('display', 'contents');
-    this._focus._attachMenu(el);
   }
 
   protected override onConnect(el: HTMLElement) {
     effect(this._watchExpanded.bind(this));
-    if (this.isSubmenu) this._parentMenu?._addSubmenu(this);
-    requestAnimationFrame(() => {
-      this._onResize();
-    });
+    if (this.isSubmenu) {
+      this._parentMenu?._addSubmenu(this);
+    }
   }
 
   protected override onDestroy() {
@@ -170,10 +182,33 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._menuObserver = null;
   }
 
+  private _observeSliders() {
+    let sliderActiveTimer = -1,
+      parentSliderObserver = hasProvidedContext(sliderObserverContext)
+        ? useContext(sliderObserverContext)
+        : null;
+
+    provideContext(sliderObserverContext, {
+      onDragStart: () => {
+        parentSliderObserver?.onDragStart?.();
+        window.clearTimeout(sliderActiveTimer);
+        sliderActiveTimer = -1;
+        this._isSliderActive = true;
+      },
+      onDragEnd: () => {
+        parentSliderObserver?.onDragEnd?.();
+        sliderActiveTimer = window.setTimeout(() => {
+          this._isSliderActive = false;
+          sliderActiveTimer = -1;
+        }, 300);
+      },
+    });
+  }
+
   private _watchExpanded() {
     const expanded = this._isExpanded();
 
-    this._onResize();
+    if (!this.isSubmenu) this._onResize();
     this._updateMenuItemsHidden(expanded);
 
     if (!expanded) return;
@@ -181,6 +216,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     effect(() => {
       const { height } = this._media.$state,
         content = this._content();
+
       content && setStyle(content, '--player-height', height() + 'px');
     });
 
@@ -202,10 +238,6 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     setAttribute(el, 'aria-haspopup', 'menu');
     setAttribute(el, 'aria-expanded', 'false');
     setAttribute(el, 'data-submenu', this.isSubmenu);
-
-    if (!this.isSubmenu) {
-      this._stopClickPropagation(el);
-    }
 
     const watchAttrs = () => {
       setAttribute(el, 'data-open', this._expanded());
@@ -233,32 +265,24 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._content.set(el);
     onDispose(() => this._content.set(null));
 
-    if (!this.isSubmenu) {
-      this._stopClickPropagation(el);
-    }
-
-    const watchAttrs = () => {
-      setAttribute(el, 'data-open', this._expanded());
-    };
-
+    const watchAttrs = () => setAttribute(el, 'data-open', this._expanded());
     if (__SERVER__) watchAttrs();
     else effect(watchAttrs);
 
     this._focus._attachMenu(el);
     this._updateMenuItemsHidden(false);
 
-    if (!__SERVER__) {
-      requestAnimationFrame(this._onResize.bind(this));
+    if (!this.isSubmenu) {
+      const onTransition = this._onResizeTransition.bind(this);
+      items.listen('transitionstart', onTransition);
+      items.listen('transitionend', onTransition);
+      items.listen('animationend', this._onResize);
+      items.listen('vds-menu-resize' as any, this._onResize);
     }
   }
 
   private _attachObserver(observer: MenuObserver) {
     this._menuObserver = observer;
-  }
-
-  private _stopClickPropagation(el: HTMLElement) {
-    listenEvent(el, 'click', (e) => e.stopPropagation());
-    listenEvent(el, 'pointerup', (e) => e.stopPropagation());
   }
 
   private _updateMenuItemsHidden(expanded: boolean) {
@@ -270,7 +294,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._isTriggerDisabled.set(disabled);
   }
 
+  private _wasKeyboardExpand = false;
   private _onExpandedChange(isExpanded: boolean, event?: Event) {
+    this._wasKeyboardExpand = isKeyboardEvent(event);
+
     event?.stopPropagation();
 
     if (this._expanded() === isExpanded) return;
@@ -279,6 +306,13 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       if (isExpanded) this._popper.hide(event);
       return;
     }
+
+    this.el?.dispatchEvent(
+      new Event('vds-menu-resize', {
+        bubbles: true,
+        composed: true,
+      }),
+    );
 
     const trigger = this._trigger(),
       content = this._content();
@@ -294,12 +328,9 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._toggleMediaControls(event);
     tick();
 
-    if (isKeyboardEvent(event)) {
-      if (isExpanded) {
-        content?.focus();
-      } else {
-        trigger?.focus();
-      }
+    if (this._wasKeyboardExpand) {
+      if (isExpanded) content?.focus();
+      else trigger?.focus();
 
       for (const el of [this.el, content]) {
         el && el.setAttribute('data-keyboard', '');
@@ -321,10 +352,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       this._menuObserver?._onOpen?.(event);
     } else {
       if (this.isSubmenu) {
-        // A little delay so submenu closing doesn't jump menu size when closing.
-        setTimeout(() => {
-          for (const el of this._submenus) el.close(event);
-        }, 300);
+        for (const el of this._submenus) el.close(event);
       } else {
         this._media.activeMenu = null;
       }
@@ -332,15 +360,16 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       this._menuObserver?._onClose?.(event);
     }
 
-    if (isExpanded && !isKeyboardEvent(event)) {
-      requestAnimationFrame(() => {
-        this._focus._update();
-        // Timeout to allow size to be updated via transition.
-        setTimeout(() => {
-          this._focus._scroll();
-        }, 100);
-      });
+    if (isExpanded) {
+      requestAnimationFrame(this._updateFocus.bind(this));
     }
+  }
+
+  private _updateFocus() {
+    if (this._isTransitionActive || this._isSubmenuOpen) return;
+    this._focus._update();
+    if (this._wasKeyboardExpand) this._focus._focusActive();
+    this._focus._scroll();
   }
 
   private _isExpanded() {
@@ -356,19 +385,31 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   }
 
   private _onPointerUp(event: PointerEvent) {
+    const content = this._content();
+
+    if (this._isSliderActive || (content && isEventInside(content, event))) {
+      return;
+    }
+
     // Prevent it bubbling up to window so we can determine when to close dialog.
     event.stopPropagation();
   }
 
   private _onWindowPointerUp(event: Event) {
-    // A little delay so submenu closing doesn't jump menu size when closing.
-    if (this.isSubmenu) return setTimeout(this.close.bind(this, event), 800);
-    else this.close(event);
+    const content = this._content();
+
+    if (this._isSliderActive || (content && isEventInside(content, event))) {
+      return;
+    }
+
+    this.close(event);
   }
 
   private _getCloseTarget() {
-    const target = this.el!.querySelector('[data-part="close-target"]');
-    return isElementParent(this.el!, target, (node) => node.getAttribute('role') === 'menu')
+    const target = this.el?.querySelector('[data-part="close-target"]');
+    return this.el &&
+      target &&
+      isElementParent(this.el, target, (node) => node.getAttribute('role') === 'menu')
       ? target
       : null;
   }
@@ -396,8 +437,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _addSubmenu(menu: Menu) {
     this._submenus.add(menu);
+
     listenEvent(menu, 'open', this._onSubmenuOpenBind);
     listenEvent(menu, 'close', this._onSubmenuCloseBind);
+
     onDispose(this._removeSubmenuBind);
   }
 
@@ -406,8 +449,17 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._submenus.delete(menu);
   }
 
+  private _isSubmenuOpen = false;
   private _onSubmenuOpenBind = this._onSubmenuOpen.bind(this);
   private _onSubmenuOpen(event: MenuOpenEvent) {
+    this._isSubmenuOpen = true;
+
+    const content = this._content();
+
+    if (this.isSubmenu) {
+      this.triggerElement?.setAttribute('aria-hidden', 'true');
+    }
+
     for (const target of this._submenus) {
       if (target !== event.target) {
         for (const el of [target.el, target.triggerElement]) {
@@ -416,59 +468,82 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       }
     }
 
-    requestAnimationFrame(() => {
-      this._onResize();
-    });
+    if (content) {
+      const el = event.target.el;
+      for (const child of content.children) {
+        if (child.contains(el)) {
+          child.setAttribute('data-open', '');
+        } else if (child !== el) {
+          child.setAttribute('data-hide', '');
+        }
+      }
+    }
   }
 
   private _onSubmenuCloseBind = this._onSubmenuClose.bind(this);
-  private _onSubmenuClose() {
+  private _onSubmenuClose(event: MenuCloseEvent) {
+    this._isSubmenuOpen = false;
+
+    const content = this._content();
+
+    if (this.isSubmenu) {
+      this.triggerElement?.setAttribute('aria-hidden', 'false');
+    }
+
     for (const target of this._submenus) {
       for (const el of [target.el, target.triggerElement]) {
         el?.setAttribute('aria-hidden', 'false');
       }
     }
 
-    requestAnimationFrame(() => {
-      this._onResize();
-    });
+    if (content) {
+      for (const child of content.children) {
+        child.removeAttribute('data-open');
+        child.removeAttribute('data-hide');
+      }
+    }
   }
 
-  private _onResize() {
+  private _onResize = animationFrameThrottle(() => {
     const content = peek(this._content);
-
     if (!content || __SERVER__) return;
 
-    let { paddingTop, paddingBottom, borderTopWidth, borderBottomWidth } =
-        getComputedStyle(content),
-      height =
-        parseFloat(paddingTop) +
-        parseFloat(paddingBottom) +
-        parseFloat(borderTopWidth) +
-        parseFloat(borderBottomWidth),
+    let height = 0,
+      styles = getComputedStyle(content),
       children = [...content.children];
 
+    for (const prop of ['paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth']) {
+      height += parseFloat(styles[prop]) || 0;
+    }
+
     for (const child of children) {
-      if (child instanceof HTMLElement && child.style.display === 'contents') {
+      if (isHTMLElement(child) && child.style.display === 'contents') {
         children.push(...child.children);
       } else if (child.nodeType === 3) {
-        height += parseInt(window.getComputedStyle(child).fontSize, 10);
-      } else {
-        height += (child as HTMLElement).offsetHeight || 0;
+        height += parseFloat(getComputedStyle(child).fontSize);
+      } else if (isHTMLElement(child)) {
+        if (!isElementVisible(child)) continue;
+        const style = getComputedStyle(child);
+        height +=
+          child.offsetHeight +
+          (parseFloat(style.marginTop) || 0) +
+          (parseFloat(style.marginBottom) || 0);
       }
     }
 
-    requestAnimationFrame(() => {
-      if (!content) return;
+    setStyle(content, '--menu-height', height + 'px');
+  });
 
-      setAttribute(content, 'data-resizing', '');
+  protected _isTransitionActive = false;
+  protected _onResizeTransition(event: TransitionEvent) {
+    const content = this._content();
+    if (content && event.propertyName === 'height') {
+      this._isTransitionActive = event.type === 'transitionstart';
 
-      setTimeout(() => {
-        if (content) setAttribute(content, 'data-resizing', false);
-      }, 400);
+      setAttribute(content, 'data-resizing', this._isTransitionActive);
 
-      setStyle(content, '--menu-height', height + 'px');
-    });
+      if (this._expanded()) this._updateFocus();
+    }
   }
 
   /**
@@ -500,7 +575,11 @@ export interface MenuProps {
   showDelay: number;
 }
 
-export interface MenuEvents {
+export interface MenuEvents
+  extends Pick<
+    MediaRequestEvents,
+    'media-pause-controls-request' | 'media-resume-controls-request'
+  > {
   open: MenuOpenEvent;
   close: MenuCloseEvent;
 }

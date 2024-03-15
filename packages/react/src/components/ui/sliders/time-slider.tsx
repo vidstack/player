@@ -20,8 +20,7 @@ import {
 } from '../../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import * as ThumbnailBase from '../thumbnail';
-import { type ValueProps } from './slider';
-import { SliderValueBridge } from './slider-value';
+import { sliderCallbacks } from './slider-callbacks';
 
 /* -------------------------------------------------------------------------------------------------
  * TimeSliderContext
@@ -41,7 +40,10 @@ TimeSliderContext.displayName = 'TimeSliderContext';
  * TimeSlider
  * -----------------------------------------------------------------------------------------------*/
 
-const TimeSliderBridge = createReactComponent(TimeSliderInstance);
+const TimeSliderBridge = createReactComponent(TimeSliderInstance, {
+  events: sliderCallbacks,
+  domEventsRegex: /^onMedia/,
+});
 
 export interface RootProps extends ReactElementProps<TimeSliderInstance> {
   asChild?: boolean;
@@ -119,7 +121,10 @@ const Chapters = React.forwardRef<HTMLDivElement, ChaptersProps>(
     return (
       <SliderChaptersBridge {...props}>
         {(props, instance) => (
-          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.div
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             <ChapterTracks instance={instance}>{children}</ChapterTracks>
           </Primitive.div>
         )}
@@ -198,7 +203,7 @@ const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
     }, []);
 
     return (
-      <Primitive.div {...props} ref={forwardRef as any}>
+      <Primitive.div {...props} ref={forwardRef as React.Ref<any>}>
         {title}
         {children}
       </Primitive.div>
@@ -207,43 +212,6 @@ const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
 );
 
 ChapterTitle.displayName = 'SliderChapterTitle';
-
-/* -------------------------------------------------------------------------------------------------
- * SliderValue
- * -----------------------------------------------------------------------------------------------*/
-
-/**
- * Displays the specific numeric representation of the current or pointer value of the time slider.
- * When a user interacts with a slider by moving its thumb along the track, the slider value
- * and current playback time updates accordingly.
- *
- * @docs {@link https://www.vidstack.io/docs/player/components/time-slider#preview}
- * @example
- * ```tsx
- * <TimeSlider.Root>
- *   <TimeSlider.Preview>
- *     <TimeSlider.Value />
- *   </TimeSlider.Preview>
- * </TimeSlider.Root>
- * ```
- */
-const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props }, forwardRef) => {
-  return (
-    <SliderValueBridge {...(props as Omit<ValueProps, 'ref'>)}>
-      {(props, instance) => {
-        const $text = useSignal(() => instance.getValueText(), instance);
-        return (
-          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
-            {$text}
-            {children}
-          </Primitive.div>
-        );
-      }}
-    </SliderValueBridge>
-  );
-});
-
-Value.displayName = 'SliderValue';
 
 /* -------------------------------------------------------------------------------------------------
  * SliderProgress
@@ -265,7 +233,7 @@ export interface ProgressProps extends PrimitivePropsWithRef<'div'> {}
  * ```
  */
 const Progress = React.forwardRef<HTMLElement, ProgressProps>((props, forwardRef) => (
-  <Primitive.div {...props} ref={forwardRef as any} />
+  <Primitive.div {...props} ref={forwardRef as React.Ref<any>} />
 ));
 
 Progress.displayName = 'SliderProgress';
@@ -307,7 +275,7 @@ const ThumbnailRoot = React.forwardRef<HTMLElement, ThumbnailProps>(
     return (
       <SliderThumbnailBridge {...(props as Omit<ThumbnailProps, 'ref'>)}>
         {(props) => (
-          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.div {...props} ref={composeRefs(props.ref as React.Ref<any>, forwardRef)}>
             {children}
           </Primitive.div>
         )}
@@ -357,7 +325,11 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     return (
       <VideoBridge {...(props as Omit<VideoProps, 'ref'>)}>
         {(props, instance) => (
-          <VideoProvider {...props} instance={instance} ref={composeRefs(props.ref, forwardRef)}>
+          <VideoProvider
+            {...props}
+            instance={instance}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef)}
+          >
             {children}
           </VideoProvider>
         )}
@@ -379,11 +351,11 @@ export interface VideoProviderProps {
 
 const VideoProvider = React.forwardRef<HTMLVideoElement, VideoProviderProps>(
   ({ instance, children, ...props }, forwardRef) => {
-    const { crossorigin, canLoad } = useStateContext(mediaState),
-      { src, video } = instance.$state,
+    const { canLoad } = useStateContext(mediaState),
+      { src, video, crossOrigin } = instance.$state,
       $src = useSignal(src),
       $canLoad = useSignal(canLoad),
-      $crossorigin = useSignal(crossorigin);
+      $crossOrigin = useSignal(crossOrigin);
     return (
       <Primitive.video
         style={{ maxWidth: 'unset' }}
@@ -392,8 +364,8 @@ const VideoProvider = React.forwardRef<HTMLVideoElement, VideoProviderProps>(
         muted
         playsInline
         preload={$canLoad ? 'auto' : 'none'}
-        crossOrigin={($crossorigin as '') || undefined}
-        ref={composeRefs(video.set as any, forwardRef)}
+        crossOrigin={$crossOrigin || undefined}
+        ref={composeRefs(video.set as React.Ref<HTMLVideoElement>, forwardRef)}
       >
         {children}
       </Primitive.video>
@@ -404,4 +376,4 @@ const VideoProvider = React.forwardRef<HTMLVideoElement, VideoProviderProps>(
 VideoProvider.displayName = 'SliderVideoProvider';
 
 export * from './slider';
-export { Root, Progress, Value, Thumbnail, Video, Chapters, ChapterTitle };
+export { Root, Progress, Thumbnail, Video, Chapters, ChapterTitle };

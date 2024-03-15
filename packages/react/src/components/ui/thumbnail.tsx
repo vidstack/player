@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import type { WriteSignal } from 'maverick.js';
 import {
   composeRefs,
   createReactComponent,
@@ -39,7 +40,10 @@ const Root = React.forwardRef<HTMLElement, RootProps>(({ children, ...props }, f
   return (
     <ThumbnailBridge {...(props as Omit<RootProps, 'ref'>)}>
       {(props) => (
-        <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+        <Primitive.div
+          {...props}
+          ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+        >
           {children}
         </Primitive.div>
       )}
@@ -58,13 +62,12 @@ export interface ImgProps extends PrimitivePropsWithRef<'img'> {
 }
 
 const Img = React.forwardRef<HTMLImageElement, ImgProps>(({ children, ...props }, forwardRef) => {
-  const { crossorigin } = useStateContext(mediaState),
-    { src, img } = useStateContext(ThumbnailInstance.state),
+  const { src, img, crossOrigin } = useStateContext(ThumbnailInstance.state),
     $src = useSignal(src),
-    $crossorigin = useSignal(crossorigin);
+    $crossOrigin = useSignal(crossOrigin);
   return (
     <Primitive.img
-      crossOrigin={$crossorigin as '' | undefined}
+      crossOrigin={$crossOrigin as '' | undefined}
       {...props}
       src={$src}
       ref={composeRefs((img as any).set, forwardRef)}

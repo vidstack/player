@@ -1,8 +1,8 @@
 import { effect } from 'maverick.js';
-import { Host } from 'maverick.js/element';
+import { Host, type Attributes } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
-import { Thumbnail } from '../../components';
+import { Thumbnail, type ThumbnailProps } from '../../components';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { cloneTemplateContent, createTemplate } from '../../utils/dom';
 
@@ -26,6 +26,10 @@ const imgTemplate = /* #__PURE__*/ createTemplate(
 export class MediaThumbnailElement extends Host(HTMLElement, Thumbnail) {
   static tagName = 'media-thumbnail';
 
+  static override attrs: Attributes<ThumbnailProps> = {
+    crossOrigin: 'crossorigin',
+  };
+
   protected _media!: MediaContext;
   protected _img = this._createImg();
 
@@ -35,8 +39,7 @@ export class MediaThumbnailElement extends Host(HTMLElement, Thumbnail) {
   }
 
   protected onConnect(): void {
-    const { src } = this.$state,
-      { crossorigin } = this._media.$props;
+    const { src, crossOrigin } = this.$state;
 
     if (this._img.parentNode !== this) {
       this.prepend(this._img);
@@ -44,7 +47,7 @@ export class MediaThumbnailElement extends Host(HTMLElement, Thumbnail) {
 
     effect(() => {
       setAttribute(this._img, 'src', src());
-      setAttribute(this._img, 'crossorigin', crossorigin());
+      setAttribute(this._img, 'crossorigin', crossOrigin());
     });
   }
 

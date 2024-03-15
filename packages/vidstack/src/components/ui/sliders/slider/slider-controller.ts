@@ -1,6 +1,7 @@
 import {
   effect,
   hasProvidedContext,
+  onDispose,
   peek,
   provideContext,
   signal,
@@ -8,9 +9,14 @@ import {
 } from 'maverick.js';
 import { animationFrameThrottle, ariaBool } from 'maverick.js/std';
 
-import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
+import {
+  useMediaContext,
+  useMediaState,
+  type MediaContext,
+} from '../../../../core/api/media-context';
 import { FocusVisibleController } from '../../../../foundation/observers/focus-visible';
-import { setAttributeIfEmpty } from '../../../../utils/dom';
+import { IntersectionObserverController } from '../../../../foundation/observers/intersection-observer';
+import { observeVisibility, setAttributeIfEmpty } from '../../../../utils/dom';
 import { round } from '../../../../utils/number';
 import type { SliderEvents } from './api/events';
 import type { SliderState } from './api/state';
@@ -23,6 +29,8 @@ import { getClampedValue } from './utils';
 export interface SliderDelegate extends Omit<SliderEventDelegate, '_getOrientation'> {
   _getARIAValueNow(): number;
   _getARIAValueText(): string;
+  _getARIAValueMin?(): number;
+  _getARIAValueMax?(): number;
 }
 
 export class SliderController extends ViewController<
@@ -31,6 +39,7 @@ export class SliderController extends ViewController<
   SliderEvents
 > {
   static props: SliderControllerProps = {
+    hidden: false,
     disabled: false,
     step: 1,
     keyStep: 1,
@@ -39,6 +48,8 @@ export class SliderController extends ViewController<
   };
 
   private _media!: MediaContext;
+  private _isVisible = signal(true);
+  private _isIntersecting = signal(true);
 
   constructor(private _delegate: SliderDelegate) {
     super();
@@ -65,11 +76,15 @@ export class SliderController extends ViewController<
     });
 
     effect(this._watchValue.bind(this));
+    effect(this._watchStep.bind(this));
     effect(this._watchDisabled.bind(this));
 
     this._setupAttrs();
 
     new SliderEventsController(this._delegate, this._media).attach(this);
+    new IntersectionObserverController({
+      callback: this._onIntersectionChange.bind(this),
+    }).attach(this);
   }
 
   protected override onAttach(el: HTMLElement) {
@@ -80,14 +95,32 @@ export class SliderController extends ViewController<
     else effect(this._watchCSSVars.bind(this));
   }
 
+  protected override onConnect(el: HTMLElement): void {
+    onDispose(observeVisibility(el, this._isVisible.set));
+    effect(this._watchHidden.bind(this));
+  }
+
+  private _onIntersectionChange(entries: IntersectionObserverEntry[]) {
+    this._isIntersecting.set(entries[0].isIntersecting);
+  }
+
   // -------------------------------------------------------------------------------------------
   // Watch
   // -------------------------------------------------------------------------------------------
+
+  private _watchHidden() {
+    const { hidden } = this.$props;
+    this.$state.hidden.set(hidden() || !this._isVisible() || !this._isIntersecting.bind(this));
+  }
 
   private _watchValue() {
     const { dragging, value, min, max } = this.$state;
     if (peek(dragging)) return;
     value.set(getClampedValue(min(), max(), value(), this._delegate._getStep()));
+  }
+
+  private _watchStep() {
+    this.$state.step.set(this._delegate._getStep());
   }
 
   private _watchDisabled() {
@@ -118,8 +151,8 @@ export class SliderController extends ViewController<
       'data-pointing': pointing,
       'data-active': active,
       'aria-disabled': this._getARIADisabled.bind(this),
-      'aria-valuemin': this.$state.min,
-      'aria-valuemax': this.$state.max,
+      'aria-valuemin': this._delegate._getARIAValueMin ?? this.$state.min,
+      'aria-valuemax': this._delegate._getARIAValueMax ?? this.$state.max,
       'aria-valuenow': this._delegate._getARIAValueNow,
       'aria-valuetext': this._delegate._getARIAValueText,
       'aria-orientation': orientation,
@@ -144,6 +177,11 @@ export interface SliderControllerProps {
    * Whether the slider should be disabled (non-interactive).
    */
   disabled: boolean;
+  /**
+   * Provides a hint that the slider is not visible and stops all events and expensive updates to
+   * be more power efficient.
+   */
+  hidden: boolean;
   /**
    * The orientation of the slider.
    */

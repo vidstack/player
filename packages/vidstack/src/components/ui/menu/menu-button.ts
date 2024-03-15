@@ -1,4 +1,4 @@
-import { Component, effect, prop, useContext } from 'maverick.js';
+import { Component, effect, onDispose, prop, signal, useContext } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
@@ -20,6 +20,7 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
   };
 
   private _menu!: MenuContext;
+  private _hintEl = signal<HTMLElement | null>(null);
 
   @prop
   get expanded() {
@@ -42,13 +43,12 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
   }
 
   protected override onConnect(el: HTMLElement) {
-    const hint = Array.from(el.querySelectorAll('[data-part="hint"]')).pop();
-    if (hint) {
-      effect(() => {
-        const text = this._menu._hint();
-        if (text) hint.textContent = text;
-      });
-    }
+    effect(this._watchHintEl.bind(this));
+
+    this._onMutation();
+    const mutations = new MutationObserver(this._onMutation.bind(this));
+    mutations.observe(el, { attributeFilter: ['data-part'], childList: true, subtree: true });
+    onDispose(() => mutations.disconnect());
 
     onPress(el, (trigger) => {
       this.dispatch('select', { trigger });
@@ -57,6 +57,20 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
 
   private _watchDisabled() {
     this._menu._disableMenuButton(this.$props.disabled());
+  }
+
+  private _watchHintEl() {
+    const el = this._hintEl();
+    if (!el) return;
+    effect(() => {
+      const text = this._menu._hint();
+      if (text) el.textContent = text;
+    });
+  }
+
+  private _onMutation() {
+    const hintEl = this.el?.querySelector<HTMLElement>('[data-part="hint"]');
+    this._hintEl.set(hintEl ?? null);
   }
 }
 

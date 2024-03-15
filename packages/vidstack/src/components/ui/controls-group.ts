@@ -8,6 +8,6 @@ import { setStyle } from 'maverick.js/std';
  */
 export class ControlsGroup extends Component {
   protected override onAttach(el: HTMLElement): void {
-    setStyle(el, 'pointer-events', 'auto');
+    if (!el.style.pointerEvents) setStyle(el, 'pointer-events', 'auto');
   }
 }

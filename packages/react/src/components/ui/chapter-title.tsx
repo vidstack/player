@@ -1,15 +1,18 @@
 import * as React from 'react';
 
-import { useActiveTextCues } from '../../hooks/use-active-text-cues';
-import { useActiveTextTrack } from '../../hooks/use-active-text-track';
-import { useMediaState } from '../../hooks/use-media-state';
+import { useChapterTitle } from '../../hooks/use-chapter-title';
 import { Primitive, type PrimitivePropsWithRef } from '../primitives/nodes';
 
 /* -------------------------------------------------------------------------------------------------
  * Chapter Title
  * -----------------------------------------------------------------------------------------------*/
 
-export interface ChapterTitleProps extends PrimitivePropsWithRef<'span'> {}
+export interface ChapterTitleProps extends PrimitivePropsWithRef<'span'> {
+  /**
+   * Specify text to be displayed when no chapter title is available.
+   */
+  defaultText?: string;
+}
 
 /**
  * This component is used to load and display the current chapter title based on the text tracks
@@ -22,14 +25,11 @@ export interface ChapterTitleProps extends PrimitivePropsWithRef<'span'> {}
  * ```
  */
 const ChapterTitle = React.forwardRef<HTMLElement, ChapterTitleProps>(
-  ({ children, ...props }, forwardRef) => {
-    const $started = useMediaState('started'),
-      $title = useMediaState('title'),
-      track = useActiveTextTrack('chapters'),
-      cues = useActiveTextCues(track);
+  ({ defaultText = '', children, ...props }, forwardRef) => {
+    const $chapterTitle = useChapterTitle();
     return (
-      <Primitive.span {...props} ref={forwardRef as any}>
-        {$started ? cues[0]?.text || $title : $title}
+      <Primitive.span {...props} ref={forwardRef as React.Ref<any>}>
+        {$chapterTitle || defaultText}
         {children}
       </Primitive.span>
     );

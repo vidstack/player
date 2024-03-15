@@ -4,8 +4,19 @@ import {
   type ComputePositionConfig,
   type Placement,
 } from '@floating-ui/dom';
-import { effect, getScope, onDispose, scoped } from 'maverick.js';
 import {
+  computed,
+  effect,
+  getScope,
+  onDispose,
+  scoped,
+  signal,
+  type ReadSignal,
+} from 'maverick.js';
+import {
+  animationFrameThrottle,
+  isDOMNode,
+  isFunction,
   isKeyboardClick,
   isTouchEvent,
   listenEvent,
@@ -13,19 +24,81 @@ import {
   setStyle,
 } from 'maverick.js/std';
 
+import { round } from './number';
+
+export interface EventTargetLike {
+  addEventListener(type: string, handler: (...args: any[]) => void): void;
+  removeEventListener(type: string, handler: (...args: any[]) => void): void;
+}
+
+export function listen(
+  target: EventTargetLike | null | undefined,
+  type: string,
+  handler: (...args: any[]) => void,
+) {
+  if (!target) return;
+  // @ts-expect-error - `listenEvent` is not typed to handle this.
+  return listenEvent(target, type, handler);
+}
+
+export function isEventInside(el: HTMLElement, event: Event) {
+  return isDOMNode(event.target) && el.contains(event.target);
+}
+
+const intervalJobs = new Set<() => void>();
+
+if (!__SERVER__) {
+  window.setInterval(() => {
+    for (const job of intervalJobs) job();
+  }, 1000);
+}
+
+export function scheduleIntervalJob(job: () => void) {
+  intervalJobs.add(job);
+  return () => intervalJobs.delete(job);
+}
+
 export function setAttributeIfEmpty(target: Element, name: string, value: string) {
   if (!target.hasAttribute(name)) target.setAttribute(name, value);
 }
 
-export function setARIALabel(target: Element, $label: () => string | null) {
-  if (target.hasAttribute('aria-label')) return;
+export function setARIALabel(target: Element, $label: string | null | ReadSignal<string | null>) {
+  if (target.hasAttribute('aria-label') || target.hasAttribute('data-no-label')) return;
+
+  if (!isFunction($label)) {
+    setAttribute(target, 'aria-label', $label);
+    return;
+  }
 
   function updateAriaDescription() {
-    setAttribute(target, 'aria-label', $label());
+    setAttribute(target, 'aria-label', ($label as ReadSignal<string | null>)());
   }
 
   if (__SERVER__) updateAriaDescription();
   else effect(updateAriaDescription);
+}
+
+export function hasParentElement(node: Element | null, test: (node: Element) => boolean) {
+  if (!node) {
+    return false;
+  } else if (test(node)) {
+    return true;
+  }
+
+  return hasParentElement(node.parentElement, test);
+}
+
+export function isElementVisible(el: HTMLElement) {
+  const style = getComputedStyle(el);
+  return style.display !== 'none' && parseInt(style.opacity) > 0;
+}
+
+export function checkVisibility(el: HTMLElement | null) {
+  return !!el && el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
+}
+
+export function observeVisibility(el: HTMLElement, callback: (isVisible: boolean) => void) {
+  return scheduleIntervalJob(() => callback(checkVisibility(el)));
 }
 
 export function isElementParent(
@@ -150,7 +223,8 @@ export function autoPlacement(
   setStyle(el, 'visibility', !trigger ? 'hidden' : null);
   if (!trigger) return;
 
-  const negateY = (y: string) => (placement.includes('top') ? `calc(-1 * ${y})` : y);
+  const negateX = (x: string) => (placement.includes('left') ? `calc(-1 * ${x})` : x),
+    negateY = (y: string) => (placement.includes('top') ? `calc(-1 * ${y})` : y);
 
   return autoUpdate(trigger, el, () => {
     computePosition(trigger, el, { placement: floatingPlacement, ...options }).then(({ x, y }) => {
@@ -158,9 +232,9 @@ export function autoPlacement(
         top: `calc(${y + 'px'} + ${negateY(
           yOffset ? yOffset + 'px' : `var(--${offsetVarName}-y-offset, 0px)`,
         )})`,
-        left: `calc(${x + 'px'} + ${
-          xOffset ? xOffset + 'px' : `var(--${offsetVarName}-x-offset, 0px)`
-        })`,
+        left: `calc(${x + 'px'} + ${negateX(
+          xOffset ? xOffset + 'px' : `var(--${offsetVarName}-x-offset, 0px)`,
+        )})`,
       });
     });
   });
@@ -169,4 +243,141 @@ export function autoPlacement(
 export function hasAnimation(el: HTMLElement): boolean {
   const styles = getComputedStyle(el);
   return styles.animationName !== 'none';
+}
+
+export function createSlot(name: string) {
+  const slot = document.createElement('slot');
+  slot.name = name;
+  return slot;
+}
+
+export function useTransitionActive($el: ReadSignal<Element | null | undefined>) {
+  const $active = signal(false);
+
+  effect(() => {
+    const el = $el();
+    if (!el) return;
+    listenEvent(el, 'transitionstart', () => $active.set(true));
+    listenEvent(el, 'transitionend', () => $active.set(false));
+  });
+
+  return $active;
+}
+
+export function useResizeObserver(
+  $el: ReadSignal<Element | null | undefined>,
+  onResize: () => void,
+) {
+  function onElementChange() {
+    const el = $el();
+    if (!el) return;
+
+    onResize();
+
+    const observer = new ResizeObserver(animationFrameThrottle(onResize));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }
+
+  effect(onElementChange);
+}
+
+export function useSafeTriangle(
+  $root: ReadSignal<Element | null | undefined>,
+  $trigger: ReadSignal<Element | null | undefined>,
+  $popper: ReadSignal<Element | null | undefined>,
+) {
+  effect(() => {
+    const root = $root(),
+      trigger = $trigger(),
+      popper = $popper();
+
+    if (!root || !trigger || !popper) return;
+
+    const $isActive = useMouseEnter($root);
+
+    effect(() => {
+      if (!$isActive()) return;
+      useRectCSSVars($root, $popper, 'safe');
+      listenEvent(trigger, 'mousemove', (event) => {
+        setStyle(root as HTMLElement, '--safe-cursor-x', `${event.clientX}px`);
+        setStyle(root as HTMLElement, '--safe-cursor-y', `${event.clientY}px`);
+      });
+    });
+  });
+}
+
+export function useRectCSSVars(
+  $root: ReadSignal<Element | null | undefined>,
+  $el: ReadSignal<Element | null | undefined>,
+  prefix: string,
+) {
+  useResizeObserver($el, () => {
+    const root = $root(),
+      el = $el();
+
+    if (root && el) setRectCSSVars(root, el, prefix);
+  });
+}
+
+export function setRectCSSVars(root: Element, el: Element, prefix: string) {
+  const rect = el.getBoundingClientRect();
+
+  for (const side of ['top', 'left', 'bottom', 'right']) {
+    setStyle(root as HTMLElement, `--${prefix}-${side}`, `${round(rect[side], 3)}px`);
+  }
+}
+
+export function useActive($el: ReadSignal<Element | null | undefined>) {
+  const $isMouseEnter = useMouseEnter($el),
+    $isFocusedIn = useFocusIn($el);
+
+  let prevMouseEnter = false;
+
+  return computed(() => {
+    const isMouseEnter = $isMouseEnter();
+    if (prevMouseEnter && !isMouseEnter) return false;
+    prevMouseEnter = isMouseEnter;
+    return isMouseEnter || $isFocusedIn();
+  });
+}
+
+export function useMouseEnter($el: ReadSignal<Element | null | undefined>) {
+  const $isMouseEnter = signal(false);
+
+  effect(() => {
+    const el = $el();
+
+    if (!el) {
+      $isMouseEnter.set(false);
+      return;
+    }
+
+    listenEvent(el, 'mouseenter', () => $isMouseEnter.set(true));
+    listenEvent(el, 'mouseleave', () => $isMouseEnter.set(false));
+  });
+
+  return $isMouseEnter;
+}
+
+export function useFocusIn($el: ReadSignal<Element | null | undefined>) {
+  const $isFocusIn = signal(false);
+
+  effect(() => {
+    const el = $el();
+
+    if (!el) {
+      $isFocusIn.set(false);
+      return;
+    }
+
+    listenEvent(el, 'focusin', () => $isFocusIn.set(true));
+    listenEvent(el, 'focusout', () => $isFocusIn.set(false));
+  });
+
+  return $isFocusIn;
+}
+
+export function isHTMLElement(el: any): el is HTMLElement {
+  return el instanceof HTMLElement;
 }

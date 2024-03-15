@@ -3,7 +3,7 @@ import { setAttribute } from 'maverick.js/std';
 
 import type { MediaContext } from '../../../core';
 import { useMediaContext } from '../../../core/api/media-context';
-import { requestScopedAnimationFrame } from '../../../utils/dom';
+import { isHTMLElement, requestScopedAnimationFrame } from '../../../utils/dom';
 
 /**
  * Portals menu items into the document body.
@@ -82,7 +82,7 @@ export class MenuPortal extends Component<MenuPortalProps> {
   }
 
   private _getContainer(selector: MenuPortalProps['container']) {
-    if (selector instanceof HTMLElement) return selector;
+    if (isHTMLElement(selector)) return selector;
     return selector ? document.querySelector<HTMLElement>(selector) : document.body;
   }
 }

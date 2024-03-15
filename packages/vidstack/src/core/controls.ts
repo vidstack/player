@@ -1,5 +1,5 @@
-import { effect } from 'maverick.js';
-import { isKeyboardEvent, isTouchEvent, listenEvent } from 'maverick.js/std';
+import { effect, signal } from 'maverick.js';
+import { isKeyboardEvent } from 'maverick.js/std';
 
 import { isTouchPinchEvent } from '../utils/dom';
 import { MediaPlayerController } from './api/player-controller';
@@ -7,7 +7,10 @@ import { MediaPlayerController } from './api/player-controller';
 export class MediaControls extends MediaPlayerController {
   private _idleTimer = -2;
   private _pausedTracking = false;
+  private _hideOnMouseLeave = signal(false);
+  private _isMouseOutside = signal(false);
   private _focusedItem: HTMLElement | null = null;
+  private _canIdle = signal(true);
 
   /**
    * The default amount of delay in milliseconds while media playback is progressing without user
@@ -16,6 +19,33 @@ export class MediaControls extends MediaPlayerController {
    * @defaultValue 2000
    */
   defaultDelay = 2000;
+
+  /**
+   * Whether controls can hide after a delay in user interaction. If this is false, controls will
+   * not hide and be user controlled.
+   */
+  get canIdle() {
+    return this._canIdle();
+  }
+
+  set canIdle(canIdle: boolean) {
+    this._canIdle.set(canIdle);
+  }
+
+  /**
+   * Whether controls visibility should be toggled when the mouse enters and leaves the player
+   * container.
+   *
+   * @defaultValue false
+   */
+  get hideOnMouseLeave() {
+    const { hideControlsOnMouseLeave } = this.$props;
+    return this._hideOnMouseLeave() || hideControlsOnMouseLeave();
+  }
+
+  set hideOnMouseLeave(hide) {
+    this._hideOnMouseLeave.set(hide);
+  }
 
   /**
    * Whether media controls are currently visible.
@@ -60,6 +90,13 @@ export class MediaControls extends MediaPlayerController {
   }
 
   protected override onConnect() {
+    effect(this._init.bind(this));
+  }
+
+  private _init() {
+    if (!this._canIdle()) return;
+
+    effect(this._watchMouse.bind(this));
     effect(this._watchPaused.bind(this));
 
     const onPlay = this._onPlay.bind(this),
@@ -69,12 +106,30 @@ export class MediaControls extends MediaPlayerController {
     this.listen('play', onPlay);
 
     this.listen('pause', onPause);
-    this.listen('autoplay-fail', onPause);
+    this.listen('auto-play-fail', onPause);
+  }
+
+  private _watchMouse() {
+    const { started, pointer, paused } = this.$state;
+    if (!started() || pointer() !== 'fine') return;
+
+    const shouldHideOnMouseLeave = this.hideOnMouseLeave;
+
+    if (!shouldHideOnMouseLeave || !this._isMouseOutside()) {
+      effect(() => {
+        if (!paused()) this.listen('pointermove', this._onStopIdle.bind(this));
+      });
+    }
+
+    if (shouldHideOnMouseLeave) {
+      this.listen('mouseenter', this._onMouseEnter.bind(this));
+      this.listen('mouseleave', this._onMouseLeave.bind(this));
+    }
   }
 
   private _watchPaused() {
-    const { paused, started, autoplayError } = this.$state;
-    if (paused() || (autoplayError() && !started())) return;
+    const { paused, started, autoPlayError } = this.$state;
+    if (paused() || (autoPlayError() && !started())) return;
 
     const onStopIdle = this._onStopIdle.bind(this);
 
@@ -84,22 +139,29 @@ export class MediaControls extends MediaPlayerController {
         events = [isTouch ? 'touchend' : 'pointerup', 'keydown'] as const;
 
       for (const eventType of events) {
-        listenEvent(this.el!, eventType, onStopIdle, { passive: false });
-      }
-
-      if (!isTouch) {
-        listenEvent(this.el!, 'pointermove', onStopIdle);
+        this.listen(eventType, onStopIdle, { passive: false });
       }
     });
   }
 
   private _onPlay(event: Event) {
     this.show(0, event);
-    this.hide(this.defaultDelay, event);
+    this.hide(undefined, event);
   }
 
   private _onPause(event: Event) {
     this.show(0, event);
+  }
+
+  private _onMouseEnter(event: Event) {
+    this._isMouseOutside.set(false);
+    this.show(0, event);
+    this.hide(undefined, event);
+  }
+
+  private _onMouseLeave(event: Event) {
+    this._isMouseOutside.set(true);
+    this.hide(0, event);
   }
 
   private _clearIdleTimer() {

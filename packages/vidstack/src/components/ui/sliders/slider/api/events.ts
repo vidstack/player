@@ -21,7 +21,7 @@ export interface SliderEvent<Detail = unknown> extends DOMEvent<Detail> {
  * @detail value
  */
 export interface SliderDragStartEvent extends SliderEvent<number> {
-  trigger: PointerEvent | KeyboardEvent;
+  readonly trigger: PointerEvent | KeyboardEvent;
 }
 
 /**
@@ -31,7 +31,7 @@ export interface SliderDragStartEvent extends SliderEvent<number> {
  * @detail value
  */
 export interface SliderDragEndEvent extends SliderEvent<number> {
-  trigger: PointerEvent | KeyboardEvent;
+  readonly trigger: PointerEvent | KeyboardEvent;
 }
 
 /**
@@ -40,7 +40,7 @@ export interface SliderDragEndEvent extends SliderEvent<number> {
  * @detail value
  */
 export interface SliderValueChangeEvent extends SliderEvent<number> {
-  trigger?: PointerEvent | KeyboardEvent;
+  readonly trigger: PointerEvent | KeyboardEvent | undefined;
 }
 
 /**
@@ -50,7 +50,7 @@ export interface SliderValueChangeEvent extends SliderEvent<number> {
  * @detail value
  */
 export interface SliderDragValueChangeEvent extends SliderEvent<number> {
-  trigger: PointerEvent | KeyboardEvent;
+  readonly trigger: PointerEvent | KeyboardEvent;
 }
 
 /**
@@ -61,5 +61,5 @@ export interface SliderDragValueChangeEvent extends SliderEvent<number> {
  * @detail pointerValue
  */
 export interface SliderPointerValueChangeEvent extends SliderEvent<number> {
-  trigger: PointerEvent | KeyboardEvent;
+  readonly trigger: PointerEvent | KeyboardEvent;
 }

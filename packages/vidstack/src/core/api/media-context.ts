@@ -3,7 +3,6 @@ import {
   useContext,
   type ReadSignal,
   type ReadSignalRecord,
-  type Scope,
   type WriteSignal,
 } from 'maverick.js';
 
@@ -14,6 +13,7 @@ import type { AdsController } from '../ads/controller';
 import type { MediaKeyShortcuts } from '../keyboard/types';
 import type { VideoQualityList } from '../quality/video-quality';
 import type { MediaPlayerDelegate } from '../state/media-player-delegate';
+import type { MediaStorage } from '../state/media-storage';
 import type { MediaRemoteControl } from '../state/remote-control';
 import type { AudioTrackList } from '../tracks/audio-tracks';
 import type { TextRenderers } from '../tracks/text/render/text-renderer';
@@ -23,7 +23,7 @@ import type { PlayerStore } from './player-state';
 
 export interface MediaContext {
   player: MediaPlayer;
-  scope: Scope;
+  storage: MediaStorage | null;
   remote: MediaRemoteControl;
   delegate: MediaPlayerDelegate;
   qualities: VideoQualityList;
@@ -34,6 +34,7 @@ export interface MediaContext {
   logger?: Logger;
   $ads: WriteSignal<AdsController | null>;
   $provider: WriteSignal<MediaProviderAdapter | null>;
+  $providerSetup: WriteSignal<boolean>;
   $iosControls: ReadSignal<boolean>;
   $props: ReadSignalRecord<MediaPlayerProps>;
   $state: PlayerStore;
@@ -46,4 +47,8 @@ export const mediaContext = createContext<MediaContext>();
 
 export function useMediaContext(): MediaContext {
   return useContext(mediaContext);
+}
+
+export function useMediaState() {
+  return useMediaContext().$state;
 }

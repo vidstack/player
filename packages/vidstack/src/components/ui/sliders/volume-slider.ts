@@ -2,6 +2,7 @@ import throttle from 'just-throttle';
 import { Component, effect, provideContext } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
@@ -14,8 +15,6 @@ import type {
 import { sliderState, type SliderState } from './slider/api/state';
 import { sliderValueFormatContext } from './slider/format';
 import { SliderController, type SliderControllerProps } from './slider/slider-controller';
-
-export interface VolumeSliderProps extends SliderControllerProps {}
 
 /**
  * Versatile and user-friendly input volume control designed for seamless cross-browser and provider
@@ -33,9 +32,9 @@ export interface VolumeSliderProps extends SliderControllerProps {}
  */
 export class VolumeSlider extends Component<
   VolumeSliderProps,
-  SliderState,
-  SliderEvents,
-  SliderCSSVars
+  VolumeSliderState,
+  VolumeSliderEvents,
+  VolumeSliderCSSVars
 > {
   static props: VolumeSliderProps = {
     ...SliderController.props,
@@ -50,15 +49,23 @@ export class VolumeSlider extends Component<
   protected override onSetup(): void {
     this._media = useMediaContext();
 
+    const { audioGain } = this._media.$state;
     provideContext(sliderValueFormatContext, {
       default: 'percent',
+      value(value) {
+        return (value * (audioGain() ?? 1)).toFixed(2);
+      },
+      percent(value) {
+        return Math.round(value * (audioGain() ?? 1));
+      },
     });
 
     new SliderController({
       _getStep: this.$props.step,
       _getKeyStep: this.$props.keyStep,
-      _isDisabled: this.$props.disabled,
       _roundValue: Math.round,
+      _isDisabled: this._isDisabled.bind(this),
+      _getARIAValueMax: this._getARIAValueMax.bind(this),
       _getARIAValueNow: this._getARIAValueNow.bind(this),
       _getARIAValueText: this._getARIAValueText.bind(this),
       _onDragValueChange: this._onDragValueChange.bind(this),
@@ -80,13 +87,26 @@ export class VolumeSlider extends Component<
   }
 
   private _getARIAValueNow() {
-    const { value } = this.$state;
-    return Math.round(value());
+    const { value } = this.$state,
+      { audioGain } = this._media.$state;
+    return Math.round(value() * (audioGain() ?? 1));
   }
 
   private _getARIAValueText() {
-    const { value, max } = this.$state;
-    return round((value() / max()) * 100, 2) + '%';
+    const { value, max } = this.$state,
+      { audioGain } = this._media.$state;
+    return round((value() / max()) * (audioGain() ?? 1) * 100, 2) + '%';
+  }
+
+  private _getARIAValueMax() {
+    const { audioGain } = this._media.$state;
+    return this.$state.max() * (audioGain() ?? 1);
+  }
+
+  private _isDisabled() {
+    const { disabled } = this.$props,
+      { canSetVolume } = this._media.$state;
+    return disabled() || !canSetVolume();
   }
 
   private _watchVolume() {
@@ -111,3 +131,13 @@ export class VolumeSlider extends Component<
     this._throttleVolumeChange(event);
   }
 }
+
+export interface VolumeSliderProps extends SliderControllerProps {}
+
+export interface VolumeSliderState extends SliderState {}
+
+export interface VolumeSliderEvents
+  extends SliderEvents,
+    Pick<MediaRequestEvents, 'media-volume-change-request'> {}
+
+export interface VolumeSliderCSSVars extends SliderCSSVars {}

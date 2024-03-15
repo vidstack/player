@@ -11,7 +11,7 @@ import type {
   MediaFullscreenAdapter,
   MediaPictureInPictureAdapter,
   MediaProviderAdapter,
-  MediaSetupContext,
+  MediaRemotePlaybackAdapter,
 } from '../types';
 import { NativeHLSTextTracks } from './native-hls-text-tracks';
 import { VideoPictureInPicture } from './picture-in-picture';
@@ -20,6 +20,7 @@ import {
   PIPPresentationAdapter,
   VideoPresentation,
 } from './presentation/video-presentation';
+import { VideoAirPlayAdapter } from './remote-playback';
 
 /**
  * The video provider adapts the `<video>` element to enable loading videos via the HTML Media
@@ -44,35 +45,39 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
     return 'video';
   }
 
+  airPlay?: MediaRemotePlaybackAdapter;
   fullscreen?: MediaFullscreenAdapter;
   pictureInPicture?: MediaPictureInPictureAdapter;
 
-  constructor(video: HTMLVideoElement, context: MediaContext) {
-    super(video);
+  constructor(video: HTMLVideoElement, ctx: MediaContext) {
+    super(video, ctx);
+
     scoped(() => {
+      this.airPlay = new VideoAirPlayAdapter(video, ctx);
+
       if (canUseVideoPresentation(video)) {
-        const presentation = new VideoPresentation(video, context);
+        const presentation = new VideoPresentation(video, ctx);
         this.fullscreen = new FullscreenPresentationAdapter(presentation);
         this.pictureInPicture = new PIPPresentationAdapter(presentation);
       } else if (canUsePictureInPicture(video)) {
-        this.pictureInPicture = new VideoPictureInPicture(video, context);
+        this.pictureInPicture = new VideoPictureInPicture(video, ctx);
       }
     }, this.scope);
   }
 
-  override setup(context: MediaSetupContext): void {
-    super.setup(context);
+  override setup(): void {
+    super.setup();
 
     if (canPlayHLSNatively(this.video)) {
-      new NativeHLSTextTracks(this.video, context);
+      new NativeHLSTextTracks(this.video, this._ctx);
     }
 
-    context.textRenderers._attachVideo(this.video);
+    this._ctx.textRenderers._attachVideo(this.video);
     onDispose(() => {
-      context.textRenderers._attachVideo(null);
+      this._ctx.textRenderers._attachVideo(null);
     });
 
-    if (this.type === 'video') context.delegate._dispatch('provider-setup', { detail: this });
+    if (this.type === 'video') this._ctx.delegate._notify('provider-setup', this);
   }
 
   /**

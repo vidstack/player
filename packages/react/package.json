@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/react",
-  "version": "1.5.6",
+  "version": "1.10.9",
   "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
@@ -17,7 +17,7 @@
     "analyze.json"
   ],
   "scripts": {
-    "analyze": "maverick analyze \"src/**/*.tsx\" --framework react",
+    "analyze": "maverick analyze \"src/**/*.tsx\" --framework react --project tsconfig.build.json",
     "dev": "pnpm clean && pnpm build:icons && pnpm build:types && pnpm watch",
     "build": "pnpm build:icons && rollup -c",
     "build:icons": "node .scripts/build-icons.js",
@@ -39,24 +39,25 @@
     "media-captions": "^1.0.1"
   },
   "devDependencies": {
-    "@maverick-js/cli": "0.40.11",
-    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@maverick-js/cli": "0.41.4",
+    "@rollup/plugin-node-resolve": "^15.2.0",
     "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
-    "@vitejs/plugin-react": "^4.1.0",
+    "@vitejs/plugin-react": "^4.2.0",
     "esbuild": "^0.19.4",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.40.11",
+    "maverick.js": "0.41.4",
     "media-icons": "^1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "remotion": "^4.0.76",
     "rimraf": "^3.0.0",
-    "rollup": "^3.25.1",
-    "rollup-plugin-dts": "^5.3.0",
+    "rollup": "^4.0.0",
+    "rollup-plugin-dts": "^6.0.0",
     "rollup-plugin-esbuild": "^6.1.0",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.0",
     "vidstack": "workspace:*",
-    "vite": "^4.4.9"
+    "vite": "^5.0.0"
   },
   "contributors": [
     "Rahim Alwer <rahim.alwer@gmail.com>"
@@ -79,13 +80,25 @@
       "types": "./icons.d.ts",
       "default": "./dist/prod/vidstack-icons.js"
     },
+    "./player/remotion": {
+      "types": "./player/remotion.d.ts",
+      "development": "./dist/dev/player/vidstack-remotion.js",
+      "default": "./dist/prod/player/vidstack-remotion.js"
+    },
     "./player/layouts/default": {
       "types": "./player/layouts/default.d.ts",
       "development": "./dist/dev/player/vidstack-default-layout.js",
       "default": "./dist/prod/player/vidstack-default-layout.js"
     },
+    "./player/layouts/plyr": {
+      "types": "./player/layouts/plyr.d.ts",
+      "development": "./dist/dev/player/vidstack-plyr-layout.js",
+      "default": "./dist/prod/player/vidstack-plyr-layout.js"
+    },
     "./player/styles/*": "./player/styles/*",
     "./dist/types/*": "./dist/types/*",
+    "./dom.d.ts": "./dom.d.ts",
+    "./google-cast.d.ts": "./google-cast.d.ts",
     "./package.json": "./package.json",
     "./tailwind.cjs": {
       "types": "./tailwind.d.cts",

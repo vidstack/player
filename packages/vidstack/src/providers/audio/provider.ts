@@ -1,5 +1,5 @@
 import { HTMLMediaProvider } from '../html/provider';
-import type { MediaProviderAdapter, MediaSetupContext } from '../types';
+import type { MediaProviderAdapter } from '../types';
 
 /**
  * The audio provider adapts the `<audio>` element to enable loading audio via the HTML Media
@@ -21,9 +21,9 @@ export class AudioProvider extends HTMLMediaProvider implements MediaProviderAda
     return 'audio';
   }
 
-  override setup(context: MediaSetupContext): void {
-    super.setup(context);
-    if (this.type === 'audio') context.delegate._dispatch('provider-setup', { detail: this });
+  override setup() {
+    super.setup();
+    if (this.type === 'audio') this._ctx.delegate._notify('provider-setup', this);
   }
 
   /**

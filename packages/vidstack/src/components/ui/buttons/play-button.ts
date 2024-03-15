@@ -1,6 +1,7 @@
 import { Component, computed } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaRequestEvents } from '../../../core/api/media-request-events';
 import { setARIALabel } from '../../../utils/dom';
 import {
   ToggleButtonController,
@@ -9,6 +10,9 @@ import {
 
 export interface PlayButtonProps extends ToggleButtonControllerProps {}
 
+export interface PlayButtonEvents
+  extends Pick<MediaRequestEvents, 'media-play-request' | 'media-pause-request'> {}
+
 /**
  * A button for toggling the playback state (play/pause) of the current media.
  *
@@ -16,7 +20,7 @@ export interface PlayButtonProps extends ToggleButtonControllerProps {}
  * @attr data-ended - Whether playback has ended.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/play-button}
  */
-export class PlayButton extends Component<PlayButtonProps> {
+export class PlayButton extends Component<PlayButtonProps, {}, PlayButtonEvents> {
   static props: PlayButtonProps = ToggleButtonController.props;
 
   private _media!: MediaContext;
@@ -43,7 +47,7 @@ export class PlayButton extends Component<PlayButtonProps> {
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'play');
-    setARIALabel(el, this._getLabel.bind(this));
+    setARIALabel(el, 'Play');
   }
 
   private _onPress(event: Event) {
@@ -54,10 +58,5 @@ export class PlayButton extends Component<PlayButtonProps> {
   private _isPressed() {
     const { paused } = this._media.$state;
     return !paused();
-  }
-
-  private _getLabel() {
-    const { paused } = this._media.$state;
-    return paused() ? 'Play' : 'Pause';
   }
 }

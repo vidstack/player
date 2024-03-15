@@ -5,6 +5,7 @@ import type { MenuButton } from './menu-button';
 import type { MenuItems } from './menu-items';
 
 export interface MenuContext {
+  readonly _submenu: boolean;
   readonly _expanded: ReadSignal<boolean>;
   readonly _hint: WriteSignal<string>;
   readonly _button: ReadSignal<HTMLElement | null>;

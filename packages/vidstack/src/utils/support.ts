@@ -8,10 +8,11 @@ export const IS_IOS_CHROME = !__SERVER__ && /crios/i.test(UA);
 export const IS_SAFARI = !__SERVER__ && (!!window.safari || IS_IOS);
 
 /**
- * Returns the current version of Safari. Defaults to `0` if unknown.
+ * Returns the current Android OS version. Defaults to `0` if unknown.
  */
-export function currentSafariVersion(): number {
-  return __SERVER__ ? 0 : Number((/Safari\/(\d+)/.exec(navigator.userAgent) ?? ['', 0])[1]);
+export function getAndroidVersion() {
+  const version = parseFloat(UA.match(/android\s([0-9\.]*)/)?.[1] ?? '0');
+  return !isNaN(version) ? version : 0;
 }
 
 /**
@@ -54,10 +55,22 @@ export function isReducedMotionPreferred(): boolean {
   );
 }
 
+export function canPlayAudioType(audio: HTMLAudioElement | null, type: string): boolean {
+  if (__SERVER__) return false;
+  if (!audio) audio = document.createElement('audio');
+  return audio.canPlayType(type).length > 0;
+}
+
+export function canPlayVideoType(video: HTMLVideoElement | null, type: string): boolean {
+  if (__SERVER__) return false;
+  if (!video) video = document.createElement('video');
+  return video.canPlayType(type).length > 0;
+}
+
 /**
  * Checks if the native HTML5 video player can play HLS.
  */
-export function canPlayHLSNatively(video?: HTMLVideoElement): boolean {
+export function canPlayHLSNatively(video?: HTMLVideoElement | null): boolean {
   if (__SERVER__) return false;
   if (!video) video = document.createElement('video');
   return video.canPlayType('application/vnd.apple.mpegurl').length > 0;
@@ -69,9 +82,9 @@ export function canPlayHLSNatively(video?: HTMLVideoElement): boolean {
  *
  * @see {@link https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture}
  */
-export function canUsePictureInPicture(video: HTMLVideoElement): boolean {
+export function canUsePictureInPicture(video: HTMLVideoElement | null): boolean {
   if (__SERVER__) return false;
-  return !!document.pictureInPictureEnabled && !video.disablePictureInPicture;
+  return !!document.pictureInPictureEnabled && !video?.disablePictureInPicture;
 }
 
 /**
@@ -79,10 +92,11 @@ export function canUsePictureInPicture(video: HTMLVideoElement): boolean {
  *
  * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode}
  */
-export function canUseVideoPresentation(video: HTMLVideoElement): boolean {
+export function canUseVideoPresentation(video: HTMLVideoElement | null): boolean {
   if (__SERVER__) return false;
   return (
-    isFunction(video.webkitSupportsPresentationMode) && isFunction(video.webkitSetPresentationMode)
+    isFunction(video?.webkitSupportsPresentationMode) &&
+    isFunction(video?.webkitSetPresentationMode)
   );
 }
 
@@ -97,7 +111,9 @@ export async function canChangeVolume() {
  * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
 export function getMediaSource(): typeof MediaSource | undefined {
-  return __SERVER__ ? undefined : window?.MediaSource ?? window?.WebKitMediaSource;
+  return __SERVER__
+    ? undefined
+    : window?.ManagedMediaSource ?? window?.MediaSource ?? window?.WebKitMediaSource;
 }
 
 /**

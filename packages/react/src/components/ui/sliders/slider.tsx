@@ -7,8 +7,10 @@ import {
   type ReactElementProps,
 } from 'maverick.js/react';
 
+import { useSliderState } from '../../../hooks/use-slider-state';
 import { SliderInstance, SliderPreviewInstance } from '../../primitives/instances';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
+import { sliderCallbacks } from './slider-callbacks';
 import { SliderValueBridge, type SliderValueProps } from './slider-value';
 
 /* -------------------------------------------------------------------------------------------------
@@ -16,13 +18,7 @@ import { SliderValueBridge, type SliderValueProps } from './slider-value';
  * -----------------------------------------------------------------------------------------------*/
 
 const SliderBridge = createReactComponent(SliderInstance, {
-  events: [
-    'onDragStart',
-    'onDragEnd',
-    'onDragValueChange',
-    'onValueChange',
-    'onPointerValueChange',
-  ],
+  events: sliderCallbacks,
 });
 
 export interface RootProps extends ReactElementProps<SliderInstance> {
@@ -76,7 +72,7 @@ export interface ThumbProps extends PrimitivePropsWithRef<'div'> {}
  * ```
  */
 const Thumb = React.forwardRef<HTMLElement, ThumbProps>((props, forwardRef) => (
-  <Primitive.div {...props} ref={forwardRef as any} />
+  <Primitive.div {...props} ref={forwardRef as React.Ref<any>} />
 ));
 
 Thumb.displayName = 'SliderThumb';
@@ -103,7 +99,7 @@ export interface TrackProps extends PrimitivePropsWithRef<'div'> {}
  * ```
  */
 const Track = React.forwardRef<HTMLElement, TrackProps>((props, forwardRef) => (
-  <Primitive.div {...props} ref={forwardRef as any} />
+  <Primitive.div {...props} ref={forwardRef as React.Ref<any>} />
 ));
 
 Track.displayName = 'SliderTrack';
@@ -130,7 +126,7 @@ export interface TrackFillProps extends PrimitivePropsWithRef<'div'> {}
  * ```
  */
 const TrackFill = React.forwardRef<HTMLElement, TrackFillProps>((props, forwardRef) => (
-  <Primitive.div {...props} ref={forwardRef as any} />
+  <Primitive.div {...props} ref={forwardRef as React.Ref<any>} />
 ));
 
 TrackFill.displayName = 'SliderTrackFill';
@@ -167,7 +163,10 @@ const Preview = React.forwardRef<HTMLElement, PreviewProps>(
     return (
       <PreviewBridge {...(props as Omit<PreviewProps, 'ref'>)}>
         {(props) => (
-          <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+          <Primitive.div
+            {...props}
+            ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+          >
             {children}
           </Primitive.div>
         )}
@@ -205,7 +204,7 @@ const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props },
       {(props, instance) => {
         const $text = useSignal(() => instance.getValueText(), instance);
         return (
-          <Primitive.div {...props} ref={forwardRef as any}>
+          <Primitive.div {...props} ref={forwardRef as React.Ref<any>}>
             {$text}
             {children}
           </Primitive.div>
@@ -217,4 +216,39 @@ const Value = React.forwardRef<HTMLElement, ValueProps>(({ children, ...props },
 
 Value.displayName = 'SliderValue';
 
-export { Root, Thumb, Track, TrackFill, Preview, Value };
+/* -------------------------------------------------------------------------------------------------
+ * SliderSteps
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface StepsProps extends Omit<PrimitivePropsWithRef<'div'>, 'children'> {
+  children: (step: number) => React.ReactNode;
+}
+
+/**
+ * Visual markers that can be used to indicate value steps on the slider track.
+ *
+ * @example
+ * ```tsx
+ * <Slider.Root>
+ *   <Slider.Steps className="steps">
+ *     {(step) => <div className="step" key={String(step)}></div>}
+ *   </Slider.Steps>
+ * </Slider.Root>
+ * ```
+ */
+const Steps = React.forwardRef<HTMLElement, StepsProps>(({ children, ...props }, forwardRef) => {
+  const $min = useSliderState('min'),
+    $max = useSliderState('max'),
+    $step = useSliderState('step'),
+    steps = ($max - $min) / $step;
+
+  return (
+    <Primitive.div {...props} ref={forwardRef as React.Ref<any>}>
+      {Array.from({ length: Math.floor(steps) + 1 }).map((_, step) => children(step))}
+    </Primitive.div>
+  );
+});
+
+Steps.displayName = 'SliderSteps';
+
+export { Root, Thumb, Track, TrackFill, Preview, Value, Steps };

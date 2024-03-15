@@ -1,6 +1,7 @@
-import type { Dispose } from 'maverick.js';
+import { type Dispose } from 'maverick.js';
 import { isString, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
+
 import type { TextTrack } from './text-track';
 import type { TextTrackList } from './text-tracks';
 
@@ -16,7 +17,7 @@ export function isCueActive(cue: VTTCue, time: number) {
   return time >= cue.startTime && time < cue.endTime;
 }
 
-export function observeActiveTextTrack(
+export function watchActiveTextTrack(
   tracks: TextTrackList,
   kind: TextTrackKind | TextTrackKind[],
   onChange: (track: TextTrack | null) => void,
@@ -33,6 +34,7 @@ export function observeActiveTextTrack(
 
     if (!track) {
       onChange(null);
+      currentTrack = null;
       return;
     }
 
@@ -48,4 +50,25 @@ export function observeActiveTextTrack(
 
   onModeChange();
   return listenEvent(tracks, 'mode-change', onModeChange);
+}
+
+export function watchCueTextChange(
+  tracks: TextTrackList,
+  kind: TextTrackKind | TextTrackKind[],
+  callback: (title: string) => void,
+) {
+  watchActiveTextTrack(tracks, kind, (track) => {
+    if (!track) {
+      callback('');
+      return;
+    }
+
+    const onCueChange = () => {
+      const activeCue = track?.activeCues[0];
+      callback(activeCue?.text || '');
+    };
+
+    onCueChange();
+    listenEvent(track, 'cue-change', onCueChange);
+  });
 }

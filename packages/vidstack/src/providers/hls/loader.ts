@@ -1,6 +1,5 @@
-import type { MediaSrc } from '../../core';
+import type { Src } from '../../core';
 import { isHLSSrc } from '../../utils/mime';
-import { preconnect } from '../../utils/network';
 import { isHLSSupported } from '../../utils/support';
 import type { MediaProviderLoader } from '../types';
 import { VideoProviderLoader } from '../video/loader';
@@ -12,11 +11,9 @@ export class HLSProviderLoader
 {
   static supported = isHLSSupported();
 
-  preconnect() {
-    preconnect('https://cdn.jsdelivr.net', 'preconnect');
-  }
+  override readonly name = 'hls';
 
-  override canPlay(src: MediaSrc) {
+  override canPlay(src: Src) {
     return HLSProviderLoader.supported && isHLSSrc(src);
   }
 

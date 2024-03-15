@@ -7,43 +7,20 @@ import {
 } from '../../foundation/fullscreen/controller';
 import { ScreenOrientationController } from '../../foundation/orientation/controller';
 import { Queue } from '../../foundation/queue/queue';
+import { RequestQueue } from '../../foundation/queue/request-queue';
+import type { GoogleCastLoader } from '../../providers/google-cast/loader';
 import type { MediaProviderAdapter } from '../../providers/types';
 import { coerceToError } from '../../utils/error';
 import { AdsController } from '../ads/controller';
+import { canGoogleCastSrc } from '../../utils/mime';
+import { preconnect } from '../../utils/network';
+import { IS_CHROME, IS_IOS } from '../../utils/support';
 import type { MediaContext } from '../api/media-context';
 import type { MediaFullscreenChangeEvent } from '../api/media-events';
 import * as RE from '../api/media-request-events';
 import { MediaPlayerController } from '../api/player-controller';
 import { MediaControls } from '../controls';
 import type { MediaStateManager } from './media-state-manager';
-
-export class MediaRequestContext {
-  _seeking = false;
-  _looping = false;
-  _replaying = false;
-  _queue = new Queue<MediaRequestQueueRecord>();
-}
-
-export interface MediaRequestQueueRecord {
-  audioTrack: RE.MediaAudioTrackChangeRequestEvent;
-  load: RE.MediaStartLoadingRequestEvent;
-  play: RE.MediaPlayRequestEvent;
-  pause: RE.MediaPauseRequestEvent;
-  rate: RE.MediaRateChangeRequestEvent;
-  volume: RE.MediaVolumeChangeRequestEvent | RE.MediaMuteRequestEvent | RE.MediaUnmuteRequestEvent;
-  fullscreen: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
-  orientation: RE.MediaOrientationLockRequestEvent | RE.MediaOrientationUnlockRequestEvent;
-  seeked: RE.MediaSeekRequestEvent | RE.MediaLiveEdgeRequestEvent;
-  seeking: RE.MediaSeekingRequestEvent;
-  textTrack: RE.MediaTextTrackChangeRequestEvent;
-  quality: RE.MediaQualityChangeRequestEvent;
-  pip: RE.MediaEnterPIPRequestEvent | RE.MediaExitPIPRequestEvent;
-  controls: RE.MediaResumeControlsRequestEvent | RE.MediaPauseControlsRequestEvent;
-}
-
-export type MediaRequestHandler = {
-  [Type in keyof RE.MediaRequestEvents]: (event: RE.MediaRequestEvents[Type]) => unknown;
-};
 
 /**
  * This class is responsible for listening to media request events and calling the appropriate
@@ -55,8 +32,9 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   readonly _fullscreen: FullscreenController;
   readonly _orientation: ScreenOrientationController;
 
-  private readonly _provider: ReadSignal<MediaProviderAdapter | null>;
   private readonly _ads: ReadSignal<AdsController | null>;
+  private readonly _$provider: ReadSignal<MediaProviderAdapter | null>;
+  private readonly _providerQueue = new RequestQueue();
 
   constructor(
     private _stateMgr: MediaStateManager,
@@ -64,8 +42,8 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     private _media: MediaContext,
   ) {
     super();
-    this._provider = _media.$provider;
     this._ads = _media.$ads;
+    this._$provider = _media.$provider;
     this._controls = new MediaControls();
     this._fullscreen = new FullscreenController();
     this._orientation = new ScreenOrientationController();
@@ -85,13 +63,49 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       }
     }
 
-    effect(this._onControlsDelayChange.bind(this));
-    effect(this._onFullscreenSupportChange.bind(this));
-    effect(this._onPiPSupportChange.bind(this));
+    this._attachLoadPlayListener();
+
+    effect(this._watchProvider.bind(this));
+    effect(this._watchControlsDelayChange.bind(this));
+    effect(this._watchAudioGainSupport.bind(this));
+    effect(this._watchAirPlaySupport.bind(this));
+    effect(this._watchGoogleCastSupport.bind(this));
+    effect(this._watchFullscreenSupport.bind(this));
+    effect(this._watchPiPSupport.bind(this));
+  }
+
+  protected override onDestroy(): void {
+    this._providerQueue._reset();
+  }
+
+  private _attachLoadPlayListener() {
+    const { load } = this.$props,
+      { canLoad } = this.$state;
+
+    if (load() !== 'play' || canLoad()) return;
+
+    const off = this.listen('media-play-request', (event) => {
+      this._handleLoadPlayStrategy(event);
+      off();
+    });
+  }
+
+  private _watchProvider() {
+    const provider = this._$provider(),
+      canPlay = this.$state.canPlay();
+
+    if (provider && canPlay) {
+      this._providerQueue._start();
+    }
+
+    return () => {
+      this._providerQueue._stop();
+    };
   }
 
   private _handleRequest(event: Event) {
     event.stopPropagation();
+    if (event.defaultPrevented) return;
 
     if (__DEV__) {
       this._media.logger
@@ -100,23 +114,27 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
         .dispatch();
     }
 
-    if (peek(this._provider)) this[event.type]?.(event);
+    if (!this[event.type]) return;
+
+    if (peek(this._$provider)) {
+      this[event.type](event);
+    } else {
+      this._providerQueue._enqueue(event.type, () => {
+        if (peek(this._$provider)) this[event.type](event);
+      });
+    }
   }
 
   async _play(trigger?: Event) {
     if (__SERVER__) return;
 
-    const { canPlay, paused, ended, autoplaying, seekableStart, adStarted, shouldPlayPreroll } =
-      this.$state;
+    const { canPlay, paused, autoPlaying, adStarted, shouldPlayPreroll } = this.$state;
+
+    if (this._handleLoadPlayStrategy(trigger)) return;
 
     if (!peek(paused)) return;
 
-    if (trigger?.type !== 'media-play-request') {
-      this.dispatchEvent(this.createEvent('media-play-request', { trigger }));
-      return;
-    }
-
-    this._request._queue._enqueue('play', trigger as RE.MediaPlayRequestEvent);
+    if (trigger) this._request._queue._enqueue('media-play-request', trigger);
 
     try {
       if (adStarted() || shouldPlayPreroll()) {
@@ -129,34 +147,45 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
         return await peek(this._ads)!.play();
       } else {
-        const provider = peek(this._provider);
+        const provider = peek(this._$provider);
         throwIfNotReadyForPlayback(provider, peek(canPlay));
-
-        if (peek(ended)) {
-          provider!.currentTime = seekableStart() + 0.1;
-        }
-
         return await provider!.play();
       }
     } catch (error) {
-      if (__DEV__) {
-        this._media.logger
-          ?.errorGroup('play request failed')
-          .labelledLog('Trigger', trigger)
-          .labelledLog('Error', error)
-          .dispatch();
-      }
+      if (__DEV__) this._logError('play request failed', error, trigger);
 
       const errorEvent = this.createEvent('play-fail', {
         detail: coerceToError(error),
         trigger,
       });
 
-      errorEvent.autoplay = autoplaying();
+      errorEvent.autoPlay = autoPlaying();
 
       this._stateMgr._handle(errorEvent);
       throw error;
     }
+  }
+
+  private _handleLoadPlayStrategy(trigger?: Event) {
+    const { load } = this.$props,
+      { canLoad } = this.$state;
+
+    if (load() === 'play' && !canLoad()) {
+      const event = this.createEvent('media-start-loading', { trigger });
+      this.dispatchEvent(event);
+
+      this._providerQueue._enqueue('media-play-request', async () => {
+        try {
+          await this._play(event);
+        } catch (error) {
+          // no-op
+        }
+      });
+
+      return true;
+    }
+
+    return false;
   }
 
   async _pause(trigger?: Event) {
@@ -166,27 +195,34 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (peek(paused)) return;
 
-    if (trigger?.type !== 'media-pause-request') {
-      this.dispatchEvent(this.createEvent('media-pause-request', { trigger }));
-      return;
+    if (trigger) {
+      this._request._queue._enqueue('media-pause-request', trigger);
     }
 
-    this._request._queue._enqueue('pause', trigger as RE.MediaPauseRequestEvent);
+    try {
+      if (adStarted() || shouldPlayPreroll()) {
+        // since the play event is actually happening on the seperate ad video player
+        const pauseEvent = this.createEvent('pause', {
+          trigger,
+        });
 
-    if (adStarted() || shouldPlayPreroll()) {
-      // since the play event is actually happening on the seperate ad video player
-      const pauseEvent = this.createEvent('pause', {
-        trigger,
-      });
+        this._stateMgr._handle(pauseEvent);
 
-      this._stateMgr._handle(pauseEvent);
+        return await peek(this._ads)!.pause();
+      } else {
+        const provider = peek(this._$provider);
+        throwIfNotReadyForPlayback(provider, peek(canPlay));
+        return await provider!.pause();
+      }
 
-      return await peek(this._ads)!.pause();
-    } else {
-      const provider = peek(this._provider);
-      throwIfNotReadyForPlayback(provider, peek(canPlay));
+    } catch (error) {
+      this._request._queue._delete('media-pause-request');
 
-      return provider!.pause();
+      if (__DEV__) {
+        this._logError('pause request failed', error, trigger);
+      }
+
+      throw error;
     }
   }
 
@@ -200,10 +236,13 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (peek(() => !live() || liveEdge() || !canSeek())) return;
 
-    const provider = peek(this._provider);
+    const provider = peek(this._$provider);
     throwIfNotReadyForPlayback(provider, peek(canPlay));
 
-    provider!.currentTime = liveSyncPosition() ?? seekableEnd() - 2;
+    if (trigger) this._request._queue._enqueue('media-seek-request', trigger);
+
+    const end = seekableEnd() - 2;
+    provider!.setCurrentTime(Math.min(end, liveSyncPosition() ?? end));
   }
 
   private _wasPIPActive = false;
@@ -224,17 +263,9 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       await this._exitPictureInPicture(trigger);
     }
 
-    if (trigger?.type !== 'media-enter-fullscreen-request') {
-      this.dispatchEvent(
-        this.createEvent('media-enter-fullscreen-request', {
-          detail: target,
-          trigger,
-        }),
-      );
-      return;
+    if (trigger) {
+      this._request._queue._enqueue('media-enter-fullscreen-request', trigger);
     }
-
-    this._request._queue._enqueue('fullscreen', trigger as RE.MediaEnterFullscreenRequestEvent);
 
     return adapter!.enter();
   }
@@ -248,20 +279,11 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (!adapter!.active) return;
 
-    if (trigger?.type !== 'media-exit-fullscreen-request') {
-      this.dispatchEvent(
-        this.createEvent('media-exit-fullscreen-request', {
-          detail: target,
-          trigger,
-        }),
-      );
-
-      return;
+    if (trigger) {
+      this._request._queue._enqueue('media-exit-fullscreen-request', trigger);
     }
 
     try {
-      this._request._queue._enqueue('fullscreen', trigger as RE.MediaExitFullscreenRequestEvent);
-
       const result = await adapter!.exit();
 
       if (this._wasPIPActive && peek(this.$state.canPictureInPicture)) {
@@ -275,7 +297,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   private _getFullscreenAdapter(target: RE.MediaFullscreenRequestTarget) {
-    const provider = peek(this._provider);
+    const provider = peek(this._$provider);
     return (target === 'prefer-media' && this._fullscreen.supported) || target === 'media'
       ? this._fullscreen
       : provider?.fullscreen;
@@ -288,14 +310,11 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (this.$state.pictureInPicture()) return;
 
-    if (trigger?.type !== 'media-enter-pip-request') {
-      this.dispatchEvent(this.createEvent('media-enter-pip-request', { trigger }));
-      return;
+    if (trigger) {
+      this._request._queue._enqueue('media-enter-pip-request', trigger);
     }
 
-    this._request._queue._enqueue('pip', trigger as RE.MediaEnterPIPRequestEvent);
-
-    return await this._provider()!.pictureInPicture!.enter();
+    return await this._$provider()!.pictureInPicture!.enter();
   }
 
   async _exitPictureInPicture(trigger?: Event) {
@@ -305,14 +324,11 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (!this.$state.pictureInPicture()) return;
 
-    if (trigger?.type !== 'media-exit-pip-request') {
-      this.dispatchEvent(this.createEvent('media-exit-pip-request', { trigger }));
-      return;
+    if (trigger) {
+      this._request._queue._enqueue('media-exit-pip-request', trigger);
     }
 
-    this._request._queue._enqueue('pip', trigger as RE.MediaExitPIPRequestEvent);
-
-    return await this._provider()!.pictureInPicture!.exit();
+    return await this._$provider()!.pictureInPicture!.exit();
   }
 
   private _throwIfPIPNotSupported() {
@@ -324,34 +340,133 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     );
   }
 
-  private _onControlsDelayChange() {
+  private _watchControlsDelayChange() {
     this._controls.defaultDelay = this.$props.controlsDelay();
   }
 
-  private _onFullscreenSupportChange() {
-    const { canLoad, canFullscreen } = this.$state,
-      supported = this._fullscreen.supported || this._provider()?.fullscreen?.supported || false;
+  private _watchAudioGainSupport() {
+    const { canSetAudioGain } = this.$state,
+      supported = !!this._$provider()?.audioGain?.supported;
+    canSetAudioGain.set(supported);
+  }
 
-    if (canLoad() && peek(canFullscreen) === supported) return;
+  private _watchAirPlaySupport() {
+    const { canAirPlay } = this.$state,
+      supported = !!this._$provider()?.airPlay?.supported;
+    canAirPlay.set(supported);
+  }
 
+  private _watchGoogleCastSupport() {
+    const { canGoogleCast, source } = this.$state,
+      supported = IS_CHROME && !IS_IOS && canGoogleCastSrc(source());
+    canGoogleCast.set(supported);
+  }
+
+  private _watchFullscreenSupport() {
+    const { canFullscreen } = this.$state,
+      supported = this._fullscreen.supported || !!this._$provider()?.fullscreen?.supported;
     canFullscreen.set(supported);
   }
 
-  private _onPiPSupportChange() {
-    const { canLoad, canPictureInPicture, adStarted } = this.$state,
-      supported = (!adStarted() && this._provider()?.pictureInPicture?.supported) || false;
-
-    if (canLoad() && peek(canPictureInPicture) === supported) return;
-
+  private _watchPiPSupport() {
+    const { canPictureInPicture, adStarted } = this.$state,
+      supported = !!this._$provider()?.pictureInPicture?.supported && !adStarted();
     canPictureInPicture.set(supported);
   }
 
-  ['media-audio-track-change-request'](event: RE.MediaAudioTrackChangeRequestEvent) {
-    if (this._media.audioTracks.readonly) {
+  async ['media-airplay-request'](event: RE.MediaAirPlayRequestEvent) {
+    try {
+      await this._requestAirPlay(event);
+    } catch (error) {
+      // no-op
+    }
+  }
+
+  async _requestAirPlay(trigger?: Event) {
+    try {
+      const adapter = this._$provider()?.airPlay;
+
+      if (!adapter?.supported) {
+        throw Error(__DEV__ ? 'AirPlay adapter not available on provider.' : 'No AirPlay adapter.');
+      }
+
+      if (trigger) {
+        this._request._queue._enqueue('media-airplay-request', trigger);
+      }
+
+      return await adapter.prompt();
+    } catch (error) {
+      this._request._queue._delete('media-airplay-request');
+
       if (__DEV__) {
-        this._media.logger
+        this._logError('airplay request failed', error, trigger);
+      }
+
+      throw error;
+    }
+  }
+
+  async ['media-google-cast-request'](event: RE.MediaGoogleCastRequestEvent) {
+    try {
+      await this._requestGoogleCast(event);
+    } catch (error) {
+      // no-op
+    }
+  }
+
+  protected _googleCastLoader?: GoogleCastLoader;
+  async _requestGoogleCast(trigger?: Event) {
+    try {
+      const { canGoogleCast } = this.$state;
+
+      if (!peek(canGoogleCast)) {
+        throw new Error(
+          __DEV__ ? 'Google Cast not available on this platform.' : 'Cast not available.',
+        );
+      }
+
+      preconnect('https://www.gstatic.com');
+
+      if (!this._googleCastLoader) {
+        const $module = await import('../../providers/google-cast/loader');
+        this._googleCastLoader = new $module.GoogleCastLoader();
+      }
+
+      await this._googleCastLoader.prompt(this._media);
+
+      if (trigger) {
+        this._request._queue._enqueue('media-google-cast-request', trigger);
+      }
+
+      const isConnecting = peek(this.$state.remotePlaybackState) !== 'disconnected';
+
+      if (isConnecting) {
+        this.$state.savedState.set({
+          paused: peek(this.$state.paused),
+          currentTime: peek(this.$state.currentTime),
+        });
+      }
+
+      this.$state.remotePlaybackLoader.set(isConnecting ? this._googleCastLoader : null);
+    } catch (error) {
+      this._request._queue._delete('media-google-cast-request');
+
+      if (__DEV__ && (error as Error).message !== '"cancel"') {
+        this._logError('google cast request failed', error, trigger);
+      }
+
+      throw error;
+    }
+  }
+
+  ['media-audio-track-change-request'](event: RE.MediaAudioTrackChangeRequestEvent) {
+    const { logger, audioTracks } = this._media;
+
+    if (audioTracks.readonly) {
+      if (__DEV__) {
+        logger
           ?.warnGroup(`[vidstack] attempted to change audio track but it is currently read-only`)
-          .labelledLog('Event', event)
+          .labelledLog('Request Event', event)
           .dispatch();
       }
 
@@ -359,17 +474,18 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     }
 
     const index = event.detail,
-      track = this._media.audioTracks[index];
+      track = audioTracks[index];
 
     if (track) {
-      this._request._queue._enqueue('audioTrack', event);
+      const key = event.type as 'media-audio-track-change-request';
+      this._request._queue._enqueue(key, event);
       track.selected = true;
     } else if (__DEV__) {
-      this._media.logger
+      logger
         ?.warnGroup('[vidstack] failed audio track change request (invalid index)')
-        .labelledLog('Audio Tracks', this._media.audioTracks.toArray())
+        .labelledLog('Audio Tracks', audioTracks.toArray())
         .labelledLog('Index', index)
-        .labelledLog('Event', event)
+        .labelledLog('Request Event', event)
         .dispatch();
     }
   }
@@ -413,11 +529,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
   private _onFullscreenError(error: unknown, request?: Event) {
     if (__DEV__) {
-      this._media.logger
-        ?.errorGroup('fullscreen request failed')
-        .labelledLog('Request', request)
-        .labelledLog('Error', error)
-        .dispatch();
+      this._logError('fullscreen request failed', error, request);
     }
 
     this._stateMgr._handle(
@@ -428,33 +540,29 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   async ['media-orientation-lock-request'](event: RE.MediaOrientationLockRequestEvent) {
+    const key = event.type as 'media-orientation-lock-request';
+
     try {
-      this._request._queue._enqueue('orientation', event);
+      this._request._queue._enqueue(key, event);
       await this._orientation.lock(event.detail);
     } catch (error) {
-      this._request._queue._delete('orientation');
+      this._request._queue._delete(key);
       if (__DEV__) {
-        this._media.logger
-          ?.errorGroup('failed to lock screen orientation')
-          .labelledLog('Request Event', event)
-          .labelledLog('Error', error)
-          .dispatch();
+        this._logError('failed to lock screen orientation', error, event);
       }
     }
   }
 
   async ['media-orientation-unlock-request'](event: RE.MediaOrientationUnlockRequestEvent) {
+    const key = event.type as 'media-orientation-unlock-request';
+
     try {
-      this._request._queue._enqueue('orientation', event);
+      this._request._queue._enqueue(key, event);
       await this._orientation.unlock();
     } catch (error) {
-      this._request._queue._delete('orientation');
+      this._request._queue._delete(key);
       if (__DEV__) {
-        this._media.logger
-          ?.errorGroup('failed to unlock screen orientation')
-          .labelledLog('Request Event', event)
-          .labelledLog('Error', error)
-          .dispatch();
+        this._logError('failed to unlock screen orientation', error, event);
       }
     }
   }
@@ -477,11 +585,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
   private _onPictureInPictureError(error: unknown, request?: Event) {
     if (__DEV__) {
-      this._media.logger
-        ?.errorGroup('pip request failed')
-        .labelledLog('Request', request)
-        .labelledLog('Error', error)
-        .dispatch();
+      this._logError('pip request failed', error, request);
     }
 
     this._stateMgr._handle(
@@ -493,26 +597,33 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
   ['media-live-edge-request'](event: RE.MediaLiveEdgeRequestEvent) {
     const { live, liveEdge, canSeek } = this.$state;
+
     if (!live() || liveEdge() || !canSeek()) return;
-    this._request._queue._enqueue('seeked', event);
+
+    this._request._queue._enqueue('media-seek-request', event);
+
     try {
       this._seekToLiveEdge();
     } catch (error) {
-      if (__DEV__) this._media.logger?.error('seek to live edge fail', error);
+      this._request._queue._delete('media-seek-request');
+      if (__DEV__) {
+        this._logError('seek to live edge fail', error, event);
+      }
     }
   }
 
-  ['media-loop-request'](event: RE.MediaLoopRequestEvent) {
-    window.requestAnimationFrame(async () => {
-      try {
-        this._request._looping = true;
-        this._request._replaying = true;
-        await this._play(event);
-      } catch (e) {
-        this._request._looping = false;
-        this._request._replaying = false;
-      }
-    });
+  async ['media-loop-request'](event: RE.MediaLoopRequestEvent) {
+    try {
+      this._request._looping = true;
+      this._request._replaying = true;
+      await this._play(event);
+    } catch (error) {
+      this._request._looping = false;
+    }
+  }
+
+  ['media-user-loop-change-request'](event: RE.MediaUserLoopChangeRequestEvent) {
+    this.$state.userPrefersLoop.set(event.detail);
   }
 
   async ['media-pause-request'](event: RE.MediaPauseRequestEvent) {
@@ -521,16 +632,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     try {
       await this._pause(event);
     } catch (error) {
-      if (__DEV__) {
-        this._media.logger
-          ?.errorGroup('πause request failed')
-          .labelledLog('Request', event)
-          .labelledLog('Error', error)
-          .dispatch();
-      }
-
-      this._request._queue._delete('pause');
-      if (__DEV__) this._media.logger?.error('pause-fail', error);
+      // no-op
     }
   }
 
@@ -544,67 +646,103 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   ['media-rate-change-request'](event: RE.MediaRateChangeRequestEvent) {
-    if (this.$state.playbackRate() === event.detail) return;
-    this._request._queue._enqueue('rate', event);
-    this._provider()!.playbackRate = event.detail;
+    const { playbackRate, canSetPlaybackRate } = this.$state;
+    if (playbackRate() === event.detail || !canSetPlaybackRate()) return;
+
+    const provider = this._$provider();
+    if (!provider?.setPlaybackRate) return;
+
+    this._request._queue._enqueue('media-rate-change-request', event);
+    provider.setPlaybackRate(event.detail);
+  }
+
+  ['media-audio-gain-change-request'](event: RE.MediaAudioGainChangeRequestEvent) {
+    const { audioGain, canSetAudioGain } = this.$state;
+    if (audioGain() === event.detail || !canSetAudioGain()) return;
+
+    const provider = this._$provider();
+    if (!provider?.audioGain) return;
+
+    this._request._queue._enqueue('media-audio-gain-change-request', event);
+    provider.audioGain.setGain(event.detail);
   }
 
   ['media-quality-change-request'](event: RE.MediaQualityChangeRequestEvent) {
-    if (this._media.qualities.readonly) {
+    const { qualities, storage, logger } = this._media;
+
+    if (qualities.readonly) {
       if (__DEV__) {
-        this._media.logger
+        logger
           ?.warnGroup(`[vidstack] attempted to change video quality but it is currently read-only`)
-          .labelledLog('Event', event)
+          .labelledLog('Request Event', event)
           .dispatch();
       }
 
       return;
     }
 
-    this._request._queue._enqueue('quality', event);
+    this._request._queue._enqueue('media-quality-change-request', event);
 
     const index = event.detail;
+
     if (index < 0) {
-      this._media.qualities.autoSelect(event);
+      qualities.autoSelect(event);
+      if (event.isOriginTrusted) storage?.setVideoQuality?.(null);
     } else {
-      const quality = this._media.qualities[index];
+      const quality = qualities[index];
       if (quality) {
         quality.selected = true;
+        if (event.isOriginTrusted) {
+          storage?.setVideoQuality?.({
+            id: quality.id,
+            width: quality.width,
+            height: quality.height,
+            bitrate: quality.bitrate,
+          });
+        }
       } else if (__DEV__) {
-        this._media.logger
+        logger
           ?.warnGroup('[vidstack] failed quality change request (invalid index)')
-          .labelledLog('Qualities', this._media.qualities.toArray())
+          .labelledLog('Qualities', qualities.toArray())
           .labelledLog('Index', index)
-          .labelledLog('Event', event)
+          .labelledLog('Request Event', event)
           .dispatch();
       }
     }
   }
 
   ['media-pause-controls-request'](event: RE.MediaPauseControlsRequestEvent) {
-    this._request._queue._enqueue('controls', event);
+    const key = event.type as 'media-pause-controls-request';
+    this._request._queue._enqueue(key, event);
     this._controls.pause(event);
   }
 
   ['media-resume-controls-request'](event: RE.MediaResumeControlsRequestEvent) {
-    this._request._queue._enqueue('controls', event);
+    const key = event.type as 'media-resume-controls-request';
+    this._request._queue._enqueue(key, event);
     this._controls.resume(event);
   }
 
   ['media-seek-request'](event: RE.MediaSeekRequestEvent) {
-    const { seekableStart, seekableEnd, ended, canSeek, live, userBehindLiveEdge } = this.$state;
+    const { seekableStart, seekableEnd, ended, canSeek, live, userBehindLiveEdge, clipStartTime } =
+      this.$state;
 
     if (ended()) this._request._replaying = true;
 
-    this._request._seeking = false;
-    this._request._queue._delete('seeking');
+    const key = event.type as 'media-seek-request';
 
-    const boundTime = Math.min(Math.max(seekableStart() + 0.1, event.detail), seekableEnd() - 0.1);
+    this._request._seeking = false;
+    this._request._queue._delete(key);
+
+    const boundTime = Math.min(
+      Math.max(seekableStart() + 0.1, event.detail + clipStartTime()),
+      seekableEnd() - 0.1,
+    );
 
     if (!Number.isFinite(boundTime) || !canSeek()) return;
 
-    this._request._queue._enqueue('seeked', event);
-    this._provider()!.currentTime = boundTime;
+    this._request._queue._enqueue(key, event);
+    this._$provider()!.setCurrentTime(boundTime);
 
     if (live() && event.isOriginTrusted && Math.abs(seekableEnd() - boundTime) >= 2) {
       userBehindLiveEdge.set(true);
@@ -612,37 +750,48 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   ['media-seeking-request'](event: RE.MediaSeekingRequestEvent) {
-    this._request._queue._enqueue('seeking', event);
+    const key = event.type as 'media-seeking-request';
+    this._request._queue._enqueue(key, event);
     this.$state.seeking.set(true);
     this._request._seeking = true;
   }
 
   ['media-start-loading'](event: RE.MediaStartLoadingRequestEvent) {
     if (this.$state.canLoad()) return;
-    this._request._queue._enqueue('load', event);
+    const key = event.type as 'media-start-loading';
+    this._request._queue._enqueue(key, event);
     this._stateMgr._handle(this.createEvent('can-load'));
+  }
+
+  ['media-poster-start-loading'](event: RE.MediaPosterStartLoadingRequestEvent) {
+    if (this.$state.canLoadPoster()) return;
+    const key = event.type as 'media-poster-start-loading';
+    this._request._queue._enqueue(key, event);
+    this._stateMgr._handle(this.createEvent('can-load-poster'));
   }
 
   ['media-text-track-change-request'](event: RE.MediaTextTrackChangeRequestEvent) {
     const { index, mode } = event.detail,
       track = this._media.textTracks[index];
     if (track) {
-      this._request._queue._enqueue('textTrack', event);
+      const key = event.type as 'media-text-track-change-request';
+      this._request._queue._enqueue(key, event);
       track.setMode(mode, event);
     } else if (__DEV__) {
       this._media.logger
         ?.warnGroup('[vidstack] failed text track change request (invalid index)')
         .labelledLog('Text Tracks', this._media.textTracks.toArray())
         .labelledLog('Index', index)
-        .labelledLog('Event', event)
+        .labelledLog('Request Event', event)
         .dispatch();
     }
   }
 
   ['media-mute-request'](event: RE.MediaMuteRequestEvent) {
     if (this.$state.muted()) return;
-    this._request._queue._enqueue('volume', event);
-    this._provider()!.muted = true;
+    const key = event.type as 'media-mute-request';
+    this._request._queue._enqueue(key, event);
+    this._$provider()!.setMuted(true);
     this._ads()?.mute();
   }
 
@@ -651,13 +800,15 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (!muted()) return;
 
-    this._request._queue._enqueue('volume', event);
-    this._media.$provider()!.muted = false;
+    const key = event.type as 'media-unmute-request';
+
+    this._request._queue._enqueue(key, event);
+    this._media.$provider()!.setMuted(false);
     this._ads()?.setVolume(volume());
 
     if (volume() === 0) {
-      this._request._queue._enqueue('volume', event);
-      this._provider()!.volume = 0.25;
+      this._request._queue._enqueue(key, event);
+      this._$provider()!.setVolume(0.25);
       this._ads()?.setVolume(0.25);
     }
   }
@@ -668,14 +819,26 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     const newVolume = event.detail;
     if (volume() === newVolume) return;
 
-    this._request._queue._enqueue('volume', event);
-    this._provider()!.volume = newVolume;
+    const key = event.type as 'media-volume-change-request';
+
+    this._request._queue._enqueue(key, event);
+    this._$provider()!.setVolume(newVolume);
     this._ads()?.setVolume(newVolume);
 
     if (newVolume > 0 && muted()) {
-      this._request._queue._enqueue('volume', event);
-      this._provider()!.muted = false;
+      this._request._queue._enqueue(key, event);
+      this._$provider()!.setMuted(false);
     }
+  }
+
+  private _logError(title: string, error: unknown, request?: Event) {
+    if (!__DEV__) return;
+    this._media.logger
+      ?.errorGroup(`[vidstack] ${title}`)
+      .labelledLog('Error', error)
+      .labelledLog('Media Context', { ...this._media })
+      .labelledLog('Trigger Event', request)
+      .dispatch();
   }
 }
 
@@ -699,3 +862,18 @@ function throwIfFullscreenNotSupported(
       : '[vidstack] no fullscreen support',
   );
 }
+
+export class MediaRequestContext {
+  _seeking = false;
+  _looping = false;
+  _replaying = false;
+  _queue = new Queue<MediaRequestQueueItems>();
+}
+
+export type MediaRequestQueueItems = {
+  [P in keyof RE.MediaRequestEvents]: Event;
+};
+
+export type MediaRequestHandler = {
+  [Type in keyof RE.MediaRequestEvents]: (event: RE.MediaRequestEvents[Type]) => unknown;
+};

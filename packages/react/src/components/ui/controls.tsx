@@ -33,7 +33,10 @@ const Root = React.forwardRef<HTMLElement, RootProps>(({ children, ...props }, f
   return (
     <ControlsBridge {...(props as Omit<RootProps, 'ref'>)}>
       {(props) => (
-        <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+        <Primitive.div
+          {...props}
+          ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+        >
           {children}
         </Primitive.div>
       )}
@@ -71,7 +74,10 @@ const Group = React.forwardRef<HTMLElement, GroupProps>(({ children, ...props },
   return (
     <ControlsGroupBridge {...(props as Omit<GroupProps, 'ref'>)}>
       {(props) => (
-        <Primitive.div {...props} ref={composeRefs(props.ref, forwardRef)}>
+        <Primitive.div
+          {...props}
+          ref={composeRefs(props.ref as React.Ref<any>, forwardRef as React.Ref<any>)}
+        >
           {children}
         </Primitive.div>
       )}

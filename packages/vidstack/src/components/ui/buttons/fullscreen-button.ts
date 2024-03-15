@@ -1,7 +1,10 @@
 import { Component } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
-import type { MediaFullscreenRequestTarget } from '../../../core/api/media-request-events';
+import type {
+  MediaFullscreenRequestTarget,
+  MediaRequestEvents,
+} from '../../../core/api/media-request-events';
 import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
 import {
@@ -18,6 +21,12 @@ export interface FullscreenButtonProps extends ToggleButtonControllerProps {
   target: MediaFullscreenRequestTarget | undefined;
 }
 
+export interface FullscreenButtonEvents
+  extends Pick<
+    MediaRequestEvents,
+    'media-enter-fullscreen-request' | 'media-exit-fullscreen-request'
+  > {}
+
 /**
  * A button for toggling the fullscreen mode of the player.
  *
@@ -26,7 +35,7 @@ export interface FullscreenButtonProps extends ToggleButtonControllerProps {
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/fullscreen-button}
  * @see {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen}
  */
-export class FullscreenButton extends Component<FullscreenButtonProps> {
+export class FullscreenButton extends Component<FullscreenButtonProps, {}, FullscreenButtonEvents> {
   static props: FullscreenButtonProps = {
     ...ToggleButtonController.props,
     target: 'prefer-media',
@@ -58,7 +67,7 @@ export class FullscreenButton extends Component<FullscreenButtonProps> {
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'fullscreen');
-    setARIALabel(el, this._getLabel.bind(this));
+    setARIALabel(el, 'Fullscreen');
   }
 
   private _onPress(event: Event) {
@@ -77,10 +86,5 @@ export class FullscreenButton extends Component<FullscreenButtonProps> {
   private _isSupported() {
     const { canFullscreen } = this._media.$state;
     return canFullscreen();
-  }
-
-  private _getLabel() {
-    const { fullscreen } = this._media.$state;
-    return fullscreen() ? 'Exit Fullscreen' : 'Enter Fullscreen';
   }
 }

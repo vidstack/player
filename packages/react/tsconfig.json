@@ -6,7 +6,7 @@
       "vidstack": ["../vidstack/src"],
       "@vidstack/react": ["./src/index.ts"]
     },
-    "types": ["@types/node", "../vidstack/dom.d.ts"]
+    "types": ["@types/node"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

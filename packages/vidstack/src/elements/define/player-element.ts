@@ -18,7 +18,11 @@ export class MediaPlayerElement extends Host(HTMLElement, MediaPlayer) {
   static tagName = 'media-player';
 
   static override attrs: Attributes<MediaPlayerProps> = {
+    autoPlay: 'autoplay',
+    crossOrigin: 'crossorigin',
+    playsInline: 'playsinline',
     preferNativeHLS: 'prefer-native-hls',
+    minLiveDVRWindow: 'min-live-dvr-window',
   };
 }
 

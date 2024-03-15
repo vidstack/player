@@ -1,4 +1,5 @@
 import { effect, type ReadSignal } from 'maverick.js';
+
 import type { MediaContext } from '../../core/api/media-context';
 import { TextTrack, type TextTrackInit } from '../../core/tracks/text/text-track';
 

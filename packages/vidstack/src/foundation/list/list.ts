@@ -41,6 +41,7 @@ export class List<Item extends ListItem, Events extends ListEvents>
   /* @internal */
   [ListSymbol._add](item: Item, trigger?: Event): void {
     const index = this._items.length;
+
     if (!('' + index in this)) {
       Object.defineProperty(this, index, {
         get() {
@@ -48,7 +49,9 @@ export class List<Item extends ListItem, Events extends ListEvents>
         },
       });
     }
+
     if (this._items.includes(item as Item)) return;
+
     this._items.push(item as Item);
     this.dispatchEvent(new DOMEvent<any>('add', { detail: item, trigger }));
   }
