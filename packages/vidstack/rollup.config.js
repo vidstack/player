@@ -381,6 +381,7 @@ function getProviderInputs() {
     [`providers/vidstack-audio`]: 'src/providers/audio/provider.ts',
     [`providers/vidstack-video`]: 'src/providers/video/provider.ts',
     [`providers/vidstack-hls`]: 'src/providers/hls/provider.ts',
+    [`providers/vidstack-twitch`]: 'src/providers/twitch/provider.ts',
     [`providers/vidstack-youtube`]: 'src/providers/youtube/provider.ts',
     [`providers/vidstack-vimeo`]: 'src/providers/vimeo/provider.ts',
     [`providers/vidstack-google-cast`]: 'src/providers/google-cast/provider.ts',

@@ -39,7 +39,8 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
       const loader = this.$state.loader(),
         isYouTubeEmbed = loader?.name === 'youtube',
         isVimeoEmbed = loader?.name === 'vimeo',
-        isEmbed = isYouTubeEmbed || isVimeoEmbed,
+        isTwitchEmbed = loader?.name === 'twitch',
+        isEmbed = isYouTubeEmbed || isVimeoEmbed || isTwitchEmbed,
         isGoogleCast = loader?.name === 'google-cast';
 
       const target = loader
@@ -81,6 +82,7 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
 
       if (isYouTubeEmbed) target?.classList.add('vds-youtube');
       else if (isVimeoEmbed) target?.classList.add('vds-vimeo');
+      else if (isTwitchEmbed) target?.classList.add('vds-twitch');
 
       if (!isEmbed) {
         this._blocker?.remove();
