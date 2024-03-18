@@ -48,6 +48,7 @@
     "watch:types": "pnpm run build:types -w"
   },
   "dependencies": {
+    "@alugha/ima": "^2.2.1",
     "media-captions": "^1.0.1",
     "unplugin": "^1.6.0"
   },

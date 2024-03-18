@@ -589,6 +589,7 @@ export class MediaStateManager extends MediaPlayerController {
       viewType,
       live,
       userBehindLiveEdge,
+      adStarted
     } = this.$state;
 
     this._resetPlaybackIfNeeded();
@@ -620,7 +621,7 @@ export class MediaStateManager extends MediaPlayerController {
       autoPlaying.set(false);
     }
 
-    if (ended() || this._request._replaying) {
+    if ((!adStarted() && ended()) || this._request._replaying) {
       this._request._replaying = false;
       ended.set(false);
       this._handle(this.createEvent('replay', { trigger: event }));
@@ -736,6 +737,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['pause'](event: ME.MediaPauseEvent) {
+    console.log('media-state-manager pause');
     if (!this.el?.isConnected) {
       this._isPlayingOnDisconnect = true;
     }
@@ -897,6 +899,14 @@ export class MediaStateManager extends MediaPlayerController {
     this._firingWaiting = false;
   }, 300);
 
+  ['ad-ended'](event: ME.AdEndedEvent) {
+    const { paused, playing, seeking, adStarted } = this.$state;
+    paused.set(true);
+    playing.set(false);
+    seeking.set(false);
+    adStarted.set(false);
+  }
+  
   ['end'](event: Event) {
     const { loop } = this.$state;
 

@@ -35,6 +35,7 @@
     "react": "^18.0.0"
   },
   "dependencies": {
+    "@alugha/ima": "^2.2.1",
     "media-captions": "^1.0.1"
   },
   "devDependencies": {

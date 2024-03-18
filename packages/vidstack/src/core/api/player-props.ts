@@ -48,6 +48,7 @@ export const mediaPlayerProps: MediaPlayerProps = {
   keyDisabled: false,
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
+  adsUrl: '',
   storage: null,
 };
 
@@ -81,6 +82,8 @@ export interface MediaPlayerProps
     | 'streamType'
     | 'liveEdgeTolerance'
     | 'minLiveDVRWindow'
+    // ads
+    | 'adsUrl'
   > {
   /** @deprecated - Use `autoPlay` */
   autoplay: boolean;

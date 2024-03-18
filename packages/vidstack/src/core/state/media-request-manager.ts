@@ -1,5 +1,5 @@
 import { effect, peek, type ReadSignal } from 'maverick.js';
-import { isUndefined } from 'maverick.js/std';
+import { DOMEvent, isUndefined } from 'maverick.js/std';
 
 import {
   FullscreenController,
@@ -11,6 +11,7 @@ import { RequestQueue } from '../../foundation/queue/request-queue';
 import type { GoogleCastLoader } from '../../providers/google-cast/loader';
 import type { MediaProviderAdapter } from '../../providers/types';
 import { coerceToError } from '../../utils/error';
+import { AdsController } from '../ads/controller';
 import { canGoogleCastSrc } from '../../utils/mime';
 import { preconnect } from '../../utils/network';
 import { IS_CHROME, IS_IOS } from '../../utils/support';
@@ -31,6 +32,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   readonly _fullscreen: FullscreenController;
   readonly _orientation: ScreenOrientationController;
 
+  private readonly _ads: ReadSignal<AdsController | null>;
   private readonly _$provider: ReadSignal<MediaProviderAdapter | null>;
   private readonly _providerQueue = new RequestQueue();
 
@@ -40,6 +42,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     private _media: MediaContext,
   ) {
     super();
+    this._ads = _media.$ads;
     this._$provider = _media.$provider;
     this._controls = new MediaControls();
     this._fullscreen = new FullscreenController();
@@ -125,7 +128,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   async _play(trigger?: Event) {
     if (__SERVER__) return;
 
-    const { canPlay, paused, autoPlaying } = this.$state;
+    const { canPlay, paused, autoPlaying, adStarted, shouldPlayPreroll } = this.$state;
 
     if (this._handleLoadPlayStrategy(trigger)) return;
 
@@ -134,9 +137,20 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     if (trigger) this._request._queue._enqueue('media-play-request', trigger);
 
     try {
-      const provider = peek(this._$provider);
-      throwIfNotReadyForPlayback(provider, peek(canPlay));
-      return await provider!.play();
+      if (adStarted() || shouldPlayPreroll()) {
+        // since the play event is actually happening on the seperate ad video player
+        const playEvent = this.createEvent('play', {
+          trigger,
+        });
+
+        this._stateMgr._handle(playEvent);
+
+        return await peek(this._ads)!.play();
+      } else {
+        const provider = peek(this._$provider);
+        throwIfNotReadyForPlayback(provider, peek(canPlay));
+        return await provider!.play();
+      }
     } catch (error) {
       if (__DEV__) this._logError('play request failed', error, trigger);
 
@@ -177,7 +191,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   async _pause(trigger?: Event) {
     if (__SERVER__) return;
 
-    const { canPlay, paused } = this.$state;
+    const { canPlay, paused, adStarted, shouldPlayPreroll } = this.$state;
 
     if (peek(paused)) return;
 
@@ -186,9 +200,21 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     }
 
     try {
-      const provider = peek(this._$provider);
-      throwIfNotReadyForPlayback(provider, peek(canPlay));
-      return await provider!.pause();
+      if (adStarted() || shouldPlayPreroll()) {
+        // since the play event is actually happening on the seperate ad video player
+        const pauseEvent = this.createEvent('pause', {
+          trigger,
+        });
+
+        this._stateMgr._handle(pauseEvent);
+
+        return await peek(this._ads)!.pause();
+      } else {
+        const provider = peek(this._$provider);
+        throwIfNotReadyForPlayback(provider, peek(canPlay));
+        return await provider!.pause();
+      }
+
     } catch (error) {
       this._request._queue._delete('media-pause-request');
 
@@ -343,8 +369,8 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   private _watchPiPSupport() {
-    const { canPictureInPicture } = this.$state,
-      supported = !!this._$provider()?.pictureInPicture?.supported;
+    const { canPictureInPicture, adStarted } = this.$state,
+      supported = !!this._$provider()?.pictureInPicture?.supported && !adStarted();
     canPictureInPicture.set(supported);
   }
 
@@ -467,6 +493,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   async ['media-enter-fullscreen-request'](event: RE.MediaEnterFullscreenRequestEvent) {
     try {
       await this._enterFullscreen(event.detail, event);
+      this._ads()?.enterFullscreen();
     } catch (error) {
       this._onFullscreenError(error, event);
     }
@@ -475,6 +502,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   async ['media-exit-fullscreen-request'](event: RE.MediaExitFullscreenRequestEvent) {
     try {
       await this._exitFullscreen(event.detail, event);
+      this._ads()?.exitFullscreen();
     } catch (error) {
       this._onFullscreenError(error, event);
     }
@@ -599,6 +627,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   async ['media-pause-request'](event: RE.MediaPauseRequestEvent) {
+    console.log('media-pause-request');
     if (this.$state.paused()) return;
     try {
       await this._pause(event);
@@ -763,6 +792,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     const key = event.type as 'media-mute-request';
     this._request._queue._enqueue(key, event);
     this._$provider()!.setMuted(true);
+    this._ads()?.mute();
   }
 
   ['media-unmute-request'](event: RE.MediaUnmuteRequestEvent) {
@@ -774,10 +804,12 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     this._request._queue._enqueue(key, event);
     this._media.$provider()!.setMuted(false);
+    this._ads()?.setVolume(volume());
 
     if (volume() === 0) {
       this._request._queue._enqueue(key, event);
       this._$provider()!.setVolume(0.25);
+      this._ads()?.setVolume(0.25);
     }
   }
 
@@ -791,6 +823,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     this._request._queue._enqueue(key, event);
     this._$provider()!.setVolume(newVolume);
+    this._ads()?.setVolume(newVolume);
 
     if (newVolume > 0 && muted()) {
       this._request._queue._enqueue(key, event);

@@ -114,7 +114,12 @@ export class TimeSlider extends Component<
 
   private _hasChapters() {
     const { duration } = this._media.$state;
-    return this._chapter()?.cues.length && Number.isFinite(duration()) && duration() > 0;
+    return (
+      this._chapter()?.cues.length &&
+      Number.isFinite(duration()) &&
+      duration() > 0 &&
+      !this._media.$state.adStarted()
+    );
   }
 
   private _watchSeekingThrottle() {
@@ -214,8 +219,8 @@ export class TimeSlider extends Component<
 
   private _isDisabled() {
     const { disabled } = this.$props,
-      { canSeek } = this._media.$state;
-    return disabled() || !canSeek();
+      { canSeek, adStarted } = this._media.$state;
+    return disabled() || !canSeek() || adStarted();
   }
 
   // -------------------------------------------------------------------------------------------

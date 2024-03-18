@@ -39,6 +39,7 @@ import {
   type MediaStateAccessors,
   type MediaStore,
 } from '../core';
+import { AdsController } from '../core/ads/controller';
 import { MEDIA_ATTRIBUTES, mediaAttributes } from '../core/api/media-attrs';
 import { mediaContext, type MediaContext } from '../core/api/media-context';
 import { mediaPlayerProps } from '../core/api/player-props';
@@ -157,6 +158,7 @@ export class MediaPlayer
       $providerSetup: signal(false),
       $props: this.$props,
       $state: this.$state as MediaStore,
+      $ads: signal<AdsController | null>(null),
     } as unknown as MediaContext;
 
     if (__DEV__) {
@@ -195,6 +197,10 @@ export class MediaPlayer
       context,
     );
 
+    if (!this.ads && isString(this.$props.adsUrl()) && this.$props.viewType() !== 'audio') {
+      this.ads = new AdsController(context);
+      this._media.$ads.set(this.ads);
+    }
     new NavigatorMediaSession();
     new MediaLoadController('load', this.startLoading.bind(this));
     new MediaLoadController('posterLoad', this.startLoadingPoster.bind(this));
@@ -630,6 +636,12 @@ export class MediaPlayer
       src = source();
     return src.src ? `${src.src}:${clipStartTime()}:${clipEndTime()}` : null;
   }
+
+  /**
+   * Controls advertising playback.
+   */
+  @prop
+  ads: AdsController | undefined;
 
   /**
    * Begins/resumes playback of the media. If this method is called programmatically before the

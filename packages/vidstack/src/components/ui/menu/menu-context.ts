@@ -1,4 +1,4 @@
-import { createContext, type ReadSignal, type WriteSignal } from 'maverick.js';
+import { createContext, useContext, type ReadSignal, type WriteSignal } from 'maverick.js';
 
 import type { Menu } from './menu';
 import type { MenuButton } from './menu-button';

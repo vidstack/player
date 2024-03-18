@@ -189,7 +189,23 @@ export const mediaState = new State<MediaState>({
       : 0;
   },
 
+  // ~~ ads props ~~
+  adsUrl: '',
+  adsLoaded: false,
+  adStarted: false,
+  adCuePoints: [],
   // ~~ internal props ~~
+  get shouldPlayPreroll() {
+    // prerolls are represented by cue points with 0 as value
+    // or by an empty array so no cue points at all which means this ad break can be played anytime &
+    // also only should play a preroll if the currentTime is greater than 0
+    return (
+      (this.adCuePoints.some((cuePoint) => cuePoint === 0) || this.adCuePoints.length === 0) &&
+      this.currentTime === 0 &&
+      !this.playedPreroll
+    );
+  },
+  playedPreroll: false,
   autoPlaying: false,
   providedTitle: '',
   inferredTitle: '',
@@ -785,6 +801,29 @@ export interface MediaState {
    * @defaultValue false
    */
   waiting: boolean;
+  /**
+   * The url that should be used to load ads. This only works with the `video` or `hls` providers.
+   * We (partially) support VAST 4, VAST 3, VAST 2, VMAP, VPAID and OM SDK formats.
+   * @defaultValue 'video'
+   * @see {@link https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/compatibility}
+   */
+  adsUrl: string;
+  /**
+   * Whether the ads have been loaded.
+   * @defaultValue false
+   */
+  adsLoaded: boolean;
+  /**
+   * Whether an ad is currently playing.
+   * @defaultValue false
+   */
+  adStarted: boolean;
+  /**
+   * The cue point list represents a time-schedule of ad breaks.
+   * Note that individual ads in the ad break are not included in the schedule.
+   * @defaultValue []
+   */
+  adCuePoints: number[];
 
   // !!! Responsive Design !!!
 
@@ -824,6 +863,10 @@ export interface MediaState {
 
   // !!! INTERNALS !!!
 
+  /** @internal */
+  readonly shouldPlayPreroll: boolean;
+  /* @internal */
+  playedPreroll: boolean;
   /* @internal */
   autoPlaying: boolean;
   /* @internal */

@@ -344,8 +344,9 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     if (!this.scope) return;
 
     const { disabled } = this.$props;
+    const { adStarted } = this._media.$state;
 
-    if (disabled()) {
+    if (disabled() || adStarted()) {
       this._$cues.set([]);
       this._activeIndex.set(0);
       this._bufferedIndex = 0;

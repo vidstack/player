@@ -1,4 +1,4 @@
-import { Component } from 'maverick.js';
+import { Component, computed } from 'maverick.js';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaRequestEvents } from '../../../core/api/media-request-events';
@@ -37,11 +37,11 @@ export class PlayButton extends Component<PlayButtonProps, {}, PlayButtonEvents>
 
   protected override onSetup(): void {
     this._media = useMediaContext();
-    const { paused, ended } = this._media.$state;
+    const { paused, ended, adStarted } = this._media.$state;
 
     this.setAttributes({
       'data-paused': paused,
-      'data-ended': ended,
+      'data-ended': computed(() => (adStarted() ? false : ended())),
     });
   }
 
