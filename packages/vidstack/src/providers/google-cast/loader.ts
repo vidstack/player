@@ -1,13 +1,14 @@
 import { peek } from 'maverick.js';
-import { DOMEvent } from 'maverick.js/std';
+import type { DOMEvent } from 'maverick.js/std';
 
 import type { MediaType, Src } from '../../core';
 import type { MediaContext } from '../../core/api/media-context';
-import { coerceToError } from '../../utils/error';
+import { showToast } from '../../utils/dom';
 import { canGoogleCastSrc } from '../../utils/mime';
 import { loadScript } from '../../utils/network';
 import { IS_CHROME, IS_IOS } from '../../utils/support';
 import type { MediaProviderLoader } from '../types';
+import type { GoogleCastPromptError, GoogleCastPromptErrorCode } from './events';
 import type { GoogleCastProvider } from './provider';
 import type { GoogleCastOptions } from './types';
 import {
@@ -45,10 +46,17 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
   }
 
   async prompt(ctx: MediaContext) {
-    let openEvent: DOMEvent | undefined;
+    let loadEvent: DOMEvent | undefined,
+      openEvent: DOMEvent | undefined,
+      errorEvent: DOMEvent | undefined;
 
     try {
-      const loadEvent = await this._loadCastFramework(ctx);
+      loadEvent = await this._loadCastFramework(ctx);
+
+      const State = window.cast.framework.CastState;
+      if (this.cast.getCastState() === State.NO_DEVICES_AVAILABLE) {
+        throw this._createError(State.NO_DEVICES_AVAILABLE, 'No cast devices found.');
+      }
 
       if (!this._player) {
         this._player = new cast.framework.RemotePlayer();
@@ -70,19 +78,37 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
       });
 
       if (isCastConnected()) this._notifyRemoteStateChange(ctx, 'connected', openEvent);
-    } catch (message) {
-      const error = coerceToError(message);
+    } catch (code) {
+      const error =
+        code instanceof Error
+          ? (code as GoogleCastPromptError)
+          : this._createError(
+              (code + '').toUpperCase() as GoogleCastPromptErrorCode,
+              'Prompt failed.',
+            );
+
+      errorEvent = ctx.player.createEvent('google-cast-prompt-error', {
+        detail: error,
+        trigger: openEvent ?? loadEvent,
+        cancelable: true,
+      });
+
+      ctx.player.dispatch(errorEvent);
+
+      if (!errorEvent.defaultPrevented && error.code === 'NO_DEVICES_AVAILABLE') {
+        showToast('No cast devices found.');
+      }
 
       this._notifyRemoteStateChange(
         ctx,
         isCastConnected() ? 'connected' : 'disconnected',
-        new DOMEvent('google-cast-prompt-error', { detail: error }),
+        errorEvent,
       );
 
       throw error;
     } finally {
       ctx.player.dispatch('google-cast-prompt-close', {
-        trigger: openEvent,
+        trigger: errorEvent ?? openEvent ?? loadEvent,
       });
     }
   }
@@ -112,9 +138,7 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
     ctx.player.dispatch(loadedEvent);
 
     if (!isCastAvailable()) {
-      throw Error(
-        __DEV__ ? 'Google Cast is not available on this platform.' : 'Cast not available.',
-      );
+      throw this._createError('CAST_NOT_AVAILABLE', 'Google Cast not available on this platform.');
     }
 
     return loadedEvent;
@@ -122,8 +146,15 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
 
   protected async _showPrompt(options: GoogleCastOptions) {
     this._setOptions(options);
+
     const errorCode = await this.cast!.requestSession();
-    if (errorCode) throw Error(getCastErrorMessage(errorCode));
+
+    if (errorCode) {
+      throw this._createError(
+        errorCode.toUpperCase() as GoogleCastPromptErrorCode,
+        getCastErrorMessage(errorCode),
+      );
+    }
   }
 
   protected _setOptions(options?: GoogleCastOptions) {
@@ -140,5 +171,11 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
   ) {
     const detail = { type: 'google-cast', state } as const;
     ctx.delegate._notify('remote-playback-change', detail, trigger);
+  }
+
+  private _createError(code: GoogleCastPromptErrorCode, message: string): GoogleCastPromptError {
+    const error = Error(message) as GoogleCastPromptError;
+    error.code = code;
+    return error;
   }
 }

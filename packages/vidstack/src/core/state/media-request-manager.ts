@@ -8,6 +8,7 @@ import {
 import { ScreenOrientationController } from '../../foundation/orientation/controller';
 import { Queue } from '../../foundation/queue/queue';
 import { RequestQueue } from '../../foundation/queue/request-queue';
+import type { GoogleCastPromptError } from '../../providers';
 import type { GoogleCastLoader } from '../../providers/google-cast/loader';
 import type { MediaProviderAdapter } from '../../providers/types';
 import { coerceToError } from '../../utils/error';
@@ -394,9 +395,13 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       const { canGoogleCast } = this.$state;
 
       if (!peek(canGoogleCast)) {
-        throw new Error(
+        const error = Error(
           __DEV__ ? 'Google Cast not available on this platform.' : 'Cast not available.',
-        );
+        ) as GoogleCastPromptError;
+
+        error.code = 'CAST_NOT_AVAILABLE';
+
+        throw error;
       }
 
       preconnect('https://www.gstatic.com');
@@ -425,7 +430,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     } catch (error) {
       this._request._queue._delete('media-google-cast-request');
 
-      if (__DEV__ && (error as Error).message !== '"cancel"') {
+      if (__DEV__) {
         this._logError('google cast request failed', error, trigger);
       }
 

@@ -386,3 +386,12 @@ export function useFocusIn($el: ReadSignal<Element | null | undefined>) {
 export function isHTMLElement(el: any): el is HTMLElement {
   return el instanceof HTMLElement;
 }
+
+export function showToast(message: string, ms = 5000) {
+  const toast = document.createElement('div');
+  toast.classList.add('vds-toast');
+  toast.textContent = message;
+  toast.ariaLive = 'polite';
+  document.body.append(toast);
+  setTimeout(() => toast.remove(), ms);
+}
