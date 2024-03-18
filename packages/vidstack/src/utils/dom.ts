@@ -94,7 +94,12 @@ export function isElementVisible(el: HTMLElement) {
 }
 
 export function checkVisibility(el: HTMLElement | null) {
-  return !!el && el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
+  return (
+    !!el &&
+    ('checkVisibility' in el
+      ? el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })
+      : isElementVisible(el))
+  );
 }
 
 export function observeVisibility(el: HTMLElement, callback: (isVisible: boolean) => void) {
