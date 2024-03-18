@@ -2,7 +2,7 @@ import { Component, method, onDispose, peek, signal, State, tick } from 'maveric
 import { animationFrameThrottle, isString, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
-import type { Src, TextTrackInit } from '../../core';
+import { TextTrack, type Src, type TextTrackInit } from '../../core';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import type { MediaProviderLoader } from '../../providers';
 import { SourceSelection } from './source-select';
@@ -157,14 +157,18 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
         sources.push(src);
       } else if (el instanceof HTMLTrackElement) {
-        tracks.push({
-          id: el.id,
+        const track = {
           src: el.src,
           kind: el.track.kind,
           language: el.srclang,
           label: el.label,
           default: el.default,
           type: el.getAttribute('data-type') as CaptionsFileFormat,
+        };
+
+        tracks.push({
+          id: el.id || TextTrack.createId(track),
+          ...track,
         });
       }
     }
