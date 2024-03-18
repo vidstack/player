@@ -100,6 +100,10 @@ iframe.vds-youtube[data-no-controls] {
   height: 1000%;
 }
 
+iframe.vds-twitch[data-no-controls] {
+  height: 1000%;
+}
+
 .vds-blocker {
   position: absolute;
   inset: 0;

@@ -13,6 +13,7 @@ import { isVideoQualitySrc, type MediaContext, type MediaPlayerProps, type Src }
 import {
   AudioProviderLoader,
   HLSProviderLoader,
+  TwitchProviderLoader,
   VideoProviderLoader,
   VimeoProviderLoader,
   YouTubeProviderLoader,
@@ -46,7 +47,8 @@ export class SourceSelection {
       AUDIO_LOADER = new AudioProviderLoader(),
       YOUTUBE_LOADER = new YouTubeProviderLoader(),
       VIMEO_LOADER = new VimeoProviderLoader(),
-      EMBED_LOADERS = [YOUTUBE_LOADER, VIMEO_LOADER];
+      TWITCH_LOADER = new TwitchProviderLoader(),
+      EMBED_LOADERS = [YOUTUBE_LOADER, VIMEO_LOADER, TWITCH_LOADER];
 
     this._loaders = computed<MediaProviderLoader[]>(() => {
       const remoteLoader = _media.$state.remotePlaybackLoader();
@@ -318,7 +320,7 @@ function normalizeSrc(src: MediaPlayerProps['src']): Src[] {
       if (isString(src)) {
         return {
           src,
-          type: '?',
+          type: inferType(src),
         };
       } else {
         return {
@@ -339,6 +341,8 @@ function inferType(src: unknown, type?: string) {
     return 'video/object';
   } else if (src.includes('youtube')) {
     return 'video/youtube';
+  } else if (src.includes('twitch')) {
+    return 'video/twitch';
   } else if (
     src.includes('vimeo') &&
     !src.includes('progressive_redirect') &&
