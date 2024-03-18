@@ -13,7 +13,7 @@ export class MediaStateSync extends MediaPlayerController {
     if (__SERVER__) return;
 
     if (__DEV__) effect(this._watchLogLevel.bind(this));
-    effect(this._watchArtist.bind(this));
+    effect(this._watchMetadata.bind(this));
     effect(this._watchAutoplay.bind(this));
     effect(this._watchClipTimes.bind(this));
     effect(this._watchControls.bind(this));
@@ -71,9 +71,10 @@ export class MediaStateSync extends MediaPlayerController {
     this.$state.logLevel.set(this.$props.logLevel());
   }
 
-  private _watchArtist() {
-    const { artist } = this.$props;
+  private _watchMetadata() {
+    const { artist, artwork } = this.$props;
     this.$state.artist.set(artist());
+    this.$state.artwork.set(artwork());
   }
 
   private _watchTitle() {

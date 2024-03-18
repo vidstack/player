@@ -12,6 +12,7 @@ import type { MediaLoadingStrategy, MediaPosterLoadingStrategy } from './types';
 
 export const mediaPlayerProps: MediaPlayerProps = {
   artist: '',
+  artwork: null,
   autoplay: false,
   autoPlay: false,
   clipStartTime: 0,
@@ -60,6 +61,7 @@ export interface MediaPlayerProps
   extends Pick<
     Writable<MediaState>,
     | 'artist'
+    | 'artwork'
     | 'autoPlay'
     | 'clipStartTime'
     | 'clipEndTime'

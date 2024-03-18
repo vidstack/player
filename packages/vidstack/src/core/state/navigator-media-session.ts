@@ -29,11 +29,11 @@ export class NavigatorMediaSession extends MediaPlayerController {
   }
 
   protected _onMetadataChange() {
-    const { title, artist, poster } = this.$state;
+    const { title, artist, artwork, poster } = this.$state;
     navigator.mediaSession.metadata = new MediaMetadata({
       title: title(),
       artist: artist(),
-      artwork: [{ src: poster() }],
+      artwork: artwork() ?? [{ src: poster() }],
     });
   }
 

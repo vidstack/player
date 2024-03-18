@@ -22,6 +22,7 @@ export interface MediaPlayerState extends MediaState {}
 
 export const mediaState = new State<MediaState>({
   artist: '',
+  artwork: null,
   audioTrack: null,
   audioTracks: [],
   autoPlay: false,
@@ -748,6 +749,10 @@ export interface MediaState {
    * layout and it will be included in the Media Session API.
    */
   artist: string;
+  /**
+   * Images to be included in the Media Session API.
+   */
+  artwork: MediaImage[] | null;
   /**
    * The list of all available text tracks.
    */
