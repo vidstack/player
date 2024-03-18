@@ -28,8 +28,8 @@ export class VidstackPlayer {
         !isHTMLAudioElement(target) && !isHTMLVideoElement(target) && !isHTMLIFrameElement(target);
 
     if (layout?.type === 'default') {
-      await import('../elements/bundles/player-ui');
       await import('../elements/bundles/player-layouts/default');
+      await import('../elements/bundles/player-ui');
 
       layouts.push(
         document.createElement('media-video-layout'),

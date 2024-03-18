@@ -20,7 +20,7 @@ packages/*/local/
 packages/*/dist/
 packages/*/cdn/
 packages/*/elements/
-packages/*/enhance/
+packages/*/global/
 packages/*/types/
 packages/*/sandbox/
 packages/*/stats.html

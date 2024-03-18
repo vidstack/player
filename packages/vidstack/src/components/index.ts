@@ -64,7 +64,6 @@ export * from './ui/poster';
 export * from './ui/time';
 export * from './ui/thumbnails/thumbnail';
 export * from './ui/thumbnails/thumbnail-loader';
-export type { IconProps } from './icons/types';
 
 // Layouts
 export type { DefaultLayoutProps } from './layouts/default/props';

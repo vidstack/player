@@ -7,7 +7,9 @@
   "types": "index.d.ts",
   "sideEffects": [
     "./src/elements/bundles/**/*.ts",
-    "./dist/*/define/*.js"
+    "./dist/*/define/*.js",
+    "./src/global/*.ts",
+    "./dist/*/global/*.js"
   ],
   "engines": {
     "node": ">=18"
@@ -16,6 +18,7 @@
     "*.d.ts",
     "dist/",
     "player/",
+    "global/",
     "cdn/",
     "plugins.*",
     "tailwind.*",
@@ -28,7 +31,7 @@
     "analyze": "maverick analyze \"src/**/*.ts\"",
     "dev": "pnpm clean && pnpm build:types && pnpm watch",
     "build": "rollup -c",
-    "build:cdn": "rollup -c --config-cdn",
+    "build:cdn": "rimraf dist-cdn && rollup -c --config-cdn",
     "build:plugins": "rollup -c --config-plugins",
     "build:types": "tsc -p tsconfig.build.json",
     "types": "pnpm build:types && rollup -c --config-types",
@@ -67,7 +70,7 @@
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
     "maverick.js": "0.41.4",
-    "media-icons": "^1.0.0",
+    "media-icons": "^1.1.2",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
     "rollup": "^4.0.0",
@@ -116,23 +119,23 @@
       "development": "./dist/dev/vidstack-elements.js",
       "default": "./dist/prod/vidstack-elements.js"
     },
-    "./enhance/player": {
-      "types": "./enhance/player.d.ts",
-      "node": "./dist/server/enhance/vidstack-player.js",
-      "deno": "./dist/server/enhance/vidstack-player.js",
-      "bun": "./dist/server/enhance/vidstack-player.js",
-      "workerd": "./dist/server/enhance/vidstack-player.js",
-      "development": "./dist/dev/enhance/vidstack-player.js",
-      "default": "./dist/prod/enhance/vidstack-player.js"
+    "./global/player": {
+      "types": "./global/player.d.ts",
+      "node": "./dist/server/global/vidstack-player.js",
+      "deno": "./dist/server/global/vidstack-player.js",
+      "bun": "./dist/server/global/vidstack-player.js",
+      "workerd": "./dist/server/global/vidstack-player.js",
+      "development": "./dist/dev/global/vidstack-player.js",
+      "default": "./dist/prod/global/vidstack-player.js"
     },
-    "./enhance/plyr": {
-      "types": "./enhance/plyr.d.ts",
-      "node": "./dist/server/enhance/plyr.js",
-      "deno": "./dist/server/enhance/plyr.js",
-      "bun": "./dist/server/enhance/plyr.js",
-      "workerd": "./dist/server/enhance/plyr.js",
-      "development": "./dist/dev/enhance/plyr.js",
-      "default": "./dist/prod/enhance/plyr.js"
+    "./global/plyr": {
+      "types": "./global/plyr.d.ts",
+      "node": "./dist/server/global/plyr.js",
+      "deno": "./dist/server/global/plyr.js",
+      "bun": "./dist/server/global/plyr.js",
+      "workerd": "./dist/server/global/plyr.js",
+      "development": "./dist/dev/global/plyr.js",
+      "default": "./dist/prod/global/plyr.js"
     },
     "./icons": {
       "types": "./icons.d.ts",
@@ -181,12 +184,12 @@
     },
     "./player/layouts/plyr": {
       "types": "./player/layouts/plyr.d.ts",
-      "node": "./dist/server/define/vidstack-player-plyr-layout.js",
-      "deno": "./dist/server/define/vidstack-player-plyr-layout.js",
-      "bun": "./dist/server/define/vidstack-player-plyr-layout.js",
-      "workerd": "./dist/server/define/vidstack-player-plyr-layout.js",
-      "development": "./dist/dev/define/vidstack-player-plyr-layout.js",
-      "default": "./dist/prod/define/vidstack-player-plyr-layout.js"
+      "node": "./dist/server/define/plyr-layout.js",
+      "deno": "./dist/server/define/plyr-layout.js",
+      "bun": "./dist/server/define/plyr-layout.js",
+      "workerd": "./dist/server/define/plyr-layout.js",
+      "development": "./dist/dev/define/plyr-layout.js",
+      "default": "./dist/prod/define/plyr-layout.js"
     },
     "./dist/types/*": "./dist/types/*",
     "./player/styles/*": "./player/styles/*",
