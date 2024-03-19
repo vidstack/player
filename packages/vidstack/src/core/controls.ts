@@ -94,7 +94,14 @@ export class MediaControls extends MediaPlayerController {
   }
 
   private _init() {
+    const { viewType } = this.$state;
+
     if (!this._canIdle()) return;
+
+    if (viewType() === 'audio') {
+      this.show();
+      return;
+    }
 
     effect(this._watchMouse.bind(this));
     effect(this._watchPaused.bind(this));
@@ -215,7 +222,9 @@ export class MediaControls extends MediaPlayerController {
 
     if (!visible && document.activeElement && this.el?.contains(document.activeElement)) {
       this._focusedItem = document.activeElement as HTMLElement;
-      requestAnimationFrame(() => this.el?.focus());
+      requestAnimationFrame(() => {
+        this.el?.focus({ preventScroll: true });
+      });
     }
 
     this.dispatch('controls-change', {
