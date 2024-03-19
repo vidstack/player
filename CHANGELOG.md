@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file.
 - new slider steps component ([5623c98](https://github.com/vidstack/player/commit/5623c985b9b654cdf5d9695dbe19830c9302f24a))
 - source qualities ([837daa0](https://github.com/vidstack/player/commit/837daa0be8230c68efdd39e2fc470c2487652746))
 - new js player constructors ([2876c73](https://github.com/vidstack/player/commit/2876c737bf564fa891d3221d667f87fec7b2b5e8))
+- new cdn urls and bundles ([e36958c](https://github.com/vidstack/player/commit/e36958c491e0f7d109bcc0ce6539a6a171d46600))
+- add new `artwork` player prop ([c0a4eaf](https://github.com/vidstack/player/commit/c0a4eafefb7d16499107a0f84341e13db1680252))
 
 ### 🐛 Bug Fixes
 
@@ -41,6 +43,13 @@ All notable changes to this project will be documented in this file.
 - add workerd to node exports (#1198) ([dedd706](https://github.com/vidstack/player/commit/dedd706e761afaf681866e1f70155187a359b9bc))
 - stop expensive updates when not visible ([be96bd2](https://github.com/vidstack/player/commit/be96bd29206b25b75a49dccba4e80e46fbdc2253))
 - narrow player src types ([82988ca](https://github.com/vidstack/player/commit/82988ca75d42efc143688a2154fa6009b8e237a9))
+- default `<track>` element not selected ([c82528b](https://github.com/vidstack/player/commit/c82528b02ed6e0d2fa958c841baef71d9dcd161d))
+- `checkVisibility` api not available on ios safari ([1ef5e06](https://github.com/vidstack/player/commit/1ef5e064b30fb495f4756c8b242cc5b7e44a7705))
+- improve google cast error handling and events ([6fc54a9](https://github.com/vidstack/player/commit/6fc54a9dd263f404aabd7959e5bde0c74bdea92f))
+- accept `youtu.be` short urls ([9261b06](https://github.com/vidstack/player/commit/9261b06755968d6f771fde765d076b97dc0262d1))
+- vimeo ended event not firing ([53025a3](https://github.com/vidstack/player/commit/53025a3ee0f88c56a4094a6024177784d0f4464f))
+- focus on controls hide should not scroll ([778132f](https://github.com/vidstack/player/commit/778132f4061845153e8bff8ab8b6346adcae5d4c))
+- extending `LocalMediaStorage` should work ([71298c3](https://github.com/vidstack/player/commit/71298c3e36d1726d0113514c6438c7b51ff465f1))
 
 #### Player (React)
 
