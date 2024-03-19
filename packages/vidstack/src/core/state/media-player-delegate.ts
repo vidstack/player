@@ -79,7 +79,8 @@ export class MediaPlayerDelegate {
 
       const savedPlaybackTime = savedState()?.currentTime,
         savedPlayingState = savedState()?.paused === false,
-        startTime = savedPlaybackTime ?? (await storage?.getTime()) ?? clipStartTime(),
+        storageTime = await storage?.getTime(),
+        startTime = savedPlaybackTime ?? storageTime ?? clipStartTime(),
         shouldAutoPlay =
           savedPlayingState || (savedPlayingState !== false && !started() && autoPlay());
 
@@ -119,6 +120,8 @@ export class MediaPlayerDelegate {
 
       if (canPlay() && shouldAutoPlay) {
         await this._attemptAutoplay(trigger);
+      } else if (storageTime && storageTime > 0) {
+        this._notify('started', undefined, trigger);
       }
 
       remotePlaybackInfo.set(null);
