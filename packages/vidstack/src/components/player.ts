@@ -541,12 +541,15 @@ export class MediaPlayer
       peek(() => {
         if (!this._provider) return;
 
-        const boundTime = Math.min(
-          Math.max(seekableStart() + 0.1, time + clipStartTime()),
-          seekableEnd() - 0.1,
-        );
+        const clippedTime = time + clipStartTime(),
+          isEnd = Math.floor(clippedTime) === Math.floor(seekableEnd()),
+          boundTime = isEnd
+            ? seekableEnd()
+            : Math.min(Math.max(seekableStart() + 0.1, clippedTime), seekableEnd() - 0.1);
 
-        if (Number.isFinite(boundTime)) this._provider.setCurrentTime(boundTime);
+        if (Number.isFinite(boundTime)) {
+          this._provider.setCurrentTime(boundTime);
+        }
       });
     });
   }

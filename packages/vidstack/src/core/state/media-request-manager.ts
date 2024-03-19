@@ -701,7 +701,8 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
   ['media-seek-request'](event: RE.MediaSeekRequestEvent) {
     const { seekableStart, seekableEnd, ended, canSeek, live, userBehindLiveEdge, clipStartTime } =
-      this.$state;
+        this.$state,
+      seekTime = event.detail;
 
     if (ended()) this._request._replaying = true;
 
@@ -710,10 +711,11 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this._request._seeking = false;
     this._request._queue._delete(key);
 
-    const boundTime = Math.min(
-      Math.max(seekableStart() + 0.1, event.detail + clipStartTime()),
-      seekableEnd() - 0.1,
-    );
+    const clippedTime = seekTime + clipStartTime(),
+      isEnd = Math.floor(clippedTime) === Math.floor(seekableEnd()),
+      boundTime = isEnd
+        ? seekableEnd()
+        : Math.min(Math.max(seekableStart() + 0.1, clippedTime), seekableEnd() - 0.1);
 
     if (!Number.isFinite(boundTime) || !canSeek()) return;
 
