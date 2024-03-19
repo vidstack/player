@@ -7,6 +7,7 @@ import {
   canUseVideoPresentation,
 } from '../../utils/support';
 import { HTMLMediaProvider } from '../html/provider';
+import { HTMLAirPlayAdapter } from '../html/remote-playback';
 import type {
   MediaFullscreenAdapter,
   MediaPictureInPictureAdapter,
@@ -20,7 +21,6 @@ import {
   PIPPresentationAdapter,
   VideoPresentation,
 } from './presentation/video-presentation';
-import { VideoAirPlayAdapter } from './remote-playback';
 
 /**
  * The video provider adapts the `<video>` element to enable loading videos via the HTML Media
@@ -53,7 +53,7 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
     super(video, ctx);
 
     scoped(() => {
-      this.airPlay = new VideoAirPlayAdapter(video, ctx);
+      this.airPlay = new HTMLAirPlayAdapter(video, ctx);
 
       if (canUseVideoPresentation(video)) {
         const presentation = new VideoPresentation(video, ctx);

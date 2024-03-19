@@ -120,7 +120,7 @@ export class MediaAnnouncer extends Component<
 
   private _translate(word: string | null) {
     const { translations } = this.$props;
-    return translations()?.[word || ''] ?? word;
+    return translations?.()?.[word || ''] ?? word;
   }
 
   private _watchLabel() {

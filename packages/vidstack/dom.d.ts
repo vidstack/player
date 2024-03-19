@@ -11,6 +11,13 @@ declare global {
 
   type WebKitPresentationMode = 'picture-in-picture' | 'inline' | 'fullscreen';
 
+  interface HTMLMediaElement {
+    /**
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlmediaelement/1632172-webkitshowplaybacktargetpicker}
+     */
+    webkitShowPlaybackTargetPicker?(): void;
+  }
+
   interface HTMLVideoElement {
     disablePictureInPicture: boolean;
 
@@ -78,11 +85,6 @@ declare global {
      * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631224-webkitsetpresentationmode}
      */
     webkitSetPresentationMode?(mode: WebKitPresentationMode): Promise<void>;
-
-    /**
-     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlmediaelement/1632172-webkitshowplaybacktargetpicker}
-     */
-    webkitShowPlaybackTargetPicker?(): void;
   }
 }
 

@@ -10,6 +10,7 @@ import { useResizeObserver, useTransitionActive } from '../../../../utils/dom';
 import { $signal } from '../../../lit/directives/signal';
 import { DefaultAnnouncer } from './ui/announcer';
 import {
+  DefaultAirPlayButton,
   DefaultCaptionButton,
   DefaultDownloadButton,
   DefaultPlayButton,
@@ -40,6 +41,7 @@ export function DefaultAudioLayout() {
             DefaultVolumePopup({ orientation: 'vertical', tooltip: 'top' }),
             DefaultCaptionButton({ tooltip: 'top' }),
             DefaultDownloadButton(),
+            DefaultAirPlayButton({ tooltip: 'top' }),
             DefaultAudioMenus(),
           ]}
         </media-controls-group>
