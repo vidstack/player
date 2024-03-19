@@ -926,7 +926,8 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   private _onEnded(event: Event) {
-    const { paused, seeking, ended, duration } = this.$state;
+    const { storage } = this._media,
+      { paused, seeking, ended, duration } = this.$state;
 
     if (!paused()) {
       this.dispatch('pause', { trigger: event });
@@ -941,6 +942,7 @@ export class MediaStateManager extends MediaPlayerController {
 
     ended.set(true);
     this._resetTracking();
+    storage?.setTime?.(null);
 
     this.dispatch('ended', {
       trigger: event,

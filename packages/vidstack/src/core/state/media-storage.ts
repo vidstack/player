@@ -1,5 +1,6 @@
 import throttle from 'just-throttle';
 import type { MaybeStopEffect } from 'maverick.js';
+import { isNull } from 'maverick.js/std';
 
 import type { Src } from '../api/src-types';
 
@@ -11,7 +12,7 @@ export interface MediaStorage {
   setMuted?(muted: boolean): Promise<void>;
 
   getTime(): Promise<number | null>;
-  setTime?(time: number): Promise<void>;
+  setTime?(time: number | null): Promise<void>;
 
   getLang(): Promise<string | null>;
   setLang?(lang: string | null): Promise<void>;
@@ -91,9 +92,10 @@ export class LocalMediaStorage implements MediaStorage {
     return this._data.time;
   }
 
-  async setTime(time: number) {
+  async setTime(time: number | null) {
     this._data.time = time;
-    this.saveTime();
+    if (isNull(time)) this._saveTime();
+    else this.saveTime();
   }
 
   async getLang() {
@@ -167,11 +169,12 @@ export class LocalMediaStorage implements MediaStorage {
     localStorage.setItem(this.playerId, data);
   }
 
-  protected saveTime = throttle(() => {
+  protected saveTime = throttle(this._saveTime.bind(this), 1000);
+  private _saveTime() {
     if (__SERVER__ || !this.mediaId) return;
     const data = (this._data.time ?? 0).toString();
     localStorage.setItem(this.mediaId, data);
-  }, 1000);
+  }
 }
 
 interface SavedMediaData {
