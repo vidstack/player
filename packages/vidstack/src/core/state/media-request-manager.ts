@@ -489,7 +489,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     const lockType = peek(this.$props.fullscreenOrientation),
       isFullscreen = event.detail;
 
-    if (isUndefined(lockType) || lockType === 'no' || !this._orientation.supported) return;
+    if (isUndefined(lockType) || lockType === 'none' || !this._orientation.supported) return;
 
     if (isFullscreen) {
       if (this._orientation.locked) return;

@@ -17,9 +17,9 @@ export interface MediaPlayerEvents
     HLSProviderEvents,
     GoogleCastEvents {
   'media-player-connect': MediaPlayerConnectEvent;
-  /* @internal */
+  /** @internal */
   'find-media-player': FindMediaPlayerEvent;
-  /* @internal */
+  /** @internal */
   'vds-font-change': Event;
 }
 

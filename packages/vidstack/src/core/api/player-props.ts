@@ -148,7 +148,7 @@ export interface MediaPlayerProps
    * This method will indicate the orientation to lock the screen to when in fullscreen mode and
    * the Screen Orientation API is available.
    */
-  fullscreenOrientation: ScreenOrientationLockType | 'no' | undefined;
+  fullscreenOrientation: ScreenOrientationLockType | 'none' | undefined;
   /**
    * Google Cast options.
    *

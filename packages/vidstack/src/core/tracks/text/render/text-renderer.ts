@@ -43,7 +43,7 @@ export class TextRenderers {
     this._update();
   }
 
-  /* @internal */
+  /** @internal */
   _attachVideo(video: HTMLVideoElement | null) {
     requestAnimationFrame(() => {
       this._video = video;

@@ -149,7 +149,7 @@
   display: none !important;
 }
 
-.vds-menu-items [data-hide] {
+.vds-menu-items [data-hidden] {
   display: none !important;
 }
 

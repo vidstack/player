@@ -4,6 +4,7 @@ import { createReactComponent, type ReactElementProps } from 'maverick.js/react'
 
 import { VolumeSliderInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
+import { Value } from './slider';
 import { sliderCallbacks } from './slider-callbacks';
 
 /* -------------------------------------------------------------------------------------------------
@@ -51,4 +52,4 @@ const Root = React.forwardRef<VolumeSliderInstance, RootProps>(
 Root.displayName = 'VolumeSlider';
 
 export * from './slider';
-export { Root };
+export { Root, Value };

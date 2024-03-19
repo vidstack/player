@@ -824,37 +824,37 @@ export interface MediaState {
 
   // !!! INTERNALS !!!
 
-  /* @internal */
+  /** @internal */
   autoPlaying: boolean;
-  /* @internal */
+  /** @internal */
   providedTitle: string;
-  /* @internal */
+  /** @internal */
   inferredTitle: string;
-  /* @internal */
+  /** @internal */
   providedLoop: boolean;
-  /* @internal */
+  /** @internal */
   userPrefersLoop: boolean;
-  /* @internal - Unclipped current time. */
+  /** @internal - Unclipped current time. */
   realCurrentTime: number;
-  /* @internal */
+  /** @internal */
   providedPoster: string;
-  /* @internal */
+  /** @internal */
   intrinsicDuration: number;
-  /* @internal */
+  /** @internal */
   realDuration: number;
-  /* @internal */
+  /** @internal */
   providedDuration: number;
-  /* @internal */
+  /** @internal */
   inferredPoster: string;
-  /* @internal */
+  /** @internal */
   inferredViewType: MediaViewType;
-  /* @internal */
+  /** @internal */
   providedViewType: MediaViewType;
-  /* @internal */
+  /** @internal */
   providedStreamType: MediaStreamType;
-  /* @internal */
+  /** @internal */
   inferredStreamType: MediaStreamType;
-  /* @internal */
+  /** @internal */
   liveSyncPosition: number | null;
   /** @internal */
   savedState: { paused?: boolean; currentTime?: number } | null;

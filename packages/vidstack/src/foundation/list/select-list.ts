@@ -21,15 +21,15 @@ export class SelectList<
     return this._items.findIndex((item) => item.selected);
   }
 
-  /* @internal */
+  /** @internal */
   protected override [ListSymbol._onRemove](item: Item, trigger?: Event): void {
     this[ListSymbol._select](item, false, trigger);
   }
 
-  /* @internal */
+  /** @internal */
   protected [ListSymbol._onUserSelect]?(): void;
 
-  /* @internal */
+  /** @internal */
   override [ListSymbol._add](item: Omit<Item, 'selected'>, trigger?: Event) {
     item[SELECTED] = false;
     Object.defineProperty(item, 'selected', {
@@ -46,7 +46,7 @@ export class SelectList<
     super[ListSymbol._add](item as Item, trigger);
   }
 
-  /* @internal */
+  /** @internal */
   [ListSymbol._select](item: Item | undefined, selected: boolean, trigger?: Event) {
     if (selected === item?.[SELECTED]) return;
 

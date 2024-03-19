@@ -35,15 +35,15 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
     return this._auto || this.readonly;
   }
 
-  /* @internal */
+  /** @internal */
   [QualitySymbol._enableAuto]?: (trigger?: Event) => void;
 
-  /* @internal */
+  /** @internal */
   protected override [ListSymbol._onUserSelect]() {
     this[QualitySymbol._setAuto](false);
   }
 
-  /* @internal */
+  /** @internal */
   protected override [ListSymbol._onReset](trigger?: Event) {
     this[QualitySymbol._enableAuto] = undefined;
     this[QualitySymbol._setAuto](false, trigger);
@@ -71,7 +71,7 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
     return this._items.find((quality) => quality.src === src);
   }
 
-  /* @internal */
+  /** @internal */
   [QualitySymbol._setAuto](auto: boolean, trigger?: Event) {
     if (this._auto === auto) return;
     this._auto = auto;

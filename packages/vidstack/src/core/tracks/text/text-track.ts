@@ -54,16 +54,16 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   private _cues: VTTCue[] = [];
   private _activeCues: VTTCue[] = [];
 
-  /* @internal */
+  /** @internal */
   [TextTrackSymbol._readyState]: TextTrackReadyState = 0;
 
-  /* @internal */
+  /** @internal */
   [TextTrackSymbol._crossOrigin]?: () => string | null;
 
-  /* @internal */
+  /** @internal */
   [TextTrackSymbol._onModeChange]: (() => void) | null = null;
 
-  /* @internal */
+  /** @internal */
   [TextTrackSymbol._native]: {
     default?: boolean;
     track: {
@@ -186,7 +186,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     this[TextTrackSymbol._onModeChange]?.();
   }
 
-  /* @internal */
+  /** @internal */
   [TextTrackSymbol._updateActiveCues](currentTime: number, trigger?: Event) {
     this._currentTime = currentTime;
     if (this.mode === 'disabled' || !this._cues.length) return;
@@ -212,7 +212,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     if (changed) this._activeCuesChanged(trigger);
   }
 
-  /* @internal */
+  /** @internal */
   [TextTrackSymbol._canLoad]() {
     this._canLoad = true;
     if (this._mode !== 'disabled') this._load();

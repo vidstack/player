@@ -11,7 +11,7 @@ export interface IconProps
    */
   size?: number;
   part?: string;
-  /* @internal */
+  /** @internal */
   paths?: string;
 }
 

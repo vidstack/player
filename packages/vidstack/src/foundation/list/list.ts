@@ -12,11 +12,11 @@ export class List<Item extends ListItem, Events extends ListEvents>
 
   protected _items: Item[] = [];
 
-  /* @internal */
+  /** @internal */
   protected [ListSymbol._readonly] = false;
-  /* @internal */
+  /** @internal */
   protected [ListSymbol._onReset]?(trigger?: Event): void;
-  /* @internal */
+  /** @internal */
   protected [ListSymbol._onRemove]?(item: Item, trigger?: Event): void;
 
   get length() {
@@ -38,7 +38,7 @@ export class List<Item extends ListItem, Events extends ListEvents>
     return this._items.values();
   }
 
-  /* @internal */
+  /** @internal */
   [ListSymbol._add](item: Item, trigger?: Event): void {
     const index = this._items.length;
 
@@ -56,7 +56,7 @@ export class List<Item extends ListItem, Events extends ListEvents>
     this.dispatchEvent(new DOMEvent<any>('add', { detail: item, trigger }));
   }
 
-  /* @internal */
+  /** @internal */
   [ListSymbol._remove](item: Item, trigger?: Event): void {
     const index = this._items.indexOf(item);
     if (index >= 0) {
@@ -66,7 +66,7 @@ export class List<Item extends ListItem, Events extends ListEvents>
     }
   }
 
-  /* @internal */
+  /** @internal */
   [ListSymbol._reset](trigger?: Event): void {
     for (const item of [...this._items]) this[ListSymbol._remove](item, trigger);
     this._items = [];
@@ -74,7 +74,7 @@ export class List<Item extends ListItem, Events extends ListEvents>
     this[ListSymbol._onReset]?.();
   }
 
-  /* @internal */
+  /** @internal */
   [ListSymbol._setReadonly](readonly: boolean, trigger?: Event) {
     if (this[ListSymbol._readonly] === readonly) return;
     this[ListSymbol._readonly] = readonly;

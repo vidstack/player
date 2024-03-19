@@ -54,6 +54,9 @@ All notable changes to this project will be documented in this file.
 - accept `no` value for fullscreen orientation attr/prop ([7c082b9](https://github.com/vidstack/player/commit/7c082b916b0c6ec61baef1a7fe58fc9bf9ebcffb))
 - clear saved time in storage on media end ([7628525](https://github.com/vidstack/player/commit/7628525a04be2b5927707d7a6e97132a0beb5c72))
 - trigger started if resuming from stored session ([3606317](https://github.com/vidstack/player/commit/360631788160049e3a54a0b605fc5c683a5fcae4))
+- allow seeking directly to end ([91d52ba](https://github.com/vidstack/player/commit/91d52baa4f05a961412c29a75468cad4b3e9eca2))
+- hls tracks not initializing correctly ([9abff96](https://github.com/vidstack/player/commit/9abff96cf146816500d84030eef0f2e0491489b2))
+- hide chapters menu button when disabled ([29d26ca](https://github.com/vidstack/player/commit/29d26ca58fc18161a238e9355e6a2722017d6fb7))
 
 #### Player (React)
 

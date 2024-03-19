@@ -474,7 +474,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
         if (child.contains(el)) {
           child.setAttribute('data-open', '');
         } else if (child !== el) {
-          child.setAttribute('data-hide', '');
+          child.setAttribute('data-hidden', '');
         }
       }
     }
@@ -499,7 +499,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     if (content) {
       for (const child of content.children) {
         child.removeAttribute('data-open');
-        child.removeAttribute('data-hide');
+        child.removeAttribute('data-hidden');
       }
     }
   }

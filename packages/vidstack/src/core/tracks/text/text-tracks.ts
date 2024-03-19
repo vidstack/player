@@ -99,7 +99,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     return this._items.indexOf(track);
   }
 
-  /* @internal */
+  /** @internal */
   [TextTrackSymbol._canLoad]() {
     if (this._canLoad) return;
     for (const track of this._items) track[TextTrackSymbol._canLoad]();
