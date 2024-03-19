@@ -29,6 +29,10 @@
   word-break: break-word;
 }
 
+:where([data-fullscreen][data-orientation='portrait'] .vds-captions) {
+  --cue-default-font-size: var(--media-cue-font-size, calc(var(--overlay-width) / 100 * 4.5));
+}
+
 :where([data-view-type='audio'] .vds-captions) {
   position: relative;
   margin: 0;
