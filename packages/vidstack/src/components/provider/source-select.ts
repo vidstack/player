@@ -316,15 +316,9 @@ function normalizeSrc(src: MediaPlayerProps['src']): Src[] {
   return (isArray(src) ? src : [src])
     .map((src) => {
       if (isString(src)) {
-        return {
-          src,
-          type: '?',
-        };
+        return { src, type: inferType(src) };
       } else {
-        return {
-          ...src,
-          type: inferType(src.src, src.type),
-        };
+        return { ...src, type: inferType(src.src, src.type) };
       }
     })
     .sort((a) => (a.type === '?' ? 1 : -1));
@@ -337,7 +331,7 @@ function inferType(src: unknown, type?: string) {
     return sourceTypes.get(src)!;
   } else if (!isString(src) || src.startsWith('blob:')) {
     return 'video/object';
-  } else if (src.includes('youtube')) {
+  } else if (src.includes('youtube') || src.includes('youtu.be')) {
     return 'video/youtube';
   } else if (
     src.includes('vimeo') &&
