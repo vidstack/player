@@ -611,7 +611,7 @@ export class MediaPlayer
         playerId = isString(storageValue) ? storageValue : this.el?.id,
         mediaId = computed(this._computeMediaId.bind(this));
 
-      effect(() => storage!.onChange!(source(), mediaId(), playerId));
+      effect(() => storage!.onChange!(source(), mediaId(), playerId || undefined));
     }
 
     this._media.storage = storage;
