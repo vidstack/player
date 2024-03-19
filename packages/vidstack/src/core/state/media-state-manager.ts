@@ -560,18 +560,27 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['progress'](event: ME.MediaProgressEvent) {
-    const { buffered, seekable, live, intrinsicDuration } = this.$state,
-      detail = event.detail;
+    const { buffered, bufferedEnd, seekable, seekableEnd, live, intrinsicDuration } = this.$state,
+      { buffered: newBuffered, seekable: newSeekable } = event.detail,
+      newBufferedEnd = getTimeRangesEnd(newBuffered) ?? Infinity,
+      hasBufferedLengthChanged = newBuffered.length !== buffered().length,
+      hasBufferedEndChanged = newBufferedEnd > bufferedEnd(),
+      newSeekableEnd = getTimeRangesEnd(newSeekable) ?? Infinity,
+      hasSeekableLengthChanged = newSeekable.length !== seekable().length,
+      hasSeekableEndChanged = newSeekableEnd > seekableEnd();
 
-    buffered.set(detail.buffered);
-    seekable.set(detail.seekable);
+    if (hasBufferedLengthChanged || hasBufferedEndChanged) {
+      buffered.set(newBuffered);
+    }
+
+    if (hasSeekableLengthChanged || hasSeekableEndChanged) {
+      seekable.set(newSeekable);
+    }
 
     if (live()) {
-      // Do not fetch `seekableEnd` from `$state` as it might be clipped.
-      const seekableEnd = getTimeRangesEnd(detail.seekable) ?? Infinity;
-      intrinsicDuration.set(seekableEnd);
+      intrinsicDuration.set(newSeekableEnd);
       this.dispatch('duration-change', {
-        detail: seekableEnd,
+        detail: newSeekableEnd,
         trigger: event,
       });
     }
@@ -898,7 +907,9 @@ export class MediaStateManager extends MediaPlayerController {
   }, 300);
 
   ['end'](event: Event) {
-    const { loop } = this.$state;
+    const { loop, ended } = this.$state;
+
+    if (!loop() && ended()) return;
 
     if (loop()) {
       setTimeout(() => {
@@ -910,7 +921,8 @@ export class MediaStateManager extends MediaPlayerController {
       return;
     }
 
-    this._onEnded(event);
+    // Fire after `end`
+    setTimeout(() => this._onEnded(event), 0);
   }
 
   private _onEnded(event: Event) {

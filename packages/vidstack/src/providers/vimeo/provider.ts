@@ -11,7 +11,6 @@ import { TextTrack, TimeRange, type MediaContext, type Src } from '../../core';
 import { QualitySymbol } from '../../core/quality/symbols';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
-import { coerceToError } from '../../utils/error';
 import { preconnect } from '../../utils/network';
 import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
@@ -293,10 +292,10 @@ export class VimeoProvider
   }
 
   // Embed will sometimes dispatch 0 at end of playback.
-  private _skipTimeUpdates = false;
+  private _preventTimeUpdates = false;
 
   protected _onTimeUpdate(time: number, trigger: Event) {
-    if (this._skipTimeUpdates && time === 0) return;
+    if (this._preventTimeUpdates && time === 0) return;
 
     const { realCurrentTime, realDuration, paused, bufferedEnd } = this._ctx.$state;
 
@@ -321,9 +320,9 @@ export class VimeoProvider
 
     if (realDuration() - time < 0.01) {
       this._notify('end', undefined, trigger);
-      this._skipTimeUpdates = true;
+      this._preventTimeUpdates = true;
       setTimeout(() => {
-        this._skipTimeUpdates = false;
+        this._preventTimeUpdates = false;
       }, 500);
     }
   }
@@ -452,7 +451,7 @@ export class VimeoProvider
 
   protected _onPlayProgress(trigger: Event) {
     const { paused } = this._ctx.$state;
-    if (!paused()) {
+    if (!paused() && !this._preventTimeUpdates) {
       this._notify('playing', undefined, trigger);
     }
   }
