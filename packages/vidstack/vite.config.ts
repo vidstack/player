@@ -14,6 +14,7 @@ export default defineConfig({
   build: {
     target: 'es2019',
   },
+  publicDir: 'sandbox/public',
   resolve: {
     alias: {
       '$test-utils': '/src/test-utils',

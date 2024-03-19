@@ -88,11 +88,12 @@ export class HLSController {
     const event = new DOMEvent<HLS.NonNativeTextTracksData>(eventType, { detail: data });
 
     let currentTrack = -1;
+
     for (let i = 0; i < data.tracks.length; i++) {
       const nonNativeTrack = data.tracks[i],
         init = nonNativeTrack.subtitleTrack ?? nonNativeTrack.closedCaptions,
         track = new TextTrack({
-          id: `hls-${nonNativeTrack!.kind}${i}`,
+          id: `hls-${nonNativeTrack!.kind}-${i}`,
           src: init?.url,
           label: nonNativeTrack!.label,
           language: init?.lang,
@@ -116,9 +117,13 @@ export class HLSController {
   }
 
   private _onCuesParsed(eventType: string, data: HLS.CuesParsedData) {
-    const track = this._ctx.textTracks.getById(`hls-${data.track}`);
+    const index = this._instance?.subtitleTrack,
+      track = this._ctx.textTracks.getById(`hls-${data.type}-${index}`);
+
     if (!track) return;
+
     const event = new DOMEvent<HLS.CuesParsedData>(eventType, { detail: data });
+
     for (const cue of data.cues) {
       cue.positionAlign = 'auto';
       track.addCue(cue, event);
