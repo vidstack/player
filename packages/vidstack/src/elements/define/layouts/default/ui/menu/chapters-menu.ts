@@ -5,7 +5,8 @@ import { isFunction, unwrap } from 'maverick.js/std';
 import { useDefaultLayoutContext } from '../../../../../../components/layouts/default/context';
 import type { MenuPlacement } from '../../../../../../components/ui/menu/menu-items';
 import type { TooltipPlacement } from '../../../../../../components/ui/tooltip/tooltip-content';
-import { useMediaState } from '../../../../../../core/api/media-context';
+import { TextTrack, watchActiveTextTrack } from '../../../../../../core';
+import { useMediaContext, useMediaState } from '../../../../../../core/api/media-context';
 import { $signal } from '../../../../../lit/directives/signal';
 import { IconSlot } from '../../slots';
 import { $i18n } from '../utils';
@@ -20,7 +21,8 @@ export function DefaultChaptersMenu({
   placement: MenuPlacement | ReadSignal<MenuPlacement | null>;
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
 }) {
-  const { viewType } = useMediaState(),
+  const { textTracks } = useMediaContext(),
+    { viewType, clipStartTime, clipEndTime } = useMediaState(),
     {
       translations,
       thumbnails,
@@ -29,7 +31,23 @@ export function DefaultChaptersMenu({
       menuGroup,
       smallWhen: smWhen,
     } = useDefaultLayoutContext(),
-    $placement = computed(() =>
+    $disabled = computed(() => {
+      const $startTime = clipStartTime(),
+        $endTime = clipEndTime() || Infinity,
+        $track = signal<TextTrack | null>(null);
+
+      watchActiveTextTrack(textTracks, 'chapters', $track.set);
+
+      const cues = $track()?.cues.filter(
+        (cue) => cue.startTime <= $endTime && cue.endTime >= $startTime,
+      );
+
+      return !cues?.length;
+    });
+
+  if ($disabled()) return null;
+
+  const $placement = computed(() =>
       noModal() ? unwrap(placement) : !smWhen() ? unwrap(placement) : null,
     ),
     $offset = computed(() =>

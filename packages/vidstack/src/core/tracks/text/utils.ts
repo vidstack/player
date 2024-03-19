@@ -1,4 +1,4 @@
-import { type Dispose } from 'maverick.js';
+import { getScope, onDispose, scoped, type Dispose } from 'maverick.js';
 import { isString, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
@@ -22,7 +22,8 @@ export function watchActiveTextTrack(
   kind: TextTrackKind | TextTrackKind[],
   onChange: (track: TextTrack | null) => void,
 ): Dispose {
-  let currentTrack: TextTrack | null = null;
+  let currentTrack: TextTrack | null = null,
+    scope = getScope();
 
   function onModeChange() {
     const kinds = isString(kind) ? [kind] : kind,
@@ -42,7 +43,17 @@ export function watchActiveTextTrack(
       onChange(track);
     } else {
       onChange(null);
-      track.addEventListener('load', () => onChange(track), { once: true });
+      scoped(() => {
+        const off = listenEvent(
+          track,
+          'load',
+          () => {
+            onChange(track);
+            off();
+          },
+          { once: true },
+        );
+      }, scope);
     }
 
     currentTrack = track;

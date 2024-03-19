@@ -281,6 +281,7 @@
   overflow: hidden;
 }
 
+.vds-menu-button[aria-disabled='true'],
 .vds-menu-item[aria-disabled='true'],
 .vds-menu-item[data-disabled] {
   display: none;

@@ -150,6 +150,8 @@ export class ChaptersRadioGroup extends Component<
 
     if (activeCueIndex >= 0) {
       requestScopedAnimationFrame(() => {
+        if (!this.connectScope) return;
+
         const cue = this._cues()[activeCueIndex],
           radio = this.el!.querySelector(`[aria-checked='true']`),
           cueStartTime = Math.max(startTime, cue.startTime),
