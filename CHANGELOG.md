@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - new js player constructors ([2876c73](https://github.com/vidstack/player/commit/2876c737bf564fa891d3221d667f87fec7b2b5e8))
 - new cdn urls and bundles ([e36958c](https://github.com/vidstack/player/commit/e36958c491e0f7d109bcc0ce6539a6a171d46600))
 - add new `artwork` player prop ([c0a4eaf](https://github.com/vidstack/player/commit/c0a4eafefb7d16499107a0f84341e13db1680252))
+- add airplay support for audio ([2142d94](https://github.com/vidstack/player/commit/2142d947e430f424a4d5972180ca0ffe0d526355))
 
 ### 🐛 Bug Fixes
 
@@ -50,6 +51,9 @@ All notable changes to this project will be documented in this file.
 - vimeo ended event not firing ([53025a3](https://github.com/vidstack/player/commit/53025a3ee0f88c56a4094a6024177784d0f4464f))
 - focus on controls hide should not scroll ([778132f](https://github.com/vidstack/player/commit/778132f4061845153e8bff8ab8b6346adcae5d4c))
 - extending `LocalMediaStorage` should work ([71298c3](https://github.com/vidstack/player/commit/71298c3e36d1726d0113514c6438c7b51ff465f1))
+- accept `no` value for fullscreen orientation attr/prop ([7c082b9](https://github.com/vidstack/player/commit/7c082b916b0c6ec61baef1a7fe58fc9bf9ebcffb))
+- clear saved time in storage on media end ([7628525](https://github.com/vidstack/player/commit/7628525a04be2b5927707d7a6e97132a0beb5c72))
+- trigger started if resuming from stored session ([3606317](https://github.com/vidstack/player/commit/360631788160049e3a54a0b605fc5c683a5fcae4))
 
 #### Player (React)
 
