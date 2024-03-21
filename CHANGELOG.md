@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### ⏪ Revert
+
+#### Player
+
+- clear saved time on media end ([1b9c598](https://github.com/vidstack/player/commit/1b9c59827cad6141bfdce84800a2bdf6e621f499))
+
 ### ✨ Features
 
 #### Player
@@ -26,7 +32,8 @@ All notable changes to this project will be documented in this file.
 - new js player constructors ([2876c73](https://github.com/vidstack/player/commit/2876c737bf564fa891d3221d667f87fec7b2b5e8))
 - new cdn urls and bundles ([e36958c](https://github.com/vidstack/player/commit/e36958c491e0f7d109bcc0ce6539a6a171d46600))
 - add new `artwork` player prop ([c0a4eaf](https://github.com/vidstack/player/commit/c0a4eafefb7d16499107a0f84341e13db1680252))
-- add airplay support for audio ([2142d94](https://github.com/vidstack/player/commit/2142d947e430f424a4d5972180ca0ffe0d526355))
+- add airplay support for audio ([c60c2fc](https://github.com/vidstack/player/commit/c60c2fc4b7031f3dd70c746b08bc52785ef8c68a))
+- add new `onLoad` method to storage ([2ce029f](https://github.com/vidstack/player/commit/2ce029f5377c3a46a6c4bc5db374b0efab3e97d5))
 
 ### 🐛 Bug Fixes
 
@@ -51,12 +58,12 @@ All notable changes to this project will be documented in this file.
 - vimeo ended event not firing ([53025a3](https://github.com/vidstack/player/commit/53025a3ee0f88c56a4094a6024177784d0f4464f))
 - focus on controls hide should not scroll ([778132f](https://github.com/vidstack/player/commit/778132f4061845153e8bff8ab8b6346adcae5d4c))
 - extending `LocalMediaStorage` should work ([71298c3](https://github.com/vidstack/player/commit/71298c3e36d1726d0113514c6438c7b51ff465f1))
-- accept `no` value for fullscreen orientation attr/prop ([7c082b9](https://github.com/vidstack/player/commit/7c082b916b0c6ec61baef1a7fe58fc9bf9ebcffb))
-- clear saved time in storage on media end ([7628525](https://github.com/vidstack/player/commit/7628525a04be2b5927707d7a6e97132a0beb5c72))
-- trigger started if resuming from stored session ([3606317](https://github.com/vidstack/player/commit/360631788160049e3a54a0b605fc5c683a5fcae4))
-- allow seeking directly to end ([91d52ba](https://github.com/vidstack/player/commit/91d52baa4f05a961412c29a75468cad4b3e9eca2))
-- hls tracks not initializing correctly ([9abff96](https://github.com/vidstack/player/commit/9abff96cf146816500d84030eef0f2e0491489b2))
-- hide chapters menu button when disabled ([29d26ca](https://github.com/vidstack/player/commit/29d26ca58fc18161a238e9355e6a2722017d6fb7))
+- accept `none` value for fullscreen orientation attr/prop ([545b7d6](https://github.com/vidstack/player/commit/545b7d62e36a8c1f03babe8c634003c62022f15f))
+- clear saved time in storage on media end ([3c37e51](https://github.com/vidstack/player/commit/3c37e519540aec4ac6eaf97499593d17c6aaba20))
+- trigger started if resuming from stored session ([6cdeed7](https://github.com/vidstack/player/commit/6cdeed7dd769f2b911f142589b266e6e3dcba993))
+- allow seeking directly to end ([20cc205](https://github.com/vidstack/player/commit/20cc2055c9a053c1118f29092943aaa4c090f1fa))
+- hls tracks not initializing correctly ([edddf3b](https://github.com/vidstack/player/commit/edddf3b90262f33f814e712f27a335eb076b6fcc))
+- hide chapters menu button when disabled ([9e96b33](https://github.com/vidstack/player/commit/9e96b33e2d966abf9e013109947da2958cb4fe3b))
 
 #### Player (React)
 
