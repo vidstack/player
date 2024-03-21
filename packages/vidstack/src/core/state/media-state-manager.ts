@@ -942,7 +942,7 @@ export class MediaStateManager extends MediaPlayerController {
 
     ended.set(true);
     this._resetTracking();
-    storage?.setTime?.(null);
+    storage?.setTime?.(duration());
 
     this.dispatch('ended', {
       trigger: event,

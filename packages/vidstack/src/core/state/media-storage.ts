@@ -12,7 +12,7 @@ export interface MediaStorage {
   setMuted?(muted: boolean): Promise<void>;
 
   getTime(): Promise<number | null>;
-  setTime?(time: number | null): Promise<void>;
+  setTime?(time: number): Promise<void>;
 
   getLang(): Promise<string | null>;
   setLang?(lang: string | null): Promise<void>;
@@ -97,10 +97,13 @@ export class LocalMediaStorage implements MediaStorage {
     return this._data.time;
   }
 
-  async setTime(time: number | null) {
-    this._data.time = time;
-    if (isNull(time)) this._saveTime();
-    else this.saveTime();
+  async setTime(time: number) {
+    const shouldClear = time < 0;
+
+    this._data.time = !shouldClear ? time : null;
+
+    if (shouldClear) this.saveTime();
+    else this.saveTimeThrottled();
   }
 
   async getLang() {
@@ -174,8 +177,8 @@ export class LocalMediaStorage implements MediaStorage {
     localStorage.setItem(this.playerId, data);
   }
 
-  protected saveTime = throttle(this._saveTime.bind(this), 1000);
-  private _saveTime() {
+  protected saveTimeThrottled = throttle(this.saveTime.bind(this), 1000);
+  private saveTime() {
     if (__SERVER__ || !this.mediaId) return;
     const data = (this._data.time ?? 0).toString();
     localStorage.setItem(this.mediaId, data);
