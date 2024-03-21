@@ -1,4 +1,6 @@
 import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
@@ -289,12 +291,14 @@ function getCDNBundles() {
  * @returns {import('rollup').RollupOptions}
  */
 function defineCDNBundle({ dev = false, input, dir, file, legacy = false }) {
+  const npm = defineNPMBundle({
+    type: dev ? 'dev' : 'prod',
+    minify: !dev,
+    target: 'es2020',
+  });
+
   return {
-    ...defineNPMBundle({
-      type: dev ? 'dev' : 'prod',
-      minify: !dev,
-      target: 'es2020',
-    }),
+    ...npm,
     input: dev ? input : { [file]: input, ...getProviderInputs() },
     preserveEntrySignatures: dev ? 'allow-extension' : 'strict',
     output: {
@@ -324,6 +328,28 @@ function defineCDNBundle({ dev = false, input, dir, file, legacy = false }) {
       },
     },
     external: CDN_EXTERNAL_PACKAGES,
+    plugins: [
+      .../** @type {*} */ (npm.plugins),
+      {
+        // This plugin rewrites chunk paths so our URL rewrites to jsDelivr work.
+        name: 'cdn-chunks',
+        async generateBundle(_, bundle) {
+          const __dirname = path.dirname(fileURLToPath(import.meta.url)),
+            version = JSON.parse(
+              await fs.readFile(path.join(__dirname, 'package.json'), 'utf-8'),
+            ).version;
+
+          for (const chunk of Object.values(bundle)) {
+            if (chunk.type === 'chunk' && chunk.isEntry && chunk.name === file) {
+              chunk.code = chunk.code.replace(
+                /\"\.\/(chunks|providers)\/(.*?)\"/g,
+                `"https://cdn.jsdelivr.net/npm/@vidstack/cdn@${version}/$1/$2"`,
+              );
+            }
+          }
+        },
+      },
+    ],
   };
 }
 
