@@ -30,6 +30,11 @@ export interface MediaStorage {
   setAudioGain?(gain: number | null): Promise<void>;
 
   /**
+   * Called when media is ready for playback and new data can be loaded.
+   */
+  onLoad?(src: Src): void | Promise<void>;
+
+  /**
    * Called when the `mediaId` has changed. This method can return a function to be called
    * before the next change.
    *

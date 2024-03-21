@@ -50,6 +50,7 @@ export class MediaPlayerDelegate {
           remotePlaybackInfo,
           playsInline,
           savedState,
+          source,
         } = this._media.$state;
 
       if (canPlay()) return;
@@ -76,6 +77,8 @@ export class MediaPlayerDelegate {
       let provider = this._media.$provider(),
         { storage, qualities } = this._media,
         { muted, volume, clipStartTime, playbackRate } = this._media.$props;
+
+      await storage?.onLoad?.(source());
 
       const savedPlaybackTime = savedState()?.currentTime,
         savedPlayingState = savedState()?.paused === false,
