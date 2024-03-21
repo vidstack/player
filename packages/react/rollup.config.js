@@ -29,6 +29,7 @@ const EXTERNAL_PACKAGES = [
     'media-icons',
     'media-captions',
     'hls.js',
+    'dashjs',
     /^remotion/,
   ],
   NPM_BUNDLES = [defineNPMBundle({ dev: true }), defineNPMBundle({ dev: false })],

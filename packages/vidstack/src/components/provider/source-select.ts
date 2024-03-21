@@ -18,8 +18,9 @@ import {
   YouTubeProviderLoader,
   type MediaProviderLoader,
 } from '../../providers';
+import { DASHProviderLoader } from '../../providers/dash/loader';
 import { resolveStreamTypeFromHLSManifest } from '../../utils/hls';
-import { isHLSSrc } from '../../utils/mime';
+import { isDASHSrc, isHLSSrc } from '../../utils/mime';
 import { getRequestCredentials, preconnect } from '../../utils/network';
 import { isHLSSupported } from '../../utils/support';
 
@@ -41,7 +42,8 @@ export class SourceSelection {
     private _loader: WriteSignal<MediaProviderLoader | null>,
     customLoaders: MediaProviderLoader[] = [],
   ) {
-    const HLS_LOADER = new HLSProviderLoader(),
+    const DASH_LOADER = new DASHProviderLoader(),
+      HLS_LOADER = new HLSProviderLoader(),
       VIDEO_LOADER = new VideoProviderLoader(),
       AUDIO_LOADER = new AudioProviderLoader(),
       YOUTUBE_LOADER = new YouTubeProviderLoader(),
@@ -52,8 +54,8 @@ export class SourceSelection {
       const remoteLoader = _media.$state.remotePlaybackLoader();
 
       const loaders = _media.$props.preferNativeHLS()
-        ? [VIDEO_LOADER, AUDIO_LOADER, HLS_LOADER, ...EMBED_LOADERS, ...customLoaders]
-        : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER, ...EMBED_LOADERS, ...customLoaders];
+        ? [VIDEO_LOADER, AUDIO_LOADER, DASH_LOADER, HLS_LOADER, ...EMBED_LOADERS, ...customLoaders]
+        : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER, DASH_LOADER, ...EMBED_LOADERS, ...customLoaders];
 
       return remoteLoader ? [remoteLoader, ...loaders] : loaders;
     });

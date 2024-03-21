@@ -152,3 +152,7 @@ export function isHLSSupported(): boolean {
 
   return !!isTypeSupported && !!isSourceBufferValid;
 }
+
+export function isDASHSupported(): boolean {
+  return isHLSSupported();
+}
