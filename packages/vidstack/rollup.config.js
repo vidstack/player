@@ -208,6 +208,7 @@ function defineNPMBundle({ target, type, minify }) {
         define: {
           __DEV__: !isProd && !isServer ? 'true' : 'false',
           __SERVER__: isServer ? 'true' : 'false',
+          __CDN__: MODE_CDN ? 'true' : 'false',
           __TEST__: 'false',
         },
       }),

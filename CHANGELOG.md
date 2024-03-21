@@ -64,6 +64,7 @@ All notable changes to this project will be documented in this file.
 - allow seeking directly to end ([20cc205](https://github.com/vidstack/player/commit/20cc2055c9a053c1118f29092943aaa4c090f1fa))
 - hls tracks not initializing correctly ([edddf3b](https://github.com/vidstack/player/commit/edddf3b90262f33f814e712f27a335eb076b6fcc))
 - hide chapters menu button when disabled ([9e96b33](https://github.com/vidstack/player/commit/9e96b33e2d966abf9e013109947da2958cb4fe3b))
+- rework layout loading in player class constructors ([9b183ac](https://github.com/vidstack/player/commit/9b183ac98291982ac0ed7cd13c986e971a4670f0))
 
 #### Player (React)
 

@@ -2,10 +2,14 @@ import '../elements/bundles/player';
 
 import { isString, kebabToCamelCase } from 'maverick.js/std';
 
-import type { DefaultLayoutProps, PlyrLayoutProps } from '../components';
 import type { MediaPlayerProps, TextTrackInit } from '../core';
 import { isHTMLAudioElement, isHTMLIFrameElement, isHTMLVideoElement } from '../providers';
 import { isHTMLElement } from '../utils/dom';
+import { VidstackPlayerLayout } from './layouts/default';
+import type { VidstackPlayerLayoutLoader } from './layouts/loader';
+import { PlyrLayout } from './layouts/plyr';
+
+const LAYOUT_LOADED = Symbol();
 
 export class VidstackPlayer {
   static async create({ target, layout, tracks, ...props }: VidstackPlayerConfig) {
@@ -21,31 +25,19 @@ export class VidstackPlayer {
       throw Error(`[vidstack] target must be of type \`HTMLElement\`, found \`${typeof target}\``);
     }
 
-    const player = document.createElement('media-player'),
+    let player = document.createElement('media-player'),
       provider = document.createElement('media-provider'),
-      layouts: HTMLElement[] = [],
+      layouts: HTMLElement[] | undefined,
       isTargetContainer =
         !isHTMLAudioElement(target) && !isHTMLVideoElement(target) && !isHTMLIFrameElement(target);
 
-    if (layout?.type === 'default') {
-      await import('../elements/bundles/player-layouts/default');
-      await import('../elements/bundles/player-ui');
-
-      layouts.push(
-        document.createElement('media-video-layout'),
-        document.createElement('media-audio-layout'),
-      );
-    } else if (layout?.type === 'plyr') {
-      await import('../elements/bundles/player-layouts/plyr');
-
-      layouts.push(document.createElement('media-plyr-layout'));
-    }
-
-    if (layout && layouts.length) {
-      const { type, ...props } = layout;
-      for (const [name, value] of Object.entries(props)) {
-        for (const layout of layouts) layout[name] = value;
+    if (layout) {
+      if (!layout[LAYOUT_LOADED]) {
+        await layout.load();
+        layout[LAYOUT_LOADED] = true;
       }
+
+      layouts = await layout.create();
     }
 
     target.removeAttribute('controls');
@@ -68,9 +60,11 @@ export class VidstackPlayer {
 
       if (propName in player) {
         player.setAttribute(name, attr.value);
-      } else if (layouts.length) {
+      } else if (layouts?.length) {
         for (const layout of layouts) {
-          if (propName in layout) layout.setAttribute(name, attr.value);
+          if (propName in layout) {
+            layout.setAttribute(name, attr.value);
+          }
         }
       }
     }
@@ -85,8 +79,8 @@ export class VidstackPlayer {
 
     player.append(provider);
 
-    for (const layout of layouts) {
-      player.append(layout);
+    if (layouts) {
+      for (const layout of layouts) player.append(layout);
     }
 
     if (isTargetContainer) {
@@ -116,17 +110,16 @@ export interface VidstackPlayerConfig extends Partial<MediaPlayerProps> {
   /**
    * Specify a layout to be loaded.
    */
-  layout?: DefaultLayoutConfig | PlyrLayoutConfig;
+  layout?: VidstackPlayerLayoutLoader;
 }
 
-export interface DefaultLayoutConfig extends Partial<DefaultLayoutProps> {
-  type: 'default';
-}
+export { VidstackPlayerLayout, PlyrLayout, type VidstackPlayerLayoutLoader };
 
-export interface PlyrLayoutConfig extends Partial<PlyrLayoutProps> {
-  type: 'plyr';
-}
+if (__CDN__) {
+  (VidstackPlayer as any).Layout = {
+    Default: VidstackPlayerLayout,
+    Plyr: PlyrLayout,
+  };
 
-if (typeof window !== 'undefined') {
   (window as any).VidstackPlayer = VidstackPlayer;
 }

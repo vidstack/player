@@ -902,6 +902,6 @@ export interface PlyrEvents
   volumechange: ME.MediaVolumeChangeEvent;
 }
 
-if (typeof window !== 'undefined') {
+if (__CDN__) {
   (window as any).Plyr = Plyr;
 }
