@@ -1,8 +1,9 @@
 import type * as DASH from 'dashjs';
-
 import { effect, peek } from 'maverick.js';
 import { camelToKebabCase, DOMEvent, isString, listenEvent } from 'maverick.js/std';
 
+import type { MediaContext } from '../../core/api/media-context';
+import type { Src } from '../../core/api/src-types';
 import { QualitySymbol } from '../../core/quality/symbols';
 import { TextTrackSymbol } from '../../core/tracks/text/symbols';
 import { TextTrack } from '../../core/tracks/text/text-track';
@@ -10,10 +11,8 @@ import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { canPlayAudioType, canPlayVideoType, IS_CHROME } from '../../utils/support';
 import type { DashConstructor, DashInstanceCallback } from './types';
-import type { MediaContext } from '../../core/api/media-context';
-import type { Src } from '../../core/api/src-types';
 
-export type DashGetMediaTracks = (type: DASH.MediaType, manifest: object) => DASH.MediaInfo[]
+export type DashGetMediaTracks = (type: DASH.MediaType, manifest: object) => DASH.MediaInfo[];
 
 const toDOMEventType = (type: string) => camelToKebabCase(type);
 
@@ -21,7 +20,7 @@ export class DASHController {
   private _instance: DASH.MediaPlayerClass | null = null;
   private _stopLiveSync: (() => void) | null = null;
 
-  _config: Partial<DASH.MediaPlayerSettingClass> = {}
+  _config: Partial<DASH.MediaPlayerSettingClass> = {};
   _callbacks = new Set<DashInstanceCallback>();
 
   get instance() {
@@ -31,7 +30,7 @@ export class DASHController {
   constructor(
     private _video: HTMLVideoElement,
     protected _ctx: MediaContext,
-  ) { }
+  ) {}
 
   setup(ctor: DashConstructor) {
     this._instance = ctor().create();
@@ -131,10 +130,12 @@ export class DASHController {
     const data = event.tracks;
 
     /* dash.js inserts text tracks into the video element, so that it can render subtitles natively. for now just going to link dashTrack cues with the textTrack supported by the vidStack */
-    const dashTracks = [...this._instance.getVideoElement().textTracks].filter((track) => 'manualMode' in track);
+    const dashTracks = [...this._instance.getVideoElement().textTracks].filter(
+      (track) => 'manualMode' in track,
+    );
 
     data.forEach((textTrack, i) => {
-      const dashTrack = dashTracks[i] as (DASH.TextTrackInfo & globalThis.TextTrack);
+      const dashTrack = dashTracks[i] as DASH.TextTrackInfo & globalThis.TextTrack;
 
       const track = new TextTrack({
         id: `dash-text${textTrack.lang}${i}`,
@@ -175,7 +176,7 @@ export class DASHController {
   }
 
   _onQualitySwitched(event: DASH.QualityChangeRenderedEvent) {
-    if (event.mediaType !== "video") return;
+    if (event.mediaType !== 'video') return;
     const quality = this._ctx.qualities[event.newQuality];
 
     if (quality) {
@@ -187,7 +188,7 @@ export class DASHController {
   _onManifestLoaded(event: DASH.ManifestLoadedEvent) {
     if (this._ctx.$state.canPlay() || !this._instance) return;
 
-    const { type, mediaPresentationDuration } = event.data as (DASH.Mpd & DASH.AdaptationSet),
+    const { type, mediaPresentationDuration } = event.data as DASH.Mpd & DASH.AdaptationSet,
       trigger = new DOMEvent(event.type, { detail: event.data });
     this._ctx.delegate._notify(
       'stream-type-change',
@@ -198,18 +199,26 @@ export class DASHController {
 
     this._ctx.qualities[QualitySymbol._setAuto](true, trigger);
 
-    const media = this._instance.getVideoElement()
+    const media = this._instance.getVideoElement();
 
     // getting videos from manifest whose type is supported
-    const videoQualities = (this._instance.getTracksForTypeFromManifest as DashGetMediaTracks)('video', event.data);
-    const supportedVideoMimeType = [...new Set(videoQualities.map((e) => e.mimeType))].find((type) =>
-      type && canPlayVideoType(media, type),
+    const videoQualities = (this._instance.getTracksForTypeFromManifest as DashGetMediaTracks)(
+      'video',
+      event.data,
     );
-    const videoQuality = videoQualities.filter((track) => supportedVideoMimeType === track.mimeType)[0];
+    const supportedVideoMimeType = [...new Set(videoQualities.map((e) => e.mimeType))].find(
+      (type) => type && canPlayVideoType(media, type),
+    );
+    const videoQuality = videoQualities.filter(
+      (track) => supportedVideoMimeType === track.mimeType,
+    )[0];
 
-    let audioTracks = (this._instance.getTracksForTypeFromManifest as DashGetMediaTracks)('audio', event.data);
-    const supportedAudioMimeType = [...new Set(audioTracks.map((e) => e.mimeType))].find((type) =>
-      type && canPlayAudioType(media, type),
+    let audioTracks = (this._instance.getTracksForTypeFromManifest as DashGetMediaTracks)(
+      'audio',
+      event.data,
+    );
+    const supportedAudioMimeType = [...new Set(audioTracks.map((e) => e.mimeType))].find(
+      (type) => type && canPlayAudioType(media, type),
     );
     audioTracks = audioTracks.filter((track) => supportedAudioMimeType === track.mimeType);
 
@@ -220,16 +229,16 @@ export class DASHController {
         height: bitrate.height ?? 0,
         bitrate: bitrate.bandwidth ?? 0,
         codec: videoQuality.codec,
-        index
+        index,
       };
       this._ctx.qualities[ListSymbol._add](quality, trigger);
     });
 
-    audioTracks.forEach((audioTrack: (DASH.MediaInfo & { label?: string | null }), index) => {
+    audioTracks.forEach((audioTrack: DASH.MediaInfo & { label?: string | null }, index) => {
       const localTrack = {
         id: `dash-audio${audioTrack?.index}`,
-        label: audioTrack.label ?? audioTrack.lang ?? "",
-        language: audioTrack.lang ?? "",
+        label: audioTrack.label ?? audioTrack.lang ?? '',
+        language: audioTrack.lang ?? '',
         kind: 'main',
         mimeType: audioTrack.mimeType,
         codec: audioTrack.codec,
@@ -292,7 +301,7 @@ export class DASHController {
     this._instance?.destroy();
     this._instance = null;
     this._ctx.delegate._notify('error', {
-      message: error.message ?? "",
+      message: error.message ?? '',
       code: 1,
       error: error as any,
     });
@@ -313,7 +322,7 @@ export class DASHController {
     if (!this._instance || qualities.auto || !qualities.selected) return;
 
     this._switchAutoBitrate('video', false);
-    this._instance.setQualityFor('video', qualities.selectedIndex, qualities.switch === "current");
+    this._instance.setQualityFor('video', qualities.selectedIndex, qualities.switch === 'current');
     /**
      * Chrome has some strange issue with detecting keyframes inserted before the current
      * playhead position. This can cause playback to freeze until a new keyframe. It seems
@@ -328,7 +337,9 @@ export class DASHController {
     const { audioTracks } = this._ctx;
     const selectedTrack = this._instance
       .getTracksFor('audio')
-      .find((track) => audioTracks.selected && audioTracks.selected.id === `dash-audio${track.index}`);
+      .find(
+        (track) => audioTracks.selected && audioTracks.selected.id === `dash-audio${track.index}`,
+      );
     selectedTrack && this._instance.setCurrentTrack(selectedTrack);
   }
 
