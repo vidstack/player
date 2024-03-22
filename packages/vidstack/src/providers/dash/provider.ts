@@ -115,7 +115,7 @@ export class DASHProvider extends VideoProvider implements MediaProviderAdapter 
 
     this._media.preload = preload || '';
     this._appendSource(src as Src<string>, 'application/x-mpegurl');
-    this._controller._loadSource(src);
+    this._controller.loadSource(src);
     this._currentSrc = src as Src<string>;
   }
 
@@ -131,6 +131,6 @@ export class DASHProvider extends VideoProvider implements MediaProviderAdapter 
   }
 
   destroy() {
-    this._controller._destroy();
+    this._controller.destroy();
   }
 }

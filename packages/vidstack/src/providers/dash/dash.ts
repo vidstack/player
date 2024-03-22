@@ -51,12 +51,12 @@ export class DASHController {
     this._instance.updateSettings({
       streaming: {
         text: {
-          // disabling text rendering by dash
+          // Disabling text rendering by dash.
           defaultEnabled: false,
           dispatchForManualRendering: true,
         },
         buffer: {
-          ///enables buffer replacement when switching bitrates for faster switching
+          /// Enables buffer replacement when switching bitrates for faster switching.
           fastSwitchEnabled: true,
         },
       },
@@ -76,11 +76,14 @@ export class DASHController {
     this._stopLiveSync = effect(this._liveSync.bind(this));
   }
 
-  _attachTTMLRenderingDiv() {
+  private _attachTTMLRenderingDiv() {
     if (!this._instance) return;
+
     this._removeTTMLRenderingDiv();
+
     const div = document.createElement('div');
     div.id = 'ttml-rendering-div';
+
     const videoElement = this._instance.getVideoElement();
     if (videoElement.parentNode) {
       videoElement.parentNode.insertBefore(div, videoElement.nextSibling);
@@ -88,32 +91,31 @@ export class DASHController {
     }
   }
 
-  _removeTTMLRenderingDiv() {
+  private _removeTTMLRenderingDiv() {
     const div = document.getElementById('ttml-rendering-div');
     if (div) div.remove();
   }
 
-  _liveSync() {
+  private _liveSync() {
     if (!this._ctx.$state.live()) return;
     const raf = new RAFLoop(this._liveSyncPosition.bind(this));
     raf._start();
     return raf._stop.bind(raf);
   }
 
-  _liveSyncPosition() {
+  private _liveSyncPosition() {
     if (!this._instance) return;
-
     const position = this._instance.duration() - this._instance.time();
     this._ctx.$state.liveSyncPosition.set(!isNaN(position) ? position : Infinity);
   }
 
-  _dispatchDASHEvent(event: any) {
-    const eventType = event.type;
-    const detail = event;
+  private _dispatchDASHEvent(event: any) {
+    const eventType = event.type,
+      detail = event;
     this._ctx.player?.dispatch(new DOMEvent(toDOMEventType(eventType), { detail }));
   }
 
-  _textManualRendering(enable: boolean) {
+  private _textManualRendering(enable: boolean) {
     if (!this._instance) return;
     // render text manually or let dashjs render it
     this._instance.updateSettings({
@@ -125,11 +127,15 @@ export class DASHController {
     });
   }
 
-  _onTracksFound(event: DASH.TextTracksAddedEvent) {
+  private _onTracksFound(event: DASH.TextTracksAddedEvent) {
     if (!this._instance) return;
+
     const data = event.tracks;
 
-    /* dash.js inserts text tracks into the video element, so that it can render subtitles natively. for now just going to link dashTrack cues with the textTrack supported by the vidStack */
+    /*
+     * dash.js inserts text tracks into the video element, so that it can render subtitles
+     * natively. for now just going to link dashTrack cues with our own textTrack.
+     */
     const dashTracks = [...this._instance.getVideoElement().textTracks].filter(
       (track) => 'manualMode' in track,
     );
@@ -164,9 +170,11 @@ export class DASHController {
     });
   }
 
-  _onAudioSwitch(event: DASH.Event) {
+  private _onAudioSwitch(event: DASH.Event) {
     const { mediaType, newMediaInfo } = event as DASH.TrackChangeRenderedEvent;
+
     if (mediaType !== 'audio') return;
+
     const track = this._ctx.audioTracks.getById(`dash-audio${newMediaInfo.index}`);
 
     if (track) {
@@ -175,8 +183,9 @@ export class DASHController {
     }
   }
 
-  _onQualitySwitched(event: DASH.QualityChangeRenderedEvent) {
+  private _onQualitySwitched(event: DASH.QualityChangeRenderedEvent) {
     if (event.mediaType !== 'video') return;
+
     const quality = this._ctx.qualities[event.newQuality];
 
     if (quality) {
@@ -185,16 +194,18 @@ export class DASHController {
     }
   }
 
-  _onManifestLoaded(event: DASH.ManifestLoadedEvent) {
+  private _onManifestLoaded(event: DASH.ManifestLoadedEvent) {
     if (this._ctx.$state.canPlay() || !this._instance) return;
 
     const { type, mediaPresentationDuration } = event.data as DASH.Mpd & DASH.AdaptationSet,
       trigger = new DOMEvent(event.type, { detail: event.data });
+
     this._ctx.delegate._notify(
       'stream-type-change',
       type !== 'static' ? 'live' : 'on-demand',
       trigger,
     );
+
     this._ctx.delegate._notify('duration-change', mediaPresentationDuration, trigger);
 
     this._ctx.qualities[QualitySymbol._setAuto](true, trigger);
@@ -206,9 +217,11 @@ export class DASHController {
       'video',
       event.data,
     );
+
     const supportedVideoMimeType = [...new Set(videoQualities.map((e) => e.mimeType))].find(
       (type) => type && canPlayVideoType(media, type),
     );
+
     const videoQuality = videoQualities.filter(
       (track) => supportedVideoMimeType === track.mimeType,
     )[0];
@@ -217,9 +230,11 @@ export class DASHController {
       'audio',
       event.data,
     );
+
     const supportedAudioMimeType = [...new Set(audioTracks.map((e) => e.mimeType))].find(
       (type) => type && canPlayAudioType(media, type),
     );
+
     audioTracks = audioTracks.filter((track) => supportedAudioMimeType === track.mimeType);
 
     videoQuality.bitrateList.forEach((bitrate, index) => {
@@ -231,6 +246,7 @@ export class DASHController {
         codec: videoQuality.codec,
         index,
       };
+
       this._ctx.qualities[ListSymbol._add](quality, trigger);
     });
 
@@ -251,8 +267,9 @@ export class DASHController {
     media.dispatchEvent(new DOMEvent<void>('canplay', { trigger }));
   }
 
-  _onError(event: DASH.Event) {
+  private _onError(event: DASH.Event) {
     const { type: eventType, error: data } = event as DASH.MediaPlayerErrorEvent;
+
     if (__DEV__) {
       this._ctx.logger
         ?.errorGroup(`[vidstack] DASH error \`${data.message}\``)
@@ -275,12 +292,12 @@ export class DASHController {
     }
   }
 
-  _onFragLoading() {
+  private _onFragLoading() {
     if (this._retryLoadingTimer >= 0) this._clearRetryTimer();
   }
 
-  _retryLoadingTimer = -1;
-  _onNetworkError(error: DASH.DashJSError) {
+  private _retryLoadingTimer = -1;
+  private _onNetworkError(error: DASH.DashJSError) {
     this._clearRetryTimer();
 
     this._instance?.play();
@@ -291,12 +308,12 @@ export class DASHController {
     }, 5000);
   }
 
-  _clearRetryTimer() {
+  private _clearRetryTimer() {
     clearTimeout(this._retryLoadingTimer);
     this._retryLoadingTimer = -1;
   }
 
-  _onFatalError(error: DASH.DashJSError) {
+  private _onFatalError(error: DASH.DashJSError) {
     // We can't recover here - better course of action?
     this._instance?.destroy();
     this._instance = null;
@@ -307,22 +324,24 @@ export class DASHController {
     });
   }
 
-  _enableAutoQuality() {
+  private _enableAutoQuality() {
     if (this._instance) this._switchAutoBitrate('video', true);
   }
 
-  _switchAutoBitrate(type: DASH.MediaType, auto: boolean) {
+  private _switchAutoBitrate(type: DASH.MediaType, auto: boolean) {
     if (!this._instance) return;
 
     this._instance.updateSettings({ streaming: { abr: { autoSwitchBitrate: { [type]: auto } } } });
   }
 
-  _onQualityChange() {
+  private _onQualityChange() {
     const { qualities } = this._ctx;
+
     if (!this._instance || qualities.auto || !qualities.selected) return;
 
     this._switchAutoBitrate('video', false);
     this._instance.setQualityFor('video', qualities.selectedIndex, qualities.switch === 'current');
+
     /**
      * Chrome has some strange issue with detecting keyframes inserted before the current
      * playhead position. This can cause playback to freeze until a new keyframe. It seems
@@ -332,7 +351,7 @@ export class DASHController {
     if (IS_CHROME) this._video.currentTime = this._video.currentTime;
   }
 
-  _onAudioChange() {
+  private _onAudioChange() {
     if (!this._instance) return;
     const { audioTracks } = this._ctx;
     const selectedTrack = this._instance
@@ -343,14 +362,14 @@ export class DASHController {
     selectedTrack && this._instance.setCurrentTrack(selectedTrack);
   }
 
-  _loadSource(src: Src) {
+  loadSource(src: Src) {
     if (!isString(src.src)) return;
 
     this._clearRetryTimer();
     this._instance?.attachSource(src.src);
   }
 
-  _destroy() {
+  destroy() {
     this._clearRetryTimer();
     this._instance?.destroy();
     this._instance = null;

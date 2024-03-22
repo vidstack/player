@@ -36,11 +36,13 @@ const audioSrcButton = document.querySelector('#audio-src-button'),
   hlsSrcButton = document.querySelector('#hls-src-button'),
   liveSrcButton = document.querySelector('#live-src-button'),
   youtubeSrcButton = document.querySelector('#youtube-src-button'),
+  dashSrcButton = document.querySelector('#dash-src-button'),
   vimeoSrcButton = document.querySelector('#vimeo-src-button');
 
 audioSrcButton?.addEventListener('click', () => changeSource('audio'));
 videoSrcButton?.addEventListener('click', () => changeSource('video'));
 hlsSrcButton?.addEventListener('click', () => changeSource('hls'));
+dashSrcButton?.addEventListener('click', () => changeSource('dash'));
 liveSrcButton?.addEventListener('click', () => changeSource('live'));
 youtubeSrcButton?.addEventListener('click', () => changeSource('youtube'));
 vimeoSrcButton?.addEventListener('click', () => changeSource('vimeo'));
@@ -48,16 +50,18 @@ vimeoSrcButton?.addEventListener('click', () => changeSource('vimeo'));
 changeSource('audio');
 
 function changeSource(type: string) {
-  const muxPlaybackId = 'VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU';
   switch (type) {
     case 'audio':
       player.src = 'https://media-files.vidstack.io/sprite-fight/audio.mp3';
       break;
     case 'video':
-      player.src = `https://stream.mux.com/${muxPlaybackId}/low.mp4`;
+      player.src = 'https://media-files.vidstack.io/sprite-fight/480p.mp4';
       break;
     case 'hls':
-      player.src = `https://stream.mux.com/${muxPlaybackId}.m3u8`;
+      player.src = 'https://media-files.vidstack.io/sprite-fight/hls/stream.m3u8';
+      break;
+    case 'dash':
+      player.src = 'https://media-files.vidstack.io/sprite-fight/dash/stream.mpd';
       break;
     case 'live':
       player.src = 'https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8';

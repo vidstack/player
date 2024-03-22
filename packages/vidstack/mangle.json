@@ -845,5 +845,12 @@
   "_source": "Jo",
   "_watchMetadata": "Mo",
   "_createError": "Oo",
-  "_preventTimeUpdates": "No"
+  "_preventTimeUpdates": "No",
+  "_attachTTMLRenderingDiv": "To",
+  "_dispatchDASHEvent": "So",
+  "_onManifestLoaded": "Uo",
+  "_onQualitySwitched": "Vo",
+  "_removeTTMLRenderingDiv": "Po",
+  "_switchAutoBitrate": "Ro",
+  "_textManualRendering": "Qo"
 }

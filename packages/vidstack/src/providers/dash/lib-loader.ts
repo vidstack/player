@@ -1,9 +1,9 @@
 import { DOMEvent, isFunction, isString, isUndefined } from 'maverick.js/std';
 
+import type { MediaContext } from '../../core/api/media-context';
 import { coerceToError } from '../../utils/error';
 import { loadScript } from '../../utils/network';
 import type { DashConstructor, DashConstructorLoader, DashLibrary } from './types';
-import type { MediaContext } from '../../core/api/media-context';
 
 interface LoadDASHConstructorCallbacks {
   onLoadStart?: () => void;
@@ -11,18 +11,19 @@ interface LoadDASHConstructorCallbacks {
   onLoadError?: (err: Error) => void;
 }
 
-
 export class DASHLibLoader {
   constructor(
-    private _lib : DashLibrary, private _ctx : MediaContext, private _callback :  (ctor : DashConstructor) => void,
-    ) {
+    private _lib: DashLibrary,
+    private _ctx: MediaContext,
+    private _callback: (ctor: DashConstructor) => void,
+  ) {
     this._startLoading();
   }
 
- private async _startLoading() {
+  private async _startLoading() {
     if (__DEV__) this._ctx.logger?.info('🏗️ Loading DASH Library');
 
-    const callbacks : LoadDASHConstructorCallbacks = {
+    const callbacks: LoadDASHConstructorCallbacks = {
       onLoadStart: this._onLoadStart.bind(this),
       onLoaded: this._onLoaded.bind(this),
       onLoadError: this._onLoadError.bind(this),
@@ -78,7 +79,7 @@ export class DASHLibLoader {
     this._callback(ctor);
   }
 
-  private _onLoadError(e : any) {
+  private _onLoadError(e: any) {
     const error = coerceToError(e);
 
     if (__DEV__) {
@@ -103,8 +104,12 @@ export class DASHLibLoader {
   }
 }
 
-async function importDASH(loader: DashConstructor | DashConstructorLoader | undefined, callbacks : LoadDASHConstructorCallbacks = {}) {
+async function importDASH(
+  loader: DashConstructor | DashConstructorLoader | undefined,
+  callbacks: LoadDASHConstructorCallbacks = {},
+) {
   if (isUndefined(loader)) return undefined;
+
   callbacks.onLoadStart?.();
 
   // Must be static.
@@ -135,18 +140,22 @@ async function importDASH(loader: DashConstructor | DashConstructorLoader | unde
 }
 
 /**
- * Loads `hls.js` from the remote source given via `library` into the window namespace. This
- * is because `hls.js` in {currentYear} still doesn't provide a ESM export. This method will
- * return `undefined` if it fails to load the script. Listen to `lib-load-error` to be
+ * Loads `dash.js` from the remote source given via `library` into the window namespace. This
+ * is because `dash.js` in {currentYear} still doesn't provide a ESM export. This method will
+ * return `undefined` if it fails to load the script. Listen to `dash-lib-load-error` to be
  * notified of any failures.
  */
-async function loadDASHScript(src : unknown, callbacks : LoadDASHConstructorCallbacks = {}) :Promise<DashConstructor | undefined> {
+async function loadDASHScript(
+  src: unknown,
+  callbacks: LoadDASHConstructorCallbacks = {},
+): Promise<DashConstructor | undefined> {
   if (!isString(src)) return undefined;
 
   callbacks.onLoadStart?.();
 
   try {
     await loadScript(src);
+
     if (!isFunction((window as any).dashjs.MediaPlayer)) {
       throw Error(
         __DEV__

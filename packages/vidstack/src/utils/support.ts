@@ -124,7 +124,8 @@ export function getSourceBuffer(): typeof SourceBuffer | undefined {
 }
 
 /**
- * Whether `hls.js` is supported in this environment.
+ * Whether `hls.js` is supported in this environment. Checks whether `MediaSource` or
+ * `ManagedMediaSource` and a valid `SourceBuffer` API are available.
  *
  * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
@@ -153,6 +154,10 @@ export function isHLSSupported(): boolean {
   return !!isTypeSupported && !!isSourceBufferValid;
 }
 
+/**
+ * Whether `dashjs` is supported in this environment. Checks whether `MediaSource` or
+ * `ManagedMediaSource` and a valid `SourceBuffer` API are available.
+ */
 export function isDASHSupported(): boolean {
   return isHLSSupported();
 }
