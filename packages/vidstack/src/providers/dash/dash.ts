@@ -1,6 +1,6 @@
 import type * as DASH from 'dashjs';
 import { effect, peek } from 'maverick.js';
-import { camelToKebabCase, DOMEvent, isString, listenEvent } from 'maverick.js/std';
+import { camelToKebabCase, DOMEvent, isNumber, isString, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
 import type { Src } from '../../core/api/src-types';
@@ -80,6 +80,10 @@ export class DASHController {
     this._stopLiveSync = effect(this._liveSync.bind(this));
   }
 
+  private _createDOMEvent(event: DASH.Event) {
+    return new DOMEvent(toDOMEventType(event.type), { detail: event });
+  }
+
   private _liveSync() {
     if (!this._ctx.$state.live()) return;
     const raf = new RAFLoop(this._liveSyncPosition.bind(this));
@@ -93,10 +97,8 @@ export class DASHController {
     this._ctx.$state.liveSyncPosition.set(!isNaN(position) ? position : Infinity);
   }
 
-  private _dispatchDASHEvent(event: any) {
-    const eventType = event.type,
-      detail = event;
-    this._ctx.player?.dispatch(new DOMEvent(toDOMEventType(eventType), { detail }));
+  private _dispatchDASHEvent(event: DASH.Event) {
+    this._ctx.player?.dispatch(this._createDOMEvent(event));
   }
 
   private _currentTrack: TextTrack | null = null;
@@ -110,7 +112,7 @@ export class DASHController {
 
     const id = this._currentTrack!.id,
       startIndex = this._cueTracker[id] ?? 0,
-      trigger = new DOMEvent(toDOMEventType(event.type), { detail: event });
+      trigger = this._createDOMEvent(event);
 
     for (let i = startIndex; i < cues.length; i++) {
       const cue = cues[i] as VTTCue;
@@ -125,7 +127,8 @@ export class DASHController {
     if (!this._instance) return;
 
     const data = event.tracks,
-      nativeTextTracks = [...this._video.textTracks].filter((track) => 'manualMode' in track);
+      nativeTextTracks = [...this._video.textTracks].filter((track) => 'manualMode' in track),
+      trigger = this._createDOMEvent(event);
 
     for (let i = 0; i < nativeTextTracks.length; i++) {
       const textTrackInfo = data[i],
@@ -162,7 +165,7 @@ export class DASHController {
         }
       };
 
-      this._ctx.textTracks.add(track, new DOMEvent(event.type, { detail: track }));
+      this._ctx.textTracks.add(track, trigger);
     }
   }
 
@@ -172,7 +175,7 @@ export class DASHController {
     if (mediaType === 'audio') {
       const track = this._ctx.audioTracks.getById(`dash-audio-${newMediaInfo.index}`);
       if (track) {
-        const trigger = new DOMEvent(event.type, { detail: event });
+        const trigger = this._createDOMEvent(event);
         this._ctx.audioTracks[ListSymbol._select](track, true, trigger);
       }
     }
@@ -184,7 +187,7 @@ export class DASHController {
     const quality = this._ctx.qualities[event.newQuality];
 
     if (quality) {
-      const trigger = new DOMEvent(event.type, { detail: event });
+      const trigger = this._createDOMEvent(event);
       this._ctx.qualities[ListSymbol._select](quality, true, trigger);
     }
   }
@@ -193,7 +196,7 @@ export class DASHController {
     if (this._ctx.$state.canPlay() || !this._instance) return;
 
     const { type, mediaPresentationDuration } = event.data as DASH.Mpd & DASH.AdaptationSet,
-      trigger = new DOMEvent(event.type, { detail: event.data });
+      trigger = this._createDOMEvent(event);
 
     this._ctx.delegate._notify(
       'stream-type-change',
@@ -244,6 +247,11 @@ export class DASHController {
 
       this._ctx.qualities[ListSymbol._add](quality, trigger);
     });
+
+    if (isNumber(videoQuality.index)) {
+      const quality = this._ctx.qualities[videoQuality.index];
+      if (quality) this._ctx.qualities[ListSymbol._select](quality, true, trigger);
+    }
 
     audioTracks.forEach((audioTrack: DASH.MediaInfo & { label?: string | null }, index) => {
       const localTrack = {
@@ -326,6 +334,9 @@ export class DASHController {
 
   private _enableAutoQuality() {
     this._switchAutoBitrate('video', true);
+    // Force update so ABR engine can re-calc.
+    const { qualities } = this._ctx;
+    this._instance?.setQualityFor('video', qualities.selectedIndex, true);
   }
 
   private _switchAutoBitrate(type: DASH.MediaType, auto: boolean) {

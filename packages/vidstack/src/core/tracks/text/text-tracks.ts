@@ -86,17 +86,9 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     return this;
   }
 
-  getById(id: string): TextTrack | null {
-    return this._items.find((track) => track.id === id) ?? null;
-  }
-
   getByKind(kind: TextTrackKind | TextTrackKind[]): TextTrack[] {
     const kinds = Array.isArray(kind) ? kind : [kind];
     return this._items.filter((track) => kinds.includes(track.kind));
-  }
-
-  indexOf(track: TextTrack) {
-    return this._items.indexOf(track);
   }
 
   /** @internal */

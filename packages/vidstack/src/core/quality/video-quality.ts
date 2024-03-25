@@ -59,14 +59,6 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
     this[QualitySymbol._setAuto](true, trigger);
   }
 
-  indexOf(quality: VideoQuality) {
-    return this._items.indexOf(quality);
-  }
-
-  getById(id: string) {
-    return this._items.find((quality) => quality.id === id);
-  }
-
   getBySrc(src: unknown) {
     return this._items.find((quality) => quality.src === src);
   }

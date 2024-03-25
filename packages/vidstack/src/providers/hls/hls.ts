@@ -69,6 +69,10 @@ export class HLSController {
     this._stopLiveSync = effect(this._liveSync.bind(this));
   }
 
+  private _createDOMEvent<T>(type: string, data: T): DOMEvent<T> {
+    return new DOMEvent<any>(toDOMEventType(type), { detail: data });
+  }
+
   private _liveSync() {
     if (!this._ctx.$state.live()) return;
     const raf = new RAFLoop(this._liveSyncPosition.bind(this));
@@ -80,12 +84,12 @@ export class HLSController {
     this._ctx.$state.liveSyncPosition.set(this._instance?.liveSyncPosition ?? Infinity);
   }
 
-  private _dispatchHLSEvent(eventType: string, detail: any) {
-    this._ctx.player?.dispatch(new DOMEvent(toDOMEventType(eventType), { detail }));
+  private _dispatchHLSEvent(type: string, data: any) {
+    this._ctx.player?.dispatch(this._createDOMEvent(type, data));
   }
 
   private _onTracksFound(eventType: string, data: HLS.NonNativeTextTracksData) {
-    const event = new DOMEvent<HLS.NonNativeTextTracksData>(eventType, { detail: data });
+    const event = this._createDOMEvent(eventType, data);
 
     let currentTrack = -1;
 
@@ -122,7 +126,7 @@ export class HLSController {
 
     if (!track) return;
 
-    const event = new DOMEvent<HLS.CuesParsedData>(eventType, { detail: data });
+    const event = this._createDOMEvent(eventType, data);
 
     for (const cue of data.cues) {
       cue.positionAlign = 'auto';
@@ -133,7 +137,7 @@ export class HLSController {
   private _onAudioSwitch(eventType: string, data: HLS.AudioTrackSwitchedData) {
     const track = this._ctx.audioTracks[data.id];
     if (track) {
-      const trigger = new DOMEvent(eventType, { detail: data });
+      const trigger = this._createDOMEvent(eventType, data);
       this._ctx.audioTracks[ListSymbol._select](track, true, trigger);
     }
   }
@@ -141,7 +145,7 @@ export class HLSController {
   private _onLevelSwitched(eventType: string, data: HLS.LevelSwitchedData) {
     const quality = this._ctx.qualities[data.level];
     if (quality) {
-      const trigger = new DOMEvent(eventType, { detail: data });
+      const trigger = this._createDOMEvent(eventType, data);
       this._ctx.qualities[ListSymbol._select](quality, true, trigger);
     }
   }
@@ -150,7 +154,7 @@ export class HLSController {
     if (this._ctx.$state.canPlay()) return;
 
     const { type, live, totalduration: duration, targetduration } = data.details,
-      trigger = new DOMEvent(eventType, { detail: data });
+      trigger = this._createDOMEvent(eventType, data);
 
     this._ctx.delegate._notify(
       'stream-type-change',
