@@ -14,7 +14,7 @@ import type { DashConstructor, DashInstanceCallback } from './types';
 
 export type DashGetMediaTracks = (type: DASH.MediaType, manifest: object) => DASH.MediaInfo[];
 
-const toDOMEventType = (type: string) => camelToKebabCase(type);
+const toDOMEventType = (type: string) => `dash-${camelToKebabCase(type)}`;
 
 export class DASHController {
   private _instance: DASH.MediaPlayerClass | null = null;
@@ -46,7 +46,6 @@ export class DASHController {
     });
 
     this._instance.initialize(this._video, undefined, false);
-    this._attachTTMLRenderingDiv();
 
     this._instance.updateSettings({
       streaming: {
@@ -63,37 +62,22 @@ export class DASHController {
       ...this._config,
     });
 
-    this._instance.on(ctor.events.FRAGMENT_LOADING_STARTED, this._onFragLoading.bind(this));
+    this._instance.on(ctor.events.FRAGMENT_LOADING_STARTED, this._onFragmentLoadStart.bind(this));
+    this._instance.on(
+      ctor.events.FRAGMENT_LOADING_COMPLETED,
+      this._onFragmentLoadComplete.bind(this),
+    );
     this._instance.on(ctor.events.MANIFEST_LOADED, this._onManifestLoaded.bind(this));
-    this._instance.on(ctor.events.QUALITY_CHANGE_RENDERED, this._onQualitySwitched.bind(this));
-    this._instance.on(ctor.events.TEXT_TRACKS_ADDED, this._onTracksFound.bind(this));
-    this._instance.on(ctor.events.TRACK_CHANGE_RENDERED, this._onAudioSwitch.bind(this));
+    this._instance.on(ctor.events.QUALITY_CHANGE_RENDERED, this._onQualityChange.bind(this));
+    this._instance.on(ctor.events.TEXT_TRACKS_ADDED, this._onTextTracksAdded.bind(this));
+    this._instance.on(ctor.events.TRACK_CHANGE_RENDERED, this._onTrackChange.bind(this));
+
     this._ctx.qualities[QualitySymbol._enableAuto] = this._enableAutoQuality.bind(this);
 
-    listenEvent(this._ctx.qualities, 'change', this._onQualityChange.bind(this));
-    listenEvent(this._ctx.audioTracks, 'change', this._onAudioChange.bind(this));
+    listenEvent(this._ctx.qualities, 'change', this._onUserQualityChange.bind(this));
+    listenEvent(this._ctx.audioTracks, 'change', this._onUserAudioChange.bind(this));
 
     this._stopLiveSync = effect(this._liveSync.bind(this));
-  }
-
-  private _attachTTMLRenderingDiv() {
-    if (!this._instance) return;
-
-    this._removeTTMLRenderingDiv();
-
-    const div = document.createElement('div');
-    div.id = 'ttml-rendering-div';
-
-    const videoElement = this._instance.getVideoElement();
-    if (videoElement.parentNode) {
-      videoElement.parentNode.insertBefore(div, videoElement.nextSibling);
-      this._instance.attachTTMLRenderingDiv(div);
-    }
-  }
-
-  private _removeTTMLRenderingDiv() {
-    const div = document.getElementById('ttml-rendering-div');
-    if (div) div.remove();
   }
 
   private _liveSync() {
@@ -115,75 +99,86 @@ export class DASHController {
     this._ctx.player?.dispatch(new DOMEvent(toDOMEventType(eventType), { detail }));
   }
 
-  private _textManualRendering(enable: boolean) {
-    if (!this._instance) return;
-    // render text manually or let dashjs render it
-    this._instance.updateSettings({
-      streaming: {
-        text: {
-          dispatchForManualRendering: enable,
-        },
-      },
-    });
+  private _currentTrack: TextTrack | null = null;
+  private _cueTracker: Record<string, number> = {};
+
+  private _onTextFragmentLoaded(event: DASH.FragmentLoadingCompletedEvent) {
+    const native = this._currentTrack?.[TextTrackSymbol._native],
+      cues = (native?.track as globalThis.TextTrack).cues;
+
+    if (!native || !cues) return;
+
+    const id = this._currentTrack!.id,
+      startIndex = this._cueTracker[id] ?? 0,
+      trigger = new DOMEvent(toDOMEventType(event.type), { detail: event });
+
+    for (let i = startIndex; i < cues.length; i++) {
+      const cue = cues[i] as VTTCue;
+      if (!cue.positionAlign) cue.positionAlign = 'auto';
+      this._currentTrack!.addCue(cue, trigger);
+    }
+
+    this._cueTracker[id] = cues.length;
   }
 
-  private _onTracksFound(event: DASH.TextTracksAddedEvent) {
+  private _onTextTracksAdded(event: DASH.TextTracksAddedEvent) {
     if (!this._instance) return;
 
-    const data = event.tracks;
+    const data = event.tracks,
+      nativeTextTracks = [...this._video.textTracks].filter((track) => 'manualMode' in track);
 
-    /*
-     * dash.js inserts text tracks into the video element, so that it can render subtitles
-     * natively. for now just going to link dashTrack cues with our own textTrack.
-     */
-    const dashTracks = [...this._instance.getVideoElement().textTracks].filter(
-      (track) => 'manualMode' in track,
-    );
+    for (let i = 0; i < nativeTextTracks.length; i++) {
+      const textTrackInfo = data[i],
+        nativeTextTrack = nativeTextTracks[i];
 
-    data.forEach((textTrack, i) => {
-      const dashTrack = dashTracks[i] as DASH.TextTrackInfo & globalThis.TextTrack;
+      const id = `dash-${textTrackInfo.kind}-${i}`,
+        track = new TextTrack({
+          id,
+          label:
+            textTrackInfo?.label ??
+            textTrackInfo.labels.find((t) => t.text)?.text ??
+            textTrackInfo?.lang ??
+            undefined,
+          language: textTrackInfo.lang ?? undefined,
+          kind: textTrackInfo!.kind as TextTrackKind,
+          default: textTrackInfo.defaultTrack,
+        });
 
-      const track = new TextTrack({
-        id: `dash-text${textTrack.lang}${i}`,
-        label: textTrack?.label ?? textTrack?.lang ?? undefined,
-        language: textTrack.lang ?? undefined,
-        kind: textTrack!.kind as TextTrackKind,
-        default: (TextTrack as any)?.default ?? false,
-      });
+      track[TextTrackSymbol._native] = {
+        managed: true,
+        track: nativeTextTrack,
+      };
 
-      (track as any)._cues = dashTrack.cues;
       track[TextTrackSymbol._readyState] = 2;
 
       track[TextTrackSymbol._onModeChange] = () => {
         if (!this._instance) return;
         if (track.mode === 'showing') {
-          dashTrack.isTTML || (dashTrack as any).isFromCEA608
-            ? this._textManualRendering(false)
-            : this._textManualRendering(true);
           this._instance.setTextTrack(i);
+          this._currentTrack = track;
         } else {
           this._instance.setTextTrack(-1);
+          this._currentTrack = null;
         }
       };
 
       this._ctx.textTracks.add(track, new DOMEvent(event.type, { detail: track }));
-    });
-  }
-
-  private _onAudioSwitch(event: DASH.Event) {
-    const { mediaType, newMediaInfo } = event as DASH.TrackChangeRenderedEvent;
-
-    if (mediaType !== 'audio') return;
-
-    const track = this._ctx.audioTracks.getById(`dash-audio${newMediaInfo.index}`);
-
-    if (track) {
-      const trigger = new DOMEvent(event.type, { detail: event });
-      this._ctx.audioTracks[ListSymbol._select](track, true, trigger);
     }
   }
 
-  private _onQualitySwitched(event: DASH.QualityChangeRenderedEvent) {
+  private _onTrackChange(event: DASH.Event) {
+    const { mediaType, newMediaInfo } = event as DASH.TrackChangeRenderedEvent;
+
+    if (mediaType === 'audio') {
+      const track = this._ctx.audioTracks.getById(`dash-audio-${newMediaInfo.index}`);
+      if (track) {
+        const trigger = new DOMEvent(event.type, { detail: event });
+        this._ctx.audioTracks[ListSymbol._select](track, true, trigger);
+      }
+    }
+  }
+
+  private _onQualityChange(event: DASH.QualityChangeRenderedEvent) {
     if (event.mediaType !== 'video') return;
 
     const quality = this._ctx.qualities[event.newQuality];
@@ -239,7 +234,7 @@ export class DASHController {
 
     videoQuality.bitrateList.forEach((bitrate, index) => {
       const quality = {
-        id: bitrate.id?.toString() ?? `dash-bitrate${index}`,
+        id: bitrate.id?.toString() ?? `dash-bitrate-${index}`,
         width: bitrate.width ?? 0,
         height: bitrate.height ?? 0,
         bitrate: bitrate.bandwidth ?? 0,
@@ -252,7 +247,7 @@ export class DASHController {
 
     audioTracks.forEach((audioTrack: DASH.MediaInfo & { label?: string | null }, index) => {
       const localTrack = {
-        id: `dash-audio${audioTrack?.index}`,
+        id: `dash-audio-${audioTrack?.index}`,
         label: audioTrack.label ?? audioTrack.lang ?? '',
         language: audioTrack.lang ?? '',
         kind: 'main',
@@ -273,7 +268,7 @@ export class DASHController {
     if (__DEV__) {
       this._ctx.logger
         ?.errorGroup(`[vidstack] DASH error \`${data.message}\``)
-        .labelledLog('Media Element', this._instance?.getVideoElement())
+        .labelledLog('Media Element', this._video)
         .labelledLog('HLS Instance', this._instance)
         .labelledLog('Event Type', eventType)
         .labelledLog('Data', data)
@@ -292,8 +287,16 @@ export class DASHController {
     }
   }
 
-  private _onFragLoading() {
+  private _onFragmentLoadStart() {
     if (this._retryLoadingTimer >= 0) this._clearRetryTimer();
+  }
+
+  private _onFragmentLoadComplete(event: DASH.FragmentLoadingCompletedEvent) {
+    const mediaType = (event as any).mediaType as 'audio' | 'video' | 'text';
+    if (mediaType === 'text') {
+      // It seems like text cues are synced on animation frames.
+      requestAnimationFrame(this._onTextFragmentLoaded.bind(this, event));
+    }
   }
 
   private _retryLoadingTimer = -1;
@@ -314,9 +317,6 @@ export class DASHController {
   }
 
   private _onFatalError(error: DASH.DashJSError) {
-    // We can't recover here - better course of action?
-    this._instance?.destroy();
-    this._instance = null;
     this._ctx.delegate._notify('error', {
       message: error.message ?? '',
       code: 1,
@@ -325,16 +325,16 @@ export class DASHController {
   }
 
   private _enableAutoQuality() {
-    if (this._instance) this._switchAutoBitrate('video', true);
+    this._switchAutoBitrate('video', true);
   }
 
   private _switchAutoBitrate(type: DASH.MediaType, auto: boolean) {
-    if (!this._instance) return;
-
-    this._instance.updateSettings({ streaming: { abr: { autoSwitchBitrate: { [type]: auto } } } });
+    this._instance?.updateSettings({
+      streaming: { abr: { autoSwitchBitrate: { [type]: auto } } },
+    });
   }
 
-  private _onQualityChange() {
+  private _onUserQualityChange() {
     const { qualities } = this._ctx;
 
     if (!this._instance || qualities.auto || !qualities.selected) return;
@@ -348,32 +348,41 @@ export class DASHController {
      * setting the current time forces chrome to seek back to the last keyframe and adjust
      * playback. Weird fix, but it works!
      */
-    if (IS_CHROME) this._video.currentTime = this._video.currentTime;
+    if (IS_CHROME) {
+      this._video.currentTime = this._video.currentTime;
+    }
   }
 
-  private _onAudioChange() {
+  private _onUserAudioChange() {
     if (!this._instance) return;
-    const { audioTracks } = this._ctx;
-    const selectedTrack = this._instance
-      .getTracksFor('audio')
-      .find(
-        (track) => audioTracks.selected && audioTracks.selected.id === `dash-audio${track.index}`,
-      );
-    selectedTrack && this._instance.setCurrentTrack(selectedTrack);
+
+    const { audioTracks } = this._ctx,
+      selectedTrack = this._instance
+        .getTracksFor('audio')
+        .find(
+          (track) =>
+            audioTracks.selected && audioTracks.selected.id === `dash-audio-${track.index}`,
+        );
+
+    if (selectedTrack) this._instance.setCurrentTrack(selectedTrack);
+  }
+
+  private _reset() {
+    this._clearRetryTimer();
+    this._currentTrack = null;
+    this._cueTracker = {};
   }
 
   loadSource(src: Src) {
+    this._reset();
     if (!isString(src.src)) return;
-
-    this._clearRetryTimer();
     this._instance?.attachSource(src.src);
   }
 
   destroy() {
-    this._clearRetryTimer();
+    this._reset();
     this._instance?.destroy();
     this._instance = null;
-    this._removeTTMLRenderingDiv();
     this._stopLiveSync?.();
     this._stopLiveSync = null;
     if (__DEV__) this._ctx?.logger?.info('🏗️ Destroyed DASH instance');

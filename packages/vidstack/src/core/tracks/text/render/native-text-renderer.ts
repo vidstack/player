@@ -59,7 +59,7 @@ export class NativeTextRenderer implements TextRenderer {
     const el = (track[TextTrackSymbol._native] ??= this._createTrackElement(track));
     if (isHTMLElement(el)) {
       this._video.append(el);
-      el.track.mode = el.default ? 'showing' : 'hidden';
+      el.track.mode = el.default ? 'showing' : 'disabled';
     }
   }
 
@@ -89,16 +89,17 @@ export class NativeTextRenderer implements TextRenderer {
 
   private _onChange(event?: Event) {
     for (const track of this._tracks) {
-      const nativeTrack = track[TextTrackSymbol._native]?.track;
-      if (!nativeTrack) continue;
+      const native = track[TextTrackSymbol._native];
+
+      if (!native) continue;
 
       if (!this._display) {
-        nativeTrack.mode = 'disabled';
+        native.track.mode = native.managed ? 'hidden' : 'disabled';
         continue;
       }
 
-      const isShowing = nativeTrack.mode === 'showing';
-      if (isShowing) this._copyCues(track, nativeTrack);
+      const isShowing = native.track.mode === 'showing';
+      if (isShowing) this._copyCues(track, native.track);
       track.setMode(isShowing ? 'showing' : 'disabled', event);
     }
   }

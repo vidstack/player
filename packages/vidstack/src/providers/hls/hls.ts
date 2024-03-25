@@ -63,8 +63,8 @@ export class HLSController {
 
     this._ctx.qualities[QualitySymbol._enableAuto] = this._enableAutoQuality.bind(this);
 
-    listenEvent(this._ctx.qualities, 'change', this._onQualityChange.bind(this));
-    listenEvent(this._ctx.audioTracks, 'change', this._onAudioChange.bind(this));
+    listenEvent(this._ctx.qualities, 'change', this._onUserQualityChange.bind(this));
+    listenEvent(this._ctx.audioTracks, 'change', this._onUserAudioChange.bind(this));
 
     this._stopLiveSync = effect(this._liveSync.bind(this));
   }
@@ -246,9 +246,6 @@ export class HLSController {
   }
 
   private _onFatalError(error: Error) {
-    // We can't recover here - better course of action?
-    this._instance?.destroy();
-    this._instance = null;
     this._ctx.delegate._notify('error', {
       message: error.message,
       code: 1,
@@ -260,20 +257,25 @@ export class HLSController {
     if (this._instance) this._instance.currentLevel = -1;
   }
 
-  private _onQualityChange() {
+  private _onUserQualityChange() {
     const { qualities } = this._ctx;
+
     if (!this._instance || qualities.auto) return;
+
     this._instance[qualities.switch + 'Level'] = qualities.selectedIndex;
+
     /**
      * Chrome has some strange issue with detecting keyframes inserted before the current
      * playhead position. This can cause playback to freeze until a new keyframe. It seems
      * setting the current time forces chrome to seek back to the last keyframe and adjust
      * playback. Weird fix, but it works!
      */
-    if (IS_CHROME) this._video.currentTime = this._video.currentTime;
+    if (IS_CHROME) {
+      this._video.currentTime = this._video.currentTime;
+    }
   }
 
-  private _onAudioChange() {
+  private _onUserAudioChange() {
     const { audioTracks } = this._ctx;
     if (this._instance && this._instance.audioTrack !== audioTracks.selectedIndex) {
       this._instance.audioTrack = audioTracks.selectedIndex;
@@ -281,8 +283,8 @@ export class HLSController {
   }
 
   _loadSource(src: Src) {
-    if (!isString(src.src)) return;
     this._clearRetryTimer();
+    if (!isString(src.src)) return;
     this._instance?.loadSource(src.src);
   }
 

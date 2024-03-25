@@ -1,5 +1,16 @@
 import type { MediaStreamType } from '../core';
 
+export function resolveStreamTypeFromDASHManifest(
+  manifestSrc: string,
+  requestInit?: RequestInit,
+): Promise<MediaStreamType> {
+  return fetch(manifestSrc, requestInit)
+    .then((res) => res.text())
+    .then((manifest) => {
+      return /type="static"/.test(manifest) ? 'on-demand' : 'live';
+    });
+}
+
 export function resolveStreamTypeFromHLSManifest(
   manifestSrc: string,
   requestInit?: RequestInit,

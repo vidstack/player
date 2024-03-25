@@ -19,7 +19,10 @@ import {
   type MediaProviderLoader,
 } from '../../providers';
 import { DASHProviderLoader } from '../../providers/dash/loader';
-import { resolveStreamTypeFromHLSManifest } from '../../utils/hls';
+import {
+  resolveStreamTypeFromDASHManifest,
+  resolveStreamTypeFromHLSManifest,
+} from '../../utils/manifest';
 import { isDASHSrc, isHLSSrc } from '../../utils/mime';
 import { getRequestCredentials, preconnect } from '../../utils/network';
 import { isHLSSupported } from '../../utils/support';
@@ -256,6 +259,15 @@ export class SourceSelection {
             })
             .catch(noop);
         }
+      } else if (isDASHSrc(source)) {
+        resolveStreamTypeFromDASHManifest(source.src as string, {
+          credentials: getRequestCredentials(crossOrigin),
+          signal: abort.signal,
+        })
+          .then((streamType) => {
+            this._notify('stream-type-change', streamType);
+          })
+          .catch(noop);
       } else {
         this._notify('stream-type-change', 'on-demand');
       }
