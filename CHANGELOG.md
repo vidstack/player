@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - add new `artwork` player prop ([c0a4eaf](https://github.com/vidstack/player/commit/c0a4eafefb7d16499107a0f84341e13db1680252))
 - add airplay support for audio ([c60c2fc](https://github.com/vidstack/player/commit/c60c2fc4b7031f3dd70c746b08bc52785ef8c68a))
 - add new `onLoad` method to storage ([2ce029f](https://github.com/vidstack/player/commit/2ce029f5377c3a46a6c4bc5db374b0efab3e97d5))
+- dash provider (#1212) ([000c7a4](https://github.com/vidstack/player/commit/000c7a4dc6483ed3051d54f73e2e3b4bccd6e867))
 
 ### 🐛 Bug Fixes
 
@@ -64,7 +65,9 @@ All notable changes to this project will be documented in this file.
 - allow seeking directly to end ([20cc205](https://github.com/vidstack/player/commit/20cc2055c9a053c1118f29092943aaa4c090f1fa))
 - hls tracks not initializing correctly ([edddf3b](https://github.com/vidstack/player/commit/edddf3b90262f33f814e712f27a335eb076b6fcc))
 - hide chapters menu button when disabled ([9e96b33](https://github.com/vidstack/player/commit/9e96b33e2d966abf9e013109947da2958cb4fe3b))
-- rework layout loading in player class constructors ([9b183ac](https://github.com/vidstack/player/commit/9b183ac98291982ac0ed7cd13c986e971a4670f0))
+- rework layout loading in player class constructors ([b37814c](https://github.com/vidstack/player/commit/b37814c279ac8d444a7eb6808a00e761c718bb1f))
+- cdn entries need absolute url import specifiers ([c2bafe7](https://github.com/vidstack/player/commit/c2bafe7505375bbdab136ce3ba1bca1a648a3830))
+- handle seeking to end precision changes ([abf9b17](https://github.com/vidstack/player/commit/abf9b17bd77506051cfa0a20eef061a55838e6a8))
 
 #### Player (React)
 
