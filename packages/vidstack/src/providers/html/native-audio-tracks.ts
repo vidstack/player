@@ -44,13 +44,14 @@ export class NativeAudioTracks {
 
     if (_track.label === '') return;
 
-    const audioTrack: AudioTrack = {
-      id: _track.id.toString(),
-      label: _track.label,
-      language: _track.language,
-      kind: _track.kind,
-      selected: false,
-    };
+    const id = _track.id.toString() || `native-audio-${this._ctx.audioTracks.length}`,
+      audioTrack: AudioTrack = {
+        id,
+        label: _track.label,
+        language: _track.language,
+        kind: _track.kind,
+        selected: false,
+      };
 
     this._ctx.audioTracks[ListSymbol._add](audioTrack, event);
     if (_track.enabled) audioTrack.selected = true;

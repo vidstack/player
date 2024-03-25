@@ -51,16 +51,18 @@ export function Player() {
   }
 
   function changeSource(type: string) {
-    const muxPlaybackId = 'VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU';
     switch (type) {
       case 'audio':
         setSrc('https://media-files.vidstack.io/sprite-fight/audio.mp3');
         break;
       case 'video':
-        setSrc(`https://stream.mux.com/${muxPlaybackId}/low.mp4`);
+        setSrc('https://media-files.vidstack.io/sprite-fight/480p.mp4');
         break;
       case 'hls':
-        setSrc(`https://stream.mux.com/${muxPlaybackId}.m3u8`);
+        setSrc('https://media-files.vidstack.io/sprite-fight/hls/stream.m3u8');
+        break;
+      case 'dash':
+        setSrc('https://media-files.vidstack.io/sprite-fight/dash/stream.mpd');
         break;
       case 'live':
         setSrc('https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8');
@@ -108,6 +110,7 @@ export function Player() {
         <button onClick={() => changeSource('audio')}>Audio</button>
         <button onClick={() => changeSource('video')}>Video</button>
         <button onClick={() => changeSource('hls')}>HLS</button>
+        <button onClick={() => changeSource('dash')}>DASH</button>
         <button onClick={() => changeSource('live')}>Live</button>
         <button onClick={() => changeSource('youtube')}>YouTube</button>
         <button onClick={() => changeSource('vimeo')}>Vimeo</button>

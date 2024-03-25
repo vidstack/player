@@ -59,6 +59,7 @@
     "@rollup/plugin-node-resolve": "^15.2.0",
     "@types/fscreen": "^1.0.1",
     "autoprefixer": "^10.4.2",
+    "dashjs": "^4.7.4",
     "es-module-lexer": "^1.4.0",
     "esbuild": "^0.19.4",
     "esbuild-minify-templates": "^0.11.0",

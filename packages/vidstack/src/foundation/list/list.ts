@@ -2,7 +2,9 @@ import { DOMEvent, EventsTarget } from 'maverick.js/std';
 
 import { ListSymbol } from './symbols';
 
-export interface ListItem {}
+export interface ListItem {
+  id: string;
+}
 
 export class List<Item extends ListItem, Events extends ListEvents>
   extends EventsTarget<Events>
@@ -25,6 +27,21 @@ export class List<Item extends ListItem, Events extends ListEvents>
 
   get readonly() {
     return this[ListSymbol._readonly];
+  }
+
+  /**
+   * Returns the index of the first occurrence of the given item, or -1 if it is not present.
+   */
+  indexOf(item: Item) {
+    return this._items.indexOf(item);
+  }
+
+  /**
+   * Returns an item matching the given `id`, or `null` if not present.
+   */
+  getById(id: string): Item | null {
+    if (id === '') return null;
+    return this._items.find((item) => item.id === id) ?? null;
   }
 
   /**

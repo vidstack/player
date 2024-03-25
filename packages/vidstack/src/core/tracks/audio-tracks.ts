@@ -6,16 +6,7 @@ import { SelectList, type SelectListItem } from '../../foundation/list/select-li
 /**
  * @see {@link https://vidstack.io/docs/player/core-concepts/audio-tracks}
  */
-export class AudioTrackList extends SelectList<AudioTrack, AudioTrackListEvents> {
-  getById(id: string): AudioTrack | null {
-    if (id === '') return null;
-    return this._items.find((track) => track.id === id) ?? null;
-  }
-
-  indexOf(track: AudioTrack) {
-    return this._items.indexOf(track);
-  }
-}
+export class AudioTrackList extends SelectList<AudioTrack, AudioTrackListEvents> {}
 
 /**
  * @see {@link https://vidstack.io/docs/player/core-concepts/audio-tracks}

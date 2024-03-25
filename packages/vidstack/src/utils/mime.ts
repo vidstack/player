@@ -31,6 +31,7 @@ export const VIDEO_TYPES = new Set<string>([
 ]);
 
 export const HLS_VIDEO_EXTENSIONS = /\.(m3u8)($|\?)/i;
+export const DASH_VIDEO_EXTENSIONS = /\.(mpd)($|\?)/i;
 
 // Taken from video.js
 export const HLS_VIDEO_TYPES = new Set<string>([
@@ -46,6 +47,10 @@ export const HLS_VIDEO_TYPES = new Set<string>([
   'video/x-mpegurl',
   'video/mpegurl',
   'application/mpegurl',
+]);
+
+export const DASH_VIDEO_TYPES = new Set<string>([
+  "application/dash+xml",
 ]);
 
 export function isAudioSrc({ src, type }: Src): boolean {
@@ -67,6 +72,10 @@ export function isVideoSrc(src: Src): boolean {
 
 export function isHLSSrc({ src, type }: Src): boolean {
   return (isString(src) && HLS_VIDEO_EXTENSIONS.test(src)) || HLS_VIDEO_TYPES.has(type);
+}
+
+export function isDASHSrc({ src, type }: Src): boolean {
+  return (isString(src) && DASH_VIDEO_EXTENSIONS.test(src)) || DASH_VIDEO_TYPES.has(type);
 }
 
 export function canGoogleCastSrc(src: Src): boolean {

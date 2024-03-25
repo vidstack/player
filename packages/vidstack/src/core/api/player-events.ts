@@ -7,15 +7,17 @@ import type { HLSProviderEvents } from '../../providers/hls/events';
 import type { VideoPresentationEvents } from '../../providers/video/presentation/events';
 import type { MediaEvents } from './media-events';
 import type { MediaRequestEvents } from './media-request-events';
+import type { DashProviderEvents } from '../../providers/dash/events';
 
 export interface MediaPlayerEvents
   extends MediaEvents,
-    MediaRequestEvents,
-    MediaUserEvents,
-    LoggerEvents,
-    VideoPresentationEvents,
-    HLSProviderEvents,
-    GoogleCastEvents {
+  MediaRequestEvents,
+  MediaUserEvents,
+  LoggerEvents,
+  VideoPresentationEvents,
+  HLSProviderEvents,
+  DashProviderEvents,
+  GoogleCastEvents {
   'media-player-connect': MediaPlayerConnectEvent;
   /** @internal */
   'find-media-player': FindMediaPlayerEvent;
@@ -30,7 +32,7 @@ export interface MediaPlayerEvents
  * @composed
  * @detail player
  */
-export interface MediaPlayerConnectEvent extends DOMEvent<MediaPlayer> {}
+export interface MediaPlayerConnectEvent extends DOMEvent<MediaPlayer> { }
 
 export interface FindMediaPlayerEventDetail {
   (player: MediaPlayer | null): void;
@@ -42,6 +44,6 @@ export interface FindMediaPlayerEventDetail {
  * @composed
  * @detail callback
  */
-export interface FindMediaPlayerEvent extends DOMEvent<FindMediaPlayerEventDetail> {}
+export interface FindMediaPlayerEvent extends DOMEvent<FindMediaPlayerEventDetail> { }
 
-export interface MediaUserEvents {}
+export interface MediaUserEvents { }

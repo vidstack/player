@@ -63,10 +63,14 @@ export class HLSController {
 
     this._ctx.qualities[QualitySymbol._enableAuto] = this._enableAutoQuality.bind(this);
 
-    listenEvent(this._ctx.qualities, 'change', this._onQualityChange.bind(this));
-    listenEvent(this._ctx.audioTracks, 'change', this._onAudioChange.bind(this));
+    listenEvent(this._ctx.qualities, 'change', this._onUserQualityChange.bind(this));
+    listenEvent(this._ctx.audioTracks, 'change', this._onUserAudioChange.bind(this));
 
     this._stopLiveSync = effect(this._liveSync.bind(this));
+  }
+
+  private _createDOMEvent<T>(type: string, data: T): DOMEvent<T> {
+    return new DOMEvent<any>(toDOMEventType(type), { detail: data });
   }
 
   private _liveSync() {
@@ -80,12 +84,12 @@ export class HLSController {
     this._ctx.$state.liveSyncPosition.set(this._instance?.liveSyncPosition ?? Infinity);
   }
 
-  private _dispatchHLSEvent(eventType: string, detail: any) {
-    this._ctx.player?.dispatch(new DOMEvent(toDOMEventType(eventType), { detail }));
+  private _dispatchHLSEvent(type: string, data: any) {
+    this._ctx.player?.dispatch(this._createDOMEvent(type, data));
   }
 
   private _onTracksFound(eventType: string, data: HLS.NonNativeTextTracksData) {
-    const event = new DOMEvent<HLS.NonNativeTextTracksData>(eventType, { detail: data });
+    const event = this._createDOMEvent(eventType, data);
 
     let currentTrack = -1;
 
@@ -122,7 +126,7 @@ export class HLSController {
 
     if (!track) return;
 
-    const event = new DOMEvent<HLS.CuesParsedData>(eventType, { detail: data });
+    const event = this._createDOMEvent(eventType, data);
 
     for (const cue of data.cues) {
       cue.positionAlign = 'auto';
@@ -133,7 +137,7 @@ export class HLSController {
   private _onAudioSwitch(eventType: string, data: HLS.AudioTrackSwitchedData) {
     const track = this._ctx.audioTracks[data.id];
     if (track) {
-      const trigger = new DOMEvent(eventType, { detail: data });
+      const trigger = this._createDOMEvent(eventType, data);
       this._ctx.audioTracks[ListSymbol._select](track, true, trigger);
     }
   }
@@ -141,7 +145,7 @@ export class HLSController {
   private _onLevelSwitched(eventType: string, data: HLS.LevelSwitchedData) {
     const quality = this._ctx.qualities[data.level];
     if (quality) {
-      const trigger = new DOMEvent(eventType, { detail: data });
+      const trigger = this._createDOMEvent(eventType, data);
       this._ctx.qualities[ListSymbol._select](quality, true, trigger);
     }
   }
@@ -150,7 +154,7 @@ export class HLSController {
     if (this._ctx.$state.canPlay()) return;
 
     const { type, live, totalduration: duration, targetduration } = data.details,
-      trigger = new DOMEvent(eventType, { detail: data });
+      trigger = this._createDOMEvent(eventType, data);
 
     this._ctx.delegate._notify(
       'stream-type-change',
@@ -246,9 +250,6 @@ export class HLSController {
   }
 
   private _onFatalError(error: Error) {
-    // We can't recover here - better course of action?
-    this._instance?.destroy();
-    this._instance = null;
     this._ctx.delegate._notify('error', {
       message: error.message,
       code: 1,
@@ -260,20 +261,25 @@ export class HLSController {
     if (this._instance) this._instance.currentLevel = -1;
   }
 
-  private _onQualityChange() {
+  private _onUserQualityChange() {
     const { qualities } = this._ctx;
+
     if (!this._instance || qualities.auto) return;
+
     this._instance[qualities.switch + 'Level'] = qualities.selectedIndex;
+
     /**
      * Chrome has some strange issue with detecting keyframes inserted before the current
      * playhead position. This can cause playback to freeze until a new keyframe. It seems
      * setting the current time forces chrome to seek back to the last keyframe and adjust
      * playback. Weird fix, but it works!
      */
-    if (IS_CHROME) this._video.currentTime = this._video.currentTime;
+    if (IS_CHROME) {
+      this._video.currentTime = this._video.currentTime;
+    }
   }
 
-  private _onAudioChange() {
+  private _onUserAudioChange() {
     const { audioTracks } = this._ctx;
     if (this._instance && this._instance.audioTrack !== audioTracks.selectedIndex) {
       this._instance.audioTrack = audioTracks.selectedIndex;
@@ -281,8 +287,8 @@ export class HLSController {
   }
 
   _loadSource(src: Src) {
-    if (!isString(src.src)) return;
     this._clearRetryTimer();
+    if (!isString(src.src)) return;
     this._instance?.loadSource(src.src);
   }
 
