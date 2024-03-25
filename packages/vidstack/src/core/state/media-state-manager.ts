@@ -17,7 +17,7 @@ import type {
   VideoQualityChangeEvent,
   VideoQualityRemoveEvent,
 } from '../quality/video-quality';
-import { getTimeRangesEnd } from '../time-ranges';
+import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
 import type {
   AudioTrackAddEvent,
   AudioTrackChangeEvent,
@@ -554,9 +554,13 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['duration-change'](event: ME.MediaDurationChangeEvent) {
-    const { live, intrinsicDuration } = this.$state,
+    const { live, intrinsicDuration, ended } = this.$state,
       time = event.detail;
-    if (!live()) intrinsicDuration.set(!Number.isNaN(time) ? time : 0);
+    if (!live()) {
+      const duration = !Number.isNaN(time) ? time : 0;
+      intrinsicDuration.set(duration);
+      if (ended()) this._onEndPrecisionChange(event);
+    }
   }
 
   ['progress'](event: ME.MediaProgressEvent) {
@@ -795,10 +799,25 @@ export class MediaStateManager extends MediaPlayerController {
     this._saveTime();
   }
 
+  // Called to update time again incase duration precision has changed.
+  private _onEndPrecisionChange(trigger?: Event) {
+    const { duration, played } = this.$state,
+      playedStart = getTimeRangesStart(played()) ?? 0;
+
+    this._handle(
+      this.createEvent('time-update', {
+        detail: {
+          currentTime: duration(),
+          played: new TimeRange(playedStart, duration()),
+        },
+        trigger,
+      }),
+    );
+  }
+
   private _saveTime() {
     const { storage } = this._media,
       { canPlay, realCurrentTime } = this.$state;
-
     if (canPlay()) {
       storage?.setTime?.(realCurrentTime());
     }
@@ -847,7 +866,7 @@ export class MediaStateManager extends MediaPlayerController {
   );
 
   ['seeked'](event: ME.MediaSeekedEvent) {
-    const { seeking, currentTime, realCurrentTime, paused, duration, ended } = this.$state;
+    const { seeking, currentTime, realCurrentTime, paused, seekableEnd, ended } = this.$state;
 
     if (this._request._seeking) {
       seeking.set(true);
@@ -865,8 +884,6 @@ export class MediaStateManager extends MediaPlayerController {
 
       seeking.set(false);
 
-      if (event.detail !== duration()) ended.set(false);
-
       realCurrentTime.set(event.detail);
       this._satisfyRequest('media-seek-request', event);
 
@@ -877,8 +894,10 @@ export class MediaStateManager extends MediaPlayerController {
       }
     }
 
-    if (Math.abs(duration() - currentTime()) >= 0.1) {
+    if (Math.floor(currentTime()) !== Math.floor(seekableEnd())) {
       ended.set(false);
+    } else {
+      this.end(event);
     }
   }
 
@@ -929,6 +948,8 @@ export class MediaStateManager extends MediaPlayerController {
     const { storage } = this._media,
       { paused, seeking, ended, duration } = this.$state;
 
+    this._onEndPrecisionChange(event);
+
     if (!paused()) {
       this.dispatch('pause', { trigger: event });
     }
@@ -942,7 +963,7 @@ export class MediaStateManager extends MediaPlayerController {
 
     ended.set(true);
     this._resetTracking();
-    storage?.setTime?.(duration());
+    storage?.setTime?.(duration(), true);
 
     this.dispatch('ended', {
       trigger: event,

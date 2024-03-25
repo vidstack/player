@@ -852,5 +852,17 @@
   "_onQualitySwitched": "Vo",
   "_removeTTMLRenderingDiv": "Po",
   "_switchAutoBitrate": "Ro",
-  "_textManualRendering": "Qo"
+  "_textManualRendering": "Qo",
+  "_createDOMEvent": "Wo",
+  "_cueTracker": "_o",
+  "_currentTrack": "Xo",
+  "_error": "$o",
+  "_onFragmentLoadComplete": "cp",
+  "_onFragmentLoadStart": "bp",
+  "_onTextFragmentLoaded": "ep",
+  "_onTextTracksAdded": "dp",
+  "_onUserAudioChange": "Zo",
+  "_onUserQualityChange": "Yo",
+  "_parseContent": "ap",
+  "_onEndPrecisionChange": "fp"
 }

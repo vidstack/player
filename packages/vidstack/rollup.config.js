@@ -19,7 +19,7 @@ const MODE_WATCH = process.argv.includes('-w'),
 /** @type {Record<string, string | false>} */
 const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
 
-const NPM_EXTERNAL_PACKAGES = ['hls.js','dashjs', 'media-captions', 'media-icons'],
+const NPM_EXTERNAL_PACKAGES = ['hls.js', 'dashjs', 'media-captions', 'media-icons'],
   CDN_EXTERNAL_PACKAGES = ['media-captions', 'media-icons'],
   PLUGINS_EXTERNAL_PACKAGES = ['vite', 'rollup', /webpack/, /rspack/, 'esbuild', 'unplugin'];
 

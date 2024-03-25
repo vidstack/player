@@ -1,6 +1,5 @@
 import throttle from 'just-throttle';
 import type { MaybeStopEffect } from 'maverick.js';
-import { isNull } from 'maverick.js/std';
 
 import type { Src } from '../api/src-types';
 
@@ -12,7 +11,7 @@ export interface MediaStorage {
   setMuted?(muted: boolean): Promise<void>;
 
   getTime(): Promise<number | null>;
-  setTime?(time: number): Promise<void>;
+  setTime?(time: number, ended?: boolean): Promise<void>;
 
   getLang(): Promise<string | null>;
   setLang?(lang: string | null): Promise<void>;
@@ -97,12 +96,12 @@ export class LocalMediaStorage implements MediaStorage {
     return this._data.time;
   }
 
-  async setTime(time: number) {
+  async setTime(time: number, ended: boolean) {
     const shouldClear = time < 0;
 
     this._data.time = !shouldClear ? time : null;
 
-    if (shouldClear) this.saveTime();
+    if (shouldClear || ended) this.saveTime();
     else this.saveTimeThrottled();
   }
 
