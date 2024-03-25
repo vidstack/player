@@ -56,7 +56,7 @@ export class SliderValue extends Component<SliderValueProps> {
     if (_format === 'percent') {
       const range = max() - min();
       const percent = (value / range) * 100;
-      return (this._format.percent ?? round)(percent, decimalPlaces()) + '﹪';
+      return (this._format.percent ?? round)(percent, decimalPlaces()) + '%';
     } else if (_format === 'time') {
       return (this._format.time ?? formatTime)(value, {
         padHrs: padHours(),
