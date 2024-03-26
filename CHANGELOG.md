@@ -68,6 +68,8 @@ All notable changes to this project will be documented in this file.
 - rework layout loading in player class constructors ([b37814c](https://github.com/vidstack/player/commit/b37814c279ac8d444a7eb6808a00e761c718bb1f))
 - cdn entries need absolute url import specifiers ([c2bafe7](https://github.com/vidstack/player/commit/c2bafe7505375bbdab136ce3ba1bca1a648a3830))
 - handle seeking to end precision changes ([abf9b17](https://github.com/vidstack/player/commit/abf9b17bd77506051cfa0a20eef061a55838e6a8))
+- replace small percent sign for slider values (#1215) ([833f2e4](https://github.com/vidstack/player/commit/833f2e4e9346333b3296331ae2a2419e1bf50a2c))
+- keep js constructed player alive ([5f5cae1](https://github.com/vidstack/player/commit/5f5cae115b4b619a6e940de55245425d5cff6ed4))
 
 #### Player (React)
 
