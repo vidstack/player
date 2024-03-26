@@ -46,6 +46,8 @@ export class VidstackPlayer {
     }
 
     if (layout) {
+      target.removeAttribute('controls');
+
       if (!layout[LAYOUT_LOADED]) {
         await layout.load();
         layout[LAYOUT_LOADED] = true;
@@ -53,8 +55,6 @@ export class VidstackPlayer {
 
       layouts = await layout.create();
     }
-
-    target.removeAttribute('controls');
 
     const title = target.getAttribute('title');
     if (title) player.setAttribute('title', title);
