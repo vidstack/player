@@ -17,7 +17,7 @@ import { Primitive } from '../primitives/nodes';
 const PosterBridge = createReactComponent(PosterInstance);
 
 export interface PosterProps extends ReactElementProps<PosterInstance, HTMLImageElement> {
-  alt: string;
+  alt?: string;
   asChild?: boolean;
   children?: React.ReactNode;
   ref?: React.Ref<HTMLImageElement>;
