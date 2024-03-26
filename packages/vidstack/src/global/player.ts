@@ -31,6 +31,8 @@ export class VidstackPlayer {
       isTargetContainer =
         !isHTMLAudioElement(target) && !isHTMLVideoElement(target) && !isHTMLIFrameElement(target);
 
+    player.setAttribute('keep-alive', '');
+
     if (layout) {
       if (!layout[LAYOUT_LOADED]) {
         await layout.load();
