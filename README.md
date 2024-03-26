@@ -14,6 +14,7 @@ layouts to get up and running quickly! See any of the following links to get sta
 
 **Installation:**
 
+- [JavaScript](https://www.vidstack.io/docs/player/getting-started/installation/javascript)
 - [Angular](https://www.vidstack.io/docs/player/getting-started/installation/angular)
 - [React](https://www.vidstack.io/docs/player/getting-started/installation/react)
 - [Svelte](https://www.vidstack.io/docs/player/getting-started/installation/svelte)
