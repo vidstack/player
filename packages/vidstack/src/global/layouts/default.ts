@@ -4,6 +4,8 @@ import type { VidstackPlayerLayoutLoader } from './loader';
 export class VidstackPlayerLayout implements VidstackPlayerLayoutLoader {
   constructor(readonly props?: Partial<DefaultLayoutProps>) {}
 
+  readonly name = 'vidstack';
+
   async load() {
     await import('../../elements/bundles/player-layouts/default');
     await import('../../elements/bundles/player-ui');

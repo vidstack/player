@@ -1,5 +1,6 @@
 import '../elements/bundles/player';
 
+import { defineCustomElement } from 'maverick.js/element';
 import { isString, kebabToCamelCase } from 'maverick.js/std';
 
 import type { MediaPlayerProps, TextTrackInit } from '../core';
@@ -32,6 +33,17 @@ export class VidstackPlayer {
         !isHTMLAudioElement(target) && !isHTMLVideoElement(target) && !isHTMLIFrameElement(target);
 
     player.setAttribute('keep-alive', '');
+
+    if (props.poster && layout?.name !== 'plyr') {
+      if (!customElements.get('media-poster')) {
+        const { MediaPosterElement } = await import('../elements/define/poster-element');
+        defineCustomElement(MediaPosterElement);
+      }
+
+      const poster = document.createElement('media-poster');
+      if (layout?.name === 'default') poster.classList.add('vds-poster');
+      provider.append(poster);
+    }
 
     if (layout) {
       if (!layout[LAYOUT_LOADED]) {

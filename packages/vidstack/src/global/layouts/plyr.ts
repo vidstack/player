@@ -4,6 +4,8 @@ import type { VidstackPlayerLayoutLoader } from './loader';
 export class PlyrLayout implements VidstackPlayerLayoutLoader {
   constructor(readonly props?: Partial<PlyrLayoutProps>) {}
 
+  readonly name = 'plyr';
+
   async load() {
     await import('../../elements/bundles/player-layouts/plyr');
   }
