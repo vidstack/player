@@ -17,7 +17,7 @@ const imgTemplate = /* #__PURE__*/ createTemplate(
  * <media-player>
  *   <!-- ... -->
  *   <media-thumbnail
- *     src="https://media-files.vidstack.io/thumbnails.vtt"
+ *     src="https://files.vidstack.io/thumbnails.vtt"
  *     time="10"
  *   ></media-thumbnail>
  * </media-player>

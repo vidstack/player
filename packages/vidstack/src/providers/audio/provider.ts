@@ -13,7 +13,7 @@ import type { MediaProviderAdapter, MediaRemotePlaybackAdapter } from '../types'
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio}
  * @example
  * ```html
- * <media-player src="https://media-files.vidstack.io/audio.mp3">
+ * <media-player src="https://files.vidstack.io/audio.mp3">
  *   <media-provider></media-provider>
  * </media-player>
  * ```

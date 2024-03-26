@@ -53,16 +53,16 @@ export function Player() {
   function changeSource(type: string) {
     switch (type) {
       case 'audio':
-        setSrc('https://media-files.vidstack.io/sprite-fight/audio.mp3');
+        setSrc('https://files.vidstack.io/sprite-fight/audio.mp3');
         break;
       case 'video':
-        setSrc('https://media-files.vidstack.io/sprite-fight/480p.mp4');
+        setSrc('https://files.vidstack.io/sprite-fight/480p.mp4');
         break;
       case 'hls':
-        setSrc('https://media-files.vidstack.io/sprite-fight/hls/stream.m3u8');
+        setSrc('https://files.vidstack.io/sprite-fight/hls/stream.m3u8');
         break;
       case 'dash':
-        setSrc('https://media-files.vidstack.io/sprite-fight/dash/stream.mpd');
+        setSrc('https://files.vidstack.io/sprite-fight/dash/stream.mpd');
         break;
       case 'live':
         setSrc('https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8');

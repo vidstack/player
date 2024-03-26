@@ -10,7 +10,7 @@ import { MediaThumbnailElement } from '../thumbnail-element';
  *   <media-time-slider>
  *     <media-slider-preview>
  *       <media-slider-thumbnail
- *         src="https://media-files.vidstack.io/thumbnails.vtt"
+ *         src="https://files.vidstack.io/thumbnails.vtt"
  *       ></media-slider-thumbnail>
  *     </media-slider-preview>
  *   </media-time-slider>

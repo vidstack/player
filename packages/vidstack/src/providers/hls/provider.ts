@@ -23,8 +23,8 @@ const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
  * @example
  * ```html
  * <media-player
- *   src="https://media-files.vidstack.io/hls/index.m3u8"
- *   poster="https://media-files.vidstack.io/poster.png"
+ *   src="https://files.vidstack.io/hls/index.m3u8"
+ *   poster="https://files.vidstack.io/poster.png"
  * >
  *   <media-provider></media-provider>
  * </media-player>

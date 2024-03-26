@@ -31,8 +31,8 @@ import {
  * @example
  * ```html
  * <media-player
- *   src="https://media-files.vidstack.io/720p.mp4"
- *   poster="https://media-files.vidstack.io/poster.png"
+ *   src="https://files.vidstack.io/720p.mp4"
+ *   poster="https://files.vidstack.io/poster.png"
  * >
  *   <media-provider></media-provider>
  * </media-player>

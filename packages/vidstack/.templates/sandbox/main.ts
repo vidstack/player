@@ -52,16 +52,16 @@ changeSource('audio');
 function changeSource(type: string) {
   switch (type) {
     case 'audio':
-      player.src = 'https://media-files.vidstack.io/sprite-fight/audio.mp3';
+      player.src = 'https://files.vidstack.io/sprite-fight/audio.mp3';
       break;
     case 'video':
-      player.src = 'https://media-files.vidstack.io/sprite-fight/480p.mp4';
+      player.src = 'https://files.vidstack.io/sprite-fight/480p.mp4';
       break;
     case 'hls':
-      player.src = 'https://media-files.vidstack.io/sprite-fight/hls/stream.m3u8';
+      player.src = 'https://files.vidstack.io/sprite-fight/hls/stream.m3u8';
       break;
     case 'dash':
-      player.src = 'https://media-files.vidstack.io/sprite-fight/dash/stream.mpd';
+      player.src = 'https://files.vidstack.io/sprite-fight/dash/stream.mpd';
       break;
     case 'live':
       player.src = 'https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8';
@@ -93,21 +93,21 @@ function changeSource(type: string) {
 const tracks: TextTrackInit[] = [
   // Subtitles
   {
-    src: 'https://media-files.vidstack.io/sprite-fight/subs/english.vtt',
+    src: 'https://files.vidstack.io/sprite-fight/subs/english.vtt',
     label: 'English',
     language: 'en-US',
     kind: 'subtitles',
     default: true,
   },
   {
-    src: 'https://media-files.vidstack.io/sprite-fight/subs/spanish.vtt',
+    src: 'https://files.vidstack.io/sprite-fight/subs/spanish.vtt',
     label: 'Spanish',
     language: 'es-ES',
     kind: 'subtitles',
   },
   // Chapters
   {
-    src: 'https://media-files.vidstack.io/sprite-fight/chapters.vtt',
+    src: 'https://files.vidstack.io/sprite-fight/chapters.vtt',
     kind: 'chapters',
     language: 'en-US',
     default: true,
