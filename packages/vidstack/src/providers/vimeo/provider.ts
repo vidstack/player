@@ -592,7 +592,7 @@ export class VimeoProvider
       this._ctx.qualities[QualitySymbol._setAuto](isAuto, trigger);
       this._ctx.qualities[ListSymbol._select](undefined, true, trigger);
     } else {
-      this._ctx.qualities[ListSymbol._select](newQuality, true, trigger);
+      this._ctx.qualities[ListSymbol._select](newQuality ?? undefined, true, trigger);
     }
   }
 
