@@ -21,7 +21,7 @@ export function isHLSProvider(provider: any): provider is HLSProvider {
   return provider?.$$PROVIDER_TYPE === 'HLS';
 }
 
-export function isDashProvider(provider: any): provider is DASHProvider {
+export function isDASHProvider(provider: any): provider is DASHProvider {
   return provider?.$$PROVIDER_TYPE === 'DASH';
 }
 

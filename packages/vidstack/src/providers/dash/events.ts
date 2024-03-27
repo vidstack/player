@@ -3,7 +3,7 @@ import type { DOMEvent } from 'maverick.js/std';
 
 import type { MediaPlayer } from '../../components/player';
 
-export interface DashProviderEvents {
+export interface DASHProviderEvents {
   'dash-lib-load-start': DASHLibLoadStartEvent;
   'dash-lib-loaded': DASHLibLoadedEvent;
   'dash-lib-load-error': DASHLibLoadErrorEvent;

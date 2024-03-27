@@ -49,9 +49,7 @@ export const HLS_VIDEO_TYPES = new Set<string>([
   'application/mpegurl',
 ]);
 
-export const DASH_VIDEO_TYPES = new Set<string>([
-  "application/dash+xml",
-]);
+export const DASH_VIDEO_TYPES = new Set<string>(['application/dash+xml']);
 
 export function isAudioSrc({ src, type }: Src): boolean {
   return isString(src)

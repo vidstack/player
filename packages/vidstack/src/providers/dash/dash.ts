@@ -10,7 +10,7 @@ import { TextTrack } from '../../core/tracks/text/text-track';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { canPlayAudioType, canPlayVideoType, IS_CHROME } from '../../utils/support';
-import type { DashConstructor, DashInstanceCallback } from './types';
+import type { DASHConstructor, DASHInstanceCallback } from './types';
 
 export type DashGetMediaTracks = (type: DASH.MediaType, manifest: object) => DASH.MediaInfo[];
 
@@ -21,7 +21,7 @@ export class DASHController {
   private _stopLiveSync: (() => void) | null = null;
 
   _config: Partial<DASH.MediaPlayerSettingClass> = {};
-  _callbacks = new Set<DashInstanceCallback>();
+  _callbacks = new Set<DASHInstanceCallback>();
 
   get instance() {
     return this._instance;
@@ -32,7 +32,7 @@ export class DASHController {
     protected _ctx: MediaContext,
   ) {}
 
-  setup(ctor: DashConstructor) {
+  setup(ctor: DASHConstructor) {
     this._instance = ctor().create();
 
     const dispatcher = this._dispatchDASHEvent.bind(this);

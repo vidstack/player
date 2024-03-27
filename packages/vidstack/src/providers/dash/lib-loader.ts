@@ -3,19 +3,19 @@ import { DOMEvent, isFunction, isString, isUndefined } from 'maverick.js/std';
 import type { MediaContext } from '../../core/api/media-context';
 import { coerceToError } from '../../utils/error';
 import { loadScript } from '../../utils/network';
-import type { DashConstructor, DashConstructorLoader, DashLibrary } from './types';
+import type { DASHConstructor, DASHConstructorLoader, DASHLibrary } from './types';
 
 interface LoadDASHConstructorCallbacks {
   onLoadStart?: () => void;
-  onLoaded?: (ctor: DashConstructor) => void;
+  onLoaded?: (ctor: DASHConstructor) => void;
   onLoadError?: (err: Error) => void;
 }
 
 export class DASHLibLoader {
   constructor(
-    private _lib: DashLibrary,
+    private _lib: DASHLibrary,
     private _ctx: MediaContext,
-    private _callback: (ctor: DashConstructor) => void,
+    private _callback: (ctor: DASHConstructor) => void,
   ) {
     this._startLoading();
   }
@@ -61,7 +61,7 @@ export class DASHLibLoader {
     this._ctx.player.dispatch(new DOMEvent<void>('dash-lib-load-start'));
   }
 
-  private _onLoaded(ctor: DashConstructor) {
+  private _onLoaded(ctor: DASHConstructor) {
     if (__DEV__) {
       this._ctx.logger
         ?.infoGroup('Loaded `dash.js`')
@@ -71,7 +71,7 @@ export class DASHLibLoader {
     }
 
     this._ctx.player.dispatch(
-      new DOMEvent<DashConstructor>('dash-lib-loaded', {
+      new DOMEvent<DASHConstructor>('dash-lib-loaded', {
         detail: ctor,
       }),
     );
@@ -105,7 +105,7 @@ export class DASHLibLoader {
 }
 
 async function importDASH(
-  loader: DashConstructor | DashConstructorLoader | undefined,
+  loader: DASHConstructor | DASHConstructorLoader | undefined,
   callbacks: LoadDASHConstructorCallbacks = {},
 ) {
   if (isUndefined(loader)) return undefined;
@@ -114,12 +114,12 @@ async function importDASH(
 
   // Must be static.
   if (loader.prototype && loader.prototype !== Function) {
-    callbacks.onLoaded?.(loader as DashConstructor);
-    return loader as DashConstructor;
+    callbacks.onLoaded?.(loader as DASHConstructor);
+    return loader as DASHConstructor;
   }
 
   try {
-    const ctor = (await (loader as DashConstructorLoader)())?.default;
+    const ctor = (await (loader as DASHConstructorLoader)())?.default;
 
     if (ctor) {
       callbacks.onLoaded?.(ctor);
@@ -148,7 +148,7 @@ async function importDASH(
 async function loadDASHScript(
   src: unknown,
   callbacks: LoadDASHConstructorCallbacks = {},
-): Promise<DashConstructor | undefined> {
+): Promise<DASHConstructor | undefined> {
   if (!isString(src)) return undefined;
 
   callbacks.onLoadStart?.();

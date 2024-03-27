@@ -8,7 +8,7 @@ import type { MediaProviderAdapter } from '../types';
 import { VideoProvider } from '../video/provider';
 import { DASHController } from './dash';
 import { DASHLibLoader } from './lib-loader';
-import type { DashConstructor, DashInstanceCallback, DashLibrary } from './types';
+import type { DASHConstructor, DASHInstanceCallback, DASHLibrary } from './types';
 
 const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
 
@@ -31,7 +31,7 @@ const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
 export class DASHProvider extends VideoProvider implements MediaProviderAdapter {
   protected override $$PROVIDER_TYPE = 'DASH';
 
-  private _ctor: DashConstructor | null = null;
+  private _ctor: DASHConstructor | null = null;
   private readonly _controller = new DASHController(this.video, this._ctx);
 
   /**
@@ -61,7 +61,7 @@ export class DASHProvider extends VideoProvider implements MediaProviderAdapter 
     return true;
   }
 
-  protected _library: DashLibrary = `${JS_DELIVR_CDN}/npm/dashjs@4.7.4/dist/dash${
+  protected _library: DASHLibrary = `${JS_DELIVR_CDN}/npm/dashjs@4.7.4/dist/dash${
     __DEV__ ? '.all.debug.js' : '.all.min.js'
   }`;
 
@@ -123,7 +123,7 @@ export class DASHProvider extends VideoProvider implements MediaProviderAdapter 
    * The given callback is invoked when a new `dash.js` instance is created and right before it's
    * attached to media.
    */
-  onInstance(callback: DashInstanceCallback): Dispose {
+  onInstance(callback: DASHInstanceCallback): Dispose {
     const instance = this._controller.instance;
     if (instance) callback(instance);
     this._controller._callbacks.add(callback);

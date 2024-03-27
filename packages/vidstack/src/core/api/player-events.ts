@@ -2,22 +2,22 @@ import type { DOMEvent } from 'maverick.js/std';
 
 import type { MediaPlayer } from '../../components';
 import type { LoggerEvents } from '../../foundation/logger/events';
+import type { DASHProviderEvents } from '../../providers/dash/events';
 import type { GoogleCastEvents } from '../../providers/google-cast/events';
 import type { HLSProviderEvents } from '../../providers/hls/events';
 import type { VideoPresentationEvents } from '../../providers/video/presentation/events';
 import type { MediaEvents } from './media-events';
 import type { MediaRequestEvents } from './media-request-events';
-import type { DashProviderEvents } from '../../providers/dash/events';
 
 export interface MediaPlayerEvents
   extends MediaEvents,
-  MediaRequestEvents,
-  MediaUserEvents,
-  LoggerEvents,
-  VideoPresentationEvents,
-  HLSProviderEvents,
-  DashProviderEvents,
-  GoogleCastEvents {
+    MediaRequestEvents,
+    MediaUserEvents,
+    LoggerEvents,
+    VideoPresentationEvents,
+    HLSProviderEvents,
+    DASHProviderEvents,
+    GoogleCastEvents {
   'media-player-connect': MediaPlayerConnectEvent;
   /** @internal */
   'find-media-player': FindMediaPlayerEvent;
@@ -32,7 +32,7 @@ export interface MediaPlayerEvents
  * @composed
  * @detail player
  */
-export interface MediaPlayerConnectEvent extends DOMEvent<MediaPlayer> { }
+export interface MediaPlayerConnectEvent extends DOMEvent<MediaPlayer> {}
 
 export interface FindMediaPlayerEventDetail {
   (player: MediaPlayer | null): void;
@@ -44,6 +44,6 @@ export interface FindMediaPlayerEventDetail {
  * @composed
  * @detail callback
  */
-export interface FindMediaPlayerEvent extends DOMEvent<FindMediaPlayerEventDetail> { }
+export interface FindMediaPlayerEvent extends DOMEvent<FindMediaPlayerEventDetail> {}
 
-export interface MediaUserEvents { }
+export interface MediaUserEvents {}

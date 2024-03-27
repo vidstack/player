@@ -14,7 +14,7 @@ export { YouTubeProviderLoader } from './youtube/loader';
 export type { AudioProvider } from './audio/provider';
 export type { GoogleCastProvider } from './google-cast/provider';
 export type { HLSProvider } from './hls/provider';
-export type { DASHProvider } from './dash/provider'
+export type { DASHProvider } from './dash/provider';
 export type { VideoProvider } from './video/provider';
 export type { VimeoProvider } from './vimeo/provider';
 export type { YouTubeProvider } from './youtube/provider';

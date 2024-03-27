@@ -1,11 +1,10 @@
 import type * as DASH from 'dashjs';
 
-import type { DashProviderEvents } from './events';
+import type { DASHProviderEvents } from './events';
 
-export { type DashProviderEvents };
+export { type DASHProviderEvents };
 
-export type DashConstructor = typeof DASH.MediaPlayer;
-export type DashConstructorLoader = () => Promise<{ default: DashConstructor } | undefined>;
-export type DashLibrary = DashConstructor | DashConstructorLoader | string | undefined;
-export type DashInstanceCallback = (player: DASH.MediaPlayerClass) => void;
-
+export type DASHConstructor = typeof DASH.MediaPlayer;
+export type DASHConstructorLoader = () => Promise<{ default: DASHConstructor } | undefined>;
+export type DASHLibrary = DASHConstructor | DASHConstructorLoader | string | undefined;
+export type DASHInstanceCallback = (player: DASH.MediaPlayerClass) => void;

@@ -1,7 +1,7 @@
 import { isNumber, isString } from 'maverick.js/std';
 import type { SetRequired } from 'type-fest';
 
-export type MediaSrc = string | AudioSrc | VideoSrc | HLSSrc | YouTubeSrc | VimeoSrc;
+export type MediaSrc = string | AudioSrc | VideoSrc | HLSSrc | DASHSrc | YouTubeSrc | VimeoSrc;
 
 export type MediaSrcObject = MediaStream | MediaSource | Blob;
 
@@ -68,6 +68,13 @@ export type HLSMimeType =
   | 'video/x-mpegurl'
   | 'video/mpegurl'
   | 'application/mpegurl';
+
+export interface DASHSrc {
+  src: string;
+  type: DASHMimeType;
+}
+
+export type DASHMimeType = 'application/dash+xml';
 
 export interface YouTubeSrc {
   src: string;
