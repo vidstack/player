@@ -864,5 +864,6 @@
   "_onUserAudioChange": "Zo",
   "_onUserQualityChange": "Yo",
   "_parseContent": "ap",
-  "_onEndPrecisionChange": "fp"
+  "_onEndPrecisionChange": "fp",
+  "_setAudioGain": "gp"
 }

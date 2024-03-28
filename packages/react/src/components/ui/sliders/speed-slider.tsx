@@ -4,6 +4,7 @@ import { createReactComponent, type ReactElementProps } from 'maverick.js/react'
 
 import { SpeedSliderInstance } from '../../primitives/instances';
 import { Primitive } from '../../primitives/nodes';
+import { Value } from './slider';
 import { sliderCallbacks } from './slider-callbacks';
 
 /* -------------------------------------------------------------------------------------------------
@@ -50,4 +51,4 @@ const Root = React.forwardRef<SpeedSliderInstance, RootProps>(
 Root.displayName = 'SpeedSlider';
 
 export * from './slider';
-export { Root };
+export { Root, Value };
