@@ -808,5 +808,20 @@
   "_watchSource": "co",
   "_watchStep": "Zn",
   "_watchToggle": "io",
-  "_watchUpdates": "eo"
+  "_watchUpdates": "eo",
+  "_createDOMEvent": "lo",
+  "_cueTracker": "po",
+  "_currentTrack": "mo",
+  "_dispatchDASHEvent": "uo",
+  "_error": "qo",
+  "_onEndPrecisionChange": "so",
+  "_onFragmentLoadComplete": "wo",
+  "_onFragmentLoadStart": "vo",
+  "_onManifestLoaded": "xo",
+  "_onTextFragmentLoaded": "zo",
+  "_onTextTracksAdded": "yo",
+  "_onUserAudioChange": "oo",
+  "_onUserQualityChange": "no",
+  "_parseContent": "to",
+  "_switchAutoBitrate": "ro"
 }

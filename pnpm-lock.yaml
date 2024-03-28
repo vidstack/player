@@ -96,8 +96,8 @@ importers:
         specifier: 0.41.5
         version: 0.41.5
       media-icons:
-        specifier: ^1.1.2
-        version: 1.1.2
+        specifier: ^1.1.3
+        version: 1.1.3
       react:
         specifier: ^18.0.0
         version: 18.2.0
@@ -119,6 +119,9 @@ importers:
       rollup-plugin-esbuild:
         specifier: ^6.1.0
         version: 6.1.1(esbuild@0.19.12)(rollup@4.12.1)
+      type-fest:
+        specifier: ^3.8.0
+        version: 3.13.1
       typescript:
         specifier: ^5.3.0
         version: 5.4.2
@@ -196,8 +199,8 @@ importers:
         specifier: 0.41.5
         version: 0.41.5
       media-icons:
-        specifier: ^1.1.2
-        version: 1.1.2
+        specifier: ^1.1.3
+        version: 1.1.3
       postcss:
         specifier: ^8.4.0
         version: 8.4.35
@@ -4472,10 +4475,10 @@ packages:
     engines: { node: '>=16' }
     dev: false
 
-  /media-icons@1.1.2:
+  /media-icons@1.1.3:
     resolution:
       {
-        integrity: sha512-N5O3Q35YVu7u9/gWGDjV5YAdRmG35OZbibD/vTLXEmhMpsyIS0FiE2xRLPDCIedLBoozDhniEPSEfsVN13CcfQ==,
+        integrity: sha512-WuG+bbqXdmmMFwCzoH1bazo5z4R0Mzcx7TZE1jaD2y5NyY4og5QqlkJZCW1VkirAdfiVxUB+z8yTlxOg5NRGKQ==,
       }
     engines: { node: '>=16' }
     dev: true

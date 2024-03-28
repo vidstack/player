@@ -387,7 +387,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(.vds-audio-layout .vds-menu-items:not([data-submenu])) {
+:where(.vds-audio-layout .vds-menu-items[data-root]) {
   max-height: var(--audio-menu-max-height, 320px);
 }
 

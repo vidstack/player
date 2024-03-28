@@ -147,7 +147,6 @@ function DefaultAudioTracksMenu() {
               onSelect={select}
               key={value}
             >
-              <div className="vds-radio-check" />
               <Icons.Menu.RadioCheck className="vds-icon" />
               <span className="vds-radio-label">{label}</span>
             </Menu.Radio>

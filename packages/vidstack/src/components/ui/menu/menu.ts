@@ -45,11 +45,11 @@ let idCount = 0;
  * Root menu container used to hold and manage a menu button and menu items. This component is
  * used to display options in a floating panel. They can be nested to create submenus.
  *
+ * @attr data-root - Whether this is the root menu items.
+ * @attr data-submenu - Whether menu is a submenu.
  * @attr data-open - Whether menu is open.
  * @attr data-keyboard - Whether the menu is opened via keyboard.
- * @attr data-submenu - Whether menu is a submenu.
  * @attr data-disabled - Whether menu is disabled.
- * @attr data-resizing - Whether the menu is resizing.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  */
 export class Menu extends Component<MenuProps, {}, MenuEvents> {
@@ -135,7 +135,6 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._menuButtonId = `media-menu-button-${currentIdCount}`;
 
     this._focus = new MenuFocusController({
-      _getScrollContainer: this._findScrollContainer.bind(this),
       _closeMenu: this.close.bind(this),
     });
 
@@ -147,6 +146,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
     this.setAttributes({
       'data-open': this._expanded,
+      'data-root': !this.isSubmenu,
       'data-submenu': this.isSubmenu,
       'data-disabled': this._isDisabled.bind(this),
     });
@@ -235,8 +235,11 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     setAttributeIfEmpty(el, 'role', isMenuItem ? 'menuitem' : 'button');
 
     setAttribute(el, 'id', this._menuButtonId);
+
     setAttribute(el, 'aria-haspopup', 'menu');
     setAttribute(el, 'aria-expanded', 'false');
+
+    setAttribute(el, 'data-root', !this.isSubmenu);
     setAttribute(el, 'data-submenu', this.isSubmenu);
 
     const watchAttrs = () => {
@@ -260,6 +263,8 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     setAttribute(el, 'id', this._menuId);
     setAttributeIfEmpty(el, 'role', 'menu');
     setAttributeIfEmpty(el, 'tabindex', '-1');
+
+    setAttribute(el, 'data-root', !this.isSubmenu);
     setAttribute(el, 'data-submenu', this.isSubmenu);
 
     this._content.set(el);
@@ -367,9 +372,14 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _updateFocus() {
     if (this._isTransitionActive || this._isSubmenuOpen) return;
+
     this._focus._update();
-    if (this._wasKeyboardExpand) this._focus._focusActive();
-    this._focus._scroll();
+
+    if (this._wasKeyboardExpand) {
+      this._focus._focusActive();
+    } else {
+      this._focus._scroll();
+    }
   }
 
   private _isExpanded() {
@@ -412,21 +422,6 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       isElementParent(this.el, target, (node) => node.getAttribute('role') === 'menu')
       ? target
       : null;
-  }
-
-  private _findScrollContainer() {
-    if (!this.isSubmenu) {
-      const content = peek(this._content);
-      return content || null;
-    } else {
-      let el: HTMLElement | null = this.el;
-
-      while (el && el.tagName !== 'media-menu' && el.hasAttribute('data-submenu')) {
-        el = el.parentNode as HTMLElement;
-      }
-
-      return el;
-    }
   }
 
   private _toggleMediaControls(trigger?: Event) {
@@ -539,9 +534,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     const content = this._content();
     if (content && event.propertyName === 'height') {
       this._isTransitionActive = event.type === 'transitionstart';
-
-      setAttribute(content, 'data-resizing', this._isTransitionActive);
-
+      setAttribute(content, 'data-transition', this._isTransitionActive ? 'height' : null);
       if (this._expanded()) this._updateFocus();
     }
   }

@@ -27,12 +27,11 @@ const VALID_KEYS = /* #__PURE__*/ new Set([
 ]);
 
 export interface MenuFocusControllerDelegate {
-  _getScrollContainer(): HTMLElement | null;
   _closeMenu(trigger?: Event): void;
 }
 
 export class MenuFocusController {
-  protected _index = 0;
+  protected _index = -1;
   protected _el: HTMLElement | null = null;
   protected _elements: HTMLElement[] = [];
 
@@ -60,7 +59,7 @@ export class MenuFocusController {
     listenEvent(this._el, 'keydown', this._onKeyDown.bind(this));
 
     onDispose(() => {
-      this._index = 0;
+      this._index = -1;
       this._elements = [];
     });
   }
@@ -71,38 +70,41 @@ export class MenuFocusController {
   }
 
   _scroll(index = this._findActiveIndex()) {
-    const element = this._elements[index],
-      container = this._delegate._getScrollContainer();
-    if (element && container) {
+    const element = this._elements[index];
+    if (element) {
       requestAnimationFrame(() => {
-        container.scrollTop =
-          element.offsetTop - container.offsetHeight / 2 + element.offsetHeight / 2;
+        requestAnimationFrame(() => {
+          element.scrollIntoView({ block: 'center' });
+        });
       });
     }
   }
 
-  _focusActive() {
+  _focusActive(scroll = true) {
     const index = this._findActiveIndex();
-    this._focusAt(index >= 0 ? index : 0);
+    this._focusAt(index >= 0 ? index : 0, scroll);
   }
 
-  protected _focusAt(index: number) {
+  protected _focusAt(index: number, scroll = true) {
     this._index = index;
     if (this._elements[index]) {
-      this._elements[index].focus();
-      this._scroll(index);
+      this._elements[index].focus({ preventScroll: true });
+      if (scroll) this._scroll(index);
     } else {
-      this._el?.focus();
+      this._el?.focus({ preventScroll: true });
     }
   }
 
   protected _findActiveIndex() {
     return this._elements.findIndex(
-      (el) => document.activeElement === el || el.getAttribute('aria-checked') === 'true',
+      (el) =>
+        document.activeElement === el ||
+        (el.getAttribute('role') === 'menuitemradio' && el.getAttribute('aria-checked') === 'true'),
     );
   }
 
   protected _onFocus() {
+    if (this._index >= 0) return;
     this._update();
     this._focusActive();
   }

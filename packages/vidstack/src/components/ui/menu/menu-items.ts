@@ -15,11 +15,14 @@ import { menuPortalContext } from './menu-portal';
 /**
  * Menu items can be used to display settings or arbitrary content in a floating panel.
  *
+ * @attr data-root - Whether this is the root menu items.
+ * @attr data-submenu - Whether menu items are part of a submenu.
  * @attr data-open - Whether menu items are currently visible.
  * @attr data-keyboard - Whether the menu is opened via keyboard.
  * @attr data-placement - The placement prop setting.
  * @attr data-focus - Whether item are being keyboard focused.
  * @attr data-hocus - Whether items are being keyboard focused or hovered over.
+ * @attr data-transition - Whether the menu is resizing.
  * @docs {@link https://www.vidstack.io/docs/player/components/menu/menu}
  */
 export class MenuItems extends Component<MenuItemsProps> {

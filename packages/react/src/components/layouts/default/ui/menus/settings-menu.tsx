@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { flushSync } from 'react-dom';
+
 import { useMediaState } from '../../../../../hooks/use-media-state';
 import * as Menu from '../../../../ui/menu';
 import type * as Tooltip from '../../../../ui/tooltip';
@@ -33,7 +35,9 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
     [isOpen, setIsOpen] = React.useState(false);
 
   function onOpen() {
-    setIsOpen(true);
+    flushSync(() => {
+      setIsOpen(true);
+    });
   }
 
   function onClose() {

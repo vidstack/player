@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { useSignal } from 'maverick.js/react';
+import { flushSync } from 'react-dom';
 
 import { useChapterOptions } from '../../../../../hooks/options/use-chapter-options';
 import { useMediaState } from '../../../../../hooks/use-media-state';
@@ -37,7 +38,9 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
   if (disabled) return null;
 
   function onOpen() {
-    setIsOpen(true);
+    flushSync(() => {
+      setIsOpen(true);
+    });
   }
 
   function onClose() {

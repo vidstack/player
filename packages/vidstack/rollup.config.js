@@ -14,7 +14,8 @@ import esbuildPlugin from 'rollup-plugin-esbuild';
 const MODE_WATCH = process.argv.includes('-w'),
   MODE_TYPES = process.argv.includes('--config-types'),
   MODE_CDN = process.argv.includes('--config-cdn'),
-  MODE_PLUGINS = process.argv.includes('--config-plugins');
+  MODE_PLUGINS = process.argv.includes('--config-plugins'),
+  MODE_CSS = process.argv.includes('--config-css');
 
 /** @type {Record<string, string | false>} */
 const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
@@ -42,17 +43,23 @@ if (!MODE_TYPES) {
   }
 }
 
-export default defineConfig(
-  MODE_PLUGINS
-    ? getPluginsBundles()
-    : MODE_CDN
-      ? getCDNBundles()
-      : MODE_WATCH
-        ? [...getNPMBundles(), ...getTypesBundles()]
-        : MODE_TYPES
-          ? getTypesBundles()
-          : [...getNPMBundles(), ...getLegacyCDNBundles(), ...getPluginsBundles()],
-);
+export default defineConfig(getBundles());
+
+function getBundles() {
+  if (MODE_CSS) {
+    return [];
+  } else if (MODE_PLUGINS) {
+    return getPluginsBundles();
+  } else if (MODE_CDN) {
+    return getCDNBundles();
+  } else if (MODE_WATCH) {
+    return [...getNPMBundles(), ...getTypesBundles()];
+  } else if (MODE_TYPES) {
+    return getTypesBundles();
+  } else {
+    return [...getNPMBundles(), ...getLegacyCDNBundles(), ...getPluginsBundles()];
+  }
+}
 
 /**
  * @returns {import('rollup').RollupOptions[]}
