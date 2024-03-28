@@ -201,6 +201,24 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     }
   }
 
+  _setAudioGain(gain: number, trigger?: Event) {
+    const { audioGain, canSetAudioGain } = this.$state;
+
+    if (audioGain() === gain) return;
+
+    const provider = this._$provider();
+
+    if (!provider?.audioGain || !canSetAudioGain()) {
+      throw Error('[vidstack] audio gain api not available');
+    }
+
+    if (trigger) {
+      this._request._queue._enqueue('media-audio-gain-change-request', trigger);
+    }
+
+    provider.audioGain.setGain(gain);
+  }
+
   _seekToLiveEdge(trigger?: Event) {
     if (__SERVER__) return;
 
@@ -633,14 +651,11 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   ['media-audio-gain-change-request'](event: RE.MediaAudioGainChangeRequestEvent) {
-    const { audioGain, canSetAudioGain } = this.$state;
-    if (audioGain() === event.detail || !canSetAudioGain()) return;
-
-    const provider = this._$provider();
-    if (!provider?.audioGain) return;
-
-    this._request._queue._enqueue('media-audio-gain-change-request', event);
-    provider.audioGain.setGain(event.detail);
+    try {
+      this._setAudioGain(event.detail, event);
+    } catch (e) {
+      // no-op
+    }
   }
 
   ['media-quality-change-request'](event: RE.MediaQualityChangeRequestEvent) {

@@ -499,7 +499,7 @@
   height: var(--size);
 }
 
-:where(.vds-menu-item-hint, .vds-menu-open-icon) {
+:where(.vds-menu-item-hint, .vds-menu-open-icon, .vds-radio-hint) {
   color: var(--text-hint-color);
   font-size: var(--media-menu-hint-font-size, 13px);
   font-weight: var(--media-menu-hint-font-weight, 400);
@@ -726,6 +726,10 @@
 .vds-radio[aria-checked='true'] .vds-icon {
   display: inline-block;
   margin-left: 6px;
+}
+
+:where(.vds-radio-hint) {
+  margin-left: auto;
 }
 
 /*

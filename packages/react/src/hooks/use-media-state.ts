@@ -40,7 +40,7 @@ export function useMediaState<T extends keyof MediaState>(
 /**
  * This hook is used to subscribe to the current media state on the nearest parent player.
  *
- * @docs {@link https://vidstack.io/docs/player/core-concepts/state#reading}
+ * @docs {@link https://vidstack.io/docs/player/core-concepts/state-management#reading}
  */
 export function useMediaStore(
   ref?: React.RefObject<MediaPlayerInstance | null>,

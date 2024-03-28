@@ -362,14 +362,14 @@ export interface MediaState {
   /**
    * Whether media is allowed to begin loading. This depends on the `load` player prop.
    *
-   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
   canLoad: boolean;
   /**
    * Whether the media poster is allowed to begin loading. This depends on the `posterLoad`
    * player prop.
    *
-   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
   canLoadPoster: boolean;
   /**

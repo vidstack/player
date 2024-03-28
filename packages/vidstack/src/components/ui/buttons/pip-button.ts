@@ -20,7 +20,7 @@ export interface PIPButtonEvents
  * @attr data-active - Whether picture-in-picture mode is active.
  * @attr data-supported - Whether picture-in-picture mode is available.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/pip-button}
- * @see {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture}
+ * @see {@link https://www.vidstack.io/docs/player/api/picture-in-picture}
  */
 export class PIPButton extends Component<PIPButtonProps, {}, PIPButtonEvents> {
   static props: PIPButtonProps = ToggleButtonController.props;

@@ -22,7 +22,7 @@ export interface MediaPlayerProps extends Omit<ReactElementProps<MediaPlayerInst
   /**
    * The URL or object of the current media resource/s to be considered for playback.
    *
-   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-source}
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#sources}
    */
   src?: PlayerSrc;
   aspectRatio?: string;

@@ -10,8 +10,7 @@ import { isTrackCaptionKind } from '../tracks/text/text-track';
 /**
  * A simple facade for dispatching media requests to the nearest media player element.
  *
- * @docs {@link https://www.vidstack.io/docs/player/core-concepts/state#remote-control}
- * @docs {@link https://www.vidstack.io/docs/player/core-concepts/state#updating}
+ * @docs {@link https://www.vidstack.io/docs/player/core-concepts/state-management#updating}
  *
  */
 export class MediaRemoteControl {
@@ -71,7 +70,7 @@ export class MediaRemoteControl {
    * Dispatch a request to start the media loading process. This will only work if the media
    * player has been initialized with a custom loading strategy `load="custom">`.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
   startLoading(trigger?: Event) {
     this._dispatchRequest('media-start-loading', trigger);
@@ -81,7 +80,7 @@ export class MediaRemoteControl {
    * Dispatch a request to start the poster loading process. This will only work if the media
    * player has been initialized with a custom poster loading strategy `posterLoad="custom">`.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
   startLoadingPoster(trigger?: Event) {
     this._dispatchRequest('media-poster-start-loading', trigger);
@@ -136,7 +135,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to enter fullscreen.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#remote-control}
+   * @docs {@link https://www.vidstack.io/docs/player/api/fullscreen#remote-control}
    */
   enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     this._dispatchRequest('media-enter-fullscreen-request', trigger, target);
@@ -145,7 +144,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to exit fullscreen.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#remote-control}
+   * @docs {@link https://www.vidstack.io/docs/player/api/fullscreen#remote-control}
    */
   exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     this._dispatchRequest('media-exit-fullscreen-request', trigger, target);
@@ -154,7 +153,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to lock the screen orientation.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/screen-orientation#remote-control}
+   * @docs {@link https://www.vidstack.io/docs/player/screen-orientation#remote-control}
    */
   lockScreenOrientation(lockType: ScreenOrientationLockType, trigger?: Event) {
     this._dispatchRequest('media-orientation-lock-request', trigger, lockType);
@@ -163,7 +162,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to unlock the screen orientation.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/screen-orientation#remote-control}
+   * @docs {@link https://www.vidstack.io/docs/player/api/screen-orientation#remote-control}
    */
   unlockScreenOrientation(trigger?: Event) {
     this._dispatchRequest('media-orientation-unlock-request', trigger);
@@ -172,7 +171,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to enter picture-in-picture mode.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#remote-control}
+   * @docs {@link https://www.vidstack.io/docs/player/api/picture-in-picture#remote-control}
    */
   enterPictureInPicture(trigger?: Event) {
     this._dispatchRequest('media-enter-pip-request', trigger);
@@ -181,7 +180,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to exit picture-in-picture mode.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#remote-control}
+   * @docs {@link https://www.vidstack.io/docs/player/api/picture-in-picture#remote-control}
    */
   exitPictureInPicture(trigger?: Event) {
     this._dispatchRequest('media-exit-pip-request', trigger);
@@ -210,6 +209,7 @@ export class MediaRemoteControl {
    * Dispatch a request to update the media volume to the given `volume` level which is a value
    * between 0 and 1.
    *
+   * @docs {@link https://www.vidstack.io/docs/player/api/audio-gain#remote-control}
    * @example
    * ```ts
    * remote.changeVolume(0); // 0%
@@ -291,9 +291,9 @@ export class MediaRemoteControl {
    *
    * @example
    * ```ts
-   * remote.changeAudioGain(1); // Disable audio gain (100% of current volume)
-   * remote.changeAudioGain(1.5); // 150% louder than current volume
-   * remote.changeAudioGain(2); // 200% louder than current volume
+   * remote.changeAudioGain(1); // Disable audio gain
+   * remote.changeAudioGain(1.5); // 50% louder
+   * remote.changeAudioGain(2); // 100% louder
    * ```
    */
   changeAudioGain(gain: number, trigger?: Event) {
@@ -380,7 +380,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to toggle the media fullscreen state.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#remote-control}
+   * @docs {@link https://www.vidstack.io/docs/player/api/fullscreen#remote-control}
    */
   toggleFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     const player = this.getPlayer(trigger?.target);
@@ -397,7 +397,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to toggle the media picture-in-picture mode.
    *
-   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#remote-control}
+   * @docs {@link https://www.vidstack.io/docs/player/api/picture-in-picture#remote-control}
    */
   togglePictureInPicture(trigger?: Event) {
     const player = this.getPlayer(trigger?.target);

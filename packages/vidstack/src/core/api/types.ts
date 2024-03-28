@@ -30,14 +30,14 @@ export type MediaViewType = 'unknown' | 'audio' | 'video';
 /**
  * Indicates the type of strategy that should be used to initiate the loading process.
  *
- * @docs {@see https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+ * @docs {@see https://www.vidstack.io/docs/player/core-concepts/loading#load-strategies}
  */
 export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom' | 'play';
 
 /**
  * Indicates the type of strategy that should be used to initiate the poster loading process.
  *
- * @docs {@see https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+ * @docs {@see https://www.vidstack.io/docs/player/core-concepts/loading#load-strategies}
  */
 export type MediaPosterLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
 

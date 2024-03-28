@@ -33,7 +33,7 @@ export interface FullscreenButtonEvents
  * @attr data-active - Whether fullscreen mode is active.
  * @attr data-supported - Whether fullscreen mode is supported.
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/fullscreen-button}
- * @see {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen}
+ * @see {@link https://www.vidstack.io/docs/player/api/fullscreen}
  */
 export class FullscreenButton extends Component<FullscreenButtonProps, {}, FullscreenButtonEvents> {
   static props: FullscreenButtonProps = {

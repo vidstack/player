@@ -6,7 +6,7 @@ import { ListSymbol } from '../../foundation/list/symbols';
 import { QualitySymbol } from './symbols';
 
 /**
- * @see {@link https://vidstack.io/docs/player/core-concepts/quality#quality-list}
+ * @see {@link https://vidstack.io/docs/player/core-concepts/video-quality#quality-list}
  */
 export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListEvents> {
   private _auto = false;

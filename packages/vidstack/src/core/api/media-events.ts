@@ -136,7 +136,7 @@ export interface MediaAutoPlayEvent extends MediaEvent<MediaAutoPlayEventDetail>
  * Fired when the player can begin loading the current provider and media. This depends on the
  * `load` player prop.
  *
- *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+ *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#load-strategies}
  */
 export interface MediaCanLoadEvent extends MediaEvent<void> {}
 
@@ -144,7 +144,7 @@ export interface MediaCanLoadEvent extends MediaEvent<void> {}
  * Fired when the player can begin loading the poster image. This depends on the `posterLoad`
  * player prop.
  *
- *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+ *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#load-strategies}
  */
 export interface MediaCanLoadPosterEvent extends MediaEvent<void> {}
 

@@ -24,7 +24,7 @@ export interface FullscreenButtonProps
  * A button for toggling the fullscreen mode of the player.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/fullscreen-button}
- * @see {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen}
+ * @see {@link https://www.vidstack.io/docs/player/api/fullscreen}
  * @example
  * ```tsx
  * const isActive = useMediaState('fullscreen');

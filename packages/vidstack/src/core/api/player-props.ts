@@ -101,7 +101,7 @@ export interface MediaPlayerProps
   /**
    * The URL and optionally type of the current media resource/s to be considered for playback.
    *
-   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-source}
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#sources}
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject}
    */
@@ -120,7 +120,7 @@ export interface MediaPlayerProps
    * - `custom`: media will wait for the `startLoading()` method or `media-start-loading` event.
    * - `play`: media will delay loading until there is a play request.
    *
-   *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
   load: MediaLoadingStrategy;
   /**
@@ -131,7 +131,7 @@ export interface MediaPlayerProps
    * - `visible`: poster will delay loading until the provider has entered the viewport.
    * - `custom`: poster will wait for the `startLoadingPoster()` method or `media-poster-start-loading` event.
    *
-   *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+   *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
   posterLoad: MediaPosterLoadingStrategy;
   /**

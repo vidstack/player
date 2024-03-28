@@ -13,7 +13,7 @@ import {
 } from './text-track';
 
 /**
- * @see {@link https://vidstack.io/docs/player/core-concepts/text-tracks}
+ * @see {@link https://vidstack.io/docs/player/api/text-tracks}
  */
 export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   private _canLoad = false;
