@@ -664,29 +664,6 @@
   }
 }
 
-:where(.vds-slider-steps) {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-:where(.vds-slider-step) {
-  width: 2.5px;
-  height: 6px;
-  background-color: var(--media-menu-slider-step-color, rgb(124, 124, 124));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-:where(.vds-slider[data-active] .vds-slider-step) {
-  opacity: 1;
-}
-
 :where(.vds-menu-items .vds-slider-track-fill) {
   transition: opacity 0.3s ease;
 }
