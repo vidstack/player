@@ -18,6 +18,7 @@ const require = createRequire(import.meta.url),
   args = minimist(process.argv.slice(2)),
   isDryRun = args.dry,
   isNext = args.next,
+  isCDNOnly = args.cdn,
   skippedPackages = [],
   currentVersion = require('../package.json').version,
   packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages')),
@@ -93,6 +94,11 @@ async function main() {
   );
 
   if (!yes) {
+    return;
+  }
+
+  if (isCDNOnly) {
+    await publishCDN(targetVersion);
     return;
   }
 
