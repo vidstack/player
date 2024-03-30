@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [1.11.0-next](https://github.com/vidstack/player/releases/tag/v1.11.0-next) (2024-03-30)
 
 ### ⏪ Revert
 
@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - add airplay support for audio ([c60c2fc](https://github.com/vidstack/player/commit/c60c2fc4b7031f3dd70c746b08bc52785ef8c68a))
 - add new `onLoad` method to storage ([2ce029f](https://github.com/vidstack/player/commit/2ce029f5377c3a46a6c4bc5db374b0efab3e97d5))
 - dash provider (#1212) ([000c7a4](https://github.com/vidstack/player/commit/000c7a4dc6483ed3051d54f73e2e3b4bccd6e867))
+- add `setAudioGain` method on player ([a4a7778](https://github.com/vidstack/player/commit/a4a77781e37e25be387a1db9d7ed268c5017390c))
 
 ### 🐛 Bug Fixes
 
@@ -70,11 +71,17 @@ All notable changes to this project will be documented in this file.
 - handle seeking to end precision changes ([abf9b17](https://github.com/vidstack/player/commit/abf9b17bd77506051cfa0a20eef061a55838e6a8))
 - replace small percent sign for slider values (#1215) ([833f2e4](https://github.com/vidstack/player/commit/833f2e4e9346333b3296331ae2a2419e1bf50a2c))
 - keep js constructed player alive ([5f5cae1](https://github.com/vidstack/player/commit/5f5cae115b4b619a6e940de55245425d5cff6ed4))
+- load poster element in js player create ([2c56c58](https://github.com/vidstack/player/commit/2c56c58c7d0d829d98309bcc35b508be49209692))
+- add `media-icons/element` to external deps ([ac7acf6](https://github.com/vidstack/player/commit/ac7acf6fe34e06e03e1329c1f6d545b8fe792372))
+- only remove js player controls if layout provided ([685ea68](https://github.com/vidstack/player/commit/685ea68a41af1c753bc6edeb877adc71a21674ab))
+- add dash src to media src type ([2cc150b](https://github.com/vidstack/player/commit/2cc150b7bdad48c901e47c43084dcc2098e095ad))
+- improve menu focus and scroll management ([a73a99a](https://github.com/vidstack/player/commit/a73a99a2c79cfa4bf9e398cc49d1ca658e338348))
 
 #### Player (React)
 
 - rename `DefaultKeyboardActionDisplay` to `DefaultKeyboardDisplay` ([9d573f9](https://github.com/vidstack/player/commit/9d573f984642629c7595911d2c621da404742b17))
 - slider callbacks not firing ([a4fe4e0](https://github.com/vidstack/player/commit/a4fe4e0b8dd748dd6bc04a5372bd4d816f212197))
+- `alt` optional on poster for slotting ([aa46aae](https://github.com/vidstack/player/commit/aa46aaeb215aed145a8fdc2ca6567831bd37cd38))
 
 ## [1.10.9-next](https://github.com/vidstack/player/releases/tag/v1.10.9-next) (2024-02-20)
 
