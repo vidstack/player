@@ -823,5 +823,6 @@
   "_onUserAudioChange": "oo",
   "_onUserQualityChange": "no",
   "_parseContent": "to",
-  "_switchAutoBitrate": "ro"
+  "_switchAutoBitrate": "ro",
+  "_setAudioGain": "Ao"
 }
