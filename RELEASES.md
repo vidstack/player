@@ -1,3 +1,7 @@
+## Player Release 1.0-RC: There’s Always a Bigger Fish (March 2024)
+
+[See release notes](https://github.com/vidstack/player/discussions/1220).
+
 ## Player Release 1.10@next: It's Time for the Big One! (January 2024)
 
 [See release notes](https://github.com/vidstack/player/discussions/1116).
