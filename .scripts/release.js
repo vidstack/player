@@ -250,6 +250,7 @@ async function publishCDN(version) {
 
 function getReleaseTag(version) {
   let releaseTag = null;
+
   if (args.tag) {
     releaseTag = args.tag;
   } else if (version.includes('alpha')) {
@@ -261,6 +262,8 @@ function getReleaseTag(version) {
   } else {
     releaseTag = isNext ? 'next' : 'latest';
   }
+
+  return releaseTag;
 }
 
 if (isDryRun) console.log(kleur.cyan('\n☂️  Running in dry mode...\n'));
