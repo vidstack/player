@@ -267,6 +267,11 @@
   margin-left: 2px;
 }
 
+.light .vds-video-layout .vds-time,
+.vds-video-layout.light .vds-time {
+  color: var(--media-time-color, #f5f5f5);
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Captions
