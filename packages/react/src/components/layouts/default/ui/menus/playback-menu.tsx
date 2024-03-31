@@ -80,7 +80,12 @@ function DefaultAutoQualityMenuCheckbox() {
 
   return (
     <DefaultMenuItem label={label}>
-      <DefaultMenuCheckbox label={label} checked={$autoQuality} onChange={onChange} />
+      <DefaultMenuCheckbox
+        label={label}
+        checked={$autoQuality}
+        onChange={onChange}
+        defaultChecked={$autoQuality}
+      />
     </DefaultMenuItem>
   );
 }
