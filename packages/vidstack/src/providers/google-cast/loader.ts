@@ -3,7 +3,6 @@ import type { DOMEvent } from 'maverick.js/std';
 
 import type { MediaType, Src } from '../../core';
 import type { MediaContext } from '../../core/api/media-context';
-import { showToast } from '../../utils/dom';
 import { canGoogleCastSrc } from '../../utils/mime';
 import { loadScript } from '../../utils/network';
 import { IS_CHROME, IS_IOS } from '../../utils/support';
@@ -53,10 +52,11 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
     try {
       loadEvent = await this._loadCastFramework(ctx);
 
-      const State = window.cast.framework.CastState;
-      if (this.cast.getCastState() === State.NO_DEVICES_AVAILABLE) {
-        throw this._createError(State.NO_DEVICES_AVAILABLE, 'No cast devices found.');
-      }
+      // Not working as expected.
+      // const State = window.cast.framework.CastState;
+      // if (this.cast.getCastState() === State.NO_DEVICES_AVAILABLE) {
+      //   throw this._createError(State.NO_DEVICES_AVAILABLE, 'No cast devices found.');
+      // }
 
       if (!this._player) {
         this._player = new cast.framework.RemotePlayer();
@@ -94,10 +94,6 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
       });
 
       ctx.player.dispatch(errorEvent);
-
-      if (!errorEvent.defaultPrevented && error.code === 'NO_DEVICES_AVAILABLE') {
-        showToast('No cast devices found.');
-      }
 
       this._notifyRemoteStateChange(
         ctx,
