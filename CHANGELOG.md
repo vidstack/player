@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.3-next](https://github.com/vidstack/player/releases/tag/v1.11.3-next) (2024-03-31)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- time is not visible in light theme default video layout ([6e9a9b1](https://github.com/vidstack/player/commit/6e9a9b1f99ca55ee4574add785830dafc8e68a26))
+
+#### Player (React)
+
+- default auto quality checkbox resets ([1ad5321](https://github.com/vidstack/player/commit/1ad53219f06230f8032b43c1661cc260cf761a02))
+
 ## [1.11.2-next](https://github.com/vidstack/player/releases/tag/v1.11.2-next) (2024-03-31)
 
 ### ⏪ Revert
