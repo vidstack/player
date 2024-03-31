@@ -81,7 +81,7 @@ export class MediaPlayerDelegate {
       await storage?.onLoad?.(source());
 
       const savedPlaybackTime = savedState()?.currentTime,
-        savedPlayingState = savedState()?.paused === false,
+        savedPlayingState = savedState()?.paused,
         storageTime = await storage?.getTime(),
         startTime = savedPlaybackTime ?? storageTime ?? clipStartTime(),
         shouldAutoPlay =
