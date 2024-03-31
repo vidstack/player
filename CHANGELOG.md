@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.2-next](https://github.com/vidstack/player/releases/tag/v1.11.2-next) (2024-03-31)
+
+### ⏪ Revert
+
+#### Player
+
+- show message when no cast devices ([c7934a9](https://github.com/vidstack/player/commit/c7934a902206100b4c7af99283603a27854d1142))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- autoplay not triggered ([1fd57f0](https://github.com/vidstack/player/commit/1fd57f03204a713840c7f0e0237d279e13437425))
+
 ## [1.11.0-next](https://github.com/vidstack/player/releases/tag/v1.11.0-next) (2024-03-30)
 
 ### ⏪ Revert
