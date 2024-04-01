@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.4-next](https://github.com/vidstack/player/releases/tag/v1.11.4-next) (2024-04-01)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- prefers color scheme not overriden ([5125ed1](https://github.com/vidstack/player/commit/5125ed1971d069b1e3a171b0f8dcd1539005959a))
+- time slider seek keys not working when hidden ([c1ce79c](https://github.com/vidstack/player/commit/c1ce79c07e8c3f508b6bbb6cd4e2329d90f5b070))
+- browser conditional exports ([3f1a666](https://github.com/vidstack/player/commit/3f1a666d73d35a5452fe137718439b5ce441301f))
+
 ## [1.11.3-next](https://github.com/vidstack/player/releases/tag/v1.11.3-next) (2024-03-31)
 
 ### 🐛 Bug Fixes
