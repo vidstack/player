@@ -105,93 +105,83 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "node": "./dist/server/vidstack.js",
-      "deno": "./dist/server/vidstack.js",
-      "bun": "./dist/server/vidstack.js",
-      "workerd": "./dist/server/vidstack.js",
-      "development": "./dist/dev/vidstack.js",
-      "default": "./dist/prod/vidstack.js"
+      "browser": {
+        "development": "./dist/dev/vidstack.js",
+        "default": "./dist/prod/vidstack.js"
+      },
+      "default": "./dist/server/vidstack.js"
     },
     "./elements": {
       "types": "./elements.d.ts",
-      "node": "./dist/server/vidstack-elements.js",
-      "deno": "./dist/server/vidstack-elements.js",
-      "bun": "./dist/server/vidstack-elements.js",
-      "workerd": "./dist/server/vidstack-elements.js",
-      "development": "./dist/dev/vidstack-elements.js",
-      "default": "./dist/prod/vidstack-elements.js"
+      "browser": {
+        "development": "./dist/dev/vidstack-elements.js",
+        "default": "./dist/prod/vidstack-elements.js"
+      },
+      "default": "./dist/server/vidstack-elements.js"
     },
     "./global/player": {
       "types": "./global/player.d.ts",
-      "node": "./dist/server/global/vidstack-player.js",
-      "deno": "./dist/server/global/vidstack-player.js",
-      "bun": "./dist/server/global/vidstack-player.js",
-      "workerd": "./dist/server/global/vidstack-player.js",
-      "development": "./dist/dev/global/vidstack-player.js",
-      "default": "./dist/prod/global/vidstack-player.js"
+      "browser": {
+        "development": "./dist/dev/global/vidstack-player.js",
+        "default": "./dist/prod/global/vidstack-player.js"
+      },
+      "default": "./dist/server/global/vidstack-player.js"
     },
     "./global/plyr": {
       "types": "./global/plyr.d.ts",
-      "node": "./dist/server/global/plyr.js",
-      "deno": "./dist/server/global/plyr.js",
-      "bun": "./dist/server/global/plyr.js",
-      "workerd": "./dist/server/global/plyr.js",
-      "development": "./dist/dev/global/plyr.js",
-      "default": "./dist/prod/global/plyr.js"
+      "browser": {
+        "development": "./dist/dev/global/plyr.js",
+        "default": "./dist/prod/global/plyr.js"
+      },
+      "default": "./dist/server/global/plyr.js"
     },
     "./icons": {
       "types": "./icons.d.ts",
-      "node": "./dist/server/define/vidstack-icons.js",
-      "deno": "./dist/server/define/vidstack-icons.js",
-      "bun": "./dist/server/define/vidstack-icons.js",
-      "workerd": "./dist/server/define/vidstack-icons.js",
-      "development": "./dist/dev/define/vidstack-icons.js",
-      "default": "./dist/prod/define/vidstack-icons.js"
+      "browser": {
+        "development": "./dist/dev/define/vidstack-icons.js",
+        "default": "./dist/prod/define/vidstack-icons.js"
+      },
+      "default": "./dist/server/define/vidstack-icons.js"
     },
     "./player": {
       "types": "./player/index.d.ts",
-      "node": "./dist/server/define/vidstack-player.js",
-      "deno": "./dist/server/define/vidstack-player.js",
-      "bun": "./dist/server/define/vidstack-player.js",
-      "workerd": "./dist/server/define/vidstack-player.js",
-      "development": "./dist/dev/define/vidstack-player.js",
-      "default": "./dist/prod/define/vidstack-player.js"
+      "browser": {
+        "development": "./dist/dev/define/vidstack-player.js",
+        "default": "./dist/prod/define/vidstack-player.js"
+      },
+      "default": "./dist/server/define/vidstack-player.js"
     },
     "./player/ui": {
       "types": "./player/ui.d.ts",
-      "node": "./dist/server/define/vidstack-player-ui.js",
-      "deno": "./dist/server/define/vidstack-player-ui.js",
-      "bun": "./dist/server/define/vidstack-player-ui.js",
-      "workerd": "./dist/server/define/vidstack-player-ui.js",
-      "development": "./dist/dev/define/vidstack-player-ui.js",
-      "default": "./dist/prod/define/vidstack-player-ui.js"
+      "browser": {
+        "development": "./dist/dev/define/vidstack-player-ui.js",
+        "default": "./dist/prod/define/vidstack-player-ui.js"
+      },
+      "default": "./dist/server/define/vidstack-player-ui.js"
     },
     "./player/layouts": {
       "types": "./player/layouts/index.d.ts",
-      "node": "./dist/server/define/vidstack-player-layouts.js",
-      "deno": "./dist/server/define/vidstack-player-layouts.js",
-      "bun": "./dist/server/define/vidstack-player-layouts.js",
-      "workerd": "./dist/server/define/vidstack-player-layouts.js",
-      "development": "./dist/dev/define/vidstack-player-layouts.js",
-      "default": "./dist/prod/define/vidstack-player-layouts.js"
+      "browser": {
+        "development": "./dist/dev/define/vidstack-player-layouts.js",
+        "default": "./dist/prod/define/vidstack-player-layouts.js"
+      },
+      "default": "./dist/server/define/vidstack-player-layouts.js"
     },
     "./player/layouts/default": {
       "types": "./player/layouts/default.d.ts",
-      "node": "./dist/server/define/vidstack-player-default-layout.js",
-      "deno": "./dist/server/define/vidstack-player-default-layout.js",
-      "bun": "./dist/server/define/vidstack-player-default-layout.js",
-      "workerd": "./dist/server/define/vidstack-player-default-layout.js",
-      "development": "./dist/dev/define/vidstack-player-default-layout.js",
-      "default": "./dist/prod/define/vidstack-player-default-layout.js"
+      "browser": {
+        "development": "./dist/dev/define/vidstack-player-default-layout.js",
+        "default": "./dist/prod/define/vidstack-player-default-layout.js"
+      },
+      "default": "./dist/server/define/vidstack-player-default-layout.js"
     },
     "./player/layouts/plyr": {
       "types": "./player/layouts/plyr.d.ts",
-      "node": "./dist/server/define/plyr-layout.js",
-      "deno": "./dist/server/define/plyr-layout.js",
-      "bun": "./dist/server/define/plyr-layout.js",
-      "workerd": "./dist/server/define/plyr-layout.js",
-      "development": "./dist/dev/define/plyr-layout.js",
-      "default": "./dist/prod/define/plyr-layout.js"
+      "browser": {
+        "development": "./dist/dev/define/plyr-layout.js",
+        "default": "./dist/prod/define/plyr-layout.js"
+      },
+      "default": "./dist/server/define/plyr-layout.js"
     },
     "./dist/types/*": "./dist/types/*",
     "./player/styles/*": "./player/styles/*",
