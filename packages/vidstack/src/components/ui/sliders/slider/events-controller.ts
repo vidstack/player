@@ -42,6 +42,7 @@ const SliderKeyDirection = {
 export interface SliderEventDelegate {
   _swipeGesture?: ReadSignal<boolean>;
   _isDisabled(): boolean;
+  _getValue?(): number;
   _getStep(): number;
   _getKeyStep(): number;
   _roundValue(value: number): number;
@@ -334,7 +335,7 @@ export class SliderEventsController extends ViewController<
     const modifiedStep = !shiftKey ? keyStep : keyStep * shiftKeyMultiplier(),
       direction = Number(SliderKeyDirection[key]),
       diff = modifiedStep * direction,
-      steps = (value() + diff) / step;
+      steps = ((this._delegate._getValue?.() ?? value()) + diff) / step;
 
     return Math.max(min(), Math.min(max(), Number((step * steps).toFixed(3))));
   }

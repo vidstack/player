@@ -63,6 +63,7 @@ export class TimeSlider extends Component<
     const { noSwipeGesture } = this.$props;
     new SliderController({
       _swipeGesture: () => !noSwipeGesture(),
+      _getValue: this._getValue.bind(this),
       _getStep: this._getStep.bind(this),
       _getKeyStep: this._getKeyStep.bind(this),
       _roundValue: this._roundValue,
@@ -127,9 +128,8 @@ export class TimeSlider extends Component<
   private _watchCurrentTime() {
     if (this.$state.hidden()) return;
 
-    const { currentTime } = this._media.$state,
-      { value, dragging } = this.$state,
-      newValue = this._timeToPercent(currentTime());
+    const { value, dragging } = this.$state,
+      newValue = this._getValue();
 
     if (!peek(dragging)) {
       value.set(newValue);
@@ -197,6 +197,11 @@ export class TimeSlider extends Component<
   // -------------------------------------------------------------------------------------------
   // Props
   // -------------------------------------------------------------------------------------------
+
+  private _getValue() {
+    const { currentTime } = this._media.$state;
+    return this._timeToPercent(currentTime());
+  }
 
   private _getStep() {
     const value = (this.$props.step() / this._media.$state.duration()) * 100;
