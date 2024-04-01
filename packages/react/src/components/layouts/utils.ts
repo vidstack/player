@@ -9,8 +9,9 @@ export function useLayoutName(name: string) {
   React.useEffect(() => {
     if (!player) return;
     return effect(() => {
-      player.$el?.setAttribute('data-layout', name);
-      return () => player.$el?.removeAttribute('data-layout');
+      const el = player.$el;
+      el?.setAttribute('data-layout', name);
+      return () => el?.removeAttribute('data-layout');
     });
   }, [player]);
 }

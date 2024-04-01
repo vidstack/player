@@ -68,8 +68,6 @@ function DefaultAudioLayout(props: DefaultAudioLayoutProps) {
   const [scrubbing, setScrubbing] = React.useState(false),
     $pointer = useMediaState('pointer');
 
-  useLayoutName('audio');
-
   const onStartScrubbing = React.useCallback((event: React.SyntheticEvent) => {
     const { target } = event,
       hasTimeSlider = !!(target instanceof HTMLElement && target.closest('.vds-time-slider'));
@@ -105,6 +103,9 @@ export { DefaultAudioLayout };
 
 function AudioLayout() {
   const slots = useDefaultAudioLayoutSlots();
+
+  useLayoutName('audio');
+
   return (
     <>
       <DefaultAnnouncer />

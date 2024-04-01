@@ -22,6 +22,7 @@ import {
   listenEvent,
   setAttribute,
   setStyle,
+  toggleClass,
 } from 'maverick.js/std';
 
 import { round } from './number';
@@ -387,11 +388,41 @@ export function isHTMLElement(el: any): el is HTMLElement {
   return el instanceof HTMLElement;
 }
 
-export function showToast(message: string, ms = 5000) {
-  const toast = document.createElement('div');
-  toast.classList.add('vds-toast');
-  toast.textContent = message;
-  toast.ariaLive = 'polite';
-  document.body.append(toast);
-  setTimeout(() => toast.remove(), ms);
+export function useColorSchemePreference() {
+  const colorScheme = signal<'light' | 'dark'>('dark');
+
+  if (__SERVER__) return colorScheme;
+
+  const media = window.matchMedia('(prefers-color-scheme: light)');
+
+  function onChange() {
+    colorScheme.set(media.matches ? 'light' : 'dark');
+  }
+
+  onChange();
+  listenEvent(media, 'change', onChange);
+
+  return colorScheme;
+}
+
+export function watchColorScheme(
+  el: HTMLElement,
+  colorScheme: ReadSignal<'light' | 'dark' | 'system' | 'default'>,
+) {
+  effect(() => {
+    const scheme = colorScheme();
+
+    if (scheme === 'system') {
+      const preference = useColorSchemePreference();
+      effect(() => updateColorScheme(preference()));
+      return;
+    }
+
+    updateColorScheme(scheme);
+  });
+
+  function updateColorScheme(scheme: string) {
+    toggleClass(el, 'light', scheme === 'light');
+    toggleClass(el, 'dark', scheme === 'dark');
+  }
 }

@@ -45,16 +45,8 @@ const MediaLayout = createDefaultMediaLayout({
   smLayoutWhen({ width, height }) {
     return width < 576 || height < 380;
   },
-  renderLayout({ streamType, isSmallLayout, isLoadLayout }) {
-    return isLoadLayout ? (
-      <DefaultVideoLoadLayout />
-    ) : streamType === 'unknown' ? (
-      <DefaultBufferingIndicator />
-    ) : isSmallLayout ? (
-      <DefaultVideoSmallLayout />
-    ) : (
-      <DefaultVideoLargeLayout />
-    );
+  renderLayout(props) {
+    return <VideoLayout {...props} />;
   },
 });
 
@@ -78,12 +70,31 @@ export interface DefaultVideoLayoutProps extends DefaultLayoutProps<DefaultVideo
  * ```
  */
 function DefaultVideoLayout(props: DefaultVideoLayoutProps) {
-  useLayoutName('video');
   return <MediaLayout {...props} />;
 }
 
 DefaultVideoLayout.displayName = 'DefaultVideoLayout';
 export { DefaultVideoLayout };
+
+/* -------------------------------------------------------------------------------------------------
+ * VideoLayout
+ * -----------------------------------------------------------------------------------------------*/
+
+function VideoLayout({ streamType, isLoadLayout, isSmallLayout }) {
+  useLayoutName('video');
+
+  return isLoadLayout ? (
+    <DefaultVideoLoadLayout />
+  ) : streamType === 'unknown' ? (
+    <DefaultBufferingIndicator />
+  ) : isSmallLayout ? (
+    <DefaultVideoSmallLayout />
+  ) : (
+    <DefaultVideoLargeLayout />
+  );
+}
+
+VideoLayout.displayName = 'VideoLayout';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultVideoLargeLayout

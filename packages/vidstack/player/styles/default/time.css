@@ -27,7 +27,7 @@
 
 .vds-time {
   outline: 0;
-  color: var(--media-time-color, #f5f5f5);
+  color: var(--media-time-color, var(--default-color));
   background-color: var(--media-time-bg);
   border: var(--media-time-border);
 }
@@ -36,12 +36,10 @@
   box-shadow: var(--media-focus-ring);
 }
 
-@media (prefers-color-scheme: light) {
-  .vds-time {
-    color: var(--media-time-color, rgb(10 10 10));
-  }
+.light .vds-time {
+  --default-color: rgb(10 10 10);
 }
 
-.light .vds-time {
-  color: var(--media-time-color, rgb(10 10 10));
+.dark .vds-time {
+  --default-color: #f5f5f5;
 }

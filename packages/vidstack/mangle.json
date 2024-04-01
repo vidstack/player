@@ -865,5 +865,6 @@
   "_onUserQualityChange": "Yo",
   "_parseContent": "ap",
   "_onEndPrecisionChange": "fp",
-  "_setAudioGain": "gp"
+  "_setAudioGain": "gp",
+  "_updateColorScheme": "hp"
 }

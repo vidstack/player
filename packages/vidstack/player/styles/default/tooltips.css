@@ -11,9 +11,6 @@
 :where(.vds-tooltip-content) {
   display: inline-block;
   box-sizing: border-box;
-  color: var(--media-tooltip-color, #f5f5f5);
-  background-color: var(--media-tooltip-bg-color, black);
-  border: var(--media-tooltip-border);
   font-family: var(--media-font-family, sans-serif);
   font-size: var(--media-tooltip-font-size, 13px);
   font-weight: var(--media-tooltip-font-weight, 500);
@@ -27,27 +24,21 @@
 }
 
 .vds-tooltip-content {
-  border: var(--media-tooltip-border, 1px solid rgb(255 255 255 / 0.1));
-}
-
-@media (prefers-color-scheme: light) {
-  :where(.vds-tooltip-content) {
-    color: var(--media-tooltip-color, #1a1a1a);
-    background-color: var(--media-tooltip-bg-color, white);
-  }
-
-  .vds-tooltip-content {
-    border: var(--media-tooltip-border, 1px solid rgb(0 0 0 / 0.2));
-  }
-}
-
-:where(.light .vds-tooltip-content) {
-  color: var(--media-tooltip-color, #1a1a1a);
-  background-color: var(--media-tooltip-bg-color, white);
+  color: var(--media-tooltip-color, var(--default-color));
+  background-color: var(--media-tooltip-bg-color, var(--default-bg));
+  border: var(--media-tooltip-border, var(--default-border));
 }
 
 .light .vds-tooltip-content {
-  border: var(--media-tooltip-border, 1px solid rgb(0 0 0 / 0.2));
+  --default-color: #1a1a1a;
+  --default-bg: white;
+  --default-border: 1px solid rgb(0 0 0 / 0.2);
+}
+
+.dark .vds-tooltip-content {
+  --default-color: #f5f5f5;
+  --default-bg: black;
+  --default-border: 1px solid rgb(255 255 255 / 0.1);
 }
 
 :where(.vds-menu .vds-menu-button[role='button'][data-pressed] .vds-tooltip-content) {

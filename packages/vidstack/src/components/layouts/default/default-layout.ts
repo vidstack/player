@@ -1,8 +1,9 @@
-import { Component, computed, effect, prop, provideContext, signal } from 'maverick.js';
+import { Component, computed, prop, provideContext, signal } from 'maverick.js';
 import { isBoolean } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaPlayerQuery } from '../../../core/api/player-state';
+import { watchColorScheme } from '../../../utils/dom';
 import { defaultLayoutContext } from './context';
 import { defaultLayoutProps, type DefaultLayoutProps } from './props';
 
@@ -58,13 +59,8 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     });
   }
 
-  protected override onAttach(): void {
-    effect(this._watchColorScheme.bind(this));
-  }
-
-  private _watchColorScheme() {
-    const { colorScheme } = this.$props;
-    this.el?.classList.toggle('light', colorScheme() === 'light');
+  protected override onAttach(el: HTMLElement): void {
+    watchColorScheme(el, this.$props.colorScheme);
   }
 
   protected _matches(query: 'never' | boolean | MediaPlayerQuery) {

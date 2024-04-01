@@ -4,7 +4,7 @@ import type { ThumbnailSrc } from '../../ui/thumbnails/thumbnail-loader';
 import type { DefaultLayoutTranslations } from './translations';
 
 export const defaultLayoutProps: DefaultLayoutProps = {
-  colorScheme: null,
+  colorScheme: 'system',
   download: null,
   customIcons: false,
   disableTimeSlider: false,
@@ -46,7 +46,7 @@ export interface DefaultLayoutProps {
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme}
    */
-  colorScheme: 'light' | 'dark' | null;
+  colorScheme: 'light' | 'dark' | 'system' | 'default';
   /**
    * Sets the download URL and filename for the download button.
    */

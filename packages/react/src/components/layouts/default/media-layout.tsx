@@ -15,6 +15,7 @@ import { useMediaState } from '../../../hooks/use-media-state';
 import { createComputed, createSignal } from '../../../hooks/use-signals';
 import type { PrimitivePropsWithRef } from '../../primitives/nodes';
 import { DefaultLayoutContext } from './context';
+import { useColorSchemeClass } from './hooks';
 import type { DefaultLayoutIcons } from './icons';
 
 /* -------------------------------------------------------------------------------------------------
@@ -33,7 +34,7 @@ export interface DefaultLayoutProps<Slots = unknown> extends PrimitivePropsWithR
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme}
    */
-  colorScheme?: 'light' | 'dark' | null;
+  colorScheme?: 'light' | 'dark' | 'system' | 'default';
   /**
    * Sets the download URL and filename for the download button.
    */
@@ -150,7 +151,7 @@ export function createDefaultMediaLayout({
         disableTimeSlider = false,
         hideQualityBitrate = false,
         icons,
-        colorScheme = null,
+        colorScheme = 'system',
         download = null,
         menuGroup = 'bottom',
         noAudioGain = false,
@@ -186,7 +187,8 @@ export function createDefaultMediaLayout({
         isSmallLayout = $smallWhen(),
         isForcedLayout = isBoolean(smallLayoutWhen),
         isLoadLayout = $load === 'play' && !$canLoad,
-        canRender = $canLoad || isForcedLayout || isLoadLayout;
+        canRender = $canLoad || isForcedLayout || isLoadLayout,
+        colorSchemeClass = useColorSchemeClass(colorScheme);
 
       useSignal($smallWhen);
 
@@ -195,7 +197,7 @@ export function createDefaultMediaLayout({
           {...props}
           className={
             `vds-${type}-layout` +
-            (colorScheme === 'light' ? ' light' : '') +
+            (colorSchemeClass ? ` ${colorSchemeClass}` : '') +
             (className ? ` ${className}` : '')
           }
           data-match={isMatch ? '' : null}

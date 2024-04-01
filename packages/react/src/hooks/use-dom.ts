@@ -110,3 +110,20 @@ export function setRectCSSVars(root: Element, el: Element, prefix: string) {
     setStyle(root as HTMLElement, `--${prefix}-${side}`, `${rect[side]}px`);
   }
 }
+
+export function useColorSchemePreference() {
+  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>('dark');
+
+  React.useEffect(() => {
+    const media = window.matchMedia('(prefers-color-scheme: light)');
+
+    function onChange() {
+      setColorScheme(media.matches ? 'light' : 'dark');
+    }
+
+    onChange();
+    return listenEvent(media, 'change', onChange);
+  }, []);
+
+  return colorScheme;
+}

@@ -10,6 +10,7 @@ import * as Menu from '../../../../ui/menu';
 import * as Thumbnail from '../../../../ui/thumbnail';
 import { RemotionThumbnail } from '../../../remotion-ui';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
+import { useColorSchemeClass } from '../../hooks';
 import { DefaultTooltip } from '../tooltip';
 import type { DefaultMediaMenuProps } from './settings-menu';
 
@@ -17,13 +18,14 @@ import type { DefaultMediaMenuProps } from './settings-menu';
  * DefaultChaptersMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMenuProps) {
+function DefaultChaptersMenu({ tooltip, placement, portalClass = '' }: DefaultMediaMenuProps) {
   const {
       showMenuDelay,
       noModal,
       isSmallLayout,
       icons: Icons,
       menuGroup,
+      colorScheme,
     } = useDefaultLayoutContext(),
     chaptersText = useDefaultLayoutWord('Chapters'),
     options = useChapterOptions(),
@@ -33,6 +35,7 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
     $viewType = useMediaState('viewType'),
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
     $RemotionThumbnail = useSignal(RemotionThumbnail),
+    colorSchemeClass = useColorSchemeClass(colorScheme),
     [isOpen, setIsOpen] = React.useState(false);
 
   if (disabled) return null;
@@ -108,7 +111,7 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass }: DefaultMediaMe
         Content
       ) : (
         <Menu.Portal
-          className={portalClass}
+          className={portalClass + (colorSchemeClass ? ` ${colorSchemeClass}` : '')}
           disabled="fullscreen"
           data-sm={isSmallLayout ? '' : null}
           data-lg={!isSmallLayout ? '' : null}

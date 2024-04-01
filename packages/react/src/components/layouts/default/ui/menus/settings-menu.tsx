@@ -6,6 +6,7 @@ import { useMediaState } from '../../../../../hooks/use-media-state';
 import * as Menu from '../../../../ui/menu';
 import type * as Tooltip from '../../../../ui/tooltip';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
+import { useColorSchemeClass } from '../../hooks';
 import { slot, type DefaultLayoutMenuSlotName, type Slots } from '../../slots';
 import { DefaultTooltip } from '../tooltip';
 import { DefaultAccessibilityMenu } from './accessibility-menu';
@@ -20,7 +21,12 @@ export interface DefaultMediaMenuProps {
   slots?: Slots<DefaultLayoutMenuSlotName>;
 }
 
-function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: DefaultMediaMenuProps) {
+function DefaultSettingsMenu({
+  tooltip,
+  placement,
+  portalClass = '',
+  slots,
+}: DefaultMediaMenuProps) {
   const {
       showMenuDelay,
       icons: Icons,
@@ -32,6 +38,7 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
     settingsText = useDefaultLayoutWord('Settings'),
     $viewType = useMediaState('viewType'),
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
+    colorSchemeClass = useColorSchemeClass(colorScheme),
     [isOpen, setIsOpen] = React.useState(false);
 
   function onOpen() {
@@ -79,7 +86,7 @@ function DefaultSettingsMenu({ tooltip, placement, portalClass, slots }: Default
         Content
       ) : (
         <Menu.Portal
-          className={`${portalClass}${colorScheme === 'light' ? ' light' : ''}`}
+          className={portalClass + (colorSchemeClass ? ` ${colorSchemeClass}` : '')}
           disabled="fullscreen"
           data-sm={isSmallLayout ? '' : null}
           data-lg={!isSmallLayout ? '' : null}

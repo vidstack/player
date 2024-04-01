@@ -18,8 +18,8 @@
   align-items: center;
   min-width: 100%;
   height: 60px;
-  color: var(--audio-controls-color, #f5f5f5);
-  background-color: var(--audio-bg, black);
+  color: var(--audio-controls-color, var(--default-color));
+  background-color: var(--audio-bg, var(--default-bg));
   border-radius: var(--audio-border-radius, 6px);
   box-sizing: border-box;
   filter: var(
@@ -37,49 +37,42 @@
 }
 
 :where(.vds-audio-layout) {
-  --media-brand: var(--audio-brand, #f5f5f5);
+  --media-brand: var(--audio-brand, var(--default-brand));
   --media-font-family: var(--audio-font-family, sans-serif);
-  --media-controls-color: var(--audio-controls-color, #f5f5f5);
+  --media-controls-color: var(--audio-controls-color, var(--default-controls-color));
   --media-menu-y-offset: 18px;
   --media-tooltip-y-offset: 18px;
-  --media-slider-track-bg: var(--audio-slider-track-bg, rgb(255 255 255 / 0.3));
+  --media-slider-track-bg: var(--audio-slider-track-bg, var(--default-slider-track-bg));
   --media-slider-track-fill-bg: var(--audio-slider-track-bg, var(--media-brand));
-  --media-slider-track-progress-bg: var(--audio-slider-progress-bg, rgb(255 255 255 / 0.5));
+  --media-slider-track-progress-bg: var(
+    --audio-slider-progress-bg,
+    var(--default-slider-progress-bg)
+  );
   --media-slider-value-border: var(--audio-slider-value-border, 1px solid rgb(255 255 255 / 0.1));
   --media-slider-value-gap: var(--audio-slider-value-gap, 6px);
   --media-focus-ring-color: var(--audio-focus-ring-color, rgb(78 156 246));
   --media-focus-ring: var(--audio-focus-ring, 0 0 0 3px var(--media-focus-ring-color));
 }
 
-@media (prefers-color-scheme: light) {
-  :where(.vds-audio-layout) {
-    --media-brand: var(--audio-brand, rgb(10 10 10));
-    --media-controls-color: var(--audio-controls-color, rgb(10 10 10));
-    --media-slider-track-bg: var(--audio-slider-track-bg, rgb(50 50 50 / 0.1));
-    --media-slider-track-progress-bg: var(--audio-slider-progress-bg, rgb(10 10 10 / 0.2));
-
-    color: var(--audio-controls-color, rgb(10 10 10));
-    background-color: var(--audio-bg, rgb(250 250 250));
-  }
-
-  .vds-audio-layout {
-    border: var(--audio-border, 1px solid rgb(100 100 100 /0.2));
-  }
-}
-
-:where(.vds-audio-layout.light, .light .vds-audio-layout) {
-  --media-brand: var(--audio-brand, rgb(10 10 10));
-  --media-controls-color: var(--audio-controls-color, rgb(10 10 10));
-  --media-slider-track-bg: var(--audio-slider-track-bg, rgb(50 50 50 / 0.1));
-  --media-slider-track-progress-bg: var(--audio-slider-progress-bg, rgb(10 10 10 / 0.2));
-
-  color: var(--audio-controls-color, rgb(10 10 10));
-  background-color: var(--audio-bg, rgb(250 250 250));
-}
-
 .vds-audio-layout.light,
 .light .vds-audio-layout {
-  border: var(--audio-border, 1px solid rgb(100 100 100 /0.2));
+  --default-brand: rgb(10 10 10);
+  --default-color: rgb(10 10 10);
+  --default-bg: rgb(250 250 250);
+  --default-controls-color: rgb(10 10 10);
+  --default-border: 1px solid rgb(100 100 100 /0.2);
+  --default-slider-track-bg: rgb(50 50 50 / 0.1);
+  --default-slider-progress-bg: rgb(10 10 10 / 0.2);
+}
+
+.vds-audio-layout.dark,
+.dark .vds-audio-layout {
+  --default-brand: #f5f5f5;
+  --default-color: #f5f5f5;
+  --default-controls-color: #f5f5f5;
+  --default-bg: black;
+  --default-slider-track-bg: rgb(255 255 255 / 0.3);
+  --default-slider-progress-bg: rgb(255 255 255 / 0.5);
 }
 
 /*
@@ -122,14 +115,10 @@
 }
 
 :where(.vds-audio-layout .vds-play-button) {
-  --color: var(--audio-play-button-color, rgb(10 10 10));
-  --bg-color: var(--audio-play-button-bg, var(--media-brand));
-
   --media-button-hover-transform: 0;
   --media-button-border: var(--audio-play-button-border, var(--color));
   --media-button-hover-bg: var(--bg-color);
   --media-button-touch-hover-bg: var(--bg-color);
-
   width: var(--audio-play-button-size, 32px);
   height: var(--audio-play-button-size, 32px);
   border-radius: var(--audio-play-button-border-radius, 100%);
@@ -138,19 +127,21 @@
   overflow: hidden;
 }
 
-@media (prefers-color-scheme: light) {
-  :where(.vds-audio-layout .vds-play-button) {
-    --color: var(--audio-play-button-color, #f5f5f5);
-  }
-}
-
-:where(.vds-audio-layout.light .vds-play-button, .light .vds-audio-layout .vds-play-button) {
-  --color: var(--audio-play-button-color, #f5f5f5);
-}
-
 .vds-audio-layout .vds-play-button {
-  color: var(--color);
-  background-color: var(--bg-color);
+  color: var(--audio-play-button-color, var(--default-color));
+  background-color: var(--audio-play-button-bg, var(--default-bg));
+}
+
+.light .vds-audio-layout .vds-play-button,
+.vds-audio-layout.light .vds-play-button {
+  --default-color: #f5f5f5;
+  --default-bg: var(--media-brand);
+}
+
+.dark .vds-audio-layout .vds-play-button,
+.vds-audio-layout.dark .vds-play-button {
+  --default-color: rgb(10 10 10);
+  --default-bg: var(--media-brand);
 }
 
 :where(.vds-audio-layout .vds-caption-button:not([data-active])) {
@@ -337,8 +328,6 @@
   transition:
     opacity 150ms ease-out,
     visibility 150ms ease-out;
-  background-color: var(--audio-volume-bg, var(--media-menu-bg, rgb(10 10 10)));
-  border: var(--audio-volume-border, 1px solid rgb(255 255 255 / 0.1));
   border-radius: var(--audio-volume-border-radius, 8px);
   filter: var(--media-volume-filter, drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)));
   visibility: hidden;
@@ -356,16 +345,21 @@
   pointer-events: auto;
 }
 
-@media (prefers-color-scheme: light) {
-  :where(.vds-audio-layout .vds-volume-popup) {
-    border: var(--audio-volume-border, 1px solid rgb(10 10 10 / 0.1));
-    background-color: var(--audio-volume-bg, var(--media-menu-bg, rgb(250 250 250)));
-  }
+.vds-audio-layout .vds-volume-popup {
+  background-color: var(--audio-volume-bg, var(--media-menu-bg, var(--default-bg)));
+  border: var(--audio-volume-border, var(--default-border));
 }
 
-:where(.vds-audio-layout.light .vds-volume-popup, .light .vds-audio-layout .vds-volume-popup) {
-  border: var(--audio-volume-border, 1px solid rgb(10 10 10 / 0.1));
-  background-color: var(--audio-volume-bg, var(--media-menu-bg, rgb(250 250 250)));
+.light .vds-audio-layout .vds-volume-popup,
+.vds-audio-layout.light .vds-volume-popup {
+  --default-bg: rgb(250 250 250);
+  --default-border: 1px solid rgb(10 10 10 / 0.1);
+}
+
+.dark .vds-audio-layout .vds-volume-popup,
+.vds-audio-layout.dark .vds-volume-popup {
+  --default-bg: rgb(10 10 10);
+  --default-border: 1px solid rgb(255 255 255 / 0.1);
 }
 
 :where(.vds-audio-layout .vds-volume[data-active] .vds-volume-popup),

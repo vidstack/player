@@ -4,6 +4,7 @@ import { setAttribute } from 'maverick.js/std';
 
 import { useDefaultLayoutContext } from '../../../../../../components/layouts/default/context';
 import { useMediaState } from '../../../../../../core/api/media-context';
+import { watchColorScheme } from '../../../../../../utils/dom';
 
 export function MenuPortal(container: HTMLElement | null, template: TemplateResult) {
   return html`
@@ -30,14 +31,13 @@ export function createMenuContainer(className: string, isSmallLayout: ReadSignal
     if (!container) return;
 
     const isSmall = isSmallLayout();
-
     setAttribute(container, 'data-view-type', viewType());
     setAttribute(container, 'data-sm', isSmall);
     setAttribute(container, 'data-lg', !isSmall);
     setAttribute(container, 'data-size', isSmall ? 'sm' : 'lg');
-
-    container.classList.toggle('light', colorScheme() === 'light');
   });
+
+  watchColorScheme(container, colorScheme);
 
   return container;
 }
