@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.5-next](https://github.com/vidstack/player/releases/tag/v1.11.5-next) (2024-04-02)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- sveltekit cloudflare worker bundle throws ([554e423](https://github.com/vidstack/player/commit/554e423dc208e5df5aa7778b3e4753f9436ca684))
+
 ## [1.11.4-next](https://github.com/vidstack/player/releases/tag/v1.11.4-next) (2024-04-01)
 
 ### 🐛 Bug Fixes
