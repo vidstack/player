@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.6-next](https://github.com/vidstack/player/releases/tag/v1.11.6-next) (2024-04-02)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- `worker` conditional export should take priority over `browser` ([7bf5ae8](https://github.com/vidstack/player/commit/7bf5ae8a527fac036d8e7a4889abbc0eaee95707))
+
 ## [1.11.5-next](https://github.com/vidstack/player/releases/tag/v1.11.5-next) (2024-04-02)
 
 ### 🐛 Bug Fixes
