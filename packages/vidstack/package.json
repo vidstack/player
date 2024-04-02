@@ -109,6 +109,7 @@
         "development": "./dist/dev/vidstack.js",
         "default": "./dist/prod/vidstack.js"
       },
+      "worker": "./dist/server/vidstack.js",
       "default": "./dist/server/vidstack.js"
     },
     "./elements": {
@@ -117,6 +118,7 @@
         "development": "./dist/dev/vidstack-elements.js",
         "default": "./dist/prod/vidstack-elements.js"
       },
+      "worker": "./dist/server/vidstack-elements.js",
       "default": "./dist/server/vidstack-elements.js"
     },
     "./global/player": {
@@ -125,6 +127,7 @@
         "development": "./dist/dev/global/vidstack-player.js",
         "default": "./dist/prod/global/vidstack-player.js"
       },
+      "worker": "./dist/server/global/vidstack-player.js",
       "default": "./dist/server/global/vidstack-player.js"
     },
     "./global/plyr": {
@@ -133,6 +136,7 @@
         "development": "./dist/dev/global/plyr.js",
         "default": "./dist/prod/global/plyr.js"
       },
+      "worker": "./dist/server/global/plyr.js",
       "default": "./dist/server/global/plyr.js"
     },
     "./icons": {
@@ -141,6 +145,7 @@
         "development": "./dist/dev/define/vidstack-icons.js",
         "default": "./dist/prod/define/vidstack-icons.js"
       },
+      "worker": "./dist/server/define/vidstack-icons.js",
       "default": "./dist/server/define/vidstack-icons.js"
     },
     "./player": {
@@ -149,6 +154,7 @@
         "development": "./dist/dev/define/vidstack-player.js",
         "default": "./dist/prod/define/vidstack-player.js"
       },
+      "worker": "./dist/server/define/vidstack-player.js",
       "default": "./dist/server/define/vidstack-player.js"
     },
     "./player/ui": {
@@ -157,6 +163,7 @@
         "development": "./dist/dev/define/vidstack-player-ui.js",
         "default": "./dist/prod/define/vidstack-player-ui.js"
       },
+      "worker": "./dist/server/define/vidstack-player-ui.js",
       "default": "./dist/server/define/vidstack-player-ui.js"
     },
     "./player/layouts": {
@@ -165,6 +172,7 @@
         "development": "./dist/dev/define/vidstack-player-layouts.js",
         "default": "./dist/prod/define/vidstack-player-layouts.js"
       },
+      "worker": "./dist/server/define/vidstack-player-layouts.js",
       "default": "./dist/server/define/vidstack-player-layouts.js"
     },
     "./player/layouts/default": {
@@ -173,6 +181,7 @@
         "development": "./dist/dev/define/vidstack-player-default-layout.js",
         "default": "./dist/prod/define/vidstack-player-default-layout.js"
       },
+      "worker": "./dist/server/define/vidstack-player-default-layout.js",
       "default": "./dist/server/define/vidstack-player-default-layout.js"
     },
     "./player/layouts/plyr": {
@@ -181,6 +190,7 @@
         "development": "./dist/dev/define/plyr-layout.js",
         "default": "./dist/prod/define/plyr-layout.js"
       },
+      "worker": "./dist/server/define/plyr-layout.js",
       "default": "./dist/server/define/plyr-layout.js"
     },
     "./dist/types/*": "./dist/types/*",
