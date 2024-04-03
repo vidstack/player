@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.7-next](https://github.com/vidstack/player/releases/tag/v1.11.7-next) (2024-04-03)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- bundler plugins should support multiple files ([5c5db3f](https://github.com/vidstack/player/commit/5c5db3ff02b827acf176b6ca5ba1caf8e296ad4e))
+- flip and shift floating ui to stay in view ([22ecaa7](https://github.com/vidstack/player/commit/22ecaa7d15dc58e19271534cfe34b58d391cc8b5))
+- do not render layouts when ios controls are shown ([eeed0e4](https://github.com/vidstack/player/commit/eeed0e47b495c61b98689852422a4cedd7c2da7d))
+- infer src type so native hls playback works ([18be0a5](https://github.com/vidstack/player/commit/18be0a5444ec369957a87beffec0ceb967e799e9))
+- relax no text track label to warning from error ([e66a8bd](https://github.com/vidstack/player/commit/e66a8bddc943abc58b4e4886aa34317d0995a4da))
+- vertically centers posters (#1227) ([0d3400a](https://github.com/vidstack/player/commit/0d3400a4adf9e0f74d829a64d309eee478083626))
+
+#### Player (React)
+
+- comma in default video layout ([479df95](https://github.com/vidstack/player/commit/479df956fc3f47371f195eb2ebb6dac663804d8e))
+
 ## [1.11.6-next](https://github.com/vidstack/player/releases/tag/v1.11.6-next) (2024-04-02)
 
 ### 🐛 Bug Fixes
