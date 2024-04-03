@@ -1,8 +1,9 @@
+import fscreen from 'fscreen';
 import { State, tick, type Store } from 'maverick.js';
 
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { MediaProviderLoader } from '../../providers/types';
-import { canOrientScreen } from '../../utils/support';
+import { canOrientScreen, IS_IPHONE } from '../../utils/support';
 import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
 import type { AudioTrack } from '../tracks/audio-tracks';
@@ -38,6 +39,16 @@ export const mediaState = new State<MediaState>({
   clipStartTime: 0,
   clipEndTime: 0,
   controls: false,
+  get iOSControls() {
+    return (
+      IS_IPHONE &&
+      this.mediaType === 'video' &&
+      (!this.playsInline || (!fscreen.fullscreenEnabled && this.fullscreen))
+    );
+  },
+  get nativeControls() {
+    return this.controls || this.iOSControls;
+  },
   controlsVisible: false,
   get controlsHidden() {
     return !this.controlsVisible;
@@ -410,6 +421,15 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls}
    */
   controls: boolean;
+  /**
+   * Whether iOS Safari video controls are visible. This will be true if `playsinline` is not set
+   * or in fullscreen due to lack of a Fullscreen API.
+   */
+  readonly iOSControls: boolean;
+  /**
+   * Whether native controls should be shown due to the `controls` state or `iOSControls` state.
+   */
+  readonly nativeControls: boolean;
   /**
    * Defines how the media element handles cross-origin requests, thereby enabling the
    * configuration of the CORS requests for the element's fetched data.

@@ -61,9 +61,8 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
 
         if (isEmbed && target) {
           effect(() => {
-            const { $iosControls } = this._media,
-              { controls } = this._media.$state,
-              showControls = controls() || $iosControls();
+            const { nativeControls } = this._media.$state,
+              showControls = nativeControls();
 
             if (showControls) {
               this._blocker?.remove();
@@ -111,13 +110,12 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
     const video =
       this._target instanceof HTMLVideoElement ? this._target : document.createElement('video');
 
-    const { controls, crossOrigin, poster } = this._media.$state,
-      { $iosControls } = this._media,
-      $nativeControls = computed(() => (controls() || $iosControls() ? 'true' : null)),
-      $poster = computed(() => (poster() && (controls() || $iosControls()) ? poster() : null));
+    const { crossOrigin, poster, nativeControls } = this._media.$state,
+      $controls = computed(() => (nativeControls() ? 'true' : null)),
+      $poster = computed(() => (poster() && nativeControls() ? poster() : null));
 
     effect(() => {
-      setAttribute(video, 'controls', $nativeControls());
+      setAttribute(video, 'controls', $controls());
       setAttribute(video, 'crossorigin', crossOrigin());
       setAttribute(video, 'poster', $poster());
     });
@@ -127,13 +125,10 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
 
   private _createIFrame() {
     const iframe =
-      this._target instanceof HTMLIFrameElement ? this._target : document.createElement('iframe');
+        this._target instanceof HTMLIFrameElement ? this._target : document.createElement('iframe'),
+      { nativeControls } = this._media.$state;
 
-    const { controls } = this._media.$state,
-      { $iosControls } = this._media,
-      $nativeControls = computed(() => controls() || $iosControls());
-
-    effect(() => setAttribute(iframe, 'tabindex', !$nativeControls() ? -1 : null));
+    effect(() => setAttribute(iframe, 'tabindex', !nativeControls() ? -1 : null));
 
     return iframe;
   }

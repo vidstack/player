@@ -269,10 +269,9 @@ export class VimeoProvider
   }
 
   protected override _buildParams(): VimeoParams {
-    const { $iosControls } = this._ctx,
-      { keyDisabled } = this._ctx.$props,
-      { controls, playsInline } = this._ctx.$state,
-      showControls = controls() || $iosControls();
+    const { keyDisabled } = this._ctx.$props,
+      { playsInline, nativeControls } = this._ctx.$state,
+      showControls = nativeControls();
     return {
       title: this.title,
       byline: this.byline,
@@ -361,9 +360,8 @@ export class VimeoProvider
   }
 
   private _onReady(duration: number, trigger: Event) {
-    const { $iosControls } = this._ctx,
-      { controls } = this._ctx.$state,
-      showEmbedControls = controls() || $iosControls();
+    const { nativeControls } = this._ctx.$state,
+      showEmbedControls = nativeControls();
 
     this._seekableRange = new TimeRange(0, duration);
 

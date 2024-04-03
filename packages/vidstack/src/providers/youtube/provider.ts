@@ -179,9 +179,8 @@ export class YouTubeProvider
 
   protected override _buildParams(): YouTubeParams {
     const { keyDisabled } = this._ctx.$props,
-      { $iosControls } = this._ctx,
-      { controls, muted, playsInline } = this._ctx.$state,
-      showControls = controls() || $iosControls();
+      { muted, playsInline, nativeControls } = this._ctx.$state,
+      showControls = nativeControls();
     return {
       autoplay: 0,
       cc_lang_pref: this.language,

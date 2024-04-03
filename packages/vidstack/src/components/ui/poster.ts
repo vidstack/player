@@ -106,11 +106,9 @@ export class Poster extends Component<PosterProps, PosterState> {
 
   private _watchHidden() {
     const { src } = this.$props,
-      { $iosControls } = this._media,
-      { poster } = this._media.$state;
-
-    this.el && setAttribute(this.el, 'display', $iosControls() ? 'none' : null);
-    this.$state.hidden.set(this._hasError() || !(src() || poster()) || $iosControls());
+      { poster, nativeControls } = this._media.$state;
+    this.el && setAttribute(this.el, 'display', nativeControls() ? 'none' : null);
+    this.$state.hidden.set(this._hasError() || !(src() || poster()) || nativeControls());
   }
 
   private _isLoading() {

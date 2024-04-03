@@ -54,9 +54,8 @@ export class Controls extends Component<ControlsProps, {}, ControlsEvents> {
   private _hideControls() {
     if (!this.el) return;
 
-    const { $iosControls } = this._media,
-      { controls } = this._media.$state,
-      isHidden = controls() || $iosControls();
+    const { nativeControls } = this._media.$state,
+      isHidden = nativeControls();
 
     setAttribute(this.el, 'aria-hidden', isHidden ? 'true' : null);
     setStyle(this.el, 'display', isHidden ? 'none' : null);

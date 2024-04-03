@@ -79,13 +79,10 @@ export class Captions extends Component<CaptionsProps> {
   }
 
   private _isHidden() {
-    const { textTrack, remotePlaybackState } = this._media.$state,
+    const { textTrack, remotePlaybackState, iOSControls } = this._media.$state,
       track = textTrack();
     return (
-      this._media.$iosControls() ||
-      remotePlaybackState() === 'connected' ||
-      !track ||
-      !isTrackCaptionKind(track)
+      iOSControls() || remotePlaybackState() === 'connected' || !track || !isTrackCaptionKind(track)
     );
   }
 

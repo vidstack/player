@@ -27,8 +27,8 @@ export class TextRenderers {
   }
 
   private _watchControls() {
-    const { $state, $iosControls } = this._media;
-    this._nativeDisplay = $state.controls() || $iosControls();
+    const { nativeControls } = this._media.$state;
+    this._nativeDisplay = nativeControls();
     this._update();
   }
 

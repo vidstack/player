@@ -67,16 +67,10 @@ interface MediaOutletProps extends React.HTMLAttributes<HTMLMediaElement> {
 }
 
 function MediaOutlet({ provider, ...props }: MediaOutletProps) {
-  const { controls, crossOrigin, poster, remotePlaybackInfo } = useStateContext(mediaState),
+  const { crossOrigin, poster, remotePlaybackInfo, nativeControls } = useStateContext(mediaState),
     { loader } = provider.$state,
-    {
-      $iosControls: $$iosControls,
-      $provider: $$provider,
-      $providerSetup: $$providerSetup,
-    } = useMediaContext(),
-    $controls = useSignal(controls),
-    $iosControls = useSignal($$iosControls),
-    $nativeControls = $controls || $iosControls,
+    { $provider: $$provider, $providerSetup: $$providerSetup } = useMediaContext(),
+    $nativeControls = useSignal(nativeControls),
     $crossOrigin = useSignal(crossOrigin),
     $poster = useSignal(poster),
     $loader = useSignal(loader),

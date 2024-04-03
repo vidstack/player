@@ -171,7 +171,6 @@ export class MediaPlayer
       __DEV__ ? context.logger : undefined,
     );
     context.remote.setPlayer(this);
-    context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList();
     context.textTracks[TextTrackSymbol._crossOrigin] = this.$state.crossOrigin;
     context.textRenderers = new TextRenderers(context);
@@ -309,7 +308,7 @@ export class MediaPlayer
         return !!track && isTrackCaptionKind(track);
       },
       'data-ios-controls': function (this: MediaPlayer) {
-        return this._media.$iosControls();
+        return this.$state.iOSControls();
       },
       'data-controls': function (this: MediaPlayer) {
         return this.controls.showing;
@@ -375,16 +374,6 @@ export class MediaPlayer
     setAttribute(this.el!, 'data-pointer', pointer);
     this.$state.pointer.set(pointer);
     this._onResize();
-  }
-
-  private _isIOSControls() {
-    const { playsInline, fullscreen } = this.$state;
-    return (
-      IS_IPHONE &&
-      !canFullscreen() &&
-      this.$state.mediaType() === 'video' &&
-      (!playsInline() || fullscreen())
-    );
   }
 
   /**
