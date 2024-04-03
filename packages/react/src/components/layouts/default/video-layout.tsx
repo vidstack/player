@@ -183,7 +183,7 @@ function DefaultVideoSmallLayout() {
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="bottom" />)}
           {slot(slots, 'downloadButton', <DefaultDownloadButton />)}
           <DefaultVideoMenus slots={slots} />
-          <DefaultVolumePopup orientation="vertical" tooltip="bottom end" slots={slots} />,
+          <DefaultVolumePopup orientation="vertical" tooltip="bottom end" slots={slots} />
           {slot(slots, 'topControlsGroupEnd', null)}
         </Controls.Group>
         <DefaultControlsSpacer />
