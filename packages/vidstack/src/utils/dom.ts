@@ -1,6 +1,8 @@
 import {
   autoUpdate,
   computePosition,
+  flip,
+  shift,
   type ComputePositionConfig,
   type Placement,
 } from '@floating-ui/dom';
@@ -229,11 +231,33 @@ export function autoPlacement(
   setStyle(el, 'visibility', !trigger ? 'hidden' : null);
   if (!trigger) return;
 
+  let isTop = placement.includes('top');
+
   const negateX = (x: string) => (placement.includes('left') ? `calc(-1 * ${x})` : x),
-    negateY = (y: string) => (placement.includes('top') ? `calc(-1 * ${y})` : y);
+    negateY = (y: string) => (isTop ? `calc(-1 * ${y})` : y);
 
   return autoUpdate(trigger, el, () => {
-    computePosition(trigger, el, { placement: floatingPlacement, ...options }).then(({ x, y }) => {
+    computePosition(trigger, el, {
+      placement: floatingPlacement,
+      middleware: [
+        ...(options.middleware ?? []),
+        flip({ fallbackAxisSideDirection: 'start', crossAxis: false }),
+        shift(),
+      ],
+      ...options,
+    }).then(({ x, y, middlewareData }) => {
+      const hasFlipped = !!middlewareData.flip?.index;
+      isTop = placement.includes(hasFlipped ? 'bottom' : 'top');
+
+      el.setAttribute(
+        'data-placement',
+        hasFlipped
+          ? placement.startsWith('top')
+            ? placement.replace('top', 'bottom')
+            : placement.replace('bottom', 'top')
+          : placement,
+      );
+
       Object.assign(el.style, {
         top: `calc(${y + 'px'} + ${negateY(
           yOffset ? yOffset + 'px' : `var(--${offsetVarName}-y-offset, 0px)`,
