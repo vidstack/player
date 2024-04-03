@@ -26,7 +26,7 @@ export class NativeHLSTextTracks {
     const track = new VdsTextTrack({
       id: nativeTrack.id,
       kind: nativeTrack.kind,
-      label: nativeTrack.label,
+      label: nativeTrack.label ?? '',
       language: nativeTrack.language,
       type: 'vtt',
     });
