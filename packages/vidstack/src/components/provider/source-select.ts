@@ -343,6 +343,10 @@ function inferType(src: unknown, type?: string) {
     return type;
   } else if (isString(src) && sourceTypes.has(src)) {
     return sourceTypes.get(src)!;
+  } else if (!type && isHLSSrc({ src, type: '' })) {
+    return 'application/x-mpegurl';
+  } else if (!type && isDASHSrc({ src, type: '' })) {
+    return 'application/dash+xml';
   } else if (!isString(src) || src.startsWith('blob:')) {
     return 'video/object';
   } else if (src.includes('youtube') || src.includes('youtu.be')) {
