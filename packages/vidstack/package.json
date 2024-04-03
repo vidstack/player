@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "media-captions": "^1.0.1",
-    "unplugin": "^1.6.0"
+    "unplugin": "^1.10.1"
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.4.4",

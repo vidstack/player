@@ -138,7 +138,7 @@ importers:
         specifier: ^1.0.1
         version: 1.0.3
       unplugin:
-        specifier: ^1.6.0
+        specifier: ^1.10.1
         version: 1.10.1
     devDependencies:
       '@floating-ui/dom':

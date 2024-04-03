@@ -16,34 +16,6 @@ const defaultIncludePattern = /\.(jsx|tsx|html|vue|svelte)/,
   elementsJSON = fs.readFileSync(elementsFilePath, 'utf8'),
   elementsManifest = JSON.parse(elementsJSON) as Record<string, string>;
 
-// These elements need to be registered before their children to prevent async setup flows.
-const priorityImports = [
-  // Core
-  'media-player',
-  'media-provider',
-  // Layout
-  'media-audio-layout',
-  'media-video-layout',
-  'media-plyr-layout',
-  'media-layout',
-  'media-controls',
-  'media-controls-group',
-  'media-poster',
-  // Tooltips
-  'media-tooltip',
-  'media-tooltip-trigger',
-  'media-tooltip-content',
-  // Sliders
-  'media-slider',
-  'media-volume-slider',
-  'media-time-slider',
-  // Menus
-  'media-menu',
-  'media-menu-button',
-  'media-menu-portal',
-  'media-menu-items',
-];
-
 const defaultStyles = {
   'vds-buffering-indicator': 'buffering.css',
   'vds-button': 'buttons.css',
@@ -67,6 +39,12 @@ for (const name of Object.keys(defaultStyles)) {
   defaultStyles[name] = `vidstack/player/styles/default/${defaultStyles[name]}`;
 }
 
+interface GraphData {
+  // Module-specific elements and styles (tracked for HMR).
+  elementsGraph: ElementsGraph;
+  stylesGraph: StylesGraph;
+}
+
 type ElementsGraph = Map<string, Set<string>>;
 type StylesGraph = Map<string, Set<string>>;
 
@@ -80,151 +58,176 @@ export interface UserOptions {
 export const unplugin = createUnplugin<UserOptions | undefined>((options = {}) => {
   let include = options.include ?? defaultIncludePattern,
     filter = createFilter(include, options.exclude),
-    // Elements and styles across all modules.
-    elements = new Set<string>(),
-    styles = new Set<string>(),
-    // Module-specific elements and styles (tracked for HMR).
-    elementsGraph: ElementsGraph = new Map(),
-    stylesGraph: StylesGraph = new Map(),
+    data: GraphData = {
+      elementsGraph: new Map(),
+      stylesGraph: new Map(),
+    },
+    defaultAudioLayout = false,
+    defaultVideoLayout = false,
+    plyrLayout = false,
+    chunkToFile = new Map<string, string>(),
+    moduleToChunk = new Map<string, string>(),
+    invalidated = new Set<string>(),
     viteServer: ViteDevServer | null = null;
 
-  function invalidateBundleModule() {
-    elements.clear();
-    for (const tagNames of elementsGraph.values()) {
-      for (const tagName of tagNames) elements.add(tagName);
-    }
-
-    styles.clear();
-    for (const files of stylesGraph.values()) {
-      for (const file of files) styles.add(file);
-    }
-
-    const mod = viteServer?.moduleGraph.getModuleById(bundleModuleId);
-    mod && viteServer?.moduleGraph.invalidateModule(mod);
-    viteServer?.ws.send({ type: 'full-reload' });
+  function hasDefaultLayout() {
+    return defaultAudioLayout || defaultVideoLayout;
   }
 
-  function parse(id: string, code: string) {
-    if (viteServer) {
-      const oldElements = elementsGraph.get(id),
-        oldStyles = stylesGraph.get(id),
-        newElements = new Set<string>(),
-        newStyles = new Set<string>();
+  function processModule(id: string, code: string) {
+    const { elementsGraph, stylesGraph } = data,
+      { elements, styles } = parse(code);
 
-      parseCode(code, newElements, newStyles);
-
-      const isEqual = isSetsEqual(oldElements, newElements) && isSetsEqual(oldStyles, newStyles);
-
-      if (!isEqual) {
-        elementsGraph.set(id, newElements);
-        stylesGraph.set(id, newStyles);
-        invalidateBundleModule();
-      }
-    } else {
-      parseCode(code, elements, styles);
+    if (elements.size) {
+      if (elements.has('media-audio-layout')) defaultAudioLayout = true;
+      if (elements.has('media-video-layout')) defaultVideoLayout = true;
+      if (elements.has('media-plyr-layout')) plyrLayout = true;
+      elementsGraph.set(id, elements);
     }
+
+    if (styles.size) {
+      stylesGraph.set(id, styles);
+    }
+
+    return { elements, styles };
   }
 
-  return {
-    name: 'vidstack',
-    enforce: 'pre',
-    resolveId(id) {
-      if (id === bundleModuleId) return id;
-    },
-    load(id) {
-      if (id === bundleModuleId) {
-        const imports: string[] = [],
-          hasDefaultLayout =
-            elements.has('media-audio-layout') || elements.has('media-video-layout'),
-          hasPlyrLayout = elements.has('media-plyr-layout');
+  function invalidateAll() {
+    if (!viteServer) return;
 
-        if (!hasDefaultLayout) {
-          imports.push('import "vidstack/player/styles/base.css";');
+    invalidateModule(bundleModuleId);
 
-          for (const style of styles) {
-            imports.push(`import "${style}";`);
-          }
+    for (const id of chunkToFile.keys()) invalidateModule(id);
+  }
 
-          const elementClasses = new Set<string>();
+  function invalidateModule(id: string) {
+    const mod = viteServer?.moduleGraph.getModuleById(id);
+    if (mod) viteServer?.moduleGraph.invalidateModule(mod);
+  }
 
-          for (const tagName of [...priorityImports, ...elements]) {
-            if (!elements.has(tagName)) continue;
+  function reload() {
+    viteServer?.hot.send({ type: 'full-reload' });
+  }
 
-            if (tagName === 'media-plyr-layout') {
-              imports.push('vidstack/player/styles/plyr/theme.css');
-              imports.push('vidstack/player/layouts/plyr');
-              continue;
-            }
-
-            const className = elementsManifest[tagName];
-
-            if (className) {
-              elementClasses.add(className);
-            } else {
-              console.warn(`[vidstack]: unknown media element was found \`${tagName}\``);
-            }
-          }
-
-          const elementImports = ['defineCustomElement', ...elementClasses];
-          imports.push(`import {\n${elementImports.join(',\n')}\n} from "vidstack/elements";`);
-
-          return (
-            imports.join('\n') +
-            '\n\n' +
-            [...elementClasses].map((name) => `defineCustomElement(${name});`).join('\n')
-          );
-        } else {
-          imports.push(`import "vidstack/player/styles/default/theme.css";`);
-
-          if (hasPlyrLayout) {
-            imports.push(`vidstack/player/styles/plyr/theme.css`);
-          }
-
-          if (elements.has('media-audio-layout')) {
-            imports.push(`import "vidstack/player/styles/default/layouts/audio.css";`);
-          }
-
-          if (elements.has('media-video-layout')) {
-            imports.push(`import "vidstack/player/styles/default/layouts/video.css";`);
-          }
-
-          imports.push('import "vidstack/player";');
-          imports.push(`import "vidstack/player/layouts${!hasPlyrLayout ? '/default' : ''}";`);
-          imports.push('import "vidstack/player/ui";');
-
-          return imports.join('\n');
+  return [
+    {
+      name: 'vidstack-pre',
+      enforce: 'pre',
+      resolveId(id) {
+        if (id === bundleModuleId) return id;
+        else if (chunkToFile.has(id)) return id;
+      },
+      load(id) {
+        if (id === bundleModuleId) {
+          return generateBundleImports({
+            defaultAudioLayout,
+            defaultVideoLayout,
+            plyrLayout,
+          });
         }
-      }
 
-      return null;
-    },
-    transformInclude(id) {
-      return filter(id);
-    },
-    transform(code, id) {
-      parse(id, code);
-      return null;
-    },
-    vite: {
-      configureServer(server) {
-        viteServer = server;
+        if (chunkToFile.has(id)) {
+          if (hasDefaultLayout()) return '';
+
+          const moduleId = chunkToFile.get(id),
+            elements = data.elementsGraph.get(moduleId!),
+            styles = data.stylesGraph.get(moduleId!);
+
+          return elements || styles ? generateElementImports(elements, styles) : '';
+        }
+
+        return null;
       },
-      async handleHotUpdate({ file, read }) {
-        if (!filter(file)) return;
-        parse(file, await read());
+      transformInclude(id) {
+        return filter(id);
+      },
+      transform(code, id) {
+        processModule(id, code);
+        return null;
+      },
+      vite: {
+        configureServer(server) {
+          viteServer = server;
+        },
+        async handleHotUpdate({ file, read }) {
+          if (!filter(file)) return;
+
+          const oldElements = data.elementsGraph.get(file),
+            oldStyles = data.stylesGraph.get(file);
+
+          const { elements: newElements, styles: newStyles } = processModule(file, await read());
+
+          const hasChangedLayouts =
+            diff(oldElements, newElements, 'media-audio-layout') ||
+            diff(oldElements, newElements, 'media-video-layout') ||
+            diff(oldElements, newElements, 'media-plyr-layout');
+
+          data.elementsGraph.set(file, newElements);
+          data.stylesGraph.set(file, newStyles);
+
+          if (hasChangedLayouts) {
+            defaultAudioLayout = false;
+            defaultVideoLayout = false;
+            plyrLayout = false;
+
+            invalidateAll();
+            reload();
+
+            return;
+          }
+
+          const isEqual =
+            isSetsEqual(oldElements, newElements) && isSetsEqual(oldStyles, newStyles);
+
+          if (!isEqual) {
+            const chunkId = moduleToChunk.get(file);
+            if (chunkId) {
+              invalidateModule(chunkId);
+              reload();
+            }
+          }
+        },
       },
     },
-  };
+    {
+      name: 'vidstack-post',
+      enforce: 'post',
+      transformInclude(id) {
+        return filter(id);
+      },
+      transform(code, id) {
+        const { elementsGraph, stylesGraph } = data,
+          elements = elementsGraph.get(id),
+          styles = stylesGraph.get(id);
+
+        if (elements?.size || styles?.size) {
+          let chunkId = moduleToChunk.get(id)!;
+
+          if (!chunkId) {
+            chunkId = `:vidstack/chunk-${chunkToFile.size}`;
+            chunkToFile.set(chunkId, id);
+            moduleToChunk.set(id, chunkId);
+          }
+
+          return code.startsWith(`import "${chunkId}";`) ? code : `import "${chunkId}";\n` + code;
+        }
+
+        return null;
+      },
+    },
+  ];
 });
 
 const PARSE_MODE_NONE = 0,
   PARSE_MODE_ELEMENT = 1,
   PARSE_MODE_STYLE = 2;
 
-function parseCode(code: string, elements: Set<string>, styles: Set<string>) {
+function parse(code: string) {
   let mode = PARSE_MODE_NONE,
     char = '',
-    buffer = '';
+    buffer = '',
+    elements = new Set<string>(),
+    styles = new Set<string>();
 
   for (let i = 0; i < code.length; i++) {
     char = code[i];
@@ -273,9 +276,86 @@ function parseCode(code: string, elements: Set<string>, styles: Set<string>) {
         break;
     }
   }
+
+  elements.delete('media-player');
+  elements.delete('media-provider');
+
+  return { elements, styles };
 }
 
-function isSetsEqual(a?: Set<any>, b?: Set<any>): boolean {
+function generateBundleImports({
+  defaultAudioLayout = false,
+  defaultVideoLayout = false,
+  plyrLayout = false,
+}) {
+  const styles: string[] = [],
+    imports: string[] = [],
+    hasDefaultLayout = defaultAudioLayout || defaultVideoLayout;
+
+  if (!hasDefaultLayout) {
+    styles.push('import "vidstack/player/styles/base.css";');
+    if (plyrLayout) {
+      styles.push('vidstack/player/styles/plyr/theme.css');
+      imports.push('vidstack/player/layouts/plyr');
+    }
+  } else {
+    styles.push(`import "vidstack/player/styles/default/theme.css";`);
+
+    if (plyrLayout) {
+      styles.push(`vidstack/player/styles/plyr/theme.css`);
+    }
+
+    if (defaultAudioLayout) {
+      styles.push(`import "vidstack/player/styles/default/layouts/audio.css";`);
+    }
+
+    if (defaultVideoLayout) {
+      styles.push(`import "vidstack/player/styles/default/layouts/video.css";`);
+    }
+
+    imports.push(`import "vidstack/player/layouts${!plyrLayout ? '/default' : ''}";`);
+    imports.push('import "vidstack/player/ui";');
+  }
+
+  return [...styles, 'import "vidstack/player";', ...imports].join('\n');
+}
+
+function generateElementImports(
+  elements: Set<string> = new Set(),
+  styles: Set<string> = new Set(),
+) {
+  const imports: string[] = [],
+    elementClasses = new Set<string>();
+
+  for (const style of styles) imports.push(`import "${style}";`);
+
+  for (const tagName of elements) {
+    if (!elements.has(tagName)) continue;
+
+    const className = elementsManifest[tagName];
+
+    if (className) {
+      elementClasses.add(className);
+    } else {
+      console.warn(`[vidstack]: unknown media element was found \`${tagName}\``);
+    }
+  }
+
+  if (elementClasses.size === 0) return imports.join('\n');
+
+  const elementImports = ['defineCustomElement', ...elementClasses];
+  imports.push(`import {\n${elementImports.join(',\n')}\n} from "vidstack/elements";`);
+
+  const definitions = [...elementClasses].map((name) => `defineCustomElement(${name});`);
+
+  return imports.join('\n') + '\n\n' + definitions.join('\n');
+}
+
+function diff(a: Set<any> | undefined, b: Set<any> | undefined, key: string) {
+  return a?.has(key) !== b?.has(key);
+}
+
+function isSetsEqual(a: Set<any> | undefined, b: Set<any> | undefined): boolean {
   return (
     (!a?.size && !b?.size) ||
     (!!a && !!b && a.size === b.size && [...a].every((value) => b.has(value)))
