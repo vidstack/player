@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.8-next](https://github.com/vidstack/player/releases/tag/v1.11.8-next) (2024-04-04)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- plyr layout element not registering ([5a61fc6](https://github.com/vidstack/player/commit/5a61fc6733343fb7198ebf6352261c43dfa6b88b))
+
 ## [1.11.7-next](https://github.com/vidstack/player/releases/tag/v1.11.7-next) (2024-04-03)
 
 ### 🐛 Bug Fixes
