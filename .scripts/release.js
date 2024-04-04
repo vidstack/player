@@ -261,7 +261,7 @@ async function publishCDN(version) {
     cdnPkgPath = path.resolve(cdnDir, 'package.json');
 
   // Copy over styles.
-  fsExtra.copySync(path.resolve(pkgRoot, 'styles'), path.resolve(cdnDir, 'styles/player'));
+  fsExtra.copySync(path.resolve(pkgRoot, 'styles'), path.resolve(cdnDir, 'styles'));
 
   const packageJson = {
     name: '@vidstack/cdn',
