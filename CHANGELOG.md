@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.10-next](https://github.com/vidstack/player/releases/tag/v1.11.10-next) (2024-04-04)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- invalid styles dir in cdn bundle ([c285fc7](https://github.com/vidstack/player/commit/c285fc73a1a334adfb7f1398b3c136b8c4702b63))
+
 ## [1.11.9-next](https://github.com/vidstack/player/releases/tag/v1.11.9-next) (2024-04-04)
 
 ### 🐛 Bug Fixes
