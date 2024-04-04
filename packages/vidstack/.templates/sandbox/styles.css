@@ -1,7 +1,7 @@
-@import '../player/styles/base.css';
-@import '../player/styles/default/theme.css';
-@import '../player/styles/default/layouts/audio.css';
-@import '../player/styles/default/layouts/video.css';
+@import '../styles/player/base.css';
+@import '../styles/player/default/theme.css';
+@import '../styles/player/default/layouts/audio.css';
+@import '../styles/player/default/layouts/video.css';
 
 /*************************************************************************************************
  * Player

@@ -1,4 +1,4 @@
-import type * as DASH from 'dashjs';
+import type DASH from 'dashjs';
 import { effect, peek } from 'maverick.js';
 import { camelToKebabCase, DOMEvent, isNumber, isString, listenEvent } from 'maverick.js/std';
 

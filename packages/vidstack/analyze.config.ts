@@ -11,8 +11,11 @@ import {
 } from '@maverick-js/cli/analyze';
 
 export default [
-  createJSONPlugin(),
+  createJSONPlugin({
+    outFile: 'dist-npm/analyze.json',
+  }),
   createVSCodePlugin({
+    outFile: 'dist-npm/vscode.html-data.json',
     transformTagData({ component }, data) {
       const refs = (data.references ??= []);
 
@@ -82,16 +85,19 @@ export default [
   elementsManifest(),
   checkElementExports(),
   vueJSXTypesPlugin({
+    file: 'dist-npm/vue.d.ts',
     imports: [`import type { IconType } from "./icons";`],
     components: [`"media-icon": HTMLAttributes & { type: IconType }`],
   }),
   svelteJSXTypesPlugin({
+    file: 'dist-npm/svelte.d.ts',
     imports: [`import type { IconType } from './icons';`],
     components: [
       `"media-icon": import('svelte/elements').HTMLAttributes<HTMLElement> & { type: IconType }`,
     ],
   }),
   solidJSXTypesPlugin({
+    file: 'dist-npm/solid.d.ts',
     imports: [`import type { IconType } from "./icons";`],
     components: [`"media-icon": JSX.HTMLAttributes<HTMLElement> & { type: IconType };`],
   }),
@@ -107,7 +113,7 @@ function elementsManifest(): AnalyzePlugin {
         manifest[el.tag.name] = el.name;
       }
 
-      writeFileSync('elements.json', JSON.stringify(manifest, null, 2));
+      writeFileSync('dist-npm/elements.json', JSON.stringify(manifest, null, 2));
     },
   };
 }

@@ -1,4 +1,4 @@
-import type * as DASH from 'dashjs';
+import type DASH from 'dashjs';
 
 import type { DASHProviderEvents } from './events';
 

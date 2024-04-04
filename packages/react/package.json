@@ -9,13 +9,6 @@
   "engines": {
     "node": ">=18"
   },
-  "files": [
-    "*.d.ts",
-    "dist/",
-    "player/",
-    "tailwind.*",
-    "analyze.json"
-  ],
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.tsx\" --framework react --project tsconfig.build.json",
     "dev": "pnpm clean && pnpm build:icons && pnpm build:types && pnpm watch",
@@ -25,7 +18,7 @@
     "sandbox": "node ../../.scripts/sandbox.js",
     "sandbox:build": "vite build sandbox",
     "types": "pnpm build:icons && pnpm build:types && rollup -c --config-types",
-    "clean": "rimraf dist player",
+    "clean": "rimraf dist-npm",
     "format": "prettier src --write --loglevel warn",
     "watch": "pnpm watch:types & rollup -c -w",
     "watch:types": "pnpm run build:types -w"
@@ -73,30 +66,30 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "development": "./dist/dev/vidstack.js",
-      "default": "./dist/prod/vidstack.js"
+      "development": "./dev/vidstack.js",
+      "default": "./prod/vidstack.js"
     },
     "./icons": {
       "types": "./icons.d.ts",
-      "default": "./dist/prod/vidstack-icons.js"
+      "default": "./prod/vidstack-icons.js"
     },
     "./player/remotion": {
       "types": "./player/remotion.d.ts",
-      "development": "./dist/dev/player/vidstack-remotion.js",
-      "default": "./dist/prod/player/vidstack-remotion.js"
+      "development": "./dev/player/vidstack-remotion.js",
+      "default": "./prod/player/vidstack-remotion.js"
     },
     "./player/layouts/default": {
       "types": "./player/layouts/default.d.ts",
-      "development": "./dist/dev/player/vidstack-default-layout.js",
-      "default": "./dist/prod/player/vidstack-default-layout.js"
+      "development": "./dev/player/vidstack-default-layout.js",
+      "default": "./prod/player/vidstack-default-layout.js"
     },
     "./player/layouts/plyr": {
       "types": "./player/layouts/plyr.d.ts",
-      "development": "./dist/dev/player/vidstack-plyr-layout.js",
-      "default": "./dist/prod/player/vidstack-plyr-layout.js"
+      "development": "./dev/player/vidstack-plyr-layout.js",
+      "default": "./prod/player/vidstack-plyr-layout.js"
     },
     "./player/styles/*": "./player/styles/*",
-    "./dist/types/*": "./dist/types/*",
+    "./types/*": "./types/*",
     "./dom.d.ts": "./dom.d.ts",
     "./google-cast.d.ts": "./google-cast.d.ts",
     "./package.json": "./package.json",

@@ -195,14 +195,45 @@ async function publishPackage(pkgName, version, runIfNotDry) {
     return;
   }
 
-  const pkgRoot = getPkgRoot(pkgName);
-  const pkgPath = path.resolve(pkgRoot, 'package.json');
-  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+  const pkgRoot = getPkgRoot(pkgName),
+    pkgPath = path.resolve(pkgRoot, 'package.json'),
+    pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')),
+    distDir = path.resolve(pkgRoot, 'dist-npm'),
+    root = (p) => path.resolve(pkgRoot, p),
+    dist = (p) => path.resolve(distDir, p);
 
   if (pkg.private) {
     console.log(kleur.red(`\n🚫 Skipping private package: ${pkg.name}`));
     return;
   }
+
+  const validPkgFields = [
+    'name',
+    'description',
+    'version',
+    'license',
+    'type',
+    'types',
+    'sideEffects',
+    'engines',
+    'dependencies',
+    'peerDependencies',
+    'contributors',
+    'repository',
+    'bugs',
+    'exports',
+    'publishConfig',
+    'keywords',
+  ];
+
+  // Create package.json.
+  const distPkg = {};
+  for (const field of validPkgFields) distPkg[field] = pkg[field];
+  fs.writeFileSync(dist('package.json'), JSON.stringify(distPkg, null, 2), 'utf-8');
+
+  // Copy over license and readme.
+  fs.copyFileSync(root('LICENSE'), dist('LICENSE'));
+  fs.copyFileSync(root('README.md'), dist('README.md'));
 
   step(`Publishing ${pkgName}...`);
 
@@ -210,7 +241,7 @@ async function publishPackage(pkgName, version, runIfNotDry) {
     await runIfNotDry(
       'yarn',
       ['publish', '--new-version', version, '--tag', getReleaseTag(version), '--access', 'public'],
-      { cwd: pkgRoot, stdio: 'pipe' },
+      { cwd: distDir, stdio: 'pipe' },
     );
     console.log(kleur.green(`\n✅ Successfully published ${pkgName}@${version}`));
   } catch (e) {
@@ -225,14 +256,12 @@ async function publishPackage(pkgName, version, runIfNotDry) {
 async function publishCDN(version) {
   step('Publishing CDN...');
 
-  await run('pnpm', ['-F', 'vidstack', 'build:cdn']);
-
   const pkgRoot = getPkgRoot('vidstack'),
     cdnDir = path.resolve(pkgRoot, 'dist-cdn'),
     cdnPkgPath = path.resolve(cdnDir, 'package.json');
 
   // Copy over styles.
-  fsExtra.copySync(path.resolve(pkgRoot, 'player/styles'), path.resolve(cdnDir, 'styles/player'));
+  fsExtra.copySync(path.resolve(pkgRoot, 'styles'), path.resolve(cdnDir, 'styles/player'));
 
   const packageJson = {
     name: '@vidstack/cdn',

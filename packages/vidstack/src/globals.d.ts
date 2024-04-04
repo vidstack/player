@@ -1,5 +1,5 @@
-/// <reference path="../dom.d.ts" />
-/// <reference path="../google-cast.d.ts" />
+/// <reference path="../npm/dom.d.ts" />
+/// <reference path="../npm/google-cast.d.ts" />
 
 declare global {
   const __DEV__: boolean;

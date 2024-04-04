@@ -1,4 +1,4 @@
-import type * as DASH from 'dashjs';
+import type DASH from 'dashjs';
 import type { DOMEvent } from 'maverick.js/std';
 
 import type { MediaPlayer } from '../../components/player';

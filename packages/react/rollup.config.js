@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
 import { build, transform as esbuildTransform } from 'esbuild';
-import fs from 'fs-extra';
+import fsExtra from 'fs-extra';
 import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
@@ -18,12 +18,11 @@ const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
 
 const DIRNAME = path.dirname(fileURLToPath(import.meta.url)),
   ROOT_DIR = path.resolve(DIRNAME, '.'),
-  STYLES_DIR = path.resolve(ROOT_DIR, 'player/styles'),
+  DIST_NPM_DIR = path.resolve(ROOT_DIR, 'dist-npm'),
   VIDSTACK_PKG_DIR = path.resolve(ROOT_DIR, 'node_modules/vidstack'),
-  VIDSTACK_PKG_PLAYER_STYLES_DIR = path.resolve(VIDSTACK_PKG_DIR, 'player/styles'),
   VIDSTACK_LOCAL_PATH = path.resolve('../vidstack/src/index.ts');
 
-const EXTERNAL_PACKAGES = [
+const NPM_EXTERNAL_PACKAGES = [
     'react',
     'react-dom',
     'media-icons',
@@ -37,15 +36,10 @@ const EXTERNAL_PACKAGES = [
 
 // Styles
 if (!MODE_TYPES) {
-  copyStyles();
-  copyTailwind();
-
   if (MODE_WATCH) {
     chokidar.watch('player/styles/**').on('all', (_, path) => {
       if (path !== 'player/styles/default/theme.css') buildDefaultTheme();
     });
-  } else {
-    buildDefaultTheme();
   }
 }
 
@@ -67,15 +61,15 @@ function defineTypesBundle() {
         'player/layouts/plyr': 'types/react/src/components/layouts/plyr/index.d.ts',
       },
       output: {
-        dir: '.',
-        chunkFileNames: 'dist/types/[name].d.ts',
+        dir: 'dist-npm',
+        chunkFileNames: 'types/[name].d.ts',
         manualChunks(id) {
           if (id.includes('react/src')) return 'vidstack-react';
           if (id.includes('maverick')) return 'vidstack-framework';
           if (id.includes('vidstack')) return 'vidstack';
         },
       },
-      external: EXTERNAL_PACKAGES,
+      external: NPM_EXTERNAL_PACKAGES,
       plugins: [
         {
           name: 'resolve-vidstack-types',
@@ -98,7 +92,7 @@ function defineTypesBundle() {
                 .join('\n');
 
             for (const file of globalFiles) {
-              fs.copyFileSync(path.resolve(`../vidstack/${file}`), file);
+              fsExtra.copyFileSync(path.resolve(`../vidstack/npm/${file}`), `dist-npm/${file}`);
             }
 
             if (indexFile?.type === 'chunk') {
@@ -143,10 +137,10 @@ function defineNPMBundle({ dev }) {
     treeshake: true,
     preserveEntrySignatures: 'allow-extension',
     maxParallelFileOps: !dev ? 1 : 20,
-    external: EXTERNAL_PACKAGES,
+    external: NPM_EXTERNAL_PACKAGES,
     output: {
       format: 'esm',
-      dir: `dist/${alias}`,
+      dir: `dist-npm/${alias}`,
       chunkFileNames: `chunks/vidstack-[hash].js`,
       manualChunks(id) {
         if (id.includes('maverick')) return 'vidstack-framework';
@@ -225,36 +219,52 @@ function defineNPMBundle({ dev }) {
           }
         },
       },
+      !dev && {
+        name: 'npm-artifacts',
+        async buildEnd() {
+          await copyStyles();
+          await copyTailwind();
+          await buildDefaultTheme();
+          await fsExtra.copy('npm', 'dist-npm');
+        },
+      },
     ],
   };
 }
 
-function copyStyles() {
-  fs.copySync(VIDSTACK_PKG_PLAYER_STYLES_DIR, STYLES_DIR);
+async function copyStyles() {
+  const from = path.resolve(VIDSTACK_PKG_DIR, 'styles/player'),
+    to = path.resolve(DIST_NPM_DIR, 'player/styles');
+  await fsExtra.copy(from, to);
 }
 
-function copyTailwind() {
-  const tailwindFilePath = path.resolve(VIDSTACK_PKG_DIR, 'tailwind.cjs'),
-    tailwindDTSFilePath = path.resolve(VIDSTACK_PKG_DIR, 'tailwind.d.cts');
-  fs.copyFileSync(tailwindFilePath, path.resolve(ROOT_DIR, 'tailwind.cjs'));
-  fs.copyFileSync(tailwindDTSFilePath, path.resolve(ROOT_DIR, 'tailwind.d.cts'));
+async function copyTailwind() {
+  const tailwindFilePath = path.resolve(VIDSTACK_PKG_DIR, 'npm/tailwind.cjs'),
+    tailwindDTSFilePath = path.resolve(VIDSTACK_PKG_DIR, 'npm/tailwind.d.cts');
+  await fsExtra.copyFile(tailwindFilePath, path.resolve(DIST_NPM_DIR, 'tailwind.cjs'));
+  await fsExtra.copyFile(tailwindDTSFilePath, path.resolve(DIST_NPM_DIR, 'tailwind.d.cts'));
 }
 
-function buildDefaultTheme() {
+async function buildDefaultTheme() {
   // CSS merge.
-  let defaultStyles = fs.readFileSync('player/styles/base.css', 'utf-8');
+  let defaultStyles = await fsExtra.readFile(
+    path.resolve(DIST_NPM_DIR, 'player/styles/base.css'),
+    'utf-8',
+  );
 
-  const themeDir = 'player/styles/default';
-  for (const file of fs.readdirSync(themeDir, 'utf-8')) {
+  const themeDir = path.resolve(DIST_NPM_DIR, 'player/styles/default'),
+    themeDirFiles = await fsExtra.readdir(themeDir, 'utf-8');
+
+  for (const file of themeDirFiles) {
     if (file === 'theme.css' || file === 'layouts') continue;
-    defaultStyles += '\n' + fs.readFileSync(`${themeDir}/${file}`, 'utf-8');
+    defaultStyles += '\n' + (await fsExtra.readFile(`${themeDir}/${file}`, 'utf-8'));
   }
 
-  fs.writeFileSync('player/styles/default/theme.css', defaultStyles);
+  await fsExtra.writeFile(`${themeDir}/theme.css`, defaultStyles);
 }
 
 export async function buildMangleCache() {
-  let mangleCache = JSON.parse(await fs.readFile('mangle.json', 'utf-8'));
+  let mangleCache = JSON.parse(await fsExtra.readFile('mangle.json', 'utf-8'));
 
   const result = await build({
     entryPoints: globbySync('src/**', {
@@ -286,7 +296,7 @@ export async function buildMangleCache() {
     ...result.mangleCache,
   };
 
-  await fs.writeFile('mangle.json', JSON.stringify(mangleCache, null, 2) + '\n');
+  await fsExtra.writeFile('mangle.json', JSON.stringify(mangleCache, null, 2) + '\n');
 
   return mangleCache;
 }
