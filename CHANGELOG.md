@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.9-next](https://github.com/vidstack/player/releases/tag/v1.11.9-next) (2024-04-04)
+
+### 🐛 Bug Fixes
+
+#### Core
+
+- analyze file missing in npm dist ([f45e93d](https://github.com/vidstack/player/commit/f45e93d38832df2e80f6e6631a45c97c7a3dd440))
+
 ## [1.11.8-next](https://github.com/vidstack/player/releases/tag/v1.11.8-next) (2024-04-04)
 
 ### 🐛 Bug Fixes
