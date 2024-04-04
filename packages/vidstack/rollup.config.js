@@ -166,11 +166,11 @@ function defineNPMBundle({ target, type, minify }) {
       ...getProviderInputs(),
     };
 
-    input['define/vidstack-audio-layout'] =
+    input['define/vidstack-audio-layout-el'] =
       'src/elements/define/layouts/default/audio-layout-element.ts';
-    input['define/vidstack-video-layout'] =
+    input['define/vidstack-video-layout-el'] =
       'src/elements/define/layouts/default/video-layout-element.ts';
-    input['define/plyr-layout'] = 'src/elements/define/layouts/plyr/plyr-layout-element.ts';
+    input['define/plyr-layout-el'] = 'src/elements/define/layouts/plyr/plyr-layout-element.ts';
   }
 
   return {
