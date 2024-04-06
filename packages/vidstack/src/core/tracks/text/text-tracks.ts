@@ -140,7 +140,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   private _onTrackModeChange(event: TextTrackModeChangeEvent) {
     const track = event.detail;
 
-    if (this._storage && isTrackCaptionKind(track) && track.mode !== 'disabled') {
+    if (this._storage && isTrackCaptionKind(track)) {
       this._saveCaptionsTrack(track);
     }
 
@@ -162,7 +162,9 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   }
 
   private _saveCaptionsTrack(track: TextTrack) {
-    this._saveLang(track.language);
+    if (track.mode !== 'disabled') {
+      this._saveLang(track.language);
+    }
     this._storage?.setCaptions?.(track.mode === 'showing');
   }
 
