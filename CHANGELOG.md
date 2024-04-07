@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.12-next](https://github.com/vidstack/player/releases/tag/v1.11.12-next) (2024-04-07)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- cdn bundle chunk versions have skewed ([9c63ad9](https://github.com/vidstack/player/commit/9c63ad939ff2fbf47b5339a159cff6aa884e4722))
+
 ## [1.11.11-next](https://github.com/vidstack/player/releases/tag/v1.11.11-next) (2024-04-07)
 
 ### 🐛 Bug Fixes
