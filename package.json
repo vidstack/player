@@ -7,8 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run analyze build build:cdn types --filter=./packages/*",
-    "build:vidstack": "turbo run analyze build build:cdn types --filter=vidstack",
+    "build": "turbo run analyze build types --filter=./packages/*",
+    "build:vidstack": "turbo run analyze build types --filter=vidstack",
     "build:react": "turbo run analyze build types --filter=react",
     "changelog": "pnpm exec git cliff --output CHANGELOG.md",
     "clean": "turbo run clean",

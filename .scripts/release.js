@@ -260,6 +260,8 @@ async function publishCDN(version) {
     cdnDir = path.resolve(pkgRoot, 'dist-cdn'),
     cdnPkgPath = path.resolve(cdnDir, 'package.json');
 
+  await run('pnpm', ['run', '-F', 'vidstack', 'build:cdn']);
+
   // Copy over styles.
   fsExtra.copySync(path.resolve(pkgRoot, 'styles'), path.resolve(cdnDir, 'styles'));
 
