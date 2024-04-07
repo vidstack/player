@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.11-next](https://github.com/vidstack/player/releases/tag/v1.11.11-next) (2024-04-07)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- save captions hidden in local storage (#1235) ([c191ee0](https://github.com/vidstack/player/commit/c191ee0858dd2d5cc247d92f6a8ea841c76f9a2e))
+
 ## [1.11.10-next](https://github.com/vidstack/player/releases/tag/v1.11.10-next) (2024-04-04)
 
 ### 🐛 Bug Fixes
