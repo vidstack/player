@@ -866,5 +866,6 @@
   "_parseContent": "ap",
   "_onEndPrecisionChange": "fp",
   "_setAudioGain": "gp",
-  "_updateColorScheme": "hp"
+  "_updateColorScheme": "hp",
+  "_pendingRemoval": "ip"
 }

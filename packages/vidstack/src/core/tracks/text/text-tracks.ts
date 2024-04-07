@@ -69,12 +69,14 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   }
 
   remove(track: TextTrack, trigger?: Event) {
+    this._pendingRemoval = track;
     if (!this._items.includes(track)) return;
     if (track === this._defaults[track.kind]) delete this._defaults[track.kind];
     track.mode = 'disabled';
     track[TextTrackSymbol._onModeChange] = null;
     track.removeEventListener('mode-change', this._onTrackModeChangeBind);
     this[ListSymbol._remove](track, trigger);
+    this._pendingRemoval = null;
     return this;
   }
 
@@ -136,11 +138,13 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     }
   }, 300);
 
+  private _pendingRemoval: TextTrack | null = null;
   private _onTrackModeChangeBind = this._onTrackModeChange.bind(this);
   private _onTrackModeChange(event: TextTrackModeChangeEvent) {
     const track = event.detail;
 
-    if (this._storage && isTrackCaptionKind(track) && track.mode !== 'disabled') {
+    // We need to check whether track is being removed to not mistakenly save "disabled" mode change.
+    if (this._storage && isTrackCaptionKind(track) && track !== this._pendingRemoval) {
       this._saveCaptionsTrack(track);
     }
 
@@ -162,7 +166,9 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   }
 
   private _saveCaptionsTrack(track: TextTrack) {
-    this._saveLang(track.language);
+    if (track.mode !== 'disabled') {
+      this._saveLang(track.language);
+    }
     this._storage?.setCaptions?.(track.mode === 'showing');
   }
 
