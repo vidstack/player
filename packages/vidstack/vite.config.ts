@@ -10,6 +10,7 @@ export default defineConfig({
     __DEV__: 'true',
     __TEST__: 'true',
     __SERVER__: SERVER ? 'true' : 'false',
+    __CDN__: 'true',
   },
   build: {
     target: 'es2019',

@@ -41,7 +41,7 @@ export class VidstackPlayer {
       }
 
       const poster = document.createElement('media-poster');
-      if (layout?.name === 'default') poster.classList.add('vds-poster');
+      if (layout?.name === 'vidstack') poster.classList.add('vds-poster');
       provider.append(poster);
     }
 
