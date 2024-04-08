@@ -61,6 +61,12 @@ function getBundles() {
   }
 }
 
+function isLibraryId(id) {
+  return ['maverick', 'lit-html', '@floating-ui', 'fscreen', 'compute-scroll-into-view'].some(
+    (frameworkId) => id.includes(frameworkId),
+  );
+}
+
 /**
  * @returns {import('rollup').RollupOptions[]}
  * */
@@ -81,7 +87,7 @@ function getTypesBundles() {
         dir: 'dist-npm',
         chunkFileNames: 'types/vidstack-[hash].d.ts',
         manualChunks(id) {
-          if (id.includes('maverick') || id.includes('lit-html') || id.includes('@floating-ui')) {
+          if (isLibraryId(id)) {
             return 'framework.d';
           }
         },
@@ -183,8 +189,8 @@ function defineNPMBundle({ target, type, minify }) {
       dir: `dist-npm/${type.replace('local-', '')}`,
       chunkFileNames: 'chunks/vidstack-[hash].js',
       manualChunks(id) {
-        if (id.includes('maverick') || id.includes('@floating-ui')) return 'framework';
         if (id.includes('lit-html')) return 'framework-layouts';
+        if (isLibraryId(id)) return 'framework';
         return null;
       },
     },
@@ -342,7 +348,7 @@ function defineCDNBundle({ dev = false, input, dir, file, legacy = false }) {
       manualChunks(id) {
         if (dev) return file;
 
-        if (id.includes('maverick') || id.includes('@floating-ui')) {
+        if (isLibraryId(id)) {
           return 'frameworks';
         }
 

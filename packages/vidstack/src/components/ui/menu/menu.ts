@@ -67,7 +67,6 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _trigger = signal<HTMLElement | null>(null);
   private _content = signal<HTMLElement | null>(null);
-  private _isTriggerDisabled = signal(false);
 
   private _parentMenu?: MenuContext;
   private _submenus = new Set<Menu>();
@@ -75,7 +74,10 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
   private _popper: Popper;
   private _focus!: MenuFocusController;
+
   private _isSliderActive = false;
+  private _isTriggerDisabled = signal(false);
+  private _transitionCallbacks = new Set<(event: TransitionEvent) => void>();
 
   /**
    * The menu trigger element.
@@ -153,6 +155,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
     provideContext(menuContext, {
       _button: this._trigger,
+      _content: this._content,
       _expanded: this._expanded,
       _hint: signal(''),
       _submenu: !!this._parentMenu,
@@ -162,6 +165,12 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
       _attachObserver: this._attachObserver.bind(this),
       _disableMenuButton: this._disableMenuButton.bind(this),
       _addSubmenu: this._addSubmenu.bind(this),
+      _onTransitionEvent: (callback) => {
+        this._transitionCallbacks.add(callback);
+        onDispose(() => {
+          this._transitionCallbacks.delete(callback);
+        });
+      },
     });
   }
 
@@ -180,6 +189,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._trigger.set(null);
     this._content.set(null);
     this._menuObserver = null;
+    this._transitionCallbacks.clear();
   }
 
   private _observeSliders() {
@@ -277,12 +287,15 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
     this._focus._attachMenu(el);
     this._updateMenuItemsHidden(false);
 
+    const onTransition = this._onResizeTransition.bind(this);
+
     if (!this.isSubmenu) {
-      const onTransition = this._onResizeTransition.bind(this);
       items.listen('transitionstart', onTransition);
       items.listen('transitionend', onTransition);
       items.listen('animationend', this._onResize);
       items.listen('vds-menu-resize' as any, this._onResize);
+    } else {
+      this._parentMenu?._onTransitionEvent(onTransition);
     }
   }
 
@@ -375,11 +388,13 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
 
     this._focus._update();
 
-    if (this._wasKeyboardExpand) {
-      this._focus._focusActive();
-    } else {
-      this._focus._scroll();
-    }
+    requestAnimationFrame(() => {
+      if (this._wasKeyboardExpand) {
+        this._focus._focusActive();
+      } else {
+        this._focus._scroll();
+      }
+    });
   }
 
   private _isExpanded() {
@@ -532,11 +547,14 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   protected _isTransitionActive = false;
   protected _onResizeTransition(event: TransitionEvent) {
     const content = this._content();
+
     if (content && event.propertyName === 'height') {
       this._isTransitionActive = event.type === 'transitionstart';
       setAttribute(content, 'data-transition', this._isTransitionActive ? 'height' : null);
       if (this._expanded()) this._updateFocus();
     }
+
+    for (const callback of this._transitionCallbacks) callback(event);
   }
 
   /**

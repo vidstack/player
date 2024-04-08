@@ -867,5 +867,8 @@
   "_onEndPrecisionChange": "fp",
   "_setAudioGain": "gp",
   "_updateColorScheme": "hp",
-  "_pendingRemoval": "ip"
+  "_pendingRemoval": "ip",
+  "_onTransitionEvent": "lp",
+  "_transitionCallbacks": "jp",
+  "_validateKeyEvent": "kp"
 }

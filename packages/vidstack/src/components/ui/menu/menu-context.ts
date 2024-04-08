@@ -9,12 +9,14 @@ export interface MenuContext {
   readonly _expanded: ReadSignal<boolean>;
   readonly _hint: WriteSignal<string>;
   readonly _button: ReadSignal<HTMLElement | null>;
+  readonly _content: ReadSignal<HTMLElement | null>;
   _attachMenuButton(button: MenuButton): void;
   _attachMenuItems(menuItems: MenuItems): void;
   _attachObserver(observer: MenuObserver): void;
   _disable(disable: boolean): void;
   _disableMenuButton(disable: boolean): void;
   _addSubmenu(menu: Menu): void;
+  _onTransitionEvent(callback: (event: TransitionEvent) => void): void;
 }
 
 export interface MenuObserver {

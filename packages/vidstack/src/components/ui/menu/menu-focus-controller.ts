@@ -1,7 +1,8 @@
 import { onDispose } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { listenEvent, wasEnterKeyPressed } from 'maverick.js/std';
 
 import { isElementParent, isHTMLElement } from '../../../utils/dom';
+import { scrollIntoCenter } from '../../../utils/scroll';
 
 const FOCUSABLE_ELEMENTS_SELECTOR = /* #__PURE__*/ [
   'a[href]',
@@ -74,7 +75,12 @@ export class MenuFocusController {
     if (element) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          element.scrollIntoView({ block: 'center' });
+          scrollIntoCenter(element, {
+            behavior: 'smooth',
+            boundary: (el) => {
+              return !el.hasAttribute('data-root');
+            },
+          });
         });
       });
     }
@@ -109,16 +115,30 @@ export class MenuFocusController {
     this._focusActive();
   }
 
+  protected _validateKeyEvent(event: KeyboardEvent) {
+    const el = event.target;
+
+    if (wasEnterKeyPressed(event) && el instanceof Element) {
+      const role = el.getAttribute('role');
+      return !/a|input|select|button/.test(el.localName) && !role;
+    }
+
+    return VALID_KEYS.has(event.key);
+  }
+
   protected _onKeyUp(event: KeyboardEvent) {
-    if (!VALID_KEYS.has(event.key)) return;
+    if (!this._validateKeyEvent(event)) return;
+
     event.stopPropagation();
     event.preventDefault();
   }
 
   protected _onKeyDown(event: KeyboardEvent) {
-    if (!VALID_KEYS.has(event.key)) return;
+    if (!this._validateKeyEvent(event)) return;
+
     event.stopPropagation();
     event.preventDefault();
+
     switch (event.key) {
       case 'Escape':
         this._delegate._closeMenu(event);
