@@ -825,5 +825,8 @@
   "_parseContent": "to",
   "_switchAutoBitrate": "ro",
   "_setAudioGain": "Ao",
-  "_pendingRemoval": "Bo"
+  "_pendingRemoval": "Bo",
+  "_onTransitionEvent": "Eo",
+  "_transitionCallbacks": "Co",
+  "_validateKeyEvent": "Do"
 }
