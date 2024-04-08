@@ -166,6 +166,7 @@
   min-width: var(--media-menu-min-width, 280px);
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb-bg) var(--scrollbar-track-bg);
+  transform: translate3d(0, 0, 0);
 }
 
 :where(.vds-menu-items)::-webkit-scrollbar {
