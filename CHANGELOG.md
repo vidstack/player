@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.13-next](https://github.com/vidstack/player/releases/tag/v1.11.13-next) (2024-04-08)
+
+### ✨ Features
+
+#### Player
+
+- export core and globals from cdn entry ([02058f8](https://github.com/vidstack/player/commit/02058f83cea472f17360c15e9bf150429a505ff6))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- player constructor poster not styled correctly ([94a57c4](https://github.com/vidstack/player/commit/94a57c4b42a88e1f385d727e7825da42669a21bd))
+- menu items outside scroll not painting on safari ([c6d6a63](https://github.com/vidstack/player/commit/c6d6a631ff18aaa54ac143aaa9d7ee213e5d06ab))
+- menu scroll and focus improvements ([f435f2a](https://github.com/vidstack/player/commit/f435f2a6b4b66243e0f86b4a69b8681d5dc2a947))
+
 ## [1.11.12-next](https://github.com/vidstack/player/releases/tag/v1.11.12-next) (2024-04-07)
 
 ### 🐛 Bug Fixes
