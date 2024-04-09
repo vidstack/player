@@ -11,6 +11,7 @@ import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { canPlayAudioType, canPlayVideoType, IS_CHROME } from '../../utils/support';
 import type { DASHConstructor, DASHInstanceCallback } from './types';
+import { getLangName } from '../../utils/language';
 
 export type DashGetMediaTracks = (type: DASH.MediaType, manifest: object) => DASH.MediaInfo[];
 
@@ -30,7 +31,7 @@ export class DASHController {
   constructor(
     private _video: HTMLVideoElement,
     protected _ctx: MediaContext,
-  ) {}
+  ) { }
 
   setup(ctor: DASHConstructor) {
     this._instance = ctor().create();
@@ -140,6 +141,7 @@ export class DASHController {
           label:
             textTrackInfo?.label ??
             textTrackInfo.labels.find((t) => t.text)?.text ??
+            (textTrackInfo?.lang && getLangName(textTrackInfo.lang)) ??
             textTrackInfo?.lang ??
             undefined,
           language: textTrackInfo.lang ?? undefined,
@@ -253,10 +255,22 @@ export class DASHController {
       if (quality) this._ctx.qualities[ListSymbol._select](quality, true, trigger);
     }
 
-    audioTracks.forEach((audioTrack: DASH.MediaInfo & { label?: string | null }, index) => {
+    audioTracks.forEach((audioTrack: DASH.MediaInfo, index) => {
+      // Find the label object that matches the user's preferred languages
+      const matchingLabel = audioTrack.labels.find(label => {
+        return navigator.languages.some(language => {
+          return label.lang && language.toLowerCase().startsWith(label.lang.toLowerCase());
+        });
+      });
+
+      const label = matchingLabel || audioTrack.labels[0]
+
       const localTrack = {
         id: `dash-audio-${audioTrack?.index}`,
-        label: audioTrack.label ?? audioTrack.lang ?? '',
+        label: label?.text ??
+          (audioTrack.lang && getLangName(audioTrack.lang)) ??
+          audioTrack.lang ??
+          '',
         language: audioTrack.lang ?? '',
         kind: 'main',
         mimeType: audioTrack.mimeType,
@@ -277,7 +291,7 @@ export class DASHController {
       this._ctx.logger
         ?.errorGroup(`[vidstack] DASH error \`${data.message}\``)
         .labelledLog('Media Element', this._video)
-        .labelledLog('HLS Instance', this._instance)
+        .labelledLog('DASH Instance', this._instance)
         .labelledLog('Event Type', eventType)
         .labelledLog('Data', data)
         .labelledLog('Src', peek(this._ctx.$state.source))
