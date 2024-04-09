@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.15-next](https://github.com/vidstack/player/releases/tag/v1.11.15-next) (2024-04-09)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- update `media-icons` to `1.1.4@next` ([f2d33fd](https://github.com/vidstack/player/commit/f2d33fd2b7a3149e263abd3c2dcd41d4e14ebe61))
+
 ## [1.11.14-next](https://github.com/vidstack/player/releases/tag/v1.11.14-next) (2024-04-09)
 
 ### 🐛 Bug Fixes
