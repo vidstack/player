@@ -15,7 +15,7 @@
   text-shadow: none;
   transition: box-shadow 0.3s ease;
   border-radius: inherit;
-  z-index: 0;
+  z-index: 1;
 }
 
 [data-media-player][data-layout='plyr']:not([data-fullscreen]) {
