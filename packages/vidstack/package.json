@@ -62,7 +62,7 @@
     "just-throttle": "^4.2.0",
     "lit-html": "^2.7.4",
     "maverick.js": "0.41.5",
-    "media-icons": "^1.1.3",
+    "media-icons": "^1.1.4",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
     "rollup": "^4.0.0",
