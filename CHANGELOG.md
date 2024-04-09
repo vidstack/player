@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.16-next](https://github.com/vidstack/player/releases/tag/v1.11.16-next) (2024-04-09)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- blocker preventing hover interactions on plyr layout ([8057b11](https://github.com/vidstack/player/commit/8057b11d5dd71b517a42b7c630f15fe01e7d1176))
+
 ## [1.11.15-next](https://github.com/vidstack/player/releases/tag/v1.11.15-next) (2024-04-09)
 
 ### 🐛 Bug Fixes
