@@ -29,6 +29,7 @@ export class SlotObserver {
       slot.textContent = '';
       slot.append(template);
     } else {
+      render(null, slot);
       render(template, slot);
     }
 

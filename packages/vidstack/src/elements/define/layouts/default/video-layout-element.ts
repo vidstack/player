@@ -71,7 +71,7 @@ export class MediaVideoLayoutElement
   }
 
   render() {
-    return html`${$signal(this._render.bind(this))}`;
+    return $signal(this._render.bind(this));
   }
 
   private _render() {

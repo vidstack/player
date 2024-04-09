@@ -48,7 +48,7 @@ export class MediaPlyrLayoutElement extends Host(LitElement, PlyrLayout) impleme
   }
 
   render() {
-    return html`${$signal(this._render.bind(this))}`;
+    return $signal(this._render.bind(this));
   }
 
   private _render() {

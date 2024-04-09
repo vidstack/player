@@ -1,5 +1,4 @@
 import { type TemplateResult } from 'lit-html';
-import { onDispose } from 'maverick.js';
 
 import { SlotObserver } from '../slot-observer';
 
@@ -17,7 +16,6 @@ export abstract class IconsLoader {
 
   connect() {
     this.slots.connect();
-    onDispose(this.disconnect.bind(this));
   }
 
   load() {
@@ -26,12 +24,6 @@ export abstract class IconsLoader {
       this._loaded = true;
       this._insertIcons();
     });
-  }
-
-  disconnect() {
-    for (const { slot } of this._iterate()) {
-      slot.textContent = '';
-    }
   }
 
   abstract _load(): Promise<IconsRecord>;
