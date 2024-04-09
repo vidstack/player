@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.17-next](https://github.com/vidstack/player/releases/tag/v1.11.17-next) (2024-04-09)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- moving in dom throws ([4fc0acc](https://github.com/vidstack/player/commit/4fc0acc15bcc0d967fed534f04da204fc515a59e))
+
 ## [1.11.16-next](https://github.com/vidstack/player/releases/tag/v1.11.16-next) (2024-04-09)
 
 ### 🐛 Bug Fixes
