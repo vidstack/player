@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
 import * as eslexer from 'es-module-lexer';
-import { build } from 'esbuild';
+import { build, transform as esbuildTransform } from 'esbuild';
 import fsExtra from 'fs-extra';
 import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
@@ -231,9 +231,6 @@ function defineNPMBundle({ target, type, minify }) {
         platform: isServer ? 'node' : 'browser',
         minify: minify,
         legalComments: 'none',
-        mangleProps: shouldMangle ? /^_/ : undefined,
-        mangleCache: shouldMangle ? MANGLE_CACHE : undefined,
-        reserveProps: shouldMangle ? /^__/ : undefined,
         define: {
           __DEV__: !isProd && !isServer ? 'true' : 'false',
           __SERVER__: isServer ? 'true' : 'false',
@@ -241,6 +238,21 @@ function defineNPMBundle({ target, type, minify }) {
           __TEST__: 'false',
         },
       }),
+      shouldMangle && {
+        name: 'mangle',
+        async transform(code, id) {
+          if (id.includes('node_modules')) return null;
+          return (
+            await esbuildTransform(code, {
+              target: 'esnext',
+              platform: 'neutral',
+              mangleProps: /^_/,
+              mangleCache: MANGLE_CACHE,
+              reserveProps: /^__/,
+            })
+          ).code;
+        },
+      },
     ],
   };
 }
