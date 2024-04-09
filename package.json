@@ -1,6 +1,6 @@
 {
   "name": "vidstack-workspace",
-  "version": "1.11.13",
+  "version": "1.11.14",
   "private": true,
   "type": "module",
   "workspaces": [
