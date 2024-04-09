@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.14-next](https://github.com/vidstack/player/releases/tag/v1.11.14-next) (2024-04-09)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- improve dash track labels (#1243) ([3893637](https://github.com/vidstack/player/commit/38936377e3b87d6cd30006a05b800930bda15c38))
+- reset mangle cache ([6a46433](https://github.com/vidstack/player/commit/6a46433a493a9995829cd7d544e1b00de6a31da5))
+- cdn breaking due to node modules mangling ([7dc7588](https://github.com/vidstack/player/commit/7dc7588c486371ed63ce7fdacf88ba4093e44ff7))
+
 ## [1.11.13-next](https://github.com/vidstack/player/releases/tag/v1.11.13-next) (2024-04-08)
 
 ### ✨ Features
