@@ -275,7 +275,7 @@
   bottom: var(--video-large-fullscreen-captions-offset, 54px);
 }
 
-:where(media-player:not([data-user-idle]) media-community-skin[data-video] media-captions, ) {
+:where(media-player:not([data-user-idle]) media-community-skin[data-video] media-captions) {
   bottom: var(--video-captions-offset, 72px);
 }
 
@@ -397,7 +397,7 @@
 }
 
 :where(media-player:not([data-started]) media-community-skin[data-video][data-mobile])
-  :where([data-media-button] [data-media-slider], [part='time-group'], ) {
+  :where([data-media-button] [data-media-slider], [part='time-group']) {
   opacity: 0;
   visibility: hidden;
 }
