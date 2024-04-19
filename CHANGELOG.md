@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.18-next](https://github.com/vidstack/player/releases/tag/v1.11.18-next) (2024-04-19)
+
+### ✨ Features
+
+#### Player (React)
+
+- add default layout slots for settings submenus (#1246) ([0467f87](https://github.com/vidstack/player/commit/0467f87ec4b633bb83d6f718bf81443c9bf48b98))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- unknown warning on `media-icon` from bundler plugins ([b263650](https://github.com/vidstack/player/commit/b2636509ad363898347045c59cc38689fb2b4ae5))
+- exit fs and pip on destroy ([068f1fa](https://github.com/vidstack/player/commit/068f1facc08e0aaa4c74d85e210acbac0d5f671b))
+- prefer raf for scheduling jobs ([3d3a27a](https://github.com/vidstack/player/commit/3d3a27afe7970c54f60c4c1939743989938c3839))
+- destroy component instance ([7f830f3](https://github.com/vidstack/player/commit/7f830f30ce9570a8680225bfded0f5b8854a4835))
+- improve slider key handling ([a93c7e5](https://github.com/vidstack/player/commit/a93c7e57490f5ed7845f773a808223e905d682b2))
+
 ## [1.11.17-next](https://github.com/vidstack/player/releases/tag/v1.11.17-next) (2024-04-09)
 
 ### 🐛 Bug Fixes
