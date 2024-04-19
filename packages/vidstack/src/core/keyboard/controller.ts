@@ -252,7 +252,11 @@ export class MediaKeyboardController extends MediaPlayerController {
 
   private _seeking(event: KeyboardEvent, type: string, forward: boolean) {
     if (!this.$state.canSeek()) return;
-    if (!this._timeSlider) this._timeSlider = this.el!.querySelector('[data-media-time-slider]');
+
+    if (!this._timeSlider) {
+      this._timeSlider = this.el!.querySelector('[data-media-time-slider]');
+    }
+
     if (this._timeSlider) {
       this._forwardTimeKeyboardEvent(event, forward);
     } else {

@@ -9,11 +9,7 @@ import {
 } from 'maverick.js';
 import { animationFrameThrottle, ariaBool } from 'maverick.js/std';
 
-import {
-  useMediaContext,
-  useMediaState,
-  type MediaContext,
-} from '../../../../core/api/media-context';
+import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import { FocusVisibleController } from '../../../../foundation/observers/focus-visible';
 import { IntersectionObserverController } from '../../../../foundation/observers/intersection-observer';
 import { observeVisibility, setAttributeIfEmpty } from '../../../../utils/dom';

@@ -276,66 +276,79 @@ export class SliderEventsController extends ViewController<
   // -------------------------------------------------------------------------------------------
 
   private _lastDownKey!: string;
+  private _repeatedKeys = false;
+
   private _onKeyDown(event: KeyboardEvent) {
+    const isValidKey = Object.keys(SliderKeyDirection).includes(event.key);
+
+    if (!isValidKey) return;
+
     const { key } = event,
-      { min, max } = this.$state;
+      jumpValue = this._calcJumpValue(event);
 
-    let newValue: number | undefined;
-    if (key === 'Home' || key === 'PageUp') {
-      newValue = min();
-    } else if (key === 'End' || key === 'PageDown') {
-      newValue = max();
-    } else if (!event.metaKey && /^[0-9]$/.test(key)) {
-      newValue = ((max() - min()) / 10) * Number(key);
-    }
-
-    if (!isUndefined(newValue)) {
-      this._updatePointerValue(newValue, event);
-      this._updateValue(newValue, event);
+    if (!isNull(jumpValue)) {
+      this._updatePointerValue(jumpValue, event);
+      this._updateValue(jumpValue, event);
       return;
     }
 
-    const value = this._getKeyValue(event);
-    if (isUndefined(value)) return;
+    const newValue = this._calcNewKeyValue(event);
 
-    const repeat = key === this._lastDownKey;
-    if (!this.$state.dragging() && repeat) this._onStartDragging(value, event);
+    if (!this._repeatedKeys) {
+      this._repeatedKeys = key === this._lastDownKey;
+      if (!this.$state.dragging() && this._repeatedKeys) {
+        this._onStartDragging(newValue, event);
+      }
+    }
 
-    this._updatePointerValue(value, event);
-    if (!repeat) this._updateValue(value, event);
+    this._updatePointerValue(newValue, event);
 
     this._lastDownKey = key;
   }
 
   private _onKeyUp(event: KeyboardEvent) {
-    this._lastDownKey = '';
+    const isValidKey = Object.keys(SliderKeyDirection).includes(event.key);
+    if (!isValidKey || !isNull(this._calcJumpValue(event))) return;
 
-    const { dragging, value } = this.$state;
-    if (!dragging()) return;
-
-    const newValue = this._getKeyValue(event) ?? value();
-    this._updatePointerValue(newValue);
+    const newValue = this._repeatedKeys ? this.$state.pointerValue() : this._calcNewKeyValue(event);
+    this._updateValue(newValue, event);
     this._onStopDragging(newValue, event);
+
+    this._lastDownKey = '';
+    this._repeatedKeys = false;
   }
 
-  private _getKeyValue(event: KeyboardEvent) {
-    const { key, shiftKey } = event,
-      isValidKey = Object.keys(SliderKeyDirection).includes(key);
+  private _calcJumpValue(event: KeyboardEvent) {
+    let key = event.key,
+      { min, max } = this.$state;
 
-    if (!isValidKey) return;
+    if (key === 'Home' || key === 'PageUp') {
+      return min();
+    } else if (key === 'End' || key === 'PageDown') {
+      return max();
+    } else if (!event.metaKey && /^[0-9]$/.test(key)) {
+      return ((max() - min()) / 10) * Number(key);
+    }
+
+    return null;
+  }
+
+  private _calcNewKeyValue(event: KeyboardEvent) {
+    const { key, shiftKey } = event;
 
     event.preventDefault();
     event.stopPropagation();
 
     const { shiftKeyMultiplier } = this.$props;
-    const { value, min, max } = this.$state,
+    const { min, max, value, pointerValue } = this.$state,
       step = this._delegate._getStep(),
       keyStep = this._delegate._getKeyStep();
 
     const modifiedStep = !shiftKey ? keyStep : keyStep * shiftKeyMultiplier(),
       direction = Number(SliderKeyDirection[key]),
       diff = modifiedStep * direction,
-      steps = ((this._delegate._getValue?.() ?? value()) + diff) / step;
+      currentValue = this._repeatedKeys ? pointerValue() : this._delegate._getValue?.() ?? value(),
+      steps = (currentValue + diff) / step;
 
     return Math.max(min(), Math.min(max(), Number((step * steps).toFixed(3))));
   }
