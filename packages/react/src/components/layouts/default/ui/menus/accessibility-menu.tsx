@@ -24,7 +24,7 @@ function DefaultAccessibilityMenu({ slots }: DefaultAccessibilityMenuProps) {
     <Menu.Root className="vds-accessibility-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Accessibility} />
       <Menu.Content className="vds-menu-items">
-        {slot(slots, 'accessibilitySettingsMenuItemsStart', null)}
+        {slot(slots, 'accessibilityMenuItemsStart', null)}
 
         <DefaultMenuSection>
           <DefaultAnnouncementsMenuCheckbox />
@@ -35,7 +35,7 @@ function DefaultAccessibilityMenu({ slots }: DefaultAccessibilityMenuProps) {
           <DefaultFontMenu />
         </DefaultMenuSection>
 
-        {slot(slots, 'accessibilitySettingsMenuItemsEnd', null)}
+        {slot(slots, 'accessibilityMenuItemsEnd', null)}
       </Menu.Content>
     </Menu.Root>
   );

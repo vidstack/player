@@ -30,17 +30,17 @@ function DefaultPlaybackMenu({ slots }: DefaultPlaybackMenuProps) {
     <Menu.Root className="vds-accessibility-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Playback} />
       <Menu.Content className="vds-menu-items">
-        {slot(slots, 'playbackSettingsMenuItemsStart', null)}
+        {slot(slots, 'playbackMenuItemsStart', null)}
 
         <DefaultMenuSection>
-          {slot(slots, 'playbackSettingsMenuLoop', <DefaultLoopMenuCheckbox />)}
+          {slot(slots, 'playbackMenuLoop', <DefaultLoopMenuCheckbox />)}
         </DefaultMenuSection>
 
         <DefaultSpeedMenuSection />
 
         <DefaultQualityMenuSection />
 
-        {slot(slots, 'playbackSettingsMenuItemsEnd', null)}
+        {slot(slots, 'playbackMenuItemsEnd', null)}
       </Menu.Content>
     </Menu.Root>
   );

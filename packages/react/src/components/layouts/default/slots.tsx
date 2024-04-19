@@ -47,15 +47,19 @@ export type DefaultLayoutSlotName =
 export type DefaultLayoutMenuSlotName =
   | 'chaptersMenu'
   | 'settingsMenu'
+  /** @deprecated - use `settingsMenuItemsStart` */
+  | 'settingsMenuStartItems'
+  /** @deprecated - use `settingsMenuItemsEnd` */
+  | 'settingsMenuEndItems'
   | 'settingsMenuItemsStart'
   | 'settingsMenuItemsEnd'
-  | 'playbackSettingsMenuItemsStart'
-  | 'playbackSettingsMenuItemsEnd'
-  | 'playbackSettingsMenuLoop'
-  | 'accessibilitySettingsMenuItemsStart'
-  | 'accessibilitySettingsMenuItemsEnd'
-  | 'audioSettingsMenuItemsStart'
-  | 'audioSettingsMenuItemsEnd'
+  | 'playbackMenuItemsStart'
+  | 'playbackMenuItemsEnd'
+  | 'playbackMenuLoop'
+  | 'accessibilityMenuItemsStart'
+  | 'accessibilityMenuItemsEnd'
+  | 'audioMenuItemsStart'
+  | 'audioMenuItemsEnd'
   | 'captionsMenuItemsStart'
   | 'captionsMenuItemsEnd';
 

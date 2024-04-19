@@ -33,10 +33,10 @@ function DefaultAudioMenu({ slots }: DefaultAudioMenuProps) {
     <Menu.Root className="vds-audio-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Audio} />
       <Menu.Content className="vds-menu-items">
-        {slot(slots, 'audioSettingsMenuItemsStart', null)}
+        {slot(slots, 'audioMenuItemsStart', null)}
         <DefaultAudioTracksMenu />
         {hasGainSlider ? <DefaultAudioBoostMenuSection /> : null}
-        {slot(slots, 'audioSettingsMenuItemsEnd', null)}
+        {slot(slots, 'audioMenuItemsEnd', null)}
       </Menu.Content>
     </Menu.Root>
   );
