@@ -780,5 +780,8 @@
   "_watchVideoInfo": "_i",
   "_watchViewType": "Sh",
   "_watchVolume": "Gc",
-  "_watchWaiting": "Fn"
+  "_watchWaiting": "Fn",
+  "_calcJumpValue": "Ln",
+  "_calcNewKeyValue": "Mn",
+  "_repeatedKeys": "Kn"
 }
