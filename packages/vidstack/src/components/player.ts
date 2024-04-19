@@ -749,6 +749,7 @@ export class MediaPlayer
   }
 
   override destroy() {
+    super.destroy();
     this._media.remote.setPlayer(null);
     this.dispatch('destroy');
   }
