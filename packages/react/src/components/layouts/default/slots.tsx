@@ -47,8 +47,21 @@ export type DefaultLayoutSlotName =
 export type DefaultLayoutMenuSlotName =
   | 'chaptersMenu'
   | 'settingsMenu'
+  /** @deprecated - use `settingsMenuItemsStart` */
   | 'settingsMenuStartItems'
-  | 'settingsMenuEndItems';
+  /** @deprecated - use `settingsMenuItemsEnd` */
+  | 'settingsMenuEndItems'
+  | 'settingsMenuItemsStart'
+  | 'settingsMenuItemsEnd'
+  | 'playbackMenuItemsStart'
+  | 'playbackMenuItemsEnd'
+  | 'playbackMenuLoop'
+  | 'accessibilityMenuItemsStart'
+  | 'accessibilityMenuItemsEnd'
+  | 'audioMenuItemsStart'
+  | 'audioMenuItemsEnd'
+  | 'captionsMenuItemsStart'
+  | 'captionsMenuItemsEnd';
 
 export interface DefaultLayoutSlots extends Slots<DefaultLayoutSlotName> {}
 

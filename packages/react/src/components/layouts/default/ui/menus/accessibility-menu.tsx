@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useMediaState } from '../../../../../hooks/use-media-state';
 import * as Menu from '../../../../ui/menu';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
+import { slot, type DefaultLayoutMenuSlotName, type Slots } from '../../slots';
 import { DefaultFontMenu } from './font-menu';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
 import { DefaultMenuButton, DefaultMenuItem, DefaultMenuSection } from './items/menu-items';
@@ -11,7 +12,11 @@ import { DefaultMenuButton, DefaultMenuItem, DefaultMenuSection } from './items/
  * DefaultAccessibilityMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultAccessibilityMenu() {
+interface DefaultAccessibilityMenuProps {
+  slots?: Slots<DefaultLayoutMenuSlotName>;
+}
+
+function DefaultAccessibilityMenu({ slots }: DefaultAccessibilityMenuProps) {
   const label = useDefaultLayoutWord('Accessibility'),
     { icons: Icons } = useDefaultLayoutContext();
 
@@ -19,6 +24,8 @@ function DefaultAccessibilityMenu() {
     <Menu.Root className="vds-accessibility-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Accessibility} />
       <Menu.Content className="vds-menu-items">
+        {slot(slots, 'accessibilityMenuItemsStart', null)}
+
         <DefaultMenuSection>
           <DefaultAnnouncementsMenuCheckbox />
           <DefaultKeyboardAnimationsMenuCheckbox />
@@ -27,6 +34,8 @@ function DefaultAccessibilityMenu() {
         <DefaultMenuSection>
           <DefaultFontMenu />
         </DefaultMenuSection>
+
+        {slot(slots, 'accessibilityMenuItemsEnd', null)}
       </Menu.Content>
     </Menu.Root>
   );

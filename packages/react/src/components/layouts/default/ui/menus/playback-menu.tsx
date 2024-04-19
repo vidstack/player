@@ -9,6 +9,7 @@ import * as Menu from '../../../../ui/menu';
 import * as QualitySlider from '../../../../ui/sliders/quality-slider';
 import * as SpeedSlider from '../../../../ui/sliders/speed-slider';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
+import { slot, type DefaultLayoutMenuSlotName, type Slots } from '../../slots';
 import { DefaultMenuCheckbox } from './items/menu-checkbox';
 import { DefaultMenuButton, DefaultMenuItem, DefaultMenuSection } from './items/menu-items';
 import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from './items/menu-slider';
@@ -17,7 +18,11 @@ import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from '.
  * DefaultPlaybackMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultPlaybackMenu() {
+interface DefaultPlaybackMenuProps {
+  slots?: Slots<DefaultLayoutMenuSlotName>;
+}
+
+function DefaultPlaybackMenu({ slots }: DefaultPlaybackMenuProps) {
   const label = useDefaultLayoutWord('Playback'),
     { icons: Icons } = useDefaultLayoutContext();
 
@@ -25,13 +30,17 @@ function DefaultPlaybackMenu() {
     <Menu.Root className="vds-accessibility-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Playback} />
       <Menu.Content className="vds-menu-items">
+        {slot(slots, 'playbackMenuItemsStart', null)}
+
         <DefaultMenuSection>
-          <DefaultLoopMenuCheckbox />
+          {slot(slots, 'playbackMenuLoop', <DefaultLoopMenuCheckbox />)}
         </DefaultMenuSection>
 
         <DefaultSpeedMenuSection />
 
         <DefaultQualityMenuSection />
+
+        {slot(slots, 'playbackMenuItemsEnd', null)}
       </Menu.Content>
     </Menu.Root>
   );

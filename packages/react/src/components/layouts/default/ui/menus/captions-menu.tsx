@@ -3,13 +3,18 @@ import * as React from 'react';
 import { useCaptionOptions } from '../../../../../hooks/options/use-caption-options';
 import * as Menu from '../../../../ui/menu';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
+import { slot, type DefaultLayoutMenuSlotName, type Slots } from '../../slots';
 import { DefaultMenuButton } from './items/menu-items';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultCaptionMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultCaptionMenu() {
+interface DefaultCaptionMenuProps {
+  slots?: Slots<DefaultLayoutMenuSlotName>;
+}
+
+function DefaultCaptionMenu({ slots }: DefaultCaptionMenuProps) {
   const { icons: Icons } = useDefaultLayoutContext(),
     label = useDefaultLayoutWord('Captions'),
     offText = useDefaultLayoutWord('Off'),
@@ -27,6 +32,8 @@ function DefaultCaptionMenu() {
         Icon={Icons.Menu.Captions}
       />
       <Menu.Content className="vds-menu-items">
+        {slot(slots, 'captionsMenuItemsStart', null)}
+
         <Menu.RadioGroup
           className="vds-captions-radio-group vds-radio-group"
           value={options.selectedValue}
@@ -43,6 +50,8 @@ function DefaultCaptionMenu() {
             </Menu.Radio>
           ))}
         </Menu.RadioGroup>
+
+        {slot(slots, 'captionsMenuItemsEnd', null)}
       </Menu.Content>
     </Menu.Root>
   );

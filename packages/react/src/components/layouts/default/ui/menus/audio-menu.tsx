@@ -7,6 +7,7 @@ import { useMediaState } from '../../../../../hooks/use-media-state';
 import * as Menu from '../../../../ui/menu';
 import * as AudioGainSlider from '../../../../ui/sliders/audio-gain-slider';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
+import { slot, type DefaultLayoutMenuSlotName, type Slots } from '../../slots';
 import { DefaultMenuButton, DefaultMenuSection } from './items/menu-items';
 import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from './items/menu-slider';
 
@@ -14,7 +15,11 @@ import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from '.
  * DefaultAudioMenu
  * -----------------------------------------------------------------------------------------------*/
 
-function DefaultAudioMenu() {
+interface DefaultAudioMenuProps {
+  slots?: Slots<DefaultLayoutMenuSlotName>;
+}
+
+function DefaultAudioMenu({ slots }: DefaultAudioMenuProps) {
   const label = useDefaultLayoutWord('Audio'),
     $canSetAudioGain = useMediaState('canSetAudioGain'),
     $audioTracks = useMediaState('audioTracks'),
@@ -28,8 +33,10 @@ function DefaultAudioMenu() {
     <Menu.Root className="vds-audio-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Audio} />
       <Menu.Content className="vds-menu-items">
+        {slot(slots, 'audioMenuItemsStart', null)}
         <DefaultAudioTracksMenu />
         {hasGainSlider ? <DefaultAudioBoostMenuSection /> : null}
+        {slot(slots, 'audioMenuItemsEnd', null)}
       </Menu.Content>
     </Menu.Root>
   );
