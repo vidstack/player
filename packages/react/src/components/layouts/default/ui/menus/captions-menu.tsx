@@ -32,7 +32,7 @@ function DefaultCaptionMenu({ slots }: DefaultCaptionMenuProps) {
         Icon={Icons.Menu.Captions}
       />
       <Menu.Content className="vds-menu-items">
-        {slot(slots, 'captionsMenuStartItems', null)}
+        {slot(slots, 'captionsMenuItemsStart', null)}
 
         <Menu.RadioGroup
           className="vds-captions-radio-group vds-radio-group"
@@ -51,7 +51,7 @@ function DefaultCaptionMenu({ slots }: DefaultCaptionMenuProps) {
           ))}
         </Menu.RadioGroup>
 
-        {slot(slots, 'captionsMenuEndItems', null)}
+        {slot(slots, 'captionsMenuItemsEnd', null)}
       </Menu.Content>
     </Menu.Root>
   );

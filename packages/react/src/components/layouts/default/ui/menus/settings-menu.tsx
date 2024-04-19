@@ -59,12 +59,12 @@ function DefaultSettingsMenu({
     >
       {isOpen ? (
         <>
-          {slot(slots, 'settingsMenuStartItems', null)}
+          {slot(slots, 'settingsMenuItemsStart', null)}
           <DefaultPlaybackMenu slots={slots} />
           <DefaultAccessibilityMenu slots={slots} />
           <DefaultAudioMenu slots={slots} />
           <DefaultCaptionMenu slots={slots} />
-          {slot(slots, 'settingsMenuEndItems', null)}
+          {slot(slots, 'settingsMenuItemsEnd', null)}
         </>
       ) : null}
     </Menu.Content>
