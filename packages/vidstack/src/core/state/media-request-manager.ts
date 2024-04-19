@@ -73,6 +73,17 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   protected override onDestroy(): void {
+    try {
+      const destroyEvent = this.createEvent('destroy'),
+        { pictureInPicture, fullscreen } = this.$state;
+
+      if (fullscreen()) this._exitFullscreen('prefer-media', destroyEvent);
+
+      if (pictureInPicture()) this._exitPictureInPicture(destroyEvent);
+    } catch (e) {
+      // no-op
+    }
+
     this._providerQueue._reset();
   }
 

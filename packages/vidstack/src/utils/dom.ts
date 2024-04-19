@@ -53,7 +53,7 @@ const intervalJobs = new Set<() => void>();
 if (!__SERVER__) {
   window.setInterval(() => {
     for (const job of intervalJobs) job();
-  }, 1000);
+  }, 500);
 }
 
 export function scheduleIntervalJob(job: () => void) {
