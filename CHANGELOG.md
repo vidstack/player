@@ -1,3 +1,9 @@
+## [0.6.15](https://github.com/vidstack/player/compare/v0.6.14...v0.6.15) (2024-04-19)
+
+### Bug Fixes
+
+- remove unnecessary commas from styles ([#1259](https://github.com/vidstack/player/issues/1259)) ([6621a63](https://github.com/vidstack/player/commit/6621a63398e854af282e874b004a7f5575133239)), closes [#1258](https://github.com/vidstack/player/issues/1258)
+
 ## [0.6.14](https://github.com/vidstack/player/compare/v0.6.13...v0.6.14) (2023-11-02)
 
 ### Bug Fixes
