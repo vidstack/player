@@ -336,7 +336,7 @@ function generateElementImports(
 
     if (className) {
       elementClasses.add(className);
-    } else {
+    } else if (className !== 'media-icon') {
       console.warn(`[vidstack]: unknown media element was found \`${tagName}\``);
     }
   }
