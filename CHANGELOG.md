@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.19-next](https://github.com/vidstack/player/releases/tag/v1.11.19-next) (2024-04-22)
+
+### ✨ Features
+
+#### Player
+
+- `data-active` and `data-ended` slider chapter attrs ([dd8e445](https://github.com/vidstack/player/commit/dd8e445a13d4b5ecb2d5cd208f812a39b6e90f24))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- default theme padding breaks due to css resets ([cf9b193](https://github.com/vidstack/player/commit/cf9b193c4e2e95035b14f4ac84486590e9f74d81))
+- muted prop should take priority over storage ([7283344](https://github.com/vidstack/player/commit/7283344438cf3df3ad87ac4d61ffa4fe285bdb8f))
+- improve vite plugin hmr ([be19840](https://github.com/vidstack/player/commit/be198406c0753acea6ef82fa8ce701ab6dfd38be))
+- dash provider library types should accept namespace ([e7e5d65](https://github.com/vidstack/player/commit/e7e5d65f31960a4090250eda9931e7a8b2df58f8))
+- releasing slider should not trigger other elements ([5548a15](https://github.com/vidstack/player/commit/5548a157e65276bd9a4af012b05493a222988957))
+
 ## [1.11.18-next](https://github.com/vidstack/player/releases/tag/v1.11.18-next) (2024-04-19)
 
 ### ✨ Features
