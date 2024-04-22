@@ -89,7 +89,7 @@ export class MediaPlayerDelegate {
 
       if (provider) {
         provider.setVolume((await storage?.getVolume()) ?? volume());
-        provider.setMuted((await storage?.getMuted()) ?? muted());
+        provider.setMuted(muted() || !!(await storage?.getMuted()));
 
         const audioGain = (await storage?.getAudioGain()) ?? 1;
         if (audioGain > 1) provider.audioGain?.setGain?.(audioGain);
