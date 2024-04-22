@@ -20,7 +20,6 @@
   font-size: var(--media-time-font-size, 15px);
   font-weight: var(--media-time-font-weight, 400);
   font-family: var(--media-font-family, sans-serif);
-  padding: var(--media-time-padding, 2px);
   border-radius: var(--media-time-border-radius, 2px);
   letter-spacing: var(--media-time-letter-spacing, 0.025em);
 }
@@ -30,6 +29,7 @@
   color: var(--media-time-color, var(--default-color));
   background-color: var(--media-time-bg);
   border: var(--media-time-border);
+  padding: var(--media-time-padding, 2px);
 }
 
 :where(.vds-time:focus-visible) {

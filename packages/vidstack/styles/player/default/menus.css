@@ -245,7 +245,6 @@
 }
 
 :where(.vds-menu-items[data-root]) {
-  padding: var(--root-padding);
   background-color: var(--root-bg);
   border-radius: var(--root-border-radius);
   box-shadow: var(--media-menu-box-shadow);
@@ -266,6 +265,7 @@
 
 .vds-menu-items[data-root] {
   border: var(--root-border);
+  padding: var(--root-padding);
 }
 
 :where([data-view-type='video']) :where(.vds-menu-items[data-root]) {
@@ -416,7 +416,6 @@
   border-radius: var(--item-border-radius);
   box-sizing: border-box;
   min-height: var(--item-min-height);
-  padding: var(--item-padding);
   font-size: var(--font-size);
   outline: none;
 }
@@ -425,6 +424,7 @@
 .vds-radio {
   color: var(--text-color);
   background-color: var(--item-bg);
+  padding: var(--item-padding);
 }
 
 .vds-menu-item:focus-visible,
@@ -816,8 +816,11 @@
  */
 
 :where(.vds-chapters-menu-items) {
-  padding: var(--media-chapters-padding, 0);
   min-width: var(--media-chapters-min-width, var(--media-menu-min-width, 220px));
+}
+
+.vds-chapters-menu-items {
+  padding: var(--media-chapters-padding, 0);
 }
 
 :where(.vds-menu-items:has(.vds-chapters-radio-group[data-thumbnails])) {
@@ -826,11 +829,11 @@
 
 :where(.vds-chapter-radio) {
   border-radius: 0;
-  padding: var(--item-padding);
 }
 
 .vds-chapters-radio {
   border-bottom: var(--chapter-divider);
+  padding: var(--item-padding);
 }
 
 :where(.vds-chapter-radio:last-child) {
@@ -879,14 +882,17 @@
 
 :where(.vds-chapters-radio-group .vds-chapter-radio-start-time) {
   display: inline-block;
-  padding: var(--media-chapters-start-time-padding, 1px 4px);
   letter-spacing: var(--media-chapters-start-time-letter-spacing, 0.4px);
   border-radius: var(--media-chapters-start-time-border-radius, 2px);
-  color: var(--text-secondary-color);
   font-size: var(--chapter-time-font-size);
   font-weight: var(--chapter-time-font-weight);
-  background-color: var(--section-bg);
   margin-top: var(--chapter-time-gap);
+}
+
+.vds-chapters-radio-group .vds-chapter-radio-start-time {
+  color: var(--text-secondary-color);
+  background-color: var(--section-bg);
+  padding: var(--media-chapters-start-time-padding, 1px 4px);
 }
 
 :where(.vds-chapters-radio-group .vds-chapter-radio-duration) {
@@ -926,6 +932,6 @@
   flex-basis: 100%;
 }
 
-:where(.vds-menu-items[data-keyboard]) .vds-chapters-radio-group:focus-within {
+.vds-menu-items[data-keyboard] .vds-chapters-radio-group:focus-within {
   padding: var(--media-chapters-focus-padding, 4px);
 }

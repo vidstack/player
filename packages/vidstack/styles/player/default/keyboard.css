@@ -26,7 +26,6 @@
 
 :where(.vds-kb-text) {
   display: inline-block;
-  padding: var(--media-kb-text-padding, 10px 20px);
   font-size: var(--media-kb-text-size, 150%);
   font-family: var(--media-font-family, sans-serif);
   backdrop-filter: blur(2px);
@@ -37,6 +36,7 @@
 .vds-kb-text {
   color: var(--media-kb-text-color, var(--default-color));
   background-color: var(--media-kb-text-bg, var(--default-bg));
+  padding: var(--media-kb-text-padding, 10px 20px);
 }
 
 .light .vds-kb-text {

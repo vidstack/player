@@ -19,14 +19,14 @@
   white-space: nowrap;
   z-index: 10;
   will-change: transform, opacity;
-  border-radius: var(--media-tooltip-border-radius, 2px);
-  padding: var(--media-tooltip-padding, 2px 8px);
 }
 
 .vds-tooltip-content {
-  color: var(--media-tooltip-color, var(--default-color));
+  border-radius: var(--media-tooltip-border-radius, 2px);
   background-color: var(--media-tooltip-bg-color, var(--default-bg));
   border: var(--media-tooltip-border, var(--default-border));
+  color: var(--media-tooltip-color, var(--default-color));
+  padding: var(--media-tooltip-padding, 2px 8px);
 }
 
 .light .vds-tooltip-content {

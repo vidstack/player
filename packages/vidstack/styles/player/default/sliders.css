@@ -192,15 +192,12 @@
   transition: opacity 0.2s ease-in;
 }
 
-:where(.vds-slider-value) {
-  padding: var(--media-slider-value-padding, 1px 10px);
-  color: var(--media-slider-value-color, white);
+.vds-slider-value {
   background-color: var(--media-slider-value-bg, black);
   border-radius: var(--media-slider-value-border-radius, 2px);
-}
-
-.vds-slider-value {
   border: var(--media-slider-value-border);
+  color: var(--media-slider-value-color, white);
+  padding: var(--media-slider-value-padding, 1px 10px);
 }
 
 :where(

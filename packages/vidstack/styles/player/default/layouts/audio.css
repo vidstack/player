@@ -81,7 +81,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(.vds-audio-layout .vds-controls) {
+.vds-audio-layout .vds-controls {
   padding-inline: 6px;
   border-radius: var(--audio-border-radius, 6px);
 }

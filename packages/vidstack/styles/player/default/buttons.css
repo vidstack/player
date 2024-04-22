@@ -15,9 +15,7 @@
   background: none;
   outline: none;
   border: none;
-  padding: var(--media-button-padding, 0px);
   border-radius: var(--media-button-border-radius, 8px);
-  color: var(--media-button-color, var(--media-controls-color, #f5f5f5));
   width: var(--media-button-size, 40px);
   height: var(--media-button-size, 40px);
   transition: transform 0.2s ease-out;
@@ -31,6 +29,8 @@
 
 .vds-button {
   border: var(--media-button-border);
+  color: var(--media-button-color, var(--media-controls-color, #f5f5f5));
+  padding: var(--media-button-padding, 0px);
 }
 
 :where([data-fullscreen] .vds-button) {
@@ -113,15 +113,18 @@
 }
 
 :where(.vds-live-button-text) {
-  background-color: var(--media-live-button-bg, #8a8a8a);
-  border-radius: var(--media-live-button-border-radius, 2px);
-  color: var(--media-live-button-color, #161616);
   font-family: var(--media-font-family, sans-serif);
   font-size: var(--media-live-button-font-size, 12px);
   font-weight: var(--media-live-button-font-weight, 600);
   letter-spacing: var(--media-live-button-letter-spacing, 1.5px);
-  padding: var(--media-live-button-padding, 1px 4px);
   transition: color 0.3s ease;
+}
+
+.vds-live-button-text {
+  background-color: var(--media-live-button-bg, #8a8a8a);
+  border-radius: var(--media-live-button-border-radius, 2px);
+  color: var(--media-live-button-color, #161616);
+  padding: var(--media-live-button-padding, 1px 4px);
 }
 
 :where(.vds-live-button[data-focus] .vds-live-button-text) {
