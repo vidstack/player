@@ -142,7 +142,7 @@ export function onPress(
   handler: (event: PointerEvent | KeyboardEvent) => void,
 ) {
   listenEvent(target, 'pointerup', (event) => {
-    if (event.button === 0) handler(event);
+    if (event.button === 0 && !event.defaultPrevented) handler(event);
   });
   listenEvent(target, 'keydown', (event) => {
     if (isKeyboardClick(event)) handler(event);

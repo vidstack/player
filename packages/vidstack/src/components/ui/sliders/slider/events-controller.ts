@@ -149,7 +149,7 @@ export class SliderEventsController extends ViewController<
   private _attachPointerListeners() {
     if (this._delegate._isDisabled() || !this.$state.dragging()) return;
 
-    listenEvent(document, 'pointerup', this._onDocumentPointerUp.bind(this));
+    listenEvent(document, 'pointerup', this._onDocumentPointerUp.bind(this), { capture: true });
     listenEvent(document, 'pointermove', this._onDocumentPointerMove.bind(this));
     listenEvent(document, 'touchmove', this._onDocumentTouchMove.bind(this), {
       passive: false,
@@ -359,6 +359,10 @@ export class SliderEventsController extends ViewController<
 
   private _onDocumentPointerUp(event: PointerEvent) {
     if (event.button !== 0) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
     const value = this._getPointerValue(event);
     this._updatePointerValue(value, event);
     this._onStopDragging(value, event);
