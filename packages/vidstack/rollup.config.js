@@ -40,6 +40,8 @@ if (!MODE_TYPES) {
         await buildDefaultTheme();
       }
     });
+
+    fsExtra.copyFile('package.json', 'dist-npm/package.json');
   }
 }
 

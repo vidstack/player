@@ -352,7 +352,7 @@ function generateElementImports(
 }
 
 function diff(a: Set<any> | undefined, b: Set<any> | undefined, key: string) {
-  return a?.has(key) !== b?.has(key);
+  return !!a && !!b && a.has(key) && b.has(key);
 }
 
 function isSetsEqual(a: Set<any> | undefined, b: Set<any> | undefined): boolean {

@@ -40,6 +40,8 @@ if (!MODE_TYPES) {
     chokidar.watch('player/styles/**').on('all', (_, path) => {
       if (path !== 'player/styles/default/theme.css') buildDefaultTheme();
     });
+
+    fsExtra.copyFile('package.json', 'dist-npm/package.json');
   }
 }
 
