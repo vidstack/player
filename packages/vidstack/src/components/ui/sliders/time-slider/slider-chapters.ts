@@ -14,7 +14,7 @@ import {
   type ReadSignalRecord,
   type Scope,
 } from 'maverick.js';
-import { animationFrameThrottle, listenEvent } from 'maverick.js/std';
+import { animationFrameThrottle, listenEvent, setAttribute } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import { watchActiveTextTrack } from '../../../../core';
@@ -174,21 +174,21 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
         );
 
     if (isLiveEdge || !currentChapter) {
-      this._updateFillPercents(0, cues.length, '100%');
+      this._updateFillPercents(0, cues.length, 100);
     } else if (currentActiveIndex > prevActiveIndex) {
-      this._updateFillPercents(prevActiveIndex, currentActiveIndex, '100%');
+      this._updateFillPercents(prevActiveIndex, currentActiveIndex, 100);
     } else if (currentActiveIndex < prevActiveIndex) {
-      this._updateFillPercents(currentActiveIndex + 1, prevActiveIndex + 1, '0%');
+      this._updateFillPercents(currentActiveIndex + 1, prevActiveIndex + 1, 0);
     }
 
     const percent = isLiveEdge
-      ? '100%'
+      ? 100
       : this._calcPercent(
           cues[currentActiveIndex],
           fillPercent(),
           clipStartTime(),
           this._getEndTime(cues),
-        ) + '%';
+        );
 
     this._updateFillPercent(this._refs[currentActiveIndex], percent);
 
@@ -207,12 +207,17 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     this._activePointerIndex.set(activeIndex);
   }
 
-  private _updateFillPercents(start: number, end: number, percent: string) {
+  private _updateFillPercents(start: number, end: number, percent: number) {
     for (let i = start; i < end; i++) this._updateFillPercent(this._refs[i], percent);
   }
 
-  private _updateFillPercent(ref: HTMLElement | null, percent: string) {
-    ref && ref.style.setProperty('--chapter-fill', percent);
+  private _updateFillPercent(ref: HTMLElement | null, percent: number) {
+    if (!ref) return;
+
+    ref.style.setProperty('--chapter-fill', percent + '%');
+
+    setAttribute(ref, 'data-active', percent > 0 && percent < 100);
+    setAttribute(ref, 'data-ended', percent === 100);
   }
 
   private _findActiveChapterIndex(startIndex: number, percent: number) {
