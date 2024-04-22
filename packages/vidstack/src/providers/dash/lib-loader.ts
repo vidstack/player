@@ -3,7 +3,13 @@ import { DOMEvent, isFunction, isString, isUndefined } from 'maverick.js/std';
 import type { MediaContext } from '../../core/api/media-context';
 import { coerceToError } from '../../utils/error';
 import { loadScript } from '../../utils/network';
-import type { DASHConstructor, DASHConstructorLoader, DASHLibrary } from './types';
+import type {
+  DASHConstructor,
+  DASHConstructorLoader,
+  DASHLibrary,
+  DASHNamespace,
+  DASHNamespaceLoader,
+} from './types';
 
 interface LoadDASHConstructorCallbacks {
   onLoadStart?: () => void;
@@ -105,28 +111,38 @@ export class DASHLibLoader {
 }
 
 async function importDASH(
-  loader: DASHConstructor | DASHConstructorLoader | undefined,
+  loader: DASHConstructor | DASHConstructorLoader | DASHNamespace | DASHNamespaceLoader | undefined,
   callbacks: LoadDASHConstructorCallbacks = {},
 ) {
   if (isUndefined(loader)) return undefined;
 
   callbacks.onLoadStart?.();
 
-  // Must be static.
-  if (loader.prototype && loader.prototype !== Function) {
-    callbacks.onLoaded?.(loader as DASHConstructor);
-    return loader as DASHConstructor;
+  if (isDASHConstructor(loader)) {
+    callbacks.onLoaded?.(loader);
+    return loader;
+  }
+
+  if (isDASHNamespace(loader)) {
+    const ctor = loader.MediaPlayer;
+    callbacks.onLoaded?.(ctor);
+    return ctor;
   }
 
   try {
-    const ctor = (await (loader as DASHConstructorLoader)())?.default;
+    const ctor = (await loader())?.default;
+
+    if (isDASHNamespace(ctor)) {
+      callbacks.onLoaded?.(ctor.MediaPlayer);
+      return ctor.MediaPlayer;
+    }
 
     if (ctor) {
       callbacks.onLoaded?.(ctor);
     } else {
       throw Error(
         __DEV__
-          ? '[vidstack] failed importing `dash.js`. Dynamic import returned invalid constructor.'
+          ? '[vidstack] failed importing `dash.js`. Dynamic import returned invalid object.'
           : '',
       );
     }
@@ -172,4 +188,12 @@ async function loadDASHScript(
   }
 
   return undefined;
+}
+
+function isDASHConstructor(value: any): value is DASHConstructor {
+  return value && value.prototype && value.prototype !== Function;
+}
+
+function isDASHNamespace(value: any): value is DASHNamespace {
+  return value && 'MediaPlayer' in value;
 }
