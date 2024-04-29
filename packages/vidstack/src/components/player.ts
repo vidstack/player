@@ -194,7 +194,10 @@ export class MediaPlayer
       context,
     );
 
-    new NavigatorMediaSession();
+    if ('mediaSession' in navigator) {
+      new NavigatorMediaSession();
+    }
+
     new MediaLoadController('load', this.startLoading.bind(this));
     new MediaLoadController('posterLoad', this.startLoadingPoster.bind(this));
   }
