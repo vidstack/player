@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.21-next](https://github.com/vidstack/player/releases/tag/v1.11.21-next) (2024-04-29)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- media session check throwing during ssr ([963bb8c](https://github.com/vidstack/player/commit/963bb8cac00d9367316aab357717480484e26a36))
+
 ## [1.11.20-next](https://github.com/vidstack/player/releases/tag/v1.11.20-next) (2024-04-29)
 
 ### 🐛 Bug Fixes
