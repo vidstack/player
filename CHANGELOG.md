@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.20-next](https://github.com/vidstack/player/releases/tag/v1.11.20-next) (2024-04-29)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- check media session is supported (#1268) ([e6a3fb4](https://github.com/vidstack/player/commit/e6a3fb489ba6a7546638485b84d388f03cce52df))
+
 ## [1.11.19-next](https://github.com/vidstack/player/releases/tag/v1.11.19-next) (2024-04-22)
 
 ### ✨ Features
