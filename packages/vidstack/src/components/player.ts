@@ -194,7 +194,7 @@ export class MediaPlayer
       context,
     );
 
-    if ('mediaSession' in navigator) {
+    if (typeof navigator !== 'undefined' && 'mediaSession' in navigator) {
       new NavigatorMediaSession();
     }
 
