@@ -49,7 +49,7 @@ export class SliderValue extends Component<SliderValueProps> {
   getValueText() {
     const { type, format, decimalPlaces, padHours, padMinutes, showHours, showMs } = this.$props,
       { value: sliderValue, pointerValue, min, max } = this._slider,
-      _format = format() ?? this._format.default;
+      _format = format?.() ?? this._format.default;
 
     const value = type() === 'current' ? sliderValue() : pointerValue();
 
