@@ -557,7 +557,6 @@
   display: inline-block;
   width: var(--checkbox-width);
   height: var(--checkbox-height);
-  background-color: var(--checkbox-bg);
   border-radius: calc(var(--checkbox-height) / 2);
   transition: 0.3s all ease-in-out;
   box-sizing: border-box;
@@ -565,12 +564,16 @@
   pointer-events: auto;
 }
 
+.vds-menu-checkbox {
+  background-color: var(--checkbox-bg);
+}
+
 :where(.vds-menu-checkbox:focus-visible) {
   outline: none;
   box-shadow: var(--media-focus-ring);
 }
 
-:where(.vds-menu-checkbox[aria-checked='true']) {
+.vds-menu-checkbox[aria-checked='true'] {
   background-color: var(--checkbox-active-bg);
 }
 
@@ -579,7 +582,6 @@
   display: inline-block;
   width: var(--checkbox-diameter);
   height: var(--checkbox-diameter);
-  background-color: var(--checkbox-handle-bg);
   border-radius: calc(var(--checkbox-diameter) / 2);
   position: absolute;
   top: var(--checkbox-top);
@@ -587,6 +589,10 @@
   transition: 0.3s all ease-in-out;
   border: var(--checkbox-handle-border);
   box-sizing: border-box;
+}
+
+.vds-menu-checkbox::after {
+  background-color: var(--checkbox-handle-bg);
 }
 
 :where(.vds-menu-checkbox[aria-checked='true'])::after {
@@ -684,13 +690,13 @@
   flex-direction: column;
 }
 
-:where(.vds-radio) {
+.vds-radio {
   cursor: pointer;
   contain: content;
   padding-left: calc(var(--item-icon-size) + var(--item-padding));
 }
 
-:where(.vds-radio[aria-checked='true']) {
+.vds-radio[aria-checked='true'] {
   padding-left: 0;
 }
 
@@ -840,7 +846,7 @@
   border-bottom: 0;
 }
 
-:where(.vds-chapter-radio[aria-checked='true']) {
+.vds-chapter-radio[aria-checked='true'] {
   background-color: var(--chapter-active-bg);
   border-left: var(--chapter-active-border-left);
 }
@@ -852,6 +858,9 @@
   position: absolute;
   bottom: 0;
   left: 0;
+}
+
+.vds-chapter-radio[aria-checked='true']:after {
   border-radius: var(--media-chapters-progress-border-radius, 0);
   background-color: var(--chapter-progress-bg);
 }
@@ -897,11 +906,14 @@
 
 :where(.vds-chapters-radio-group .vds-chapter-radio-duration) {
   color: var(--text-hint-color);
-  background-color: var(--chapter-duration-bg);
   font-size: var(--chapter-time-font-size);
   font-weight: var(--chapter-time-font-weight);
-  border-radius: var(--media-chapters-duration-border-radius, 2px);
   margin-top: var(--chapter-time-gap);
+}
+
+.vds-chapters-radio-group .vds-chapter-radio-duration {
+  background-color: var(--chapter-duration-bg);
+  border-radius: var(--media-chapters-duration-border-radius, 2px);
 }
 
 .vds-chapters-radio-group:not([data-thumbnails]) :where(.vds-thumbnail, media-thumbnail) {
