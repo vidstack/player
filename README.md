@@ -25,6 +25,7 @@ layouts to get up and running quickly! See any of the following links to get sta
 
 **Resources:**
 
+- [Player Demo](https://www.vidstack.io/player/demo)
 - [Media Files](https://github.com/vidstack/media-files)
 - [Media Captions](https://github.com/vidstack/media-captions)
 - [Media Icons](https://www.vidstack.io/media-icons)
