@@ -27,7 +27,7 @@ function DefaultPlaybackMenu({ slots }: DefaultPlaybackMenuProps) {
     { icons: Icons } = useDefaultLayoutContext();
 
   return (
-    <Menu.Root className="vds-accessibility-menu vds-menu">
+    <Menu.Root className="vds-playback-menu vds-menu">
       <DefaultMenuButton label={label} Icon={Icons.Menu.Playback} />
       <Menu.Content className="vds-menu-items">
         {slot(slots, 'playbackMenuItemsStart', null)}
