@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.22-next](https://github.com/vidstack/player/releases/tag/v1.11.22-next) (2024-06-07)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- typeerror format not func ([a8be90b](https://github.com/vidstack/player/commit/a8be90b698ab3b74972c60b5702aa6f940bdd605))
+- css reset breaking some menu styles ([6306b13](https://github.com/vidstack/player/commit/6306b1317f02f5414559442b590a904de01421e8))
+- font settings should apply on load ([223bef3](https://github.com/vidstack/player/commit/223bef3754c5fce7a1aa62403be1f4fcb2f700c8))
+- autoplay breaks on safari ([b194d06](https://github.com/vidstack/player/commit/b194d060bc189b40837a17f6453f4716875560ba))
+- default load play button has incorrect color ([e0ebc2d](https://github.com/vidstack/player/commit/e0ebc2d074ca3032b0926455660ba10ff72139bf))
+- default live button at edge not red ([4b0e109](https://github.com/vidstack/player/commit/4b0e109bc0dc436ceeb906083bef88d9137b9544))
+- keyboard display should not show empty icons ([008141d](https://github.com/vidstack/player/commit/008141ded3766d8a3770715c40bd0dc6b83cc016))
+- video border radius cssvar should apply to controls ([bb19e05](https://github.com/vidstack/player/commit/bb19e05a1a1ac7082646bb3c8d8ae4916055585f))
+
+#### Player (React)
+
+- incorrect class on default playback menu ([28c7598](https://github.com/vidstack/player/commit/28c759825842b823aa970548e3dd51bcda96c4a6))
+
 ## [1.11.21-next](https://github.com/vidstack/player/releases/tag/v1.11.21-next) (2024-04-29)
 
 ### 🐛 Bug Fixes
