@@ -12,7 +12,7 @@ import type { DefaultKeyboardDisplayIcons } from '../icons';
 
 export interface DefaultKeyboardDisplayProps
   extends Omit<PrimitivePropsWithRef<'div'>, 'disabled'> {
-  icons: DefaultKeyboardDisplayIcons;
+  icons: Partial<DefaultKeyboardDisplayIcons>;
 }
 
 const DefaultKeyboardDisplay = React.forwardRef<HTMLElement, DefaultKeyboardDisplayProps>(
@@ -54,7 +54,7 @@ const DefaultKeyboardDisplay = React.forwardRef<HTMLElement, DefaultKeyboardDisp
       };
     }, [$lastKeyboardAction]);
 
-    return (
+    return Icon ? (
       <Primitive.div
         {...props}
         className={className}
@@ -65,14 +65,12 @@ const DefaultKeyboardDisplay = React.forwardRef<HTMLElement, DefaultKeyboardDisp
           <div className="vds-kb-text">{$text}</div>
         </div>
         <div className="vds-kb-bezel" key={count}>
-          {Icon ? (
-            <div className="vds-kb-icon">
-              <Icon />
-            </div>
-          ) : null}
+          <div className="vds-kb-icon">
+            <Icon />
+          </div>
         </div>
       </Primitive.div>
-    );
+    ) : null;
   },
 );
 
@@ -98,7 +96,7 @@ function getVolumeText(volume: number, gain: number) {
   return `${Math.round(volume * gain * 100)}%`;
 }
 
-function getIcon(Icons: DefaultKeyboardDisplayIcons) {
+function getIcon(Icons: Partial<DefaultKeyboardDisplayIcons>) {
   const { $state } = useContext(mediaContext),
     action = $state.lastKeyboardAction()?.action;
   switch (action) {

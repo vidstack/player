@@ -80,6 +80,10 @@
   pointer-events: none;
 }
 
+.vds-kb-bezel:not(:has(svg)) {
+  display: none !important;
+}
+
 .light .vds-kb-bezel {
   --default-bg: rgb(255 255 255 / 0.6);
 }

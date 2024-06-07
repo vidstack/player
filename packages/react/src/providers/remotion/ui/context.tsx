@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { noop } from 'maverick.js/std';
 import {
   Internals,
   type CompositionManagerContext,
@@ -59,6 +60,7 @@ export function RemotionContextProvider({
       unregisterFolder: () => undefined,
       registerComposition: () => undefined,
       unregisterComposition: () => undefined,
+      updateCompositionDefaultProps: noop,
       currentCompositionMetadata: null,
       setCurrentCompositionMetadata: () => undefined,
       canvasContent: { type: 'composition', compositionId: REMOTION_PROVIDER_ID },

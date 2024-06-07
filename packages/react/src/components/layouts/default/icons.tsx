@@ -221,5 +221,5 @@ export interface DefaultLayoutIcons {
   SeekButton: DefaultSeekButtonIcons;
   DownloadButton?: DefaultDownloadButtonIcons;
   Menu: DefaultMenuIcons;
-  KeyboardDisplay?: DefaultKeyboardDisplayIcons;
+  KeyboardDisplay?: Partial<DefaultKeyboardDisplayIcons>;
 }
