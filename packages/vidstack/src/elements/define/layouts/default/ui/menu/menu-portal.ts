@@ -21,7 +21,7 @@ export function createMenuContainer(layoutElement: Element, className: string, i
     container = document.createElement('div');
     container.style.display = 'contents';
     container.classList.add(className);
-    document.layoutElement.after(container);
+    layoutElement.after(container);
   }
 
   const { viewType } = useMediaState(),
