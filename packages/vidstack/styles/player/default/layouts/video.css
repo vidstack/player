@@ -419,11 +419,14 @@
 
   width: var(--size);
   height: var(--size);
-  border-radius: var(--video-load-button-border-radius, 100%);
-  color: var(--color);
   pointer-events: auto;
   margin-bottom: 2px;
   overflow: hidden;
+}
+
+.vds-video-layout .vds-load-container .vds-play-button {
+  border-radius: var(--video-load-button-border-radius, 100%);
+  color: var(--color);
 }
 
 .vds-video-layout .vds-load-container .vds-play-button {
