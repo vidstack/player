@@ -14,14 +14,14 @@ export function MenuPortal(container: HTMLElement | null, template: TemplateResu
   `;
 }
 
-export function createMenuContainer(className: string, isSmallLayout: ReadSignal<boolean>) {
+export function createMenuContainer(layoutElement: Element, className: string, isSmallLayout: ReadSignal<boolean>) {
   let container = document.querySelector<HTMLElement>(`body > .${className}`);
 
   if (!container) {
     container = document.createElement('div');
     container.style.display = 'contents';
     container.classList.add(className);
-    document.body.append(container);
+    document.layoutElement.after(container);
   }
 
   const { viewType } = useMediaState(),

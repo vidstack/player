@@ -50,7 +50,7 @@ export class MediaAudioLayoutElement
     this._media = useMediaContext();
 
     this.classList.add('vds-audio-layout');
-    this.menuContainer = createMenuContainer('vds-audio-layout', () => this.isSmallLayout);
+    this.menuContainer = createMenuContainer(this, 'vds-audio-layout', () => this.isSmallLayout);
 
     const { pointer } = this._media.$state;
     effect(() => {
