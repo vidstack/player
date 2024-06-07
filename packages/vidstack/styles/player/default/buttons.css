@@ -135,7 +135,7 @@
   cursor: unset;
 }
 
-:where(.vds-live-button[data-edge] .vds-live-button-text) {
+.vds-live-button[data-edge] .vds-live-button-text {
   background-color: var(--media-live-button-edge-bg, #dc2626);
   color: var(--media-live-button-edge-color, #f5f5f5);
 }
