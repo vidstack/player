@@ -209,6 +209,8 @@ export class HTMLMediaEvents {
   }
 
   private _onPlaying(event: Event) {
+    // This event can incorrectly fire on Safari.
+    if (this._media.paused) return;
     this._waiting = false;
     this._notify('playing', undefined, event);
     this._timeRAF._start();

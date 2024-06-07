@@ -145,6 +145,8 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     if (trigger) this._request._queue._enqueue('media-play-request', trigger);
 
+    const isAutoPlaying = peek(autoPlaying);
+
     try {
       const provider = peek(this._$provider);
       throwIfNotReadyForPlayback(provider, peek(canPlay));
@@ -157,7 +159,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
         trigger,
       });
 
-      errorEvent.autoPlay = autoPlaying();
+      errorEvent.autoPlay = isAutoPlaying;
 
       this._stateMgr._handle(errorEvent);
       throw error;
