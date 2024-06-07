@@ -28,3 +28,7 @@ export * from './quality/utils';
 export type * from './keyboard/types';
 export { MEDIA_KEY_SHORTCUTS } from './keyboard/controller';
 export { ARIAKeyShortcuts } from './keyboard/aria-shortcuts';
+
+// Font
+export * from './font/font-options';
+export { updateFontCssVars } from './font/font-vars';

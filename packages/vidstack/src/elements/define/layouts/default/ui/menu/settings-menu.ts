@@ -6,6 +6,7 @@ import { useDefaultLayoutContext } from '../../../../../../components/layouts/de
 import type { MenuPlacement } from '../../../../../../components/ui/menu/menu-items';
 import type { TooltipPlacement } from '../../../../../../components/ui/tooltip/tooltip-content';
 import { useMediaState } from '../../../../../../core/api/media-context';
+import { updateFontCssVars } from '../../../../../../core/font/font-vars';
 import { $signal } from '../../../../../lit/directives/signal';
 import { IconSlot } from '../../slots';
 import { $i18n } from '../utils';
@@ -41,6 +42,8 @@ export function DefaultSettingsMenu({
       ),
       $isOpen = signal(false);
 
+    updateFontCssVars();
+
     function onOpen() {
       $isOpen.set(true);
     }
@@ -56,7 +59,10 @@ export function DefaultSettingsMenu({
         offset=${$signal($offset)}
       >
         ${$signal(() => {
-          if (!$isOpen()) return null;
+          if (!$isOpen()) {
+            return null;
+          }
+
           return [
             DefaultPlaybackMenu(),
             DefaultAccessibilityMenu(),

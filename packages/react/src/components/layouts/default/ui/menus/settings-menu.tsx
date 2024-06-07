@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 import { flushSync } from 'react-dom';
+import { updateFontCssVars } from 'vidstack';
 
 import { useMediaState } from '../../../../../hooks/use-media-state';
+import { useScoped } from '../../../../../hooks/use-signals';
 import * as Menu from '../../../../ui/menu';
 import type * as Tooltip from '../../../../ui/tooltip';
 import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
@@ -40,6 +42,8 @@ function DefaultSettingsMenu({
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
     colorSchemeClass = useColorSchemeClass(colorScheme),
     [isOpen, setIsOpen] = React.useState(false);
+
+  useScoped(updateFontCssVars);
 
   function onOpen() {
     flushSync(() => {

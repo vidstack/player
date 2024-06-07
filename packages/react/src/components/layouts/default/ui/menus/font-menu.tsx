@@ -1,10 +1,22 @@
 import * as React from 'react';
 
-import type { DefaultLayoutTranslations } from 'vidstack';
+import { useSignal } from 'maverick.js/react';
+import { camelToKebabCase } from 'maverick.js/std';
+import {
+  FONT_COLOR_OPTION,
+  FONT_FAMILY_OPTION,
+  FONT_OPACITY_OPTION,
+  FONT_SIGNALS,
+  FONT_SIZE_OPTION,
+  FONT_TEXT_SHADOW_OPTION,
+  onFontReset,
+  type DefaultFontSettingProps,
+  type FontRadioOption,
+  type FontSliderOption,
+} from 'vidstack';
 
 import { useMediaPlayer } from '../../../../../hooks/use-media-player';
 import { useMediaState } from '../../../../../hooks/use-media-state';
-import type { MediaPlayerInstance } from '../../../../primitives/instances';
 import * as Menu from '../../../../ui/menu';
 import * as Slider from '../../../../ui/sliders/slider';
 import { i18n, useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
@@ -19,56 +31,12 @@ import {
 import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from './items/menu-slider';
 
 /* -------------------------------------------------------------------------------------------------
- * Options
- * -----------------------------------------------------------------------------------------------*/
-
-const COLOR_OPTION = {
-    type: 'color',
-  } as const,
-  FONT_FAMILY_OPTION = {
-    type: 'radio',
-    values: {
-      'Monospaced Serif': 'mono-serif',
-      'Proportional Serif': 'pro-serif',
-      'Monospaced Sans-Serif': 'mono-sans',
-      'Proportional Sans-Serif': 'pro-sans',
-      Casual: 'casual',
-      Cursive: 'cursive',
-      'Small Capitals': 'capitals',
-    },
-  } as const,
-  FONT_SIZE_OPTION = {
-    type: 'slider',
-    min: 0,
-    max: 400,
-    step: 25,
-  } as const,
-  OPACITY_OPTION = {
-    type: 'slider',
-    min: 0,
-    max: 100,
-    step: 5,
-  } as const,
-  TEXT_SHADOW_OPTION = {
-    type: 'radio',
-    values: ['None', 'Drop Shadow', 'Raised', 'Depressed', 'Outline'] as string[],
-  } as const;
-
-interface FontReset {
-  all: Set<() => void>;
-}
-
-const FontResetContext = React.createContext<FontReset>({ all: new Set() });
-FontResetContext.displayName = 'FontResetContext';
-
-/* -------------------------------------------------------------------------------------------------
  * DefaultFontMenu
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultFontMenu() {
   const label = useDefaultLayoutWord('Caption Styles'),
     $hasCaptions = useMediaState('hasCaptions'),
-    resets = React.useMemo<FontReset>(() => ({ all: new Set() }), []),
     fontSectionLabel = useDefaultLayoutWord('Font'),
     textSectionLabel = useDefaultLayoutWord('Text'),
     textBgSectionLabel = useDefaultLayoutWord('Text Background'),
@@ -77,37 +45,35 @@ function DefaultFontMenu() {
   if (!$hasCaptions) return null;
 
   return (
-    <FontResetContext.Provider value={resets}>
-      <Menu.Root className="vds-font-menu vds-menu">
-        <DefaultMenuButton label={label} />
-        <Menu.Content className="vds-font-style-items vds-menu-items">
-          <DefaultMenuSection label={fontSectionLabel}>
-            <DefaultFontFamilyMenu />
-            <DefaultFontSizeSlider />
-          </DefaultMenuSection>
+    <Menu.Root className="vds-font-menu vds-menu">
+      <DefaultMenuButton label={label} />
+      <Menu.Content className="vds-font-style-items vds-menu-items">
+        <DefaultMenuSection label={fontSectionLabel}>
+          <DefaultFontFamilyMenu />
+          <DefaultFontSizeSlider />
+        </DefaultMenuSection>
 
-          <DefaultMenuSection label={textSectionLabel}>
-            <DefaultTextColorInput />
-            <DefaultTextShadowMenu />
-            <DefaultTextOpacitySlider />
-          </DefaultMenuSection>
+        <DefaultMenuSection label={textSectionLabel}>
+          <DefaultTextColorInput />
+          <DefaultTextShadowMenu />
+          <DefaultTextOpacitySlider />
+        </DefaultMenuSection>
 
-          <DefaultMenuSection label={textBgSectionLabel}>
-            <DefaultTextBgInput />
-            <DefaultTextBgOpacitySlider />
-          </DefaultMenuSection>
+        <DefaultMenuSection label={textBgSectionLabel}>
+          <DefaultTextBgInput />
+          <DefaultTextBgOpacitySlider />
+        </DefaultMenuSection>
 
-          <DefaultMenuSection label={displayBgSectionLabel}>
-            <DefaultDisplayBgInput />
-            <DefaultDisplayBgOpacitySlider />
-          </DefaultMenuSection>
+        <DefaultMenuSection label={displayBgSectionLabel}>
+          <DefaultDisplayBgInput />
+          <DefaultDisplayBgOpacitySlider />
+        </DefaultMenuSection>
 
-          <DefaultMenuSection>
-            <DefaultResetMenuItem />
-          </DefaultMenuSection>
-        </Menu.Content>
-      </Menu.Root>
-    </FontResetContext.Provider>
+        <DefaultMenuSection>
+          <DefaultResetMenuItem />
+        </DefaultMenuSection>
+      </Menu.Content>
+    </Menu.Root>
   );
 }
 
@@ -119,22 +85,7 @@ export { DefaultFontMenu };
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultFontFamilyMenu() {
-  return (
-    <DefaultFontSetting
-      group="font"
-      label="Family"
-      option={FONT_FAMILY_OPTION}
-      defaultValue="pro-sans"
-      cssVarName="font-family"
-      getCssVarValue={getFontFamilyCSSVarValue}
-    />
-  );
-}
-
-function getFontFamilyCSSVarValue(value: string, player: MediaPlayerInstance) {
-  const fontVariant = value === 'capitals' ? 'small-caps' : '';
-  player.el?.style.setProperty('--media-user-font-variant', fontVariant);
-  return getFontFamily(value);
+  return <DefaultFontSetting label="Family" type="fontFamily" option={FONT_FAMILY_OPTION} />;
 }
 
 DefaultFontFamilyMenu.displayName = 'DefaultFontFamilyMenu';
@@ -144,21 +95,14 @@ DefaultFontFamilyMenu.displayName = 'DefaultFontFamilyMenu';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultFontSizeSlider() {
-  const { icons: Icons } = useDefaultLayoutContext();
-  return (
-    <DefaultFontSetting
-      group="font"
-      label="Size"
-      option={{
-        ...FONT_SIZE_OPTION,
-        UpIcon: Icons.Menu.FontSizeUp,
-        DownIcon: Icons.Menu.FontSizeDown,
-      }}
-      defaultValue="100%"
-      cssVarName="font-size"
-      getCssVarValue={percentToRatio}
-    />
-  );
+  const { icons: Icons } = useDefaultLayoutContext(),
+    option: FontSliderOption = {
+      ...FONT_SIZE_OPTION,
+      upIcon: Icons.Menu.FontSizeUp,
+      downIcon: Icons.Menu.FontSizeDown,
+    };
+
+  return <DefaultFontSetting label="Size" type="fontSize" option={option} />;
 }
 
 DefaultFontSizeSlider.displayName = 'DefaultFontSizeSlider';
@@ -168,18 +112,7 @@ DefaultFontSizeSlider.displayName = 'DefaultFontSizeSlider';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTextColorInput() {
-  return (
-    <DefaultFontSetting
-      group="text"
-      label="Color"
-      option={COLOR_OPTION}
-      defaultValue="#ffffff"
-      cssVarName="text-color"
-      getCssVarValue={(value) => {
-        return `rgb(${hexToRGB(value)} / var(--media-user-text-opacity, 1))`;
-      }}
-    />
-  );
+  return <DefaultFontSetting label="Color" type="textColor" option={FONT_COLOR_OPTION} />;
 }
 
 DefaultTextColorInput.displayName = 'DefaultTextColorInput';
@@ -189,21 +122,13 @@ DefaultTextColorInput.displayName = 'DefaultTextColorInput';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTextOpacitySlider() {
-  const { icons: Icons } = useDefaultLayoutContext();
-  return (
-    <DefaultFontSetting
-      group="text"
-      label="Opacity"
-      option={{
-        ...OPACITY_OPTION,
-        UpIcon: Icons.Menu.OpacityUp,
-        DownIcon: Icons.Menu.OpacityDown,
-      }}
-      defaultValue="100%"
-      cssVarName="text-opacity"
-      getCssVarValue={percentToRatio}
-    />
-  );
+  const { icons: Icons } = useDefaultLayoutContext(),
+    option = {
+      ...FONT_OPACITY_OPTION,
+      upIcon: Icons.Menu.OpacityUp,
+      downIcon: Icons.Menu.OpacityDown,
+    };
+  return <DefaultFontSetting label="Opacity" type="textOpacity" option={option} />;
 }
 
 DefaultTextOpacitySlider.displayName = 'DefaultTextOpacitySlider';
@@ -213,16 +138,7 @@ DefaultTextOpacitySlider.displayName = 'DefaultTextOpacitySlider';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTextShadowMenu() {
-  return (
-    <DefaultFontSetting
-      group="text"
-      label="Shadow"
-      option={TEXT_SHADOW_OPTION}
-      defaultValue="none"
-      cssVarName="text-shadow"
-      getCssVarValue={getTextShadowCssVarValue}
-    />
-  );
+  return <DefaultFontSetting label="Shadow" type="textShadow" option={FONT_TEXT_SHADOW_OPTION} />;
 }
 
 DefaultTextShadowMenu.displayName = 'DefaultTextShadowMenu';
@@ -232,18 +148,7 @@ DefaultTextShadowMenu.displayName = 'DefaultTextShadowMenu';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTextBgInput() {
-  return (
-    <DefaultFontSetting
-      group="text-bg"
-      label="Color"
-      option={COLOR_OPTION}
-      defaultValue="#000000"
-      cssVarName="text-bg"
-      getCssVarValue={(value) => {
-        return `rgb(${hexToRGB(value)} / var(--media-user-text-bg-opacity, 1))`;
-      }}
-    />
-  );
+  return <DefaultFontSetting label="Color" type="textBg" option={FONT_COLOR_OPTION} />;
 }
 
 DefaultTextBgInput.displayName = 'DefaultTextBgInput';
@@ -253,17 +158,14 @@ DefaultTextBgInput.displayName = 'DefaultTextBgInput';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultTextBgOpacitySlider() {
-  const { icons: Icons } = useDefaultLayoutContext();
-  return (
-    <DefaultFontSetting
-      group="text-bg"
-      label="Opacity"
-      option={{ ...OPACITY_OPTION, UpIcon: Icons.Menu.OpacityUp, DownIcon: Icons.Menu.OpacityDown }}
-      defaultValue="100%"
-      cssVarName="text-bg-opacity"
-      getCssVarValue={percentToRatio}
-    />
-  );
+  const { icons: Icons } = useDefaultLayoutContext(),
+    option = {
+      ...FONT_OPACITY_OPTION,
+      upIcon: Icons.Menu.OpacityUp,
+      downIcon: Icons.Menu.OpacityDown,
+    };
+
+  return <DefaultFontSetting label="Opacity" type="textBgOpacity" option={option} />;
 }
 
 DefaultTextBgOpacitySlider.displayName = 'DefaultTextBgOpacitySlider';
@@ -273,18 +175,7 @@ DefaultTextBgOpacitySlider.displayName = 'DefaultTextBgOpacitySlider';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultDisplayBgInput() {
-  return (
-    <DefaultFontSetting
-      group="display-bg"
-      label="Color"
-      option={COLOR_OPTION}
-      defaultValue="#000000"
-      cssVarName="display-bg"
-      getCssVarValue={(value) => {
-        return `rgb(${hexToRGB(value)} / var(--media-user-display-bg-opacity, 1))`;
-      }}
-    />
-  );
+  return <DefaultFontSetting label="Color" type="displayBg" option={FONT_COLOR_OPTION} />;
 }
 
 DefaultDisplayBgInput.displayName = 'DefaultDisplayBgInput';
@@ -294,21 +185,14 @@ DefaultDisplayBgInput.displayName = 'DefaultDisplayBgInput';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultDisplayBgOpacitySlider() {
-  const { icons: Icons } = useDefaultLayoutContext();
-  return (
-    <DefaultFontSetting
-      group="display-bg"
-      label="Opacity"
-      option={{
-        ...OPACITY_OPTION,
-        UpIcon: Icons.Menu.OpacityUp,
-        DownIcon: Icons.Menu.OpacityDown,
-      }}
-      defaultValue="0%"
-      cssVarName="display-bg-opacity"
-      getCssVarValue={percentToRatio}
-    />
-  );
+  const { icons: Icons } = useDefaultLayoutContext(),
+    option = {
+      ...FONT_OPACITY_OPTION,
+      upIcon: Icons.Menu.OpacityUp,
+      downIcon: Icons.Menu.OpacityDown,
+    };
+
+  return <DefaultFontSetting label="Opacity" type="displayBgOpacity" option={option} />;
 }
 
 DefaultDisplayBgOpacitySlider.displayName = 'DefaultDisplayBgOpacitySlider';
@@ -317,61 +201,11 @@ DefaultDisplayBgOpacitySlider.displayName = 'DefaultDisplayBgOpacitySlider';
  * DefaultFontSetting
  * -----------------------------------------------------------------------------------------------*/
 
-interface FontRadioOption {
-  type: 'radio';
-  values: string[] | Record<string, string>;
-}
-
-interface FontSliderOption {
-  type: 'slider';
-  min: number;
-  max: number;
-  step: number;
-  UpIcon?: DefaultLayoutIcon;
-  DownIcon?: DefaultLayoutIcon;
-}
-
-interface FontColorOption {
-  type: 'color';
-}
-
-type FontOption = FontRadioOption | FontSliderOption | FontColorOption;
-
-interface DefaultFontSettingProps {
-  group: string;
-  label: keyof DefaultLayoutTranslations;
-  option: FontOption;
-  cssVarName: string;
-  getCssVarValue?(value: string, player: MediaPlayerInstance): string;
-  defaultValue: string;
-}
-
-function DefaultFontSetting({
-  group,
-  label,
-  option,
-  cssVarName,
-  getCssVarValue,
-  defaultValue,
-}: DefaultFontSettingProps) {
+function DefaultFontSetting({ label, option, type }: DefaultFontSettingProps) {
   const player = useMediaPlayer(),
-    id = `${group}-${label.toLowerCase()}`,
-    translatedLabel = useDefaultLayoutWord(label),
-    resets = React.useContext(FontResetContext);
-
-  const [value, setValue] = React.useState(defaultValue);
-
-  const update = React.useCallback(
-    (newValue: string) => {
-      setValue(newValue);
-      localStorage.setItem(`vds-player:${id}`, newValue);
-      player?.el?.style.setProperty(
-        `--media-user-${cssVarName}`,
-        getCssVarValue?.(newValue, player) ?? newValue,
-      );
-    },
-    [player],
-  );
+    $currentValue = FONT_SIGNALS[type],
+    $value = useSignal($currentValue),
+    translatedLabel = useDefaultLayoutWord(label);
 
   const notify = React.useCallback(() => {
     player?.dispatchEvent(new Event('vds-font-change'));
@@ -379,25 +213,11 @@ function DefaultFontSetting({
 
   const onChange = React.useCallback(
     (newValue: string) => {
-      update(newValue);
+      $currentValue.set(newValue);
       notify();
     },
-    [update, notify],
+    [$currentValue, notify],
   );
-
-  const onReset = React.useCallback(() => {
-    onChange(defaultValue);
-  }, [onChange]);
-
-  React.useEffect(() => {
-    const savedValue = localStorage.getItem(`vds-player:${id}`);
-    if (savedValue) update(savedValue);
-  }, []);
-
-  React.useEffect(() => {
-    resets.all.add(onReset);
-    return () => void resets.all.delete(onReset);
-  }, [onReset]);
 
   if (option.type === 'color') {
     function onColorChange(event) {
@@ -406,13 +226,13 @@ function DefaultFontSetting({
 
     return (
       <DefaultMenuItem label={translatedLabel}>
-        <input className="vds-color-picker" type="color" value={value} onChange={onColorChange} />
+        <input className="vds-color-picker" type="color" value={$value} onChange={onColorChange} />
       </DefaultMenuItem>
     );
   }
 
   if (option.type === 'slider') {
-    const { min, max, step, UpIcon, DownIcon } = option;
+    const { min, max, step, upIcon, downIcon } = option;
 
     function onSliderValueChange(value) {
       onChange(value + '%');
@@ -421,11 +241,11 @@ function DefaultFontSetting({
     return (
       <DefaultMenuSliderItem
         label={translatedLabel}
-        value={value}
-        UpIcon={UpIcon}
-        DownIcon={DownIcon}
-        isMin={value === min + '%'}
-        isMax={value === max + '%'}
+        value={$value}
+        UpIcon={upIcon as DefaultLayoutIcon}
+        DownIcon={downIcon as DefaultLayoutIcon}
+        isMin={$value === min + '%'}
+        isMax={$value === max + '%'}
       >
         <Slider.Root
           className="vds-slider"
@@ -433,7 +253,7 @@ function DefaultFontSetting({
           max={max}
           step={step}
           keyStep={step}
-          value={parseInt(value)}
+          value={parseInt($value)}
           aria-label={translatedLabel}
           onValueChange={onSliderValueChange}
           onDragValueChange={onSliderValueChange}
@@ -448,9 +268,9 @@ function DefaultFontSetting({
   if (option.type === 'radio') {
     return (
       <DefaultFontRadioGroup
-        id={id}
+        id={camelToKebabCase(type)}
         label={translatedLabel}
-        value={value}
+        value={$value}
         values={option.values}
         onChange={onChange}
       />
@@ -499,66 +319,13 @@ DefaultFontRadioGroup.displayName = 'DefaultFontRadioGroup';
  * -----------------------------------------------------------------------------------------------*/
 
 function DefaultResetMenuItem() {
-  const resetText = useDefaultLayoutWord('Reset'),
-    resets = React.useContext(FontResetContext);
-
-  function onClick() {
-    resets.all.forEach((reset) => reset());
-  }
+  const resetText = useDefaultLayoutWord('Reset');
 
   return (
-    <button className="vds-menu-item" role="menuitem" onClick={onClick}>
+    <button className="vds-menu-item" role="menuitem" onClick={onFontReset}>
       <span className="vds-menu-item-label">{resetText}</span>
     </button>
   );
 }
 
 DefaultResetMenuItem.displayName = 'DefaultResetMenuItem';
-
-/* -------------------------------------------------------------------------------------------------
- * Utils
- * -----------------------------------------------------------------------------------------------*/
-
-function percentToRatio(value: string) {
-  return (parseInt(value) / 100).toString();
-}
-
-function hexToRGB(hex: string) {
-  const { style } = new Option();
-  style.color = hex;
-  return style.color.match(/\((.*?)\)/)![1].replace(/,/g, ' ');
-}
-
-function getFontFamily(value: string) {
-  switch (value) {
-    case 'mono-serif':
-      return '"Courier New", Courier, "Nimbus Mono L", "Cutive Mono", monospace';
-    case 'mono-sans':
-      return '"Deja Vu Sans Mono", "Lucida Console", Monaco, Consolas, "PT Mono", monospace';
-    case 'pro-sans':
-      return 'Roboto, "Arial Unicode Ms", Arial, Helvetica, Verdana, "PT Sans Caption", sans-serif';
-    case 'casual':
-      return '"Comic Sans MS", Impact, Handlee, fantasy';
-    case 'cursive':
-      return '"Monotype Corsiva", "URW Chancery L", "Apple Chancery", "Dancing Script", cursive';
-    case 'capitals':
-      return '"Arial Unicode Ms", Arial, Helvetica, Verdana, "Marcellus SC", sans-serif + font-variant=small-caps';
-    default:
-      return '"Times New Roman", Times, Georgia, Cambria, "PT Serif Caption", serif';
-  }
-}
-
-function getTextShadowCssVarValue(value: string) {
-  switch (value) {
-    case 'drop shadow':
-      return 'rgb(34, 34, 34) 1.86389px 1.86389px 2.79583px, rgb(34, 34, 34) 1.86389px 1.86389px 3.72778px, rgb(34, 34, 34) 1.86389px 1.86389px 4.65972px';
-    case 'raised':
-      return 'rgb(34, 34, 34) 1px 1px, rgb(34, 34, 34) 2px 2px';
-    case 'depressed':
-      return 'rgb(204, 204, 204) 1px 1px, rgb(34, 34, 34) -1px -1px';
-    case 'outline':
-      return 'rgb(34, 34, 34) 0px 0px 1.86389px, rgb(34, 34, 34) 0px 0px 1.86389px, rgb(34, 34, 34) 0px 0px 1.86389px, rgb(34, 34, 34) 0px 0px 1.86389px, rgb(34, 34, 34) 0px 0px 1.86389px';
-    default:
-      return '';
-  }
-}
