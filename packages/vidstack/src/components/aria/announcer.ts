@@ -105,9 +105,12 @@ export class MediaAnnouncer extends Component<
           const isForward = newTime >= this._startedSeekingAt,
             spokenTime = formatSpokenTime(seconds);
 
-          this._setLabel(
-            `${this._translate(isForward ? 'Seek Forward' : 'Seek Backward')} ${spokenTime}`,
-          );
+          // We are inside a setTimeout, there is a chance the component has been unmounted and the state set to null.
+          if (this.$state) {
+            this._setLabel(
+              `${this._translate(isForward ? 'Seek Forward' : 'Seek Backward')} ${spokenTime}`,
+            );
+          }
         }
 
         this._startedSeekingAt = -1;
