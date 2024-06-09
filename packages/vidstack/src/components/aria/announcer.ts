@@ -98,6 +98,9 @@ export class MediaAnnouncer extends Component<
     if (this._startedSeekingAt > 0) {
       window.clearTimeout(this._seekTimer);
       this._seekTimer = window.setTimeout(() => {
+        // Checking whether the component scope still exists (i.e., has it been destroyed?).
+        if (!this.scope) return;
+
         const newTime = peek(currentTime),
           seconds = Math.abs(newTime - this._startedSeekingAt);
 
@@ -105,12 +108,9 @@ export class MediaAnnouncer extends Component<
           const isForward = newTime >= this._startedSeekingAt,
             spokenTime = formatSpokenTime(seconds);
 
-          // We are inside a setTimeout, there is a chance the component has been unmounted and the state set to null.
-          if (this.$state) {
-            this._setLabel(
-              `${this._translate(isForward ? 'Seek Forward' : 'Seek Backward')} ${spokenTime}`,
-            );
-          }
+          this._setLabel(
+            `${this._translate(isForward ? 'Seek Forward' : 'Seek Backward')} ${spokenTime}`,
+          );
         }
 
         this._startedSeekingAt = -1;
