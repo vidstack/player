@@ -98,6 +98,8 @@ export class MediaAnnouncer extends Component<
     if (this._startedSeekingAt > 0) {
       window.clearTimeout(this._seekTimer);
       this._seekTimer = window.setTimeout(() => {
+        if (!this.scope) return;
+
         const newTime = peek(currentTime),
           seconds = Math.abs(newTime - this._startedSeekingAt);
 
