@@ -1,6 +1,7 @@
 import type { VimeoOEmbedData, VimeoVideoInfo } from './embed/misc';
 
-const videoIdRE = /(?:https:\/\/)?(?:player\.)?vimeo(?:\.com)?\/(?:video\/)?(\d+)(?:\?hash=(.*))?/;
+const videoIdRE =
+  /(?:https:\/\/)?(?:player\.)?vimeo(?:\.com)?\/(?:video\/)?(\d+)(?:(?:\?hash=|\?h=|\/)(.*))?/;
 
 const infoCache = new Map<string, VimeoVideoInfo>();
 
@@ -11,12 +12,19 @@ export function resolveVimeoVideoId(src: string) {
   return { videoId: matches?.[1], hash: matches?.[2] };
 }
 
-export async function getVimeoVideoInfo(videoId: string, abort: AbortController) {
+export async function getVimeoVideoInfo(
+  videoId: string,
+  abort: AbortController,
+  videoHash?: string | null,
+) {
   if (infoCache.has(videoId)) return infoCache.get(videoId)!;
 
   if (pendingFetch.has(videoId)) return pendingFetch.get(videoId);
 
-  const oembedSrc = `https://vimeo.com/api/oembed.json?url=https://player.vimeo.com/video/${videoId}`;
+  let oembedSrc = `https://vimeo.com/api/oembed.json?url=https://player.vimeo.com/video/${videoId}`;
+  if (videoHash) {
+    oembedSrc = oembedSrc.concat(`?h=${videoHash}`);
+  }
 
   const promise = window
     .fetch(oembedSrc, {

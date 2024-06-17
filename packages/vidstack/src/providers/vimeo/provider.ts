@@ -228,7 +228,7 @@ export class VimeoProvider
 
     this._videoInfoPromise = promise;
 
-    getVimeoVideoInfo(videoId, abort)
+    getVimeoVideoInfo(videoId, abort, this._hash)
       .then((info) => {
         promise.resolve(info);
       })
