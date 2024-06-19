@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.23-next](https://github.com/vidstack/player/releases/tag/v1.11.23-next) (2024-06-19)
+
+### ✨ Features
+
+#### Player
+
+- new `menuContainer` default layout prop ([0efc998](https://github.com/vidstack/player/commit/0efc9984ba74a023cd25c5533f74cd4330739a62))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- detect `flac` audio ext ([5359e80](https://github.com/vidstack/player/commit/5359e802012bfda3eaec7efd1f13c694496ae9ed))
+- announcer setting state after component is destroyed (#1303) ([0edf188](https://github.com/vidstack/player/commit/0edf18888be1fd0e448f5e518d2e362c0b480bbc))
+- improve unlisted vimeo video handling (#1315) ([5d5ae75](https://github.com/vidstack/player/commit/5d5ae75fcff47f40d3f8f79cc84e62e5dc92e569))
+- default chapter radio padding broken ([7e9a624](https://github.com/vidstack/player/commit/7e9a6241af78024d7ceec2020c10010cc2cb61d5))
+- `delegate` called on `undefined` error on provider destroy ([f968659](https://github.com/vidstack/player/commit/f96865972b61b1e5579d835d14f922c9cc8ba187))
+- maintain provided source order ([f583604](https://github.com/vidstack/player/commit/f583604ece59a19f649a57c904d41b58852950c7))
+
+#### Player (React)
+
+- audio layout end time slot not working ([a896970](https://github.com/vidstack/player/commit/a896970e319fc6acfb75b6e342940a2a5f580c36))
+- support `exactOptionalPropertyTypes` ([25d0831](https://github.com/vidstack/player/commit/25d08315ac2216cb2c3bb0d400cd0d514c548271))
+
 ## [1.11.22-next](https://github.com/vidstack/player/releases/tag/v1.11.22-next) (2024-06-07)
 
 ### 🐛 Bug Fixes
