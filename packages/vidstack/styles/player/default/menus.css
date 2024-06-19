@@ -837,9 +837,13 @@
   border-radius: 0;
 }
 
-.vds-chapters-radio {
+.vds-chapter-radio {
   border-bottom: var(--chapter-divider);
   padding: var(--item-padding);
+}
+
+.vds-chapter-radio[aria-checked='true'] {
+  padding-left: var(--item-padding);
 }
 
 :where(.vds-chapter-radio:last-child) {
