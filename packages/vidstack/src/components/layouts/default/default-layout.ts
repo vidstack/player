@@ -23,9 +23,6 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
   });
 
   @prop
-  menuContainer: HTMLElement | null = null;
-
-  @prop
   get isMatch() {
     return this._when();
   }
@@ -53,9 +50,7 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
       smallWhen: this._smallWhen,
       userPrefersAnnouncements: signal(true),
       userPrefersKeyboardAnimations: signal(true),
-      get menuContainer() {
-        return self.menuContainer;
-      },
+      menuPortal: signal<HTMLElement | null>(null),
     });
   }
 

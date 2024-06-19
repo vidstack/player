@@ -26,7 +26,7 @@ export function DefaultChaptersMenu({
     {
       translations,
       thumbnails,
-      menuContainer,
+      menuPortal,
       noModal,
       menuGroup,
       smallWhen: smWhen,
@@ -110,7 +110,7 @@ export function DefaultChaptersMenu({
           ${$i18n(translations, 'Chapters')}
         </media-tooltip-content>
       </media-tooltip>
-      ${portal ? MenuPortal(menuContainer, items) : items}
+      ${portal ? MenuPortal(menuPortal, items) : items}
     </media-menu>
   `;
 }

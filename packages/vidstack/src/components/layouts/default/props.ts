@@ -8,6 +8,7 @@ export const defaultLayoutProps: DefaultLayoutProps = {
   download: null,
   customIcons: false,
   disableTimeSlider: false,
+  menuContainer: null,
   menuGroup: 'bottom',
   noAudioGain: false,
   noGestures: false,
@@ -60,6 +61,11 @@ export interface DefaultLayoutProps {
    * Translation map from english to your desired language for words used throughout the layout.
    */
   translations: Partial<DefaultLayoutTranslations> | null;
+  /**
+   * A document query selector string or `HTMLElement` to mount the menu container inside. Defaults
+   * to `document.body` when set to `null`.
+   */
+  menuContainer: string | HTMLElement | null;
   /**
    * Specifies whether menu buttons should be placed in the top or bottom controls group. This
    * only applies to the large video layout.

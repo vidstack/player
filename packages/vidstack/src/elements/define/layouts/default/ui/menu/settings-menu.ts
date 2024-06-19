@@ -29,7 +29,7 @@ export function DefaultSettingsMenu({
     const { viewType } = useMediaState(),
       {
         translations,
-        menuContainer,
+        menuPortal,
         noModal,
         menuGroup,
         smallWhen: smWhen,
@@ -91,7 +91,7 @@ export function DefaultSettingsMenu({
             ${$i18n(translations, 'Settings')}
           </media-tooltip-content>
         </media-tooltip>
-        ${portal ? MenuPortal(menuContainer, items) : items}
+        ${portal ? MenuPortal(menuPortal, items) : items}
       </media-menu>
     `;
   });

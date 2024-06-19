@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { composeRefs, createReactComponent, type ReactElementProps } from 'maverick.js/react';
+import { isString } from 'maverick.js/std';
 import { createPortal } from 'react-dom';
 
 import { IS_SERVER } from '../../env';
@@ -109,14 +110,14 @@ Button.displayName = 'MenuButton';
  * Portal
  * -----------------------------------------------------------------------------------------------*/
 
-export interface PortalProps extends Omit<ReactElementProps<MenuPortalInstance>, 'container'> {
+export interface PortalProps extends ReactElementProps<MenuPortalInstance> {
   asChild?: boolean;
   children?: React.ReactNode;
   ref?: React.Ref<HTMLElement>;
 }
 
 /**
- * Portals menu items into the document body.
+ * Portals menu items into the given container.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/menu#portal}
  * @example
@@ -130,9 +131,18 @@ export interface PortalProps extends Omit<ReactElementProps<MenuPortalInstance>,
  * ```
  */
 const Portal = React.forwardRef<HTMLElement, PortalProps>(
-  ({ disabled = false, children, ...props }, forwardRef) => {
+  ({ container = null, disabled = false, children, ...props }, forwardRef) => {
     let fullscreen = useMediaState('fullscreen'),
       shouldPortal = disabled === 'fullscreen' ? !fullscreen : !disabled;
+
+    const target = React.useMemo(() => {
+      if (IS_SERVER) return null;
+
+      const node = isString(container) ? document.querySelector(container) : container;
+
+      return node ?? document.body;
+    }, [container]);
+
     return IS_SERVER || !shouldPortal
       ? children
       : createPortal(
@@ -143,7 +153,7 @@ const Portal = React.forwardRef<HTMLElement, PortalProps>(
           >
             {children}
           </Primitive.div>,
-          document.body,
+          target,
         );
   },
 );

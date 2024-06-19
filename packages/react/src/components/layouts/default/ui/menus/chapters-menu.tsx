@@ -25,6 +25,7 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass = '' }: DefaultMe
       isSmallLayout,
       icons: Icons,
       menuGroup,
+      menuContainer,
       colorScheme,
     } = useDefaultLayoutContext(),
     chaptersText = useDefaultLayoutWord('Chapters'),
@@ -111,6 +112,7 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass = '' }: DefaultMe
         Content
       ) : (
         <Menu.Portal
+          container={menuContainer}
           className={portalClass + (colorSchemeClass ? ` ${colorSchemeClass}` : '')}
           disabled="fullscreen"
           data-sm={isSmallLayout ? '' : null}

@@ -90,9 +90,9 @@ export class MenuPortal extends Component<MenuPortalProps> {
 export interface MenuPortalProps {
   /**
    * Specifies a DOM element or query selector for the container that the menu should be portalled
-   * inside.
+   * inside. Defaults to `document.body` when set to `null`.
    */
-  container: HTMLElement | string | null;
+  container: string | HTMLElement | null;
   /**
    * Whether the portal should be disabled. The value can be the string "fullscreen" to disable
    * portals while media is fullscreen. This is to ensure the menu remains visible.

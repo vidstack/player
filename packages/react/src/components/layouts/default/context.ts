@@ -8,7 +8,6 @@ export const DefaultLayoutContext = React.createContext<DefaultLayoutContext>({}
 DefaultLayoutContext.displayName = 'DefaultLayoutContext';
 
 interface DefaultLayoutContext extends DefaultLayoutProps {
-  menuContainer?: React.RefObject<HTMLElement | null>;
   isSmallLayout: boolean;
   userPrefersAnnouncements: WriteSignal<boolean>;
   userPrefersKeyboardAnimations: WriteSignal<boolean>;

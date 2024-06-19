@@ -1,7 +1,7 @@
-import { html } from 'lit-html';
-import { effect, onDispose } from 'maverick.js';
+import { effect } from 'maverick.js';
 import { Host, type Attributes } from 'maverick.js/element';
 
+import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import type { DefaultLayoutProps } from '../../../../components/layouts/default/props';
 import { DefaultVideoLayout } from '../../../../components/layouts/default/video-layout';
 import type { MediaContext } from '../../../../core';
@@ -52,26 +52,43 @@ export class MediaVideoLayoutElement
     this._media = useMediaContext();
 
     this.classList.add('vds-video-layout');
-    this.menuContainer = createMenuContainer('vds-video-layout', () => this.isSmallLayout);
-
-    onDispose(() => this.menuContainer?.remove());
   }
 
   protected onConnect() {
     setLayoutName('video', () => this.isMatch);
-
-    effect(() => {
-      const roots = this.menuContainer ? [this, this.menuContainer] : [this];
-      if (this.$props.customIcons()) {
-        new SlotManager(roots).connect();
-      } else {
-        new DefaultLayoutIconsLoader(roots).connect();
-      }
-    });
+    this._setupMenuContainer();
   }
 
   render() {
     return $signal(this._render.bind(this));
+  }
+
+  private _setupMenuContainer() {
+    const { menuPortal } = useDefaultLayoutContext();
+
+    effect(() => {
+      if (!this.isMatch) return;
+
+      const container = createMenuContainer(
+          this.menuContainer,
+          'vds-video-layout',
+          () => this.isSmallLayout,
+        ),
+        roots = container ? [this, container] : [this];
+
+      const iconsManager = this.$props.customIcons()
+        ? new SlotManager(roots)
+        : new DefaultLayoutIconsLoader(roots);
+
+      iconsManager.connect();
+
+      menuPortal.set(container);
+
+      return () => {
+        container.remove();
+        menuPortal.set(null);
+      };
+    });
   }
 
   private _render() {

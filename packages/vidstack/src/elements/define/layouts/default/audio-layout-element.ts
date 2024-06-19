@@ -1,9 +1,9 @@
-import { html } from 'lit-html';
-import { effect, onDispose, signal } from 'maverick.js';
+import { effect, signal } from 'maverick.js';
 import { Host, type Attributes } from 'maverick.js/element';
 import { listenEvent } from 'maverick.js/std';
 
 import { DefaultAudioLayout } from '../../../../components/layouts/default/audio-layout';
+import { useDefaultLayoutContext } from '../../../../components/layouts/default/context';
 import type { DefaultLayoutProps } from '../../../../components/layouts/default/props';
 import type { MediaContext } from '../../../../core';
 import { useMediaContext } from '../../../../core/api/media-context';
@@ -50,28 +50,13 @@ export class MediaAudioLayoutElement
     this._media = useMediaContext();
 
     this.classList.add('vds-audio-layout');
-    this.menuContainer = createMenuContainer('vds-audio-layout', () => this.isSmallLayout);
 
-    const { pointer } = this._media.$state;
-    effect(() => {
-      if (pointer() !== 'coarse') return;
-      effect(this._watchScrubbing.bind(this));
-    });
-
-    onDispose(() => this.menuContainer?.remove());
+    this._setupWatchScrubbing();
   }
 
   protected onConnect() {
     setLayoutName('audio', () => this.isMatch);
-
-    effect(() => {
-      const roots = this.menuContainer ? [this, this.menuContainer] : [this];
-      if (this.$props.customIcons()) {
-        new SlotManager(roots).connect();
-      } else {
-        new DefaultLayoutIconsLoader(roots).connect();
-      }
-    });
+    this._setupMenuContainer();
   }
 
   render() {
@@ -80,6 +65,42 @@ export class MediaAudioLayoutElement
 
   private _render() {
     return this.isMatch ? Layout() : null;
+  }
+
+  private _setupMenuContainer() {
+    const { menuPortal } = useDefaultLayoutContext();
+
+    effect(() => {
+      if (!this.isMatch) return;
+
+      const container = createMenuContainer(
+          this.menuContainer,
+          'vds-audio-layout',
+          () => this.isSmallLayout,
+        ),
+        roots = container ? [this, container] : [this];
+
+      const iconsManager = this.$props.customIcons()
+        ? new SlotManager(roots)
+        : new DefaultLayoutIconsLoader(roots);
+
+      iconsManager.connect();
+
+      menuPortal.set(container);
+
+      return () => {
+        container.remove();
+        menuPortal.set(null);
+      };
+    });
+  }
+
+  private _setupWatchScrubbing() {
+    const { pointer } = this._media.$state;
+    effect(() => {
+      if (pointer() !== 'coarse') return;
+      effect(this._watchScrubbing.bind(this));
+    });
   }
 
   private _watchScrubbing() {

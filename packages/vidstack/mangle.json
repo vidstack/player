@@ -782,5 +782,7 @@
   "_when": "cn",
   "_calcJumpValue": "Cn",
   "_calcNewKeyValue": "Dn",
-  "_repeatedKeys": "Bn"
+  "_repeatedKeys": "Bn",
+  "_setupMenuContainer": "En",
+  "_setupWatchScrubbing": "Fn"
 }

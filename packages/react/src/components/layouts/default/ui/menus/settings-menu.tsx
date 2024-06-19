@@ -33,6 +33,7 @@ function DefaultSettingsMenu({
       showMenuDelay,
       icons: Icons,
       isSmallLayout,
+      menuContainer,
       menuGroup,
       noModal,
       colorScheme,
@@ -93,6 +94,7 @@ function DefaultSettingsMenu({
       ) : (
         <Menu.Portal
           className={portalClass + (colorSchemeClass ? ` ${colorSchemeClass}` : '')}
+          container={menuContainer}
           disabled="fullscreen"
           data-sm={isSmallLayout ? '' : null}
           data-lg={!isSmallLayout ? '' : null}

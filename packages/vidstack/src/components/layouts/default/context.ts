@@ -3,7 +3,7 @@ import { createContext, useContext, type ReadSignalRecord, type WriteSignal } fr
 import type { DefaultLayoutProps } from './props';
 
 export interface DefaultLayoutContext extends ReadSignalRecord<DefaultLayoutProps> {
-  menuContainer: HTMLElement | null;
+  menuPortal: WriteSignal<HTMLElement | null>;
   userPrefersAnnouncements: WriteSignal<boolean>;
   userPrefersKeyboardAnimations: WriteSignal<boolean>;
 }
