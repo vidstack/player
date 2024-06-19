@@ -117,7 +117,7 @@ function AudioLayout() {
           {slot(slots, 'seekForwardButton', <DefaultSeekButton tooltip="top center" />)}
           <DefaultAudioTitle />
           {slot(slots, 'timeSlider', <DefaultTimeSlider />)}
-          <DefaultTimeInvert />
+          <DefaultTimeInvert slots={slots} />
           <DefaultVolumePopup orientation="vertical" tooltip="top" slots={slots} />
           {slot(slots, 'captionButton', <DefaultCaptionButton tooltip="top center" />)}
           {slot(slots, 'downloadButton', <DefaultDownloadButton />)}

@@ -59,6 +59,7 @@ export { DefaultTimeInfo };
 function DefaultTimeInvert({ slots }: { slots?: DefaultTimeInfoSlots }) {
   const $live = useMediaState('live'),
     $duration = useMediaState('duration');
+
   return $live
     ? slot(slots, 'liveButton', <DefaultLiveButton />)
     : slot(
