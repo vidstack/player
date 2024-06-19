@@ -78,6 +78,7 @@ export class SourceSelection {
 
       this._loader.set(loader);
       this._initialize = true;
+      break;
     }
   }
 
@@ -327,15 +328,13 @@ export class SourceSelection {
 }
 
 function normalizeSrc(src: MediaPlayerProps['src']): Src[] {
-  return (isArray(src) ? src : [src])
-    .map((src) => {
-      if (isString(src)) {
-        return { src, type: inferType(src) };
-      } else {
-        return { ...src, type: inferType(src.src, src.type) };
-      }
-    })
-    .sort((a) => (a.type === '?' ? 1 : -1));
+  return (isArray(src) ? src : [src]).map((src) => {
+    if (isString(src)) {
+      return { src, type: inferType(src) };
+    } else {
+      return { ...src, type: inferType(src.src, src.type) };
+    }
+  });
 }
 
 function inferType(src: unknown, type?: string) {
