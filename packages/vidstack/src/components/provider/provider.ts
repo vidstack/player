@@ -113,7 +113,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   private _destroyProvider() {
-    this._media.delegate._notify('provider-change', null);
+    this._media?.delegate._notify('provider-change', null);
   }
 
   private _onResize() {
