@@ -67,7 +67,8 @@ interface MediaOutletProps extends React.HTMLAttributes<HTMLMediaElement> {
 }
 
 function MediaOutlet({ provider, ...props }: MediaOutletProps) {
-  const { crossOrigin, poster, remotePlaybackInfo, nativeControls } = useStateContext(mediaState),
+  const { crossOrigin, poster, remotePlaybackInfo, nativeControls, viewType } =
+      useStateContext(mediaState),
     { loader } = provider.$state,
     { $provider: $$provider, $providerSetup: $$providerSetup } = useMediaContext(),
     $nativeControls = useSignal(nativeControls),
@@ -78,6 +79,8 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
     $providerSetup = useSignal($$providerSetup),
     $remoteInfo = useSignal(remotePlaybackInfo),
     $mediaType = $loader?.mediaType(),
+    $viewType = useSignal(viewType),
+    isAudioView = $viewType === 'audio',
     isYouTubeEmbed = $loader?.name === 'youtube',
     isVimeoEmbed = $loader?.name === 'vimeo',
     isEmbed = isYouTubeEmbed || isVimeoEmbed,
@@ -142,7 +145,9 @@ function MediaOutlet({ provider, ...props }: MediaOutletProps) {
             provider.load(el);
           },
         }),
-        !$nativeControls ? React.createElement('div', { className: 'vds-blocker' }) : null,
+        !$nativeControls && !isAudioView
+          ? React.createElement('div', { className: 'vds-blocker' })
+          : null,
       )
     : $mediaType
       ? React.createElement($mediaType === 'audio' ? 'audio' : 'video', {

@@ -1,4 +1,4 @@
-import { effect, onDispose } from 'maverick.js';
+import { effect, onDispose, peek, untrack } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../../api/media-context';
@@ -34,13 +34,13 @@ export class TextRenderers {
 
   add(renderer: TextRenderer) {
     this._renderers.push(renderer);
-    this._update();
+    untrack(this._update.bind(this));
   }
 
   remove(renderer: TextRenderer) {
     renderer.detach();
     this._renderers.splice(this._renderers.indexOf(renderer), 1);
-    this._update();
+    untrack(this._update.bind(this));
   }
 
   /** @internal */

@@ -784,5 +784,6 @@
   "_calcNewKeyValue": "Dn",
   "_repeatedKeys": "Bn",
   "_setupMenuContainer": "En",
-  "_setupWatchScrubbing": "Fn"
+  "_setupWatchScrubbing": "Fn",
+  "_listenToFontStyleChanges": "Gn"
 }

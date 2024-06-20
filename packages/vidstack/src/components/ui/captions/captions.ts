@@ -1,4 +1,4 @@
-import { Component, effect, peek, scoped } from 'maverick.js';
+import { Component, effect, peek, signal } from 'maverick.js';
 import { listenEvent, setAttribute } from 'maverick.js/std';
 import type { CaptionsRenderer } from 'media-captions';
 
@@ -33,9 +33,11 @@ export class Captions extends Component<CaptionsProps> {
   };
 
   private _media!: MediaContext;
-  private _renderer!: CaptionsRenderer;
-  private _textRenderer!: CaptionsTextRenderer;
-  private _lib!: typeof import('media-captions');
+
+  private static _lib = signal<typeof import('media-captions') | null>(null);
+  private get _lib() {
+    return Captions._lib;
+  }
 
   protected override onSetup(): void {
     this._media = useMediaContext();
@@ -49,45 +51,27 @@ export class Captions extends Component<CaptionsProps> {
   }
 
   protected override onConnect(el: HTMLElement) {
-    const player = this._media.player;
-    if (player) listenEvent(player, 'vds-font-change', this._onFontStyleChange.bind(this));
-
-    if (this._renderer) {
-      effect(this._watchViewType.bind(this));
-      return;
+    if (!this._lib()) {
+      import('media-captions').then((lib) => this._lib.set(lib));
     }
 
-    import('media-captions').then((lib) => {
-      if (!this.connectScope) return;
-      scoped(() => {
-        this._lib = lib;
-        const { CaptionsRenderer } = this._lib;
-        this._renderer = new CaptionsRenderer(el);
-        this._textRenderer = new CaptionsTextRenderer(this._renderer);
-        effect(this._watchViewType.bind(this));
-      }, this.connectScope);
-    });
-  }
-
-  protected override onDestroy() {
-    if (this._textRenderer) {
-      this._textRenderer.detach();
-      this._media.textRenderers.remove(this._textRenderer);
-    }
-
-    this._renderer?.destroy();
+    effect(this._watchViewType.bind(this));
   }
 
   private _isHidden() {
     const { textTrack, remotePlaybackState, iOSControls } = this._media.$state,
       track = textTrack();
+
     return (
       iOSControls() || remotePlaybackState() === 'connected' || !track || !isTrackCaptionKind(track)
     );
   }
 
   private _watchViewType() {
+    if (!this._lib()) return;
+
     const { viewType } = this._media.$state;
+
     if (viewType() === 'audio') {
       return this._setupAudioView();
     } else {
@@ -97,6 +81,9 @@ export class Captions extends Component<CaptionsProps> {
 
   private _setupAudioView() {
     effect(this._onTrackChange.bind(this));
+
+    this._listenToFontStyleChanges(null);
+
     return () => {
       this.el!.textContent = '';
     };
@@ -104,9 +91,12 @@ export class Captions extends Component<CaptionsProps> {
 
   private _onTrackChange() {
     if (this._isHidden()) return;
-    const { textTrack } = this._media.$state;
+
     this._onCueChange();
+
+    const { textTrack } = this._media.$state;
     listenEvent(textTrack()!, 'cue-change', this._onCueChange.bind(this));
+
     effect(this._onUpdateTimedNodes.bind(this));
   }
 
@@ -118,7 +108,7 @@ export class Captions extends Component<CaptionsProps> {
     }
 
     const { realCurrentTime, textTrack } = this._media.$state,
-      { renderVTTCueString } = this._lib,
+      { renderVTTCueString } = this._lib()!,
       time = peek(realCurrentTime),
       activeCues = peek(textTrack)!.activeCues;
 
@@ -135,37 +125,55 @@ export class Captions extends Component<CaptionsProps> {
 
   private _onUpdateTimedNodes() {
     const { realCurrentTime } = this._media.$state,
-      { updateTimedVTTCueNodes } = this._lib;
+      { updateTimedVTTCueNodes } = this._lib()!;
+
     updateTimedVTTCueNodes(this.el!, realCurrentTime());
   }
 
   private _setupVideoView() {
-    effect(this._watchTextDirection.bind(this));
-    effect(this._watchMediaTime.bind(this));
-    this._media.textRenderers.add(this._textRenderer);
+    const { CaptionsRenderer } = this._lib()!,
+      renderer = new CaptionsRenderer(this.el!),
+      textRenderer = new CaptionsTextRenderer(renderer);
+
+    this._media.textRenderers.add(textRenderer);
+
+    effect(this._watchTextDirection.bind(this, renderer));
+    effect(this._watchMediaTime.bind(this, renderer));
+
+    this._listenToFontStyleChanges(renderer);
+
     return () => {
       this.el!.textContent = '';
-      this._textRenderer.detach();
-      this._media.textRenderers.remove(this._textRenderer);
+      this._media.textRenderers.remove(textRenderer);
+      renderer.destroy();
     };
   }
 
-  private _watchTextDirection() {
-    this._renderer.dir = this.$props.textDir();
+  private _watchTextDirection(renderer: CaptionsRenderer) {
+    renderer.dir = this.$props.textDir();
   }
 
-  private _watchMediaTime() {
+  private _watchMediaTime(renderer: CaptionsRenderer) {
     if (this._isHidden()) return;
 
     const { realCurrentTime, textTrack } = this._media.$state;
-    this._renderer.currentTime = realCurrentTime();
+
+    renderer.currentTime = realCurrentTime();
 
     if (this._hideExampleTimer >= 0 && textTrack()?.activeCues[0]) {
       this._removeExample();
     }
   }
 
-  private _onFontStyleChange() {
+  private _listenToFontStyleChanges(renderer: CaptionsRenderer | null) {
+    const player = this._media.player;
+    if (!player) return;
+
+    const onChange = this._onFontStyleChange.bind(this, renderer);
+    listenEvent(player, 'vds-font-change', onChange);
+  }
+
+  private _onFontStyleChange(renderer: CaptionsRenderer | null) {
     if (this._hideExampleTimer >= 0) {
       this._hideExample();
       return;
@@ -176,7 +184,7 @@ export class Captions extends Component<CaptionsProps> {
     if (!textTrack()?.activeCues[0]) {
       this._showExample();
     } else {
-      this._renderer?.update(true);
+      renderer?.update(true);
     }
   }
 
