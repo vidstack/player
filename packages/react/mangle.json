@@ -783,5 +783,6 @@
   "_watchWaiting": "Fn",
   "_calcJumpValue": "Ln",
   "_calcNewKeyValue": "Mn",
-  "_repeatedKeys": "Kn"
+  "_repeatedKeys": "Kn",
+  "_listenToFontStyleChanges": "Nn"
 }
