@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.24-next](https://github.com/vidstack/player/releases/tag/v1.11.24-next) (2024-06-20)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- ignore key shortcut if invalid modifier pressed ([9608ad3](https://github.com/vidstack/player/commit/9608ad3e322f3cf1fac16d279c3b1bce52f4e6ea))
+
+#### Player (React)
+
+- captions component throws when switching view types ([471f314](https://github.com/vidstack/player/commit/471f31421baec77cc81d998fde0b0193463dd00c))
+
 ## [1.11.23-next](https://github.com/vidstack/player/releases/tag/v1.11.23-next) (2024-06-19)
 
 ### ✨ Features
