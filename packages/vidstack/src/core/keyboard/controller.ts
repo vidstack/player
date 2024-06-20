@@ -20,7 +20,7 @@ export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {
   slowDown: '<',
 };
 
-const MODIFIER_KEYS = new Set(['Shift', 'Alt', 'Meta', 'Control']),
+const MODIFIER_KEYS = new Set(['Shift', 'Alt', 'Meta', 'Ctrl']),
   BUTTON_SELECTORS = 'button, [role="button"]',
   IGNORE_SELECTORS =
     'input, textarea, select, [contenteditable], [role^="menuitem"], [role="timer"]';
@@ -208,15 +208,29 @@ export class MediaKeyboardController extends MediaPlayerController {
     const method = Object.keys(keyShortcuts).find((method) => {
       const value = keyShortcuts[method as keyof typeof keyShortcuts],
         keys = isArray(value) ? value.join(' ') : isString(value) ? value : value?.keys;
-      return (isArray(keys) ? keys : keys?.split(' '))?.some((keys) => {
-        return replaceSymbolKeys(keys)
+
+      const combinations = (isArray(keys) ? keys : keys?.split(' '))?.map((key) =>
+        replaceSymbolKeys(key)
           .replace(/Control/g, 'Ctrl')
-          .split('+')
-          .every((key) =>
-            MODIFIER_KEYS.has(key)
-              ? event[key.toLowerCase() + 'Key']
-              : event.key === key.replace('Space', ' '),
-          );
+          .split('+'),
+      );
+
+      return combinations?.some((combo) => {
+        const modifierKeys = new Set(combo.filter((key) => MODIFIER_KEYS.has(key)));
+
+        // Check whether a modifier key was pressed that's not part of this combination.
+        for (const modKey of MODIFIER_KEYS) {
+          const modKeyProp = modKey.toLowerCase() + 'Key';
+          if (!modifierKeys.has(modKey) && event[modKeyProp]) {
+            return false;
+          }
+        }
+
+        return combo.every((key) => {
+          return MODIFIER_KEYS.has(key)
+            ? event[key.toLowerCase() + 'Key']
+            : event.key === key.replace('Space', ' ');
+        });
       });
     });
 
