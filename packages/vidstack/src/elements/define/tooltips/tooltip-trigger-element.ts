@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { TooltipTrigger } from '../../../components';
+import { TooltipTrigger } from '../../../components/ui/tooltip/tooltip-trigger';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/tooltip}

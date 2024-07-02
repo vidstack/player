@@ -2,9 +2,10 @@ import { Component, method, onDispose, peek, signal, State, tick } from 'maveric
 import { animationFrameThrottle, isString, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
-import { TextTrack, type Src, type TextTrackInit } from '../../core';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
-import type { MediaProviderLoader } from '../../providers';
+import type { Src } from '../../core/api/src-types';
+import { TextTrack, type TextTrackInit } from '../../core/tracks/text/text-track';
+import type { MediaProviderLoader } from '../../providers/types';
 import { SourceSelection } from './source-select';
 import { Tracks } from './tracks';
 

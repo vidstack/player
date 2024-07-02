@@ -1,7 +1,7 @@
 import { effect, onDispose, scoped } from 'maverick.js';
 import { camelToKebabCase, keysOf } from 'maverick.js/std';
 
-import type { MediaPlayer } from '../../components';
+import type { MediaPlayer } from '../../components/player';
 import { hexToRgb } from '../../utils/color';
 import { useMediaContext } from '../api/media-context';
 import { FONT_DEFAULTS, FONT_SIGNALS, type FontSignal } from './font-options';

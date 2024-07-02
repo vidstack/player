@@ -2,5 +2,5 @@ import '../player';
 import '../player-ui';
 import '../../../global/player';
 
-export * from '../../../core/index';
+export * from '../../../exports/core';
 export * from '../../../global/player';

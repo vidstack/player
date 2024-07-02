@@ -24,7 +24,8 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['maverick.js', 'maverick.js/element', 'media-icons', 'media-captions'],
+    noDiscovery: true,
+    include: [],
   },
   // https://vitest.dev/config
   test: {

@@ -2,7 +2,7 @@ import { effect } from 'maverick.js';
 import { Host, type Attributes } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
-import { Thumbnail, type ThumbnailProps } from '../../components';
+import { Thumbnail, type ThumbnailProps } from '../../components/ui/thumbnails/thumbnail';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { cloneTemplateContent, createTemplate } from '../../utils/dom';
 

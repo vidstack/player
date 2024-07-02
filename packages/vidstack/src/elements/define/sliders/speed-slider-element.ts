@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { SpeedSlider } from '../../../components';
+import { SpeedSlider } from '../../../components/ui/sliders/speed-slider';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/speed-slider}

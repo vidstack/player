@@ -2,7 +2,8 @@ import { html, type TemplateResult } from 'lit-html';
 import { type ReadSignal } from 'maverick.js';
 import { isArray, isFunction, isString } from 'maverick.js/std';
 
-import type { RadioGroupChangeEvent, RadioOption } from '../../../../../../../components';
+import type { RadioOption } from '../../../../../../../components/ui/menu/radio/radio';
+import type { RadioGroupChangeEvent } from '../../../../../../../components/ui/menu/radio/radio-group';
 import { $signal } from '../../../../../../lit/directives/signal';
 import { IconSlot } from '../../../slots';
 

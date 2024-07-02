@@ -4,6 +4,7 @@
     "jsx": "preserve",
     "paths": {
       "vidstack": ["../vidstack/src"],
+      "vidstack/exports/*": ["../vidstack/src/exports/*"],
       "@vidstack/react": ["./src/index.ts"]
     },
     "types": ["@types/node"]

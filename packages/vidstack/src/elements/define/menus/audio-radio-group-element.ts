@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { AudioRadioGroup } from '../../../components';
+import { AudioRadioGroup } from '../../../components/ui/menu/radio-groups/audio-radio-group';
 import { renderMenuItemsTemplate } from './_template';
 
 /**

@@ -12,16 +12,13 @@ import {
   setStyle,
 } from 'maverick.js/std';
 
-import type { PlyrLayoutProps, PlyrLayoutTranslations } from '../components';
-import {
-  mediaState,
-  type MediaPlayerProps,
-  type MediaPlayerState,
-  type MediaViewType,
-  type PlayerSrc,
-  type TextTrackInit,
-} from '../core';
+import type { PlyrLayoutProps } from '../components/layouts/plyr/props';
+import type { PlyrLayoutTranslations } from '../components/layouts/plyr/translations';
 import type * as ME from '../core/api/media-events';
+import type { MediaPlayerProps, PlayerSrc } from '../core/api/player-props';
+import { mediaState, type MediaPlayerState } from '../core/api/player-state';
+import type { MediaViewType } from '../core/api/types';
+import type { TextTrackInit } from '../core/tracks/text/text-track';
 import type { MediaPlayerElement, MediaPlyrLayoutElement, MediaProviderElement } from '../elements';
 import type { LogLevel } from '../foundation/logger/log-level';
 import type { HTMLMediaProvider } from '../providers/html/provider';

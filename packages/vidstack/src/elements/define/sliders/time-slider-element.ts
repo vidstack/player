@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { TimeSlider } from '../../../components';
+import { TimeSlider } from '../../../components/ui/sliders/time-slider/time-slider';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/time-slider}

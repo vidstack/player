@@ -1,8 +1,8 @@
 import type { Scope } from 'maverick.js';
 
-import type { Src } from '../core';
 import type { MediaContext } from '../core/api/media-context';
 import type { MediaState } from '../core/api/player-state';
+import type { Src } from '../core/api/src-types';
 import type { MediaType } from '../core/api/types';
 import type { FullscreenAdapter } from '../foundation/fullscreen/controller';
 import type { AudioProvider } from './audio/provider';

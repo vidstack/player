@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { CaptionsRadioGroup } from '../../../components';
+import { CaptionsRadioGroup } from '../../../components/ui/menu/radio-groups/captions-radio-group';
 import { renderMenuItemsTemplate } from './_template';
 
 /**

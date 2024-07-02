@@ -1,4 +1,4 @@
-import type { MediaStreamType } from '../core';
+import type { MediaStreamType } from '../core/api/types';
 
 export function resolveStreamTypeFromDASHManifest(
   manifestSrc: string,

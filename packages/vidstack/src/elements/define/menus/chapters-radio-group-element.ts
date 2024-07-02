@@ -2,7 +2,10 @@ import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { isString } from 'maverick.js/std';
 
-import { ChaptersRadioGroup, type ChaptersRadioOption } from '../../../components';
+import {
+  ChaptersRadioGroup,
+  type ChaptersRadioOption,
+} from '../../../components/ui/menu/radio-groups/chapters-radio-group';
 import { renderMenuItemsTemplate } from './_template';
 
 /**

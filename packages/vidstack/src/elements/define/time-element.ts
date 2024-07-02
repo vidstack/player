@@ -1,7 +1,7 @@
 import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 
-import { Time } from '../../components';
+import { Time } from '../../components/ui/time';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/time}

@@ -2,7 +2,7 @@ import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
-import { SliderVideo } from '../../../components';
+import { SliderVideo } from '../../../components/ui/sliders/slider-video';
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { cloneTemplateContent, createTemplate } from '../../../utils/dom';
 

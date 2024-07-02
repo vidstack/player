@@ -1,4 +1,4 @@
-import type { DefaultLayoutProps } from '../../components';
+import type { DefaultLayoutProps } from '../../components/layouts/default/props';
 import type { VidstackPlayerLayoutLoader } from './loader';
 
 export class VidstackPlayerLayout implements VidstackPlayerLayoutLoader {

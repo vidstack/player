@@ -1,7 +1,7 @@
 import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 
-import { SliderChapters } from '../../../components';
+import { SliderChapters } from '../../../components/ui/sliders/time-slider/slider-chapters';
 import { cloneTemplate, requestScopedAnimationFrame } from '../../../utils/dom';
 
 /**

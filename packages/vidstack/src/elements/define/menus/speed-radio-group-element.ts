@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { SpeedRadioGroup } from '../../../components';
+import { SpeedRadioGroup } from '../../../components/ui/menu/radio-groups/speed-radio-group';
 import { renderMenuItemsTemplate } from './_template';
 
 /**

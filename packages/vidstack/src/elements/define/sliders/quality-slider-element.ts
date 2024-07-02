@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { QualitySlider } from '../../../components';
+import { QualitySlider } from '../../../components/ui/sliders/quality-slider';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/quality-slider}

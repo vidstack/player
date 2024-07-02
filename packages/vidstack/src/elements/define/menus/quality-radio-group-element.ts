@@ -1,7 +1,10 @@
 import { effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 
-import { QualityRadioGroup, type QualityRadioOption } from '../../../components';
+import {
+  QualityRadioGroup,
+  type QualityRadioOption,
+} from '../../../components/ui/menu/radio-groups/quality-radio-group';
 import { renderMenuItemsTemplate } from './_template';
 
 /**

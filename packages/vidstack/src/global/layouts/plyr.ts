@@ -1,4 +1,4 @@
-import type { PlyrLayoutProps } from '../../components';
+import type { PlyrLayoutProps } from '../../components/layouts/plyr/props';
 import type { VidstackPlayerLayoutLoader } from './loader';
 
 export class PlyrLayout implements VidstackPlayerLayoutLoader {

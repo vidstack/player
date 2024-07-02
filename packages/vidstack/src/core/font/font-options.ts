@@ -1,7 +1,7 @@
 import { signal, type WriteSignal } from 'maverick.js';
 import { camelToKebabCase, isString } from 'maverick.js/std';
 
-import type { DefaultLayoutTranslations } from '../../components';
+import type { DefaultLayoutTranslations } from '../../components/layouts/default/translations';
 
 export const FONT_COLOR_OPTION: FontOption = {
   type: 'color',

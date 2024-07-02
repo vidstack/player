@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { SeekButton } from '../../../components';
+import { SeekButton } from '../../../components/ui/buttons/seek-button';
 
 /**
  * @example

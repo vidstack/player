@@ -1,6 +1,6 @@
 import { scoped } from 'maverick.js';
 
-import type { MediaContext } from '../../core';
+import type { MediaContext } from '../../core/api/media-context';
 import { HTMLMediaProvider } from '../html/provider';
 import { HTMLAirPlayAdapter } from '../html/remote-playback';
 import type { MediaProviderAdapter, MediaRemotePlaybackAdapter } from '../types';

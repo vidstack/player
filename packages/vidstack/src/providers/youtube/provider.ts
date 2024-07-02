@@ -1,7 +1,9 @@
 import { createScope, effect, signal } from 'maverick.js';
 import { isBoolean, isNumber, isObject, isString, type DeferredPromise } from 'maverick.js/std';
 
-import { TimeRange, type MediaContext, type Src } from '../../core';
+import type { MediaContext } from '../../core/api/media-context';
+import type { Src } from '../../core/api/src-types';
+import { TimeRange } from '../../core/time-ranges';
 import { preconnect } from '../../utils/network';
 import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';

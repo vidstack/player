@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { Gesture } from '../../components';
+import { Gesture } from '../../components/ui/gesture';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/gesture}

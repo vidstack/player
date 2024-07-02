@@ -2,8 +2,8 @@ import { Component, computed, effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { isBoolean } from 'maverick.js/std';
 
-import { type MediaPlayerQuery } from '../../../core';
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
+import type { MediaPlayerQuery } from '../../../core/api/player-state';
 import { isHTMLElement } from '../../../utils/dom';
 
 class MediaLayout extends Component<MediaLayoutProps> {

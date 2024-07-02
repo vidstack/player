@@ -17,7 +17,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "analyze": "maverick analyze \"src/**/*.ts\"",
+    "analyze": "maverick analyze \"src/**/*.ts\" -p tsconfig.build.json",
     "dev": "pnpm clean && pnpm build:types && pnpm watch",
     "build": "rollup -c",
     "build:css": "node ./rollup.config.js --config-css",
@@ -38,11 +38,12 @@
     "watch:types": "pnpm run build:types -w"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.4.4",
     "media-captions": "^1.0.1",
+    "lit-html": "^2.7.4",
     "unplugin": "^1.10.1"
   },
   "devDependencies": {
-    "@floating-ui/dom": "^1.4.4",
     "@maverick-js/cli": "0.41.7",
     "@open-wc/semantic-dom-diff": "^0.20.0",
     "@open-wc/testing-helpers": "^3.0.0",
@@ -60,7 +61,6 @@
     "jsdom": "^21.0.0",
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
-    "lit-html": "^2.7.4",
     "maverick.js": "0.41.7",
     "media-icons": "^1.1.4",
     "postcss": "^8.4.0",

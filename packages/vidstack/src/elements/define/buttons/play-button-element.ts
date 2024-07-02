@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { PlayButton } from '../../../components';
+import { PlayButton } from '../../../components/ui/buttons/play-button';
 
 /**
  * @example

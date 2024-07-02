@@ -28,6 +28,7 @@
     "react": "^18.0.0"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.4.4",
     "media-captions": "^1.0.1"
   },
   "devDependencies": {

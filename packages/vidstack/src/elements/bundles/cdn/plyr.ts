@@ -2,5 +2,5 @@ import '../player';
 import '../player-layouts/plyr';
 import '../../../global/plyr';
 
-export * from '../../../core/index';
+export * from '../../../exports/core';
 export * from '../../../global/plyr';

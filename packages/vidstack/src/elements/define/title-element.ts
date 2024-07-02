@@ -1,8 +1,7 @@
 import { Component, effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 
-import { type MediaContext } from '../../core';
-import { useMediaContext } from '../../core/api/media-context';
+import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 
 class Title extends Component {}
 

@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { Radio } from '../../../components';
+import { Radio } from '../../../components/ui/menu/radio/radio';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/radio}

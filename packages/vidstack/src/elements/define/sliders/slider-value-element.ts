@@ -1,7 +1,7 @@
 import { effect } from 'maverick.js';
 import { BOOLEAN, Host, type Attributes } from 'maverick.js/element';
 
-import { SliderValue, type SliderValueProps } from '../../../components';
+import { SliderValue, type SliderValueProps } from '../../../components/ui/sliders/slider-value';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/slider-value}

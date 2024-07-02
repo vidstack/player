@@ -1,6 +1,6 @@
 import { effect, useState, type StateContext } from 'maverick.js';
 
-import { Slider } from '../../../components';
+import { Slider } from '../../../components/ui/sliders/slider/slider';
 import { MediaThumbnailElement } from '../thumbnail-element';
 
 /**

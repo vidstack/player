@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { FullscreenButton } from '../../../components';
+import { FullscreenButton } from '../../../components/ui/buttons/fullscreen-button';
 
 /**
  * @example

@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { MenuItem } from '../../../components';
+import { MenuItem } from '../../../components/ui/menu/menu-item';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/menu}

@@ -1,4 +1,4 @@
-import type { Src } from '../../core';
+import type { Src } from '../../core/api/src-types';
 import { isHLSSrc } from '../../utils/mime';
 import { isHLSSupported } from '../../utils/support';
 import type { MediaProviderLoader } from '../types';

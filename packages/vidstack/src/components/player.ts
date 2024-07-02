@@ -21,28 +21,23 @@ import {
   uppercaseFirstChar,
 } from 'maverick.js/std';
 
-import {
-  AudioTrackList,
-  isTrackCaptionKind,
-  MediaControls,
-  MediaRemoteControl,
-  mediaState,
-  TextRenderers,
-  TextTrackList,
-  VideoQualityList,
-  type FindMediaPlayerEvent,
-  type MediaFullscreenRequestTarget,
-  type MediaPlayerConnectEvent,
-  type MediaPlayerEvents,
-  type MediaPlayerProps,
-  type MediaPlayerState,
-  type MediaStateAccessors,
-  type MediaStore,
-} from '../core';
 import { MEDIA_ATTRIBUTES, mediaAttributes } from '../core/api/media-attrs';
 import { mediaContext, type MediaContext } from '../core/api/media-context';
-import { mediaPlayerProps } from '../core/api/player-props';
+import type { MediaFullscreenRequestTarget } from '../core/api/media-request-events';
+import type {
+  FindMediaPlayerEvent,
+  MediaPlayerConnectEvent,
+  MediaPlayerEvents,
+} from '../core/api/player-events';
+import {
+  mediaPlayerProps,
+  type MediaPlayerProps,
+  type MediaStateAccessors,
+} from '../core/api/player-props';
+import { mediaState, type MediaPlayerState, type MediaStore } from '../core/api/player-state';
+import type { MediaControls } from '../core/controls';
 import { MediaKeyboardController } from '../core/keyboard/controller';
+import { VideoQualityList } from '../core/quality/video-quality';
 import { MediaEventsLogger } from '../core/state/media-events-logger';
 import { MediaLoadController } from '../core/state/media-load-controller';
 import { MediaPlayerDelegate } from '../core/state/media-player-delegate';
@@ -51,14 +46,18 @@ import { MediaStateManager } from '../core/state/media-state-manager';
 import { MediaStateSync } from '../core/state/media-state-sync';
 import { LocalMediaStorage, type MediaStorage } from '../core/state/media-storage';
 import { NavigatorMediaSession } from '../core/state/navigator-media-session';
+import { MediaRemoteControl } from '../core/state/remote-control';
+import { AudioTrackList } from '../core/tracks/audio-tracks';
+import { TextRenderers } from '../core/tracks/text/render/text-renderer';
 import { TextTrackSymbol } from '../core/tracks/text/symbols';
-import { canFullscreen } from '../foundation/fullscreen/controller';
+import { isTrackCaptionKind } from '../core/tracks/text/text-track';
+import { TextTrackList } from '../core/tracks/text/text-tracks';
 import { Logger } from '../foundation/logger/controller';
 import { LogPrinter } from '../foundation/logger/log-printer';
 import { FocusVisibleController } from '../foundation/observers/focus-visible';
 import { ScreenOrientationController } from '../foundation/orientation/controller';
 import { RequestQueue } from '../foundation/queue/request-queue';
-import type { AnyMediaProvider, MediaProviderAdapter } from '../providers';
+import type { AnyMediaProvider, MediaProviderAdapter } from '../providers/types';
 import { setAttributeIfEmpty } from '../utils/dom';
 import { clampNumber } from '../utils/number';
 import { IS_IPHONE } from '../utils/support';

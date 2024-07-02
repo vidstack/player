@@ -4,5 +4,5 @@ import '../player-ui';
 import '../icons';
 import '../../../global/player';
 
-export * from '../../../core/index';
+export * from '../../../exports/core';
 export * from '../../../global/player';

@@ -1,6 +1,6 @@
 import type { DOMEvent } from 'maverick.js/std';
 
-import type { MediaPlayer } from '../../components';
+import type { MediaPlayer } from '../../components/player';
 import type { LoggerEvents } from '../../foundation/logger/events';
 import type { DASHProviderEvents } from '../../providers/dash/events';
 import type { GoogleCastEvents } from '../../providers/google-cast/events';

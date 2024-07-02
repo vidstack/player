@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { AudioGainSlider } from '../../../components';
+import { AudioGainSlider } from '../../../components/ui/sliders/audio-gain-slider';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/audio-gain-slider}

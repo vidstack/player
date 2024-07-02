@@ -2,7 +2,7 @@ import { effect } from 'maverick.js';
 import { Host, type Attributes } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
-import { Poster, type PosterProps } from '../../components';
+import { Poster, type PosterProps } from '../../components/ui/poster';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/poster}

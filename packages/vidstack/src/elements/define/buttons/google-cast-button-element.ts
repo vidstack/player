@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { GoogleCastButton } from '../../../components';
+import { GoogleCastButton } from '../../../components/ui/buttons/google-cast-button';
 
 /**
  * @example

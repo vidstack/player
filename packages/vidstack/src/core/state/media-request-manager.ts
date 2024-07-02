@@ -8,7 +8,7 @@ import {
 import { ScreenOrientationController } from '../../foundation/orientation/controller';
 import { Queue } from '../../foundation/queue/queue';
 import { RequestQueue } from '../../foundation/queue/request-queue';
-import type { GoogleCastPromptError } from '../../providers';
+import type { GoogleCastPromptError } from '../../providers/google-cast/events';
 import type { GoogleCastLoader } from '../../providers/google-cast/loader';
 import type { MediaProviderAdapter } from '../../providers/types';
 import { coerceToError } from '../../utils/error';

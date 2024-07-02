@@ -1,8 +1,7 @@
 import { Component, createContext, effect, provideContext } from 'maverick.js';
 import { setAttribute } from 'maverick.js/std';
 
-import type { MediaContext } from '../../../core';
-import { useMediaContext } from '../../../core/api/media-context';
+import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { isHTMLElement, requestScopedAnimationFrame } from '../../../utils/dom';
 
 /**

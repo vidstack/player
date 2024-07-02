@@ -13,7 +13,7 @@ import {
   type DefaultFontSettingProps,
   type FontRadioOption,
   type FontSliderOption,
-} from 'vidstack';
+} from 'vidstack/exports/font';
 
 import { useMediaPlayer } from '../../../../../hooks/use-media-player';
 import { useMediaState } from '../../../../../hooks/use-media-state';

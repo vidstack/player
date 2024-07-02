@@ -1,6 +1,6 @@
 import type { DOMEvent } from 'maverick.js/std';
 
-import type { MediaPlayer } from '../../components';
+import type { MediaPlayer } from '../../components/player';
 import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
 import type { MediaProviderAdapter, MediaProviderLoader } from '../../providers/types';
 import type { VideoQuality } from '../quality/video-quality';

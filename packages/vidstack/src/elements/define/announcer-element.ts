@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { MediaAnnouncer } from '../../components';
+import { MediaAnnouncer } from '../../components/aria/announcer';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/announcer}

@@ -9,16 +9,16 @@ import {
 } from 'maverick.js';
 import { DOMEvent, isArray, isString, noop } from 'maverick.js/std';
 
-import { isVideoQualitySrc, type MediaContext, type MediaPlayerProps, type Src } from '../../core';
-import {
-  AudioProviderLoader,
-  HLSProviderLoader,
-  VideoProviderLoader,
-  VimeoProviderLoader,
-  YouTubeProviderLoader,
-  type MediaProviderLoader,
-} from '../../providers';
+import type { MediaContext } from '../../core/api/media-context';
+import type { MediaPlayerProps } from '../../core/api/player-props';
+import { isVideoQualitySrc, type Src } from '../../core/api/src-types';
+import { AudioProviderLoader } from '../../providers/audio/loader';
 import { DASHProviderLoader } from '../../providers/dash/loader';
+import { HLSProviderLoader } from '../../providers/hls/loader';
+import type { MediaProviderLoader } from '../../providers/types';
+import { VideoProviderLoader } from '../../providers/video/loader';
+import { VimeoProviderLoader } from '../../providers/vimeo/loader';
+import { YouTubeProviderLoader } from '../../providers/youtube/loader';
 import {
   resolveStreamTypeFromDASHManifest,
   resolveStreamTypeFromHLSManifest,

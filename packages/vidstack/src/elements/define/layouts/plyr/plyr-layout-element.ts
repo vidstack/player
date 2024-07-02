@@ -3,8 +3,7 @@ import { effect, onDispose } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 
 import { PlyrLayout, usePlyrLayoutClasses } from '../../../../components/layouts/plyr/plyr-layout';
-import type { MediaContext } from '../../../../core';
-import { useMediaContext } from '../../../../core/api/media-context';
+import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import { $signal } from '../../../lit/directives/signal';
 import { LitElement, type LitRenderer } from '../../../lit/lit-element';
 import { SlotManager } from '../slot-manager';

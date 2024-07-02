@@ -6,9 +6,9 @@ import {
   ViewController,
   type ReadSignal,
 } from 'maverick.js';
-import { isNull, isNumber, isUndefined, listenEvent } from 'maverick.js/std';
+import { isNull, isNumber, listenEvent } from 'maverick.js/std';
 
-import type { MediaContext } from '../../../../core';
+import type { MediaContext } from '../../../../core/api/media-context';
 import { isTouchPinchEvent } from '../../../../utils/dom';
 import type {
   SliderDragEndEvent,

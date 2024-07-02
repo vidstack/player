@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { Captions } from '../../components';
+import { Captions } from '../../components/ui/captions/captions';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/captions}

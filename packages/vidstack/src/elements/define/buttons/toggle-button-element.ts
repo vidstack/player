@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { ToggleButton } from '../../../components';
+import { ToggleButton } from '../../../components/ui/buttons/toggle-button';
 
 /**
  * @example

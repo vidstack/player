@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { ControlsGroup } from '../../components';
+import { ControlsGroup } from '../../components/ui/controls-group';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/display/controls}

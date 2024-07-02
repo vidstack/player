@@ -3,8 +3,13 @@ import '../elements/bundles/player';
 import { defineCustomElement } from 'maverick.js/element';
 import { isString, kebabToCamelCase } from 'maverick.js/std';
 
-import type { MediaPlayerProps, TextTrackInit } from '../core';
-import { isHTMLAudioElement, isHTMLIFrameElement, isHTMLVideoElement } from '../providers';
+import type { MediaPlayerProps } from '../core/api/player-props';
+import type { TextTrackInit } from '../core/tracks/text/text-track';
+import {
+  isHTMLAudioElement,
+  isHTMLIFrameElement,
+  isHTMLVideoElement,
+} from '../providers/type-check';
 import { isHTMLElement } from '../utils/dom';
 import { VidstackPlayerLayout } from './layouts/default';
 import type { VidstackPlayerLayoutLoader } from './layouts/loader';

@@ -2,7 +2,7 @@ import { computed, effect } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 import { setAttribute } from 'maverick.js/std';
 
-import { MediaProvider } from '../../components';
+import { MediaProvider } from '../../components/provider/provider';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 
 /**

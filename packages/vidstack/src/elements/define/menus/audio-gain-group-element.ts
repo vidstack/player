@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { AudioGainRadioGroup } from '../../../components';
+import { AudioGainRadioGroup } from '../../../components/ui/menu/radio-groups/audio-gain-radio-group';
 import { renderMenuItemsTemplate } from './_template';
 
 /**

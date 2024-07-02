@@ -7,8 +7,11 @@ import {
   type DeferredPromise,
 } from 'maverick.js/std';
 
-import { TextTrack, TimeRange, type MediaContext, type Src } from '../../core';
+import type { MediaContext } from '../../core/api/media-context';
+import type { Src } from '../../core/api/src-types';
 import { QualitySymbol } from '../../core/quality/symbols';
+import { TimeRange } from '../../core/time-ranges';
+import { TextTrack } from '../../core/tracks/text/text-track';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { preconnect } from '../../utils/network';

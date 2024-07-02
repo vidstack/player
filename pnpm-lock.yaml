@@ -67,6 +67,9 @@ importers:
 
   packages/react:
     dependencies:
+      '@floating-ui/dom':
+        specifier: ^1.4.4
+        version: 1.6.6
       media-captions:
         specifier: ^1.0.1
         version: 1.0.3
@@ -134,6 +137,12 @@ importers:
 
   packages/vidstack:
     dependencies:
+      '@floating-ui/dom':
+        specifier: ^1.4.4
+        version: 1.6.6
+      lit-html:
+        specifier: ^2.7.4
+        version: 2.8.0
       media-captions:
         specifier: ^1.0.1
         version: 1.0.3
@@ -141,9 +150,6 @@ importers:
         specifier: ^1.10.1
         version: 1.10.2
     devDependencies:
-      '@floating-ui/dom':
-        specifier: ^1.4.4
-        version: 1.6.6
       '@maverick-js/cli':
         specifier: 0.41.7
         version: 0.41.7
@@ -195,9 +201,6 @@ importers:
       just-throttle:
         specifier: ^4.2.0
         version: 4.2.0
-      lit-html:
-        specifier: ^2.7.4
-        version: 2.8.0
       maverick.js:
         specifier: 0.41.7
         version: 0.41.7
@@ -1125,7 +1128,7 @@ packages:
       }
     dependencies:
       '@floating-ui/utils': 0.2.3
-    dev: true
+    dev: false
 
   /@floating-ui/dom@1.6.6:
     resolution:
@@ -1135,14 +1138,14 @@ packages:
     dependencies:
       '@floating-ui/core': 1.6.3
       '@floating-ui/utils': 0.2.3
-    dev: true
+    dev: false
 
   /@floating-ui/utils@0.2.3:
     resolution:
       {
         integrity: sha512-XGndio0l5/Gvd6CLIABvsav9HHezgDFFhDfHk1bvLfr9ni8dojqLSvBbotJEjmIwNHL7vK4QzBJTdBRoB+c1ww==,
       }
-    dev: true
+    dev: false
 
   /@hapi/bourne@3.0.0:
     resolution:
@@ -1951,7 +1954,6 @@ packages:
       {
         integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==,
       }
-    dev: true
 
   /@types/ws@7.4.7:
     resolution:
@@ -4750,7 +4752,6 @@ packages:
       }
     dependencies:
       '@types/trusted-types': 2.0.7
-    dev: true
 
   /lit-html@3.1.4:
     resolution:

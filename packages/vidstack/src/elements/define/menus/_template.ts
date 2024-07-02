@@ -1,7 +1,7 @@
 import { effect, type Scope } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
-import type { RadioOption } from '../../../components';
+import type { RadioOption } from '../../../components/ui/menu/radio/radio';
 import { cloneTemplate, requestScopedAnimationFrame } from '../../../utils/dom';
 import type { MediaRadioElement } from './radio-element';
 

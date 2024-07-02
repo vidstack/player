@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { RadioGroup } from '../../../components';
+import { RadioGroup } from '../../../components/ui/menu/radio/radio-group';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/menu/radio-group}

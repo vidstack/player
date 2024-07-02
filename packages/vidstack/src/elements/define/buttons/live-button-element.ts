@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { LiveButton } from '../../../components';
+import { LiveButton } from '../../../components/ui/buttons/live-button';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/buttons/live-button}

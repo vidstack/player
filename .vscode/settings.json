@@ -3,6 +3,7 @@
   "css.customData": [],
   "html.customData": ["./packages/vidstack/vscode.html-data.json"],
   "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.autoImportFileExcludePatterns": ["src/index.ts", "exports/**"],
   "prettier.documentSelectors": ["**/*.astro", "**/*.svelte"],
   "[astro]": {
     "editor.defaultFormatter": "astro-build.astro-vscode"

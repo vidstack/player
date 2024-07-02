@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { flushSync } from 'react-dom';
-import { updateFontCssVars } from 'vidstack';
+import { updateFontCssVars } from 'vidstack/exports/font';
 
 import { useMediaState } from '../../../../../hooks/use-media-state';
 import { useScoped } from '../../../../../hooks/use-signals';

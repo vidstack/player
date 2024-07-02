@@ -1,7 +1,8 @@
 import { isString } from 'maverick.js/std';
 
-import type { MediaType, Src } from '../../core';
 import type { MediaContext } from '../../core/api/media-context';
+import type { Src } from '../../core/api/src-types';
+import type { MediaType } from '../../core/api/types';
 import { isVideoSrc } from '../../utils/mime';
 import { canPlayVideoType } from '../../utils/support';
 import type { MediaProviderLoader } from '../types';

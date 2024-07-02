@@ -1,7 +1,7 @@
 import { Host } from 'maverick.js/element';
 import type { Attributes } from 'maverick.js/element';
 
-import { MediaPlayer } from '../../components';
+import { MediaPlayer } from '../../components/player';
 import type { MediaPlayerProps } from '../../core/api/player-props';
 
 /**

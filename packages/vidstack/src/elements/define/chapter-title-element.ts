@@ -1,8 +1,8 @@
 import { Component, effect, signal, type WriteSignal } from 'maverick.js';
 import { Host } from 'maverick.js/element';
 
-import { watchCueTextChange, type MediaContext } from '../../core';
-import { useMediaContext } from '../../core/api/media-context';
+import { useMediaContext, type MediaContext } from '../../core/api/media-context';
+import { watchCueTextChange } from '../../core/tracks/text/utils';
 
 interface ChapterTitleProps {
   /**

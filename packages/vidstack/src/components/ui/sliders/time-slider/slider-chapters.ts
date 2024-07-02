@@ -17,9 +17,9 @@ import {
 import { animationFrameThrottle, listenEvent, setAttribute } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
-import { watchActiveTextTrack } from '../../../../core';
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
+import { watchActiveTextTrack } from '../../../../core/tracks/text/utils';
 import { round } from '../../../../utils/number';
 import type { SliderState } from '../slider/api/state';
 import { TimeSlider } from './time-slider';

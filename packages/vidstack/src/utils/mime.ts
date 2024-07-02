@@ -1,6 +1,6 @@
 import { isString } from 'maverick.js/std';
 
-import type { Src } from '../core';
+import type { Src } from '../core/api/src-types';
 import { canPlayHLSNatively } from './support';
 
 // https://github.com/cookpete/react-player/blob/master/src/patterns.js#L16

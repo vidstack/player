@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { AirPlayButton } from '../../../components';
+import { AirPlayButton } from '../../../components/ui/buttons/airplay-button';
 
 /**
  * @example

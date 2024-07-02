@@ -1,4 +1,4 @@
-import type { Src } from '../../core';
+import type { Src } from '../../core/api/src-types';
 import { isDASHSrc } from '../../utils/mime';
 import { isDASHSupported } from '../../utils/support';
 import type { MediaProviderLoader } from '../types';

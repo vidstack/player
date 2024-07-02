@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { Menu } from '../../../components';
+import { Menu } from '../../../components/ui/menu/menu';
 
 /**
  * @part close-target - Closes menu when pressed.

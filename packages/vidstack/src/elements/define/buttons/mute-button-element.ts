@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { MuteButton } from '../../../components';
+import { MuteButton } from '../../../components/ui/buttons/mute-button';
 
 /**
  * @example

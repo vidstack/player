@@ -1,6 +1,6 @@
 import { Host } from 'maverick.js/element';
 
-import { Slider } from '../../../components';
+import { Slider } from '../../../components/ui/sliders/slider/slider';
 
 /**
  * @docs {@link https://www.vidstack.io/docs/wc/player/components/sliders/slider}

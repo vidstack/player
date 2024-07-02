@@ -4,7 +4,8 @@
     "declaration": true,
     "declarationDir": "types",
     "paths": {
-      "vidstack": ["../vidstack/src"]
+      "vidstack": ["../vidstack/src"],
+      "vidstack/exports/*": ["../vidstack/src/exports/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "../vidstack/src/**/*.ts"],

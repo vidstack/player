@@ -1,4 +1,38 @@
-export * from 'vidstack';
+export * from 'vidstack/exports/core';
+export * from 'vidstack/exports/foundation';
+export * from 'vidstack/exports/maverick';
+export * from 'vidstack/exports/providers';
+export * from 'vidstack/exports/utils';
+
+export {
+  type TimeState,
+  type SliderState,
+  type PosterState,
+  sliderState,
+  type ThumbnailState,
+  type TimeSliderState,
+  type SliderVideoState,
+  type SpeedSliderState,
+  type VolumeSliderState,
+  type QualitySliderState,
+  type MediaProviderState,
+  type TooltipPlacement,
+  type TooltipPlacementAlign,
+  type TooltipPlacementSide,
+  type MenuPlacement,
+  type MenuPlacementSide,
+  type MenuPlacementAlign,
+  type MediaAnnouncerState,
+  type AudioGainSliderState,
+  type GestureEventType,
+  type GestureAction,
+  type MediaAnnouncerTranslations,
+  type MediaAnnouncerWord,
+  DEFAULT_AUDIO_GAINS,
+  DEFAULT_PLAYBACK_RATES,
+} from 'vidstack/exports/components';
+
+// Primitives
 export * from './components/primitives/instances';
 
 // Core

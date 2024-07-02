@@ -10,6 +10,8 @@ import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
 
+import { copyPkgInfo } from '../../.scripts/copy-pkg-info.js';
+
 const MODE_WATCH = process.argv.includes('-w'),
   MODE_TYPES = process.argv.includes('--config-types');
 
@@ -20,7 +22,8 @@ const DIRNAME = path.dirname(fileURLToPath(import.meta.url)),
   ROOT_DIR = path.resolve(DIRNAME, '.'),
   DIST_NPM_DIR = path.resolve(ROOT_DIR, 'dist-npm'),
   VIDSTACK_PKG_DIR = path.resolve(ROOT_DIR, 'node_modules/vidstack'),
-  VIDSTACK_LOCAL_PATH = path.resolve('../vidstack/src/index.ts');
+  VIDSTACK_LOCAL_PATH = path.resolve('../vidstack/src/index.ts'),
+  VIDSTACK_EXPORTS_PATH = path.resolve('../vidstack/src/exports');
 
 const NPM_EXTERNAL_PACKAGES = [
     'react',
@@ -29,6 +32,7 @@ const NPM_EXTERNAL_PACKAGES = [
     'media-captions',
     'hls.js',
     'dashjs',
+    /^@floating-ui/,
     /^remotion/,
   ],
   NPM_BUNDLES = [defineNPMBundle({ dev: true }), defineNPMBundle({ dev: false })],
@@ -64,10 +68,11 @@ function defineTypesBundle() {
       },
       output: {
         dir: 'dist-npm',
+        compact: false,
+        minifyInternalExports: false,
         chunkFileNames: 'types/[name].d.ts',
         manualChunks(id) {
           if (id.includes('react/src')) return 'vidstack-react';
-          if (id.includes('maverick')) return 'vidstack-framework';
           if (id.includes('vidstack')) return 'vidstack';
         },
       },
@@ -78,6 +83,10 @@ function defineTypesBundle() {
           resolveId(id) {
             if (id === 'vidstack') {
               return 'types/vidstack/src/index.d.ts';
+            }
+
+            if (id.startsWith('vidstack/exports')) {
+              return id.replace('vidstack/exports', 'types/vidstack/src/exports') + '.d.ts';
             }
           },
         },
@@ -92,6 +101,10 @@ function defineTypesBundle() {
               references = globalFiles
                 .map((path) => `/// <reference path="./${path}" />`)
                 .join('\n');
+
+            if (!fsExtra.existsSync('dist-npm')) {
+              fsExtra.mkdirSync('dist-npm');
+            }
 
             for (const file of globalFiles) {
               fsExtra.copyFileSync(path.resolve(`../vidstack/npm/${file}`), `dist-npm/${file}`);
@@ -142,10 +155,12 @@ function defineNPMBundle({ dev }) {
     external: NPM_EXTERNAL_PACKAGES,
     output: {
       format: 'esm',
+      compact: false,
+      minifyInternalExports: false,
       dir: `dist-npm/${alias}`,
       chunkFileNames: `chunks/vidstack-[hash].js`,
       manualChunks(id) {
-        if (id.includes('maverick')) return 'vidstack-framework';
+        if (id.includes('node_modules')) return 'vidstack-deps';
       },
     },
     plugins: [
@@ -156,6 +171,9 @@ function defineNPMBundle({ dev }) {
             return id;
           } else if (id === 'vidstack') {
             return VIDSTACK_LOCAL_PATH;
+          } else if (id.startsWith('vidstack/exports')) {
+            const path = id.replace('vidstack/exports', VIDSTACK_EXPORTS_PATH);
+            return path + '.ts';
           }
         },
         load(id) {
@@ -224,6 +242,7 @@ function defineNPMBundle({ dev }) {
       !dev && {
         name: 'npm-artifacts',
         async buildEnd() {
+          await copyPkgInfo();
           await copyStyles();
           await copyTailwind();
           await buildDefaultTheme();
