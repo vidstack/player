@@ -1,6 +1,7 @@
 # Vidstack Player
 
 [![package-badge]][package]
+[![react-package-badge]][react-package]
 [![discord-badge]][discord]
 
 Build and ship a production-ready video or audio player! Robust, customizable, and accessible. The
@@ -58,7 +59,9 @@ accounts:
 [plyr]: https://github.com/sampotts/plyr
 [docs-player]: https://www.vidstack.io/docs/player
 [package]: https://www.npmjs.com/package/vidstack
-[package-badge]: https://img.shields.io/npm/v/vidstack/next?style=flat-square
+[package-badge]: https://img.shields.io/npm/v/vidstack/next?style=flat-square&label=vidstack@next
+[react-package]: https://www.npmjs.com/package/@vidstack/react
+[react-package-badge]: https://img.shields.io/npm/v/@vidstack/react/next?style=flat-square&label=@vidstack/react@next
 [discord]: https://discord.gg/QAjfh2gZE4
 [discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white&style=flat-square
 [discussions]: https://github.com/vidstack/player/discussions
