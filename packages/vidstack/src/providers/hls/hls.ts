@@ -54,7 +54,6 @@ export class HLSController {
     });
 
     this._instance.attachMedia(this._video);
-    this._instance.on(ctor.Events.FRAG_LOADING, this._onFragLoading.bind(this));
     this._instance.on(ctor.Events.AUDIO_TRACK_SWITCHED, this._onAudioSwitch.bind(this));
     this._instance.on(ctor.Events.LEVEL_SWITCHED, this._onLevelSwitched.bind(this));
     this._instance.on(ctor.Events.LEVEL_LOADED, this._onLevelLoaded.bind(this));
@@ -215,9 +214,6 @@ export class HLSController {
 
     if (data.fatal) {
       switch (data.type) {
-        case 'networkError':
-          this._onNetworkError(data.error);
-          break;
         case 'mediaError':
           this._instance?.recoverMediaError();
           break;
@@ -226,27 +222,6 @@ export class HLSController {
           break;
       }
     }
-  }
-
-  private _onFragLoading() {
-    if (this._retryLoadingTimer >= 0) this._clearRetryTimer();
-  }
-
-  private _retryLoadingTimer = -1;
-  private _onNetworkError(error: Error) {
-    this._clearRetryTimer();
-
-    this._instance?.startLoad();
-
-    this._retryLoadingTimer = window.setTimeout(() => {
-      this._retryLoadingTimer = -1;
-      this._onFatalError(error);
-    }, 5000);
-  }
-
-  private _clearRetryTimer() {
-    clearTimeout(this._retryLoadingTimer);
-    this._retryLoadingTimer = -1;
   }
 
   private _onFatalError(error: Error) {
@@ -287,13 +262,11 @@ export class HLSController {
   }
 
   _loadSource(src: Src) {
-    this._clearRetryTimer();
     if (!isString(src.src)) return;
     this._instance?.loadSource(src.src);
   }
 
   _destroy() {
-    this._clearRetryTimer();
     this._instance?.destroy();
     this._instance = null;
     this._stopLiveSync?.();
