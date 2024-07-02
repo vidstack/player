@@ -12,7 +12,7 @@ export const AUDIO_TYPES = new Set<string>([
   'audio/mpeg',
   'audio/ogg',
   'audio/3gp',
-  'audio/mp4',
+  'audio/mp3',
   'audio/webm',
   'audio/flac',
 ]);
