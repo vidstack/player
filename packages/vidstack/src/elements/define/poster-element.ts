@@ -29,20 +29,20 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
   protected onConnect(): void {
     const { src, alt, crossOrigin } = this.$state;
 
-    if (this._img.parentNode !== this) {
-      this.prepend(this._img);
-    }
-
-    effect(() => {
-      setAttribute(this._img, 'alt', alt());
-      setAttribute(this._img, 'crossorigin', crossOrigin());
-      setAttribute(this._img, 'src', src() || '');
-    });
-
     effect(() => {
       const { loading, hidden } = this.$state;
       this._img.style.display = loading() || hidden() ? 'none' : '';
     });
+
+    effect(() => {
+      setAttribute(this._img, 'alt', alt());
+      setAttribute(this._img, 'crossorigin', crossOrigin());
+      setAttribute(this._img, 'src', src());
+    });
+
+    if (this._img.parentNode !== this) {
+      this.prepend(this._img);
+    }
   }
 }
 
