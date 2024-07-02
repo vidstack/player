@@ -64,7 +64,7 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
             const { nativeControls, viewType } = this._media.$state,
               showNativeControls = nativeControls(),
               isAudioView = viewType() === 'audio',
-              showBlocker = showNativeControls && !isAudioView;
+              showBlocker = !showNativeControls && !isAudioView;
 
             if (showBlocker) {
               this._blocker = this.querySelector('.vds-blocker');
