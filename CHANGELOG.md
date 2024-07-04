@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.25-next](https://github.com/vidstack/player/releases/tag/v1.11.25-next) (2024-07-04)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- update maverick to `0.42.0` ([60ba0b9](https://github.com/vidstack/player/commit/60ba0b91a0fc0a857c062352ebe00f823f702555))
+- prevent blocking native embed controls ([6da5bfc](https://github.com/vidstack/player/commit/6da5bfc2a6e4fd317f4dcefa9cc096723783c0f2))
+- add `audio/mp3` to audio types ([a0a4470](https://github.com/vidstack/player/commit/a0a4470f35e2fa8bee4da317a08237a4064dcc8b))
+- remove poster img src when empty (#1328) ([b8a53b2](https://github.com/vidstack/player/commit/b8a53b23decd7c801a12b8f239139b055bec3da5))
+- remove hls network error retries (#1318) ([177c30e](https://github.com/vidstack/player/commit/177c30ea7c8b0ef4c47efce221b8252c8c843fd3))
+
+#### Player (React)
+
+- clean up exports ([ee8c86b](https://github.com/vidstack/player/commit/ee8c86be3016c10f67b139e1f10201145866be00))
+
 ## [1.11.24-next](https://github.com/vidstack/player/releases/tag/v1.11.24-next) (2024-06-20)
 
 ### 🐛 Bug Fixes
