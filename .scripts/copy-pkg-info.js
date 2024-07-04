@@ -15,6 +15,7 @@ export function copyPkgInfo() {
   const validPkgFields = [
     'name',
     'description',
+    'private',
     'version',
     'license',
     'type',

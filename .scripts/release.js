@@ -196,14 +196,18 @@ async function publishPackage(pkgName, version, runIfNotDry) {
   }
 
   const pkgRoot = getPkgRoot(pkgName),
-    pkgPath = path.resolve(pkgRoot, 'package.json'),
-    pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')),
-    distDir = path.resolve(pkgRoot, 'dist-npm');
+    distDir = path.resolve(pkgRoot, 'dist-npm'),
+    pkgPath = path.resolve(distDir, 'package.json'),
+    pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
   if (pkg.private) {
     console.log(kleur.red(`\n🚫 Skipping private package: ${pkg.name}`));
     return;
   }
+
+  // Write new version.
+  pkg.version = version;
+  fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf-8');
 
   step(`Publishing ${pkgName}...`);
 
