@@ -148,8 +148,17 @@ export class SourceSelection {
         ),
       ).then((sources) => {
         if (abort.signal.aborted) return;
-        this._findNewSource(peek($state.source), sources);
+
+        const newSource = this._findNewSource(peek($state.source), sources);
+
         tick();
+
+        if (!newSource.src) {
+          this._notify('error', {
+            message: 'Failed to load resource.',
+            code: 4,
+          });
+        }
       });
 
       return () => abort.abort();
