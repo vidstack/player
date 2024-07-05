@@ -69,6 +69,7 @@ export class MediaVideoLayoutElement
       if (!this.isMatch) return;
 
       const container = createMenuContainer(
+          this,
           this.menuContainer,
           'vds-video-layout',
           () => this.isSmallLayout,

@@ -36,6 +36,7 @@
     "@rollup/plugin-node-resolve": "^15.2.0",
     "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "@vitejs/plugin-react": "^4.2.0",
     "esbuild": "^0.19.4",
     "fs-extra": "^11.0.0",

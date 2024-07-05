@@ -137,13 +137,11 @@ const Portal = React.forwardRef<HTMLElement, PortalProps>(
 
     const target = React.useMemo(() => {
       if (IS_SERVER) return null;
-
       const node = isString(container) ? document.querySelector(container) : container;
-
       return node ?? document.body;
     }, [container]);
 
-    return IS_SERVER || !shouldPortal
+    return !target || !shouldPortal
       ? children
       : createPortal(
           <Primitive.div

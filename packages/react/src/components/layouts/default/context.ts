@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import type { WriteSignal } from 'maverick.js';
+import type { ReadSignal, WriteSignal } from 'maverick.js';
 
 import type { DefaultLayoutProps } from './media-layout';
 
@@ -8,6 +8,7 @@ export const DefaultLayoutContext = React.createContext<DefaultLayoutContext>({}
 DefaultLayoutContext.displayName = 'DefaultLayoutContext';
 
 interface DefaultLayoutContext extends DefaultLayoutProps {
+  layoutEl: ReadSignal<HTMLElement | null>;
   isSmallLayout: boolean;
   userPrefersAnnouncements: WriteSignal<boolean>;
   userPrefersKeyboardAnimations: WriteSignal<boolean>;

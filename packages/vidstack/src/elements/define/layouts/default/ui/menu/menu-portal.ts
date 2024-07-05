@@ -19,11 +19,17 @@ export function MenuPortal(
 }
 
 export function createMenuContainer(
+  layoutEl: HTMLElement,
   rootSelector: string | HTMLElement | null,
   className: string,
   isSmallLayout: ReadSignal<boolean>,
 ) {
   let root = isString(rootSelector) ? document.querySelector(rootSelector) : rootSelector;
+
+  // Check whether we can find a parent <dialog> element.
+  if (!root) root = layoutEl?.closest('dialog');
+
+  // Default to body.
   if (!root) root = document.body;
 
   const container = document.createElement('div');

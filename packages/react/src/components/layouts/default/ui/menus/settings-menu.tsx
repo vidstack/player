@@ -15,6 +15,7 @@ import { DefaultAccessibilityMenu } from './accessibility-menu';
 import { DefaultAudioMenu } from './audio-menu';
 import { DefaultCaptionMenu } from './captions-menu';
 import { DefaultPlaybackMenu } from './playback-menu';
+import { useParentDialogEl } from './utils';
 
 export interface DefaultMediaMenuProps {
   tooltip: Tooltip.ContentProps['placement'];
@@ -42,7 +43,8 @@ function DefaultSettingsMenu({
     $viewType = useMediaState('viewType'),
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
     colorSchemeClass = useColorSchemeClass(colorScheme),
-    [isOpen, setIsOpen] = React.useState(false);
+    [isOpen, setIsOpen] = React.useState(false),
+    dialogEl = useParentDialogEl();
 
   useScoped(updateFontCssVars);
 
@@ -94,7 +96,7 @@ function DefaultSettingsMenu({
       ) : (
         <Menu.Portal
           className={portalClass + (colorSchemeClass ? ` ${colorSchemeClass}` : '')}
-          container={menuContainer}
+          container={menuContainer ?? dialogEl}
           disabled="fullscreen"
           data-sm={isSmallLayout ? '' : null}
           data-lg={!isSmallLayout ? '' : null}

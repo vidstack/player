@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useSignal } from 'maverick.js/react';
+import { composeRefs, useSignal } from 'maverick.js/react';
 import { isBoolean } from 'maverick.js/std';
 import {
   type DefaultLayoutTranslations,
@@ -195,7 +195,8 @@ export function createDefaultMediaLayout({
         isForcedLayout = isBoolean(smallLayoutWhen),
         isLoadLayout = $load === 'play' && !$canLoad,
         canRender = $canLoad || isForcedLayout || isLoadLayout,
-        colorSchemeClass = useColorSchemeClass(colorScheme);
+        colorSchemeClass = useColorSchemeClass(colorScheme),
+        layoutEl = createSignal<HTMLElement | null>(null);
 
       useSignal($smallWhen);
 
@@ -212,7 +213,7 @@ export function createDefaultMediaLayout({
           data-lg={!isSmallLayout ? '' : null}
           data-size={isSmallLayout ? 'sm' : 'lg'}
           data-no-scrub-gesture={noScrubGesture ? '' : null}
-          ref={forwardRef}
+          ref={composeRefs(layoutEl.set as any, forwardRef)}
         >
           {canRender && isMatch ? (
             <DefaultLayoutContext.Provider
@@ -227,6 +228,7 @@ export function createDefaultMediaLayout({
                 menuGroup,
                 noAudioGain,
                 audioGains,
+                layoutEl,
                 noGestures,
                 noKeyboardAnimations,
                 noModal,

@@ -73,6 +73,7 @@ export class MediaAudioLayoutElement
       if (!this.isMatch) return;
 
       const container = createMenuContainer(
+          this,
           this.menuContainer,
           'vds-audio-layout',
           () => this.isSmallLayout,

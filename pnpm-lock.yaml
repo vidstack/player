@@ -86,6 +86,9 @@ importers:
       '@types/react':
         specifier: ^18.0.0
         version: 18.3.3
+      '@types/react-dom':
+        specifier: ^18.0.0
+        version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.2.0
         version: 4.3.1(vite@5.3.2)
@@ -1909,6 +1912,15 @@ packages:
       {
         integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==,
       }
+    dev: true
+
+  /@types/react-dom@18.3.0:
+    resolution:
+      {
+        integrity: sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==,
+      }
+    dependencies:
+      '@types/react': 18.3.3
     dev: true
 
   /@types/react@18.3.3:

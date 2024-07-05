@@ -13,6 +13,7 @@ import { useDefaultLayoutContext, useDefaultLayoutWord } from '../../context';
 import { useColorSchemeClass } from '../../hooks';
 import { DefaultTooltip } from '../tooltip';
 import type { DefaultMediaMenuProps } from './settings-menu';
+import { useParentDialogEl } from './utils';
 
 /* -------------------------------------------------------------------------------------------------
  * DefaultChaptersMenu
@@ -37,7 +38,8 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass = '' }: DefaultMe
     $offset = !isSmallLayout && menuGroup === 'bottom' && $viewType === 'video' ? 26 : 0,
     $RemotionThumbnail = useSignal(RemotionThumbnail),
     colorSchemeClass = useColorSchemeClass(colorScheme),
-    [isOpen, setIsOpen] = React.useState(false);
+    [isOpen, setIsOpen] = React.useState(false),
+    dialogEl = useParentDialogEl();
 
   if (disabled) return null;
 
@@ -112,7 +114,7 @@ function DefaultChaptersMenu({ tooltip, placement, portalClass = '' }: DefaultMe
         Content
       ) : (
         <Menu.Portal
-          container={menuContainer}
+          container={menuContainer ?? dialogEl}
           className={portalClass + (colorSchemeClass ? ` ${colorSchemeClass}` : '')}
           disabled="fullscreen"
           data-sm={isSmallLayout ? '' : null}
