@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.26-next](https://github.com/vidstack/player/releases/tag/v1.11.26-next) (2024-07-09)
+
+### ✨ Features
+
+#### Player
+
+- new `changeDuration` on remote control ([71d4594](https://github.com/vidstack/player/commit/71d45946c32ba13fdcfd74f837e96bb9a6cf80fc))
+- new `changeClipStart` and `changeClipEnd` on remote control ([52ae3db](https://github.com/vidstack/player/commit/52ae3dbf26aba0f13e8ae806ebf0e28a00291cf1))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- auto find and use `<dialog>` as layout menu container ([9dac0ba](https://github.com/vidstack/player/commit/9dac0ba13d0e9c4f7602e1d71da0d75769f39372))
+- fire error event when source fails to load ([1baf446](https://github.com/vidstack/player/commit/1baf44624904c6cc8f053bf3300529015a4b7b41))
+- youtube autoplay prevents interaction on fail ([6b3457d](https://github.com/vidstack/player/commit/6b3457db6b6f360849c38fa7b49b8939c7ab4c63))
+
 ## [1.11.25-next](https://github.com/vidstack/player/releases/tag/v1.11.25-next) (2024-07-04)
 
 ### 🐛 Bug Fixes
