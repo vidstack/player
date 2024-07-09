@@ -114,6 +114,11 @@ export class YouTubeProvider
     return this._playPromise.promise;
   }
 
+  private _playFail(message: string) {
+    this._playPromise?.reject(message);
+    this._playPromise = null;
+  }
+
   async pause() {
     const { paused } = this._ctx.$state;
 
@@ -127,6 +132,11 @@ export class YouTubeProvider
     }
 
     return this._pausePromise.promise;
+  }
+
+  private _pauseFail(message: string) {
+    this._pausePromise?.reject(message);
+    this._pausePromise = null;
   }
 
   setMuted(muted: boolean) {
@@ -304,8 +314,7 @@ export class YouTubeProvider
 
     // Embed incorrectly plays on initial seek operation.
     if (!started() && isPlay && this._pausedSeeking) {
-      this._playPromise?.reject('invalid internal play operation');
-      this._playPromise = null;
+      this._playFail('invalid internal play operation');
 
       if (isPlaying) {
         this.pause();
@@ -323,6 +332,12 @@ export class YouTubeProvider
     }
 
     switch (state) {
+      case YouTubePlayerState._Unstarted:
+        // These methods will only reject if a play/pause is actually pending.
+        this._playFail('provider rejected');
+        this._pauseFail('provider rejected');
+        this._notify('pause', undefined, trigger);
+        break;
       case YouTubePlayerState._Cued:
         this._onReady(trigger);
         break;
