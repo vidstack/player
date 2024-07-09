@@ -218,6 +218,32 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Dispatch a request to update the clip start time. This is the time at which media playback
+   * should start at.
+   *
+   * @example
+   * ```ts
+   * remote.changeClipStart(100); // start at 100 seconds
+   * ```
+   */
+  changeClipStart(startTime: number, trigger?: Event) {
+    this._dispatchRequest('media-clip-start-change-request', trigger, startTime);
+  }
+
+  /**
+   * Dispatch a request to update the clip end time. This is the time at which media playback
+   * should end at.
+   *
+   * @example
+   * ```ts
+   * remote.changeClipEnd(100); // end at 100 seconds
+   * ```
+   */
+  changeClipEnd(endTime: number, trigger?: Event) {
+    this._dispatchRequest('media-clip-end-change-request', trigger, endTime);
+  }
+
+  /**
    * Dispatch a request to update the media volume to the given `volume` level which is a value
    * between 0 and 1.
    *

@@ -554,7 +554,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['duration-change'](event: ME.MediaDurationChangeEvent) {
-    const { live, intrinsicDuration, providedDuration, ended } = this.$state,
+    const { live, intrinsicDuration, providedDuration, clipEndTime, ended } = this.$state,
       time = event.detail;
 
     if (!live()) {
@@ -563,7 +563,7 @@ export class MediaStateManager extends MediaPlayerController {
       if (ended()) this._onEndPrecisionChange(event);
     }
 
-    if (providedDuration()) {
+    if (providedDuration() > 0 || clipEndTime() > 0) {
       event.stopImmediatePropagation();
     }
   }

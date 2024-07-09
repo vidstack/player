@@ -469,13 +469,29 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     }
   }
 
-  ['media-duration-change-request'](event: RE.MediaDurationChangeRequestEvent) {
-    const { providedDuration } = this.$state;
-    providedDuration.set(event.detail);
+  ['media-clip-start-change-request'](event: RE.MediaClipStartChangeRequestEvent) {
+    const { clipStartTime } = this.$state;
+    clipStartTime.set(event.detail);
+  }
+
+  ['media-clip-end-change-request'](event: RE.MediaClipEndChangeRequestEvent) {
+    const { clipEndTime } = this.$state;
+    clipEndTime.set(event.detail);
     this.dispatch('duration-change', {
       detail: event.detail,
       trigger: event,
     });
+  }
+
+  ['media-duration-change-request'](event: RE.MediaDurationChangeRequestEvent) {
+    const { providedDuration, clipEndTime } = this.$state;
+    providedDuration.set(event.detail);
+    if (clipEndTime() <= 0) {
+      this.dispatch('duration-change', {
+        detail: event.detail,
+        trigger: event,
+      });
+    }
   }
 
   ['media-audio-track-change-request'](event: RE.MediaAudioTrackChangeRequestEvent) {

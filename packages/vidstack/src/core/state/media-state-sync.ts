@@ -13,20 +13,28 @@ export class MediaStateSync extends MediaPlayerController {
     if (__SERVER__) return;
 
     if (__DEV__) effect(this._watchLogLevel.bind(this));
-    effect(this._watchMetadata.bind(this));
-    effect(this._watchAutoplay.bind(this));
-    effect(this._watchClipTimes.bind(this));
-    effect(this._watchControls.bind(this));
-    effect(this._watchCrossOrigin.bind(this));
-    effect(this._watchDuration.bind(this));
-    effect(this._watchLive.bind(this));
-    effect(this._watchLiveEdge.bind(this));
-    effect(this._watchLiveTolerance.bind(this));
-    effect(this._watchLoop.bind(this));
-    effect(this._watchPlaysInline.bind(this));
-    effect(this._watchPoster.bind(this));
-    effect(this._watchProvidedTypes.bind(this));
-    effect(this._watchTitle.bind(this));
+
+    const effects = [
+      this._watchMetadata,
+      this._watchAutoplay,
+      this._watchClipStartTime,
+      this._watchClipEndTime,
+      this._watchControls,
+      this._watchCrossOrigin,
+      this._watchDuration,
+      this._watchLive,
+      this._watchLiveEdge,
+      this._watchLiveTolerance,
+      this._watchLoop,
+      this._watchPlaysInline,
+      this._watchPoster,
+      this._watchProvidedTypes,
+      this._watchTitle,
+    ];
+
+    for (const callback of effects) {
+      effect(callback.bind(this));
+    }
   }
 
   private _init() {
@@ -125,10 +133,18 @@ export class MediaStateSync extends MediaPlayerController {
     this.dispatch('plays-inline-change', { detail: inline });
   }
 
-  private _watchClipTimes() {
-    const { clipStartTime, clipEndTime } = this.$props;
-    this.$state.clipStartTime.set(clipStartTime());
-    this.$state.clipEndTime.set(clipEndTime());
+  private _watchClipStartTime() {
+    const { clipStartTime } = this.$props;
+    this.dispatch('media-clip-start-change-request', {
+      detail: clipStartTime(),
+    });
+  }
+
+  private _watchClipEndTime() {
+    const { clipEndTime } = this.$props;
+    this.dispatch('media-clip-end-change-request', {
+      detail: clipEndTime(),
+    });
   }
 
   private _watchLive() {
