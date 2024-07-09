@@ -785,5 +785,9 @@
   "_repeatedKeys": "Bn",
   "_setupMenuContainer": "En",
   "_setupWatchScrubbing": "Fn",
-  "_listenToFontStyleChanges": "Gn"
+  "_listenToFontStyleChanges": "Gn",
+  "_pauseFail": "In",
+  "_playFail": "Hn",
+  "_watchClipEndTime": "Kn",
+  "_watchClipStartTime": "Jn"
 }

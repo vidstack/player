@@ -784,5 +784,9 @@
   "_calcJumpValue": "Ln",
   "_calcNewKeyValue": "Mn",
   "_repeatedKeys": "Kn",
-  "_listenToFontStyleChanges": "Nn"
+  "_listenToFontStyleChanges": "Nn",
+  "_pauseFail": "Pn",
+  "_playFail": "On",
+  "_watchClipEndTime": "Rn",
+  "_watchClipStartTime": "Qn"
 }
