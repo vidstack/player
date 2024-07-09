@@ -112,8 +112,10 @@ export class MediaStateSync extends MediaPlayerController {
   }
 
   private _watchDuration() {
-    const { providedDuration } = this.$state;
-    providedDuration.set(this.$props.duration());
+    const { duration } = this.$props;
+    this.dispatch('media-duration-change-request', {
+      detail: duration(),
+    });
   }
 
   private _watchPlaysInline() {

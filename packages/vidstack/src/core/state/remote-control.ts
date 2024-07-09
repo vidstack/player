@@ -206,6 +206,18 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Dispatch a request to update the length of the media in seconds.
+   *
+   * @example
+   * ```ts
+   * remote.changeDuration(100); // 100 seconds
+   * ```
+   */
+  changeDuration(duration: number, trigger?: Event) {
+    this._dispatchRequest('media-duration-change-request', trigger, duration);
+  }
+
+  /**
    * Dispatch a request to update the media volume to the given `volume` level which is a value
    * between 0 and 1.
    *

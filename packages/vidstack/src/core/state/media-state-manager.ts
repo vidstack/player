@@ -554,12 +554,17 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['duration-change'](event: ME.MediaDurationChangeEvent) {
-    const { live, intrinsicDuration, ended } = this.$state,
+    const { live, intrinsicDuration, providedDuration, ended } = this.$state,
       time = event.detail;
+
     if (!live()) {
       const duration = !Number.isNaN(time) ? time : 0;
       intrinsicDuration.set(duration);
       if (ended()) this._onEndPrecisionChange(event);
+    }
+
+    if (providedDuration()) {
+      event.stopImmediatePropagation();
     }
   }
 
