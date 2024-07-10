@@ -789,5 +789,10 @@
   "_pauseFail": "In",
   "_playFail": "Hn",
   "_watchClipEndTime": "Kn",
-  "_watchClipStartTime": "Jn"
+  "_watchClipStartTime": "Jn",
+  "_lastSeenTime": "Mn",
+  "_playedInterval": "Ln",
+  "_playedIntervals": "On",
+  "_seekedTo": "Nn",
+  "_updatePlayed": "Pn"
 }
