@@ -51,6 +51,7 @@ export interface MediaEvents {
   'remote-playback-change': MediaRemotePlaybackChangeEvent;
   'source-change': MediaSourceChangeEvent;
   'sources-change': MediaSourcesChangeEvent;
+  'time-change': MediaTimeChangeEvent;
   'time-update': MediaTimeUpdateEvent;
   'title-change': MediaTitleChangeEvent;
   'stream-type-change': MediaStreamTypeChangeEvent;
@@ -517,6 +518,14 @@ export interface MediaOrientationChangeEvent extends ScreenOrientationChangeEven
  */
 export interface MediaReplayEvent extends MediaEvent<void> {}
 
+/**
+ * Fired when the `currentTime` property value changes. The event `detail` contains the real time
+ * of media playback without accounting for any clipping. This is also known as the provider time.
+ *
+ * Listen to the time update event for the displayed time.
+ */
+export interface MediaTimeChangeEvent extends MediaEvent<number> {}
+
 export interface MediaTimeUpdateEventDetail {
   currentTime: number;
   played: TimeRanges;
@@ -525,6 +534,9 @@ export interface MediaTimeUpdateEventDetail {
 /**
  * Fired when the `currentTime` property value changes due to media playback or the
  * user seeking.
+ *
+ * Listen to the time change event if you'd like to receive the real playback time
+ * without accounting for any clipping.
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event}
  */

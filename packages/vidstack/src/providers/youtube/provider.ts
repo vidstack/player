@@ -38,8 +38,6 @@ export class YouTubeProvider
   protected _state: YouTubePlayerStateValue = -1;
   protected _seekingTimer = -1;
   protected _pausedSeeking = false;
-  protected _played = 0;
-  protected _playedRange = new TimeRange(0, 0);
   protected _currentSrc: Src<string> | null = null;
   protected _playPromise: DeferredPromise<void, string> | null = null;
   protected _pausePromise: DeferredPromise<void, string> | null = null;
@@ -237,24 +235,14 @@ export class YouTubeProvider
   protected _onTimeUpdate(time: number, trigger: Event) {
     const { duration, realCurrentTime } = this._ctx.$state,
       hasEnded = this._state === YouTubePlayerState._Ended,
-      boundTime = hasEnded ? duration() : time,
-      detail = {
-        currentTime: boundTime,
-        played: this._getPlayedRange(boundTime),
-      };
+      boundTime = hasEnded ? duration() : time;
 
-    this._notify('time-update', detail, trigger);
+    this._notify('time-change', boundTime, trigger);
 
     // // This is the only way to detect `seeking`.
     if (!hasEnded && Math.abs(boundTime - realCurrentTime()) > 1) {
       this._notify('seeking', boundTime, trigger);
     }
-  }
-
-  protected _getPlayedRange(time: number) {
-    return this._played >= time
-      ? this._playedRange
-      : (this._playedRange = new TimeRange(0, (this._played = time)));
   }
 
   protected _onProgress(buffered: number, seekable: TimeRange, trigger: Event) {
@@ -410,8 +398,6 @@ export class YouTubeProvider
   protected _reset() {
     this._state = -1;
     this._seekingTimer = -1;
-    this._played = 0;
-    this._playedRange = new TimeRange(0, 0);
     this._playPromise = null;
     this._pausePromise = null;
     this._pausedSeeking = false;

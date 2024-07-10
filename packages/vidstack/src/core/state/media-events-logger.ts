@@ -29,6 +29,7 @@ const MEDIA_EVENTS: (keyof MediaEvents)[] | undefined = __DEV__
       'suspend',
       'stream-type-change',
       'replay',
+      // time-change,
       // 'time-update',
       'view-type-change',
       'volume-change',

@@ -91,9 +91,11 @@ export const mediaState = new State<MediaState>({
   waiting: false,
   realCurrentTime: 0,
   get currentTime() {
-    return this.clipStartTime > 0
-      ? Math.max(0, Math.min(this.realCurrentTime - this.clipStartTime, this.duration))
-      : this.realCurrentTime;
+    return this.ended
+      ? this.duration
+      : this.clipStartTime > 0
+        ? Math.max(0, Math.min(this.realCurrentTime - this.clipStartTime, this.duration))
+        : this.realCurrentTime;
   },
   providedDuration: -1,
   intrinsicDuration: 0,

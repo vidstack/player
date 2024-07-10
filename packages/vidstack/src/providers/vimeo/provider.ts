@@ -55,8 +55,6 @@ export class VimeoProvider
 
   readonly scope = createScope();
 
-  protected _played = 0;
-  protected _playedRange = new TimeRange(0, 0);
   protected _seekableRange = new TimeRange(0, 0);
   protected _playPromise: DeferredPromise<void, string> | null = null;
   protected _pausePromise: DeferredPromise<void, string> | null = null;
@@ -303,13 +301,9 @@ export class VimeoProvider
 
     if (realCurrentTime() === time) return;
 
-    const prevTime = realCurrentTime(),
-      detail = {
-        currentTime: time,
-        played: this._getPlayedRange(time),
-      };
+    const prevTime = realCurrentTime();
 
-    this._notify('time-update', detail, trigger);
+    this._notify('time-change', time, trigger);
 
     // This is how we detect `seeking` early.
     if (Math.abs(prevTime - time) > 1.5) {
@@ -327,12 +321,6 @@ export class VimeoProvider
         this._preventTimeUpdates = false;
       }, 500);
     }
-  }
-
-  protected _getPlayedRange(time: number) {
-    return this._played >= time
-      ? this._playedRange
-      : (this._playedRange = new TimeRange(0, (this._played = time)));
   }
 
   protected _onSeeked(time: number, trigger: Event) {
@@ -712,8 +700,6 @@ export class VimeoProvider
 
   protected _reset() {
     this._timeRAF._stop();
-    this._played = 0;
-    this._playedRange = new TimeRange(0, 0);
     this._seekableRange = new TimeRange(0, 0);
     this._playPromise = null;
     this._pausePromise = null;

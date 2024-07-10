@@ -144,13 +144,9 @@ export class HTMLMediaEvents {
   }
 
   private _updateCurrentTime(time: number, trigger?: Event) {
-    const detail = {
-      // Avoid errors where `currentTime` can have higher precision.
-      currentTime: Math.min(time, this._ctx.$state.seekableEnd()),
-      played: this._media.played,
-    };
-
-    this._notify('time-update', detail, trigger);
+    // Avoid errors where `currentTime` can have higher precision.
+    const newTime = Math.min(time, this._ctx.$state.seekableEnd());
+    this._notify('time-change', newTime, trigger);
   }
 
   private _onLoadStart(event: Event) {

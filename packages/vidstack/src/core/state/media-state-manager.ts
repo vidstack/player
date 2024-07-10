@@ -17,7 +17,12 @@ import type {
   VideoQualityChangeEvent,
   VideoQualityRemoveEvent,
 } from '../quality/video-quality';
-import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
+import {
+  getTimeRangesEnd,
+  TimeRange,
+  updateTimeIntervals,
+  type TimeInterval,
+} from '../time-ranges';
 import type {
   AudioTrackAddEvent,
   AudioTrackChangeEvent,
@@ -40,6 +45,10 @@ export class MediaStateManager extends MediaPlayerController {
   private readonly _trackedEvents = new Map<string, ME.MediaEvent>();
 
   private _clipEnded = false;
+
+  private _playedIntervals: TimeInterval[] = [];
+  private _playedInterval: TimeInterval = [-1, -1];
+
   private _firingWaiting = false;
   private _waitingTrigger: Event | undefined;
 
@@ -474,10 +483,16 @@ export class MediaStateManager extends MediaPlayerController {
     const { audioTracks, qualities } = this._media;
 
     if (!isSourceQualityChange) {
+      this._playedIntervals = [];
+      this._playedInterval = [-1, -1];
+
       audioTracks[ListSymbol._reset](event);
       qualities[ListSymbol._reset](event);
+
       softResetMediaState(this.$state, isSourceQualityChange);
+
       this._resetTracking();
+
       return;
     }
 
@@ -778,43 +793,61 @@ export class MediaStateManager extends MediaPlayerController {
     this._resetTracking();
   }
 
-  ['time-update'](event: ME.MediaTimeUpdateEvent) {
+  ['time-change'](event: ME.MediaTimeChangeEvent) {
     if (this._request._looping) {
       event.stopImmediatePropagation();
       return;
     }
 
-    const { realCurrentTime, played, waiting, clipEndTime } = this.$state,
-      endTime = clipEndTime(),
-      detail = event.detail;
+    let { waiting, played, clipEndTime, realCurrentTime, currentTime } = this.$state,
+      newTime = event.detail,
+      endTime = clipEndTime();
 
-    realCurrentTime.set(detail.currentTime);
-    played.set(detail.played);
+    realCurrentTime.set(newTime);
+    this._updatePlayed();
     waiting.set(false);
 
     for (const track of this._media.textTracks) {
-      track[TextTrackSymbol._updateActiveCues](detail.currentTime, event);
+      track[TextTrackSymbol._updateActiveCues](newTime, event);
     }
 
-    if (endTime > 0 && detail.currentTime >= endTime) {
+    if (endTime > 0 && newTime >= endTime) {
       this._clipEnded = true;
       this.dispatch('media-pause-request', { trigger: event });
     }
 
     this._saveTime();
+
+    this.dispatch('time-update', {
+      detail: { currentTime: currentTime(), played: played() },
+      trigger: event,
+    });
+  }
+
+  private _updatePlayed() {
+    const { currentTime, played, paused } = this.$state;
+
+    if (paused()) return;
+
+    this._playedInterval = updateTimeIntervals(
+      this._playedIntervals,
+      this._playedInterval,
+      currentTime(),
+    );
+
+    played.set(new TimeRange(this._playedIntervals));
   }
 
   // Called to update time again incase duration precision has changed.
   private _onEndPrecisionChange(trigger?: Event) {
-    const { duration, played } = this.$state,
-      playedStart = getTimeRangesStart(played()) ?? 0;
+    const { clipStartTime, clipEndTime, duration } = this.$state,
+      isClipped = clipStartTime() > 0 || clipEndTime() > 0;
+
+    if (isClipped) return;
 
     this._handle(
-      this.createEvent('time-update', {
-        detail: {
-          currentTime: duration(),
-          played: new TimeRange(playedStart, duration()),
-        },
+      this.createEvent('time-change', {
+        detail: duration(),
         trigger,
       }),
     );
@@ -858,13 +891,18 @@ export class MediaStateManager extends MediaPlayerController {
   ['seeking'] = throttle(
     (event: ME.MediaSeekingEvent) => {
       const { seeking, realCurrentTime, paused } = this.$state;
+
       seeking.set(true);
       realCurrentTime.set(event.detail);
+
       this._satisfyRequest('media-seeking-request', event);
+
       if (paused()) {
         this._waitingTrigger = event;
         this._fireWaiting();
       }
+
+      this._playedInterval = [-1, -1];
     },
     150,
     { leading: true },

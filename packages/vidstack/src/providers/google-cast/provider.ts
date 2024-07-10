@@ -33,7 +33,6 @@ export class GoogleCastProvider implements MediaProviderAdapter {
   protected _state: RemotePlaybackState = 'disconnected';
   protected _currentTime = 0;
   protected _played = 0;
-  protected _playedRange = new TimeRange(0, 0);
   protected _seekableRange = new TimeRange(0, 0);
   protected _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
   protected _playerEventHandlers!: Record<string, RemotePlayerEventCallback>;
@@ -215,7 +214,6 @@ export class GoogleCastProvider implements MediaProviderAdapter {
   protected _reset() {
     if (!this._reloadInfo) {
       this._played = 0;
-      this._playedRange = new TimeRange(0, 0);
       this._seekableRange = new TimeRange(0, 0);
     }
 
@@ -308,7 +306,7 @@ export class GoogleCastProvider implements MediaProviderAdapter {
       const detail = {
           provider: this,
           duration,
-          buffered: this._playedRange,
+          buffered: new TimeRange(0, 0),
           seekable: this._getSeekableRange(),
         },
         trigger = this._createEvent(event);
@@ -355,24 +353,18 @@ export class GoogleCastProvider implements MediaProviderAdapter {
     const currentTime = this._player.currentTime;
     if (currentTime === this._currentTime) return;
 
-    const prevPlayed = this._played,
-      played = this._getPlayedRange(currentTime),
-      detail = { currentTime, played };
+    this._notify('time-change', currentTime);
 
-    this._notify('time-update', detail);
-    if (currentTime > prevPlayed) this._onProgress();
+    if (currentTime > this._played) {
+      this._played = currentTime;
+      this._onProgress();
+    }
 
     if (this._ctx.$state.seeking()) {
       this._notify('seeked', currentTime);
     }
 
     this._currentTime = currentTime;
-  }
-
-  protected _getPlayedRange(time: number) {
-    return this._played >= time
-      ? this._playedRange
-      : (this._playedRange = new TimeRange(0, (this._played = time)));
   }
 
   protected _onDurationChange(event: cast.framework.RemotePlayerChangedEvent) {
@@ -410,7 +402,7 @@ export class GoogleCastProvider implements MediaProviderAdapter {
   protected _onProgress(event?: cast.framework.RemotePlayerChangedEvent) {
     const detail = {
         seekable: this._getSeekableRange(),
-        buffered: this._playedRange,
+        buffered: new TimeRange(0, this._played),
       },
       trigger = event ? this._createEvent(event) : undefined;
 

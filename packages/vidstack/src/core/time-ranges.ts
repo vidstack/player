@@ -3,14 +3,16 @@
  */
 import { isArray, isNumber, isUndefined } from 'maverick.js/std';
 
+export type TimeInterval = [start: number, end: number];
+
 export class TimeRange implements TimeRanges {
-  private readonly _ranges: [number, number][];
+  private readonly _ranges: TimeInterval[];
 
   get length() {
     return this._ranges.length;
   }
 
-  constructor(start?: number | [number, number][], end?: number) {
+  constructor(start?: number | TimeInterval[], end?: number) {
     if (isArray(start)) {
       this._ranges = start;
     } else if (!isUndefined(start) && !isUndefined(end)) {
@@ -71,4 +73,58 @@ function throwIfOutOfRange(fnName: 'start' | 'end', index: number, end: number) 
       `Failed to execute '${fnName}' on 'TimeRanges': The index provided (${index}) is non-numeric or out of bounds (0-${end}).`,
     );
   }
+}
+
+export function normalizeTimeIntervals(intervals: TimeInterval[]): TimeInterval[] {
+  if (intervals.length <= 1) {
+    return intervals;
+  }
+
+  // Sort intervals based on the starting time.
+  intervals.sort((a, b) => a[0] - b[0]);
+
+  let normalized: TimeInterval[] = [],
+    current: TimeInterval = intervals[0];
+
+  for (let i = 1; i < intervals.length; i++) {
+    const next = intervals[i];
+
+    // If the next interval overlaps or is adjacent, merge them.
+    if (current[1] >= next[0] - 1) {
+      current = [current[0], Math.max(current[1], next[1])];
+    } else {
+      normalized.push(current);
+      current = next;
+    }
+  }
+
+  // Push the last interval.
+  normalized.push(current);
+
+  return normalized;
+}
+
+export function updateTimeIntervals(
+  intervals: TimeInterval[],
+  interval: TimeInterval,
+  value: number,
+): TimeInterval {
+  let start = interval[0],
+    end = interval[1];
+
+  if (value < start) {
+    return [value, -1];
+  } else if (value === start) {
+    return interval;
+  } else if (start === -1) {
+    interval[0] = value;
+    return interval;
+  } else if (value > start) {
+    interval[1] = value;
+    if (end === -1) intervals.push(interval);
+  }
+
+  normalizeTimeIntervals(intervals);
+
+  return interval;
 }

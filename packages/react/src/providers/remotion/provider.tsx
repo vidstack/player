@@ -29,8 +29,6 @@ export class RemotionProvider implements MediaProviderAdapter {
   protected _src = signal<RemotionSrc | null>(null);
   protected _setup = false;
   protected _loadStart = false;
-  protected _played = 0;
-  protected _playedRange = new TimeRange(0, 0);
   protected _audio: any = null;
   protected _waiting = signal(false);
   protected _waitingPromise: DeferredPromise<void, string> | null = null;
@@ -124,10 +122,7 @@ export class RemotionProvider implements MediaProviderAdapter {
       [REMOTION_PROVIDER_ID]: frame,
     }));
 
-    this._notify('time-update', {
-      currentTime: time,
-      played: this._getPlayedRange(time),
-    });
+    this._notify('time-change', time);
 
     if (seeking()) {
       tick();
@@ -226,12 +221,6 @@ export class RemotionProvider implements MediaProviderAdapter {
     this._notify('rate-change', rate);
   }
 
-  protected _getPlayedRange(time: number) {
-    return this._played >= time
-      ? this._playedRange
-      : (this._playedRange = new TimeRange(0, (this._played = time)));
-  }
-
   async loadSource(src: Src) {
     if (!isRemotionSrc(src)) return;
 
@@ -282,8 +271,6 @@ export class RemotionProvider implements MediaProviderAdapter {
   changeSrc(src: RemotionSrc | null) {
     this._playbackEngine?.destroy();
 
-    this._played = 0;
-    this._playedRange = new TimeRange(0, 0);
     this._waiting.set(false);
     this._waitingPromise?.reject('src changed');
     this._waitingPromise = null;
