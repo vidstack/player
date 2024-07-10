@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.27-next](https://github.com/vidstack/player/releases/tag/v1.11.27-next) (2024-07-10)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- time stutter on safari ([8857154](https://github.com/vidstack/player/commit/8857154d16a7711848078b893580cb62000586ff))
+- bundle plugin incorrectly imports plyr layout ([fa91c21](https://github.com/vidstack/player/commit/fa91c21a98c07caee1b7cac3d93094a81d2f5ede))
+- improve `played` tracking across providers ([513db34](https://github.com/vidstack/player/commit/513db3434cac3f9d261404754a39f46775621ff8))
+- toggle button non-passive event listener ([a2a3ce3](https://github.com/vidstack/player/commit/a2a3ce30fee5cf210b06a5e5fd70cdafc982b85d))
+
 ## [1.11.26-next](https://github.com/vidstack/player/releases/tag/v1.11.26-next) (2024-07-09)
 
 ### ✨ Features
