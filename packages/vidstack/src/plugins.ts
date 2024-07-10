@@ -295,14 +295,14 @@ function generateBundleImports({
   if (!hasDefaultLayout) {
     styles.push('import "vidstack/player/styles/base.css";');
     if (plyrLayout) {
-      styles.push('vidstack/player/styles/plyr/theme.css');
-      imports.push('vidstack/player/layouts/plyr');
+      styles.push('import "vidstack/player/styles/plyr/theme.css";');
+      imports.push('import "vidstack/player/layouts/plyr";');
     }
   } else {
     styles.push(`import "vidstack/player/styles/default/theme.css";`);
 
     if (plyrLayout) {
-      styles.push(`vidstack/player/styles/plyr/theme.css`);
+      styles.push(`import "vidstack/player/styles/plyr/theme.css";`);
     }
 
     if (defaultAudioLayout) {
