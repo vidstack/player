@@ -46,9 +46,18 @@ export class HTMLMediaEvents {
    * bar (or whatever else is synced to the currentTime) moves in a choppy fashion. This helps
    * resolve that by retrieving time updates in a request animation frame loop.
    */
+  private _lastSeenTime = 0;
+  private _seekedTo = -1;
   private _onAnimationFrame() {
     const newTime = this._media.currentTime;
-    if (this._ctx.$state.realCurrentTime() !== newTime) this._updateCurrentTime(newTime);
+
+    // Avoid stuttering on Safari (after a seek operation time may drift backwards for a few frames).
+    const didStutter = IS_SAFARI && newTime - this._seekedTo < 0.35;
+
+    if (!didStutter && this._lastSeenTime !== newTime) {
+      this._updateCurrentTime(newTime);
+      this._lastSeenTime = newTime;
+    }
   }
 
   private _attachInitialListeners() {
@@ -167,6 +176,10 @@ export class HTMLMediaEvents {
   }
 
   private _onLoadedMetadata(event: Event) {
+    // Reset.
+    this._lastSeenTime = 0;
+    this._seekedTo = -1;
+
     this._attachCanPlayListeners();
 
     this._notify('loaded-metadata', undefined, event);
@@ -271,6 +284,8 @@ export class HTMLMediaEvents {
   }
 
   private _onSeeked(event: Event) {
+    this._seekedTo = this._media.currentTime;
+
     this._updateCurrentTime(this._media.currentTime, event);
 
     this._notify('seeked', this._media.currentTime, event);
