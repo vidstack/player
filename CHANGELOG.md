@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.28-next](https://github.com/vidstack/player/releases/tag/v1.11.28-next) (2024-07-11)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- thumbnail loader race condition ([cebfe8f](https://github.com/vidstack/player/commit/cebfe8f25499a9e0e4915dac48b95ef7c96dc30d))
+- time updates stop when page is hidden ([bf59ba5](https://github.com/vidstack/player/commit/bf59ba54181ec20d1e2b50e37d7a2f5299173e01))
+
+#### Player (CDN)
+
+- static blocks throwing on iOS 15 ([537fc45](https://github.com/vidstack/player/commit/537fc45870de8a5083c837cc012f36eed6ed97d0))
+
 ## [1.11.27-next](https://github.com/vidstack/player/releases/tag/v1.11.27-next) (2024-07-10)
 
 ### 🐛 Bug Fixes
