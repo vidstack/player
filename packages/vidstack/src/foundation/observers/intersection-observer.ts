@@ -14,13 +14,13 @@ export class IntersectionObserverController extends ViewController {
 
     this._observer.observe(el);
 
-    onDispose(this._disconnect.bind(this));
+    onDispose(this._onDisconnect.bind(this));
   }
 
   /**
    * Disconnect any active intersection observers.
    */
-  _disconnect(): void {
+  protected _onDisconnect(): void {
     this._observer?.disconnect();
     this._observer = undefined;
   }

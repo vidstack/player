@@ -4,6 +4,7 @@ import { DOMEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
 import type { MediaContext } from '../../core/api/media-context';
 import type { MediaCanPlayDetail } from '../../core/api/media-events';
 import type { MediaErrorCode } from '../../core/api/types';
+import { PageVisibility } from '../../foundation/observers/page-visibility';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { isHLSSrc } from '../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../utils/number';
@@ -16,6 +17,7 @@ export class HTMLMediaEvents {
   private _attachedLoadStart = false;
   private _attachedCanPlay = false;
   private _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
+  private _pageVisibility = new PageVisibility();
 
   private get _media() {
     return this._provider.media;
@@ -30,7 +32,10 @@ export class HTMLMediaEvents {
     private _ctx: MediaContext,
   ) {
     this._attachInitialListeners();
+
+    this._pageVisibility.connect();
     effect(this._attachTimeUpdate.bind(this));
+
     onDispose(this._onDispose.bind(this));
   }
 
@@ -253,12 +258,17 @@ export class HTMLMediaEvents {
   }
 
   protected _attachTimeUpdate() {
-    if (this._ctx.$state.paused()) {
+    const isPaused = this._ctx.$state.paused(),
+      isPageHidden = this._pageVisibility.visibility === 'hidden',
+      shouldListenToTimeUpdates = isPaused || isPageHidden;
+
+    if (shouldListenToTimeUpdates) {
       listenEvent(this._media, 'timeupdate', this._onTimeUpdate.bind(this));
     }
   }
 
   protected _onTimeUpdate(event: Event) {
+    console.log(this._media.currentTime);
     this._updateCurrentTime(this._media.currentTime, event);
   }
 

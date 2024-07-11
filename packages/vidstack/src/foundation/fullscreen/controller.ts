@@ -29,17 +29,19 @@ export class FullscreenController
 
   protected override onConnect() {
     // @ts-expect-error
-    listenEvent(fscreen as any, 'fullscreenchange', this._onFullscreenChange.bind(this) as any);
+    listenEvent(fscreen, 'fullscreenchange', this._onChange.bind(this));
+
     // @ts-expect-error
-    listenEvent(fscreen as any, 'fullscreenerror', this._onFullscreenError.bind(this) as any);
+    listenEvent(fscreen, 'fullscreenerror', this._onError.bind(this));
+
     onDispose(this._onDisconnect.bind(this));
   }
 
-  protected async _onDisconnect() {
+  private async _onDisconnect() {
     if (CAN_FULLSCREEN) await this.exit();
   }
 
-  protected _onFullscreenChange(event: Event) {
+  private _onChange(event: Event) {
     const active = isFullscreen(this.el);
     if (active === this._active) return;
     if (!active) this._listening = false;
@@ -47,7 +49,7 @@ export class FullscreenController
     this.dispatch('fullscreen-change', { detail: active, trigger: event });
   }
 
-  protected _onFullscreenError(event: Event) {
+  private _onError(event: Event) {
     if (!this._listening) return;
     this.dispatch('fullscreen-error', { detail: null, trigger: event });
     this._listening = false;

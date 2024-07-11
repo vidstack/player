@@ -1,4 +1,4 @@
-import { signal, ViewController } from 'maverick.js';
+import { signal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import { IS_SAFARI } from '../../utils/support';
@@ -14,7 +14,7 @@ declare global {
   }
 }
 
-export class PageVisibilityController extends ViewController {
+export class PageVisibility {
   private _state = signal<PageState>(determinePageState());
 
   private _visibility = signal<DocumentVisibility>(
@@ -23,7 +23,7 @@ export class PageVisibilityController extends ViewController {
 
   private _safariBeforeUnloadTimeout: any;
 
-  protected override onConnect() {
+  connect() {
     for (const eventType of PAGE_EVENTS) {
       listenEvent(window, eventType, this._handlePageEvent.bind(this));
     }
@@ -61,7 +61,7 @@ export class PageVisibilityController extends ViewController {
    *
    * @see https://developers.google.com/web/updates/2018/07/page-lifecycle-api#states
    */
-  $pageState(): PageState {
+  get pageState(): PageState {
     return this._state();
   }
 
@@ -76,7 +76,7 @@ export class PageVisibilityController extends ViewController {
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState
    */
-  $visibility(): DocumentVisibility {
+  get visibility(): DocumentVisibility {
     return this._visibility();
   }
 
