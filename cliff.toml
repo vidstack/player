@@ -13,7 +13,7 @@ body = """
 {% for group, commits in commits | group_by(attribute="group") %}
     ### {{ group | upper_first }}
     {% for group, commits in commits | group_by(attribute="scope") %}
-        #### {{ group | upper_first | replace(from="/react", to=" (React)") }}
+        #### {{ group | upper_first | replace(from="/react", to=" (React)") | replace(from="/cdn", to=" (CDN)") }}
         {% for commit in commits %}
             - {{ commit.message }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/vidstack/player/commit/{{ commit.id }}))\
         {% endfor %}

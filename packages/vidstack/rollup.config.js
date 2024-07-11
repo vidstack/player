@@ -255,19 +255,28 @@ function defineNPMBundle({ target, type, minify }) {
           __TEST__: 'false',
         },
       }),
+      !!target && {
+        name: 'target-syntax',
+        transform(code, id) {
+          if (/node_modules.*?\.js/.test(id)) {
+            return esbuildTransform(code, {
+              target,
+              platform: 'neutral',
+            }).then((t) => t.code);
+          }
+        },
+      },
       shouldMangle && {
         name: 'mangle',
         async transform(code, id) {
           if (id.includes('node_modules')) return null;
-          return (
-            await esbuildTransform(code, {
-              target: 'esnext',
-              platform: 'neutral',
-              mangleProps: /^_/,
-              mangleCache: MANGLE_CACHE,
-              reserveProps: /^__/,
-            })
-          ).code;
+          return esbuildTransform(code, {
+            target: 'esnext',
+            platform: 'neutral',
+            mangleProps: /^_/,
+            mangleCache: MANGLE_CACHE,
+            reserveProps: /^__/,
+          }).then((t) => t.code);
         },
       },
     ],

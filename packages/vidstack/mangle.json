@@ -794,5 +794,6 @@
   "_playedInterval": "Ln",
   "_playedIntervals": "On",
   "_seekedTo": "Nn",
-  "_updatePlayed": "Pn"
+  "_updatePlayed": "Pn",
+  "_pageVisibility": "Qn"
 }
