@@ -28,6 +28,6 @@ export default defineConfig({
   ],
   optimizeDeps: {
     noDiscovery: true,
-    include: ['react', 'react-dom'],
+    include: ['react', 'react-dom', 'react-dom/client'],
   },
 });
