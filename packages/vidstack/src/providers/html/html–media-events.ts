@@ -268,7 +268,6 @@ export class HTMLMediaEvents {
   }
 
   protected _onTimeUpdate(event: Event) {
-    console.log(this._media.currentTime);
     this._updateCurrentTime(this._media.currentTime, event);
   }
 
