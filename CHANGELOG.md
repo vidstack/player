@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.29-next](https://github.com/vidstack/player/releases/tag/v1.11.29-next) (2024-07-12)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- hide poster when not defined ([a6b1453](https://github.com/vidstack/player/commit/a6b1453ec2ce090777c836eddb1f5c975e00f57f))
+- remove console log (#1346) ([288c8ae](https://github.com/vidstack/player/commit/288c8aea26bb9c91626aaec5d09157ad9575a9ae))
+
 ## [1.11.28-next](https://github.com/vidstack/player/releases/tag/v1.11.28-next) (2024-07-11)
 
 ### 🐛 Bug Fixes
