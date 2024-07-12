@@ -45,3 +45,8 @@
 :where(.vds-poster[data-visible]) {
   opacity: 1;
 }
+
+.vds-poster:not(:defined),
+.vds-poster img:not([src]) {
+  display: none;
+}
