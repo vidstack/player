@@ -45,7 +45,8 @@ export function listen(
 }
 
 export function isEventInside(el: HTMLElement, event: Event) {
-  return isDOMNode(event.target) && el.contains(event.target);
+  const target = event.composedPath()[0];
+  return isDOMNode(target) && el.contains(target);
 }
 
 const rafJobs = new Set<() => void>();
