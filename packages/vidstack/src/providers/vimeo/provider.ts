@@ -15,8 +15,8 @@ import { TextTrack } from '../../core/tracks/text/text-track';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { preconnect } from '../../utils/network';
-import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
+import type { MediaFullscreenAdapter } from '../types';
 import type { VimeoCommandArg, VimeoCommandData } from './embed/command';
 import {
   trackedVimeoEvents,
@@ -55,17 +55,20 @@ export class VimeoProvider
 
   readonly scope = createScope();
 
-  protected _seekableRange = new TimeRange(0, 0);
-  protected _playPromise: DeferredPromise<void, string> | null = null;
-  protected _pausePromise: DeferredPromise<void, string> | null = null;
-  protected _videoInfoPromise: DeferredPromise<VimeoVideoInfo, void> | null = null;
+  fullscreen?: MediaFullscreenAdapter;
+
   protected _videoId = signal('');
   protected _pro = signal(false);
   protected _hash: string | null = null;
   protected _currentSrc: Src<string> | null = null;
   protected _currentCue: VTTCue | null = null;
   protected _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
-  private _chaptersTrack: TextTrack | null = null;
+  protected _fullscreenActive = false;
+  protected _seekableRange = new TimeRange(0, 0);
+  protected _chaptersTrack: TextTrack | null = null;
+
+  protected _promises = new Map<string, DeferredPromise<any, string>[]>();
+  protected _videoInfoPromise: DeferredPromise<VimeoVideoInfo, void> | null = null;
 
   protected get _notify() {
     return this._ctx.delegate._notify;
@@ -76,6 +79,16 @@ export class VimeoProvider
     protected _ctx: MediaContext,
   ) {
     super(iframe);
+
+    const self = this;
+    this.fullscreen = {
+      get active() {
+        return self._fullscreenActive;
+      },
+      supported: true,
+      enter: () => this._remote('requestFullscreen'),
+      exit: () => this._remote('exitFullscreen'),
+    };
   }
 
   /**
@@ -138,37 +151,26 @@ export class VimeoProvider
 
   destroy() {
     this._reset();
+
+    this.fullscreen = undefined;
+
+    // Release all pending promises.
+    const message = 'provider destroyed';
+    for (const promises of this._promises.values()) {
+      for (const { reject } of promises) reject(message);
+    }
+
+    this._promises.clear();
+
     this._remote('destroy');
   }
 
   async play() {
-    const { paused } = this._ctx.$state;
-
-    if (!this._playPromise) {
-      this._playPromise = timedPromise<void, string>(() => {
-        this._playPromise = null;
-        if (paused()) return 'Timed out.';
-      });
-
-      this._remote('play');
-    }
-
-    return this._playPromise.promise;
+    return this._remote('play');
   }
 
   async pause() {
-    const { paused } = this._ctx.$state;
-
-    if (!this._pausePromise) {
-      this._pausePromise = timedPromise<void, string>(() => {
-        this._pausePromise = null;
-        if (!paused()) return 'Timed out.';
-      });
-
-      this._remote('pause');
-    }
-
-    return this._pausePromise.promise;
+    return this._remote('pause');
   }
 
   setMuted(muted) {
@@ -416,6 +418,9 @@ export class VimeoProvider
         this._onQualitiesChange(data as VimeoQuality[], trigger);
         break;
     }
+
+    const promise = this._promises.get(method)?.shift();
+    promise?.resolve();
   }
 
   protected _attachListeners() {
@@ -427,15 +432,11 @@ export class VimeoProvider
   protected _onPause(trigger: Event) {
     this._timeRAF._stop();
     this._notify('pause', undefined, trigger);
-    this._pausePromise?.resolve();
-    this._pausePromise = null;
   }
 
   protected _onPlay(trigger: Event) {
     this._timeRAF._start();
     this._notify('play', undefined, trigger);
-    this._playPromise?.resolve();
-    this._playPromise = null;
   }
 
   protected _onPlayProgress(trigger: Event) {
@@ -632,6 +633,7 @@ export class VimeoProvider
         this._onQualityChange(payload, trigger);
         break;
       case 'fullscreenchange':
+        this._fullscreenActive = payload.fullscreen;
         this._notify('fullscreen-change', payload.fullscreen, trigger);
         break;
       case 'enterpictureinpicture':
@@ -660,18 +662,20 @@ export class VimeoProvider
   }
 
   protected _onError(error: VimeoErrorPayload, trigger: Event) {
-    if (error.method === 'setPlaybackRate') {
+    const { message, method } = error;
+
+    if (method === 'setPlaybackRate') {
       this._pro.set(false);
     }
 
-    if (error.method === 'play') {
-      this._playPromise?.reject(error.message);
-      return;
+    if (method) {
+      const promise = this._promises.get(method)?.shift();
+      promise?.reject(message);
     }
 
     if (__DEV__) {
       this._ctx.logger
-        ?.errorGroup(`[vimeo]: ${error.message}`)
+        ?.errorGroup(`[vimeo]: ${message}`)
         .labelledLog('Error', error)
         .labelledLog('Provider', this)
         .labelledLog('Event', trigger)
@@ -691,18 +695,25 @@ export class VimeoProvider
     // no-op
   }
 
-  protected _remote<T extends keyof VimeoCommandArg>(command: T, arg?: VimeoCommandArg[T]) {
-    return this._postMessage({
+  protected async _remote<T extends keyof VimeoCommandArg>(command: T, arg?: VimeoCommandArg[T]) {
+    let promise = deferredPromise<void, string>(),
+      promises = this._promises.get(command);
+
+    if (!promises) this._promises.set(command, (promises = []));
+
+    promises.push(promise);
+
+    this._postMessage({
       method: command,
       value: arg,
     });
+
+    return promise.promise;
   }
 
   protected _reset() {
     this._timeRAF._stop();
     this._seekableRange = new TimeRange(0, 0);
-    this._playPromise = null;
-    this._pausePromise = null;
     this._videoInfoPromise = null;
     this._currentCue = null;
     this._pro.set(false);
