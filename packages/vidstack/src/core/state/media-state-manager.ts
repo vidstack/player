@@ -976,6 +976,7 @@ export class MediaStateManager extends MediaPlayerController {
     if (loop()) {
       setTimeout(() => {
         requestAnimationFrame(() => {
+          this._resetPlaybackIfNeeded(event);
           this.dispatch('media-loop-request', { trigger: event });
         });
       }, 10);
