@@ -3,9 +3,13 @@ import type { YouTubePlaybackQuality } from './quality';
 import type { YouTubePlayerStateValue } from './state';
 
 export interface YouTubeVideoData {
+  allowLiveDvr: boolean;
   author: string;
   title: string;
   video_id: string;
+  errorCode?: number;
+  isListed: boolean;
+  isLive: boolean;
 }
 
 export interface YouTubeProgressState {

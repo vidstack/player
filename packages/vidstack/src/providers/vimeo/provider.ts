@@ -17,7 +17,7 @@ import { RAFLoop } from '../../foundation/observers/raf-loop';
 import { preconnect } from '../../utils/network';
 import { EmbedProvider } from '../embed/EmbedProvider';
 import type { MediaFullscreenAdapter } from '../types';
-import type { VimeoCommandArg, VimeoCommandData } from './embed/command';
+import type { VimeoCommand, VimeoCommandArg, VimeoCommandData } from './embed/command';
 import {
   trackedVimeoEvents,
   type VimeoErrorPayload,
@@ -61,10 +61,13 @@ export class VimeoProvider
   protected _pro = signal(false);
   protected _hash: string | null = null;
   protected _currentSrc: Src<string> | null = null;
-  protected _currentCue: VTTCue | null = null;
-  protected _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
+
   protected _fullscreenActive = false;
+
   protected _seekableRange = new TimeRange(0, 0);
+  protected _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
+
+  protected _currentCue: VTTCue | null = null;
   protected _chaptersTrack: TextTrack | null = null;
 
   protected _promises = new Map<string, DeferredPromise<any, string>[]>();
@@ -294,7 +297,7 @@ export class VimeoProvider
   }
 
   // Embed will sometimes dispatch 0 at end of playback.
-  private _preventTimeUpdates = false;
+  protected _preventTimeUpdates = false;
 
   protected _onTimeUpdate(time: number, trigger: Event) {
     if (this._preventTimeUpdates && time === 0) return;
@@ -352,7 +355,7 @@ export class VimeoProvider
       });
   }
 
-  private _onReady(duration: number, trigger: Event) {
+  protected _onReady(duration: number, trigger: Event) {
     const { nativeControls } = this._ctx.$state,
       showEmbedControls = nativeControls();
 
@@ -419,8 +422,7 @@ export class VimeoProvider
         break;
     }
 
-    const promise = this._promises.get(method)?.shift();
-    promise?.resolve();
+    this._getPromise(method)?.resolve();
   }
 
   protected _attachListeners() {
@@ -586,7 +588,7 @@ export class VimeoProvider
     }
   }
 
-  private _onEvent<T extends keyof VimeoEventPayload>(
+  protected _onEvent<T extends keyof VimeoEventPayload>(
     event: T,
     payload: VimeoEventPayload[T],
     trigger: Event,
@@ -669,8 +671,7 @@ export class VimeoProvider
     }
 
     if (method) {
-      const promise = this._promises.get(method)?.shift();
-      promise?.reject(message);
+      this._getPromise(method as VimeoCommand)?.reject(message);
     }
 
     if (__DEV__) {
@@ -718,5 +719,9 @@ export class VimeoProvider
     this._currentCue = null;
     this._pro.set(false);
     this._removeChapters();
+  }
+
+  protected _getPromise(command: VimeoCommand) {
+    return this._promises.get(command)?.shift();
   }
 }

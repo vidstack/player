@@ -1,14 +1,21 @@
 import { createScope, effect, signal } from 'maverick.js';
-import { isBoolean, isNumber, isObject, isString, type DeferredPromise } from 'maverick.js/std';
+import {
+  deferredPromise,
+  isBoolean,
+  isNumber,
+  isObject,
+  isString,
+  isUndefined,
+  type DeferredPromise,
+} from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
 import type { Src } from '../../core/api/src-types';
 import { TimeRange } from '../../core/time-ranges';
 import { preconnect } from '../../utils/network';
-import { timedPromise } from '../../utils/promise';
 import { EmbedProvider } from '../embed/EmbedProvider';
 import type { MediaProviderAdapter } from '../types';
-import type { YouTubeCommandArg } from './embed/command';
+import type { YouTubeCommand, YouTubeCommandArg } from './embed/command';
 import type { YouTubeMessage } from './embed/message';
 import type { YouTubeParams } from './embed/params';
 import { YouTubePlayerState, type YouTubePlayerStateValue } from './embed/state';
@@ -36,11 +43,12 @@ export class YouTubeProvider
 
   protected _videoId = signal('');
   protected _state: YouTubePlayerStateValue = -1;
+  protected _currentSrc: Src<string> | null = null;
+
   protected _seekingTimer = -1;
   protected _pausedSeeking = false;
-  protected _currentSrc: Src<string> | null = null;
-  protected _playPromise: DeferredPromise<void, string> | null = null;
-  protected _pausePromise: DeferredPromise<void, string> | null = null;
+
+  protected _promises = new Map<string, DeferredPromise<any, string>[]>();
 
   protected get _notify() {
     return this._ctx.delegate._notify;
@@ -97,44 +105,32 @@ export class YouTubeProvider
     this._notify('provider-setup', this);
   }
 
-  async play() {
-    const { paused } = this._ctx.$state;
+  destroy() {
+    this._reset();
 
-    if (!this._playPromise) {
-      this._playPromise = timedPromise<void, string>(() => {
-        this._playPromise = null;
-        if (paused()) return 'Timed out.';
-      });
-
-      this._remote('playVideo');
+    // Release all pending promises.
+    const message = 'provider destroyed';
+    for (const promises of this._promises.values()) {
+      for (const { reject } of promises) reject(message);
     }
 
-    return this._playPromise.promise;
+    this._promises.clear();
   }
 
-  private _playFail(message: string) {
-    this._playPromise?.reject(message);
-    this._playPromise = null;
+  async play() {
+    return this._remote('playVideo');
+  }
+
+  protected _playFail(message: string) {
+    this._getPromise('playVideo')?.reject(message);
   }
 
   async pause() {
-    const { paused } = this._ctx.$state;
-
-    if (!this._pausePromise) {
-      this._pausePromise = timedPromise<void, string>(() => {
-        this._pausePromise = null;
-        if (!paused()) 'Timed out.';
-      });
-
-      this._remote('pauseVideo');
-    }
-
-    return this._pausePromise.promise;
+    return this._remote('pauseVideo');
   }
 
-  private _pauseFail(message: string) {
-    this._pausePromise?.reject(message);
-    this._pausePromise = null;
+  protected _pauseFail(message: string) {
+    this._getPromise('pauseVideo')?.reject(message);
   }
 
   setMuted(muted: boolean) {
@@ -208,11 +204,20 @@ export class YouTubeProvider
   }
 
   protected _remote<T extends keyof YouTubeCommandArg>(command: T, arg?: YouTubeCommandArg[T]) {
+    let promise = deferredPromise<void, string>(),
+      promises = this._promises.get(command);
+
+    if (!promises) this._promises.set(command, (promises = []));
+
+    promises.push(promise);
+
     this._postMessage({
       event: 'command',
       func: command,
       args: arg ? [arg] : undefined,
     });
+
+    return promise.promise;
   }
 
   protected override _onLoad(): void {
@@ -227,8 +232,7 @@ export class YouTubeProvider
   }
 
   protected _onPause(trigger: Event) {
-    this._pausePromise?.resolve();
-    this._pausePromise = null;
+    this._getPromise('pauseVideo')?.resolve();
     this._notify('pause', undefined, trigger);
   }
 
@@ -292,7 +296,8 @@ export class YouTubeProvider
     const { started, paused, seeking } = this._ctx.$state,
       isPlaying = state === YouTubePlayerState._Playing,
       isBuffering = state === YouTubePlayerState._Buffering,
-      isPlay = (paused() || this._playPromise) && (isBuffering || isPlaying);
+      isPendingPlay = !isUndefined(this._getPromise('playVideo')),
+      isPlay = (paused() || isPendingPlay) && (isBuffering || isPlaying);
 
     if (isBuffering) this._notify('waiting', undefined, trigger);
 
@@ -314,8 +319,7 @@ export class YouTubeProvider
 
     // Attempt to detect `play` events early.
     if (isPlay) {
-      this._playPromise?.resolve();
-      this._playPromise = null;
+      this._getPromise('playVideo')?.resolve();
       this._notify('play', undefined, trigger);
     }
 
@@ -398,8 +402,10 @@ export class YouTubeProvider
   protected _reset() {
     this._state = -1;
     this._seekingTimer = -1;
-    this._playPromise = null;
-    this._pausePromise = null;
     this._pausedSeeking = false;
+  }
+
+  protected _getPromise(command: YouTubeCommand) {
+    return this._promises.get(command)?.shift();
   }
 }
