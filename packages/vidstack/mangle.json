@@ -795,5 +795,8 @@
   "_playedIntervals": "On",
   "_seekedTo": "Nn",
   "_updatePlayed": "Pn",
-  "_pageVisibility": "Qn"
+  "_pageVisibility": "Qn",
+  "_fullscreenActive": "Tn",
+  "_getPromise": "Sn",
+  "_promises": "Rn"
 }

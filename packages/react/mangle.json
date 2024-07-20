@@ -797,5 +797,8 @@
   "_handlePageEvent": "_n",
   "_pageVisibility": "Zn",
   "_safariBeforeUnloadTimeout": "Yn",
-  "_visibility": "Xn"
+  "_visibility": "Xn",
+  "_fullscreenActive": "bo",
+  "_getPromise": "ao",
+  "_promises": "$n"
 }
