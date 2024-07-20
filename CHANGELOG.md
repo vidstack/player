@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.30-next](https://github.com/vidstack/player/releases/tag/v1.11.30-next) (2024-07-20)
+
+### ✨ Features
+
+#### Player
+
+- vimeo fullscreen support on iphone ([a56eb3c](https://github.com/vidstack/player/commit/a56eb3c130cabb7d73a8758eb3cc580420fa8b03))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- submenu not opening when inside dialog in shadow dom ([12c5c3f](https://github.com/vidstack/player/commit/12c5c3f65f96e634b2262fce635fbe15e00cf980))
+- vimeo video freezes on loop when out of viewport ([3de2980](https://github.com/vidstack/player/commit/3de2980c84599dcd5286a3dbab4adc36c2409ead))
+- better youtube command promise handling ([4d02919](https://github.com/vidstack/player/commit/4d02919266d60700c42eff181a15bafce3bce282))
+
 ## [1.11.29-next](https://github.com/vidstack/player/releases/tag/v1.11.29-next) (2024-07-12)
 
 ### 🐛 Bug Fixes
