@@ -76,6 +76,9 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
   @method
   load(target: HTMLElement | null | undefined) {
+    // Hide underlying provider element from screen readers.
+    target?.setAttribute('aria-hidden', 'true');
+
     // Use a RAF here to prevent hot reloads resetting provider.
     window.cancelAnimationFrame(this._loadRafId);
     this._loadRafId = requestAnimationFrame(() => this._runLoader(target));

@@ -99,9 +99,6 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
     const audio =
       this._target instanceof HTMLAudioElement ? this._target : document.createElement('audio');
 
-    setAttribute(audio, 'preload', 'none');
-    setAttribute(audio, 'aria-hidden', 'true');
-
     const { controls, crossOrigin } = this._media.$state;
     effect(() => {
       setAttribute(audio, 'controls', controls());

@@ -96,6 +96,10 @@
   height: 100%;
 }
 
+[data-media-provider] iframe:not([src]) {
+  display: none;
+}
+
 iframe.vds-youtube[data-no-controls] {
   height: 1000%;
 }
