@@ -495,7 +495,7 @@ export class MediaPlayer
   }
 
   set muted(muted) {
-    this._$$props.muted.set(muted);
+    this._queueMutedUpdate(muted);
   }
 
   private _watchMuted() {
@@ -549,7 +549,7 @@ export class MediaPlayer
   }
 
   set volume(volume) {
-    this._$$props.volume.set(volume);
+    this._queueVolumeUpdate(volume);
   }
 
   private _watchVolume() {
