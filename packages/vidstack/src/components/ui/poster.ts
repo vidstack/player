@@ -119,8 +119,11 @@ export class Poster extends Component<PosterProps, PosterState> {
   private _watchImg() {
     const img = this.$state.img();
     if (!img) return;
+
     listenEvent(img, 'load', this._onLoad.bind(this));
     listenEvent(img, 'error', this._onError.bind(this));
+
+    if (img.complete) this._onLoad();
   }
 
   private _prevSrc = '';

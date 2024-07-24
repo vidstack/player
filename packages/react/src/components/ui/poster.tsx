@@ -40,7 +40,10 @@ export interface PosterProps extends ReactElementProps<PosterInstance, HTMLImage
 const Poster = React.forwardRef<HTMLImageElement, PosterProps>(
   ({ children, ...props }, forwardRef) => {
     return (
-      <PosterBridge {...(props as Omit<PosterProps, 'ref'>)}>
+      <PosterBridge
+        src={props.asChild && React.isValidElement(children) ? children.props.src : undefined}
+        {...(props as Omit<PosterProps, 'ref'>)}
+      >
         {(props, instance) => (
           <PosterImg
             {...props}
@@ -65,16 +68,16 @@ export { Poster };
 interface PosterImgProps {
   instance: PosterInstance;
   children?: React.ReactNode;
+  asChild?: boolean;
   ref?: React.LegacyRef<HTMLImageElement>;
 }
 
 const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
   ({ instance, children, ...props }, forwardRef) => {
-    const { src, img, alt, crossOrigin, loading, hidden } = instance.$state,
+    const { src, img, alt, crossOrigin, hidden } = instance.$state,
       $src = useSignal(src),
       $alt = useSignal(alt),
       $crossOrigin = useSignal(crossOrigin),
-      $loading = useSignal(loading),
       $hidden = useSignal(hidden);
     return (
       <Primitive.img
@@ -83,7 +86,7 @@ const PosterImg = React.forwardRef<HTMLImageElement, PosterImgProps>(
         alt={$alt || undefined}
         crossOrigin={$crossOrigin || undefined}
         ref={composeRefs(img.set as React.Ref<HTMLImageElement>, forwardRef)}
-        style={{ display: $loading || $hidden ? 'none' : undefined }}
+        style={{ display: $hidden ? 'none' : undefined }}
       >
         {children}
       </Primitive.img>
