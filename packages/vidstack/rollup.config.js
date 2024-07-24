@@ -396,7 +396,7 @@ function defineCDNBundle({ dev = false, input, dir, file, legacy = false }) {
     external: CDN_EXTERNAL_PACKAGES,
     plugins: [
       .../** @type {*} */ (npm.plugins),
-      {
+      !legacy && {
         // This plugin rewrites chunk paths so our URL rewrites to jsDelivr work.
         name: 'cdn-chunks',
         async generateBundle(_, bundle) {
