@@ -191,7 +191,7 @@ function DefaultAudioTitle() {
 
   React.useEffect(() => {
     if (isTransitionActive && document.activeElement === document.body) {
-      media.player.el?.focus();
+      media.player.el?.focus({ preventScroll: true });
     }
   }, []);
 
