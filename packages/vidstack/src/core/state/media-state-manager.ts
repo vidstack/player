@@ -932,7 +932,7 @@ export class MediaStateManager extends MediaPlayerController {
 
       // Only start if user initiated.
       const origin = event?.originEvent;
-      if (origin?.isTrusted && !/seek/.test(origin.type)) {
+      if (origin?.isTrusted && !(origin instanceof MessageEvent) && !/seek/.test(origin.type)) {
         this['started'](event);
       }
     }
