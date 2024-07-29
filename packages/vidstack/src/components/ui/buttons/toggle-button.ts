@@ -30,20 +30,20 @@ export class ToggleButton<
     defaultPressed: false,
   };
 
-  private _pressed = signal(false);
+  #pressed = signal(false);
 
   /**
    * Whether the toggle is currently in a `pressed` state.
    */
   @prop
   get pressed() {
-    return this._pressed();
+    return this.#pressed();
   }
 
   constructor() {
     super();
     new ToggleButtonController({
-      _isPressed: this._pressed,
+      isPresssed: this.#pressed,
     });
   }
 }

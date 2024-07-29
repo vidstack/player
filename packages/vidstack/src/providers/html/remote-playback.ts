@@ -6,83 +6,87 @@ import { getAndroidVersion, IS_CHROME } from '../../utils/support';
 import type { MediaRemotePlaybackAdapter } from '../types';
 
 export abstract class HTMLRemotePlaybackAdapter implements MediaRemotePlaybackAdapter {
-  protected abstract readonly _type: 'airplay' | 'google-cast';
-  protected abstract readonly _canPrompt: boolean;
+  protected abstract readonly type: 'airplay' | 'google-cast';
+  protected abstract readonly canPrompt: boolean;
 
-  protected _state?: RemotePlaybackState;
-  protected _supported = signal(false);
+  readonly #media: HTMLMediaElement;
+  readonly #ctx: MediaContext;
+
+  #state?: RemotePlaybackState;
+  #supported = signal(false);
 
   get supported() {
-    return this._supported();
+    return this.#supported();
   }
 
-  constructor(
-    protected _media: HTMLMediaElement,
-    protected _ctx: MediaContext,
-  ) {
-    this._setup();
+  constructor(media: HTMLMediaElement, ctx: MediaContext) {
+    this.#media = media;
+    this.#ctx = ctx;
+    this.#setup();
   }
 
-  private _setup() {
-    if (__SERVER__ || !this._media?.remote || !this._canPrompt) return;
+  #setup() {
+    if (__SERVER__ || !this.#media?.remote || !this.canPrompt) return;
 
-    this._media.remote
+    this.#media.remote
       .watchAvailability((available) => {
-        this._supported.set(available);
+        this.#supported.set(available);
       })
       .catch(() => {
-        this._supported.set(false);
+        this.#supported.set(false);
       });
 
-    effect(this._watchSupported.bind(this));
+    effect(this.#watchSupported.bind(this));
   }
 
-  private _watchSupported() {
-    if (!this._supported()) return;
+  #watchSupported() {
+    if (!this.#supported()) return;
 
     const events = ['connecting', 'connect', 'disconnect'],
-      onStateChange = this._onStateChange.bind(this);
+      onStateChange = this.#onStateChange.bind(this);
 
     onStateChange();
-    listenEvent(this._media, 'playing', onStateChange);
+    listenEvent(this.#media, 'playing', onStateChange);
 
     for (const type of events) {
       // @ts-expect-error - video remote not typed
-      listenEvent(this._media.remote, type, onStateChange);
+      listenEvent(this.#media.remote, type, onStateChange);
     }
   }
 
   async prompt() {
     if (!this.supported) throw Error('Not supported on this platform.');
 
-    if (this._type === 'airplay' && this._media.webkitShowPlaybackTargetPicker) {
-      return this._media.webkitShowPlaybackTargetPicker();
+    if (this.type === 'airplay' && this.#media.webkitShowPlaybackTargetPicker) {
+      return this.#media.webkitShowPlaybackTargetPicker();
     }
 
-    return this._media.remote.prompt();
+    return this.#media.remote.prompt();
   }
 
-  protected _onStateChange(event?: Event) {
-    const state = this._media.remote.state;
-    if (state === this._state) return;
+  #onStateChange(event?: Event) {
+    const state = this.#media.remote.state;
+    if (state === this.#state) return;
 
-    const detail = { type: this._type, state } as const;
-    this._ctx.delegate._notify('remote-playback-change', detail, event);
+    const detail = { type: this.type, state } as const;
+    this.#ctx.notify('remote-playback-change', detail, event);
 
-    this._state = state;
+    this.#state = state;
   }
 }
 
 export class HTMLAirPlayAdapter extends HTMLRemotePlaybackAdapter {
-  override _type = 'airplay' as const;
-  protected get _canPrompt() {
+  override type = 'airplay' as const;
+
+  get canPrompt() {
     return 'WebKitPlaybackTargetAvailabilityEvent' in window;
   }
 }
 
 export class HTMLGoogleCastAdapter extends HTMLRemotePlaybackAdapter {
-  override _type = 'google-cast' as const;
-  get _canPrompt() {
+  override type = 'google-cast' as const;
+
+  get canPrompt() {
     // Google Cast is available natively on Chrome Android >=56
     return IS_CHROME && getAndroidVersion() >= 56;
   }

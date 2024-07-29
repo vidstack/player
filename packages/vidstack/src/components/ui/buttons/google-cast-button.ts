@@ -26,50 +26,50 @@ export interface GoogleCastButtonEvents
 export class GoogleCastButton extends Component<GoogleCastButtonProps, {}, GoogleCastButtonEvents> {
   static props: GoogleCastButtonProps = ToggleButtonController.props;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   constructor() {
     super();
     new ToggleButtonController({
-      _isPressed: this._isPressed.bind(this),
-      _onPress: this._onPress.bind(this),
+      isPresssed: this.#isPressed.bind(this),
+      onPress: this.#onPress.bind(this),
     });
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
-    const { canGoogleCast, isGoogleCastConnected } = this._media.$state;
+    const { canGoogleCast, isGoogleCastConnected } = this.#media.$state;
     this.setAttributes({
       'data-active': isGoogleCastConnected,
       'data-supported': canGoogleCast,
-      'data-state': this._getState.bind(this),
+      'data-state': this.#getState.bind(this),
       'aria-hidden': $ariaBool(() => !canGoogleCast()),
     });
   }
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'google-cast');
-    setARIALabel(el, this._getDefaultLabel.bind(this));
+    setARIALabel(el, this.#getDefaultLabel.bind(this));
   }
 
-  private _onPress(event: Event) {
-    const remote = this._media.remote;
+  #onPress(event: Event) {
+    const remote = this.#media.remote;
     remote.requestGoogleCast(event);
   }
 
-  private _isPressed() {
-    const { remotePlaybackType, remotePlaybackState } = this._media.$state;
+  #isPressed() {
+    const { remotePlaybackType, remotePlaybackState } = this.#media.$state;
     return remotePlaybackType() === 'google-cast' && remotePlaybackState() !== 'disconnected';
   }
 
-  private _getState() {
-    const { remotePlaybackType, remotePlaybackState } = this._media.$state;
+  #getState() {
+    const { remotePlaybackType, remotePlaybackState } = this.#media.$state;
     return remotePlaybackType() === 'google-cast' && remotePlaybackState();
   }
 
-  private _getDefaultLabel() {
-    const { remotePlaybackState } = this._media.$state;
+  #getDefaultLabel() {
+    const { remotePlaybackState } = this.#media.$state;
     return `Google Cast ${remotePlaybackState()}`;
   }
 }

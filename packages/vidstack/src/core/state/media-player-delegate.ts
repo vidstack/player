@@ -8,27 +8,30 @@ import type { VideoQuality } from '../quality/video-quality';
 let seenAutoplayWarning = false;
 
 export class MediaPlayerDelegate {
-  constructor(
-    private _handle: (event: Event) => void,
-    private _media: MediaContext,
-  ) {}
+  #handle: (event: Event) => void;
+  #media: MediaContext;
 
-  _notify = <Type extends keyof MediaEvents>(
+  constructor(handle: (event: Event) => void, media: MediaContext) {
+    this.#handle = handle;
+    this.#media = media;
+  }
+
+  notify<Type extends keyof MediaEvents>(
     type: Type,
     ...init: InferEventDetail<MediaEvents[Type]> extends void | undefined | never
       ? [detail?: never, trigger?: Event]
       : [detail: InferEventDetail<MediaEvents[Type]>, trigger?: Event]
-  ) => {
+  ) {
     if (__SERVER__) return;
-    this._handle(
+    this.#handle(
       new DOMEvent<any>(type, {
         detail: init?.[0],
         trigger: init?.[1],
       }),
     );
-  };
+  }
 
-  async _ready(
+  async ready(
     info?: {
       duration: number;
       seekable: TimeRanges;
@@ -39,7 +42,7 @@ export class MediaPlayerDelegate {
     if (__SERVER__) return;
 
     return untrack(async () => {
-      const { logger } = this._media,
+      const { logger } = this.#media,
         {
           autoPlay,
           canPlay,
@@ -51,7 +54,7 @@ export class MediaPlayerDelegate {
           playsInline,
           savedState,
           source,
-        } = this._media.$state;
+        } = this.#media.$state;
 
       if (canPlay()) return;
 
@@ -59,24 +62,24 @@ export class MediaPlayerDelegate {
         duration: info?.duration ?? duration(),
         seekable: info?.seekable ?? seekable(),
         buffered: info?.buffered ?? buffered(),
-        provider: this._media.$provider()!,
+        provider: this.#media.$provider()!,
       };
 
-      this._notify('can-play', detail, trigger);
+      this.notify('can-play', detail, trigger);
 
       tick();
 
       if (__DEV__) {
         logger
           ?.infoGroup('-~-~-~-~-~-~- ✅ MEDIA READY -~-~-~-~-~-~-')
-          .labelledLog('Media', this._media)
+          .labelledLog('Media', this.#media)
           .labelledLog('Trigger Event', trigger)
           .dispatch();
       }
 
-      let provider = this._media.$provider(),
-        { storage, qualities } = this._media,
-        { muted, volume, clipStartTime, playbackRate } = this._media.$props;
+      let provider = this.#media.$provider(),
+        { storage, qualities } = this.#media,
+        { muted, volume, clipStartTime, playbackRate } = this.#media.$props;
 
       await storage?.onLoad?.(source());
 
@@ -122,20 +125,20 @@ export class MediaPlayerDelegate {
       }
 
       if (canPlay() && shouldAutoPlay) {
-        await this._attemptAutoplay(trigger);
+        await this.#attemptAutoplay(trigger);
       } else if (storageTime && storageTime > 0) {
-        this._notify('started', undefined, trigger);
+        this.notify('started', undefined, trigger);
       }
 
       remotePlaybackInfo.set(null);
     });
   }
 
-  private async _attemptAutoplay(trigger?: Event) {
+  async #attemptAutoplay(trigger?: Event) {
     const {
       player,
       $state: { autoPlaying, muted },
-    } = this._media;
+    } = this.#media;
 
     autoPlaying.set(true);
 
@@ -149,7 +152,7 @@ export class MediaPlayerDelegate {
           ? ' Attempting with volume muted will most likely resolve the issue.'
           : '';
 
-        this._media.logger
+        this.#media.logger
           ?.errorGroup('[vidstack] auto-play request failed')
           .labelledLog(
             'Message',

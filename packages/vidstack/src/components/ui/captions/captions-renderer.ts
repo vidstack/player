@@ -7,10 +7,13 @@ import type { TextTrack } from '../../../core/tracks/text/text-track';
 export class CaptionsTextRenderer implements TextRenderer {
   readonly priority = 10;
 
-  private _track: TextTrack | null = null;
-  private _disposal = createDisposalBin();
+  #track: TextTrack | null = null;
+  #disposal = createDisposalBin();
+  #renderer: CaptionsRenderer;
 
-  constructor(private _renderer: CaptionsRenderer) {}
+  constructor(renderer: CaptionsRenderer) {
+    this.#renderer = renderer;
+  }
 
   attach() {
     // no-op
@@ -21,39 +24,39 @@ export class CaptionsTextRenderer implements TextRenderer {
   }
 
   detach(): void {
-    this._disposal.empty();
-    this._renderer.reset();
-    this._track = null;
+    this.#disposal.empty();
+    this.#renderer.reset();
+    this.#track = null;
   }
 
   changeTrack(track: TextTrack | null): void {
-    if (!track || this._track === track) return;
+    if (!track || this.#track === track) return;
 
-    this._disposal.empty();
+    this.#disposal.empty();
 
     if (track.readyState < 2) {
-      this._renderer.reset();
-      this._disposal.add(
-        listenEvent(track, 'load', () => this._changeTrack(track), { once: true }),
+      this.#renderer.reset();
+      this.#disposal.add(
+        listenEvent(track, 'load', () => this.#changeTrack(track), { once: true }),
       );
     } else {
-      this._changeTrack(track);
+      this.#changeTrack(track);
     }
 
-    this._disposal.add(
+    this.#disposal.add(
       listenEvent(track, 'add-cue', (event) => {
-        this._renderer.addCue(event.detail);
+        this.#renderer.addCue(event.detail);
       }),
       listenEvent(track, 'remove-cue', (event) => {
-        this._renderer.removeCue(event.detail);
+        this.#renderer.removeCue(event.detail);
       }),
     );
 
-    this._track = track;
+    this.#track = track;
   }
 
-  private _changeTrack(track: TextTrack) {
-    this._renderer.changeTrack({
+  #changeTrack(track: TextTrack) {
+    this.#renderer.changeTrack({
       cues: [...track.cues],
       regions: [...track.regions],
     });

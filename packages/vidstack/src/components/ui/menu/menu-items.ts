@@ -32,7 +32,7 @@ export class MenuItems extends Component<MenuItemsProps> {
     alignOffset: 0,
   };
 
-  protected _menu!: MenuContext;
+  #menu!: MenuContext;
 
   constructor() {
     super();
@@ -46,24 +46,24 @@ export class MenuItems extends Component<MenuItemsProps> {
   }
 
   protected override onAttach(el: HTMLElement) {
-    this._menu = useContext(menuContext);
-    this._menu._attachMenuItems(this);
+    this.#menu = useContext(menuContext);
+    this.#menu.attachMenuItems(this);
     if (hasProvidedContext(menuPortalContext)) {
       const portal = useContext(menuPortalContext);
       if (portal) {
         // Remove portal so submenus don't attach.
         provideContext(menuPortalContext, null);
-        portal._attach(el);
-        onDispose(() => portal._attach(null));
+        portal.attach(el);
+        onDispose(() => portal.attach(null));
       }
     }
   }
 
   protected override onConnect(el: HTMLElement): void {
-    effect(this._watchPlacement.bind(this));
+    effect(this.#watchPlacement.bind(this));
   }
 
-  private _watchPlacement() {
+  #watchPlacement() {
     if (!this.el) return;
 
     const placement = this.$props.placement();
@@ -77,7 +77,7 @@ export class MenuItems extends Component<MenuItemsProps> {
       });
 
       const { offset: mainOffset, alignOffset } = this.$props;
-      return autoPlacement(this.el, this._getButton(), placement, {
+      return autoPlacement(this.el, this.#getButton(), placement, {
         offsetVarName: 'media-menu',
         xOffset: alignOffset(),
         yOffset: mainOffset(),
@@ -88,8 +88,8 @@ export class MenuItems extends Component<MenuItemsProps> {
     }
   }
 
-  private _getButton() {
-    return this._menu._button();
+  #getButton() {
+    return this.#menu.button();
   }
 }
 

@@ -23,10 +23,12 @@ import type { SliderOrientation } from './types';
 import { getClampedValue } from './utils';
 
 export interface SliderDelegate extends Omit<SliderEventDelegate, '_getOrientation'> {
-  _getARIAValueNow(): number;
-  _getARIAValueText(): string;
-  _getARIAValueMin?(): number;
-  _getARIAValueMax?(): number;
+  aria: {
+    valueNow(): number;
+    valueText(): string;
+    valueMin?(): number;
+    valueMax?(): number;
+  };
 }
 
 export class SliderController extends ViewController<
@@ -43,19 +45,22 @@ export class SliderController extends ViewController<
     shiftKeyMultiplier: 5,
   };
 
-  private _media!: MediaContext;
-  private _isVisible = signal(true);
-  private _isIntersecting = signal(true);
+  #media!: MediaContext;
+  #delegate: SliderDelegate;
+  #isVisible = signal(true);
+  #isIntersecting = signal(true);
 
-  constructor(private _delegate: SliderDelegate) {
+  constructor(delegate: SliderDelegate) {
     super();
+    this.#delegate = delegate;
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     const focus = new FocusVisibleController();
     focus.attach(this);
+
     // @ts-expect-error - overwrite readonly
     this.$state.focused = focus.focused.bind(focus);
 
@@ -66,20 +71,20 @@ export class SliderController extends ViewController<
     }
 
     provideContext(sliderContext, {
-      _orientation: this.$props.orientation,
-      _disabled: this._delegate._isDisabled,
-      _preview: signal<HTMLElement | null>(null),
+      orientation: this.$props.orientation,
+      disabled: this.#delegate.isDisabled,
+      preview: signal<HTMLElement | null>(null),
     });
 
-    effect(this._watchValue.bind(this));
-    effect(this._watchStep.bind(this));
-    effect(this._watchDisabled.bind(this));
+    effect(this.#watchValue.bind(this));
+    effect(this.#watchStep.bind(this));
+    effect(this.#watchDisabled.bind(this));
 
-    this._setupAttrs();
+    this.#setupAttrs();
 
-    new SliderEventsController(this._delegate, this._media).attach(this);
+    new SliderEventsController(this.#delegate, this.#media).attach(this);
     new IntersectionObserverController({
-      callback: this._onIntersectionChange.bind(this),
+      callback: this.#onIntersectionChange.bind(this),
     }).attach(this);
   }
 
@@ -87,40 +92,40 @@ export class SliderController extends ViewController<
     setAttributeIfEmpty(el, 'role', 'slider');
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'autocomplete', 'off');
-    if (__SERVER__) this._watchCSSVars();
-    else effect(this._watchCSSVars.bind(this));
+    if (__SERVER__) this.#watchCSSVars();
+    else effect(this.#watchCSSVars.bind(this));
   }
 
   protected override onConnect(el: HTMLElement): void {
-    onDispose(observeVisibility(el, this._isVisible.set));
-    effect(this._watchHidden.bind(this));
+    onDispose(observeVisibility(el, this.#isVisible.set));
+    effect(this.#watchHidden.bind(this));
   }
 
-  private _onIntersectionChange(entries: IntersectionObserverEntry[]) {
-    this._isIntersecting.set(entries[0].isIntersecting);
+  #onIntersectionChange(entries: IntersectionObserverEntry[]) {
+    this.#isIntersecting.set(entries[0].isIntersecting);
   }
 
   // -------------------------------------------------------------------------------------------
   // Watch
   // -------------------------------------------------------------------------------------------
 
-  private _watchHidden() {
+  #watchHidden() {
     const { hidden } = this.$props;
-    this.$state.hidden.set(hidden() || !this._isVisible() || !this._isIntersecting.bind(this));
+    this.$state.hidden.set(hidden() || !this.#isVisible() || !this.#isIntersecting.bind(this));
   }
 
-  private _watchValue() {
+  #watchValue() {
     const { dragging, value, min, max } = this.$state;
     if (peek(dragging)) return;
-    value.set(getClampedValue(min(), max(), value(), this._delegate._getStep()));
+    value.set(getClampedValue(min(), max(), value(), this.#delegate.getStep()));
   }
 
-  private _watchStep() {
-    this.$state.step.set(this._delegate._getStep());
+  #watchStep() {
+    this.$state.step.set(this.#delegate.getStep());
   }
 
-  private _watchDisabled() {
-    if (!this._delegate._isDisabled()) return;
+  #watchDisabled() {
+    if (!this.#delegate.isDisabled()) return;
     const { dragging, pointing } = this.$state;
     dragging.set(false);
     pointing.set(false);
@@ -130,15 +135,15 @@ export class SliderController extends ViewController<
   // ARIA
   // -------------------------------------------------------------------------------------------
 
-  private _getARIADisabled() {
-    return ariaBool(this._delegate._isDisabled());
+  #getARIADisabled() {
+    return ariaBool(this.#delegate.isDisabled());
   }
 
   // -------------------------------------------------------------------------------------------
   // Attributes
   // -------------------------------------------------------------------------------------------
 
-  private _setupAttrs() {
+  #setupAttrs() {
     const { orientation } = this.$props,
       { dragging, active, pointing } = this.$state;
 
@@ -146,26 +151,24 @@ export class SliderController extends ViewController<
       'data-dragging': dragging,
       'data-pointing': pointing,
       'data-active': active,
-      'aria-disabled': this._getARIADisabled.bind(this),
-      'aria-valuemin': this._delegate._getARIAValueMin ?? this.$state.min,
-      'aria-valuemax': this._delegate._getARIAValueMax ?? this.$state.max,
-      'aria-valuenow': this._delegate._getARIAValueNow,
-      'aria-valuetext': this._delegate._getARIAValueText,
+      'aria-disabled': this.#getARIADisabled.bind(this),
+      'aria-valuemin': this.#delegate.aria.valueMin ?? this.$state.min,
+      'aria-valuemax': this.#delegate.aria.valueMax ?? this.$state.max,
+      'aria-valuenow': this.#delegate.aria.valueNow,
+      'aria-valuetext': this.#delegate.aria.valueText,
       'aria-orientation': orientation,
     });
   }
 
-  private _watchCSSVars() {
+  #watchCSSVars() {
     const { fillPercent, pointerPercent } = this.$state;
-    this._updateSliderVars(round(fillPercent(), 3), round(pointerPercent(), 3));
+    this.#updateSliderVars(round(fillPercent(), 3), round(pointerPercent(), 3));
   }
 
-  private _updateSliderVars = animationFrameThrottle(
-    (fillPercent: number, pointerPercent: number) => {
-      this.el?.style.setProperty('--slider-fill', fillPercent + '%');
-      this.el?.style.setProperty('--slider-pointer', pointerPercent + '%');
-    },
-  );
+  #updateSliderVars = animationFrameThrottle((fillPercent: number, pointerPercent: number) => {
+    this.el?.style.setProperty('--slider-fill', fillPercent + '%');
+    this.el?.style.setProperty('--slider-pointer', pointerPercent + '%');
+  });
 }
 
 export interface SliderControllerProps {

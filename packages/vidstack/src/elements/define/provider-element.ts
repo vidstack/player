@@ -18,20 +18,20 @@ import { useMediaContext, type MediaContext } from '../../core/api/media-context
 export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
   static tagName = 'media-provider';
 
-  private _media!: MediaContext;
-  private _target: HTMLElement | null = null;
-  private _blocker: HTMLElement | null = null;
+  #media!: MediaContext;
+  #target: HTMLElement | null = null;
+  #blocker: HTMLElement | null = null;
 
   protected onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
     this.setAttribute('keep-alive', '');
   }
 
   protected onDestroy(): void {
-    this._blocker?.remove();
-    this._blocker = null;
-    this._target?.remove();
-    this._target = null;
+    this.#blocker?.remove();
+    this.#blocker = null;
+    this.#target?.remove();
+    this.#target = null;
   }
 
   protected onConnect(): void {
@@ -44,38 +44,38 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
 
       const target = loader
         ? isGoogleCast
-          ? this._createGoogleCastContainer()
+          ? this.#createGoogleCastContainer()
           : isEmbed
-            ? this._createIFrame()
+            ? this.#createIFrame()
             : loader.mediaType() === 'audio'
-              ? this._createAudio()
-              : this._createVideo()
+              ? this.#createAudio()
+              : this.#createVideo()
         : null;
 
-      if (this._target !== target) {
-        const parent = this._target?.parentElement ?? this;
+      if (this.#target !== target) {
+        const parent = this.#target?.parentElement ?? this;
 
-        this._target?.remove();
-        this._target = target;
+        this.#target?.remove();
+        this.#target = target;
         if (target) parent.prepend(target);
 
         if (isEmbed && target) {
           effect(() => {
-            const { nativeControls, viewType } = this._media.$state,
+            const { nativeControls, viewType } = this.#media.$state,
               showNativeControls = nativeControls(),
               isAudioView = viewType() === 'audio',
               showBlocker = !showNativeControls && !isAudioView;
 
             if (showBlocker) {
-              this._blocker = this.querySelector('.vds-blocker');
-              if (!this._blocker) {
-                this._blocker = document.createElement('div');
-                this._blocker.classList.add('vds-blocker');
-                target.after(this._blocker);
+              this.#blocker = this.querySelector('.vds-blocker');
+              if (!this.#blocker) {
+                this.#blocker = document.createElement('div');
+                this.#blocker.classList.add('vds-blocker');
+                target.after(this.#blocker);
               }
             } else {
-              this._blocker?.remove();
-              this._blocker = null;
+              this.#blocker?.remove();
+              this.#blocker = null;
             }
 
             setAttribute(target, 'data-no-controls', !showNativeControls);
@@ -87,19 +87,19 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
       else if (isVimeoEmbed) target?.classList.add('vds-vimeo');
 
       if (!isEmbed) {
-        this._blocker?.remove();
-        this._blocker = null;
+        this.#blocker?.remove();
+        this.#blocker = null;
       }
 
       this.load(target);
     });
   }
 
-  private _createAudio() {
+  #createAudio() {
     const audio =
-      this._target instanceof HTMLAudioElement ? this._target : document.createElement('audio');
+      this.#target instanceof HTMLAudioElement ? this.#target : document.createElement('audio');
 
-    const { controls, crossOrigin } = this._media.$state;
+    const { controls, crossOrigin } = this.#media.$state;
     effect(() => {
       setAttribute(audio, 'controls', controls());
       setAttribute(audio, 'crossorigin', crossOrigin());
@@ -108,11 +108,11 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
     return audio;
   }
 
-  private _createVideo() {
+  #createVideo() {
     const video =
-      this._target instanceof HTMLVideoElement ? this._target : document.createElement('video');
+      this.#target instanceof HTMLVideoElement ? this.#target : document.createElement('video');
 
-    const { crossOrigin, poster, nativeControls } = this._media.$state,
+    const { crossOrigin, poster, nativeControls } = this.#media.$state,
       $controls = computed(() => (nativeControls() ? 'true' : null)),
       $poster = computed(() => (poster() && nativeControls() ? poster() : null));
 
@@ -125,26 +125,26 @@ export class MediaProviderElement extends Host(HTMLElement, MediaProvider) {
     return video;
   }
 
-  private _createIFrame() {
+  #createIFrame() {
     const iframe =
-        this._target instanceof HTMLIFrameElement ? this._target : document.createElement('iframe'),
-      { nativeControls } = this._media.$state;
+        this.#target instanceof HTMLIFrameElement ? this.#target : document.createElement('iframe'),
+      { nativeControls } = this.#media.$state;
 
     effect(() => setAttribute(iframe, 'tabindex', !nativeControls() ? -1 : null));
 
     return iframe;
   }
 
-  private _createGoogleCastContainer() {
-    if (this._target?.classList.contains('vds-google-cast')) {
-      return this._target;
+  #createGoogleCastContainer() {
+    if (this.#target?.classList.contains('vds-google-cast')) {
+      return this.#target;
     }
 
     const container = document.createElement('div');
     container.classList.add('vds-google-cast');
 
     import('./provider-cast-display').then(({ insertContent }) => {
-      insertContent(container, this._media.$state);
+      insertContent(container, this.#media.$state);
     });
 
     return container;

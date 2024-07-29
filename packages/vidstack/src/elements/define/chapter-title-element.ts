@@ -27,23 +27,23 @@ class ChapterTitle extends Component<ChapterTitleProps> {
 export class MediaChapterTitleElement extends Host(HTMLElement, ChapterTitle) {
   static tagName = 'media-chapter-title';
 
-  private _media!: MediaContext;
-  private _chapterTitle!: WriteSignal<string>;
+  #media!: MediaContext;
+  #chapterTitle!: WriteSignal<string>;
 
   protected onSetup() {
-    this._media = useMediaContext();
-    this._chapterTitle = signal('');
+    this.#media = useMediaContext();
+    this.#chapterTitle = signal('');
   }
 
   protected onConnect() {
-    const tracks = this._media.textTracks;
-    watchCueTextChange(tracks, 'chapters', this._chapterTitle.set);
-    effect(this._watchChapterTitle.bind(this));
+    const tracks = this.#media.textTracks;
+    watchCueTextChange(tracks, 'chapters', this.#chapterTitle.set);
+    effect(this.#watchChapterTitle.bind(this));
   }
 
-  private _watchChapterTitle() {
+  #watchChapterTitle() {
     const { defaultText } = this.$props;
-    this.textContent = this._chapterTitle() || defaultText();
+    this.textContent = this.#chapterTitle() || defaultText();
   }
 }
 

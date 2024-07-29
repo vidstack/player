@@ -3,18 +3,21 @@ import { onDispose } from 'maverick.js';
 import { animationFrameThrottle, isDOMNode } from 'maverick.js/std';
 
 export class SlotObserver {
+  #roots: HTMLElement[];
+  #callback: SlotObserverCallback;
+
   readonly elements = new Set<HTMLSlotElement>();
 
-  constructor(
-    protected _roots: HTMLElement[],
-    protected _callback: SlotObserverCallback,
-  ) {}
+  constructor(roots: HTMLElement[], callback: SlotObserverCallback) {
+    this.#roots = roots;
+    this.#callback = callback;
+  }
 
   connect() {
-    this._update();
+    this.#update();
 
-    const observer = new MutationObserver(this._onMutation);
-    for (const root of this._roots) observer.observe(root, { childList: true, subtree: true });
+    const observer = new MutationObserver(this.#onMutation);
+    for (const root of this.#roots) observer.observe(root, { childList: true, subtree: true });
     onDispose(() => observer.disconnect());
 
     onDispose(this.disconnect.bind(this));
@@ -44,13 +47,13 @@ export class SlotObserver {
     if (classList) el.classList.add(...classList.split(' '));
   }
 
-  private _onMutation = animationFrameThrottle(this._update.bind(this));
+  #onMutation = animationFrameThrottle(this.#update.bind(this));
 
-  private _update(entries?: MutationRecord[]) {
+  #update(entries?: MutationRecord[]) {
     if (entries && !entries.some((e) => e.addedNodes.length)) return;
 
     let changed = false,
-      slots = this._roots.flatMap((root) => [...root.querySelectorAll('slot')]);
+      slots = this.#roots.flatMap((root) => [...root.querySelectorAll('slot')]);
 
     for (const slot of slots) {
       if (!slot.hasAttribute('name') || this.elements.has(slot)) continue;
@@ -58,7 +61,7 @@ export class SlotObserver {
       changed = true;
     }
 
-    if (changed) this._callback(this.elements);
+    if (changed) this.#callback(this.elements);
   }
 }
 

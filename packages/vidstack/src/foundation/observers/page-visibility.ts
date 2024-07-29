@@ -15,17 +15,15 @@ declare global {
 }
 
 export class PageVisibility {
-  private _state = signal<PageState>(determinePageState());
+  #state = signal<PageState>(determinePageState());
 
-  private _visibility = signal<DocumentVisibility>(
-    __SERVER__ ? 'visible' : document.visibilityState,
-  );
+  #visibility = signal<DocumentVisibility>(__SERVER__ ? 'visible' : document.visibilityState);
 
-  private _safariBeforeUnloadTimeout: any;
+  #safariBeforeUnloadTimeout: any;
 
   connect() {
     for (const eventType of PAGE_EVENTS) {
-      listenEvent(window, eventType, this._handlePageEvent.bind(this));
+      listenEvent(window, eventType, this.#handlePageEvent.bind(this));
     }
 
     /**
@@ -41,10 +39,10 @@ export class PageVisibility {
      */
     if (IS_SAFARI) {
       listenEvent(window, 'beforeunload', (event) => {
-        this._safariBeforeUnloadTimeout = setTimeout(() => {
+        this.#safariBeforeUnloadTimeout = setTimeout(() => {
           if (!(event.defaultPrevented || (event.returnValue as any).length > 0)) {
-            this._state.set('hidden');
-            this._visibility.set('hidden');
+            this.#state.set('hidden');
+            this.#visibility.set('hidden');
           }
         }, 0);
       });
@@ -62,7 +60,7 @@ export class PageVisibility {
    * @see https://developers.google.com/web/updates/2018/07/page-lifecycle-api#states
    */
   get pageState(): PageState {
-    return this._state();
+    return this.#state();
   }
 
   /**
@@ -77,17 +75,17 @@ export class PageVisibility {
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState
    */
   get visibility(): DocumentVisibility {
-    return this._visibility();
+    return this.#visibility();
   }
 
-  private _handlePageEvent(event: Event) {
-    if (IS_SAFARI) window.clearTimeout(this._safariBeforeUnloadTimeout);
+  #handlePageEvent(event: Event) {
+    if (IS_SAFARI) window.clearTimeout(this.#safariBeforeUnloadTimeout);
     // The `blur` event can fire while the page is being unloaded, so we only need to update the
     // state if the current state is "active".
-    if (event.type !== 'blur' || this._state() === 'active') {
-      this._state.set(determinePageState(event));
+    if (event.type !== 'blur' || this.#state() === 'active') {
+      this.#state.set(determinePageState(event));
       // The ternary condition is incase some browser implements other states such as `prerender`.
-      this._visibility.set(document.visibilityState == 'hidden' ? 'hidden' : 'visible');
+      this.#visibility.set(document.visibilityState == 'hidden' ? 'hidden' : 'visible');
     }
   }
 }

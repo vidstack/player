@@ -23,19 +23,19 @@ import { PlyrAudioLayout, PlyrVideoLayout } from './ui';
 export class MediaPlyrLayoutElement extends Host(LitElement, PlyrLayout) implements LitRenderer {
   static tagName = 'media-plyr-layout';
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   protected onSetup() {
     // Avoid memory leaks if `keepAlive` is true. The DOM will re-render regardless.
     this.forwardKeepAlive = false;
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
   }
 
   protected onConnect() {
-    this._media.player.el?.setAttribute('data-layout', 'plyr');
-    onDispose(() => this._media.player.el?.removeAttribute('data-layout'));
+    this.#media.player.el?.setAttribute('data-layout', 'plyr');
+    onDispose(() => this.#media.player.el?.removeAttribute('data-layout'));
 
-    usePlyrLayoutClasses(this, this._media);
+    usePlyrLayoutClasses(this, this.#media);
 
     effect(() => {
       if (this.$props.customIcons()) {
@@ -47,11 +47,11 @@ export class MediaPlyrLayoutElement extends Host(LitElement, PlyrLayout) impleme
   }
 
   render() {
-    return $signal(this._render.bind(this));
+    return $signal(this.#render.bind(this));
   }
 
-  private _render() {
-    const { viewType } = this._media.$state;
+  #render() {
+    const { viewType } = this.#media.$state;
     return viewType() === 'audio'
       ? PlyrAudioLayout()
       : viewType() === 'video'

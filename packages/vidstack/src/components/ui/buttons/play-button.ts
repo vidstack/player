@@ -23,21 +23,21 @@ export interface PlayButtonEvents
 export class PlayButton extends Component<PlayButtonProps, {}, PlayButtonEvents> {
   static props: PlayButtonProps = ToggleButtonController.props;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   constructor() {
     super();
 
     new ToggleButtonController({
-      _isPressed: this._isPressed.bind(this),
-      _keyShortcut: 'togglePaused',
-      _onPress: this._onPress.bind(this),
+      isPresssed: this.#isPressed.bind(this),
+      keyShortcut: 'togglePaused',
+      onPress: this.#onPress.bind(this),
     });
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
-    const { paused, ended } = this._media.$state;
+    this.#media = useMediaContext();
+    const { paused, ended } = this.#media.$state;
 
     this.setAttributes({
       'data-paused': paused,
@@ -50,13 +50,13 @@ export class PlayButton extends Component<PlayButtonProps, {}, PlayButtonEvents>
     setARIALabel(el, 'Play');
   }
 
-  private _onPress(event: Event) {
-    const remote = this._media.remote;
-    this._isPressed() ? remote.pause(event) : remote.play(event);
+  #onPress(event: Event) {
+    const remote = this.#media.remote;
+    this.#isPressed() ? remote.pause(event) : remote.play(event);
   }
 
-  private _isPressed() {
-    const { paused } = this._media.$state;
+  #isPressed() {
+    const { paused } = this.#media.$state;
     return !paused();
   }
 }

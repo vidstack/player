@@ -30,7 +30,7 @@ export class TooltipContent extends Component<TooltipContentProps> {
   }
 
   protected override onAttach(el: HTMLElement): void {
-    this._attach(el);
+    this.#attach(el);
 
     Object.assign(el.style, {
       position: 'absolute',
@@ -41,35 +41,35 @@ export class TooltipContent extends Component<TooltipContentProps> {
   }
 
   protected override onConnect(el: HTMLElement): void {
-    this._attach(el);
+    this.#attach(el);
 
     const tooltip = useContext(tooltipContext);
-    onDispose(() => tooltip._detachContent(el));
+    onDispose(() => tooltip.detachContent(el));
 
     onDispose(
       requestScopedAnimationFrame(() => {
         if (!this.connectScope) return;
-        effect(this._watchPlacement.bind(this));
+        effect(this.#watchPlacement.bind(this));
       }),
     );
   }
 
-  private _attach(el: HTMLElement) {
+  #attach(el: HTMLElement) {
     const tooltip = useContext(tooltipContext);
-    tooltip._attachContent(el);
+    tooltip.attachContent(el);
   }
 
-  private _watchPlacement() {
+  #watchPlacement() {
     const { placement, offset: mainOffset, alignOffset } = this.$props;
-    return autoPlacement(this.el, this._getTrigger(), placement(), {
+    return autoPlacement(this.el, this.#getTrigger(), placement(), {
       offsetVarName: 'media-tooltip',
       xOffset: alignOffset(),
       yOffset: mainOffset(),
     });
   }
 
-  private _getTrigger() {
-    return useContext(tooltipContext)._trigger();
+  #getTrigger() {
+    return useContext(tooltipContext).trigger();
   }
 }
 

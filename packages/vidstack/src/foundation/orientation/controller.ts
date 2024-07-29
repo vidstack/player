@@ -6,9 +6,9 @@ import type { ScreenOrientationEvents } from './events';
 import type { ScreenOrientationLockType, ScreenOrientationType } from './types';
 
 export class ScreenOrientationController extends ViewController<{}, {}, ScreenOrientationEvents> {
-  private _type = signal(this._getScreenOrientation());
-  private _locked = signal(false);
-  private _currentLock: ScreenOrientationLockType | undefined;
+  #type = signal(this.#getScreenOrientation());
+  #locked = signal(false);
+  #currentLock: ScreenOrientationLockType | undefined;
 
   /**
    * The current screen orientation type.
@@ -18,7 +18,7 @@ export class ScreenOrientationController extends ViewController<{}, {}, ScreenOr
    * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
    */
   get type(): ScreenOrientationType | undefined {
-    return this._type();
+    return this.#type();
   }
 
   /**
@@ -29,7 +29,7 @@ export class ScreenOrientationController extends ViewController<{}, {}, ScreenOr
    * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
    */
   get locked(): boolean {
-    return this._locked();
+    return this.#locked();
   }
 
   /**
@@ -38,7 +38,7 @@ export class ScreenOrientationController extends ViewController<{}, {}, ScreenOr
    * @signal
    */
   get portrait() {
-    return this._type().startsWith('portrait');
+    return this.#type().startsWith('portrait');
   }
 
   /**
@@ -47,7 +47,7 @@ export class ScreenOrientationController extends ViewController<{}, {}, ScreenOr
    * @signal
    */
   get landscape() {
-    return this._type().startsWith('landscape');
+    return this.#type().startsWith('landscape');
   }
 
   /**
@@ -64,26 +64,26 @@ export class ScreenOrientationController extends ViewController<{}, {}, ScreenOr
 
   protected override onConnect() {
     if (this.supported) {
-      listenEvent(screen.orientation, 'change', this._onOrientationChange.bind(this));
+      listenEvent(screen.orientation, 'change', this.#onOrientationChange.bind(this));
     } else {
       const query = window.matchMedia('(orientation: landscape)');
-      query.onchange = this._onOrientationChange.bind(this);
+      query.onchange = this.#onOrientationChange.bind(this);
       onDispose(() => (query.onchange = null));
     }
 
-    onDispose(this._onDisconnect.bind(this));
+    onDispose(this.#onDisconnect.bind(this));
   }
 
-  protected async _onDisconnect() {
-    if (this.supported && this._locked()) await this.unlock();
+  async #onDisconnect() {
+    if (this.supported && this.#locked()) await this.unlock();
   }
 
-  protected _onOrientationChange(event: Event) {
-    this._type.set(this._getScreenOrientation()!);
+  #onOrientationChange(event: Event) {
+    this.#type.set(this.#getScreenOrientation()!);
     this.dispatch('orientation-change', {
       detail: {
-        orientation: peek(this._type),
-        lock: this._currentLock,
+        orientation: peek(this.#type),
+        lock: this.#currentLock,
       },
       trigger: event,
     });
@@ -99,11 +99,11 @@ export class ScreenOrientationController extends ViewController<{}, {}, ScreenOr
    * @see {@link https://w3c.github.io/screen-orientation}
    */
   async lock(lockType: ScreenOrientationLockType): Promise<void> {
-    if (peek(this._locked) || this._currentLock === lockType) return;
-    this._assertScreenOrientationAPI();
+    if (peek(this.#locked) || this.#currentLock === lockType) return;
+    this.#assertScreenOrientationAPI();
     await (screen.orientation as any).lock(lockType);
-    this._locked.set(true);
-    this._currentLock = lockType;
+    this.#locked.set(true);
+    this.#currentLock = lockType;
   }
 
   /**
@@ -115,14 +115,14 @@ export class ScreenOrientationController extends ViewController<{}, {}, ScreenOr
    * @see {@link https://w3c.github.io/screen-orientation}
    */
   async unlock(): Promise<void> {
-    if (!peek(this._locked)) return;
-    this._assertScreenOrientationAPI();
-    this._currentLock = undefined;
+    if (!peek(this.#locked)) return;
+    this.#assertScreenOrientationAPI();
+    this.#currentLock = undefined;
     await screen.orientation.unlock();
-    this._locked.set(false);
+    this.#locked.set(false);
   }
 
-  private _assertScreenOrientationAPI() {
+  #assertScreenOrientationAPI() {
     if (this.supported) return;
     throw Error(
       __DEV__
@@ -131,7 +131,7 @@ export class ScreenOrientationController extends ViewController<{}, {}, ScreenOr
     );
   }
 
-  private _getScreenOrientation(): ScreenOrientationType {
+  #getScreenOrientation(): ScreenOrientationType {
     if (__SERVER__) return 'portrait-primary';
     if (this.supported) return window.screen!.orientation!.type;
     return window.innerWidth >= window.innerHeight ? 'landscape-primary' : 'portrait-primary';

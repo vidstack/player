@@ -31,8 +31,8 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
     hidden: false,
   });
 
-  private _media!: MediaContext;
-  private _slider!: StateContext<typeof Slider.state>;
+  #media!: MediaContext;
+  #slider!: StateContext<typeof Slider.state>;
 
   @prop
   get video() {
@@ -40,94 +40,94 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
-    this._slider = useState(Slider.state);
+    this.#media = useMediaContext();
+    this.#slider = useState(Slider.state);
 
-    this._watchCrossOrigin();
+    this.#watchCrossOrigin();
 
     this.setAttributes({
-      'data-loading': this._isLoading.bind(this),
+      'data-loading': this.#isLoading.bind(this),
       'data-hidden': this.$state.hidden,
-      'data-error': this._hasError.bind(this),
+      'data-error': this.#hasError.bind(this),
       'aria-hidden': $ariaBool(this.$state.hidden),
     });
   }
 
   protected override onAttach(el: HTMLElement) {
-    effect(this._watchVideo.bind(this));
-    effect(this._watchSrc.bind(this));
-    effect(this._watchCrossOrigin.bind(this));
-    effect(this._watchHidden.bind(this));
+    effect(this.#watchVideo.bind(this));
+    effect(this.#watchSrc.bind(this));
+    effect(this.#watchCrossOrigin.bind(this));
+    effect(this.#watchHidden.bind(this));
 
-    effect(this._onSrcChange.bind(this));
-    effect(this._onUpdateTime.bind(this));
+    effect(this.#onSrcChange.bind(this));
+    effect(this.#onUpdateTime.bind(this));
   }
 
-  private _watchVideo() {
+  #watchVideo() {
     const video = this.$state.video();
 
     if (!video) return;
 
-    if (video.readyState >= 2) this._onCanPlay();
-    listenEvent(video, 'canplay', this._onCanPlay.bind(this));
-    listenEvent(video, 'error', this._onError.bind(this));
+    if (video.readyState >= 2) this.#onCanPlay();
+    listenEvent(video, 'canplay', this.#onCanPlay.bind(this));
+    listenEvent(video, 'error', this.#onError.bind(this));
   }
 
-  private _watchSrc() {
+  #watchSrc() {
     const { src } = this.$state,
-      { canLoad } = this._media.$state;
+      { canLoad } = this.#media.$state;
     src.set(canLoad() ? this.$props.src() : null);
   }
 
-  private _watchCrossOrigin() {
+  #watchCrossOrigin() {
     const { crossOrigin: crossOriginProp } = this.$props,
       { crossOrigin: crossOriginState } = this.$state,
-      { crossOrigin: mediaCrossOrigin } = this._media.$state,
+      { crossOrigin: mediaCrossOrigin } = this.#media.$state,
       crossOrigin = crossOriginProp() !== null ? crossOriginProp() : mediaCrossOrigin();
     crossOriginState.set(crossOrigin === true ? 'anonymous' : crossOrigin);
   }
 
-  private _isLoading() {
+  #isLoading() {
     const { canPlay, hidden } = this.$state;
     return !canPlay() && !hidden();
   }
 
-  private _hasError() {
+  #hasError() {
     const { error } = this.$state;
     return !isNull(error);
   }
 
-  private _watchHidden() {
+  #watchHidden() {
     const { src, hidden } = this.$state,
-      { canLoad, duration } = this._media.$state;
-    hidden.set(canLoad() && (!src() || this._hasError() || !Number.isFinite(duration())));
+      { canLoad, duration } = this.#media.$state;
+    hidden.set(canLoad() && (!src() || this.#hasError() || !Number.isFinite(duration())));
   }
 
-  private _onSrcChange() {
+  #onSrcChange() {
     const { src, canPlay, error } = this.$state;
     src();
     canPlay.set(false);
     error.set(null);
   }
 
-  private _onCanPlay(event?: Event) {
+  #onCanPlay(event?: Event) {
     const { canPlay, error } = this.$state;
     canPlay.set(true);
     error.set(null);
     this.dispatch('can-play', { trigger: event });
   }
 
-  private _onError(event: ErrorEvent) {
+  #onError(event: ErrorEvent) {
     const { canPlay, error } = this.$state;
     canPlay.set(false);
     error.set(event);
     this.dispatch('error', { trigger: event });
   }
 
-  private _onUpdateTime() {
+  #onUpdateTime() {
     const { video, canPlay } = this.$state,
-      { duration } = this._media.$state,
-      { pointerRate } = this._slider,
+      { duration } = this.#media.$state,
+      { pointerRate } = this.#slider,
       media = video(),
       canUpdate =
         canPlay() && media && Number.isFinite(duration()) && Number.isFinite(pointerRate());

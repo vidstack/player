@@ -33,21 +33,21 @@ const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
 export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
   protected override $$PROVIDER_TYPE = 'HLS';
 
-  private _ctor: HLSConstructor | null = null;
-  private readonly _controller = new HLSController(this.video, this._ctx);
+  #ctor: HLSConstructor | null = null;
+  readonly #controller = new HLSController(this.video, this.ctx);
 
   /**
    * The `hls.js` constructor.
    */
   get ctor() {
-    return this._ctor;
+    return this.#ctor;
   }
 
   /**
    * The current `hls.js` instance.
    */
   get instance() {
-    return this._controller.instance;
+    return this.#controller.instance;
   }
 
   /**
@@ -63,7 +63,7 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
     return true;
   }
 
-  protected _library: HLSLibrary = `${JS_DELIVR_CDN}/npm/hls.js@^1.5.0/dist/hls${
+  #library: HLSLibrary = `${JS_DELIVR_CDN}/npm/hls.js@^1.5.0/dist/hls${
     __DEV__ ? '.js' : '.min.js'
   }`;
 
@@ -73,11 +73,11 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
    * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning}
    */
   get config() {
-    return this._controller._config;
+    return this.#controller.config;
   }
 
   set config(config) {
-    this._controller._config = config;
+    this.#controller.config = config;
   }
 
   /**
@@ -86,39 +86,39 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
    * @defaultValue `https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.min.js`
    */
   get library() {
-    return this._library;
+    return this.#library;
   }
 
   set library(library) {
-    this._library = library;
+    this.#library = library;
   }
 
   preconnect(): void {
-    if (!isString(this._library)) return;
-    preconnect(this._library);
+    if (!isString(this.#library)) return;
+    preconnect(this.#library);
   }
 
   override setup() {
     super.setup();
-    new HLSLibLoader(this._library, this._ctx, (ctor) => {
-      this._ctor = ctor;
-      this._controller.setup(ctor);
-      this._ctx.delegate._notify('provider-setup', this);
-      const src = peek(this._ctx.$state.source);
+    new HLSLibLoader(this.#library, this.ctx, (ctor) => {
+      this.#ctor = ctor;
+      this.#controller.setup(ctor);
+      this.ctx.notify('provider-setup', this);
+      const src = peek(this.ctx.$state.source);
       if (src) this.loadSource(src);
     });
   }
 
   override async loadSource(src: Src, preload?: HTMLMediaElement['preload']) {
     if (!isString(src.src)) {
-      this._removeSource();
+      this.removeSource();
       return;
     }
 
-    this._media.preload = preload || '';
-    this._appendSource(src as Src<string>, 'application/x-mpegurl');
-    this._controller._loadSource(src);
-    this._currentSrc = src as Src<string>;
+    this.media.preload = preload || '';
+    this.appendSource(src as Src<string>, 'application/x-mpegurl');
+    this.#controller.loadSource(src);
+    this.currentSrc = src as Src<string>;
   }
 
   /**
@@ -126,13 +126,12 @@ export class HLSProvider extends VideoProvider implements MediaProviderAdapter {
    * attached to media.
    */
   onInstance(callback: HLSInstanceCallback): Dispose {
-    const instance = this._controller.instance;
+    const instance = this.#controller.instance;
     if (instance) callback(instance);
-    this._controller._callbacks.add(callback);
-    return () => this._controller._callbacks.delete(callback);
+    return this.#controller.onInstance(callback);
   }
 
   destroy() {
-    this._controller._destroy();
+    this.#controller.destroy();
   }
 }

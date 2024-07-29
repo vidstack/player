@@ -11,87 +11,100 @@ declare global {
 }
 
 export class VideoPresentation {
-  _mode: WebKitPresentationMode = 'inline';
+  #video: HTMLVideoElement;
+  #media: MediaContext;
+  #mode: WebKitPresentationMode = 'inline';
 
-  constructor(
-    protected _video: HTMLVideoElement,
-    private _media: MediaContext,
-  ) {
-    listenEvent(this._video, 'webkitpresentationmodechanged', this._onModeChange.bind(this));
+  get mode() {
+    return this.#mode;
   }
 
-  get _supported() {
-    return canUseVideoPresentation(this._video);
+  constructor(video: HTMLVideoElement, media: MediaContext) {
+    this.#video = video;
+    this.#media = media;
+    listenEvent(video, 'webkitpresentationmodechanged', this.#onModeChange.bind(this));
   }
 
-  async _setPresentationMode(mode: WebKitPresentationMode) {
-    if (this._mode === mode) return;
-    this._video.webkitSetPresentationMode!(mode);
+  get supported() {
+    return canUseVideoPresentation(this.#video);
   }
 
-  private _onModeChange(event: Event) {
-    const prevMode = this._mode;
-    this._mode = this._video.webkitPresentationMode!;
+  async setPresentationMode(mode: WebKitPresentationMode) {
+    if (this.#mode === mode) return;
+    this.#video.webkitSetPresentationMode!(mode);
+  }
+
+  #onModeChange(event: Event) {
+    const prevMode = this.#mode;
+    this.#mode = this.#video.webkitPresentationMode!;
 
     if (__DEV__) {
-      this._media.logger
+      this.#media.logger
         ?.infoGroup('presentation mode change')
-        .labelledLog('Mode', this._mode)
+        .labelledLog('Mode', this.#mode)
         .labelledLog('Event', event)
         .dispatch();
     }
 
-    this._media.player?.dispatch(
+    this.#media.player?.dispatch(
       new DOMEvent<string>('video-presentation-change', {
-        detail: this._mode,
+        detail: this.#mode,
         trigger: event,
       }),
     );
 
     (['fullscreen', 'picture-in-picture'] as const).forEach((type) => {
-      if (this._mode === type || prevMode === type) {
-        this._media.delegate._notify(`${type}-change`, this._mode === type, event);
+      if (this.#mode === type || prevMode === type) {
+        this.#media.notify(`${type}-change`, this.#mode === type, event);
       }
     });
   }
 }
 
 export class FullscreenPresentationAdapter implements MediaFullscreenAdapter {
+  #presentation: VideoPresentation;
+
   get active() {
-    return this._presentation._mode === 'fullscreen';
+    return this.#presentation.mode === 'fullscreen';
   }
 
   get supported() {
-    return this._presentation._supported;
+    return this.#presentation.supported;
   }
 
-  constructor(protected _presentation: VideoPresentation) {}
+  constructor(presentation: VideoPresentation) {
+    this.#presentation = presentation;
+  }
 
   async enter() {
-    this._presentation._setPresentationMode('fullscreen');
+    this.#presentation.setPresentationMode('fullscreen');
   }
 
   async exit() {
-    this._presentation._setPresentationMode('inline');
+    this.#presentation.setPresentationMode('inline');
   }
 }
 
 export class PIPPresentationAdapter implements MediaPictureInPictureAdapter {
+  #presentation: VideoPresentation;
+
   get active() {
-    return this._presentation._mode === 'picture-in-picture';
+    return this.#presentation.mode === 'picture-in-picture';
   }
 
   get supported() {
-    return this._presentation._supported;
+    return this.#presentation.supported;
   }
 
-  constructor(protected _presentation: VideoPresentation) {}
+  constructor(presentation: VideoPresentation) {
+    this.#presentation = presentation;
+  }
 
   async enter() {
-    this._presentation._setPresentationMode('picture-in-picture');
+    this.#presentation.setPresentationMode('picture-in-picture');
   }
 
   async exit() {
-    this._presentation._setPresentationMode('inline');
+    this.#presentation.setPresentationMode('inline');
   }
 }

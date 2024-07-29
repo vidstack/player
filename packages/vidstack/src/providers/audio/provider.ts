@@ -36,7 +36,7 @@ export class AudioProvider extends HTMLMediaProvider implements MediaProviderAda
 
   override setup() {
     super.setup();
-    if (this.type === 'audio') this._ctx.delegate._notify('provider-setup', this);
+    if (this.type === 'audio') this.ctx.notify('provider-setup', this);
   }
 
   /**
@@ -45,6 +45,6 @@ export class AudioProvider extends HTMLMediaProvider implements MediaProviderAda
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement}
    */
   get audio() {
-    return this._media as HTMLAudioElement;
+    return this.media as HTMLAudioElement;
   }
 }

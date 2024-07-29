@@ -14,23 +14,23 @@ export class SelectList<
   Events extends SelectListEvents<Item>,
 > extends List<Item, Events> {
   get selected() {
-    return this._items.find((item) => item.selected) ?? null;
+    return this.items.find((item) => item.selected) ?? null;
   }
 
   get selectedIndex() {
-    return this._items.findIndex((item) => item.selected);
+    return this.items.findIndex((item) => item.selected);
   }
 
   /** @internal */
-  protected override [ListSymbol._onRemove](item: Item, trigger?: Event): void {
-    this[ListSymbol._select](item, false, trigger);
+  protected override [ListSymbol.onRemove](item: Item, trigger?: Event): void {
+    this[ListSymbol.select](item, false, trigger);
   }
 
   /** @internal */
-  protected [ListSymbol._onUserSelect]?(): void;
+  protected [ListSymbol.onUserSelect]?(): void;
 
   /** @internal */
-  override [ListSymbol._add](item: Omit<Item, 'selected'>, trigger?: Event) {
+  override [ListSymbol.add](item: Omit<Item, 'selected'>, trigger?: Event) {
     item[SELECTED] = false;
     Object.defineProperty(item, 'selected', {
       get() {
@@ -38,16 +38,16 @@ export class SelectList<
       },
       set: (selected: boolean) => {
         if (this.readonly) return;
-        this[ListSymbol._onUserSelect]?.();
-        this[ListSymbol._select](item as Item, selected);
+        this[ListSymbol.onUserSelect]?.();
+        this[ListSymbol.select](item as Item, selected);
       },
     });
 
-    super[ListSymbol._add](item as Item, trigger);
+    super[ListSymbol.add](item as Item, trigger);
   }
 
   /** @internal */
-  [ListSymbol._select](item: Item | undefined, selected: boolean, trigger?: Event) {
+  [ListSymbol.select](item: Item | undefined, selected: boolean, trigger?: Event) {
     if (selected === item?.[SELECTED]) return;
 
     const prev = this.selected;

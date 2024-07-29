@@ -14,11 +14,14 @@ import { isTrackCaptionKind } from '../tracks/text/text-track';
  *
  */
 export class MediaRemoteControl {
-  private _target: EventTarget | null = null;
-  private _player: MediaPlayer | null = null;
-  private _prevTrackIndex = -1;
+  #target: EventTarget | null = null;
+  #player: MediaPlayer | null = null;
+  #prevTrackIndex = -1;
+  #logger?: Logger;
 
-  constructor(private _logger = __DEV__ ? new Logger() : undefined) {}
+  constructor(logger = __DEV__ ? new Logger() : undefined) {
+    this.#logger = logger;
+  }
 
   /**
    * Set the target from which to dispatch media requests events from. The events should bubble
@@ -31,8 +34,8 @@ export class MediaRemoteControl {
    * ```
    */
   setTarget(target: EventTarget | null) {
-    this._target = target;
-    if (__DEV__) this._logger?.setTarget(target);
+    this.#target = target;
+    if (__DEV__) this.#logger?.setTarget(target);
   }
 
   /**
@@ -45,17 +48,17 @@ export class MediaRemoteControl {
    * ```
    */
   getPlayer(target?: EventTarget | null): MediaPlayer | null {
-    if (this._player) return this._player;
+    if (this.#player) return this.#player;
 
-    (target ?? this._target)?.dispatchEvent(
+    (target ?? this.#target)?.dispatchEvent(
       new DOMEvent('find-media-player', {
-        detail: (player) => void (this._player = player),
+        detail: (player) => void (this.#player = player),
         bubbles: true,
         composed: true,
       }),
     );
 
-    return this._player;
+    return this.#player;
   }
 
   /**
@@ -63,7 +66,7 @@ export class MediaRemoteControl {
    * `togglePaused` as they rely on the current media state.
    */
   setPlayer(player: MediaPlayer | null) {
-    this._player = player;
+    this.#player = player;
   }
 
   /**
@@ -73,7 +76,7 @@ export class MediaRemoteControl {
    * @docs {@link https://www.vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
   startLoading(trigger?: Event) {
-    this._dispatchRequest('media-start-loading', trigger);
+    this.#dispatchRequest('media-start-loading', trigger);
   }
 
   /**
@@ -83,7 +86,7 @@ export class MediaRemoteControl {
    * @docs {@link https://www.vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
   startLoadingPoster(trigger?: Event) {
-    this._dispatchRequest('media-poster-start-loading', trigger);
+    this.#dispatchRequest('media-poster-start-loading', trigger);
   }
 
   /**
@@ -92,7 +95,7 @@ export class MediaRemoteControl {
    * @see {@link https://www.apple.com/au/airplay}
    */
   requestAirPlay(trigger?: Event) {
-    this._dispatchRequest('media-airplay-request', trigger);
+    this.#dispatchRequest('media-airplay-request', trigger);
   }
 
   /**
@@ -101,35 +104,35 @@ export class MediaRemoteControl {
    * @see {@link https://developers.google.com/cast/docs/overview}
    */
   requestGoogleCast(trigger?: Event) {
-    this._dispatchRequest('media-google-cast-request', trigger);
+    this.#dispatchRequest('media-google-cast-request', trigger);
   }
 
   /**
    * Dispatch a request to begin/resume media playback.
    */
   play(trigger?: Event) {
-    this._dispatchRequest('media-play-request', trigger);
+    this.#dispatchRequest('media-play-request', trigger);
   }
 
   /**
    * Dispatch a request to pause media playback.
    */
   pause(trigger?: Event) {
-    this._dispatchRequest('media-pause-request', trigger);
+    this.#dispatchRequest('media-pause-request', trigger);
   }
 
   /**
    * Dispatch a request to set the media volume to mute (0).
    */
   mute(trigger?: Event) {
-    this._dispatchRequest('media-mute-request', trigger);
+    this.#dispatchRequest('media-mute-request', trigger);
   }
 
   /**
    * Dispatch a request to unmute the media volume and set it back to it's previous state.
    */
   unmute(trigger?: Event) {
-    this._dispatchRequest('media-unmute-request', trigger);
+    this.#dispatchRequest('media-unmute-request', trigger);
   }
 
   /**
@@ -138,7 +141,7 @@ export class MediaRemoteControl {
    * @docs {@link https://www.vidstack.io/docs/player/api/fullscreen#remote-control}
    */
   enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
-    this._dispatchRequest('media-enter-fullscreen-request', trigger, target);
+    this.#dispatchRequest('media-enter-fullscreen-request', trigger, target);
   }
 
   /**
@@ -147,7 +150,7 @@ export class MediaRemoteControl {
    * @docs {@link https://www.vidstack.io/docs/player/api/fullscreen#remote-control}
    */
   exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
-    this._dispatchRequest('media-exit-fullscreen-request', trigger, target);
+    this.#dispatchRequest('media-exit-fullscreen-request', trigger, target);
   }
 
   /**
@@ -156,7 +159,7 @@ export class MediaRemoteControl {
    * @docs {@link https://www.vidstack.io/docs/player/screen-orientation#remote-control}
    */
   lockScreenOrientation(lockType: ScreenOrientationLockType, trigger?: Event) {
-    this._dispatchRequest('media-orientation-lock-request', trigger, lockType);
+    this.#dispatchRequest('media-orientation-lock-request', trigger, lockType);
   }
 
   /**
@@ -165,7 +168,7 @@ export class MediaRemoteControl {
    * @docs {@link https://www.vidstack.io/docs/player/api/screen-orientation#remote-control}
    */
   unlockScreenOrientation(trigger?: Event) {
-    this._dispatchRequest('media-orientation-unlock-request', trigger);
+    this.#dispatchRequest('media-orientation-unlock-request', trigger);
   }
 
   /**
@@ -174,7 +177,7 @@ export class MediaRemoteControl {
    * @docs {@link https://www.vidstack.io/docs/player/api/picture-in-picture#remote-control}
    */
   enterPictureInPicture(trigger?: Event) {
-    this._dispatchRequest('media-enter-pip-request', trigger);
+    this.#dispatchRequest('media-enter-pip-request', trigger);
   }
 
   /**
@@ -183,14 +186,14 @@ export class MediaRemoteControl {
    * @docs {@link https://www.vidstack.io/docs/player/api/picture-in-picture#remote-control}
    */
   exitPictureInPicture(trigger?: Event) {
-    this._dispatchRequest('media-exit-pip-request', trigger);
+    this.#dispatchRequest('media-exit-pip-request', trigger);
   }
 
   /**
    * Notify the media player that a seeking process is happening and to seek to the given `time`.
    */
   seeking(time: number, trigger?: Event) {
-    this._dispatchRequest('media-seeking-request', trigger, time);
+    this.#dispatchRequest('media-seeking-request', trigger, time);
   }
 
   /**
@@ -198,11 +201,11 @@ export class MediaRemoteControl {
    * This is generally called after a series of `remote.seeking()` calls.
    */
   seek(time: number, trigger?: Event) {
-    this._dispatchRequest('media-seek-request', trigger, time);
+    this.#dispatchRequest('media-seek-request', trigger, time);
   }
 
   seekToLiveEdge(trigger?: Event) {
-    this._dispatchRequest('media-live-edge-request', trigger);
+    this.#dispatchRequest('media-live-edge-request', trigger);
   }
 
   /**
@@ -214,7 +217,7 @@ export class MediaRemoteControl {
    * ```
    */
   changeDuration(duration: number, trigger?: Event) {
-    this._dispatchRequest('media-duration-change-request', trigger, duration);
+    this.#dispatchRequest('media-duration-change-request', trigger, duration);
   }
 
   /**
@@ -227,7 +230,7 @@ export class MediaRemoteControl {
    * ```
    */
   changeClipStart(startTime: number, trigger?: Event) {
-    this._dispatchRequest('media-clip-start-change-request', trigger, startTime);
+    this.#dispatchRequest('media-clip-start-change-request', trigger, startTime);
   }
 
   /**
@@ -240,7 +243,7 @@ export class MediaRemoteControl {
    * ```
    */
   changeClipEnd(endTime: number, trigger?: Event) {
-    this._dispatchRequest('media-clip-end-change-request', trigger, endTime);
+    this.#dispatchRequest('media-clip-end-change-request', trigger, endTime);
   }
 
   /**
@@ -258,7 +261,7 @@ export class MediaRemoteControl {
    * ```
    */
   changeVolume(volume: number, trigger?: Event) {
-    this._dispatchRequest('media-volume-change-request', trigger, Math.max(0, Math.min(1, volume)));
+    this.#dispatchRequest('media-volume-change-request', trigger, Math.max(0, Math.min(1, volume)));
   }
 
   /**
@@ -270,7 +273,7 @@ export class MediaRemoteControl {
    * ```
    */
   changeAudioTrack(index: number, trigger?: Event) {
-    this._dispatchRequest('media-audio-track-change-request', trigger, index);
+    this.#dispatchRequest('media-audio-track-change-request', trigger, index);
   }
 
   /**
@@ -284,7 +287,7 @@ export class MediaRemoteControl {
    * ```
    */
   changeQuality(index: number, trigger?: Event) {
-    this._dispatchRequest('media-quality-change-request', trigger, index);
+    this.#dispatchRequest('media-quality-change-request', trigger, index);
   }
 
   /**
@@ -303,7 +306,7 @@ export class MediaRemoteControl {
    * ```
    */
   changeTextTrackMode(index: number, mode: TextTrackMode, trigger?: Event) {
-    this._dispatchRequest('media-text-track-change-request', trigger, {
+    this.#dispatchRequest('media-text-track-change-request', trigger, {
       index,
       mode,
     });
@@ -321,7 +324,7 @@ export class MediaRemoteControl {
    * ```
    */
   changePlaybackRate(rate: number, trigger?: Event) {
-    this._dispatchRequest('media-rate-change-request', trigger, rate);
+    this.#dispatchRequest('media-rate-change-request', trigger, rate);
   }
 
   /**
@@ -335,14 +338,14 @@ export class MediaRemoteControl {
    * ```
    */
   changeAudioGain(gain: number, trigger?: Event) {
-    this._dispatchRequest('media-audio-gain-change-request', trigger, gain);
+    this.#dispatchRequest('media-audio-gain-change-request', trigger, gain);
   }
 
   /**
    * Dispatch a request to resume idle tracking on controls.
    */
   resumeControls(trigger?: Event) {
-    this._dispatchRequest('media-resume-controls-request', trigger);
+    this.#dispatchRequest('media-resume-controls-request', trigger);
   }
 
   /**
@@ -364,7 +367,7 @@ export class MediaRemoteControl {
    * ```
    */
   pauseControls(trigger?: Event) {
-    this._dispatchRequest('media-pause-controls-request', trigger);
+    this.#dispatchRequest('media-pause-controls-request', trigger);
   }
 
   /**
@@ -374,7 +377,7 @@ export class MediaRemoteControl {
     const player = this.getPlayer(trigger?.target);
 
     if (!player) {
-      if (__DEV__) this._noPlayerWarning(this.togglePaused.name);
+      if (__DEV__) this.#noPlayerWarning(this.togglePaused.name);
       return;
     }
 
@@ -389,7 +392,7 @@ export class MediaRemoteControl {
     const player = this.getPlayer(trigger?.target);
 
     if (!player) {
-      if (__DEV__) this._noPlayerWarning(this.toggleControls.name);
+      if (__DEV__) this.#noPlayerWarning(this.toggleControls.name);
       return;
     }
 
@@ -407,7 +410,7 @@ export class MediaRemoteControl {
     const player = this.getPlayer(trigger?.target);
 
     if (!player) {
-      if (__DEV__) this._noPlayerWarning(this.toggleMuted.name);
+      if (__DEV__) this.#noPlayerWarning(this.toggleMuted.name);
       return;
     }
 
@@ -424,7 +427,7 @@ export class MediaRemoteControl {
     const player = this.getPlayer(trigger?.target);
 
     if (!player) {
-      if (__DEV__) this._noPlayerWarning(this.toggleFullscreen.name);
+      if (__DEV__) this.#noPlayerWarning(this.toggleFullscreen.name);
       return;
     }
 
@@ -441,7 +444,7 @@ export class MediaRemoteControl {
     const player = this.getPlayer(trigger?.target);
 
     if (!player) {
-      if (__DEV__) this._noPlayerWarning(this.togglePictureInPicture.name);
+      if (__DEV__) this.#noPlayerWarning(this.togglePictureInPicture.name);
       return;
     }
 
@@ -456,12 +459,12 @@ export class MediaRemoteControl {
     const player = this.getPlayer(trigger?.target);
 
     if (!player) {
-      if (__DEV__) this._noPlayerWarning(this.showCaptions.name);
+      if (__DEV__) this.#noPlayerWarning(this.showCaptions.name);
       return;
     }
 
     let tracks = player.state.textTracks,
-      index = this._prevTrackIndex;
+      index = this.#prevTrackIndex;
 
     if (!tracks[index] || !isTrackCaptionKind(tracks[index])) {
       index = -1;
@@ -477,7 +480,7 @@ export class MediaRemoteControl {
 
     if (index >= 0) this.changeTextTrackMode(index, 'showing', trigger);
 
-    this._prevTrackIndex = -1;
+    this.#prevTrackIndex = -1;
   }
 
   /**
@@ -487,7 +490,7 @@ export class MediaRemoteControl {
     const player = this.getPlayer(trigger?.target);
 
     if (!player) {
-      if (__DEV__) this._noPlayerWarning(this.disableCaptions.name);
+      if (__DEV__) this.#noPlayerWarning(this.disableCaptions.name);
       return;
     }
 
@@ -497,7 +500,7 @@ export class MediaRemoteControl {
     if (track) {
       const index = tracks.indexOf(track);
       this.changeTextTrackMode(index, 'disabled', trigger);
-      this._prevTrackIndex = index;
+      this.#prevTrackIndex = index;
     }
   }
 
@@ -508,7 +511,7 @@ export class MediaRemoteControl {
     const player = this.getPlayer(trigger?.target);
 
     if (!player) {
-      if (__DEV__) this._noPlayerWarning(this.toggleCaptions.name);
+      if (__DEV__) this.#noPlayerWarning(this.toggleCaptions.name);
       return;
     }
 
@@ -520,10 +523,10 @@ export class MediaRemoteControl {
   }
 
   userPrefersLoopChange(prefersLoop: boolean, trigger?: Event) {
-    this._dispatchRequest('media-user-loop-change-request', trigger, prefersLoop);
+    this.#dispatchRequest('media-user-loop-change-request', trigger, prefersLoop);
   }
 
-  private _dispatchRequest<EventType extends keyof MediaRequestEvents>(
+  #dispatchRequest<EventType extends keyof MediaRequestEvents>(
     type: EventType,
     trigger?: Event,
     detail?: MediaRequestEvents[EventType]['detail'],
@@ -544,33 +547,33 @@ export class MediaRemoteControl {
       target === document ||
       target === window ||
       target === document.body ||
-      (this._player?.el && target instanceof Node && !this._player.el.contains(target));
+      (this.#player?.el && target instanceof Node && !this.#player.el.contains(target));
 
-    target = shouldUsePlayer ? this._target ?? this.getPlayer()?.el : target ?? this._target;
+    target = shouldUsePlayer ? (this.#target ?? this.getPlayer()?.el) : (target ?? this.#target);
 
     if (__DEV__) {
-      this._logger
+      this.#logger
         ?.debugGroup(`📨 dispatching \`${type}\``)
         .labelledLog('Target', target)
-        .labelledLog('Player', this._player)
+        .labelledLog('Player', this.#player)
         .labelledLog('Request Event', request)
         .labelledLog('Trigger Event', trigger)
         .dispatch();
     }
 
-    if (this._player) {
+    if (this.#player) {
       // Special case if the player load strategy is set to `play`.
-      if (type === 'media-play-request' && !this._player.state.canLoad) {
+      if (type === 'media-play-request' && !this.#player.state.canLoad) {
         target?.dispatchEvent(request);
       } else {
-        this._player.canPlayQueue._enqueue(type, () => target?.dispatchEvent(request));
+        this.#player.canPlayQueue.enqueue(type, () => target?.dispatchEvent(request));
       }
     } else {
       target?.dispatchEvent(request);
     }
   }
 
-  private _noPlayerWarning(method: string) {
+  #noPlayerWarning(method: string) {
     if (__DEV__) {
       console.warn(
         `[vidstack] attempted to call \`MediaRemoteControl.${method}\`() that requires` +

@@ -38,6 +38,7 @@ export interface MediaContext {
   activeMenu?: {
     close(trigger?: Event): void;
   } | null;
+  notify: MediaPlayerDelegate['notify'];
 }
 
 export const mediaContext = createContext<MediaContext>();

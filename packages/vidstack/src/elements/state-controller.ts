@@ -3,35 +3,40 @@ import { effect, onDispose, type ReadSignal } from 'maverick.js';
 import { requestScopedAnimationFrame } from '../utils/dom';
 
 export class StateController {
-  constructor(
-    private _el: HTMLElement | null,
-    private _states: ReadSignal<Record<string, boolean>>,
-  ) {
-    if (this._el) this._observe(this._el);
+  #el: HTMLElement | null;
+  #states: ReadSignal<Record<string, boolean>>;
+
+  constructor(el: HTMLElement | null, states: ReadSignal<Record<string, boolean>>) {
+    this.#el = el;
+    this.#states = states;
+
+    if (this.#el) this.#observe(this.#el);
 
     onDispose(() => {
-      this._el = null;
+      this.#el = null;
     });
 
     requestScopedAnimationFrame(() => {
-      const tooltip = this._getTooltip();
-      if (tooltip) this._observe(tooltip);
+      const tooltip = this.#getTooltip();
+      if (tooltip) this.#observe(tooltip);
     });
   }
 
-  private _getTooltip() {
-    if (!this._el) return;
+  #getTooltip() {
+    if (!this.#el) return;
+
     const describedBy =
-      this._el.getAttribute('aria-describedby') ?? this._el.getAttribute('data-describedby');
+      this.#el.getAttribute('aria-describedby') ?? this.#el.getAttribute('data-describedby');
+
     return describedBy && document.getElementById(describedBy);
   }
 
-  private _observe(root: HTMLElement) {
-    effect(this._update.bind(this, root));
+  #observe(root: HTMLElement) {
+    effect(this.#update.bind(this, root));
   }
 
-  private _update(root: HTMLElement) {
-    const states = this._states();
+  #update(root: HTMLElement) {
+    const states = this.#states();
     for (const state of Object.keys(states)) {
       const el = root.querySelector<HTMLElement>(`[data-state="${state}"]`);
       if (el) {

@@ -3,113 +3,115 @@ import { createDisposalBin, listenEvent } from 'maverick.js/std';
 import type { RemotionSrc } from './types';
 
 export class RemotionPlaybackEngine {
-  protected _disposal = createDisposalBin();
-  protected _frame = 0;
-  protected _framesAdvanced = 0;
-  protected _playbackRate = 1;
-  protected _playing = false;
-  protected _rafId = -1;
-  protected _timerId = -1;
-  protected _startedAt = 0;
-  protected _isRunningInBackground = false;
+  #src: RemotionSrc;
+  #onFrameChange: (frame: number) => void;
+  #onEnd: () => void;
+  #disposal = createDisposalBin();
+  #frame = 0;
+  #framesAdvanced = 0;
+  #playbackRate = 1;
+  #playing = false;
+  #rafId = -1;
+  #timerId = -1;
+  #startedAt = 0;
+  #isRunningInBackground = false;
 
   get frame() {
-    return this._frame;
+    return this.#frame;
   }
 
   set frame(frame) {
-    this._frame = frame;
-    this._onFrameChange(frame);
+    this.#frame = frame;
+    this.#onFrameChange(frame);
   }
 
-  constructor(
-    protected _src: RemotionSrc,
-    protected _onFrameChange: (frame: number) => void,
-    protected _onEnd: () => void,
-  ) {
-    this._frame = _src.initialFrame ?? 0;
-    this._disposal.add(
-      listenEvent(document, 'visibilitychange' as any, this._onVisibilityChange.bind(this)),
+  constructor(src: RemotionSrc, onFrameChange: (frame: number) => void, onEnd: () => void) {
+    this.#src = src;
+    this.#onFrameChange = onFrameChange;
+    this.#onEnd = onEnd;
+    this.#frame = src.initialFrame ?? 0;
+    this.#disposal.add(
+      listenEvent(document, 'visibilitychange' as any, this.#onVisibilityChange.bind(this)),
     );
   }
 
   play() {
-    this._framesAdvanced = 0;
-    this._playing = true;
-    this._startedAt = performance.now();
-    this._tick();
+    this.#framesAdvanced = 0;
+    this.#playing = true;
+    this.#startedAt = performance.now();
+    this.#tick();
   }
 
   stop() {
-    this._playing = false;
+    this.#playing = false;
 
-    if (this._rafId >= 0) {
-      cancelAnimationFrame(this._rafId);
-      this._rafId = -1;
+    if (this.#rafId >= 0) {
+      cancelAnimationFrame(this.#rafId);
+      this.#rafId = -1;
     }
 
-    if (this._timerId >= 0) {
-      clearTimeout(this._timerId);
-      this._timerId = -1;
+    if (this.#timerId >= 0) {
+      clearTimeout(this.#timerId);
+      this.#timerId = -1;
     }
   }
 
   setPlaybackRate(rate: number) {
-    this._playbackRate = rate;
+    this.#playbackRate = rate;
   }
 
   destroy() {
-    this._disposal.empty();
+    this.#disposal.empty();
     this.stop();
   }
 
-  protected _update() {
-    const { nextFrame, framesToAdvance, ended } = this._calculateNextFrame();
-    this._framesAdvanced += framesToAdvance;
+  #update() {
+    const { nextFrame, framesToAdvance, ended } = this.#calculateNextFrame();
+    this.#framesAdvanced += framesToAdvance;
 
-    if (nextFrame !== this._frame) {
-      this._onFrameChange(nextFrame);
-      this._frame = nextFrame;
+    if (nextFrame !== this.#frame) {
+      this.#onFrameChange(nextFrame);
+      this.#frame = nextFrame;
     }
 
     if (ended) {
-      this._frame = this._src.outFrame!;
+      this.#frame = this.#src.outFrame!;
       this.stop();
-      this._onEnd();
+      this.#onEnd();
     }
   }
 
-  protected _tick = () => {
-    this._update();
-    if (this._playing) {
-      this._queueNextFrame(this._tick);
+  #tick = () => {
+    this.#update();
+    if (this.#playing) {
+      this.#queueNextFrame(this.#tick);
     }
   };
 
-  protected _queueNextFrame(callback: () => void) {
-    if (this._isRunningInBackground) {
-      this._timerId = window.setTimeout(callback, 1000 / this._src.fps!);
+  #queueNextFrame(callback: () => void) {
+    if (this.#isRunningInBackground) {
+      this.#timerId = window.setTimeout(callback, 1000 / this.#src.fps!);
     } else {
-      this._rafId = requestAnimationFrame(callback);
+      this.#rafId = requestAnimationFrame(callback);
     }
   }
 
-  protected _calculateNextFrame() {
-    const round = this._playbackRate < 0 ? Math.ceil : Math.floor,
-      time = performance.now() - this._startedAt,
+  #calculateNextFrame() {
+    const round = this.#playbackRate < 0 ? Math.ceil : Math.floor,
+      time = performance.now() - this.#startedAt,
       framesToAdvance =
-        round((time * this._playbackRate) / (1000 / this._src.fps!)) - this._framesAdvanced,
-      nextFrame = framesToAdvance + this._frame,
+        round((time * this.#playbackRate) / (1000 / this.#src.fps!)) - this.#framesAdvanced,
+      nextFrame = framesToAdvance + this.#frame,
       isCurrentFrameOutOfBounds =
-        this._frame > this._src.outFrame! || this._frame < this._src.inFrame!,
-      isNextFrameOutOfBounds = nextFrame > this._src.outFrame! || nextFrame < this._src.inFrame!,
+        this.#frame > this.#src.outFrame! || this.#frame < this.#src.inFrame!,
+      isNextFrameOutOfBounds = nextFrame > this.#src.outFrame! || nextFrame < this.#src.inFrame!,
       ended = isNextFrameOutOfBounds && !isCurrentFrameOutOfBounds;
 
-    if (this._playbackRate > 0 && !ended) {
+    if (this.#playbackRate > 0 && !ended) {
       // Play forwards
       if (isNextFrameOutOfBounds) {
         return {
-          nextFrame: this._src.inFrame!,
+          nextFrame: this.#src.inFrame!,
           framesToAdvance,
           ended,
         };
@@ -121,7 +123,7 @@ export class RemotionPlaybackEngine {
     // Reverse playback
     if (isNextFrameOutOfBounds) {
       return {
-        nextFrame: this._src.outFrame!,
+        nextFrame: this.#src.outFrame!,
         framesToAdvance,
         ended,
       };
@@ -130,9 +132,9 @@ export class RemotionPlaybackEngine {
     return { nextFrame, framesToAdvance, ended };
   }
 
-  protected _onVisibilityChange() {
-    this._isRunningInBackground = document.visibilityState === 'hidden';
-    if (this._playing) {
+  #onVisibilityChange() {
+    this.#isRunningInBackground = document.visibilityState === 'hidden';
+    if (this.#playing) {
       this.stop();
       this.play();
     }

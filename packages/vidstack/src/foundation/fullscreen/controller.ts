@@ -15,12 +15,12 @@ export class FullscreenController
    * listened to globally on the document so we need to know if they relate to the current host
    * element or not.
    */
-  private _listening = false;
+  #listening = false;
 
-  private _active = false;
+  #active = false;
 
   get active() {
-    return this._active;
+    return this.#active;
   }
 
   get supported() {
@@ -29,40 +29,40 @@ export class FullscreenController
 
   protected override onConnect() {
     // @ts-expect-error
-    listenEvent(fscreen, 'fullscreenchange', this._onChange.bind(this));
+    listenEvent(fscreen, 'fullscreenchange', this.#onChange.bind(this));
 
     // @ts-expect-error
-    listenEvent(fscreen, 'fullscreenerror', this._onError.bind(this));
+    listenEvent(fscreen, 'fullscreenerror', this.#onError.bind(this));
 
-    onDispose(this._onDisconnect.bind(this));
+    onDispose(this.#onDisconnect.bind(this));
   }
 
-  private async _onDisconnect() {
+  async #onDisconnect() {
     if (CAN_FULLSCREEN) await this.exit();
   }
 
-  private _onChange(event: Event) {
+  #onChange(event: Event) {
     const active = isFullscreen(this.el);
-    if (active === this._active) return;
-    if (!active) this._listening = false;
-    this._active = active;
+    if (active === this.#active) return;
+    if (!active) this.#listening = false;
+    this.#active = active;
     this.dispatch('fullscreen-change', { detail: active, trigger: event });
   }
 
-  private _onError(event: Event) {
-    if (!this._listening) return;
+  #onError(event: Event) {
+    if (!this.#listening) return;
     this.dispatch('fullscreen-error', { detail: null, trigger: event });
-    this._listening = false;
+    this.#listening = false;
   }
 
   async enter() {
     try {
-      this._listening = true;
+      this.#listening = true;
       if (!this.el || isFullscreen(this.el)) return;
       assertFullscreenAPI();
       return fscreen.requestFullscreen(this.el);
     } catch (error) {
-      this._listening = false;
+      this.#listening = false;
       throw error;
     }
   }

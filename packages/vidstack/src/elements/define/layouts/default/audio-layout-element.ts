@@ -39,34 +39,34 @@ export class MediaAudioLayoutElement
     },
   };
 
-  private _media!: MediaContext;
-  private _scrubbing = signal(false);
+  #media!: MediaContext;
+  #scrubbing = signal(false);
 
   protected onSetup() {
     // Avoid memory leaks if `keepAlive` is true. The DOM will re-render regardless.
     this.forwardKeepAlive = false;
 
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     this.classList.add('vds-audio-layout');
 
-    this._setupWatchScrubbing();
+    this.#setupWatchScrubbing();
   }
 
   protected onConnect() {
     setLayoutName('audio', () => this.isMatch);
-    this._setupMenuContainer();
+    this.#setupMenuContainer();
   }
 
   render() {
-    return $signal(this._render.bind(this));
+    return $signal(this.#render.bind(this));
   }
 
-  private _render() {
+  #render() {
     return this.isMatch ? Layout() : null;
   }
 
-  private _setupMenuContainer() {
+  #setupMenuContainer() {
     const { menuPortal } = useDefaultLayoutContext();
 
     effect(() => {
@@ -95,25 +95,25 @@ export class MediaAudioLayoutElement
     });
   }
 
-  private _setupWatchScrubbing() {
-    const { pointer } = this._media.$state;
+  #setupWatchScrubbing() {
+    const { pointer } = this.#media.$state;
     effect(() => {
       if (pointer() !== 'coarse') return;
-      effect(this._watchScrubbing.bind(this));
+      effect(this.#watchScrubbing.bind(this));
     });
   }
 
-  private _watchScrubbing() {
-    if (!this._scrubbing()) {
-      listenEvent(this, 'pointerdown', this._onStartScrubbing.bind(this), { capture: true });
+  #watchScrubbing() {
+    if (!this.#scrubbing()) {
+      listenEvent(this, 'pointerdown', this.#onStartScrubbing.bind(this), { capture: true });
       return;
     }
 
     listenEvent(this, 'pointerdown', (e) => e.stopPropagation());
-    listenEvent(window, 'pointerdown', this._onStopScrubbing.bind(this));
+    listenEvent(window, 'pointerdown', this.#onStopScrubbing.bind(this));
   }
 
-  private _onStartScrubbing(event: Event) {
+  #onStartScrubbing(event: Event) {
     const { target } = event,
       hasTimeSlider = !!(isHTMLElement(target) && target.closest('.vds-time-slider'));
 
@@ -121,11 +121,11 @@ export class MediaAudioLayoutElement
 
     event.stopImmediatePropagation();
     this.setAttribute('data-scrubbing', '');
-    this._scrubbing.set(true);
+    this.#scrubbing.set(true);
   }
 
-  private _onStopScrubbing() {
-    this._scrubbing.set(false);
+  #onStopScrubbing() {
+    this.#scrubbing.set(false);
     this.removeAttribute('data-scrubbing');
   }
 }

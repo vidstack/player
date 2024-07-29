@@ -46,25 +46,25 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   readonly kind!: TextTrackKind;
   readonly default = false;
 
-  private _canLoad = false;
-  private _currentTime = 0;
-  private _mode: TextTrackMode = 'disabled';
-  private _metadata: VTTHeaderMetadata = {};
-  private _regions: VTTRegion[] = [];
-  private _cues: VTTCue[] = [];
-  private _activeCues: VTTCue[] = [];
+  #canLoad = false;
+  #currentTime = 0;
+  #mode: TextTrackMode = 'disabled';
+  #metadata: VTTHeaderMetadata = {};
+  #regions: VTTRegion[] = [];
+  #cues: VTTCue[] = [];
+  #activeCues: VTTCue[] = [];
 
   /** @internal */
-  [TextTrackSymbol._readyState]: TextTrackReadyState = 0;
+  [TextTrackSymbol.readyState]: TextTrackReadyState = 0;
 
   /** @internal */
-  [TextTrackSymbol._crossOrigin]?: () => string | null;
+  [TextTrackSymbol.crossOrigin]?: () => string | null;
 
   /** @internal */
-  [TextTrackSymbol._onModeChange]: (() => void) | null = null;
+  [TextTrackSymbol.onModeChange]: (() => void) | null = null;
 
   /** @internal */
-  [TextTrackSymbol._native]: {
+  [TextTrackSymbol.native]: {
     default?: boolean;
     managed?: boolean;
     track: {
@@ -76,19 +76,19 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   } | null = null;
 
   get metadata(): Readonly<VTTHeaderMetadata> {
-    return this._metadata;
+    return this.#metadata;
   }
 
   get regions(): ReadonlyArray<VTTRegion> {
-    return this._regions;
+    return this.#regions;
   }
 
   get cues(): ReadonlyArray<VTTCue> {
-    return this._cues;
+    return this.#cues;
   }
 
   get activeCues(): ReadonlyArray<VTTCue> {
-    return this._activeCues;
+    return this.#activeCues;
   }
 
   /**
@@ -98,11 +98,11 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
    * - 3: Error
    */
   get readyState(): TextTrackReadyState {
-    return this[TextTrackSymbol._readyState];
+    return this[TextTrackSymbol.readyState];
   }
 
   get mode(): TextTrackMode {
-    return this._mode;
+    return this.#mode;
   }
 
   set mode(mode) {
@@ -116,9 +116,9 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     if (!this.type) this.type = 'vtt';
 
     if (!__SERVER__ && init.content) {
-      this._parseContent(init);
+      this.#parseContent(init);
     } else if (!init.src) {
-      this[TextTrackSymbol._readyState] = 2;
+      this[TextTrackSymbol.readyState] = 2;
     }
 
     if (__DEV__ && isTrackCaptionKind(this) && !this.label) {
@@ -128,117 +128,117 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
   addCue(cue: VTTCue, trigger?: Event): void {
     let i = 0,
-      length = this._cues.length;
+      length = this.#cues.length;
 
-    for (i = 0; i < length; i++) if (cue.endTime <= this._cues[i].startTime) break;
+    for (i = 0; i < length; i++) if (cue.endTime <= this.#cues[i].startTime) break;
 
-    if (i === length) this._cues.push(cue);
-    else this._cues.splice(i, 0, cue);
+    if (i === length) this.#cues.push(cue);
+    else this.#cues.splice(i, 0, cue);
 
     // Avoid infinite loop by adding native text track cues back.
     if (!(cue instanceof TextTrackCue)) {
-      this[TextTrackSymbol._native]?.track.addCue(cue);
+      this[TextTrackSymbol.native]?.track.addCue(cue);
     }
 
     this.dispatchEvent(new DOMEvent<VTTCue>('add-cue', { detail: cue, trigger }));
 
-    if (isCueActive(cue, this._currentTime)) {
-      this[TextTrackSymbol._updateActiveCues](this._currentTime, trigger);
+    if (isCueActive(cue, this.#currentTime)) {
+      this[TextTrackSymbol.updateActiveCues](this.#currentTime, trigger);
     }
   }
 
   removeCue(cue: VTTCue, trigger?: Event): void {
-    const index = this._cues.indexOf(cue);
+    const index = this.#cues.indexOf(cue);
     if (index >= 0) {
-      const isActive = this._activeCues.includes(cue);
-      this._cues.splice(index, 1);
-      this[TextTrackSymbol._native]?.track.removeCue(cue);
+      const isActive = this.#activeCues.includes(cue);
+      this.#cues.splice(index, 1);
+      this[TextTrackSymbol.native]?.track.removeCue(cue);
       this.dispatchEvent(new DOMEvent<VTTCue>('remove-cue', { detail: cue, trigger }));
       if (isActive) {
-        this[TextTrackSymbol._updateActiveCues](this._currentTime, trigger);
+        this[TextTrackSymbol.updateActiveCues](this.#currentTime, trigger);
       }
     }
   }
 
   setMode(mode: TextTrackMode, trigger?: Event) {
-    if (this._mode === mode) return;
+    if (this.#mode === mode) return;
 
-    this._mode = mode;
+    this.#mode = mode;
 
     if (mode === 'disabled') {
-      this._activeCues = [];
-      this._activeCuesChanged();
+      this.#activeCues = [];
+      this.#activeCuesChanged();
     } else if (this.readyState === 2) {
-      this[TextTrackSymbol._updateActiveCues](this._currentTime, trigger);
+      this[TextTrackSymbol.updateActiveCues](this.#currentTime, trigger);
     } else {
-      this._load();
+      this.#load();
     }
 
     this.dispatchEvent(new DOMEvent<TextTrack>('mode-change', { detail: this, trigger }));
-    this[TextTrackSymbol._onModeChange]?.();
+    this[TextTrackSymbol.onModeChange]?.();
   }
 
   /** @internal */
-  [TextTrackSymbol._updateActiveCues](currentTime: number, trigger?: Event) {
-    this._currentTime = currentTime;
-    if (this.mode === 'disabled' || !this._cues.length) return;
+  [TextTrackSymbol.updateActiveCues](currentTime: number, trigger?: Event) {
+    this.#currentTime = currentTime;
+    if (this.mode === 'disabled' || !this.#cues.length) return;
 
     const activeCues: VTTCue[] = [];
 
-    for (let i = 0, length = this._cues.length; i < length; i++) {
-      const cue = this._cues[i]!;
+    for (let i = 0, length = this.#cues.length; i < length; i++) {
+      const cue = this.#cues[i]!;
       if (isCueActive(cue, currentTime)) activeCues.push(cue);
     }
 
-    let changed = activeCues.length !== this._activeCues.length;
+    let changed = activeCues.length !== this.#activeCues.length;
     if (!changed) {
       for (let i = 0; i < activeCues.length; i++) {
-        if (!this._activeCues.includes(activeCues[i])) {
+        if (!this.#activeCues.includes(activeCues[i])) {
           changed = true;
           break;
         }
       }
     }
 
-    this._activeCues = activeCues;
-    if (changed) this._activeCuesChanged(trigger);
+    this.#activeCues = activeCues;
+    if (changed) this.#activeCuesChanged(trigger);
   }
 
   /** @internal */
-  [TextTrackSymbol._canLoad]() {
-    this._canLoad = true;
-    if (this._mode !== 'disabled') this._load();
+  [TextTrackSymbol.canLoad]() {
+    this.#canLoad = true;
+    if (this.#mode !== 'disabled') this.#load();
   }
 
-  private _parseContent(init: TextTrackInit) {
+  #parseContent(init: TextTrackInit) {
     import('media-captions').then(({ parseText, VTTCue, VTTRegion }) => {
       if (!isString(init.content) || init.type === 'json') {
-        this._parseJSON(init.content!, VTTCue, VTTRegion);
-        if (this.readyState !== 3) this._ready();
+        this.#parseJSON(init.content!, VTTCue, VTTRegion);
+        if (this.readyState !== 3) this.#ready();
       } else {
         parseText(init.content!, { type: init.type as 'vtt' }).then(({ cues, regions }) => {
-          this._cues = cues;
-          this._regions = regions;
-          this._ready();
+          this.#cues = cues;
+          this.#regions = regions;
+          this.#ready();
         });
       }
     });
   }
 
-  private async _load() {
-    if (!this._canLoad || this[TextTrackSymbol._readyState] > 0) return;
+  async #load() {
+    if (!this.#canLoad || this[TextTrackSymbol.readyState] > 0) return;
 
-    this[TextTrackSymbol._readyState] = 1;
+    this[TextTrackSymbol.readyState] = 1;
     this.dispatchEvent(new DOMEvent<void>('load-start'));
 
     if (!this.src) {
-      this._ready();
+      this.#ready();
       return;
     }
 
     try {
       const { parseResponse, VTTCue, VTTRegion } = await import('media-captions'),
-        crossOrigin = this[TextTrackSymbol._crossOrigin]?.();
+        crossOrigin = this[TextTrackSymbol.crossOrigin]?.();
 
       const response = fetch(this.src, {
         headers: this.type === 'json' ? { 'Content-Type': 'application/json' } : undefined,
@@ -246,7 +246,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
       });
 
       if (this.type === 'json') {
-        this._parseJSON(await (await response).text(), VTTCue, VTTRegion);
+        this.#parseJSON(await (await response).text(), VTTCue, VTTRegion);
       } else {
         const { errors, metadata, regions, cues } = await parseResponse(response, {
           type: this.type,
@@ -256,53 +256,53 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
         if (errors[0]?.code === 0) {
           throw errors[0];
         } else {
-          this._metadata = metadata;
-          this._regions = regions;
-          this._cues = cues;
+          this.#metadata = metadata;
+          this.#regions = regions;
+          this.#cues = cues;
         }
       }
 
-      this._ready();
+      this.#ready();
     } catch (error) {
-      this._error(error);
+      this.#error(error);
     }
   }
 
-  private _ready() {
-    this[TextTrackSymbol._readyState] = 2;
+  #ready() {
+    this[TextTrackSymbol.readyState] = 2;
 
     if (!this.src || this.type !== 'vtt') {
-      const native = this[TextTrackSymbol._native];
+      const native = this[TextTrackSymbol.native];
       if (native && !native.managed) {
-        for (const cue of this._cues) native.track.addCue(cue);
+        for (const cue of this.#cues) native.track.addCue(cue);
       }
     }
 
     const loadEvent = new DOMEvent<void>('load');
-    this[TextTrackSymbol._updateActiveCues](this._currentTime, loadEvent);
+    this[TextTrackSymbol.updateActiveCues](this.#currentTime, loadEvent);
     this.dispatchEvent(loadEvent);
   }
 
-  private _error(error: unknown) {
-    this[TextTrackSymbol._readyState] = 3;
+  #error(error: unknown) {
+    this[TextTrackSymbol.readyState] = 3;
     this.dispatchEvent(new DOMEvent('error', { detail: error }));
   }
 
-  private _parseJSON(json: string | VTTContent, VTTCue, VTTRegion) {
+  #parseJSON(json: string | VTTContent, VTTCue, VTTRegion) {
     try {
       const { regions, cues } = parseJSONCaptionsFile(json, VTTCue, VTTRegion);
-      this._regions = regions;
-      this._cues = cues;
+      this.#regions = regions;
+      this.#cues = cues;
     } catch (error) {
       if (__DEV__) {
         console.error(`[vidstack] failed to parse JSON captions at: \`${this.src}\`\n\n`, error);
       }
 
-      this._error(error);
+      this.#error(error);
     }
   }
 
-  private _activeCuesChanged(trigger?: Event) {
+  #activeCuesChanged(trigger?: Event) {
     this.dispatchEvent(new DOMEvent<void>('cue-change', { trigger }));
   }
 }

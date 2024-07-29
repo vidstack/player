@@ -26,79 +26,78 @@ export class RemotionProvider implements MediaProviderAdapter {
 
   readonly scope = createScope();
 
-  protected _src = signal<RemotionSrc | null>(null);
-  protected _setup = false;
-  protected _loadStart = false;
-  protected _audio: any = null;
-  protected _waiting = signal(false);
-  protected _waitingPromise: DeferredPromise<void, string> | null = null;
-  protected _mediaTags = signal<PlayableMediaTag[]>([]);
-  protected _mediaElements = signal<HTMLMediaElement[]>([]);
-  protected _bufferingElements = new Set<HTMLMediaElement>();
-  protected _timeline: TimelineContextValue | null = null;
-  protected _frame = signal<Record<string, number>>({ [REMOTION_PROVIDER_ID]: 0 });
+  #src = signal<RemotionSrc | null>(null);
+  #setup = false;
+  #loadStart = false;
+  #audio: any = null;
+  #waiting = signal(false);
+  #waitingPromise: DeferredPromise<void, string> | null = null;
+  #mediaTags = signal<PlayableMediaTag[]>([]);
+  #mediaElements = signal<HTMLMediaElement[]>([]);
+  #bufferingElements = new Set<HTMLMediaElement>();
+  #timeline: TimelineContextValue | null = null;
+  #frame = signal<Record<string, number>>({ [REMOTION_PROVIDER_ID]: 0 });
 
-  protected _layoutEngine = new RemotionLayoutEngine();
-  protected _playbackEngine: RemotionPlaybackEngine | null = null;
+  #layoutEngine = new RemotionLayoutEngine();
+  #playbackEngine: RemotionPlaybackEngine | null = null;
 
-  protected _setTimeline: SetTimelineContextValue = {
-    setFrame: this._setFrame.bind(this),
-    setPlaying: this._setPlaying.bind(this),
-  };
+  readonly #container: HTMLElement;
+  readonly #ctx: MediaContext;
 
-  protected _setMediaVolume: SetMediaVolumeContextValue = {
+  #setTimeline: SetTimelineContextValue;
+
+  #setMediaVolume: SetMediaVolumeContextValue = {
     setMediaMuted: this.setMuted.bind(this),
     setMediaVolume: this.setVolume.bind(this),
   };
-
-  protected get _notify() {
-    return this._ctx.delegate._notify;
-  }
 
   get type() {
     return 'remotion';
   }
 
   get currentSrc() {
-    return peek(this._src);
+    return peek(this.#src);
   }
 
   get frame() {
-    return this._frame();
+    return this.#frame();
   }
 
-  constructor(
-    readonly container: HTMLElement,
-    protected readonly _ctx: MediaContext,
-  ) {
-    this._layoutEngine.setContainer(container);
+  constructor(container: HTMLElement, ctx: MediaContext) {
+    this.#container = container;
+    this.#ctx = ctx;
+    this.#setTimeline = {
+      setFrame: this.#setFrame.bind(this),
+      setPlaying: this.#setPlaying.bind(this),
+    };
+    this.#layoutEngine.setContainer(container);
   }
 
   setup() {
-    effect(this._watchWaiting.bind(this));
-    effect(this._watchMediaTags.bind(this));
-    effect(this._watchMediaElements.bind(this));
+    effect(this.#watchWaiting.bind(this));
+    effect(this.#watchMediaTags.bind(this));
+    effect(this.#watchMediaElements.bind(this));
   }
 
-  protected _watchMediaTags() {
-    this._mediaTags();
-    this._discoverMediaElements();
+  #watchMediaTags() {
+    this.#mediaTags();
+    this.#discoverMediaElements();
   }
 
-  protected _discoverMediaElements() {
-    const elements = [...this.container.querySelectorAll<HTMLMediaElement>('audio,video')];
-    this._mediaElements.set(elements);
+  #discoverMediaElements() {
+    const elements = [...this.#container.querySelectorAll<HTMLMediaElement>('audio,video')];
+    this.#mediaElements.set(elements);
   }
 
-  protected _watchMediaElements() {
-    const elements = this._mediaElements();
+  #watchMediaElements() {
+    const elements = this.#mediaElements();
 
     for (const tag of elements) {
-      const onWait = this._onWaitFor.bind(this, tag),
-        onStopWaiting = this._onStopWaitingFor.bind(this, tag);
+      const onWait = this.#onWaitFor.bind(this, tag),
+        onStopWaiting = this.#onStopWaitingFor.bind(this, tag);
 
       if (tag.currentSrc && tag.readyState < 4) {
-        this._onWaitFor(tag);
+        this.#onWaitFor(tag);
         listenEvent(tag, 'canplay', onStopWaiting);
       }
 
@@ -107,56 +106,56 @@ export class RemotionProvider implements MediaProviderAdapter {
     }
 
     // User might have seeked to a new position, old media elements are removed.
-    for (const el of this._bufferingElements) {
-      if (!elements.includes(el)) this._onStopWaitingFor(el);
+    for (const el of this.#bufferingElements) {
+      if (!elements.includes(el)) this.#onStopWaitingFor(el);
     }
   }
 
-  protected _onFrameChange(frame: number) {
-    const { inFrame, fps } = this._src()!,
-      { seeking } = this._ctx.$state,
+  #onFrameChange(frame: number) {
+    const { inFrame, fps } = this.#src()!,
+      { seeking } = this.#ctx.$state,
       time = Math.max(0, frame - inFrame!) / fps!;
 
-    this._frame.set((record) => ({
+    this.#frame.set((record) => ({
       ...record,
       [REMOTION_PROVIDER_ID]: frame,
     }));
 
-    this._notify('time-change', time);
+    this.#ctx.notify('time-change', time);
 
     if (seeking()) {
       tick();
-      this._notify('seeked', time);
+      this.#ctx.notify('seeked', time);
     }
   }
 
-  protected _onFrameEnd() {
+  #onFrameEnd() {
     this.pause();
-    this._notify('end');
+    this.#ctx.notify('end');
   }
 
   async play() {
-    const { ended } = this._ctx.$state;
+    const { ended } = this.#ctx.$state;
 
     if (peek(ended)) {
-      this._setFrame({ [REMOTION_PROVIDER_ID]: 0 });
+      this.#setFrame({ [REMOTION_PROVIDER_ID]: 0 });
     }
 
     try {
-      const mediaElements = peek(this._mediaElements);
+      const mediaElements = peek(this.#mediaElements);
       if (mediaElements.length) {
         await Promise.all(mediaElements.map((media) => media.play()));
       }
 
-      this._notify('play');
+      this.#ctx.notify('play');
       tick();
 
-      if (this._waitingPromise) {
-        this._notify('waiting');
-        return this._waitingPromise.promise;
+      if (this.#waitingPromise) {
+        this.#ctx.notify('waiting');
+        return this.#waitingPromise.promise;
       } else {
-        this._playbackEngine?.play();
-        this._notify('playing');
+        this.#playbackEngine?.play();
+        this.#ctx.notify('playing');
       }
     } catch (error) {
       throw error;
@@ -164,46 +163,46 @@ export class RemotionProvider implements MediaProviderAdapter {
   }
 
   async pause() {
-    const { paused } = this._ctx.$state;
-    this._playbackEngine?.stop();
-    this._notify('pause');
+    const { paused } = this.#ctx.$state;
+    this.#playbackEngine?.stop();
+    this.#ctx.notify('pause');
   }
 
   setMuted(value: React.SetStateAction<boolean>) {
-    if (!this._ctx) return;
+    if (!this.#ctx) return;
 
-    const { muted, volume } = this._ctx.$state;
+    const { muted, volume } = this.#ctx.$state;
 
     if (isFunction(value)) {
       this.setMuted(value(muted()));
       return;
     }
 
-    this._notify('volume-change', {
+    this.#ctx.notify('volume-change', {
       volume: peek(volume),
       muted: value,
     });
   }
 
   setCurrentTime(time: number) {
-    const { fps } = this._src()!,
+    const { fps } = this.#src()!,
       frame = time * fps!;
 
-    this._notify('seeking', time);
-    this._setFrame({ [REMOTION_PROVIDER_ID]: frame });
+    this.#ctx.notify('seeking', time);
+    this.#setFrame({ [REMOTION_PROVIDER_ID]: frame });
   }
 
   setVolume(value: React.SetStateAction<number>) {
-    if (!this._ctx) return;
+    if (!this.#ctx) return;
 
-    const { volume, muted } = this._ctx.$state;
+    const { volume, muted } = this.#ctx.$state;
 
     if (isFunction(value)) {
       this.setVolume(value(volume()));
       return;
     }
 
-    this._notify('volume-change', {
+    this.#ctx.notify('volume-change', {
       volume: value,
       muted: peek(muted),
     });
@@ -211,14 +210,14 @@ export class RemotionProvider implements MediaProviderAdapter {
 
   setPlaybackRate(rate: React.SetStateAction<number>) {
     if (isFunction(rate)) {
-      const { playbackRate } = this._ctx.$state;
+      const { playbackRate } = this.#ctx.$state;
       this.setPlaybackRate(rate(peek(playbackRate)));
       return;
     }
 
     if (__DEV__) validatePlaybackRate(rate);
-    this._playbackEngine?.setPlaybackRate(rate);
-    this._notify('rate-change', rate);
+    this.#playbackEngine?.setPlaybackRate(rate);
+    this.#ctx.notify('rate-change', rate);
   }
 
   async loadSource(src: Src) {
@@ -237,15 +236,15 @@ export class RemotionProvider implements MediaProviderAdapter {
         ...src,
         onError: (error) => {
           if (__DEV__) {
-            this._ctx.logger
+            this.#ctx.logger
               ?.errorGroup(`[vidstack] ${error.message}`)
-              .labelledLog('Source', peek(this._src))
+              .labelledLog('Source', peek(this.#src))
               .labelledLog('Error', error)
               .dispatch();
           }
 
           this.pause();
-          this._notify('error', {
+          this.#ctx.notify('error', {
             message: error.message,
             code: 1,
           });
@@ -254,7 +253,7 @@ export class RemotionProvider implements MediaProviderAdapter {
         },
       };
 
-    this._src.set(resolvedSrc);
+    this.#src.set(resolvedSrc);
 
     // Copy initialized props over to main src object.
     for (const prop of Object.keys(resolvedSrc)) {
@@ -269,32 +268,32 @@ export class RemotionProvider implements MediaProviderAdapter {
   }
 
   changeSrc(src: RemotionSrc | null) {
-    this._playbackEngine?.destroy();
+    this.#playbackEngine?.destroy();
 
-    this._waiting.set(false);
-    this._waitingPromise?.reject('src changed');
-    this._waitingPromise = null;
-    this._audio = null;
-    this._timeline = null;
-    this._playbackEngine = null;
-    this._mediaTags.set([]);
-    this._bufferingElements.clear();
-    this._frame.set({ [REMOTION_PROVIDER_ID]: 0 });
+    this.#waiting.set(false);
+    this.#waitingPromise?.reject('src changed');
+    this.#waitingPromise = null;
+    this.#audio = null;
+    this.#timeline = null;
+    this.#playbackEngine = null;
+    this.#mediaTags.set([]);
+    this.#bufferingElements.clear();
+    this.#frame.set({ [REMOTION_PROVIDER_ID]: 0 });
 
-    this._layoutEngine.setSrc(src);
+    this.#layoutEngine.setSrc(src);
 
     if (src) {
-      this._timeline = this._createTimelineContextValue();
-      this._playbackEngine = new RemotionPlaybackEngine(
+      this.#timeline = this.#createTimelineContextValue();
+      this.#playbackEngine = new RemotionPlaybackEngine(
         src,
-        this._onFrameChange.bind(this),
-        this._onFrameEnd.bind(this),
+        this.#onFrameChange.bind(this),
+        this.#onFrameEnd.bind(this),
       );
     }
   }
 
   render = (): React.ReactNode => {
-    const $src = useSignal(this._src);
+    const $src = useSignal(this.#src);
 
     if (!$src) {
       throw Error(
@@ -309,24 +308,24 @@ export class RemotionProvider implements MediaProviderAdapter {
       validateRemotionResource($src);
 
       const rafId = requestAnimationFrame(() => {
-        if (!this._setup) {
-          this._notify('provider-setup', this);
-          this._setup = true;
+        if (!this.#setup) {
+          this.#ctx.notify('provider-setup', this);
+          this.#setup = true;
         }
 
-        if (!this._loadStart) {
-          this._notify('load-start');
-          this._loadStart = true;
+        if (!this.#loadStart) {
+          this.#ctx.notify('load-start');
+          this.#loadStart = true;
         }
 
-        this._discoverMediaElements();
+        this.#discoverMediaElements();
         tick();
-        if (!this._waiting()) this._ready($src);
+        if (!this.#waiting()) this.#ready($src);
       });
 
       return () => {
         cancelAnimationFrame(rafId);
-        this._loadStart = false;
+        this.#loadStart = false;
       };
     }, [$src]);
 
@@ -334,12 +333,12 @@ export class RemotionProvider implements MediaProviderAdapter {
       component: $src.src,
     }) as React.LazyExoticComponent<React.ComponentType<unknown>>;
 
-    const { $state } = this._ctx,
+    const { $state } = this.#ctx,
       $volume = useSignal($state.volume),
       $isMuted = useSignal($state.muted);
 
     const mediaVolume = React.useMemo((): MediaVolumeContextValue => {
-      const { muted, volume } = this._ctx.$state;
+      const { muted, volume } = this.#ctx.$state;
       return { mediaMuted: muted(), mediaVolume: volume() };
     }, [$isMuted, $volume]);
 
@@ -347,11 +346,11 @@ export class RemotionProvider implements MediaProviderAdapter {
       <RemotionContextProvider
         src={$src}
         component={Component}
-        timeline={this._timeline!}
+        timeline={this.#timeline!}
         mediaVolume={mediaVolume}
-        setMediaVolume={this._setMediaVolume}
+        setMediaVolume={this.#setMediaVolume}
       >
-        <Internals.Timeline.SetTimelineContext.Provider value={this._setTimeline}>
+        <Internals.Timeline.SetTimelineContext.Provider value={this.#setTimeline}>
           {React.createElement(this.renderVideo, { src: $src })}
         </Internals.Timeline.SetTimelineContext.Provider>
       </RemotionContextProvider>
@@ -363,16 +362,16 @@ export class RemotionProvider implements MediaProviderAdapter {
       Video = video ? video.component : null,
       audioContext = React.useContext(Internals.SharedAudioContext);
 
-    const { $state } = this._ctx;
+    const { $state } = this.#ctx;
 
-    useSignal(this._frame);
+    useSignal(this.#frame);
     useSignal($state.playing);
     useSignal($state.playbackRate);
 
     React.useEffect(() => {
-      this._audio = audioContext;
+      this.#audio = audioContext;
       return () => {
-        this._audio = null;
+        this.#audio = null;
       };
     }, [audioContext]);
 
@@ -389,86 +388,86 @@ export class RemotionProvider implements MediaProviderAdapter {
     return <React.Suspense fallback={LoadingContent}>{Content}</React.Suspense>;
   };
 
-  protected _ready(src: RemotionSrc | null) {
+  #ready(src: RemotionSrc | null) {
     if (!src) return;
 
     const { outFrame, inFrame, fps } = src,
       duration = (outFrame! - inFrame!) / fps!;
 
-    this._notify('loaded-metadata');
-    this._notify('loaded-data');
+    this.#ctx.notify('loaded-metadata');
+    this.#ctx.notify('loaded-data');
 
-    this._ctx.delegate._ready({
+    this.#ctx.delegate.ready({
       duration,
       seekable: new TimeRange(0, duration),
       buffered: new TimeRange(0, duration),
     });
 
     if (src.initialFrame) {
-      this._setFrame({
+      this.#setFrame({
         [REMOTION_PROVIDER_ID]: src.initialFrame,
       });
     }
   }
 
-  protected _onWaitFor(el: HTMLMediaElement) {
-    this._bufferingElements.add(el);
-    this._waiting.set(true);
-    if (!this._waitingPromise) {
-      this._waitingPromise = deferredPromise();
+  #onWaitFor(el: HTMLMediaElement) {
+    this.#bufferingElements.add(el);
+    this.#waiting.set(true);
+    if (!this.#waitingPromise) {
+      this.#waitingPromise = deferredPromise();
     }
   }
 
-  protected _onStopWaitingFor(el: HTMLMediaElement) {
-    this._bufferingElements.delete(el);
+  #onStopWaitingFor(el: HTMLMediaElement) {
+    this.#bufferingElements.delete(el);
 
     // There's still elements we're waiting on.
-    if (this._bufferingElements.size) return;
+    if (this.#bufferingElements.size) return;
 
-    this._waiting.set(false);
-    this._waitingPromise?.resolve();
-    this._waitingPromise = null;
+    this.#waiting.set(false);
+    this.#waitingPromise?.resolve();
+    this.#waitingPromise = null;
 
-    const { canPlay } = this._ctx.$state;
+    const { canPlay } = this.#ctx.$state;
     if (!peek(canPlay)) {
-      this._ready(peek(this._src));
+      this.#ready(peek(this.#src));
     }
   }
 
-  protected _watchWaiting() {
-    this._waiting(); // subscribe
+  #watchWaiting() {
+    this.#waiting(); // subscribe
 
-    const { paused } = this._ctx.$state;
+    const { paused } = this.#ctx.$state;
     if (peek(paused)) return;
 
-    if (this._waiting()) {
-      this._playbackEngine?.stop();
-      this._notify('waiting');
+    if (this.#waiting()) {
+      this.#playbackEngine?.stop();
+      this.#ctx.notify('waiting');
     } else {
-      this._playbackEngine?.play();
-      this._notify('playing');
+      this.#playbackEngine?.play();
+      this.#ctx.notify('playing');
     }
   }
 
-  protected _setFrame(value: React.SetStateAction<Record<string, number>>) {
+  #setFrame(value: React.SetStateAction<Record<string, number>>) {
     if (isFunction(value)) {
-      this._setFrame(value(this._frame()));
+      this.#setFrame(value(this.#frame()));
       return;
     }
 
-    this._frame.set((record) => ({ ...record, ...value }));
+    this.#frame.set((record) => ({ ...record, ...value }));
 
     const nextFrame = value[REMOTION_PROVIDER_ID];
-    if (this._playbackEngine && this._playbackEngine.frame !== nextFrame) {
-      this._playbackEngine.frame = nextFrame;
+    if (this.#playbackEngine && this.#playbackEngine.frame !== nextFrame) {
+      this.#playbackEngine.frame = nextFrame;
     }
   }
 
-  protected _setPlaying(value: React.SetStateAction<boolean>) {
-    const { playing } = this._ctx.$state;
+  #setPlaying(value: React.SetStateAction<boolean>) {
+    const { playing } = this.#ctx.$state;
 
     if (isFunction(value)) {
-      this._setPlaying(value(playing()));
+      this.#setPlaying(value(playing()));
       return;
     }
 
@@ -479,10 +478,10 @@ export class RemotionProvider implements MediaProviderAdapter {
     }
   }
 
-  protected _createTimelineContextValue(): TimelineContextValue {
-    const { playing, playbackRate } = this._ctx.$state,
-      frame = this._frame,
-      mediaTags = this._mediaTags,
+  #createTimelineContextValue(): TimelineContextValue {
+    const { playing, playbackRate } = this.#ctx.$state,
+      frame = this.#frame,
+      mediaTags = this.#mediaTags,
       setPlaybackRate = this.setPlaybackRate.bind(this);
 
     return {

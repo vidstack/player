@@ -23,23 +23,23 @@ export interface MuteButtonEvents
 export class MuteButton extends Component<MuteButtonProps, {}, MuteButtonEvents> {
   static props: MuteButtonProps = ToggleButtonController.props;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   constructor() {
     super();
     new ToggleButtonController({
-      _isPressed: this._isPressed.bind(this),
-      _keyShortcut: 'toggleMuted',
-      _onPress: this._onPress.bind(this),
+      isPresssed: this.#isPressed.bind(this),
+      keyShortcut: 'toggleMuted',
+      onPress: this.#onPress.bind(this),
     });
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     this.setAttributes({
-      'data-muted': this._isPressed.bind(this),
-      'data-state': this._getState.bind(this),
+      'data-muted': this.#isPressed.bind(this),
+      'data-state': this.#getState.bind(this),
     });
   }
 
@@ -49,18 +49,18 @@ export class MuteButton extends Component<MuteButtonProps, {}, MuteButtonEvents>
     setARIALabel(el, 'Mute');
   }
 
-  private _onPress(event: Event) {
-    const remote = this._media.remote;
-    this._isPressed() ? remote.unmute(event) : remote.mute(event);
+  #onPress(event: Event) {
+    const remote = this.#media.remote;
+    this.#isPressed() ? remote.unmute(event) : remote.mute(event);
   }
 
-  private _isPressed() {
-    const { muted, volume } = this._media.$state;
+  #isPressed() {
+    const { muted, volume } = this.#media.$state;
     return muted() || volume() === 0;
   }
 
-  private _getState() {
-    const { muted, volume } = this._media.$state,
+  #getState() {
+    const { muted, volume } = this.#media.$state,
       $volume = volume();
     if (muted() || $volume === 0) return 'muted';
     else if ($volume >= 0.5) return 'high';

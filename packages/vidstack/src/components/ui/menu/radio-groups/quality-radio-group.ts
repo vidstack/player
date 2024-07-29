@@ -35,44 +35,44 @@ export class QualityRadioGroup extends Component<
     sort: 'descending',
   };
 
-  private _media!: MediaContext;
-  private _menu?: MenuContext;
-  private _controller: RadioGroupController;
+  #media!: MediaContext;
+  #menu?: MenuContext;
+  #controller: RadioGroupController;
 
   @prop
   get value() {
-    return this._controller.value;
+    return this.#controller.value;
   }
 
   @prop
   get disabled() {
-    const { canSetQuality, qualities } = this._media.$state;
+    const { canSetQuality, qualities } = this.#media.$state;
     return !canSetQuality() || qualities().length <= 1;
   }
 
-  private _sortedQualities = computed(() => {
+  #sortedQualities = computed(() => {
     const { sort } = this.$props,
-      { qualities } = this._media.$state;
+      { qualities } = this.#media.$state;
     return sortVideoQualities(qualities(), sort() === 'descending');
   });
 
   constructor() {
     super();
-    this._controller = new RadioGroupController();
-    this._controller._onValueChange = this._onValueChange.bind(this);
+    this.#controller = new RadioGroupController();
+    this.#controller.onValueChange = this.#onValueChange.bind(this);
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
     if (hasProvidedContext(menuContext)) {
-      this._menu = useContext(menuContext);
+      this.#menu = useContext(menuContext);
     }
   }
 
   protected override onConnect(el: HTMLElement) {
-    effect(this._watchValue.bind(this));
-    effect(this._watchControllerDisabled.bind(this));
-    effect(this._watchHintText.bind(this));
+    effect(this.#watchValue.bind(this));
+    effect(this.#watchControllerDisabled.bind(this));
+    effect(this.#watchHintText.bind(this));
   }
 
   @method
@@ -80,7 +80,7 @@ export class QualityRadioGroup extends Component<
     const { autoLabel, hideBitrate } = this.$props;
     return [
       { value: 'auto', label: autoLabel },
-      ...this._sortedQualities().map((quality) => {
+      ...this.#sortedQualities().map((quality) => {
         const bitrate =
           quality.bitrate && quality.bitrate >= 0
             ? `${round(quality.bitrate / 1000000, 2)} Mbps`
@@ -89,60 +89,60 @@ export class QualityRadioGroup extends Component<
         return {
           quality,
           label: quality.height + 'p',
-          value: this._getQualityId(quality),
+          value: this.#getQualityId(quality),
           bitrate: () => (!hideBitrate() ? bitrate : null),
         };
       }),
     ];
   }
 
-  private _watchValue() {
-    this._controller.value = this._getValue();
+  #watchValue() {
+    this.#controller.value = this.#getValue();
   }
 
-  private _watchHintText() {
+  #watchHintText() {
     const { autoLabel } = this.$props,
-      { autoQuality, quality } = this._media.$state,
+      { autoQuality, quality } = this.#media.$state,
       qualityText = quality() ? quality()!.height + 'p' : '';
 
-    this._menu?._hint.set(
+    this.#menu?.hint.set(
       !autoQuality() ? qualityText : autoLabel() + (qualityText ? ` (${qualityText})` : ''),
     );
   }
 
-  private _watchControllerDisabled() {
-    this._menu?._disable(this.disabled);
+  #watchControllerDisabled() {
+    this.#menu?.disable(this.disabled);
   }
 
-  private _onValueChange(value: string, trigger?: Event) {
+  #onValueChange(value: string, trigger?: Event) {
     if (this.disabled) return;
 
     if (value === 'auto') {
-      this._media.remote.changeQuality(-1, trigger);
+      this.#media.remote.changeQuality(-1, trigger);
       this.dispatch('change', { detail: 'auto', trigger });
       return;
     }
 
-    const { qualities } = this._media.$state,
-      index = peek(qualities).findIndex((quality) => this._getQualityId(quality) === value);
+    const { qualities } = this.#media.$state,
+      index = peek(qualities).findIndex((quality) => this.#getQualityId(quality) === value);
 
     if (index >= 0) {
       const quality = peek(qualities)[index];
-      this._media.remote.changeQuality(index, trigger);
+      this.#media.remote.changeQuality(index, trigger);
       this.dispatch('change', { detail: quality, trigger });
     }
   }
 
-  private _getValue() {
-    const { quality, autoQuality } = this._media.$state;
+  #getValue() {
+    const { quality, autoQuality } = this.#media.$state;
 
     if (autoQuality()) return 'auto';
 
     const currentQuality = quality();
-    return currentQuality ? this._getQualityId(currentQuality) : 'auto';
+    return currentQuality ? this.#getQualityId(currentQuality) : 'auto';
   }
 
-  private _getQualityId(quality: VideoQuality) {
+  #getQualityId(quality: VideoQuality) {
     return quality.height + '_' + quality.bitrate;
   }
 }

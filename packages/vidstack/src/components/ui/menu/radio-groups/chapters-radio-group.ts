@@ -37,34 +37,34 @@ export class ChaptersRadioGroup extends Component<
     thumbnails: null,
   };
 
-  private _media!: MediaContext;
-  private _menu?: MenuContext;
-  private _controller: RadioGroupController;
+  #media!: MediaContext;
+  #menu?: MenuContext;
+  #controller: RadioGroupController;
 
-  private _track = signal<TextTrack | null>(null);
-  private _cues = signal<readonly VTTCue[]>([]);
+  #track = signal<TextTrack | null>(null);
+  #cues = signal<readonly VTTCue[]>([]);
 
   @prop
   get value() {
-    return this._controller.value;
+    return this.#controller.value;
   }
 
   @prop
   get disabled() {
-    return !this._cues()?.length;
+    return !this.#cues()?.length;
   }
 
   constructor() {
     super();
-    this._controller = new RadioGroupController();
-    this._controller._onValueChange = this._onValueChange.bind(this);
+    this.#controller = new RadioGroupController();
+    this.#controller.onValueChange = this.#onValueChange.bind(this);
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     if (hasProvidedContext(menuContext)) {
-      this._menu = useContext(menuContext);
+      this.#menu = useContext(menuContext);
     }
 
     const { thumbnails } = this.$props;
@@ -74,17 +74,17 @@ export class ChaptersRadioGroup extends Component<
   }
 
   protected override onAttach(el: HTMLElement) {
-    this._menu?._attachObserver({
-      _onOpen: this._onOpen.bind(this),
+    this.#menu?.attachObserver({
+      onOpen: this.#onOpen.bind(this),
     });
   }
 
   @method
   getOptions(): ChaptersRadioOption[] {
-    const { clipStartTime, clipEndTime } = this._media.$state,
+    const { clipStartTime, clipEndTime } = this.#media.$state,
       startTime = clipStartTime(),
       endTime = clipEndTime() || Infinity;
-    return this._cues().map((cue, i) => ({
+    return this.#cues().map((cue, i) => ({
       cue,
       value: i.toString(),
       label: cue.text,
@@ -95,64 +95,64 @@ export class ChaptersRadioGroup extends Component<
     }));
   }
 
-  private _onOpen() {
-    peek(() => this._watchCurrentTime());
+  #onOpen() {
+    peek(() => this.#watchCurrentTime());
   }
 
   protected override onConnect(el: HTMLElement) {
-    effect(this._watchCurrentTime.bind(this));
-    effect(this._watchControllerDisabled.bind(this));
-    effect(this._watchTrack.bind(this));
-    watchActiveTextTrack(this._media.textTracks, 'chapters', this._track.set);
+    effect(this.#watchCurrentTime.bind(this));
+    effect(this.#watchControllerDisabled.bind(this));
+    effect(this.#watchTrack.bind(this));
+    watchActiveTextTrack(this.#media.textTracks, 'chapters', this.#track.set);
   }
 
-  protected _watchTrack() {
-    const track = this._track();
+  #watchTrack() {
+    const track = this.#track();
     if (!track) return;
 
-    const onCuesChange = this._onCuesChange.bind(this, track);
+    const onCuesChange = this.#onCuesChange.bind(this, track);
 
     onCuesChange();
     listenEvent(track, 'add-cue', onCuesChange);
     listenEvent(track, 'remove-cue', onCuesChange);
 
     return () => {
-      this._cues.set([]);
+      this.#cues.set([]);
     };
   }
 
-  protected _onCuesChange(track: TextTrack) {
-    const { clipStartTime, clipEndTime } = this._media.$state,
+  #onCuesChange(track: TextTrack) {
+    const { clipStartTime, clipEndTime } = this.#media.$state,
       startTime = clipStartTime(),
       endTime = clipEndTime() || Infinity;
-    this._cues.set(
+    this.#cues.set(
       [...track.cues].filter((cue) => cue.startTime <= endTime && cue.endTime >= startTime),
     );
   }
 
-  private _watchCurrentTime() {
-    if (!this._menu?._expanded()) return;
+  #watchCurrentTime() {
+    if (!this.#menu?.expanded()) return;
 
-    const track = this._track();
+    const track = this.#track();
 
     if (!track) {
-      this._controller.value = '-1';
+      this.#controller.value = '-1';
       return;
     }
 
-    const { realCurrentTime, clipStartTime, clipEndTime } = this._media.$state,
+    const { realCurrentTime, clipStartTime, clipEndTime } = this.#media.$state,
       startTime = clipStartTime(),
       endTime = clipEndTime() || Infinity,
       time = realCurrentTime(),
-      activeCueIndex = this._cues().findIndex((cue) => isCueActive(cue, time));
+      activeCueIndex = this.#cues().findIndex((cue) => isCueActive(cue, time));
 
-    this._controller.value = activeCueIndex.toString();
+    this.#controller.value = activeCueIndex.toString();
 
     if (activeCueIndex >= 0) {
       requestScopedAnimationFrame(() => {
         if (!this.connectScope) return;
 
-        const cue = this._cues()[activeCueIndex],
+        const cue = this.#cues()[activeCueIndex],
           radio = this.el!.querySelector(`[aria-checked='true']`),
           cueStartTime = Math.max(startTime, cue.startTime),
           duration = Math.min(endTime, cue.endTime) - cueStartTime,
@@ -163,20 +163,20 @@ export class ChaptersRadioGroup extends Component<
     }
   }
 
-  private _watchControllerDisabled() {
-    this._menu?._disable(this.disabled);
+  #watchControllerDisabled() {
+    this.#menu?.disable(this.disabled);
   }
 
-  private _onValueChange(value: string, trigger?: Event) {
+  #onValueChange(value: string, trigger?: Event) {
     if (this.disabled || !trigger) return;
 
     const index = +value,
-      cues = this._cues(),
-      { clipStartTime } = this._media.$state;
+      cues = this.#cues(),
+      { clipStartTime } = this.#media.$state;
 
     if (isNumber(index) && cues?.[index]) {
-      this._controller.value = index.toString();
-      this._media.remote.seek(cues[index].startTime - clipStartTime(), trigger);
+      this.#controller.value = index.toString();
+      this.#media.remote.seek(cues[index].startTime - clipStartTime(), trigger);
       this.dispatch('change', { detail: cues[index], trigger });
     }
   }

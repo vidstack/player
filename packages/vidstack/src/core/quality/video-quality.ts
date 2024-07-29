@@ -9,7 +9,7 @@ import { QualitySymbol } from './symbols';
  * @see {@link https://vidstack.io/docs/player/core-concepts/video-quality#quality-list}
  */
 export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListEvents> {
-  private _auto = false;
+  #auto = false;
 
   /**
    * Configures quality switching:
@@ -32,21 +32,21 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
    * Whether automatic quality selection is enabled.
    */
   get auto() {
-    return this._auto || this.readonly;
+    return this.#auto || this.readonly;
   }
 
   /** @internal */
-  [QualitySymbol._enableAuto]?: (trigger?: Event) => void;
+  [QualitySymbol.enableAuto]?: (trigger?: Event) => void;
 
   /** @internal */
-  protected override [ListSymbol._onUserSelect]() {
-    this[QualitySymbol._setAuto](false);
+  protected override [ListSymbol.onUserSelect]() {
+    this[QualitySymbol.setAuto](false);
   }
 
   /** @internal */
-  protected override [ListSymbol._onReset](trigger?: Event) {
-    this[QualitySymbol._enableAuto] = undefined;
-    this[QualitySymbol._setAuto](false, trigger);
+  protected override [ListSymbol.onReset](trigger?: Event) {
+    this[QualitySymbol.enableAuto] = undefined;
+    this[QualitySymbol.setAuto](false, trigger);
   }
 
   /**
@@ -54,19 +54,19 @@ export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListE
    * `readonly` as that already implies auto-selection.
    */
   autoSelect(trigger?: Event): void {
-    if (this.readonly || this._auto || !this[QualitySymbol._enableAuto]) return;
-    this[QualitySymbol._enableAuto]?.(trigger);
-    this[QualitySymbol._setAuto](true, trigger);
+    if (this.readonly || this.#auto || !this[QualitySymbol.enableAuto]) return;
+    this[QualitySymbol.enableAuto]?.(trigger);
+    this[QualitySymbol.setAuto](true, trigger);
   }
 
   getBySrc(src: unknown) {
-    return this._items.find((quality) => quality.src === src);
+    return this.items.find((quality) => quality.src === src);
   }
 
   /** @internal */
-  [QualitySymbol._setAuto](auto: boolean, trigger?: Event) {
-    if (this._auto === auto) return;
-    this._auto = auto;
+  [QualitySymbol.setAuto](auto: boolean, trigger?: Event) {
+    if (this.#auto === auto) return;
+    this.#auto = auto;
     this.dispatchEvent(
       new DOMEvent<any>('auto-change', {
         detail: auto,

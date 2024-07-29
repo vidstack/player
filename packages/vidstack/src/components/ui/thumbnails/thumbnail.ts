@@ -32,50 +32,50 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     hidden: false,
   });
 
-  protected _media!: MediaContext;
-  protected _loader!: ThumbnailsLoader;
+  protected media!: MediaContext;
 
-  private _styleResets: (() => void)[] = [];
+  #loader!: ThumbnailsLoader;
+  #styleResets: (() => void)[] = [];
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
-    this._loader = ThumbnailsLoader.create(this.$props.src, this.$state.crossOrigin);
+    this.media = useMediaContext();
+    this.#loader = ThumbnailsLoader.create(this.$props.src, this.$state.crossOrigin);
 
-    this._watchCrossOrigin();
+    this.#watchCrossOrigin();
 
     this.setAttributes({
-      'data-loading': this._isLoading.bind(this),
-      'data-error': this._hasError.bind(this),
+      'data-loading': this.#isLoading.bind(this),
+      'data-error': this.#hasError.bind(this),
       'data-hidden': this.$state.hidden,
       'aria-hidden': $ariaBool(this.$state.hidden),
     });
   }
 
   protected override onConnect(el: HTMLElement) {
-    effect(this._watchImg.bind(this));
-    effect(this._watchHidden.bind(this));
-    effect(this._watchCrossOrigin.bind(this));
-    effect(this._onLoadStart.bind(this));
-    effect(this._onFindActiveThumbnail.bind(this));
-    effect(this._resize.bind(this));
+    effect(this.#watchImg.bind(this));
+    effect(this.#watchHidden.bind(this));
+    effect(this.#watchCrossOrigin.bind(this));
+    effect(this.#onLoadStart.bind(this));
+    effect(this.#onFindActiveThumbnail.bind(this));
+    effect(this.#resize.bind(this));
   }
 
-  private _watchImg() {
+  #watchImg() {
     const img = this.$state.img();
     if (!img) return;
-    listenEvent(img, 'load', this._onLoaded.bind(this));
-    listenEvent(img, 'error', this._onError.bind(this));
+    listenEvent(img, 'load', this.#onLoaded.bind(this));
+    listenEvent(img, 'error', this.#onError.bind(this));
   }
 
-  private _watchCrossOrigin() {
+  #watchCrossOrigin() {
     const { crossOrigin: crossOriginProp } = this.$props,
       { crossOrigin: crossOriginState } = this.$state,
-      { crossOrigin: mediaCrossOrigin } = this._media.$state,
+      { crossOrigin: mediaCrossOrigin } = this.media.$state,
       crossOrigin = crossOriginProp() !== null ? crossOriginProp() : mediaCrossOrigin();
     crossOriginState.set(crossOrigin === true ? 'anonymous' : crossOrigin);
   }
 
-  private _onLoadStart() {
+  #onLoadStart() {
     const { src, loading, error } = this.$state;
 
     if (src()) {
@@ -84,51 +84,51 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     }
 
     return () => {
-      this._resetStyles();
+      this.#resetStyles();
       loading.set(false);
       error.set(null);
     };
   }
 
-  private _onLoaded() {
+  #onLoaded() {
     const { loading, error } = this.$state;
-    this._resize();
+    this.#resize();
     loading.set(false);
     error.set(null);
   }
 
-  private _onError(event: ErrorEvent) {
+  #onError(event: ErrorEvent) {
     const { loading, error } = this.$state;
     loading.set(false);
     error.set(event);
   }
 
-  private _isLoading() {
+  #isLoading() {
     const { loading, hidden } = this.$state;
     return !hidden() && loading();
   }
 
-  private _hasError() {
+  #hasError() {
     const { error } = this.$state;
     return !isNull(error());
   }
 
-  private _watchHidden() {
+  #watchHidden() {
     const { hidden } = this.$state,
-      { duration } = this._media.$state,
-      images = this._loader.$images();
-    hidden.set(this._hasError() || !Number.isFinite(duration()) || images.length === 0);
+      { duration } = this.media.$state,
+      images = this.#loader.$images();
+    hidden.set(this.#hasError() || !Number.isFinite(duration()) || images.length === 0);
   }
 
-  protected _getTime() {
+  protected getTime() {
     return this.$props.time();
   }
 
-  private _onFindActiveThumbnail() {
-    let images = this._loader.$images();
+  #onFindActiveThumbnail() {
+    let images = this.#loader.$images();
     if (!images.length) return;
 
-    let time = this._getTime(),
+    let time = this.getTime(),
       { src, activeThumbnail } = this.$state,
       activeIndex = -1,
       activeImage: ThumbnailImage | null = null;
@@ -149,7 +149,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     src.set(activeImage?.url.href || '');
   }
 
-  private _resize() {
+  #resize() {
     if (!this.scope || this.$state.hidden()) return;
 
     const rootEl = this.el,
@@ -179,28 +179,28 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
       ),
       scale = !isNaN(maxRatio) && maxRatio < 1 ? maxRatio : minRatio > 1 ? minRatio : 1;
 
-    this._style(rootEl, '--thumbnail-width', `${width * scale}px`);
-    this._style(rootEl, '--thumbnail-height', `${height * scale}px`);
-    this._style(imgEl, 'width', `${imgEl.naturalWidth * scale}px`);
-    this._style(imgEl, 'height', `${imgEl.naturalHeight * scale}px`);
-    this._style(
+    this.#style(rootEl, '--thumbnail-width', `${width * scale}px`);
+    this.#style(rootEl, '--thumbnail-height', `${height * scale}px`);
+    this.#style(imgEl, 'width', `${imgEl.naturalWidth * scale}px`);
+    this.#style(imgEl, 'height', `${imgEl.naturalHeight * scale}px`);
+    this.#style(
       imgEl,
       'transform',
       thumbnail.coords
         ? `translate(-${thumbnail.coords.x * scale}px, -${thumbnail.coords.y * scale}px)`
         : '',
     );
-    this._style(imgEl, 'max-width', 'none');
+    this.#style(imgEl, 'max-width', 'none');
   }
 
-  private _style(el: HTMLElement, name: string, value: string) {
+  #style(el: HTMLElement, name: string, value: string) {
     el.style.setProperty(name, value);
-    this._styleResets.push(() => el.style.removeProperty(name));
+    this.#styleResets.push(() => el.style.removeProperty(name));
   }
 
-  private _resetStyles() {
-    for (const reset of this._styleResets) reset();
-    this._styleResets = [];
+  #resetStyles() {
+    for (const reset of this.#styleResets) reset();
+    this.#styleResets = [];
   }
 }
 

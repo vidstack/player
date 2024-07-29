@@ -22,24 +22,24 @@ class SliderSteps extends Component {}
 export class MediaSliderStepsElement extends Host(HTMLElement, SliderSteps) {
   static tagName = 'media-slider-steps';
 
-  private _template: HTMLTemplateElement | null = null;
+  #template: HTMLTemplateElement | null = null;
 
   onConnect(el: HTMLElement) {
     // Animation frame required as some frameworks append late for some reason.
     requestScopedAnimationFrame(() => {
       if (!this.connectScope) return;
-      this._template = el.querySelector('template');
-      if (this._template) effect(this._render.bind(this));
+      this.#template = el.querySelector('template');
+      if (this.#template) effect(this.#render.bind(this));
     });
   }
 
-  private _render() {
-    if (!this._template) return;
+  #render() {
+    if (!this.#template) return;
 
     const { min, max, step } = useState(sliderState),
       steps = (max() - min()) / step();
 
-    cloneTemplate(this._template, Math.floor(steps) + 1);
+    cloneTemplate(this.#template, Math.floor(steps) + 1);
   }
 }
 

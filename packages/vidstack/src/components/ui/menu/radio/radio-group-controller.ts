@@ -5,75 +5,75 @@ import { menuContext } from '../menu-context';
 import { radioControllerContext, type RadioController } from './radio-controller';
 
 export class RadioGroupController extends ViewController {
-  protected _group = new Set<RadioController>();
-  protected _value = signal('');
-  protected _controller: RadioGroupController | null = null;
+  #group = new Set<RadioController>();
+  #value = signal('');
+  #controller: RadioGroupController | null = null;
 
-  _onValueChange?: (newValue: string, trigger?: Event) => void;
+  onValueChange?: (newValue: string, trigger?: Event) => void;
 
-  get _values(): string[] {
-    return Array.from(this._group).map((radio) => radio._value());
+  get values(): string[] {
+    return Array.from(this.#group).map((radio) => radio.value());
   }
 
   get value() {
-    return this._value();
+    return this.#value();
   }
 
   set value(value) {
-    this._onChange(value);
+    this.#onChange(value);
   }
 
   protected override onSetup(): void {
     provideContext(radioControllerContext, {
-      add: this._addRadio.bind(this),
-      remove: this._removeRadio.bind(this),
+      add: this.#addRadio.bind(this),
+      remove: this.#removeRadio.bind(this),
     });
   }
 
   protected override onAttach(el: HTMLElement) {
     const isMenuItem = hasProvidedContext(menuContext);
     if (!isMenuItem) setAttributeIfEmpty(el, 'role', 'radiogroup');
-    this.setAttributes({ value: this._value });
+    this.setAttributes({ value: this.#value });
   }
 
   protected override onDestroy() {
-    this._group.clear();
+    this.#group.clear();
   }
 
-  private _addRadio(radio: RadioController) {
-    if (this._group.has(radio)) return;
+  #addRadio(radio: RadioController) {
+    if (this.#group.has(radio)) return;
 
-    this._group.add(radio);
-    radio._onCheck = this._onChangeBind;
+    this.#group.add(radio);
+    radio.onCheck = this.#onChangeBind;
 
-    radio._check(radio._value() === this._value());
+    radio.check(radio.value() === this.#value());
   }
 
-  private _removeRadio(radio: RadioController) {
-    radio._onCheck = null;
-    this._group.delete(radio);
+  #removeRadio(radio: RadioController) {
+    radio.onCheck = null;
+    this.#group.delete(radio);
   }
 
-  private _onChangeBind = this._onChange.bind(this);
-  private _onChange(newValue: string, trigger?: Event) {
-    const currentValue = peek(this._value);
+  #onChangeBind = this.#onChange.bind(this);
+  #onChange(newValue: string, trigger?: Event) {
+    const currentValue = peek(this.#value);
 
     if (!newValue || newValue === currentValue) return;
 
-    const currentRadio = this._findRadio(currentValue),
-      newRadio = this._findRadio(newValue);
+    const currentRadio = this.#findRadio(currentValue),
+      newRadio = this.#findRadio(newValue);
 
-    currentRadio?._check(false, trigger);
-    newRadio?._check(true, trigger);
+    currentRadio?.check(false, trigger);
+    newRadio?.check(true, trigger);
 
-    this._value.set(newValue);
+    this.#value.set(newValue);
 
-    this._onValueChange?.(newValue, trigger);
+    this.onValueChange?.(newValue, trigger);
   }
 
-  private _findRadio(newValue: string) {
-    for (const radio of this._group) {
-      if (newValue === peek(radio._value)) return radio;
+  #findRadio(newValue: string) {
+    for (const radio of this.#group) {
+      if (newValue === peek(radio.value)) return radio;
     }
 
     return null;

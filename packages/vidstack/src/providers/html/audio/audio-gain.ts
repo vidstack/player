@@ -8,21 +8,23 @@ import {
 } from './audio-context';
 
 export class AudioGain implements AudioGainAdapter {
-  private _gainNode: GainNode | null = null;
-  private _srcAudioNode: MediaElementAudioSourceNode | null = null;
+  #media: HTMLMediaElement;
+  #onChange: (gain: number | null) => void;
+  #gainNode: GainNode | null = null;
+  #srcAudioNode: MediaElementAudioSourceNode | null = null;
 
   get currentGain() {
-    return this._gainNode?.gain?.value ?? null;
+    return this.#gainNode?.gain?.value ?? null;
   }
 
   get supported() {
     return true;
   }
 
-  constructor(
-    private _media: HTMLMediaElement,
-    private _onChange: (gain: number | null) => void,
-  ) {}
+  constructor(media: HTMLMediaElement, onChange: (gain: number | null) => void) {
+    this.#media = media;
+    this.#onChange = onChange;
+  }
 
   setGain(gain: number) {
     const currGain = this.currentGain;
@@ -38,61 +40,61 @@ export class AudioGain implements AudioGainAdapter {
       return;
     }
 
-    if (!this._gainNode) {
-      this._gainNode = createGainNode();
+    if (!this.#gainNode) {
+      this.#gainNode = createGainNode();
 
       // Reconnect the element source to the gain node after audio gain was unset.
-      if (this._srcAudioNode) {
-        this._srcAudioNode.connect(this._gainNode);
+      if (this.#srcAudioNode) {
+        this.#srcAudioNode.connect(this.#gainNode);
       }
     }
 
-    if (!this._srcAudioNode) {
-      this._srcAudioNode = createElementSource(this._media, this._gainNode);
+    if (!this.#srcAudioNode) {
+      this.#srcAudioNode = createElementSource(this.#media, this.#gainNode);
     }
 
-    this._gainNode.gain.value = gain;
-    this._onChange(gain);
+    this.#gainNode.gain.value = gain;
+    this.#onChange(gain);
   }
 
   removeGain() {
-    if (!this._gainNode) return;
+    if (!this.#gainNode) return;
 
     // Connect el audio source to the default audio output, before destroying the gain node.
-    if (this._srcAudioNode) {
-      this._srcAudioNode.connect(getOrCreateAudioCtx().destination);
+    if (this.#srcAudioNode) {
+      this.#srcAudioNode.connect(getOrCreateAudioCtx().destination);
     }
 
-    this._destroyGainNode();
-    this._onChange(null);
+    this.#destroyGainNode();
+    this.#onChange(null);
   }
 
   destroy() {
-    this._destroySrcNode();
-    this._destroyGainNode();
+    this.#destroySrcNode();
+    this.#destroyGainNode();
   }
 
-  private _destroySrcNode() {
-    if (!this._srcAudioNode) return;
+  #destroySrcNode() {
+    if (!this.#srcAudioNode) return;
 
     try {
-      destroyElementSource(this._srcAudioNode);
+      destroyElementSource(this.#srcAudioNode);
     } catch (e) {
       // Ignore any error
     } finally {
-      this._srcAudioNode = null;
+      this.#srcAudioNode = null;
     }
   }
 
-  private _destroyGainNode() {
-    if (!this._gainNode) return;
+  #destroyGainNode() {
+    if (!this.#gainNode) return;
 
     try {
-      destroyGainNode(this._gainNode);
+      destroyGainNode(this.#gainNode);
     } catch (e) {
       // Ignore any error
     } finally {
-      this._gainNode = null;
+      this.#gainNode = null;
     }
   }
 }

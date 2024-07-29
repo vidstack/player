@@ -22,11 +22,11 @@ export class MediaAnnouncer extends Component<
     busy: false,
   });
 
-  private _media!: MediaContext;
-  private _initializing = false;
+  #media!: MediaContext;
+  #initializing = false;
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
   }
 
   protected override onAttach(el: HTMLElement): void {
@@ -46,90 +46,90 @@ export class MediaAnnouncer extends Component<
     });
 
     // Avoid triggering label updates on first run.
-    this._initializing = true;
+    this.#initializing = true;
 
-    effect(this._watchPaused.bind(this));
-    effect(this._watchVolume.bind(this));
-    effect(this._watchCaptions.bind(this));
-    effect(this._watchFullscreen.bind(this));
-    effect(this._watchPiP.bind(this));
-    effect(this._watchSeeking.bind(this));
-    effect(this._watchLabel.bind(this));
+    effect(this.#watchPaused.bind(this));
+    effect(this.#watchVolume.bind(this));
+    effect(this.#watchCaptions.bind(this));
+    effect(this.#watchFullscreen.bind(this));
+    effect(this.#watchPiP.bind(this));
+    effect(this.#watchSeeking.bind(this));
+    effect(this.#watchLabel.bind(this));
 
     tick();
-    this._initializing = false;
+    this.#initializing = false;
   }
 
-  private _watchPaused() {
-    const { paused } = this._media.$state;
-    this._setLabel(!paused() ? 'Play' : 'Pause');
+  #watchPaused() {
+    const { paused } = this.#media.$state;
+    this.#setLabel(!paused() ? 'Play' : 'Pause');
   }
 
-  private _watchFullscreen() {
-    const { fullscreen } = this._media.$state;
-    this._setLabel(fullscreen() ? 'Enter Fullscreen' : 'Exit Fullscreen');
+  #watchFullscreen() {
+    const { fullscreen } = this.#media.$state;
+    this.#setLabel(fullscreen() ? 'Enter Fullscreen' : 'Exit Fullscreen');
   }
 
-  private _watchPiP() {
-    const { pictureInPicture } = this._media.$state;
-    this._setLabel(pictureInPicture() ? 'Enter PiP' : 'Exit PiP');
+  #watchPiP() {
+    const { pictureInPicture } = this.#media.$state;
+    this.#setLabel(pictureInPicture() ? 'Enter PiP' : 'Exit PiP');
   }
 
-  private _watchCaptions() {
-    const { textTrack } = this._media.$state;
-    this._setLabel(textTrack() ? 'Closed-Captions On' : 'Closed-Captions Off');
+  #watchCaptions() {
+    const { textTrack } = this.#media.$state;
+    this.#setLabel(textTrack() ? 'Closed-Captions On' : 'Closed-Captions Off');
   }
 
-  private _watchVolume() {
-    const { muted, volume, audioGain } = this._media.$state;
-    this._setLabel(
+  #watchVolume() {
+    const { muted, volume, audioGain } = this.#media.$state;
+    this.#setLabel(
       muted() || volume() === 0
         ? 'Mute'
-        : `${Math.round(volume() * (audioGain() ?? 1) * 100)}% ${this._translate('Volume')}`,
+        : `${Math.round(volume() * (audioGain() ?? 1) * 100)}% ${this.#translate('Volume')}`,
     );
   }
 
-  private _startedSeekingAt = -1;
-  private _seekTimer = -1;
-  private _watchSeeking() {
-    const { seeking, currentTime } = this._media.$state,
+  #startedSeekingAt = -1;
+  #seekTimer = -1;
+  #watchSeeking() {
+    const { seeking, currentTime } = this.#media.$state,
       isSeeking = seeking();
 
-    if (this._startedSeekingAt > 0) {
-      window.clearTimeout(this._seekTimer);
-      this._seekTimer = window.setTimeout(() => {
+    if (this.#startedSeekingAt > 0) {
+      window.clearTimeout(this.#seekTimer);
+      this.#seekTimer = window.setTimeout(() => {
         if (!this.scope) return;
 
         const newTime = peek(currentTime),
-          seconds = Math.abs(newTime - this._startedSeekingAt);
+          seconds = Math.abs(newTime - this.#startedSeekingAt);
 
         if (seconds >= 1) {
-          const isForward = newTime >= this._startedSeekingAt,
+          const isForward = newTime >= this.#startedSeekingAt,
             spokenTime = formatSpokenTime(seconds);
 
-          this._setLabel(
-            `${this._translate(isForward ? 'Seek Forward' : 'Seek Backward')} ${spokenTime}`,
+          this.#setLabel(
+            `${this.#translate(isForward ? 'Seek Forward' : 'Seek Backward')} ${spokenTime}`,
           );
         }
 
-        this._startedSeekingAt = -1;
-        this._seekTimer = -1;
+        this.#startedSeekingAt = -1;
+        this.#seekTimer = -1;
       }, 300);
     } else if (isSeeking) {
-      this._startedSeekingAt = peek(currentTime);
+      this.#startedSeekingAt = peek(currentTime);
     }
   }
 
-  private _translate(word: string | null) {
+  #translate(word: string | null) {
     const { translations } = this.$props;
     return translations?.()?.[word || ''] ?? word;
   }
 
-  private _watchLabel() {
+  #watchLabel() {
     const { label, busy } = this.$state,
-      $label = this._translate(label());
+      $label = this.#translate(label());
 
-    if (this._initializing) return;
+    if (this.#initializing) return;
 
     busy.set(true);
     const id = window.setTimeout(() => void busy.set(false), 150);
@@ -143,7 +143,7 @@ export class MediaAnnouncer extends Component<
     return () => window.clearTimeout(id);
   }
 
-  private _setLabel(word: string | null) {
+  #setLabel(word: string | null) {
     const { label } = this.$state;
     label.set(word);
   }

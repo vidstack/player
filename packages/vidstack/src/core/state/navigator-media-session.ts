@@ -3,32 +3,28 @@ import { DOMEvent, isNumber } from 'maverick.js/std';
 
 import { MediaPlayerController } from '../api/player-controller';
 
+const actions = ['play', 'pause', 'seekforward', 'seekbackward', 'seekto'] as const;
+
 export class NavigatorMediaSession extends MediaPlayerController {
-  protected static _actions = ['play', 'pause', 'seekforward', 'seekbackward', 'seekto'] as const;
-
-  constructor() {
-    super();
-  }
-
   protected override onConnect() {
-    effect(this._onMetadataChange.bind(this));
-    effect(this._onPlaybackStateChange.bind(this));
+    effect(this.#onMetadataChange.bind(this));
+    effect(this.#onPlaybackStateChange.bind(this));
 
-    const handleAction = this._handleAction.bind(this);
-    for (const action of NavigatorMediaSession._actions) {
+    const handleAction = this.#handleAction.bind(this);
+    for (const action of actions) {
       navigator.mediaSession.setActionHandler(action, handleAction);
     }
 
-    onDispose(this._onDisconnect.bind(this));
+    onDispose(this.#onDisconnect.bind(this));
   }
 
-  protected _onDisconnect() {
-    for (const action of NavigatorMediaSession._actions) {
+  #onDisconnect() {
+    for (const action of actions) {
       navigator.mediaSession.setActionHandler(action, null);
     }
   }
 
-  protected _onMetadataChange() {
+  #onMetadataChange() {
     const { title, artist, artwork, poster } = this.$state;
     navigator.mediaSession.metadata = new MediaMetadata({
       title: title(),
@@ -37,12 +33,12 @@ export class NavigatorMediaSession extends MediaPlayerController {
     });
   }
 
-  protected _onPlaybackStateChange() {
+  #onPlaybackStateChange() {
     const { canPlay, paused } = this.$state;
     navigator.mediaSession.playbackState = !canPlay() ? 'none' : paused() ? 'paused' : 'playing';
   }
 
-  protected _handleAction(details: MediaSessionActionDetails) {
+  #handleAction(details: MediaSessionActionDetails) {
     const trigger = new DOMEvent(`media-session-action`, { detail: details });
     switch (details.action) {
       case 'play':

@@ -21,12 +21,12 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
     disabled: false,
   };
 
-  private _menu!: MenuContext;
-  private _hintEl = signal<HTMLElement | null>(null);
+  #menu!: MenuContext;
+  #hintEl = signal<HTMLElement | null>(null);
 
   @prop
   get expanded() {
-    return this._menu?._expanded() ?? false;
+    return this.#menu?.expanded() ?? false;
   }
 
   constructor() {
@@ -35,20 +35,20 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
   }
 
   protected override onSetup(): void {
-    this._menu = useContext(menuContext);
+    this.#menu = useContext(menuContext);
   }
 
   protected override onAttach(el: HTMLElement) {
-    this._menu._attachMenuButton(this);
-    effect(this._watchDisabled.bind(this));
+    this.#menu.attachMenuButton(this);
+    effect(this.#watchDisabled.bind(this));
     setAttributeIfEmpty(el, 'type', 'button');
   }
 
   protected override onConnect(el: HTMLElement) {
-    effect(this._watchHintEl.bind(this));
+    effect(this.#watchHintEl.bind(this));
 
-    this._onMutation();
-    const mutations = new MutationObserver(this._onMutation.bind(this));
+    this.#onMutation();
+    const mutations = new MutationObserver(this.#onMutation.bind(this));
     mutations.observe(el, { attributeFilter: ['data-part'], childList: true, subtree: true });
     onDispose(() => mutations.disconnect());
 
@@ -57,22 +57,22 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
     });
   }
 
-  private _watchDisabled() {
-    this._menu._disableMenuButton(this.$props.disabled());
+  #watchDisabled() {
+    this.#menu.disableMenuButton(this.$props.disabled());
   }
 
-  private _watchHintEl() {
-    const el = this._hintEl();
+  #watchHintEl() {
+    const el = this.#hintEl();
     if (!el) return;
     effect(() => {
-      const text = this._menu._hint();
+      const text = this.#menu.hint();
       if (text) el.textContent = text;
     });
   }
 
-  private _onMutation() {
+  #onMutation() {
     const hintEl = this.el?.querySelector<HTMLElement>('[data-part="hint"]');
-    this._hintEl.set(hintEl ?? null);
+    this.#hintEl.set(hintEl ?? null);
   }
 }
 

@@ -44,12 +44,12 @@ export class VolumeSlider extends Component<
 
   static state = sliderState;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
-    const { audioGain } = this._media.$state;
+    const { audioGain } = this.#media.$state;
     provideContext(sliderValueFormatContext, {
       default: 'percent',
       value(value) {
@@ -61,74 +61,76 @@ export class VolumeSlider extends Component<
     });
 
     new SliderController({
-      _getStep: this.$props.step,
-      _getKeyStep: this.$props.keyStep,
-      _roundValue: Math.round,
-      _isDisabled: this._isDisabled.bind(this),
-      _getARIAValueMax: this._getARIAValueMax.bind(this),
-      _getARIAValueNow: this._getARIAValueNow.bind(this),
-      _getARIAValueText: this._getARIAValueText.bind(this),
-      _onDragValueChange: this._onDragValueChange.bind(this),
-      _onValueChange: this._onValueChange.bind(this),
+      getStep: this.$props.step,
+      getKeyStep: this.$props.keyStep,
+      roundValue: Math.round,
+      isDisabled: this.#isDisabled.bind(this),
+      aria: {
+        valueMax: this.#getARIAValueMax.bind(this),
+        valueNow: this.#getARIAValueNow.bind(this),
+        valueText: this.#getARIAValueText.bind(this),
+      },
+      onDragValueChange: this.#onDragValueChange.bind(this),
+      onValueChange: this.#onValueChange.bind(this),
     }).attach(this);
 
-    effect(this._watchVolume.bind(this));
+    effect(this.#watchVolume.bind(this));
   }
 
   protected override onAttach(el: HTMLElement) {
     el.setAttribute('data-media-volume-slider', '');
     setAttributeIfEmpty(el, 'aria-label', 'Volume');
 
-    const { canSetVolume } = this._media.$state;
+    const { canSetVolume } = this.#media.$state;
     this.setAttributes({
       'data-supported': canSetVolume,
       'aria-hidden': $ariaBool(() => !canSetVolume()),
     });
   }
 
-  private _getARIAValueNow() {
+  #getARIAValueNow() {
     const { value } = this.$state,
-      { audioGain } = this._media.$state;
+      { audioGain } = this.#media.$state;
     return Math.round(value() * (audioGain() ?? 1));
   }
 
-  private _getARIAValueText() {
+  #getARIAValueText() {
     const { value, max } = this.$state,
-      { audioGain } = this._media.$state;
+      { audioGain } = this.#media.$state;
     return round((value() / max()) * (audioGain() ?? 1) * 100, 2) + '%';
   }
 
-  private _getARIAValueMax() {
-    const { audioGain } = this._media.$state;
+  #getARIAValueMax() {
+    const { audioGain } = this.#media.$state;
     return this.$state.max() * (audioGain() ?? 1);
   }
 
-  private _isDisabled() {
+  #isDisabled() {
     const { disabled } = this.$props,
-      { canSetVolume } = this._media.$state;
+      { canSetVolume } = this.#media.$state;
     return disabled() || !canSetVolume();
   }
 
-  private _watchVolume() {
-    const { muted, volume } = this._media.$state;
+  #watchVolume() {
+    const { muted, volume } = this.#media.$state;
     const newValue = muted() ? 0 : volume() * 100;
     this.$state.value.set(newValue);
     this.dispatch('value-change', { detail: newValue });
   }
 
-  private _throttleVolumeChange = throttle(this._onVolumeChange.bind(this), 25);
-  private _onVolumeChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
+  #throttleVolumeChange = throttle(this.#onVolumeChange.bind(this), 25);
+  #onVolumeChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
     if (!event.trigger) return;
     const mediaVolume = round(event.detail / 100, 3);
-    this._media.remote.changeVolume(mediaVolume, event);
+    this.#media.remote.changeVolume(mediaVolume, event);
   }
 
-  private _onValueChange(event: SliderValueChangeEvent): void {
-    this._throttleVolumeChange(event);
+  #onValueChange(event: SliderValueChangeEvent): void {
+    this.#throttleVolumeChange(event);
   }
 
-  private _onDragValueChange(event: SliderDragValueChangeEvent): void {
-    this._throttleVolumeChange(event);
+  #onDragValueChange(event: SliderDragValueChangeEvent): void {
+    this.#throttleVolumeChange(event);
   }
 }
 

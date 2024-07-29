@@ -11,26 +11,33 @@ const cache = new Map<string, ThumbnailImage[]>(),
   warned = __DEV__ ? new Set<ThumbnailSrc>() : undefined;
 
 export class ThumbnailsLoader {
+  readonly #media: MediaContext;
+  readonly #src: ReadSignal<ThumbnailSrc>;
+  readonly #crossOrigin: ReadSignal<MediaCrossOrigin | null>;
+
   readonly $images = signal<ThumbnailImage[]>([]);
 
-  static create($src: ReadSignal<ThumbnailSrc>, $crossOrigin: ReadSignal<MediaCrossOrigin | null>) {
+  static create(src: ReadSignal<ThumbnailSrc>, crossOrigin: ReadSignal<MediaCrossOrigin | null>) {
     const media = useMediaContext();
-    return new ThumbnailsLoader($src, $crossOrigin, media);
+    return new ThumbnailsLoader(src, crossOrigin, media);
   }
 
   constructor(
-    readonly $src: ReadSignal<ThumbnailSrc>,
-    readonly $crossOrigin: ReadSignal<MediaCrossOrigin | null>,
-    private _media: MediaContext,
+    src: ReadSignal<ThumbnailSrc>,
+    crossOrigin: ReadSignal<MediaCrossOrigin | null>,
+    media: MediaContext,
   ) {
-    effect(this._onLoadCues.bind(this));
+    this.#src = src;
+    this.#crossOrigin = crossOrigin;
+    this.#media = media;
+    effect(this.#onLoadCues.bind(this));
   }
 
-  protected _onLoadCues() {
-    const { canLoad } = this._media.$state;
+  #onLoadCues() {
+    const { canLoad } = this.#media.$state;
     if (!canLoad()) return;
 
-    const src = this.$src();
+    const src = this.#src();
     if (!src) return;
 
     if (isString(src) && cache.has(src)) {
@@ -46,7 +53,7 @@ export class ThumbnailsLoader {
 
       this.$images.set(cache.get(src)!);
     } else if (isString(src)) {
-      const crossOrigin = this.$crossOrigin(),
+      const crossOrigin = this.#crossOrigin(),
         currentKey = src + '::' + crossOrigin;
 
       if (!pending.has(currentKey)) {
@@ -62,7 +69,7 @@ export class ThumbnailsLoader {
 
               if (isArray(json)) {
                 if (json[0] && 'text' in (json[0] as Partial<VTTCue>)) {
-                  resolve(this._processVTTCues(json as any));
+                  resolve(this.#processVTTCues(json as any));
                 } else {
                   for (let i = 0; i < json.length; i++) {
                     const image = json[i];
@@ -80,7 +87,7 @@ export class ThumbnailsLoader {
                   resolve(json as ThumbnailImage[]);
                 }
               } else {
-                resolve(this._processStoryboard(json));
+                resolve(this.#processStoryboard(json));
               }
 
               return;
@@ -89,7 +96,7 @@ export class ThumbnailsLoader {
             import('media-captions').then(async ({ parseResponse }) => {
               try {
                 const { cues } = await parseResponse(response);
-                resolve(this._processVTTCues(cues));
+                resolve(this.#processVTTCues(cues));
               } catch (e) {
                 reject(e);
               }
@@ -103,7 +110,7 @@ export class ThumbnailsLoader {
             return images;
           })
           .catch((error) => {
-            this._onError(src, error);
+            this.#onError(src, error);
           })
           .finally(() => {
             if (isString(currentKey)) pending.delete(currentKey);
@@ -117,15 +124,15 @@ export class ThumbnailsLoader {
       });
     } else if (isArray(src)) {
       try {
-        this.$images.set(this._processImages(src));
+        this.$images.set(this.#processImages(src));
       } catch (error) {
-        this._onError(src, error);
+        this.#onError(src, error);
       }
     } else {
       try {
-        this.$images.set(this._processStoryboard(src));
+        this.$images.set(this.#processStoryboard(src));
       } catch (error) {
-        this._onError(src, error);
+        this.#onError(src, error);
       }
     }
 
@@ -134,8 +141,8 @@ export class ThumbnailsLoader {
     };
   }
 
-  private _processImages(images: ThumbnailImageInit[]): ThumbnailImage[] {
-    const baseURL = this._resolveBaseUrl();
+  #processImages(images: ThumbnailImageInit[]): ThumbnailImage[] {
+    const baseURL = this.#resolveBaseUrl();
     return images.map((img, i) => {
       assert(
         img.url && isString(img.url),
@@ -147,14 +154,12 @@ export class ThumbnailsLoader {
       );
       return {
         ...img,
-        url: isString(img.url) ? this._resolveURL(img.url, baseURL) : img.url,
+        url: isString(img.url) ? this.#resolveURL(img.url, baseURL) : img.url,
       };
     });
   }
 
-  private _processStoryboard(
-    board: Partial<ThumbnailStoryboard> | Partial<MuxThumbnailStoryboard>,
-  ) {
+  #processStoryboard(board: Partial<ThumbnailStoryboard> | Partial<MuxThumbnailStoryboard>) {
     assert(isString(board.url), __DEV__ && 'Missing `url` in storyboard object');
     assert(isArray(board.tiles) && board.tiles?.length, __DEV__ && `Empty tiles in storyboard`);
 
@@ -183,7 +188,7 @@ export class ThumbnailsLoader {
     return images;
   }
 
-  private _processVTTCues(cues: { startTime?: number; endTime?: number; text?: string }[]) {
+  #processVTTCues(cues: { startTime?: number; endTime?: number; text?: string }[]) {
     for (let i = 0; i < cues.length; i++) {
       const cue = cues[i];
       assert(
@@ -197,13 +202,13 @@ export class ThumbnailsLoader {
     }
 
     const images: ThumbnailImage[] = [],
-      baseURL = this._resolveBaseUrl();
+      baseURL = this.#resolveBaseUrl();
 
     for (const cue of cues) {
       const [url, hash] = cue.text!.split('#'),
-        data = this._resolveData(hash);
+        data = this.#resolveData(hash);
       images.push({
-        url: this._resolveURL(url, baseURL),
+        url: this.#resolveURL(url, baseURL),
         startTime: cue.startTime!,
         endTime: cue.endTime,
         width: data?.w,
@@ -215,8 +220,8 @@ export class ThumbnailsLoader {
     return images;
   }
 
-  private _resolveBaseUrl() {
-    let baseURL = peek(this.$src);
+  #resolveBaseUrl() {
+    let baseURL = peek(this.#src);
 
     if (!isString(baseURL) || !/^https?:/.test(baseURL)) {
       return location.href;
@@ -225,11 +230,11 @@ export class ThumbnailsLoader {
     return baseURL;
   }
 
-  private _resolveURL(src: string, baseURL: string) {
+  #resolveURL(src: string, baseURL: string) {
     return /^https?:/.test(src) ? new URL(src) : new URL(src, baseURL);
   }
 
-  private _resolveData(hash?: string) {
+  #resolveData(hash?: string) {
     if (!hash) return {};
 
     // hash = xywh=0,0,256,160
@@ -254,10 +259,10 @@ export class ThumbnailsLoader {
     return data;
   }
 
-  private _onError(src: ThumbnailSrc, error: unknown) {
+  #onError(src: ThumbnailSrc, error: unknown) {
     if (!__DEV__ || warned?.has(src)) return;
 
-    this._media.logger
+    this.#media.logger
       ?.errorGroup('[vidstack] failed to load thumbnails')
       .labelledLog('Src', src)
       .labelledLog('Error', error)

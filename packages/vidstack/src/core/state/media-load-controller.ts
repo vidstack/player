@@ -4,22 +4,24 @@ import { waitIdlePeriod } from 'maverick.js/std';
 import { MediaPlayerController } from '../api/player-controller';
 
 export class MediaLoadController extends MediaPlayerController {
-  constructor(
-    private _type: 'load' | 'posterLoad',
-    private _callback: () => void,
-  ) {
+  #type: 'load' | 'posterLoad';
+  #callback: () => void;
+
+  constructor(type: 'load' | 'posterLoad', callback: () => void) {
     super();
+    this.#type = type;
+    this.#callback = callback;
   }
 
   override async onAttach(el: HTMLElement) {
     if (__SERVER__) return;
 
-    const load = this.$props[this._type]();
+    const load = this.$props[this.#type]();
 
     if (load === 'eager') {
-      requestAnimationFrame(this._callback);
+      requestAnimationFrame(this.#callback);
     } else if (load === 'idle') {
-      waitIdlePeriod(this._callback);
+      waitIdlePeriod(this.#callback);
     } else if (load === 'visible') {
       let dispose: (() => void) | undefined,
         observer = new IntersectionObserver((entries) => {
@@ -27,7 +29,7 @@ export class MediaLoadController extends MediaPlayerController {
           if (entries[0].isIntersecting) {
             dispose?.();
             dispose = undefined;
-            this._callback();
+            this.#callback();
           }
         });
 

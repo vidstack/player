@@ -41,24 +41,20 @@ export class YouTubeProvider
 
   readonly scope = createScope();
 
-  protected _videoId = signal('');
-  protected _state: YouTubePlayerStateValue = -1;
-  protected _currentSrc: Src<string> | null = null;
+  readonly #ctx: MediaContext;
 
-  protected _seekingTimer = -1;
-  protected _pausedSeeking = false;
+  #videoId = signal('');
+  #state: YouTubePlayerStateValue = -1;
+  #currentSrc: Src<string> | null = null;
 
-  protected _promises = new Map<string, DeferredPromise<any, string>[]>();
+  #seekingTimer = -1;
+  #pausedSeeking = false;
 
-  protected get _notify() {
-    return this._ctx.delegate._notify;
-  }
+  #promises = new Map<string, DeferredPromise<any, string>[]>();
 
-  constructor(
-    iframe: HTMLIFrameElement,
-    protected _ctx: MediaContext,
-  ) {
+  constructor(iframe: HTMLIFrameElement, ctx: MediaContext) {
     super(iframe);
+    this.#ctx = ctx;
   }
 
   /**
@@ -84,7 +80,7 @@ export class YouTubeProvider
   cookies = false;
 
   get currentSrc(): Src<string> | null {
-    return this._currentSrc;
+    return this.#currentSrc;
   }
 
   get type() {
@@ -92,100 +88,100 @@ export class YouTubeProvider
   }
 
   get videoId() {
-    return this._videoId();
+    return this.#videoId();
   }
 
   preconnect() {
-    preconnect(this._getOrigin());
+    preconnect(this.getOrigin());
   }
 
   override setup() {
     super.setup();
-    effect(this._watchVideoId.bind(this));
-    this._notify('provider-setup', this);
+    effect(this.#watchVideoId.bind(this));
+    this.#ctx.notify('provider-setup', this);
   }
 
   destroy() {
-    this._reset();
+    this.#reset();
 
     // Release all pending promises.
     const message = 'provider destroyed';
-    for (const promises of this._promises.values()) {
+    for (const promises of this.#promises.values()) {
       for (const { reject } of promises) reject(message);
     }
 
-    this._promises.clear();
+    this.#promises.clear();
   }
 
   async play() {
-    return this._remote('playVideo');
+    return this.#remote('playVideo');
   }
 
-  protected _playFail(message: string) {
-    this._getPromise('playVideo')?.reject(message);
+  #playFail(message: string) {
+    this.#getPromise('playVideo')?.reject(message);
   }
 
   async pause() {
-    return this._remote('pauseVideo');
+    return this.#remote('pauseVideo');
   }
 
-  protected _pauseFail(message: string) {
-    this._getPromise('pauseVideo')?.reject(message);
+  #pauseFail(message: string) {
+    this.#getPromise('pauseVideo')?.reject(message);
   }
 
   setMuted(muted: boolean) {
-    if (muted) this._remote('mute');
-    else this._remote('unMute');
+    if (muted) this.#remote('mute');
+    else this.#remote('unMute');
   }
 
   setCurrentTime(time: number) {
-    this._pausedSeeking = this._ctx.$state.paused();
-    this._remote('seekTo', time);
-    this._notify('seeking', time);
+    this.#pausedSeeking = this.#ctx.$state.paused();
+    this.#remote('seekTo', time);
+    this.#ctx.notify('seeking', time);
   }
 
   setVolume(volume: number) {
-    this._remote('setVolume', volume * 100);
+    this.#remote('setVolume', volume * 100);
   }
 
   setPlaybackRate(rate: number) {
-    this._remote('setPlaybackRate', rate);
+    this.#remote('setPlaybackRate', rate);
   }
 
   async loadSource(src: Src) {
     if (!isString(src.src)) {
-      this._currentSrc = null;
-      this._videoId.set('');
+      this.#currentSrc = null;
+      this.#videoId.set('');
       return;
     }
 
     const videoId = resolveYouTubeVideoId(src.src);
-    this._videoId.set(videoId ?? '');
+    this.#videoId.set(videoId ?? '');
 
-    this._currentSrc = src as Src<string>;
+    this.#currentSrc = src as Src<string>;
   }
 
-  protected override _getOrigin() {
+  protected override getOrigin() {
     return !this.cookies ? 'https://www.youtube-nocookie.com' : 'https://www.youtube.com';
   }
 
-  protected _watchVideoId() {
-    this._reset();
+  #watchVideoId() {
+    this.#reset();
 
-    const videoId = this._videoId();
+    const videoId = this.#videoId();
 
     if (!videoId) {
-      this._src.set('');
+      this.src.set('');
       return;
     }
 
-    this._src.set(`${this._getOrigin()}/embed/${videoId}`);
-    this._notify('load-start');
+    this.src.set(`${this.getOrigin()}/embed/${videoId}`);
+    this.#ctx.notify('load-start');
   }
 
-  protected override _buildParams(): YouTubeParams {
-    const { keyDisabled } = this._ctx.$props,
-      { muted, playsInline, nativeControls } = this._ctx.$state,
+  protected override buildParams(): YouTubeParams {
+    const { keyDisabled } = this.#ctx.$props,
+      { muted, playsInline, nativeControls } = this.#ctx.$state,
       showControls = nativeControls();
     return {
       autoplay: 0,
@@ -203,15 +199,15 @@ export class YouTubeProvider
     };
   }
 
-  protected _remote<T extends keyof YouTubeCommandArg>(command: T, arg?: YouTubeCommandArg[T]) {
+  #remote<T extends keyof YouTubeCommandArg>(command: T, arg?: YouTubeCommandArg[T]) {
     let promise = deferredPromise<void, string>(),
-      promises = this._promises.get(command);
+      promises = this.#promises.get(command);
 
-    if (!promises) this._promises.set(command, (promises = []));
+    if (!promises) this.#promises.set(command, (promises = []));
 
     promises.push(promise);
 
-    this._postMessage({
+    this.postMessage({
       event: 'command',
       func: command,
       args: arg ? [arg] : undefined,
@@ -220,44 +216,44 @@ export class YouTubeProvider
     return promise.promise;
   }
 
-  protected override _onLoad(): void {
+  protected override onLoad(): void {
     // Seems like we have to wait a random small delay or else YT player isn't ready.
-    window.setTimeout(() => this._postMessage({ event: 'listening' }), 100);
+    window.setTimeout(() => this.postMessage({ event: 'listening' }), 100);
   }
 
-  protected _onReady(trigger: Event) {
-    this._notify('loaded-metadata');
-    this._notify('loaded-data');
-    this._ctx.delegate._ready(undefined, trigger);
+  #onReady(trigger: Event) {
+    this.#ctx.notify('loaded-metadata');
+    this.#ctx.notify('loaded-data');
+    this.#ctx.delegate.ready(undefined, trigger);
   }
 
-  protected _onPause(trigger: Event) {
-    this._getPromise('pauseVideo')?.resolve();
-    this._notify('pause', undefined, trigger);
+  #onPause(trigger: Event) {
+    this.#getPromise('pauseVideo')?.resolve();
+    this.#ctx.notify('pause', undefined, trigger);
   }
 
-  protected _onTimeUpdate(time: number, trigger: Event) {
-    const { duration, realCurrentTime } = this._ctx.$state,
-      hasEnded = this._state === YouTubePlayerState._Ended,
+  #onTimeUpdate(time: number, trigger: Event) {
+    const { duration, realCurrentTime } = this.#ctx.$state,
+      hasEnded = this.#state === YouTubePlayerState.Ended,
       boundTime = hasEnded ? duration() : time;
 
-    this._notify('time-change', boundTime, trigger);
+    this.#ctx.notify('time-change', boundTime, trigger);
 
     // // This is the only way to detect `seeking`.
     if (!hasEnded && Math.abs(boundTime - realCurrentTime()) > 1) {
-      this._notify('seeking', boundTime, trigger);
+      this.#ctx.notify('seeking', boundTime, trigger);
     }
   }
 
-  protected _onProgress(buffered: number, seekable: TimeRange, trigger: Event) {
+  #onProgress(buffered: number, seekable: TimeRange, trigger: Event) {
     const detail = {
       buffered: new TimeRange(0, buffered),
       seekable,
     };
 
-    this._notify('progress', detail, trigger);
+    this.#ctx.notify('progress', detail, trigger);
 
-    const { seeking, realCurrentTime } = this._ctx.$state;
+    const { seeking, realCurrentTime } = this.#ctx.$state;
 
     /**
      * This is the only way to detect `seeked`. Unfortunately while the player is `paused` `seeking`
@@ -265,53 +261,53 @@ export class YouTubeProvider
      * artificial delay between the two events.
      */
     if (seeking() && buffered > realCurrentTime()) {
-      this._onSeeked(trigger);
+      this.#onSeeked(trigger);
     }
   }
 
-  protected _onSeeked(trigger: Event) {
-    const { paused, realCurrentTime } = this._ctx.$state;
+  #onSeeked(trigger: Event) {
+    const { paused, realCurrentTime } = this.#ctx.$state;
 
-    window.clearTimeout(this._seekingTimer);
+    window.clearTimeout(this.#seekingTimer);
 
-    this._seekingTimer = window.setTimeout(
+    this.#seekingTimer = window.setTimeout(
       () => {
-        this._notify('seeked', realCurrentTime(), trigger);
-        this._seekingTimer = -1;
+        this.#ctx.notify('seeked', realCurrentTime(), trigger);
+        this.#seekingTimer = -1;
       },
       paused() ? 100 : 0,
     );
 
-    this._pausedSeeking = false;
+    this.#pausedSeeking = false;
   }
 
-  protected _onEnded(trigger: Event) {
-    const { seeking } = this._ctx.$state;
-    if (seeking()) this._onSeeked(trigger);
-    this._notify('pause', undefined, trigger);
-    this._notify('end', undefined, trigger);
+  #onEnded(trigger: Event) {
+    const { seeking } = this.#ctx.$state;
+    if (seeking()) this.#onSeeked(trigger);
+    this.#ctx.notify('pause', undefined, trigger);
+    this.#ctx.notify('end', undefined, trigger);
   }
 
-  protected _onStateChange(state: YouTubePlayerStateValue, trigger: Event) {
-    const { started, paused, seeking } = this._ctx.$state,
-      isPlaying = state === YouTubePlayerState._Playing,
-      isBuffering = state === YouTubePlayerState._Buffering,
-      isPendingPlay = !isUndefined(this._getPromise('playVideo')),
+  #onStateChange(state: YouTubePlayerStateValue, trigger: Event) {
+    const { started, paused, seeking } = this.#ctx.$state,
+      isPlaying = state === YouTubePlayerState.Playing,
+      isBuffering = state === YouTubePlayerState.Buffering,
+      isPendingPlay = !isUndefined(this.#getPromise('playVideo')),
       isPlay = (paused() || isPendingPlay) && (isBuffering || isPlaying);
 
-    if (isBuffering) this._notify('waiting', undefined, trigger);
+    if (isBuffering) this.#ctx.notify('waiting', undefined, trigger);
 
     if (seeking() && isPlaying) {
-      this._onSeeked(trigger);
+      this.#onSeeked(trigger);
     }
 
     // Embed incorrectly plays on initial seek operation.
-    if (!started() && isPlay && this._pausedSeeking) {
-      this._playFail('invalid internal play operation');
+    if (!started() && isPlay && this.#pausedSeeking) {
+      this.#playFail('invalid internal play operation');
 
       if (isPlaying) {
         this.pause();
-        this._pausedSeeking = false;
+        this.#pausedSeeking = false;
       }
 
       return;
@@ -319,69 +315,63 @@ export class YouTubeProvider
 
     // Attempt to detect `play` events early.
     if (isPlay) {
-      this._getPromise('playVideo')?.resolve();
-      this._notify('play', undefined, trigger);
+      this.#getPromise('playVideo')?.resolve();
+      this.#ctx.notify('play', undefined, trigger);
     }
 
     switch (state) {
-      case YouTubePlayerState._Unstarted:
+      case YouTubePlayerState.Unstarted:
         // These methods will only reject if a play/pause is actually pending.
-        this._playFail('provider rejected');
-        this._pauseFail('provider rejected');
-        this._notify('pause', undefined, trigger);
+        this.#playFail('provider rejected');
+        this.#pauseFail('provider rejected');
+        this.#ctx.notify('pause', undefined, trigger);
         break;
-      case YouTubePlayerState._Cued:
-        this._onReady(trigger);
+      case YouTubePlayerState.Cued:
+        this.#onReady(trigger);
         break;
-      case YouTubePlayerState._Playing:
-        this._notify('playing', undefined, trigger);
+      case YouTubePlayerState.Playing:
+        this.#ctx.notify('playing', undefined, trigger);
         break;
-      case YouTubePlayerState._Paused:
-        this._onPause(trigger);
+      case YouTubePlayerState.Paused:
+        this.#onPause(trigger);
         break;
-      case YouTubePlayerState._Ended:
-        this._onEnded(trigger);
+      case YouTubePlayerState.Ended:
+        this.#onEnded(trigger);
         break;
     }
 
-    this._state = state;
+    this.#state = state;
   }
 
-  protected override _onMessage({ info }: YouTubeMessage, event: MessageEvent) {
+  protected override onMessage({ info }: YouTubeMessage, event: MessageEvent) {
     if (!info) return;
 
-    const { title, intrinsicDuration, playbackRate } = this._ctx.$state;
+    const { title, intrinsicDuration, playbackRate } = this.#ctx.$state;
 
     if (isObject(info.videoData) && info.videoData.title !== title()) {
-      this._notify('title-change', info.videoData.title, event);
+      this.#ctx.notify('title-change', info.videoData.title, event);
     }
 
     if (isNumber(info.duration) && info.duration !== intrinsicDuration()) {
       if (isNumber(info.videoLoadedFraction)) {
         const buffered = info.progressState?.loaded ?? info.videoLoadedFraction * info.duration,
           seekable = new TimeRange(0, info.duration);
-        this._onProgress(buffered, seekable, event);
+        this.#onProgress(buffered, seekable, event);
       }
 
-      this._notify('duration-change', info.duration, event);
+      this.#ctx.notify('duration-change', info.duration, event);
     }
 
     if (isNumber(info.playbackRate) && info.playbackRate !== playbackRate()) {
-      this._notify('rate-change', info.playbackRate, event);
+      this.#ctx.notify('rate-change', info.playbackRate, event);
     }
 
     if (info.progressState) {
-      const {
-        current,
-        seekableStart,
-        seekableEnd,
-        loaded,
-        duration: _duration,
-      } = info.progressState;
-      this._onTimeUpdate(current, event);
-      this._onProgress(loaded, new TimeRange(seekableStart, seekableEnd), event);
-      if (_duration !== intrinsicDuration()) {
-        this._notify('duration-change', _duration, event);
+      const { current, seekableStart, seekableEnd, loaded, duration } = info.progressState;
+      this.#onTimeUpdate(current, event);
+      this.#onProgress(loaded, new TimeRange(seekableStart, seekableEnd), event);
+      if (duration !== intrinsicDuration()) {
+        this.#ctx.notify('duration-change', duration, event);
       }
     }
 
@@ -391,21 +381,21 @@ export class YouTubeProvider
         volume: info.volume / 100,
       };
 
-      this._notify('volume-change', detail, event);
+      this.#ctx.notify('volume-change', detail, event);
     }
 
-    if (isNumber(info.playerState) && info.playerState !== this._state) {
-      this._onStateChange(info.playerState, event);
+    if (isNumber(info.playerState) && info.playerState !== this.#state) {
+      this.#onStateChange(info.playerState, event);
     }
   }
 
-  protected _reset() {
-    this._state = -1;
-    this._seekingTimer = -1;
-    this._pausedSeeking = false;
+  #reset() {
+    this.#state = -1;
+    this.#seekingTimer = -1;
+    this.#pausedSeeking = false;
   }
 
-  protected _getPromise(command: YouTubeCommand) {
-    return this._promises.get(command)?.shift();
+  #getPromise(command: YouTubeCommand) {
+    return this.#promises.get(command)?.shift();
   }
 }

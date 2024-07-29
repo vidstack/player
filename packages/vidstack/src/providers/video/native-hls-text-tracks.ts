@@ -9,19 +9,23 @@ import { TextTrack as VdsTextTrack } from '../../core/tracks/text/text-track';
  * Safari will load text tracks that were embedded in the HLS playlist.
  */
 export class NativeHLSTextTracks {
-  constructor(
-    private _video: HTMLVideoElement,
-    private _ctx: MediaContext,
-  ) {
-    _video.textTracks.onaddtrack = this._onAddTrack.bind(this);
-    onDispose(this._onDispose.bind(this));
+  readonly #video: HTMLVideoElement;
+  readonly #ctx: MediaContext;
+
+  constructor(video: HTMLVideoElement, ctx: MediaContext) {
+    this.#video = video;
+    this.#ctx = ctx;
+
+    video.textTracks.onaddtrack = this.#onAddTrack.bind(this);
+
+    onDispose(this.#onDispose.bind(this));
   }
 
-  private _onAddTrack(event: TrackEvent) {
+  #onAddTrack(event: TrackEvent) {
     const nativeTrack = event.track;
 
     // Skip tracks the `NativeTextRenderer` has added.
-    if (!nativeTrack || findTextTrackElement(this._video, nativeTrack)) return;
+    if (!nativeTrack || findTextTrackElement(this.#video, nativeTrack)) return;
 
     const track = new VdsTextTrack({
       id: nativeTrack.id,
@@ -31,9 +35,9 @@ export class NativeHLSTextTracks {
       type: 'vtt',
     });
 
-    track[TextTrackSymbol._native] = { track: nativeTrack };
-    track[TextTrackSymbol._readyState] = 2;
-    track[TextTrackSymbol._nativeHLS] = true;
+    track[TextTrackSymbol.native] = { track: nativeTrack };
+    track[TextTrackSymbol.readyState] = 2;
+    track[TextTrackSymbol.nativeHLS] = true;
 
     let lastIndex = 0;
     const onCueChange = (event: Event) => {
@@ -47,14 +51,14 @@ export class NativeHLSTextTracks {
     onCueChange(event);
     nativeTrack.oncuechange = onCueChange;
 
-    this._ctx.textTracks.add(track, event);
+    this.#ctx.textTracks.add(track, event);
     track.setMode(nativeTrack.mode, event);
   }
 
-  private _onDispose() {
-    this._video.textTracks.onaddtrack = null;
-    for (const track of this._ctx.textTracks) {
-      const nativeTrack = track[TextTrackSymbol._native]?.track as TextTrack | undefined;
+  #onDispose() {
+    this.#video.textTracks.onaddtrack = null;
+    for (const track of this.#ctx.textTracks) {
+      const nativeTrack = track[TextTrackSymbol.native]?.track as TextTrack | undefined;
       if (nativeTrack?.oncuechange) nativeTrack.oncuechange = null;
     }
   }

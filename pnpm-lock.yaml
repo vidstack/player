@@ -125,6 +125,9 @@ importers:
       rollup-plugin-esbuild:
         specifier: ^6.1.0
         version: 6.1.1(esbuild@0.23.0)(rollup@4.19.1)
+      tslib:
+        specifier: ^2.6.0
+        version: 2.6.3
       type-fest:
         specifier: ^3.8.0
         version: 3.13.1

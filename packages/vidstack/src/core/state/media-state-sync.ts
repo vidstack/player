@@ -8,28 +8,28 @@ import type { MediaPlayerProps } from '../api/player-props';
  */
 export class MediaStateSync extends MediaPlayerController {
   protected override onSetup() {
-    this._init();
+    this.#init();
 
     if (__SERVER__) return;
 
-    if (__DEV__) effect(this._watchLogLevel.bind(this));
+    if (__DEV__) effect(this.#watchLogLevel.bind(this));
 
     const effects = [
-      this._watchMetadata,
-      this._watchAutoplay,
-      this._watchClipStartTime,
-      this._watchClipEndTime,
-      this._watchControls,
-      this._watchCrossOrigin,
-      this._watchDuration,
-      this._watchLive,
-      this._watchLiveEdge,
-      this._watchLiveTolerance,
-      this._watchLoop,
-      this._watchPlaysInline,
-      this._watchPoster,
-      this._watchProvidedTypes,
-      this._watchTitle,
+      this.#watchMetadata,
+      this.#watchAutoplay,
+      this.#watchClipStartTime,
+      this.#watchClipEndTime,
+      this.#watchControls,
+      this.#watchCrossOrigin,
+      this.#watchDuration,
+      this.#watchLive,
+      this.#watchLiveEdge,
+      this.#watchLiveTolerance,
+      this.#watchLoop,
+      this.#watchPlaysInline,
+      this.#watchPoster,
+      this.#watchProvidedTypes,
+      this.#watchTitle,
     ];
 
     for (const callback of effects) {
@@ -37,7 +37,7 @@ export class MediaStateSync extends MediaPlayerController {
     }
   }
 
-  private _init() {
+  #init() {
     const providedProps = {
       duration: 'providedDuration',
       loop: 'providedLoop',
@@ -64,7 +64,7 @@ export class MediaStateSync extends MediaPlayerController {
 
   // Sync "provided" props with internal state. Provided props are used to differentiate from
   // provider inferred values.
-  private _watchProvidedTypes() {
+  #watchProvidedTypes() {
     const { viewType, streamType, title, poster, loop } = this.$props,
       $state = this.$state;
     $state.providedPoster.set(poster());
@@ -74,89 +74,89 @@ export class MediaStateSync extends MediaPlayerController {
     $state.providedLoop.set(loop());
   }
 
-  private _watchLogLevel() {
+  #watchLogLevel() {
     if (!__DEV__) return;
     this.$state.logLevel.set(this.$props.logLevel());
   }
 
-  private _watchMetadata() {
+  #watchMetadata() {
     const { artist, artwork } = this.$props;
     this.$state.artist.set(artist());
     this.$state.artwork.set(artwork());
   }
 
-  private _watchTitle() {
+  #watchTitle() {
     const { title } = this.$state;
     this.dispatch('title-change', { detail: title() });
   }
 
-  private _watchAutoplay() {
+  #watchAutoplay() {
     // autoplay prop is deprecated, we're syncing for backwards compatibility.
     const autoPlay = this.$props.autoPlay() || this.$props.autoplay();
     this.$state.autoPlay.set(autoPlay);
     this.dispatch('auto-play-change', { detail: autoPlay });
   }
 
-  private _watchLoop() {
+  #watchLoop() {
     const loop = this.$state.loop();
     this.dispatch('loop-change', { detail: loop });
   }
 
-  private _watchControls() {
+  #watchControls() {
     const controls = this.$props.controls();
     this.$state.controls.set(controls);
   }
 
-  private _watchPoster() {
+  #watchPoster() {
     const { poster } = this.$state;
     this.dispatch('poster-change', { detail: poster() });
   }
 
-  private _watchCrossOrigin() {
+  #watchCrossOrigin() {
     // crossorigin prop is deprecated, we're syncing for backwards compatibility.
-    const _crossOrigin = this.$props.crossOrigin() ?? this.$props.crossorigin(),
-      value = _crossOrigin === true ? '' : (_crossOrigin as '');
+    const crossOrigin = this.$props.crossOrigin() ?? this.$props.crossorigin(),
+      value = crossOrigin === true ? '' : (crossOrigin as '');
     this.$state.crossOrigin.set(value);
   }
 
-  private _watchDuration() {
+  #watchDuration() {
     const { duration } = this.$props;
     this.dispatch('media-duration-change-request', {
       detail: duration(),
     });
   }
 
-  private _watchPlaysInline() {
+  #watchPlaysInline() {
     // playsinline prop is deprecated, we're syncing for backwards compatibility.
     const inline = this.$props.playsInline() || this.$props.playsinline();
     this.$state.playsInline.set(inline);
     this.dispatch('plays-inline-change', { detail: inline });
   }
 
-  private _watchClipStartTime() {
+  #watchClipStartTime() {
     const { clipStartTime } = this.$props;
     this.dispatch('media-clip-start-change-request', {
       detail: clipStartTime(),
     });
   }
 
-  private _watchClipEndTime() {
+  #watchClipEndTime() {
     const { clipEndTime } = this.$props;
     this.dispatch('media-clip-end-change-request', {
       detail: clipEndTime(),
     });
   }
 
-  private _watchLive() {
+  #watchLive() {
     this.dispatch('live-change', { detail: this.$state.live() });
   }
 
-  private _watchLiveTolerance() {
+  #watchLiveTolerance() {
     this.$state.liveEdgeTolerance.set(this.$props.liveEdgeTolerance());
     this.$state.minLiveDVRWindow.set(this.$props.minLiveDVRWindow());
   }
 
-  private _watchLiveEdge() {
+  #watchLiveEdge() {
     this.dispatch('live-edge-change', { detail: this.$state.liveEdge() });
   }
 }

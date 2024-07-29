@@ -32,14 +32,14 @@ export class SliderValue extends Component<SliderValueProps> {
     decimalPlaces: 2,
   };
 
-  protected _format!: SliderValueFormat;
-  protected _text!: ReadSignal<string>;
-  protected _slider!: StateContext<typeof Slider.state>;
+  #format!: SliderValueFormat;
+  #text!: ReadSignal<string>;
+  #slider!: StateContext<typeof Slider.state>;
 
   protected override onSetup(): void {
-    this._slider = useState(Slider.state);
-    this._format = useContext(sliderValueFormatContext);
-    this._text = computed(this.getValueText.bind(this));
+    this.#slider = useState(Slider.state);
+    this.#format = useContext(sliderValueFormatContext);
+    this.#text = computed(this.getValueText.bind(this));
   }
 
   /**
@@ -47,25 +47,33 @@ export class SliderValue extends Component<SliderValueProps> {
    */
   @method
   getValueText() {
-    const { type, format, decimalPlaces, padHours, padMinutes, showHours, showMs } = this.$props,
-      { value: sliderValue, pointerValue, min, max } = this._slider,
-      _format = format?.() ?? this._format.default;
+    const {
+        type,
+        format: $format,
+        decimalPlaces,
+        padHours,
+        padMinutes,
+        showHours,
+        showMs,
+      } = this.$props,
+      { value: sliderValue, pointerValue, min, max } = this.#slider,
+      format = $format?.() ?? this.#format.default;
 
     const value = type() === 'current' ? sliderValue() : pointerValue();
 
-    if (_format === 'percent') {
+    if (format === 'percent') {
       const range = max() - min();
       const percent = (value / range) * 100;
-      return (this._format.percent ?? round)(percent, decimalPlaces()) + '%';
-    } else if (_format === 'time') {
-      return (this._format.time ?? formatTime)(value, {
+      return (this.#format.percent ?? round)(percent, decimalPlaces()) + '%';
+    } else if (format === 'time') {
+      return (this.#format.time ?? formatTime)(value, {
         padHrs: padHours(),
         padMins: padMinutes(),
         showHrs: showHours(),
         showMs: showMs(),
       });
     } else {
-      return (this._format.value?.(value) ?? value.toFixed(2)) + '';
+      return (this.#format.value?.(value) ?? value.toFixed(2)) + '';
     }
   }
 }

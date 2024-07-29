@@ -5,23 +5,23 @@ import type { MenuButton } from './menu-button';
 import type { MenuItems } from './menu-items';
 
 export interface MenuContext {
-  readonly _submenu: boolean;
-  readonly _expanded: ReadSignal<boolean>;
-  readonly _hint: WriteSignal<string>;
-  readonly _button: ReadSignal<HTMLElement | null>;
-  readonly _content: ReadSignal<HTMLElement | null>;
-  _attachMenuButton(button: MenuButton): void;
-  _attachMenuItems(menuItems: MenuItems): void;
-  _attachObserver(observer: MenuObserver): void;
-  _disable(disable: boolean): void;
-  _disableMenuButton(disable: boolean): void;
-  _addSubmenu(menu: Menu): void;
-  _onTransitionEvent(callback: (event: TransitionEvent) => void): void;
+  readonly submenu: boolean;
+  readonly expanded: ReadSignal<boolean>;
+  readonly hint: WriteSignal<string>;
+  readonly button: ReadSignal<HTMLElement | null>;
+  readonly content: ReadSignal<HTMLElement | null>;
+  attachMenuButton(button: MenuButton): void;
+  attachMenuItems(menuItems: MenuItems): void;
+  attachObserver(observer: MenuObserver): void;
+  disable(disable: boolean): void;
+  disableMenuButton(disable: boolean): void;
+  addSubmenu(menu: Menu): void;
+  onTransitionEvent(callback: (event: TransitionEvent) => void): void;
 }
 
 export interface MenuObserver {
-  _onOpen?(trigger?: Event): void;
-  _onClose?(trigger?: Event): void;
+  onOpen?(trigger?: Event): void;
+  onClose?(trigger?: Event): void;
 }
 
 export const menuContext = createContext<MenuContext>();

@@ -19,10 +19,10 @@ export class SliderPreview extends Component<SliderPreviewProps> {
     noClamp: false,
   };
 
-  private _slider!: SliderContext;
+  #slider!: SliderContext;
 
   protected override onSetup(): void {
-    this._slider = useContext(sliderContext);
+    this.#slider = useContext(sliderContext);
 
     const { active } = useState(Slider.state);
     this.setAttributes({
@@ -40,21 +40,21 @@ export class SliderPreview extends Component<SliderPreviewProps> {
   }
 
   protected override onConnect(el: HTMLElement): void {
-    const { _preview } = this._slider;
-    _preview.set(el);
-    onDispose(() => _preview.set(null));
+    const { preview } = this.#slider;
+    preview.set(el);
+    onDispose(() => preview.set(null));
 
-    effect(this._updatePlacement.bind(this));
+    effect(this.#updatePlacement.bind(this));
 
-    const resize = new ResizeObserver(this._updatePlacement.bind(this));
+    const resize = new ResizeObserver(this.#updatePlacement.bind(this));
     resize.observe(el);
     onDispose(() => resize.disconnect());
   }
 
-  private _updatePlacement = animationFrameThrottle(() => {
-    const { _disabled, _orientation } = this._slider;
+  #updatePlacement = animationFrameThrottle(() => {
+    const { disabled, orientation } = this.#slider;
 
-    if (_disabled()) return;
+    if (disabled()) return;
 
     const el = this.el,
       { offset, noClamp } = this.$props;
@@ -64,7 +64,7 @@ export class SliderPreview extends Component<SliderPreviewProps> {
     updateSliderPreviewPlacement(el, {
       clamp: !noClamp(),
       offset: offset(),
-      orientation: _orientation(),
+      orientation: orientation(),
     });
   });
 }

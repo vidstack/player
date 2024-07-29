@@ -30,28 +30,28 @@ export class MediaThumbnailElement extends Host(HTMLElement, Thumbnail) {
     crossOrigin: 'crossorigin',
   };
 
-  protected _media!: MediaContext;
-  protected _img = this._createImg();
+  #media!: MediaContext;
+  #img = this.#createImg();
 
   protected onSetup(): void {
-    this._media = useMediaContext();
-    this.$state.img.set(this._img);
+    this.#media = useMediaContext();
+    this.$state.img.set(this.#img);
   }
 
   protected onConnect(): void {
     const { src, crossOrigin } = this.$state;
 
-    if (this._img.parentNode !== this) {
-      this.prepend(this._img);
+    if (this.#img.parentNode !== this) {
+      this.prepend(this.#img);
     }
 
     effect(() => {
-      setAttribute(this._img, 'src', src());
-      setAttribute(this._img, 'crossorigin', crossOrigin());
+      setAttribute(this.#img, 'src', src());
+      setAttribute(this.#img, 'crossorigin', crossOrigin());
     });
   }
 
-  private _createImg() {
+  #createImg() {
     return cloneTemplateContent<HTMLImageElement>(imgTemplate);
   }
 }

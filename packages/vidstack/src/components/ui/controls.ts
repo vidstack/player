@@ -18,30 +18,30 @@ export class Controls extends Component<ControlsProps, {}, ControlsEvents> {
     hideOnMouseLeave: false,
   };
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
-    effect(this._watchProps.bind(this));
+    this.#media = useMediaContext();
+    effect(this.#watchProps.bind(this));
   }
 
   protected override onAttach(el: HTMLElement): void {
-    const { pictureInPicture, fullscreen } = this._media.$state;
+    const { pictureInPicture, fullscreen } = this.#media.$state;
 
     setStyle(el, 'pointer-events', 'none');
     setAttributeIfEmpty(el, 'role', 'group');
 
     this.setAttributes({
-      'data-visible': this._isShowing.bind(this),
+      'data-visible': this.#isShowing.bind(this),
       'data-fullscreen': fullscreen,
       'data-pip': pictureInPicture,
     });
 
     effect(() => {
-      this.dispatch('change', { detail: this._isShowing() });
+      this.dispatch('change', { detail: this.#isShowing() });
     });
 
-    effect(this._hideControls.bind(this));
+    effect(this.#hideControls.bind(this));
 
     effect(() => {
       const isFullscreen = fullscreen();
@@ -51,27 +51,27 @@ export class Controls extends Component<ControlsProps, {}, ControlsEvents> {
     });
   }
 
-  private _hideControls() {
+  #hideControls() {
     if (!this.el) return;
 
-    const { nativeControls } = this._media.$state,
+    const { nativeControls } = this.#media.$state,
       isHidden = nativeControls();
 
     setAttribute(this.el, 'aria-hidden', isHidden ? 'true' : null);
     setStyle(this.el, 'display', isHidden ? 'none' : null);
   }
 
-  private _watchProps() {
-    const { controls } = this._media.player,
+  #watchProps() {
+    const { controls } = this.#media.player,
       { hideDelay, hideOnMouseLeave } = this.$props;
 
     // Use controls delay prop on player if this is the default value.
-    controls.defaultDelay = hideDelay() === 2000 ? this._media.$props.controlsDelay() : hideDelay();
+    controls.defaultDelay = hideDelay() === 2000 ? this.#media.$props.controlsDelay() : hideDelay();
     controls.hideOnMouseLeave = hideOnMouseLeave();
   }
 
-  private _isShowing() {
-    const { controlsVisible } = this._media.$state;
+  #isShowing() {
+    const { controlsVisible } = this.#media.$state;
     return controlsVisible();
   }
 }

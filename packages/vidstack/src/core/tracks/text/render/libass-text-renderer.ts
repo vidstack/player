@@ -7,9 +7,9 @@ import type { TextRenderer } from './text-renderer';
 export class LibASSTextRenderer implements TextRenderer {
   readonly priority = 1;
 
-  private _instance: LibASSInstance | null = null;
-  private _track: TextTrack | null = null;
-  private _typeRE = /(ssa|ass)$/;
+  #instance: LibASSInstance | null = null;
+  #track: TextTrack | null = null;
+  #typeRE = /(ssa|ass)$/;
 
   constructor(
     public readonly loader: LibASSModuleLoader,
@@ -20,7 +20,7 @@ export class LibASSTextRenderer implements TextRenderer {
     return (
       !!video &&
       !!track.src &&
-      ((isString(track.type) && this._typeRE.test(track.type)) || this._typeRE.test(track.src))
+      ((isString(track.type) && this.#typeRE.test(track.type)) || this.#typeRE.test(track.src))
     );
   }
 
@@ -28,21 +28,21 @@ export class LibASSTextRenderer implements TextRenderer {
     if (!video) return;
 
     this.loader().then(async (mod) => {
-      this._instance = new mod.default({
+      this.#instance = new mod.default({
         ...this.config,
         video,
-        subUrl: this._track?.src || '',
+        subUrl: this.#track?.src || '',
       });
 
-      listenEvent(this._instance, 'ready', () => {
-        const canvas = this._instance?._canvas;
+      listenEvent(this.#instance, 'ready', () => {
+        const canvas = this.#instance?._canvas;
         if (canvas) canvas.style.pointerEvents = 'none';
       });
 
-      listenEvent(this._instance, 'error', (event) => {
-        if (this._track) {
-          this._track[TextTrackSymbol._readyState] = 3;
-          this._track.dispatchEvent(
+      listenEvent(this.#instance, 'error', (event) => {
+        if (this.#track) {
+          this.#track[TextTrackSymbol.readyState] = 3;
+          this.#track.dispatchEvent(
             new DOMEvent('error', {
               trigger: event,
               detail: event.error,
@@ -55,20 +55,20 @@ export class LibASSTextRenderer implements TextRenderer {
 
   changeTrack(track: TextTrack | null) {
     if (!track || track.readyState === 3) {
-      this._freeTrack();
-    } else if (this._track !== track) {
-      this._instance?.setTrackByUrl(track.src!);
-      this._track = track;
+      this.#freeTrack();
+    } else if (this.#track !== track) {
+      this.#instance?.setTrackByUrl(track.src!);
+      this.#track = track;
     }
   }
 
   detach(): void {
-    this._freeTrack();
+    this.#freeTrack();
   }
 
-  private _freeTrack() {
-    this._instance?.freeTrack();
-    this._track = null;
+  #freeTrack() {
+    this.#instance?.freeTrack();
+    this.#track = null;
   }
 }
 

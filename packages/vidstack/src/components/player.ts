@@ -124,9 +124,9 @@ export class MediaPlayer
   static props: MediaPlayerProps = mediaPlayerProps;
   static state = mediaState;
 
-  private _media: MediaContext;
-  private _stateMgr: MediaStateManager;
-  private _requestMgr: MediaRequestManager;
+  #media: MediaContext;
+  #stateMgr: MediaStateManager;
+  #requestMgr: MediaRequestManager;
 
   @prop
   readonly canPlayQueue = new RequestQueue();
@@ -134,11 +134,11 @@ export class MediaPlayer
   @prop
   readonly remoteControl: MediaRemoteControl;
 
-  private get _provider() {
-    return this._media.$provider() as AnyMediaProvider | null;
+  get #provider() {
+    return this.#media.$provider() as AnyMediaProvider | null;
   }
 
-  private get _$$props() {
+  get #props() {
     return this.$props as unknown as WriteSignalRecord<MediaPlayerProps>;
   }
 
@@ -171,11 +171,11 @@ export class MediaPlayer
     );
     context.remote.setPlayer(this);
     context.textTracks = new TextTrackList();
-    context.textTracks[TextTrackSymbol._crossOrigin] = this.$state.crossOrigin;
+    context.textTracks[TextTrackSymbol.crossOrigin] = this.$state.crossOrigin;
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
 
-    this._media = context;
+    this.#media = context;
     provideContext(mediaContext, context);
 
     this.orientation = new ScreenOrientationController();
@@ -185,13 +185,12 @@ export class MediaPlayer
     if (__DEV__) new MediaEventsLogger(context);
 
     const request = new MediaRequestContext();
-    this._stateMgr = new MediaStateManager(request, context);
-    this._requestMgr = new MediaRequestManager(this._stateMgr, request, context);
+    this.#stateMgr = new MediaStateManager(request, context);
+    this.#requestMgr = new MediaRequestManager(this.#stateMgr, request, context);
 
-    context.delegate = new MediaPlayerDelegate(
-      this._stateMgr._handle.bind(this._stateMgr),
-      context,
-    );
+    context.delegate = new MediaPlayerDelegate(this.#stateMgr.handle.bind(this.#stateMgr), context);
+
+    context.notify = context.delegate.notify.bind(context.delegate);
 
     if (typeof navigator !== 'undefined' && 'mediaSession' in navigator) {
       new NavigatorMediaSession();
@@ -202,14 +201,14 @@ export class MediaPlayer
   }
 
   protected override onSetup(): void {
-    this._setupMediaAttributes();
-    effect(this._watchCanPlay.bind(this));
-    effect(this._watchMuted.bind(this));
-    effect(this._watchPaused.bind(this));
-    effect(this._watchVolume.bind(this));
-    effect(this._watchCurrentTime.bind(this));
-    effect(this._watchPlaysInline.bind(this));
-    effect(this._watchPlaybackRate.bind(this));
+    this.#setupMediaAttributes();
+    effect(this.#watchCanPlay.bind(this));
+    effect(this.#watchMuted.bind(this));
+    effect(this.#watchPaused.bind(this));
+    effect(this.#watchVolume.bind(this));
+    effect(this.#watchCurrentTime.bind(this));
+    effect(this.#watchPlaysInline.bind(this));
+    effect(this.#watchPlaybackRate.bind(this));
   }
 
   protected override onAttach(el: HTMLElement): void {
@@ -217,28 +216,28 @@ export class MediaPlayer
     setAttributeIfEmpty(el, 'tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'region');
 
-    effect(this._watchStorage.bind(this));
+    effect(this.#watchStorage.bind(this));
 
-    if (__SERVER__) this._watchTitle();
-    else effect(this._watchTitle.bind(this));
+    if (__SERVER__) this.#watchTitle();
+    else effect(this.#watchTitle.bind(this));
 
-    if (__SERVER__) this._watchOrientation();
-    else effect(this._watchOrientation.bind(this));
+    if (__SERVER__) this.#watchOrientation();
+    else effect(this.#watchOrientation.bind(this));
 
-    listenEvent(el, 'find-media-player', this._onFindPlayer.bind(this));
+    listenEvent(el, 'find-media-player', this.#onFindPlayer.bind(this));
   }
 
   protected override onConnect(el: HTMLElement) {
     if (IS_IPHONE) setAttribute(el, 'data-iphone', '');
 
     const pointerQuery = window.matchMedia('(pointer: coarse)');
-    this._onPointerChange(pointerQuery);
-    pointerQuery.onchange = this._onPointerChange.bind(this);
+    this.#onPointerChange(pointerQuery);
+    pointerQuery.onchange = this.#onPointerChange.bind(this);
 
-    const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
+    const resize = new ResizeObserver(animationFrameThrottle(this.#onResize.bind(this)));
     resize.observe(el);
 
-    effect(this._onResize.bind(this));
+    effect(this.#onResize.bind(this));
 
     this.dispatch('media-player-connect', {
       detail: this,
@@ -246,23 +245,23 @@ export class MediaPlayer
       composed: true,
     });
 
-    if (__DEV__) this._media.logger!.setTarget(el);
+    if (__DEV__) this.#media.logger!.setTarget(el);
 
     onDispose(() => {
       resize.disconnect();
       pointerQuery.onchange = null;
-      if (__DEV__) this._media.logger!.setTarget(null);
+      if (__DEV__) this.#media.logger!.setTarget(null);
     });
   }
 
   protected override onDestroy(): void {
     // @ts-expect-error
-    this._media.player = null;
-    this.canPlayQueue._reset();
+    this.#media.player = null;
+    this.canPlayQueue.reset();
   }
 
-  private _skipTitleUpdate = false;
-  private _watchTitle() {
+  #skipTitleUpdate = false;
+  #watchTitle() {
     const el = this.$el,
       { title, live, viewType, providedTitle } = this.$state,
       isLive = live(),
@@ -278,24 +277,24 @@ export class MediaPlayer
 
     // Title attribute is removed to prevent popover interfering with user hovering over player.
     if (!__SERVER__ && el?.hasAttribute('title')) {
-      this._skipTitleUpdate = true;
+      this.#skipTitleUpdate = true;
       el?.removeAttribute('title');
     }
   }
 
-  private _watchOrientation() {
+  #watchOrientation() {
     const orientation = this.orientation.landscape ? 'landscape' : 'portrait';
     this.$state.orientation.set(orientation);
     setAttribute(this.el!, 'data-orientation', orientation);
-    this._onResize();
+    this.#onResize();
   }
 
-  private _watchCanPlay() {
-    if (this.$state.canPlay() && this._provider) this.canPlayQueue._start();
-    else this.canPlayQueue._stop();
+  #watchCanPlay() {
+    if (this.$state.canPlay() && this.#provider) this.canPlayQueue.start();
+    else this.canPlayQueue.stop();
   }
 
-  private _setupMediaAttributes() {
+  #setupMediaAttributes() {
     if (MediaPlayer[MEDIA_ATTRIBUTES]) {
       this.setAttributes(MediaPlayer[MEDIA_ATTRIBUTES]);
       return;
@@ -353,11 +352,11 @@ export class MediaPlayer
     this.setAttributes($attrs);
   }
 
-  private _onFindPlayer(event: FindMediaPlayerEvent) {
+  #onFindPlayer(event: FindMediaPlayerEvent) {
     event.detail(this);
   }
 
-  private _onResize() {
+  #onResize() {
     if (__SERVER__ || !this.el) return;
 
     const width = this.el.clientWidth,
@@ -370,12 +369,12 @@ export class MediaPlayer
     setStyle(this.el, '--player-height', height + 'px');
   }
 
-  private _onPointerChange(queryList: MediaQueryList | MediaQueryListEvent) {
+  #onPointerChange(queryList: MediaQueryList | MediaQueryListEvent) {
     if (__SERVER__) return;
     const pointer = queryList.matches ? 'coarse' : 'fine';
     setAttribute(this.el!, 'data-pointer', pointer);
     this.$state.pointer.set(pointer);
-    this._onResize();
+    this.#onResize();
   }
 
   /**
@@ -383,7 +382,7 @@ export class MediaPlayer
    */
   @prop
   get provider(): AnyMediaProvider | null {
-    return this._provider;
+    return this.#provider;
   }
 
   /**
@@ -391,11 +390,11 @@ export class MediaPlayer
    */
   @prop
   get controls(): MediaControls {
-    return this._requestMgr._controls;
+    return this.#requestMgr.controls;
   }
 
   set controls(controls: boolean) {
-    this._$$props.controls.set(controls);
+    this.#props.controls.set(controls);
   }
 
   /**
@@ -414,8 +413,8 @@ export class MediaPlayer
   }
 
   set title(newTitle) {
-    if (this._skipTitleUpdate) {
-      this._skipTitleUpdate = false;
+    if (this.#skipTitleUpdate) {
+      this.#skipTitleUpdate = false;
       return;
     }
 
@@ -429,7 +428,7 @@ export class MediaPlayer
    */
   @prop
   get qualities(): VideoQualityList {
-    return this._media.qualities;
+    return this.#media.qualities;
   }
 
   /**
@@ -439,7 +438,7 @@ export class MediaPlayer
    */
   @prop
   get audioTracks(): AudioTrackList {
-    return this._media.audioTracks;
+    return this.#media.audioTracks;
   }
 
   /**
@@ -449,7 +448,7 @@ export class MediaPlayer
    */
   @prop
   get textTracks(): TextTrackList {
-    return this._media.textTracks;
+    return this.#media.textTracks;
   }
 
   /**
@@ -458,7 +457,7 @@ export class MediaPlayer
    */
   @prop
   get textRenderers(): TextRenderers {
-    return this._media.textRenderers;
+    return this.#media.textRenderers;
   }
 
   @prop
@@ -467,7 +466,7 @@ export class MediaPlayer
   }
 
   set duration(duration: number) {
-    this._$$props.duration.set(duration);
+    this.#props.duration.set(duration);
   }
 
   @prop
@@ -476,17 +475,17 @@ export class MediaPlayer
   }
 
   set paused(paused) {
-    this._queuePausedUpdate(paused);
+    this.#queuePausedUpdate(paused);
   }
 
-  private _watchPaused() {
-    this._queuePausedUpdate(this.$props.paused());
+  #watchPaused() {
+    this.#queuePausedUpdate(this.$props.paused());
   }
 
-  private _queuePausedUpdate(paused: boolean) {
+  #queuePausedUpdate(paused: boolean) {
     if (paused) {
-      this.canPlayQueue._enqueue('paused', () => this._requestMgr._pause());
-    } else this.canPlayQueue._enqueue('paused', () => this._requestMgr._play());
+      this.canPlayQueue.enqueue('paused', () => this.#requestMgr.pause());
+    } else this.canPlayQueue.enqueue('paused', () => this.#requestMgr.play());
   }
 
   @prop
@@ -495,16 +494,16 @@ export class MediaPlayer
   }
 
   set muted(muted) {
-    this._queueMutedUpdate(muted);
+    this.#queueMutedUpdate(muted);
   }
 
-  private _watchMuted() {
-    this._queueMutedUpdate(this.$props.muted());
+  #watchMuted() {
+    this.#queueMutedUpdate(this.$props.muted());
   }
 
-  private _queueMutedUpdate(muted: boolean) {
-    this.canPlayQueue._enqueue('muted', () => {
-      if (this._provider) this._provider.setMuted(muted);
+  #queueMutedUpdate(muted: boolean) {
+    this.canPlayQueue.enqueue('muted', () => {
+      if (this.#provider) this.#provider.setMuted(muted);
     });
   }
 
@@ -514,21 +513,21 @@ export class MediaPlayer
   }
 
   set currentTime(time) {
-    this._queueCurrentTimeUpdate(time);
+    this.#queueCurrentTimeUpdate(time);
   }
 
-  private _watchCurrentTime() {
-    this._queueCurrentTimeUpdate(this.$props.currentTime());
+  #watchCurrentTime() {
+    this.#queueCurrentTimeUpdate(this.$props.currentTime());
   }
 
-  private _queueCurrentTimeUpdate(time: number) {
-    this.canPlayQueue._enqueue('currentTime', () => {
+  #queueCurrentTimeUpdate(time: number) {
+    this.canPlayQueue.enqueue('currentTime', () => {
       const { currentTime, clipStartTime, seekableStart, seekableEnd } = this.$state;
 
       if (time === peek(currentTime)) return;
 
       peek(() => {
-        if (!this._provider) return;
+        if (!this.#provider) return;
 
         const clippedTime = time + clipStartTime(),
           isEnd = Math.floor(clippedTime) === Math.floor(seekableEnd()),
@@ -537,7 +536,7 @@ export class MediaPlayer
             : Math.min(Math.max(seekableStart() + 0.1, clippedTime), seekableEnd() - 0.1);
 
         if (Number.isFinite(boundTime)) {
-          this._provider.setCurrentTime(boundTime);
+          this.#provider.setCurrentTime(boundTime);
         }
       });
     });
@@ -549,17 +548,17 @@ export class MediaPlayer
   }
 
   set volume(volume) {
-    this._queueVolumeUpdate(volume);
+    this.#queueVolumeUpdate(volume);
   }
 
-  private _watchVolume() {
-    this._queueVolumeUpdate(this.$props.volume());
+  #watchVolume() {
+    this.#queueVolumeUpdate(this.$props.volume());
   }
 
-  private _queueVolumeUpdate(volume: number) {
+  #queueVolumeUpdate(volume: number) {
     const clampedVolume = clampNumber(0, volume, 1);
-    this.canPlayQueue._enqueue('volume', () => {
-      if (this._provider) this._provider.setVolume(clampedVolume);
+    this.canPlayQueue.enqueue('volume', () => {
+      if (this.#provider) this.#provider.setVolume(clampedVolume);
     });
   }
 
@@ -569,30 +568,30 @@ export class MediaPlayer
   }
 
   set playbackRate(rate) {
-    this._queuePlaybackRateUpdate(rate);
+    this.#queuePlaybackRateUpdate(rate);
   }
 
-  private _watchPlaybackRate() {
-    this._queuePlaybackRateUpdate(this.$props.playbackRate());
+  #watchPlaybackRate() {
+    this.#queuePlaybackRateUpdate(this.$props.playbackRate());
   }
 
-  private _queuePlaybackRateUpdate(rate: number) {
-    this.canPlayQueue._enqueue('rate', () => {
-      if (this._provider) (this._provider as MediaProviderAdapter).setPlaybackRate?.(rate);
+  #queuePlaybackRateUpdate(rate: number) {
+    this.canPlayQueue.enqueue('rate', () => {
+      if (this.#provider) (this.#provider as MediaProviderAdapter).setPlaybackRate?.(rate);
     });
   }
 
-  private _watchPlaysInline() {
-    this._queuePlaysInlineUpdate(this.$props.playsInline());
+  #watchPlaysInline() {
+    this.#queuePlaysInlineUpdate(this.$props.playsInline());
   }
 
-  private _queuePlaysInlineUpdate(inline: boolean) {
-    this.canPlayQueue._enqueue('playsinline', () => {
-      if (this._provider) (this._provider as MediaProviderAdapter).setPlaysInline?.(inline);
+  #queuePlaysInlineUpdate(inline: boolean) {
+    this.canPlayQueue.enqueue('playsinline', () => {
+      if (this.#provider) (this.#provider as MediaProviderAdapter).setPlaysInline?.(inline);
     });
   }
 
-  private _watchStorage() {
+  #watchStorage() {
     let storageValue = this.$props.storage(),
       storage: MediaStorage | null = isString(storageValue)
         ? new LocalMediaStorage()
@@ -601,22 +600,22 @@ export class MediaPlayer
     if (storage?.onChange) {
       const { source } = this.$state,
         playerId = isString(storageValue) ? storageValue : this.el?.id,
-        mediaId = computed(this._computeMediaId.bind(this));
+        mediaId = computed(this.#computeMediaId.bind(this));
 
       effect(() => storage!.onChange!(source(), mediaId(), playerId || undefined));
     }
 
-    this._media.storage = storage;
-    this._media.textTracks.setStorage(storage);
+    this.#media.storage = storage;
+    this.#media.textTracks.setStorage(storage);
 
     onDispose(() => {
       storage?.onDestroy?.();
-      this._media.storage = null;
-      this._media.textTracks.setStorage(null);
+      this.#media.storage = null;
+      this.#media.textTracks.setStorage(null);
     });
   }
 
-  private _computeMediaId() {
+  #computeMediaId() {
     const { clipStartTime, clipEndTime } = this.$props,
       { source } = this.$state,
       src = source();
@@ -632,7 +631,7 @@ export class MediaPlayer
    */
   @method
   async play(trigger?: Event) {
-    return this._requestMgr._play(trigger);
+    return this.#requestMgr.play(trigger);
   }
 
   /**
@@ -643,7 +642,7 @@ export class MediaPlayer
    */
   @method
   async pause(trigger?: Event) {
-    return this._requestMgr._pause(trigger);
+    return this.#requestMgr.pause(trigger);
   }
 
   /**
@@ -654,7 +653,7 @@ export class MediaPlayer
    */
   @method
   async enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
-    return this._requestMgr._enterFullscreen(target, trigger);
+    return this.#requestMgr.enterFullscreen(target, trigger);
   }
 
   /**
@@ -665,7 +664,7 @@ export class MediaPlayer
    */
   @method
   async exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
-    return this._requestMgr._exitFullscreen(target, trigger);
+    return this.#requestMgr.exitFullscreen(target, trigger);
   }
 
   /**
@@ -677,7 +676,7 @@ export class MediaPlayer
    */
   @method
   enterPictureInPicture(trigger?: Event) {
-    return this._requestMgr._enterPictureInPicture(trigger);
+    return this.#requestMgr.enterPictureInPicture(trigger);
   }
 
   /**
@@ -688,7 +687,7 @@ export class MediaPlayer
    */
   @method
   exitPictureInPicture(trigger?: Event) {
-    return this._requestMgr._exitPictureInPicture(trigger);
+    return this.#requestMgr.exitPictureInPicture(trigger);
   }
 
   /**
@@ -699,7 +698,7 @@ export class MediaPlayer
    */
   @method
   seekToLiveEdge(trigger?: Event): void {
-    this._requestMgr._seekToLiveEdge(trigger);
+    this.#requestMgr.seekToLiveEdge(trigger);
   }
 
   /**
@@ -710,7 +709,7 @@ export class MediaPlayer
    */
   @method
   startLoading(trigger?: Event): void {
-    this._media.delegate._notify('can-load', undefined, trigger);
+    this.#media.notify('can-load', undefined, trigger);
   }
 
   /**
@@ -720,7 +719,7 @@ export class MediaPlayer
    */
   @method
   startLoadingPoster(trigger?: Event) {
-    this._media.delegate._notify('can-load-poster', undefined, trigger);
+    this.#media.notify('can-load-poster', undefined, trigger);
   }
 
   /**
@@ -728,7 +727,7 @@ export class MediaPlayer
    */
   @method
   requestAirPlay(trigger?: Event) {
-    return this._requestMgr._requestAirPlay(trigger);
+    return this.#requestMgr.requestAirPlay(trigger);
   }
 
   /**
@@ -737,7 +736,7 @@ export class MediaPlayer
    */
   @method
   requestGoogleCast(trigger?: Event) {
-    return this._requestMgr._requestGoogleCast(trigger);
+    return this.#requestMgr.requestGoogleCast(trigger);
   }
 
   /**
@@ -747,12 +746,12 @@ export class MediaPlayer
    */
   @method
   setAudioGain(gain: number, trigger?: Event) {
-    return this._requestMgr._setAudioGain(gain, trigger);
+    return this.#requestMgr.setAudioGain(gain, trigger);
   }
 
   override destroy() {
     super.destroy();
-    this._media.remote.setPlayer(null);
+    this.#media.remote.setPlayer(null);
     this.dispatch('destroy');
   }
 }

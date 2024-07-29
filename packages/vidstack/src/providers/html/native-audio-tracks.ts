@@ -25,60 +25,62 @@ interface NativeAudioTrackList extends Iterable<NativeAudioTrack> {
 }
 
 export class NativeAudioTracks {
-  private get _nativeTracks(): NativeAudioTrackList {
-    return (this._provider.media as any).audioTracks;
+  #provider: HTMLMediaProvider;
+  #ctx: MediaContext;
+
+  get #nativeTracks(): NativeAudioTrackList {
+    return (this.#provider.media as any).audioTracks;
   }
 
-  constructor(
-    private _provider: HTMLMediaProvider,
-    private _ctx: MediaContext,
-  ) {
-    this._nativeTracks.onaddtrack = this._onAddNativeTrack.bind(this);
-    this._nativeTracks.onremovetrack = this._onRemoveNativeTrack.bind(this);
-    this._nativeTracks.onchange = this._onChangeNativeTrack.bind(this);
-    listenEvent(this._ctx.audioTracks, 'change', this._onChangeTrack.bind(this));
+  constructor(provider: HTMLMediaProvider, ctx: MediaContext) {
+    this.#provider = provider;
+    this.#ctx = ctx;
+    this.#nativeTracks.onaddtrack = this.#onAddNativeTrack.bind(this);
+    this.#nativeTracks.onremovetrack = this.#onRemoveNativeTrack.bind(this);
+    this.#nativeTracks.onchange = this.#onChangeNativeTrack.bind(this);
+    listenEvent(this.#ctx.audioTracks, 'change', this.#onChangeTrack.bind(this));
   }
 
-  private _onAddNativeTrack(event: NativeAudioEvent) {
-    const _track = event.track;
+  #onAddNativeTrack(event: NativeAudioEvent) {
+    const nativeTrack = event.track;
 
-    if (_track.label === '') return;
+    if (nativeTrack.label === '') return;
 
-    const id = _track.id.toString() || `native-audio-${this._ctx.audioTracks.length}`,
+    const id = nativeTrack.id.toString() || `native-audio-${this.#ctx.audioTracks.length}`,
       audioTrack: AudioTrack = {
         id,
-        label: _track.label,
-        language: _track.language,
-        kind: _track.kind,
+        label: nativeTrack.label,
+        language: nativeTrack.language,
+        kind: nativeTrack.kind,
         selected: false,
       };
 
-    this._ctx.audioTracks[ListSymbol._add](audioTrack, event);
-    if (_track.enabled) audioTrack.selected = true;
+    this.#ctx.audioTracks[ListSymbol.add](audioTrack, event);
+    if (nativeTrack.enabled) audioTrack.selected = true;
   }
 
-  private _onRemoveNativeTrack(event: NativeAudioEvent) {
-    const track = this._ctx.audioTracks.getById(event.track.id);
-    if (track) this._ctx.audioTracks[ListSymbol._remove](track, event);
+  #onRemoveNativeTrack(event: NativeAudioEvent) {
+    const track = this.#ctx.audioTracks.getById(event.track.id);
+    if (track) this.#ctx.audioTracks[ListSymbol.remove](track, event);
   }
 
-  private _onChangeNativeTrack(event: NativeAudioEvent) {
-    let enabledTrack = this._getEnabledNativeTrack();
+  #onChangeNativeTrack(event: NativeAudioEvent) {
+    let enabledTrack = this.#getEnabledNativeTrack();
     if (!enabledTrack) return;
-    const track = this._ctx.audioTracks.getById(enabledTrack.id);
-    if (track) this._ctx.audioTracks[ListSymbol._select](track, true, event);
+    const track = this.#ctx.audioTracks.getById(enabledTrack.id);
+    if (track) this.#ctx.audioTracks[ListSymbol.select](track, true, event);
   }
 
-  private _getEnabledNativeTrack(): NativeAudioTrack | undefined {
-    return Array.from(this._nativeTracks).find((track) => track.enabled);
+  #getEnabledNativeTrack(): NativeAudioTrack | undefined {
+    return Array.from(this.#nativeTracks).find((track) => track.enabled);
   }
 
-  private _onChangeTrack(event: AudioTrackChangeEvent) {
+  #onChangeTrack(event: AudioTrackChangeEvent) {
     const { current } = event.detail;
     if (!current) return;
-    const track = this._nativeTracks.getTrackById(current.id);
+    const track = this.#nativeTracks.getTrackById(current.id);
     if (track) {
-      const prev = this._getEnabledNativeTrack();
+      const prev = this.#getEnabledNativeTrack();
       if (prev) prev.enabled = false;
       track.enabled = true;
     }

@@ -35,7 +35,7 @@ export class SeekButton extends Component<SeekButtonProps, {}, SeekButtonEvents>
     seconds: 30,
   };
 
-  protected _media!: MediaContext;
+  #media!: MediaContext;
 
   constructor() {
     super();
@@ -43,11 +43,11 @@ export class SeekButton extends Component<SeekButtonProps, {}, SeekButtonEvents>
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
-    const { seeking } = this._media.$state,
+    const { seeking } = this.#media.$state,
       { seconds } = this.$props,
-      isSupported = this._isSupported.bind(this);
+      isSupported = this.#isSupported.bind(this);
 
     this.setAttributes({
       seconds,
@@ -62,31 +62,31 @@ export class SeekButton extends Component<SeekButtonProps, {}, SeekButtonEvents>
     setAttributeIfEmpty(el, 'role', 'button');
     setAttributeIfEmpty(el, 'type', 'button');
     el.setAttribute('data-media-tooltip', 'seek');
-    setARIALabel(el, this._getDefaultLabel.bind(this));
+    setARIALabel(el, this.#getDefaultLabel.bind(this));
   }
 
   protected override onConnect(el: HTMLElement) {
-    onPress(el, this._onPress.bind(this));
+    onPress(el, this.#onPress.bind(this));
   }
 
-  protected _isSupported() {
-    const { canSeek } = this._media.$state;
+  #isSupported() {
+    const { canSeek } = this.#media.$state;
     return canSeek();
   }
 
-  protected _getDefaultLabel() {
+  #getDefaultLabel() {
     const { seconds } = this.$props;
     return `Seek ${seconds() > 0 ? 'forward' : 'backward'} ${seconds()} seconds`;
   }
 
-  protected _onPress(event: Event) {
+  #onPress(event: Event) {
     const { seconds, disabled } = this.$props;
 
     if (disabled()) return;
 
-    const { currentTime } = this._media.$state,
+    const { currentTime } = this.#media.$state,
       seekTo = currentTime() + seconds();
 
-    this._media.remote.seek(seekTo, event);
+    this.#media.remote.seek(seekTo, event);
   }
 }

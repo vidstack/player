@@ -9,46 +9,49 @@ import { TextTrackSymbol } from '../../core/tracks/text/symbols';
 import { TextTrack } from '../../core/tracks/text/text-track';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { RAFLoop } from '../../foundation/observers/raf-loop';
+import { getLangName } from '../../utils/language';
 import { canPlayAudioType, canPlayVideoType, IS_CHROME } from '../../utils/support';
 import type { DASHConstructor, DASHInstanceCallback } from './types';
-import { getLangName } from '../../utils/language';
 
 export type DashGetMediaTracks = (type: DASH.MediaType, manifest: object) => DASH.MediaInfo[];
 
 const toDOMEventType = (type: string) => `dash-${camelToKebabCase(type)}`;
 
 export class DASHController {
-  private _instance: DASH.MediaPlayerClass | null = null;
-  private _stopLiveSync: (() => void) | null = null;
+  #video: HTMLVideoElement;
+  #ctx: MediaContext;
 
-  _config: Partial<DASH.MediaPlayerSettingClass> = {};
-  _callbacks = new Set<DASHInstanceCallback>();
+  #instance: DASH.MediaPlayerClass | null = null;
+  #callbacks = new Set<DASHInstanceCallback>();
+  #stopLiveSync: (() => void) | null = null;
+
+  config: Partial<DASH.MediaPlayerSettingClass> = {};
 
   get instance() {
-    return this._instance;
+    return this.#instance;
   }
 
-  constructor(
-    private _video: HTMLVideoElement,
-    protected _ctx: MediaContext,
-  ) { }
+  constructor(video: HTMLVideoElement, ctx: MediaContext) {
+    this.#video = video;
+    this.#ctx = ctx;
+  }
 
   setup(ctor: DASHConstructor) {
-    this._instance = ctor().create();
+    this.#instance = ctor().create();
 
-    const dispatcher = this._dispatchDASHEvent.bind(this);
-    for (const event of Object.values(ctor.events)) this._instance.on(event, dispatcher);
+    const dispatcher = this.#dispatchDASHEvent.bind(this);
+    for (const event of Object.values(ctor.events)) this.#instance.on(event, dispatcher);
 
-    this._instance.on(ctor.events.ERROR, this._onError.bind(this));
-    for (const callback of this._callbacks) callback(this._instance);
+    this.#instance.on(ctor.events.ERROR, this.#onError.bind(this));
+    for (const callback of this.#callbacks) callback(this.#instance);
 
-    this._ctx.player.dispatch('dash-instance' as any, {
-      detail: this._instance,
+    this.#ctx.player.dispatch('dash-instance' as any, {
+      detail: this.#instance,
     });
 
-    this._instance.initialize(this._video, undefined, false);
+    this.#instance.initialize(this.#video, undefined, false);
 
-    this._instance.updateSettings({
+    this.#instance.updateSettings({
       streaming: {
         text: {
           // Disabling text rendering by dash.
@@ -60,76 +63,76 @@ export class DASHController {
           fastSwitchEnabled: true,
         },
       },
-      ...this._config,
+      ...this.config,
     });
 
-    this._instance.on(ctor.events.FRAGMENT_LOADING_STARTED, this._onFragmentLoadStart.bind(this));
-    this._instance.on(
+    this.#instance.on(ctor.events.FRAGMENT_LOADING_STARTED, this.#onFragmentLoadStart.bind(this));
+    this.#instance.on(
       ctor.events.FRAGMENT_LOADING_COMPLETED,
-      this._onFragmentLoadComplete.bind(this),
+      this.#onFragmentLoadComplete.bind(this),
     );
-    this._instance.on(ctor.events.MANIFEST_LOADED, this._onManifestLoaded.bind(this));
-    this._instance.on(ctor.events.QUALITY_CHANGE_RENDERED, this._onQualityChange.bind(this));
-    this._instance.on(ctor.events.TEXT_TRACKS_ADDED, this._onTextTracksAdded.bind(this));
-    this._instance.on(ctor.events.TRACK_CHANGE_RENDERED, this._onTrackChange.bind(this));
+    this.#instance.on(ctor.events.MANIFEST_LOADED, this.#onManifestLoaded.bind(this));
+    this.#instance.on(ctor.events.QUALITY_CHANGE_RENDERED, this.#onQualityChange.bind(this));
+    this.#instance.on(ctor.events.TEXT_TRACKS_ADDED, this.#onTextTracksAdded.bind(this));
+    this.#instance.on(ctor.events.TRACK_CHANGE_RENDERED, this.#onTrackChange.bind(this));
 
-    this._ctx.qualities[QualitySymbol._enableAuto] = this._enableAutoQuality.bind(this);
+    this.#ctx.qualities[QualitySymbol.enableAuto] = this.#enableAutoQuality.bind(this);
 
-    listenEvent(this._ctx.qualities, 'change', this._onUserQualityChange.bind(this));
-    listenEvent(this._ctx.audioTracks, 'change', this._onUserAudioChange.bind(this));
+    listenEvent(this.#ctx.qualities, 'change', this.#onUserQualityChange.bind(this));
+    listenEvent(this.#ctx.audioTracks, 'change', this.#onUserAudioChange.bind(this));
 
-    this._stopLiveSync = effect(this._liveSync.bind(this));
+    this.#stopLiveSync = effect(this.#liveSync.bind(this));
   }
 
-  private _createDOMEvent(event: DASH.Event) {
+  #createDOMEvent(event: DASH.Event) {
     return new DOMEvent(toDOMEventType(event.type), { detail: event });
   }
 
-  private _liveSync() {
-    if (!this._ctx.$state.live()) return;
-    const raf = new RAFLoop(this._liveSyncPosition.bind(this));
-    raf._start();
-    return raf._stop.bind(raf);
+  #liveSync() {
+    if (!this.#ctx.$state.live()) return;
+    const raf = new RAFLoop(this.#liveSyncPosition.bind(this));
+    raf.start();
+    return raf.stop.bind(raf);
   }
 
-  private _liveSyncPosition() {
-    if (!this._instance) return;
-    const position = this._instance.duration() - this._instance.time();
-    this._ctx.$state.liveSyncPosition.set(!isNaN(position) ? position : Infinity);
+  #liveSyncPosition() {
+    if (!this.#instance) return;
+    const position = this.#instance.duration() - this.#instance.time();
+    this.#ctx.$state.liveSyncPosition.set(!isNaN(position) ? position : Infinity);
   }
 
-  private _dispatchDASHEvent(event: DASH.Event) {
-    this._ctx.player?.dispatch(this._createDOMEvent(event));
+  #dispatchDASHEvent(event: DASH.Event) {
+    this.#ctx.player?.dispatch(this.#createDOMEvent(event));
   }
 
-  private _currentTrack: TextTrack | null = null;
-  private _cueTracker: Record<string, number> = {};
+  #currentTrack: TextTrack | null = null;
+  #cueTracker: Record<string, number> = {};
 
-  private _onTextFragmentLoaded(event: DASH.FragmentLoadingCompletedEvent) {
-    const native = this._currentTrack?.[TextTrackSymbol._native],
+  #onTextFragmentLoaded(event: DASH.FragmentLoadingCompletedEvent) {
+    const native = this.#currentTrack?.[TextTrackSymbol.native],
       cues = (native?.track as globalThis.TextTrack).cues;
 
     if (!native || !cues) return;
 
-    const id = this._currentTrack!.id,
-      startIndex = this._cueTracker[id] ?? 0,
-      trigger = this._createDOMEvent(event);
+    const id = this.#currentTrack!.id,
+      startIndex = this.#cueTracker[id] ?? 0,
+      trigger = this.#createDOMEvent(event);
 
     for (let i = startIndex; i < cues.length; i++) {
       const cue = cues[i] as VTTCue;
       if (!cue.positionAlign) cue.positionAlign = 'auto';
-      this._currentTrack!.addCue(cue, trigger);
+      this.#currentTrack!.addCue(cue, trigger);
     }
 
-    this._cueTracker[id] = cues.length;
+    this.#cueTracker[id] = cues.length;
   }
 
-  private _onTextTracksAdded(event: DASH.TextTracksAddedEvent) {
-    if (!this._instance) return;
+  #onTextTracksAdded(event: DASH.TextTracksAddedEvent) {
+    if (!this.#instance) return;
 
     const data = event.tracks,
-      nativeTextTracks = [...this._video.textTracks].filter((track) => 'manualMode' in track),
-      trigger = this._createDOMEvent(event);
+      nativeTextTracks = [...this.#video.textTracks].filter((track) => 'manualMode' in track),
+      trigger = this.#createDOMEvent(event);
 
     for (let i = 0; i < nativeTextTracks.length; i++) {
       const textTrackInfo = data[i],
@@ -149,71 +152,67 @@ export class DASHController {
           default: textTrackInfo.defaultTrack,
         });
 
-      track[TextTrackSymbol._native] = {
+      track[TextTrackSymbol.native] = {
         managed: true,
         track: nativeTextTrack,
       };
 
-      track[TextTrackSymbol._readyState] = 2;
+      track[TextTrackSymbol.readyState] = 2;
 
-      track[TextTrackSymbol._onModeChange] = () => {
-        if (!this._instance) return;
+      track[TextTrackSymbol.onModeChange] = () => {
+        if (!this.#instance) return;
         if (track.mode === 'showing') {
-          this._instance.setTextTrack(i);
-          this._currentTrack = track;
+          this.#instance.setTextTrack(i);
+          this.#currentTrack = track;
         } else {
-          this._instance.setTextTrack(-1);
-          this._currentTrack = null;
+          this.#instance.setTextTrack(-1);
+          this.#currentTrack = null;
         }
       };
 
-      this._ctx.textTracks.add(track, trigger);
+      this.#ctx.textTracks.add(track, trigger);
     }
   }
 
-  private _onTrackChange(event: DASH.Event) {
+  #onTrackChange(event: DASH.Event) {
     const { mediaType, newMediaInfo } = event as DASH.TrackChangeRenderedEvent;
 
     if (mediaType === 'audio') {
-      const track = this._ctx.audioTracks.getById(`dash-audio-${newMediaInfo.index}`);
+      const track = this.#ctx.audioTracks.getById(`dash-audio-${newMediaInfo.index}`);
       if (track) {
-        const trigger = this._createDOMEvent(event);
-        this._ctx.audioTracks[ListSymbol._select](track, true, trigger);
+        const trigger = this.#createDOMEvent(event);
+        this.#ctx.audioTracks[ListSymbol.select](track, true, trigger);
       }
     }
   }
 
-  private _onQualityChange(event: DASH.QualityChangeRenderedEvent) {
+  #onQualityChange(event: DASH.QualityChangeRenderedEvent) {
     if (event.mediaType !== 'video') return;
 
-    const quality = this._ctx.qualities[event.newQuality];
+    const quality = this.#ctx.qualities[event.newQuality];
 
     if (quality) {
-      const trigger = this._createDOMEvent(event);
-      this._ctx.qualities[ListSymbol._select](quality, true, trigger);
+      const trigger = this.#createDOMEvent(event);
+      this.#ctx.qualities[ListSymbol.select](quality, true, trigger);
     }
   }
 
-  private _onManifestLoaded(event: DASH.ManifestLoadedEvent) {
-    if (this._ctx.$state.canPlay() || !this._instance) return;
+  #onManifestLoaded(event: DASH.ManifestLoadedEvent) {
+    if (this.#ctx.$state.canPlay() || !this.#instance) return;
 
     const { type, mediaPresentationDuration } = event.data as DASH.Mpd & DASH.AdaptationSet,
-      trigger = this._createDOMEvent(event);
+      trigger = this.#createDOMEvent(event);
 
-    this._ctx.delegate._notify(
-      'stream-type-change',
-      type !== 'static' ? 'live' : 'on-demand',
-      trigger,
-    );
+    this.#ctx.notify('stream-type-change', type !== 'static' ? 'live' : 'on-demand', trigger);
 
-    this._ctx.delegate._notify('duration-change', mediaPresentationDuration, trigger);
+    this.#ctx.notify('duration-change', mediaPresentationDuration, trigger);
 
-    this._ctx.qualities[QualitySymbol._setAuto](true, trigger);
+    this.#ctx.qualities[QualitySymbol.setAuto](true, trigger);
 
-    const media = this._instance.getVideoElement();
+    const media = this.#instance.getVideoElement();
 
     // getting videos from manifest whose type is supported
-    const videoQualities = (this._instance.getTracksForTypeFromManifest as DashGetMediaTracks)(
+    const videoQualities = (this.#instance.getTracksForTypeFromManifest as DashGetMediaTracks)(
       'video',
       event.data,
     );
@@ -226,7 +225,7 @@ export class DASHController {
       (track) => supportedVideoMimeType === track.mimeType,
     )[0];
 
-    let audioTracks = (this._instance.getTracksForTypeFromManifest as DashGetMediaTracks)(
+    let audioTracks = (this.#instance.getTracksForTypeFromManifest as DashGetMediaTracks)(
       'audio',
       event.data,
     );
@@ -247,30 +246,28 @@ export class DASHController {
         index,
       };
 
-      this._ctx.qualities[ListSymbol._add](quality, trigger);
+      this.#ctx.qualities[ListSymbol.add](quality, trigger);
     });
 
     if (isNumber(videoQuality.index)) {
-      const quality = this._ctx.qualities[videoQuality.index];
-      if (quality) this._ctx.qualities[ListSymbol._select](quality, true, trigger);
+      const quality = this.#ctx.qualities[videoQuality.index];
+      if (quality) this.#ctx.qualities[ListSymbol.select](quality, true, trigger);
     }
 
     audioTracks.forEach((audioTrack: DASH.MediaInfo, index) => {
       // Find the label object that matches the user's preferred languages
-      const matchingLabel = audioTrack.labels.find(label => {
-        return navigator.languages.some(language => {
+      const matchingLabel = audioTrack.labels.find((label) => {
+        return navigator.languages.some((language) => {
           return label.lang && language.toLowerCase().startsWith(label.lang.toLowerCase());
         });
       });
 
-      const label = matchingLabel || audioTrack.labels[0]
+      const label = matchingLabel || audioTrack.labels[0];
 
       const localTrack = {
         id: `dash-audio-${audioTrack?.index}`,
-        label: label?.text ??
-          (audioTrack.lang && getLangName(audioTrack.lang)) ??
-          audioTrack.lang ??
-          '',
+        label:
+          label?.text ?? (audioTrack.lang && getLangName(audioTrack.lang)) ?? audioTrack.lang ?? '',
         language: audioTrack.lang ?? '',
         kind: 'main',
         mimeType: audioTrack.mimeType,
@@ -278,94 +275,94 @@ export class DASHController {
         index,
       };
 
-      this._ctx.audioTracks[ListSymbol._add](localTrack, trigger);
+      this.#ctx.audioTracks[ListSymbol.add](localTrack, trigger);
     });
 
     media.dispatchEvent(new DOMEvent<void>('canplay', { trigger }));
   }
 
-  private _onError(event: DASH.Event) {
+  #onError(event: DASH.Event) {
     const { type: eventType, error: data } = event as DASH.MediaPlayerErrorEvent;
 
     if (__DEV__) {
-      this._ctx.logger
+      this.#ctx.logger
         ?.errorGroup(`[vidstack] DASH error \`${data.message}\``)
-        .labelledLog('Media Element', this._video)
-        .labelledLog('DASH Instance', this._instance)
+        .labelledLog('Media Element', this.#video)
+        .labelledLog('DASH Instance', this.#instance)
         .labelledLog('Event Type', eventType)
         .labelledLog('Data', data)
-        .labelledLog('Src', peek(this._ctx.$state.source))
-        .labelledLog('Media Store', { ...this._ctx.$state })
+        .labelledLog('Src', peek(this.#ctx.$state.source))
+        .labelledLog('Media Store', { ...this.#ctx.$state })
         .dispatch();
     }
 
     switch (data.code) {
       case 27:
-        this._onNetworkError(data);
+        this.#onNetworkError(data);
         break;
       default:
-        this._onFatalError(data);
+        this.#onFatalError(data);
         break;
     }
   }
 
-  private _onFragmentLoadStart() {
-    if (this._retryLoadingTimer >= 0) this._clearRetryTimer();
+  #onFragmentLoadStart() {
+    if (this.#retryLoadingTimer >= 0) this.#clearRetryTimer();
   }
 
-  private _onFragmentLoadComplete(event: DASH.FragmentLoadingCompletedEvent) {
+  #onFragmentLoadComplete(event: DASH.FragmentLoadingCompletedEvent) {
     const mediaType = (event as any).mediaType as 'audio' | 'video' | 'text';
     if (mediaType === 'text') {
       // It seems like text cues are synced on animation frames.
-      requestAnimationFrame(this._onTextFragmentLoaded.bind(this, event));
+      requestAnimationFrame(this.#onTextFragmentLoaded.bind(this, event));
     }
   }
 
-  private _retryLoadingTimer = -1;
-  private _onNetworkError(error: DASH.DashJSError) {
-    this._clearRetryTimer();
+  #retryLoadingTimer = -1;
+  #onNetworkError(error: DASH.DashJSError) {
+    this.#clearRetryTimer();
 
-    this._instance?.play();
+    this.#instance?.play();
 
-    this._retryLoadingTimer = window.setTimeout(() => {
-      this._retryLoadingTimer = -1;
-      this._onFatalError(error);
+    this.#retryLoadingTimer = window.setTimeout(() => {
+      this.#retryLoadingTimer = -1;
+      this.#onFatalError(error);
     }, 5000);
   }
 
-  private _clearRetryTimer() {
-    clearTimeout(this._retryLoadingTimer);
-    this._retryLoadingTimer = -1;
+  #clearRetryTimer() {
+    clearTimeout(this.#retryLoadingTimer);
+    this.#retryLoadingTimer = -1;
   }
 
-  private _onFatalError(error: DASH.DashJSError) {
-    this._ctx.delegate._notify('error', {
+  #onFatalError(error: DASH.DashJSError) {
+    this.#ctx.notify('error', {
       message: error.message ?? '',
       code: 1,
       error: error as any,
     });
   }
 
-  private _enableAutoQuality() {
-    this._switchAutoBitrate('video', true);
+  #enableAutoQuality() {
+    this.#switchAutoBitrate('video', true);
     // Force update so ABR engine can re-calc.
-    const { qualities } = this._ctx;
-    this._instance?.setQualityFor('video', qualities.selectedIndex, true);
+    const { qualities } = this.#ctx;
+    this.#instance?.setQualityFor('video', qualities.selectedIndex, true);
   }
 
-  private _switchAutoBitrate(type: DASH.MediaType, auto: boolean) {
-    this._instance?.updateSettings({
+  #switchAutoBitrate(type: DASH.MediaType, auto: boolean) {
+    this.#instance?.updateSettings({
       streaming: { abr: { autoSwitchBitrate: { [type]: auto } } },
     });
   }
 
-  private _onUserQualityChange() {
-    const { qualities } = this._ctx;
+  #onUserQualityChange() {
+    const { qualities } = this.#ctx;
 
-    if (!this._instance || qualities.auto || !qualities.selected) return;
+    if (!this.#instance || qualities.auto || !qualities.selected) return;
 
-    this._switchAutoBitrate('video', false);
-    this._instance.setQualityFor('video', qualities.selectedIndex, qualities.switch === 'current');
+    this.#switchAutoBitrate('video', false);
+    this.#instance.setQualityFor('video', qualities.selectedIndex, qualities.switch === 'current');
 
     /**
      * Chrome has some strange issue with detecting keyframes inserted before the current
@@ -374,42 +371,47 @@ export class DASHController {
      * playback. Weird fix, but it works!
      */
     if (IS_CHROME) {
-      this._video.currentTime = this._video.currentTime;
+      this.#video.currentTime = this.#video.currentTime;
     }
   }
 
-  private _onUserAudioChange() {
-    if (!this._instance) return;
+  #onUserAudioChange() {
+    if (!this.#instance) return;
 
-    const { audioTracks } = this._ctx,
-      selectedTrack = this._instance
+    const { audioTracks } = this.#ctx,
+      selectedTrack = this.#instance
         .getTracksFor('audio')
         .find(
           (track) =>
             audioTracks.selected && audioTracks.selected.id === `dash-audio-${track.index}`,
         );
 
-    if (selectedTrack) this._instance.setCurrentTrack(selectedTrack);
+    if (selectedTrack) this.#instance.setCurrentTrack(selectedTrack);
   }
 
-  private _reset() {
-    this._clearRetryTimer();
-    this._currentTrack = null;
-    this._cueTracker = {};
+  #reset() {
+    this.#clearRetryTimer();
+    this.#currentTrack = null;
+    this.#cueTracker = {};
+  }
+
+  onInstance(callback: DASHInstanceCallback) {
+    this.#callbacks.add(callback);
+    return () => this.#callbacks.delete(callback);
   }
 
   loadSource(src: Src) {
-    this._reset();
+    this.#reset();
     if (!isString(src.src)) return;
-    this._instance?.attachSource(src.src);
+    this.#instance?.attachSource(src.src);
   }
 
   destroy() {
-    this._reset();
-    this._instance?.destroy();
-    this._instance = null;
-    this._stopLiveSync?.();
-    this._stopLiveSync = null;
-    if (__DEV__) this._ctx?.logger?.info('🏗️ Destroyed DASH instance');
+    this.#reset();
+    this.#instance?.destroy();
+    this.#instance = null;
+    this.#stopLiveSync?.();
+    this.#stopLiveSync = null;
+    if (__DEV__) this.#ctx?.logger?.info('🏗️ Destroyed DASH instance');
   }
 }

@@ -8,10 +8,10 @@ import { plyrLayoutProps, type PlyrLayoutProps } from './props';
 export class PlyrLayout extends Component<PlyrLayoutProps> {
   static props = plyrLayoutProps;
 
-  protected _media!: MediaContext;
+  #media!: MediaContext;
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     provideContext(plyrLayoutContext, {
       ...this.$props,

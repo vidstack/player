@@ -11,51 +11,53 @@ const REMOTE_TRACK_TEXT_TYPE = chrome.cast.media.TrackType.TEXT,
   REMOTE_TRACK_AUDIO_TYPE = chrome.cast.media.TrackType.AUDIO;
 
 export class GoogleCastTracksManager {
-  constructor(
-    protected _cast: cast.framework.RemotePlayer,
-    protected _ctx: MediaContext,
-    protected _onNewLocalTracks?: () => void,
-  ) {}
+  #cast: cast.framework.RemotePlayer;
+  #ctx: MediaContext;
+  #onNewLocalTracks?: () => void;
 
-  _setup() {
-    const syncRemoteActiveIds = this._syncRemoteActiveIds.bind(this);
-    listenEvent(this._ctx.audioTracks, 'change', syncRemoteActiveIds);
-    listenEvent(this._ctx.textTracks, 'mode-change', syncRemoteActiveIds);
-
-    effect(this._syncLocalTracks.bind(this));
+  constructor(cast: cast.framework.RemotePlayer, ctx: MediaContext, onNewLocalTracks?: () => void) {
+    this.#cast = cast;
+    this.#ctx = ctx;
+    this.#onNewLocalTracks = onNewLocalTracks;
   }
 
-  _getLocalTextTracks() {
-    return this._ctx.$state.textTracks().filter((track) => track.src && track.type === 'vtt');
+  setup() {
+    const syncRemoteActiveIds = this.syncRemoteActiveIds.bind(this);
+    listenEvent(this.#ctx.audioTracks, 'change', syncRemoteActiveIds);
+    listenEvent(this.#ctx.textTracks, 'mode-change', syncRemoteActiveIds);
+
+    effect(this.#syncLocalTracks.bind(this));
   }
 
-  _getLocalAudioTracks() {
-    return this._ctx.$state.audioTracks();
+  getLocalTextTracks() {
+    return this.#ctx.$state.textTracks().filter((track) => track.src && track.type === 'vtt');
   }
 
-  _getRemoteTracks(type?: chrome.cast.media.TrackType) {
-    const tracks = this._cast.mediaInfo?.tracks ?? [];
+  #getLocalAudioTracks() {
+    return this.#ctx.$state.audioTracks();
+  }
+
+  #getRemoteTracks(type?: chrome.cast.media.TrackType) {
+    const tracks = this.#cast.mediaInfo?.tracks ?? [];
     return type ? tracks.filter((track) => track.type === type) : tracks;
   }
 
-  _getRemoteActiveIds(): number[] {
+  #getRemoteActiveIds(): number[] {
     const activeIds: number[] = [],
-      activeLocalAudioTrack = this._getLocalAudioTracks().find((track) => track.selected),
-      activeLocalTextTracks = this._getLocalTextTracks().filter(
-        (track) => track.mode === 'showing',
-      );
+      activeLocalAudioTrack = this.#getLocalAudioTracks().find((track) => track.selected),
+      activeLocalTextTracks = this.getLocalTextTracks().filter((track) => track.mode === 'showing');
 
     if (activeLocalAudioTrack) {
-      const remoteAudioTracks = this._getRemoteTracks(REMOTE_TRACK_AUDIO_TYPE),
-        remoteAudioTrack = this._findRemoteTrack(remoteAudioTracks, activeLocalAudioTrack);
+      const remoteAudioTracks = this.#getRemoteTracks(REMOTE_TRACK_AUDIO_TYPE),
+        remoteAudioTrack = this.#findRemoteTrack(remoteAudioTracks, activeLocalAudioTrack);
       if (remoteAudioTrack) activeIds.push(remoteAudioTrack.trackId);
     }
 
     if (activeLocalTextTracks?.length) {
-      const remoteTextTracks = this._getRemoteTracks(REMOTE_TRACK_TEXT_TYPE);
+      const remoteTextTracks = this.#getRemoteTracks(REMOTE_TRACK_TEXT_TYPE);
       if (remoteTextTracks.length) {
         for (const localTrack of activeLocalTextTracks) {
-          const remoteTextTrack = this._findRemoteTrack(remoteTextTracks, localTrack);
+          const remoteTextTrack = this.#findRemoteTrack(remoteTextTracks, localTrack);
           if (remoteTextTrack) activeIds.push(remoteTextTrack.trackId);
         }
       }
@@ -64,35 +66,35 @@ export class GoogleCastTracksManager {
     return activeIds;
   }
 
-  _syncLocalTracks() {
-    const localTextTracks = this._getLocalTextTracks();
+  #syncLocalTracks() {
+    const localTextTracks = this.getLocalTextTracks();
 
-    if (!this._cast.isMediaLoaded) return;
+    if (!this.#cast.isMediaLoaded) return;
 
-    const remoteTextTracks = this._getRemoteTracks(REMOTE_TRACK_TEXT_TYPE);
+    const remoteTextTracks = this.#getRemoteTracks(REMOTE_TRACK_TEXT_TYPE);
 
     // Sync local tracks with remote cast player.
     for (const localTrack of localTextTracks) {
-      const hasRemoteTrack = this._findRemoteTrack(remoteTextTracks, localTrack);
+      const hasRemoteTrack = this.#findRemoteTrack(remoteTextTracks, localTrack);
       if (!hasRemoteTrack) {
         // The Google Cast provider should send a new load request to add the new tracks.
-        untrack(() => this._onNewLocalTracks?.());
+        untrack(() => this.#onNewLocalTracks?.());
         break;
       }
     }
   }
 
-  _syncRemoteTracks(event?: Event) {
-    if (!this._cast.isMediaLoaded) return;
+  syncRemoteTracks(event?: Event) {
+    if (!this.#cast.isMediaLoaded) return;
 
-    const localAudioTracks = this._getLocalAudioTracks(),
-      localTextTracks = this._getLocalTextTracks(),
-      remoteAudioTracks = this._getRemoteTracks(REMOTE_TRACK_AUDIO_TYPE),
-      remoteTextTracks = this._getRemoteTracks(REMOTE_TRACK_TEXT_TYPE);
+    const localAudioTracks = this.#getLocalAudioTracks(),
+      localTextTracks = this.getLocalTextTracks(),
+      remoteAudioTracks = this.#getRemoteTracks(REMOTE_TRACK_AUDIO_TYPE),
+      remoteTextTracks = this.#getRemoteTracks(REMOTE_TRACK_TEXT_TYPE);
 
     // Sync remote audio tracks with local player.
     for (const remoteAudioTrack of remoteAudioTracks) {
-      const hasLocalTrack = this._findLocalTrack(localAudioTracks, remoteAudioTrack);
+      const hasLocalTrack = this.#findLocalTrack(localAudioTracks, remoteAudioTrack);
       if (hasLocalTrack) continue;
 
       const localAudioTrack: AudioTrack = {
@@ -103,12 +105,12 @@ export class GoogleCastTracksManager {
         selected: false,
       };
 
-      this._ctx.audioTracks[ListSymbol._add](localAudioTrack, event);
+      this.#ctx.audioTracks[ListSymbol.add](localAudioTrack, event);
     }
 
     // Sync remote text tracks with local player.
     for (const remoteTextTrack of remoteTextTracks) {
-      const hasLocalTrack = this._findLocalTrack(localTextTracks, remoteTextTrack);
+      const hasLocalTrack = this.#findLocalTrack(localTextTracks, remoteTextTrack);
       if (hasLocalTrack) continue;
 
       const localTextTrack: TextTrackInit = {
@@ -119,19 +121,19 @@ export class GoogleCastTracksManager {
         kind: remoteTextTrack.subtype.toLowerCase() as TextTrackKind,
       };
 
-      this._ctx.textTracks.add(localTextTrack, event);
+      this.#ctx.textTracks.add(localTextTrack, event);
     }
   }
 
-  _syncRemoteActiveIds(event?: Event) {
-    if (!this._cast.isMediaLoaded) return;
+  syncRemoteActiveIds(event?: Event) {
+    if (!this.#cast.isMediaLoaded) return;
 
-    const activeIds = this._getRemoteActiveIds(),
+    const activeIds = this.#getRemoteActiveIds(),
       editRequest = new chrome.cast.media.EditTracksInfoRequest(activeIds);
 
-    this._editTracksInfo(editRequest).catch((error) => {
+    this.#editTracksInfo(editRequest).catch((error) => {
       if (__DEV__) {
-        this._ctx.logger
+        this.#ctx.logger
           ?.errorGroup('[vidstack] failed to edit cast tracks info')
           .labelledLog('Edit Request', editRequest)
           .labelledLog('Error', error)
@@ -140,28 +142,28 @@ export class GoogleCastTracksManager {
     });
   }
 
-  protected _editTracksInfo(request: chrome.cast.media.EditTracksInfoRequest) {
+  #editTracksInfo(request: chrome.cast.media.EditTracksInfoRequest) {
     const media = getCastSessionMedia();
     return new Promise((resolve, reject) => media?.editTracksInfo(request, resolve, reject));
   }
 
-  protected _findLocalTrack<T extends AudioTrack | TextTrack>(
+  #findLocalTrack<T extends AudioTrack | TextTrack>(
     localTracks: T[],
     remoteTrack: chrome.cast.media.Track,
   ): T | undefined {
-    return localTracks.find((localTrack) => this._isMatch(localTrack, remoteTrack));
+    return localTracks.find((localTrack) => this.#isMatch(localTrack, remoteTrack));
   }
 
-  protected _findRemoteTrack(
+  #findRemoteTrack(
     remoteTracks: chrome.cast.media.Track[],
     localTrack: AudioTrack | TextTrack,
   ): chrome.cast.media.Track | undefined {
-    return remoteTracks.find((remoteTrack) => this._isMatch(localTrack, remoteTrack));
+    return remoteTracks.find((remoteTrack) => this.#isMatch(localTrack, remoteTrack));
   }
 
   // Note: we can't rely on id matching because they will differ between local/remote. A local
   // track id might not even exist.
-  protected _isMatch(localTrack: AudioTrack | TextTrack, remoteTrack: chrome.cast.media.Track) {
+  #isMatch(localTrack: AudioTrack | TextTrack, remoteTrack: chrome.cast.media.Track) {
     return (
       remoteTrack.name === localTrack.label &&
       remoteTrack.language === localTrack.language &&

@@ -45,83 +45,85 @@ export class SpeedSlider extends Component<
 
   static state = sliderState;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     new SliderController({
-      _getStep: this.$props.step,
-      _getKeyStep: this.$props.keyStep,
-      _roundValue: this._roundValue,
-      _isDisabled: this._isDisabled.bind(this),
-      _getARIAValueNow: this._getARIAValueNow.bind(this),
-      _getARIAValueText: this._getARIAValueText.bind(this),
-      _onDragValueChange: this._onDragValueChange.bind(this),
-      _onValueChange: this._onValueChange.bind(this),
+      getStep: this.$props.step,
+      getKeyStep: this.$props.keyStep,
+      roundValue: this.#roundValue,
+      isDisabled: this.#isDisabled.bind(this),
+      aria: {
+        valueNow: this.#getARIAValueNow.bind(this),
+        valueText: this.#getARIAValueText.bind(this),
+      },
+      onDragValueChange: this.#onDragValueChange.bind(this),
+      onValueChange: this.#onValueChange.bind(this),
     }).attach(this);
 
-    effect(this._watchMinMax.bind(this));
-    effect(this._watchPlaybackRate.bind(this));
+    effect(this.#watchMinMax.bind(this));
+    effect(this.#watchPlaybackRate.bind(this));
   }
 
   protected override onAttach(el: HTMLElement) {
     el.setAttribute('data-media-speed-slider', '');
     setAttributeIfEmpty(el, 'aria-label', 'Speed');
 
-    const { canSetPlaybackRate } = this._media.$state;
+    const { canSetPlaybackRate } = this.#media.$state;
     this.setAttributes({
       'data-supported': canSetPlaybackRate,
       'aria-hidden': $ariaBool(() => !canSetPlaybackRate()),
     });
   }
 
-  private _getARIAValueNow() {
+  #getARIAValueNow() {
     const { value } = this.$state;
     return value();
   }
 
-  private _getARIAValueText() {
+  #getARIAValueText() {
     const { value } = this.$state;
     return value() + 'x';
   }
 
-  private _watchMinMax() {
+  #watchMinMax() {
     const { min, max } = this.$props;
     this.$state.min.set(min());
     this.$state.max.set(max());
   }
 
-  private _watchPlaybackRate() {
-    const { playbackRate } = this._media.$state;
+  #watchPlaybackRate() {
+    const { playbackRate } = this.#media.$state;
     const newValue = playbackRate();
     this.$state.value.set(newValue);
     this.dispatch('value-change', { detail: newValue });
   }
 
-  private _roundValue(value: number) {
+  #roundValue(value: number) {
     return round(value, 2);
   }
 
-  private _isDisabled() {
+  #isDisabled() {
     const { disabled } = this.$props,
-      { canSetPlaybackRate } = this._media.$state;
+      { canSetPlaybackRate } = this.#media.$state;
     return disabled() || !canSetPlaybackRate();
   }
 
-  private _throttledSpeedChange = throttle(this._onPlaybackRateChange.bind(this), 25);
-  private _onPlaybackRateChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
+  #throttledSpeedChange = throttle(this.#onPlaybackRateChange.bind(this), 25);
+  #onPlaybackRateChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
     if (!event.trigger) return;
     const rate = event.detail;
-    this._media.remote.changePlaybackRate(rate, event);
+    this.#media.remote.changePlaybackRate(rate, event);
   }
 
-  private _onValueChange(event: SliderValueChangeEvent): void {
-    this._throttledSpeedChange(event);
+  #onValueChange(event: SliderValueChangeEvent): void {
+    this.#throttledSpeedChange(event);
   }
 
-  private _onDragValueChange(event: SliderDragValueChangeEvent): void {
-    this._throttledSpeedChange(event);
+  #onDragValueChange(event: SliderDragValueChangeEvent): void {
+    this.#throttledSpeedChange(event);
   }
 }
 

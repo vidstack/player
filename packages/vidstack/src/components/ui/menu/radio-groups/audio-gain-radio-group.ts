@@ -23,39 +23,39 @@ export class AudioGainRadioGroup extends Component<
     gains: DEFAULT_AUDIO_GAINS,
   };
 
-  private _media!: MediaContext;
-  private _menu?: MenuContext;
-  private _controller: RadioGroupController;
+  #media!: MediaContext;
+  #menu?: MenuContext;
+  #controller: RadioGroupController;
 
   @prop
   get value() {
-    return this._controller.value;
+    return this.#controller.value;
   }
 
   @prop
   get disabled() {
     const { gains } = this.$props,
-      { canSetAudioGain } = this._media.$state;
+      { canSetAudioGain } = this.#media.$state;
     return !canSetAudioGain() || gains().length === 0;
   }
 
   constructor() {
     super();
-    this._controller = new RadioGroupController();
-    this._controller._onValueChange = this._onValueChange.bind(this);
+    this.#controller = new RadioGroupController();
+    this.#controller.onValueChange = this.#onValueChange.bind(this);
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
     if (hasProvidedContext(menuContext)) {
-      this._menu = useContext(menuContext);
+      this.#menu = useContext(menuContext);
     }
   }
 
   protected override onConnect(el: HTMLElement) {
-    effect(this._watchValue.bind(this));
-    effect(this._watchHintText.bind(this));
-    effect(this._watchControllerDisabled.bind(this));
+    effect(this.#watchValue.bind(this));
+    effect(this.#watchHintText.bind(this));
+    effect(this.#watchControllerDisabled.bind(this));
   }
 
   @method
@@ -67,30 +67,30 @@ export class AudioGainRadioGroup extends Component<
     }));
   }
 
-  private _watchValue() {
-    this._controller.value = this._getValue();
+  #watchValue() {
+    this.#controller.value = this.#getValue();
   }
 
-  private _watchHintText() {
+  #watchHintText() {
     const { normalLabel } = this.$props,
-      { audioGain } = this._media.$state,
+      { audioGain } = this.#media.$state,
       gain = audioGain();
-    this._menu?._hint.set(gain === 1 || gain == null ? normalLabel() : String(gain * 100) + '%');
+    this.#menu?.hint.set(gain === 1 || gain == null ? normalLabel() : String(gain * 100) + '%');
   }
 
-  private _watchControllerDisabled() {
-    this._menu?._disable(this.disabled);
+  #watchControllerDisabled() {
+    this.#menu?.disable(this.disabled);
   }
 
-  private _getValue() {
-    const { audioGain } = this._media.$state;
+  #getValue() {
+    const { audioGain } = this.#media.$state;
     return audioGain()?.toString() ?? '1';
   }
 
-  private _onValueChange(value: string, trigger?: Event) {
+  #onValueChange(value: string, trigger?: Event) {
     if (this.disabled) return;
     const gain = +value;
-    this._media.remote.changeAudioGain(gain, trigger);
+    this.#media.remote.changeAudioGain(gain, trigger);
     this.dispatch('change', { detail: gain, trigger });
   }
 }

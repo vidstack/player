@@ -43,36 +43,38 @@ export class QualitySlider extends Component<
 
   static state = sliderState;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
-  private _sortedQualities = computed(() => {
-    const { qualities } = this._media.$state;
+  #sortedQualities = computed(() => {
+    const { qualities } = this.#media.$state;
     return sortVideoQualities(qualities());
   });
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     new SliderController({
-      _getStep: this.$props.step,
-      _getKeyStep: this.$props.keyStep,
-      _roundValue: Math.round,
-      _isDisabled: this._isDisabled.bind(this),
-      _getARIAValueNow: this._getARIAValueNow.bind(this),
-      _getARIAValueText: this._getARIAValueText.bind(this),
-      _onDragValueChange: this._onDragValueChange.bind(this),
-      _onValueChange: this._onValueChange.bind(this),
+      getStep: this.$props.step,
+      getKeyStep: this.$props.keyStep,
+      roundValue: Math.round,
+      isDisabled: this.#isDisabled.bind(this),
+      aria: {
+        valueNow: this.#getARIAValueNow.bind(this),
+        valueText: this.#getARIAValueText.bind(this),
+      },
+      onDragValueChange: this.#onDragValueChange.bind(this),
+      onValueChange: this.#onValueChange.bind(this),
     }).attach(this);
 
-    effect(this._watchMax.bind(this));
-    effect(this._watchQuality.bind(this));
+    effect(this.#watchMax.bind(this));
+    effect(this.#watchQuality.bind(this));
   }
 
   protected override onAttach(el: HTMLElement) {
     el.setAttribute('data-media-quality-slider', '');
     setAttributeIfEmpty(el, 'aria-label', 'Video Quality');
 
-    const { qualities, canSetQuality } = this._media.$state,
+    const { qualities, canSetQuality } = this.#media.$state,
       $supported = computed(() => canSetQuality() && qualities().length > 0);
 
     this.setAttributes({
@@ -81,13 +83,13 @@ export class QualitySlider extends Component<
     });
   }
 
-  private _getARIAValueNow() {
+  #getARIAValueNow() {
     const { value } = this.$state;
     return value();
   }
 
-  private _getARIAValueText() {
-    const { quality } = this._media.$state;
+  #getARIAValueText() {
+    const { quality } = this.#media.$state;
 
     if (!quality()) return '';
 
@@ -97,41 +99,41 @@ export class QualitySlider extends Component<
     return height ? `${height}p${bitrateText ? ` (${bitrateText})` : ''}` : 'Auto';
   }
 
-  private _watchMax() {
-    const $qualities = this._sortedQualities();
+  #watchMax() {
+    const $qualities = this.#sortedQualities();
     this.$state.max.set(Math.max(0, $qualities.length - 1));
   }
 
-  private _watchQuality() {
-    let { quality } = this._media.$state,
-      $qualities = this._sortedQualities(),
+  #watchQuality() {
+    let { quality } = this.#media.$state,
+      $qualities = this.#sortedQualities(),
       value = Math.max(0, $qualities.indexOf(quality()!));
     this.$state.value.set(value);
     this.dispatch('value-change', { detail: value });
   }
 
-  private _isDisabled() {
+  #isDisabled() {
     const { disabled } = this.$props,
-      { canSetQuality, qualities } = this._media.$state;
+      { canSetQuality, qualities } = this.#media.$state;
     return disabled() || qualities().length <= 1 || !canSetQuality();
   }
 
-  private _throttledQualityChange = throttle(this._onQualityChange.bind(this), 25);
-  private _onQualityChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
+  #throttledQualityChange = throttle(this.#onQualityChange.bind(this), 25);
+  #onQualityChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
     if (!event.trigger) return;
 
-    const { qualities } = this._media,
-      quality = peek(this._sortedQualities)[event.detail];
+    const { qualities } = this.#media,
+      quality = peek(this.#sortedQualities)[event.detail];
 
-    this._media.remote.changeQuality(qualities.indexOf(quality), event);
+    this.#media.remote.changeQuality(qualities.indexOf(quality), event);
   }
 
-  private _onValueChange(event: SliderValueChangeEvent): void {
-    this._throttledQualityChange(event);
+  #onValueChange(event: SliderValueChangeEvent): void {
+    this.#throttledQualityChange(event);
   }
 
-  private _onDragValueChange(event: SliderDragValueChangeEvent): void {
-    this._throttledQualityChange(event);
+  #onDragValueChange(event: SliderDragValueChangeEvent): void {
+    this.#throttledQualityChange(event);
   }
 }
 

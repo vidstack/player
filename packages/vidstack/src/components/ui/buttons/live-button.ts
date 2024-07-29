@@ -32,7 +32,7 @@ export class LiveButton extends Component<LiveButtonProps, {}, LiveButtonEvents>
     disabled: false,
   };
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   constructor() {
     super();
@@ -40,10 +40,10 @@ export class LiveButton extends Component<LiveButtonProps, {}, LiveButtonEvents>
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     const { disabled } = this.$props,
-      { live, liveEdge } = this._media.$state,
+      { live, liveEdge } = this.#media.$state,
       isHidden = () => !live();
 
     this.setAttributes({
@@ -62,15 +62,15 @@ export class LiveButton extends Component<LiveButtonProps, {}, LiveButtonEvents>
   }
 
   protected override onConnect(el: HTMLElement) {
-    onPress(el, this._onPress.bind(this));
+    onPress(el, this.#onPress.bind(this));
   }
 
-  private _onPress(event: Event) {
+  #onPress(event: Event) {
     const { disabled } = this.$props,
-      { liveEdge } = this._media.$state;
+      { liveEdge } = this.#media.$state;
 
     if (disabled() || liveEdge()) return;
 
-    this._media.remote.seekToLiveEdge(event);
+    this.#media.remote.seekToLiveEdge(event);
   }
 }

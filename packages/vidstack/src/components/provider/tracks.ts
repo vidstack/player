@@ -4,33 +4,34 @@ import type { MediaContext } from '../../core/api/media-context';
 import { TextTrack, type TextTrackInit } from '../../core/tracks/text/text-track';
 
 export class Tracks {
-  private _prevTracks: (TextTrack | TextTrackInit)[] = [];
+  #domTracks: ReadSignal<TextTrackInit[]>;
+  #media: MediaContext;
+  #prevTracks: (TextTrack | TextTrackInit)[] = [];
 
-  constructor(
-    private _domTracks: ReadSignal<TextTrackInit[]>,
-    private _media: MediaContext,
-  ) {
-    effect(this._onTracksChange.bind(this));
+  constructor(domTracks: ReadSignal<TextTrackInit[]>, media: MediaContext) {
+    this.#domTracks = domTracks;
+    this.#media = media;
+    effect(this.#onTracksChange.bind(this));
   }
 
-  private _onTracksChange() {
-    const newTracks = this._domTracks();
+  #onTracksChange() {
+    const newTracks = this.#domTracks();
 
-    for (const oldTrack of this._prevTracks) {
+    for (const oldTrack of this.#prevTracks) {
       if (!newTracks.some((t) => t.id === oldTrack.id)) {
-        const track = oldTrack.id && this._media.textTracks.getById(oldTrack.id);
-        if (track) this._media.textTracks.remove(track);
+        const track = oldTrack.id && this.#media.textTracks.getById(oldTrack.id);
+        if (track) this.#media.textTracks.remove(track);
       }
     }
 
     for (const newTrack of newTracks) {
       const id = newTrack.id || TextTrack.createId(newTrack);
-      if (!this._media.textTracks.getById(id)) {
+      if (!this.#media.textTracks.getById(id)) {
         newTrack.id = id;
-        this._media.textTracks.add(newTrack);
+        this.#media.textTracks.add(newTrack);
       }
     }
 
-    this._prevTracks = newTracks;
+    this.#prevTracks = newTracks;
   }
 }

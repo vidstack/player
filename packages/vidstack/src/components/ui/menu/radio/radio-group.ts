@@ -14,14 +14,14 @@ export class RadioGroup extends Component<RadioGroupProps, {}, RadioGroupEvents>
     value: '',
   };
 
-  private _controller: RadioGroupController;
+  #controller: RadioGroupController;
 
   /**
    * A list of radio values that belong this group.
    */
   @prop
   get values(): string[] {
-    return this._controller._values;
+    return this.#controller.values;
   }
 
   /**
@@ -29,29 +29,29 @@ export class RadioGroup extends Component<RadioGroupProps, {}, RadioGroupEvents>
    */
   @prop
   get value() {
-    return this._controller.value;
+    return this.#controller.value;
   }
 
   set value(newValue) {
-    this._controller.value = newValue;
+    this.#controller.value = newValue;
   }
 
   constructor() {
     super();
-    this._controller = new RadioGroupController();
-    this._controller._onValueChange = this._onValueChange.bind(this);
+    this.#controller = new RadioGroupController();
+    this.#controller.onValueChange = this.#onValueChange.bind(this);
   }
 
   protected override onSetup(): void {
-    if (__SERVER__) this._watchValue();
-    else effect(this._watchValue.bind(this));
+    if (__SERVER__) this.#watchValue();
+    else effect(this.#watchValue.bind(this));
   }
 
-  private _watchValue() {
-    this._controller.value = this.$props.value();
+  #watchValue() {
+    this.#controller.value = this.$props.value();
   }
 
-  private _onValueChange(value: string, trigger?: Event) {
+  #onValueChange(value: string, trigger?: Event) {
     const event = this.createEvent('change', { detail: value, trigger });
     this.dispatch(event);
   }

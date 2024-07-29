@@ -38,17 +38,20 @@ const MEDIA_EVENTS: (keyof MediaEvents)[] | undefined = __DEV__
   : undefined;
 
 export class MediaEventsLogger extends MediaPlayerController {
-  constructor(private _media: MediaContext) {
+  #media: MediaContext;
+
+  constructor(media: MediaContext) {
     super();
+    this.#media = media;
   }
 
   protected override onConnect(): void {
-    const handler = this._onMediaEvent.bind(this);
+    const handler = this.#onMediaEvent.bind(this);
     for (const eventType of MEDIA_EVENTS!) this.listen(eventType, handler);
   }
 
-  private _onMediaEvent(event: Event) {
-    this._media.logger
+  #onMediaEvent(event: Event) {
+    this.#media.logger
       ?.debugGroup(`📡 dispatching \`${event.type}\``)
       .labelledLog('Media Store', { ...this.$state })
       .labelledLog('Event', event)

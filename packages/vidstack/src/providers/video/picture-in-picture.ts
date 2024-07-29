@@ -12,39 +12,41 @@ declare global {
 }
 
 export class VideoPictureInPicture implements MediaPictureInPictureAdapter {
-  constructor(
-    protected _video: HTMLVideoElement,
-    private _media: MediaContext,
-  ) {
-    listenEvent(this._video, 'enterpictureinpicture', this._onEnter.bind(this));
-    listenEvent(this._video, 'leavepictureinpicture', this._onExit.bind(this));
+  readonly #video: HTMLVideoElement;
+  readonly #media: MediaContext;
+
+  constructor(video: HTMLVideoElement, media: MediaContext) {
+    this.#video = video;
+    this.#media = media;
+    listenEvent(video, 'enterpictureinpicture', this.#onEnter.bind(this));
+    listenEvent(video, 'leavepictureinpicture', this.#onExit.bind(this));
   }
 
   get active() {
-    return document.pictureInPictureElement === this._video;
+    return document.pictureInPictureElement === this.#video;
   }
 
   get supported() {
-    return canUsePictureInPicture(this._video);
+    return canUsePictureInPicture(this.#video);
   }
 
   async enter() {
-    return this._video.requestPictureInPicture();
+    return this.#video.requestPictureInPicture();
   }
 
   exit() {
     return document.exitPictureInPicture();
   }
 
-  private _onEnter(event: Event) {
-    this._onChange(true, event);
+  #onEnter(event: Event) {
+    this.#onChange(true, event);
   }
 
-  private _onExit(event: Event) {
-    this._onChange(false, event);
+  #onExit(event: Event) {
+    this.#onChange(false, event);
   }
 
-  private _onChange = (active: boolean, event: Event) => {
-    this._media.delegate._notify('picture-in-picture-change', active, event);
+  #onChange = (active: boolean, event: Event) => {
+    this.#media.notify('picture-in-picture-change', active, event);
   };
 }

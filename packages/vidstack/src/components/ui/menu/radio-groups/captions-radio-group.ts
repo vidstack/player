@@ -21,45 +21,45 @@ export class CaptionsRadioGroup extends Component<
     offLabel: 'Off',
   };
 
-  private _media!: MediaContext;
-  private _menu?: MenuContext;
-  private _controller: RadioGroupController;
+  #media!: MediaContext;
+  #menu?: MenuContext;
+  #controller: RadioGroupController;
 
   @prop
   get value() {
-    return this._controller.value;
+    return this.#controller.value;
   }
 
   @prop
   get disabled() {
-    const { hasCaptions } = this._media.$state;
+    const { hasCaptions } = this.#media.$state;
     return !hasCaptions();
   }
 
   constructor() {
     super();
-    this._controller = new RadioGroupController();
-    this._controller._onValueChange = this._onValueChange.bind(this);
+    this.#controller = new RadioGroupController();
+    this.#controller.onValueChange = this.#onValueChange.bind(this);
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
     if (hasProvidedContext(menuContext)) {
-      this._menu = useContext(menuContext);
+      this.#menu = useContext(menuContext);
     }
   }
 
   protected override onConnect(el: HTMLElement) {
     super.onConnect?.(el);
-    effect(this._watchValue.bind(this));
-    effect(this._watchControllerDisabled.bind(this));
-    effect(this._watchHintText.bind(this));
+    effect(this.#watchValue.bind(this));
+    effect(this.#watchControllerDisabled.bind(this));
+    effect(this.#watchHintText.bind(this));
   }
 
   @method
   getOptions(): CaptionsRadioOption[] {
     const { offLabel } = this.$props,
-      { textTracks } = this._media.$state;
+      { textTracks } = this.#media.$state;
     return [
       { value: 'off', label: offLabel },
       ...textTracks()
@@ -67,63 +67,64 @@ export class CaptionsRadioGroup extends Component<
         .map((track) => ({
           track,
           label: track.label,
-          value: this._getTrackValue(track),
+          value: this.#getTrackValue(track),
         })),
     ];
   }
 
-  private _watchValue() {
-    this._controller.value = this._getValue();
+  #watchValue() {
+    this.#controller.value = this.#getValue();
   }
 
-  private _watchHintText() {
+  #watchHintText() {
     const { offLabel } = this.$props,
-      { textTrack } = this._media.$state,
+      { textTrack } = this.#media.$state,
       track = textTrack();
-    this._menu?._hint.set(
+
+    this.#menu?.hint.set(
       track && isTrackCaptionKind(track) && track.mode === 'showing' ? track.label : offLabel(),
     );
   }
 
-  private _watchControllerDisabled() {
-    this._menu?._disable(this.disabled);
+  #watchControllerDisabled() {
+    this.#menu?.disable(this.disabled);
   }
 
-  private _getValue() {
-    const { textTrack } = this._media.$state,
+  #getValue() {
+    const { textTrack } = this.#media.$state,
       track = textTrack();
     return track && isTrackCaptionKind(track) && track.mode === 'showing'
-      ? this._getTrackValue(track)
+      ? this.#getTrackValue(track)
       : 'off';
   }
 
-  private _onValueChange(value: string, trigger?: Event) {
+  #onValueChange(value: string, trigger?: Event) {
     if (this.disabled) return;
 
     if (value === 'off') {
-      const track = this._media.textTracks.selected;
+      const track = this.#media.textTracks.selected;
 
       if (track) {
-        const index = this._media.textTracks.indexOf(track);
-        this._media.remote.changeTextTrackMode(index, 'disabled', trigger);
+        const index = this.#media.textTracks.indexOf(track);
+        this.#media.remote.changeTextTrackMode(index, 'disabled', trigger);
         this.dispatch('change', { detail: null, trigger });
       }
 
       return;
     }
 
-    const index = this._media.textTracks
+    const index = this.#media.textTracks
       .toArray()
-      .findIndex((track) => this._getTrackValue(track) === value);
+      .findIndex((track) => this.#getTrackValue(track) === value);
 
     if (index >= 0) {
-      const track = this._media.textTracks[index]!;
-      this._media.remote.changeTextTrackMode(index, 'showing', trigger);
+      const track = this.#media.textTracks[index]!;
+      this.#media.remote.changeTextTrackMode(index, 'showing', trigger);
       this.dispatch('change', { detail: track, trigger });
     }
   }
 
-  private _getTrackValue(track: TextTrack) {
+  #getTrackValue(track: TextTrack) {
     return track.id + ':' + track.kind + '-' + track.label.toLowerCase();
   }
 }

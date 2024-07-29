@@ -1,6 +1,7 @@
 import { effect, useState, type StateContext } from 'maverick.js';
 
 import { Slider } from '../../../components/ui/sliders/slider/slider';
+import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import { MediaThumbnailElement } from '../thumbnail-element';
 
 /**
@@ -20,21 +21,23 @@ import { MediaThumbnailElement } from '../thumbnail-element';
 export class MediaSliderThumbnailElement extends MediaThumbnailElement {
   static override tagName = 'media-slider-thumbnail';
 
-  private _slider!: StateContext<typeof Slider.state>;
+  #media!: MediaContext;
+  #slider!: StateContext<typeof Slider.state>;
 
   protected override onSetup(): void {
     super.onSetup();
-    this._slider = useState(Slider.state);
+    this.#media = useMediaContext();
+    this.#slider = useState(Slider.state);
   }
 
   protected override onConnect(): void {
     super.onConnect();
-    effect(this._watchTime.bind(this));
+    effect(this.#watchTime.bind(this));
   }
 
-  private _watchTime() {
-    const { duration, clipStartTime } = this._media.$state;
-    this.time = clipStartTime() + this._slider.pointerRate() * duration();
+  #watchTime() {
+    const { duration, clipStartTime } = this.#media.$state;
+    this.time = clipStartTime() + this.#slider.pointerRate() * duration();
   }
 }
 

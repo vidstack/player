@@ -3,9 +3,8 @@ import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
-import { build, transform as esbuildTransform } from 'esbuild';
+import { transform as esbuildTransform } from 'esbuild';
 import fsExtra from 'fs-extra';
-import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
@@ -14,9 +13,6 @@ import { copyPkgInfo } from '../../.scripts/copy-pkg-info.js';
 
 const MODE_WATCH = process.argv.includes('-w'),
   MODE_TYPES = process.argv.includes('--config-types');
-
-/** @type {Record<string, string | false>} */
-const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
 
 const DIRNAME = path.dirname(fileURLToPath(import.meta.url)),
   ROOT_DIR = path.resolve(DIRNAME, '.'),
@@ -133,6 +129,11 @@ function defineTypesBundle() {
 function defineNPMBundle({ dev }) {
   let alias = dev ? 'dev' : 'prod';
 
+  const target = 'es2022',
+    supported = {
+      'class-static-blocks': false,
+    };
+
   let input = {
     vidstack: 'src/index.ts',
     'player/vidstack-remotion': 'src/providers/remotion/index.ts',
@@ -195,11 +196,9 @@ function defineNPMBundle({ dev }) {
       }),
       esbuildPlugin({
         tsconfig: 'tsconfig.build.json',
-        target: 'es2021',
+        target,
+        supported,
         platform: 'browser',
-        mangleProps: !dev ? /^_/ : undefined,
-        mangleCache: !dev ? MANGLE_CACHE : undefined,
-        reserveProps: !dev ? /^__/ : undefined,
         define: {
           __DEV__: dev ? 'true' : 'false',
         },
@@ -209,7 +208,8 @@ function defineNPMBundle({ dev }) {
         transform(code, id) {
           if (/node_modules.*?\.js/.test(id)) {
             return esbuildTransform(code, {
-              target: 'es2021',
+              target,
+              supported,
               platform: 'browser',
             }).then((t) => t.code);
           }
@@ -282,42 +282,4 @@ async function buildDefaultTheme() {
   }
 
   await fsExtra.writeFile(`${themeDir}/theme.css`, defaultStyles);
-}
-
-export async function buildMangleCache() {
-  let mangleCache = JSON.parse(await fsExtra.readFile('mangle.json', 'utf-8'));
-
-  const result = await build({
-    entryPoints: globbySync('src/**', {
-      ignoreFiles: ['*.test'],
-    }),
-    target: 'esnext',
-    bundle: true,
-    minify: false,
-    mangleProps: /^_/,
-    reserveProps: /^__/,
-    mangleCache,
-    write: false,
-    outdir: 'dist-esbuild',
-    plugins: [
-      {
-        name: 'externalize',
-        setup(build) {
-          let filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
-          build.onResolve({ filter }, (args) =>
-            args.path === 'vidstack' ? undefined : { path: args.path, external: true },
-          );
-        },
-      },
-    ],
-  });
-
-  mangleCache = {
-    ...mangleCache,
-    ...result.mangleCache,
-  };
-
-  await fsExtra.writeFile('mangle.json', JSON.stringify(mangleCache, null, 2) + '\n');
-
-  return mangleCache;
 }

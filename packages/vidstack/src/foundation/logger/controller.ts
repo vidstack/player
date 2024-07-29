@@ -6,20 +6,20 @@ import { GroupedLog } from './grouped-log';
 import type { LogLevel } from './log-level';
 
 export class LoggerController extends ViewController {
-  private _logger = new Logger();
+  #logger = new Logger();
 
   protected override onConnect(el: HTMLElement) {
-    this._logger.setTarget(el);
-    onDispose(this._onDisconnect.bind(this));
+    this.#logger.setTarget(el);
+    onDispose(this.#onDisconnect.bind(this));
   }
 
-  protected _onDisconnect() {
-    this._logger.setTarget(null);
+  #onDisconnect() {
+    this.#logger.setTarget(null);
   }
 }
 
 export class Logger {
-  private _target: EventTarget | null = null;
+  #target: EventTarget | null = null;
 
   error(...data: any[]): boolean {
     return this.dispatch('error', ...data);
@@ -54,12 +54,12 @@ export class Logger {
   }
 
   setTarget(newTarget: EventTarget | null): void {
-    this._target = newTarget;
+    this.#target = newTarget;
   }
 
   dispatch(level: LogLevel, ...data: any[]): boolean {
     return (
-      this._target?.dispatchEvent(
+      this.#target?.dispatchEvent(
         new DOMEvent<LogEventDetail>('vds-log', {
           bubbles: true,
           composed: true,

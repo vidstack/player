@@ -32,12 +32,12 @@ export class Radio extends Component<RadioProps, {}, RadioEvents> {
     value: '',
   };
 
-  private _checked = signal(false);
+  #checked = signal(false);
 
-  private _controller: RadioController = {
-    _value: this.$props.value,
-    _check: this._check.bind(this),
-    _onCheck: null,
+  #controller: RadioController = {
+    value: this.$props.value,
+    check: this.#check.bind(this),
+    onCheck: null,
   };
 
   /**
@@ -45,7 +45,7 @@ export class Radio extends Component<RadioProps, {}, RadioEvents> {
    */
   @prop
   get checked(): boolean {
-    return this._checked();
+    return this.#checked();
   }
 
   constructor() {
@@ -56,8 +56,8 @@ export class Radio extends Component<RadioProps, {}, RadioEvents> {
   protected override onSetup(): void {
     this.setAttributes({
       value: this.$props.value,
-      'data-checked': this._checked,
-      'aria-checked': $ariaBool(this._checked),
+      'data-checked': this.#checked,
+      'aria-checked': $ariaBool(this.#checked),
     });
   }
 
@@ -65,55 +65,55 @@ export class Radio extends Component<RadioProps, {}, RadioEvents> {
     const isMenuItem = hasProvidedContext(menuContext);
     setAttributeIfEmpty(el, 'tabindex', isMenuItem ? '-1' : '0');
     setAttributeIfEmpty(el, 'role', isMenuItem ? 'menuitemradio' : 'radio');
-    effect(this._watchValue.bind(this));
+    effect(this.#watchValue.bind(this));
   }
 
   protected override onConnect(el: HTMLElement) {
-    this._addToGroup();
-    onPress(el, this._onPress.bind(this));
-    onDispose(this._onDisconnect.bind(this));
+    this.#addToGroup();
+    onPress(el, this.#onPress.bind(this));
+    onDispose(this.#onDisconnect.bind(this));
   }
 
-  private _onDisconnect() {
+  #onDisconnect() {
     scoped(() => {
       const group = useContext(radioControllerContext);
-      group.remove(this._controller);
+      group.remove(this.#controller);
     }, this.connectScope);
   }
 
-  private _addToGroup() {
+  #addToGroup() {
     const group = useContext(radioControllerContext);
-    group.add(this._controller);
+    group.add(this.#controller);
   }
 
-  private _watchValue() {
+  #watchValue() {
     const { value } = this.$props,
       newValue = value();
-    if (peek(this._checked)) {
-      this._controller._onCheck?.(newValue);
+    if (peek(this.#checked)) {
+      this.#controller.onCheck?.(newValue);
     }
   }
 
-  private _onPress(event: Event) {
-    if (peek(this._checked)) return;
+  #onPress(event: Event) {
+    if (peek(this.#checked)) return;
 
-    this._onChange(true, event);
-    this._onSelect(event);
+    this.#onChange(true, event);
+    this.#onSelect(event);
 
-    this._controller._onCheck?.(peek(this.$props.value), event);
+    this.#controller.onCheck?.(peek(this.$props.value), event);
   }
 
-  private _check(value: boolean, trigger?: Event) {
-    if (peek(this._checked) === value) return;
-    this._onChange(value, trigger);
+  #check(value: boolean, trigger?: Event) {
+    if (peek(this.#checked) === value) return;
+    this.#onChange(value, trigger);
   }
 
-  private _onChange(value: boolean, trigger?: Event) {
-    this._checked.set(value);
+  #onChange(value: boolean, trigger?: Event) {
+    this.#checked.set(value);
     this.dispatch('change', { detail: value, trigger });
   }
 
-  private _onSelect(trigger?: Event) {
+  #onSelect(trigger?: Event) {
     this.dispatch('select', { trigger });
   }
 }

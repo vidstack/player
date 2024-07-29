@@ -22,10 +22,10 @@ export class Tooltip extends Component<TooltipProps> {
     showDelay: 700,
   };
 
-  private _id = `media-tooltip-${++id}`;
+  #id = `media-tooltip-${++id}`;
 
-  private _trigger = signal<HTMLElement | null>(null);
-  private _content = signal<HTMLElement | null>(null);
+  #trigger = signal<HTMLElement | null>(null);
+  #content = signal<HTMLElement | null>(null);
 
   constructor() {
     super();
@@ -35,10 +35,10 @@ export class Tooltip extends Component<TooltipProps> {
     const { showDelay } = this.$props;
 
     new Popper({
-      _trigger: this._trigger,
-      _content: this._content,
-      _showDelay: showDelay,
-      _listen(trigger, show, hide) {
+      trigger: this.#trigger,
+      content: this.#content,
+      showDelay: showDelay,
+      listen(trigger, show, hide) {
         listenEvent(trigger, 'touchstart', (e) => e.preventDefault(), {
           passive: false,
         });
@@ -51,7 +51,7 @@ export class Tooltip extends Component<TooltipProps> {
         listenEvent(trigger, 'mouseenter', show);
         listenEvent(trigger, 'mouseleave', hide);
       },
-      _onChange: this._onShowingChange.bind(this),
+      onChange: this.#onShowingChange.bind(this),
     });
   }
 
@@ -61,53 +61,53 @@ export class Tooltip extends Component<TooltipProps> {
 
   protected override onSetup(): void {
     provideContext(tooltipContext, {
-      _trigger: this._trigger,
-      _content: this._content,
-      _attachTrigger: this._attachTrigger.bind(this),
-      _detachTrigger: this._detachTrigger.bind(this),
-      _attachContent: this._attachContent.bind(this),
-      _detachContent: this._detachContent.bind(this),
+      trigger: this.#trigger,
+      content: this.#content,
+      attachTrigger: this.#attachTrigger.bind(this),
+      detachTrigger: this.#detachTrigger.bind(this),
+      attachContent: this.#attachContent.bind(this),
+      detachContent: this.#detachContent.bind(this),
     });
   }
 
-  private _attachTrigger(el: HTMLElement) {
-    this._trigger.set(el);
+  #attachTrigger(el: HTMLElement) {
+    this.#trigger.set(el);
 
     let tooltipName = el.getAttribute('data-media-tooltip');
     if (tooltipName) {
       this.el?.setAttribute(`data-media-${tooltipName}-tooltip`, '');
     }
 
-    setAttribute(el, 'data-describedby', this._id);
+    setAttribute(el, 'data-describedby', this.#id);
   }
 
-  private _detachTrigger(el: HTMLElement) {
+  #detachTrigger(el: HTMLElement) {
     el.removeAttribute('data-describedby');
     el.removeAttribute('aria-describedby');
-    this._trigger.set(null);
+    this.#trigger.set(null);
   }
 
-  private _attachContent(el: HTMLElement) {
-    el.setAttribute('id', this._id);
+  #attachContent(el: HTMLElement) {
+    el.setAttribute('id', this.#id);
     el.style.display = 'none';
 
     setAttributeIfEmpty(el, 'role', 'tooltip');
 
-    this._content.set(el);
+    this.#content.set(el);
   }
 
-  private _detachContent(el: HTMLElement) {
+  #detachContent(el: HTMLElement) {
     el.removeAttribute('id');
     el.removeAttribute('role');
-    this._content.set(null);
+    this.#content.set(null);
   }
 
-  private _onShowingChange(isShowing: boolean) {
-    const trigger = this._trigger(),
-      content = this._content();
+  #onShowingChange(isShowing: boolean) {
+    const trigger = this.#trigger(),
+      content = this.#content();
 
     if (trigger) {
-      setAttribute(trigger, 'aria-describedby', isShowing ? this._id : null);
+      setAttribute(trigger, 'aria-describedby', isShowing ? this.#id : null);
     }
 
     for (const el of [this.el, trigger, content]) {

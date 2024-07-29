@@ -61,99 +61,99 @@ export class Poster extends Component<PosterProps, PosterState> {
     hidden: false,
   });
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
-    this._watchSrc();
-    this._watchAlt();
-    this._watchCrossOrigin();
-    this._watchHidden();
+    this.#media = useMediaContext();
+    this.#watchSrc();
+    this.#watchAlt();
+    this.#watchCrossOrigin();
+    this.#watchHidden();
   }
 
   protected override onAttach(el: HTMLElement): void {
     el.style.setProperty('pointer-events', 'none');
 
-    effect(this._watchImg.bind(this));
-    effect(this._watchSrc.bind(this));
-    effect(this._watchAlt.bind(this));
-    effect(this._watchCrossOrigin.bind(this));
-    effect(this._watchHidden.bind(this));
+    effect(this.#watchImg.bind(this));
+    effect(this.#watchSrc.bind(this));
+    effect(this.#watchAlt.bind(this));
+    effect(this.#watchCrossOrigin.bind(this));
+    effect(this.#watchHidden.bind(this));
 
-    const { started } = this._media.$state;
+    const { started } = this.#media.$state;
     this.setAttributes({
       'data-visible': () => !started() && !this.$state.hidden(),
-      'data-loading': this._isLoading.bind(this),
-      'data-error': this._hasError.bind(this),
+      'data-loading': this.#isLoading.bind(this),
+      'data-error': this.#hasError.bind(this),
       'data-hidden': this.$state.hidden,
     });
   }
 
   protected override onConnect(el: HTMLElement) {
-    effect(this._onPreconnect.bind(this));
-    effect(this._onLoadStart.bind(this));
+    effect(this.#onPreconnect.bind(this));
+    effect(this.#onLoadStart.bind(this));
   }
 
-  private _hasError() {
+  #hasError() {
     const { error } = this.$state;
     return !isNull(error());
   }
 
-  private _onPreconnect() {
-    const { canLoadPoster, poster } = this._media.$state;
+  #onPreconnect() {
+    const { canLoadPoster, poster } = this.#media.$state;
     if (!canLoadPoster() && poster()) preconnect(poster(), 'preconnect');
   }
 
-  private _watchHidden() {
+  #watchHidden() {
     const { src } = this.$props,
-      { poster, nativeControls } = this._media.$state;
+      { poster, nativeControls } = this.#media.$state;
     this.el && setAttribute(this.el, 'display', nativeControls() ? 'none' : null);
-    this.$state.hidden.set(this._hasError() || !(src() || poster()) || nativeControls());
+    this.$state.hidden.set(this.#hasError() || !(src() || poster()) || nativeControls());
   }
 
-  private _isLoading() {
+  #isLoading() {
     const { loading, hidden } = this.$state;
     return !hidden() && loading();
   }
 
-  private _watchImg() {
+  #watchImg() {
     const img = this.$state.img();
     if (!img) return;
 
-    listenEvent(img, 'load', this._onLoad.bind(this));
-    listenEvent(img, 'error', this._onError.bind(this));
+    listenEvent(img, 'load', this.#onLoad.bind(this));
+    listenEvent(img, 'error', this.#onError.bind(this));
 
-    if (img.complete) this._onLoad();
+    if (img.complete) this.#onLoad();
   }
 
-  private _prevSrc = '';
-  private _watchSrc() {
-    const { poster: defaultPoster } = this._media.$props,
-      { canLoadPoster, providedPoster, inferredPoster } = this._media.$state;
+  #prevSrc = '';
+  #watchSrc() {
+    const { poster: defaultPoster } = this.#media.$props,
+      { canLoadPoster, providedPoster, inferredPoster } = this.#media.$state;
 
     // Either src set on this poster component, or defined on the player.
     const src = this.$props.src() || '',
       poster = src || defaultPoster() || inferredPoster();
 
-    if (this._prevSrc === providedPoster()) {
+    if (this.#prevSrc === providedPoster()) {
       providedPoster.set(src);
     }
 
     this.$state.src.set(canLoadPoster() && poster.length ? poster : null);
-    this._prevSrc = src;
+    this.#prevSrc = src;
   }
 
-  private _watchAlt() {
+  #watchAlt() {
     const { src } = this.$props,
       { alt } = this.$state,
-      { poster } = this._media.$state;
+      { poster } = this.#media.$state;
     alt.set(src() || poster() ? this.$props.alt() : null);
   }
 
-  private _watchCrossOrigin() {
+  #watchCrossOrigin() {
     const { crossOrigin: crossOriginProp } = this.$props,
       { crossOrigin: crossOriginState } = this.$state,
-      { crossOrigin: mediaCrossOrigin, poster: src } = this._media.$state,
+      { crossOrigin: mediaCrossOrigin, poster: src } = this.#media.$state,
       crossOrigin = crossOriginProp() !== null ? crossOriginProp() : mediaCrossOrigin();
 
     crossOriginState.set(
@@ -165,20 +165,20 @@ export class Poster extends Component<PosterProps, PosterState> {
     );
   }
 
-  private _onLoadStart() {
+  #onLoadStart() {
     const { loading, error } = this.$state,
-      { canLoadPoster, poster } = this._media.$state;
+      { canLoadPoster, poster } = this.#media.$state;
     loading.set(canLoadPoster() && !!poster());
     error.set(null);
   }
 
-  private _onLoad() {
+  #onLoad() {
     const { loading, error } = this.$state;
     loading.set(false);
     error.set(null);
   }
 
-  private _onError(event: ErrorEvent) {
+  #onError(event: ErrorEvent) {
     const { loading, error } = this.$state;
     loading.set(false);
     error.set(event);

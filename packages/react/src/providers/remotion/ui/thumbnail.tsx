@@ -94,9 +94,9 @@ const RemotionThumbnail = React.forwardRef<HTMLElement, RemotionThumbnailProps>(
         [],
       );
 
-    const [, _update] = React.useState(0);
+    const [, update] = React.useState(0);
     React.useEffect(() => {
-      _update(1);
+      update(1);
     }, []);
 
     if (!isRemotionSrc($src)) return null;

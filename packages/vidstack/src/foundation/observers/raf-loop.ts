@@ -1,26 +1,29 @@
 import { isNumber, isUndefined } from 'maverick.js/std';
 
 export class RAFLoop {
-  private _id: number | undefined;
+  #id: number | undefined;
+  #callback: () => void;
 
-  constructor(private _callback: () => void) {}
+  constructor(callback: () => void) {
+    this.#callback = callback;
+  }
 
-  _start() {
+  start() {
     // Time updates are already in progress.
-    if (!isUndefined(this._id)) return;
-    this._loop();
+    if (!isUndefined(this.#id)) return;
+    this.#loop();
   }
 
-  _stop() {
-    if (isNumber(this._id)) window.cancelAnimationFrame(this._id);
-    this._id = undefined;
+  stop() {
+    if (isNumber(this.#id)) window.cancelAnimationFrame(this.#id);
+    this.#id = undefined;
   }
 
-  private _loop() {
-    this._id = window.requestAnimationFrame(() => {
-      if (isUndefined(this._id)) return;
-      this._callback();
-      this._loop();
+  #loop() {
+    this.#id = window.requestAnimationFrame(() => {
+      if (isUndefined(this.#id)) return;
+      this.#callback();
+      this.#loop();
     });
   }
 }

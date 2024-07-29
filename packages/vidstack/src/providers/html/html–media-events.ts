@@ -12,38 +12,36 @@ import { IS_IOS, IS_SAFARI } from '../../utils/support';
 import type { HTMLMediaProvider } from './provider';
 
 export class HTMLMediaEvents {
-  private _disposal = useDisposalBin();
-  private _waiting = false;
-  private _attachedLoadStart = false;
-  private _attachedCanPlay = false;
-  private _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
-  private _pageVisibility = new PageVisibility();
+  #provider: HTMLMediaProvider;
+  #ctx: MediaContext;
+  #disposal = useDisposalBin();
+  #waiting = false;
+  #attachedLoadStart = false;
+  #attachedCanPlay = false;
+  #timeRAF = new RAFLoop(this.#onAnimationFrame.bind(this));
+  #pageVisibility = new PageVisibility();
 
-  private get _media() {
-    return this._provider.media;
+  get #media() {
+    return this.#provider.media;
   }
 
-  private get _notify() {
-    return this._ctx.delegate._notify;
+  constructor(provider: HTMLMediaProvider, ctx: MediaContext) {
+    this.#provider = provider;
+    this.#ctx = ctx;
+
+    this.#attachInitialListeners();
+
+    this.#pageVisibility.connect();
+    effect(this.#attachTimeUpdate.bind(this));
+
+    onDispose(this.#onDispose.bind(this));
   }
 
-  constructor(
-    private _provider: HTMLMediaProvider,
-    private _ctx: MediaContext,
-  ) {
-    this._attachInitialListeners();
-
-    this._pageVisibility.connect();
-    effect(this._attachTimeUpdate.bind(this));
-
-    onDispose(this._onDispose.bind(this));
-  }
-
-  private _onDispose() {
-    this._attachedLoadStart = false;
-    this._attachedCanPlay = false;
-    this._timeRAF._stop();
-    this._disposal.empty();
+  #onDispose() {
+    this.#attachedLoadStart = false;
+    this.#attachedCanPlay = false;
+    this.#timeRAF.stop();
+    this.#disposal.empty();
   }
 
   /**
@@ -51,260 +49,257 @@ export class HTMLMediaEvents {
    * bar (or whatever else is synced to the currentTime) moves in a choppy fashion. This helps
    * resolve that by retrieving time updates in a request animation frame loop.
    */
-  private _lastSeenTime = 0;
-  private _seekedTo = -1;
-  private _onAnimationFrame() {
-    const newTime = this._media.currentTime;
+  #lastSeenTime = 0;
+  #seekedTo = -1;
+  #onAnimationFrame() {
+    const newTime = this.#media.currentTime;
 
     // Avoid stuttering on Safari (after a seek operation time may drift backwards for a few frames).
-    const didStutter = IS_SAFARI && newTime - this._seekedTo < 0.35;
+    const didStutter = IS_SAFARI && newTime - this.#seekedTo < 0.35;
 
-    if (!didStutter && this._lastSeenTime !== newTime) {
-      this._updateCurrentTime(newTime);
-      this._lastSeenTime = newTime;
+    if (!didStutter && this.#lastSeenTime !== newTime) {
+      this.#updateCurrentTime(newTime);
+      this.#lastSeenTime = newTime;
     }
   }
 
-  private _attachInitialListeners() {
+  #attachInitialListeners() {
     if (__DEV__) {
-      this._ctx.logger?.info('attaching initial listeners');
+      this.#ctx.logger?.info('attaching initial listeners');
     }
 
-    this._attachEventListener('loadstart', this._onLoadStart);
-    this._attachEventListener('abort', this._onAbort);
-    this._attachEventListener('emptied', this._onEmptied);
-    this._attachEventListener('error', this._onError);
-    this._attachEventListener('volumechange', this._onVolumeChange);
+    this.#attachEventListener('loadstart', this.#onLoadStart);
+    this.#attachEventListener('abort', this.#onAbort);
+    this.#attachEventListener('emptied', this.#onEmptied);
+    this.#attachEventListener('error', this.#onError);
+    this.#attachEventListener('volumechange', this.#onVolumeChange);
 
-    if (__DEV__) this._ctx.logger?.debug('attached initial media event listeners');
+    if (__DEV__) this.#ctx.logger?.debug('attached initial media event listeners');
   }
 
-  private _attachLoadStartListeners() {
-    if (this._attachedLoadStart) return;
+  #attachLoadStartListeners() {
+    if (this.#attachedLoadStart) return;
 
     if (__DEV__) {
-      this._ctx.logger?.info('attaching load start listeners');
+      this.#ctx.logger?.info('attaching load start listeners');
     }
 
-    this._disposal.add(
-      this._attachEventListener('loadeddata', this._onLoadedData),
-      this._attachEventListener('loadedmetadata', this._onLoadedMetadata),
-      this._attachEventListener('canplay', this._onCanPlay),
-      this._attachEventListener('canplaythrough', this._onCanPlayThrough),
-      this._attachEventListener('durationchange', this._onDurationChange),
-      this._attachEventListener('play', this._onPlay),
-      this._attachEventListener('progress', this._onProgress),
-      this._attachEventListener('stalled', this._onStalled),
-      this._attachEventListener('suspend', this._onSuspend),
-      this._attachEventListener('ratechange', this._onRateChange),
+    this.#disposal.add(
+      this.#attachEventListener('loadeddata', this.#onLoadedData),
+      this.#attachEventListener('loadedmetadata', this.#onLoadedMetadata),
+      this.#attachEventListener('canplay', this.#onCanPlay),
+      this.#attachEventListener('canplaythrough', this.#onCanPlayThrough),
+      this.#attachEventListener('durationchange', this.#onDurationChange),
+      this.#attachEventListener('play', this.#onPlay),
+      this.#attachEventListener('progress', this.#onProgress),
+      this.#attachEventListener('stalled', this.#onStalled),
+      this.#attachEventListener('suspend', this.#onSuspend),
+      this.#attachEventListener('ratechange', this.#onRateChange),
     );
 
-    this._attachedLoadStart = true;
+    this.#attachedLoadStart = true;
   }
 
-  private _attachCanPlayListeners() {
-    if (this._attachedCanPlay) return;
+  #attachCanPlayListeners() {
+    if (this.#attachedCanPlay) return;
 
     if (__DEV__) {
-      this._ctx.logger?.info('attaching can play listeners');
+      this.#ctx.logger?.info('attaching can play listeners');
     }
 
-    this._disposal.add(
-      this._attachEventListener('pause', this._onPause),
-      this._attachEventListener('playing', this._onPlaying),
-      this._attachEventListener('seeked', this._onSeeked),
-      this._attachEventListener('seeking', this._onSeeking),
-      this._attachEventListener('ended', this._onEnded),
-      this._attachEventListener('waiting', this._onWaiting),
+    this.#disposal.add(
+      this.#attachEventListener('pause', this.#onPause),
+      this.#attachEventListener('playing', this.#onPlaying),
+      this.#attachEventListener('seeked', this.#onSeeked),
+      this.#attachEventListener('seeking', this.#onSeeking),
+      this.#attachEventListener('ended', this.#onEnded),
+      this.#attachEventListener('waiting', this.#onWaiting),
     );
 
-    this._attachedCanPlay = true;
+    this.#attachedCanPlay = true;
   }
 
-  private _handlers = __DEV__ ? new Map<string, (event: Event) => void>() : undefined;
-  private _handleDevEvent = __DEV__ ? this._onDevEvent.bind(this) : undefined;
-  private _attachEventListener(
-    eventType: keyof HTMLElementEventMap,
-    handler: (event: Event) => void,
-  ) {
-    if (__DEV__) this._handlers!.set(eventType, handler);
+  #handlers = __DEV__ ? new Map<string, (event: Event) => void>() : undefined;
+  #handleDevEvent = __DEV__ ? this.#onDevEvent.bind(this) : undefined;
+  #attachEventListener(eventType: keyof HTMLElementEventMap, handler: (event: Event) => void) {
+    if (__DEV__) this.#handlers!.set(eventType, handler);
     return listenEvent(
-      this._media,
+      this.#media,
       eventType,
-      __DEV__ ? this._handleDevEvent! : handler.bind(this),
+      __DEV__ ? this.#handleDevEvent! : handler.bind(this),
     );
   }
 
-  private _onDevEvent(event: Event) {
+  #onDevEvent(event: Event) {
     if (!__DEV__) return;
 
-    this._ctx.logger
+    this.#ctx.logger
       ?.debugGroup(`📺 provider fired \`${event.type}\``)
-      .labelledLog('Provider', this._provider)
+      .labelledLog('Provider', this.#provider)
       .labelledLog('Event', event)
-      .labelledLog('Media Store', { ...this._ctx.$state })
+      .labelledLog('Media Store', { ...this.#ctx.$state })
       .dispatch();
 
-    this._handlers!.get(event.type)?.call(this, event);
+    this.#handlers!.get(event.type)?.call(this, event);
   }
 
-  private _updateCurrentTime(time: number, trigger?: Event) {
+  #updateCurrentTime(time: number, trigger?: Event) {
     // Avoid errors where `currentTime` can have higher precision.
-    const newTime = Math.min(time, this._ctx.$state.seekableEnd());
-    this._notify('time-change', newTime, trigger);
+    const newTime = Math.min(time, this.#ctx.$state.seekableEnd());
+    this.#ctx.notify('time-change', newTime, trigger);
   }
 
-  private _onLoadStart(event: Event) {
-    if (this._media.networkState === 3) {
-      this._onAbort(event);
+  #onLoadStart(event: Event) {
+    if (this.#media.networkState === 3) {
+      this.#onAbort(event);
       return;
     }
 
-    this._attachLoadStartListeners();
-    this._notify('load-start', undefined, event);
+    this.#attachLoadStartListeners();
+    this.#ctx.notify('load-start', undefined, event);
   }
 
-  private _onAbort(event: Event) {
-    this._notify('abort', undefined, event);
+  #onAbort(event: Event) {
+    this.#ctx.notify('abort', undefined, event);
   }
 
-  private _onEmptied() {
-    this._notify('emptied', undefined, event);
+  #onEmptied() {
+    this.#ctx.notify('emptied', undefined, event);
   }
 
-  private _onLoadedData(event: Event) {
-    this._notify('loaded-data', undefined, event);
+  #onLoadedData(event: Event) {
+    this.#ctx.notify('loaded-data', undefined, event);
   }
 
-  private _onLoadedMetadata(event: Event) {
+  #onLoadedMetadata(event: Event) {
     // Reset.
-    this._lastSeenTime = 0;
-    this._seekedTo = -1;
+    this.#lastSeenTime = 0;
+    this.#seekedTo = -1;
 
-    this._attachCanPlayListeners();
+    this.#attachCanPlayListeners();
 
-    this._notify('loaded-metadata', undefined, event);
+    this.#ctx.notify('loaded-metadata', undefined, event);
 
     // iOS Safari and Native HLS do not reliably fire `canplay` event.
-    if (IS_IOS || (IS_SAFARI && isHLSSrc(this._ctx.$state.source()))) {
-      this._ctx.delegate._ready(this._getCanPlayDetail(), event);
+    if (IS_IOS || (IS_SAFARI && isHLSSrc(this.#ctx.$state.source()))) {
+      this.#ctx.delegate.ready(this.#getCanPlayDetail(), event);
     }
   }
 
-  private _getCanPlayDetail(): MediaCanPlayDetail {
+  #getCanPlayDetail(): MediaCanPlayDetail {
     return {
-      provider: peek(this._ctx.$provider)!,
-      duration: this._media.duration,
-      buffered: this._media.buffered,
-      seekable: this._media.seekable,
+      provider: peek(this.#ctx.$provider)!,
+      duration: this.#media.duration,
+      buffered: this.#media.buffered,
+      seekable: this.#media.seekable,
     };
   }
 
-  private _onPlay(event: Event) {
-    if (!this._ctx.$state.canPlay) return;
-    this._notify('play', undefined, event);
+  #onPlay(event: Event) {
+    if (!this.#ctx.$state.canPlay) return;
+    this.#ctx.notify('play', undefined, event);
   }
 
-  private _onPause(event: Event) {
+  #onPause(event: Event) {
     // Avoid seeking events triggering pause.
-    if (this._media.readyState === 1 && !this._waiting) return;
-    this._waiting = false;
-    this._timeRAF._stop();
-    this._notify('pause', undefined, event);
+    if (this.#media.readyState === 1 && !this.#waiting) return;
+    this.#waiting = false;
+    this.#timeRAF.stop();
+    this.#ctx.notify('pause', undefined, event);
   }
 
-  private _onCanPlay(event: Event) {
-    this._ctx.delegate._ready(this._getCanPlayDetail(), event);
+  #onCanPlay(event: Event) {
+    this.#ctx.delegate.ready(this.#getCanPlayDetail(), event);
   }
 
-  private _onCanPlayThrough(event: Event) {
-    if (this._ctx.$state.started()) return;
-    this._notify('can-play-through', this._getCanPlayDetail(), event);
+  #onCanPlayThrough(event: Event) {
+    if (this.#ctx.$state.started()) return;
+    this.#ctx.notify('can-play-through', this.#getCanPlayDetail(), event);
   }
 
-  private _onPlaying(event: Event) {
+  #onPlaying(event: Event) {
     // This event can incorrectly fire on Safari.
-    if (this._media.paused) return;
-    this._waiting = false;
-    this._notify('playing', undefined, event);
-    this._timeRAF._start();
+    if (this.#media.paused) return;
+    this.#waiting = false;
+    this.#ctx.notify('playing', undefined, event);
+    this.#timeRAF.start();
   }
 
-  private _onStalled(event: Event) {
-    this._notify('stalled', undefined, event);
-    if (this._media.readyState < 3) {
-      this._waiting = true;
-      this._notify('waiting', undefined, event);
+  #onStalled(event: Event) {
+    this.#ctx.notify('stalled', undefined, event);
+    if (this.#media.readyState < 3) {
+      this.#waiting = true;
+      this.#ctx.notify('waiting', undefined, event);
     }
   }
 
-  private _onWaiting(event: Event) {
-    if (this._media.readyState < 3) {
-      this._waiting = true;
-      this._notify('waiting', undefined, event);
+  #onWaiting(event: Event) {
+    if (this.#media.readyState < 3) {
+      this.#waiting = true;
+      this.#ctx.notify('waiting', undefined, event);
     }
   }
 
-  private _onEnded(event: Event) {
-    this._timeRAF._stop();
-    this._updateCurrentTime(this._media.duration, event);
-    this._notify('end', undefined, event);
-    if (this._ctx.$state.loop()) {
-      const hasCustomControls = isNil(this._media.controls);
+  #onEnded(event: Event) {
+    this.#timeRAF.stop();
+    this.#updateCurrentTime(this.#media.duration, event);
+    this.#ctx.notify('end', undefined, event);
+    if (this.#ctx.$state.loop()) {
+      const hasCustomControls = isNil(this.#media.controls);
       // Forcefully hide controls to prevent flashing when looping. Calling `play()` at end
       // of media may show a flash of native controls on iOS, even if `controls` property is not set.
-      if (hasCustomControls) this._media.controls = false;
+      if (hasCustomControls) this.#media.controls = false;
     }
   }
 
-  protected _attachTimeUpdate() {
-    const isPaused = this._ctx.$state.paused(),
-      isPageHidden = this._pageVisibility.visibility === 'hidden',
+  #attachTimeUpdate() {
+    const isPaused = this.#ctx.$state.paused(),
+      isPageHidden = this.#pageVisibility.visibility === 'hidden',
       shouldListenToTimeUpdates = isPaused || isPageHidden;
 
     if (shouldListenToTimeUpdates) {
-      listenEvent(this._media, 'timeupdate', this._onTimeUpdate.bind(this));
+      listenEvent(this.#media, 'timeupdate', this.#onTimeUpdate.bind(this));
     }
   }
 
-  protected _onTimeUpdate(event: Event) {
-    this._updateCurrentTime(this._media.currentTime, event);
+  #onTimeUpdate(event: Event) {
+    this.#updateCurrentTime(this.#media.currentTime, event);
   }
 
-  private _onDurationChange(event: Event) {
-    if (this._ctx.$state.ended()) {
-      this._updateCurrentTime(this._media.duration, event);
+  #onDurationChange(event: Event) {
+    if (this.#ctx.$state.ended()) {
+      this.#updateCurrentTime(this.#media.duration, event);
     }
 
-    this._notify('duration-change', this._media.duration, event);
+    this.#ctx.notify('duration-change', this.#media.duration, event);
   }
 
-  private _onVolumeChange(event: Event) {
+  #onVolumeChange(event: Event) {
     const detail = {
-      volume: this._media.volume,
-      muted: this._media.muted,
+      volume: this.#media.volume,
+      muted: this.#media.muted,
     };
 
-    this._notify('volume-change', detail, event);
+    this.#ctx.notify('volume-change', detail, event);
   }
 
-  private _onSeeked(event: Event) {
-    this._seekedTo = this._media.currentTime;
+  #onSeeked(event: Event) {
+    this.#seekedTo = this.#media.currentTime;
 
-    this._updateCurrentTime(this._media.currentTime, event);
+    this.#updateCurrentTime(this.#media.currentTime, event);
 
-    this._notify('seeked', this._media.currentTime, event);
+    this.#ctx.notify('seeked', this.#media.currentTime, event);
 
     // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
     if (
-      Math.trunc(this._media.currentTime) === Math.trunc(this._media.duration) &&
-      getNumberOfDecimalPlaces(this._media.duration) >
-        getNumberOfDecimalPlaces(this._media.currentTime)
+      Math.trunc(this.#media.currentTime) === Math.trunc(this.#media.duration) &&
+      getNumberOfDecimalPlaces(this.#media.duration) >
+        getNumberOfDecimalPlaces(this.#media.currentTime)
     ) {
-      this._updateCurrentTime(this._media.duration, event);
+      this.#updateCurrentTime(this.#media.duration, event);
 
-      if (!this._media.ended) {
-        this._ctx.player.dispatch(
+      if (!this.#media.ended) {
+        this.#ctx.player.dispatch(
           new DOMEvent<void>('media-play-request', {
             trigger: event,
           }),
@@ -313,29 +308,29 @@ export class HTMLMediaEvents {
     }
   }
 
-  private _onSeeking(event: Event) {
-    this._notify('seeking', this._media.currentTime, event);
+  #onSeeking(event: Event) {
+    this.#ctx.notify('seeking', this.#media.currentTime, event);
   }
 
-  private _onProgress(event: Event) {
+  #onProgress(event: Event) {
     const detail = {
-      buffered: this._media.buffered,
-      seekable: this._media.seekable,
+      buffered: this.#media.buffered,
+      seekable: this.#media.seekable,
     };
 
-    this._notify('progress', detail, event);
+    this.#ctx.notify('progress', detail, event);
   }
 
-  private _onSuspend(event: Event) {
-    this._notify('suspend', undefined, event);
+  #onSuspend(event: Event) {
+    this.#ctx.notify('suspend', undefined, event);
   }
 
-  private _onRateChange(event: Event) {
-    this._notify('rate-change', this._media.playbackRate, event);
+  #onRateChange(event: Event) {
+    this.#ctx.notify('rate-change', this.#media.playbackRate, event);
   }
 
-  private _onError(event: Event) {
-    const error = this._media.error;
+  #onError(event: Event) {
+    const error = this.#media.error;
     if (!error) return;
 
     const detail = {
@@ -344,6 +339,6 @@ export class HTMLMediaEvents {
       mediaError: error,
     };
 
-    this._notify('error', detail, event);
+    this.#ctx.notify('error', detail, event);
   }
 }

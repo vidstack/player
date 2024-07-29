@@ -20,10 +20,10 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
     crossOrigin: 'crossorigin',
   };
 
-  private _img = document.createElement('img');
+  #img = document.createElement('img');
 
   protected onSetup(): void {
-    this.$state.img.set(this._img);
+    this.$state.img.set(this.#img);
   }
 
   protected onConnect(): void {
@@ -31,17 +31,17 @@ export class MediaPosterElement extends Host(HTMLElement, Poster) {
 
     effect(() => {
       const { loading, hidden } = this.$state;
-      this._img.style.display = loading() || hidden() ? 'none' : '';
+      this.#img.style.display = loading() || hidden() ? 'none' : '';
     });
 
     effect(() => {
-      setAttribute(this._img, 'alt', alt());
-      setAttribute(this._img, 'crossorigin', crossOrigin());
-      setAttribute(this._img, 'src', src());
+      setAttribute(this.#img, 'alt', alt());
+      setAttribute(this.#img, 'crossorigin', crossOrigin());
+      setAttribute(this.#img, 'src', src());
     });
 
-    if (this._img.parentNode !== this) {
-      this.prepend(this._img);
+    if (this.#img.parentNode !== this) {
+      this.prepend(this.#img);
     }
   }
 }

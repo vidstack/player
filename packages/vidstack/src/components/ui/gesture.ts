@@ -23,11 +23,11 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
     action: undefined,
   };
 
-  private _media!: MediaContext;
-  private _provider: HTMLElement | null = null;
+  #media!: MediaContext;
+  #provider: HTMLElement | null = null;
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
     const { event, action } = this.$props;
     this.setAttributes({
       event,
@@ -41,47 +41,47 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
   }
 
   protected override onConnect(el: HTMLElement) {
-    this._provider = this._media.player!.el?.querySelector(
+    this.#provider = this.#media.player!.el?.querySelector(
       '[data-media-provider]',
     ) as HTMLElement | null;
-    effect(this._attachListener.bind(this));
+    effect(this.#attachListener.bind(this));
   }
 
-  private _attachListener() {
+  #attachListener() {
     let eventType = this.$props.event(),
       disabled = this.$props.disabled();
 
-    if (!this._provider || !eventType || disabled) return;
+    if (!this.#provider || !eventType || disabled) return;
 
     if (/^dbl/.test(eventType)) {
       eventType = eventType.split(/^dbl/)[1] as keyof HTMLElementEventMap;
     }
 
     if (eventType === 'pointerup' || eventType === 'pointerdown') {
-      const pointer = this._media.$state.pointer();
+      const pointer = this.#media.$state.pointer();
       if (pointer === 'coarse') {
         eventType = eventType === 'pointerup' ? 'touchend' : 'touchstart';
       }
     }
 
     listenEvent(
-      this._provider,
+      this.#provider,
       eventType as keyof HTMLElementEventMap,
-      this._acceptEvent.bind(this),
+      this.#acceptEvent.bind(this),
       { passive: false },
     );
   }
 
-  private _presses = 0;
-  private _pressTimerId = -1;
+  #presses = 0;
+  #pressTimerId = -1;
 
-  private _acceptEvent(event: Event) {
+  #acceptEvent(event: Event) {
     if (
       this.$props.disabled() ||
-      (isPointerEvent(event) && (event.button !== 0 || this._media.activeMenu)) ||
-      (isTouchEvent(event) && this._media.activeMenu) ||
+      (isPointerEvent(event) && (event.button !== 0 || this.#media.activeMenu)) ||
+      (isTouchEvent(event) && this.#media.activeMenu) ||
       isTouchPinchEvent(event) ||
-      !this._inBounds(event)
+      !this.#inBounds(event)
     ) {
       return;
     }
@@ -94,32 +94,32 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
       isDblEvent = eventType?.startsWith('dbl');
 
     if (!isDblEvent) {
-      if (this._presses === 0) {
+      if (this.#presses === 0) {
         setTimeout(() => {
-          if (this._presses === 1) this._handleEvent(event);
+          if (this.#presses === 1) this.#handleEvent(event);
         }, 250);
       }
-    } else if (this._presses === 1) {
-      queueMicrotask(() => this._handleEvent(event));
-      clearTimeout(this._pressTimerId);
-      this._presses = 0;
+    } else if (this.#presses === 1) {
+      queueMicrotask(() => this.#handleEvent(event));
+      clearTimeout(this.#pressTimerId);
+      this.#presses = 0;
       return;
     }
 
-    if (this._presses === 0) {
-      this._pressTimerId = window.setTimeout(() => {
-        this._presses = 0;
+    if (this.#presses === 0) {
+      this.#pressTimerId = window.setTimeout(() => {
+        this.#presses = 0;
       }, 275);
     }
 
-    this._presses++;
+    this.#presses++;
   }
 
-  private _handleEvent(event: Event) {
+  #handleEvent(event: Event) {
     this.el!.setAttribute('data-triggered', '');
     requestAnimationFrame(() => {
-      if (this._isTopLayer()) {
-        this._performAction(peek(this.$props.action), event);
+      if (this.#isTopLayer()) {
+        this.#performAction(peek(this.$props.action), event);
       }
       requestAnimationFrame(() => {
         this.el!.removeAttribute('data-triggered');
@@ -128,11 +128,11 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
   }
 
   /** Validate event occurred in gesture bounds. */
-  private _inBounds(event: Event) {
+  #inBounds(event: Event) {
     if (!this.el) return false;
 
     if (isPointerEvent(event) || isMouseEvent(event) || isTouchEvent(event)) {
-      const touch = isTouchEvent(event) ? event.changedTouches[0] ?? event.touches[0] : undefined;
+      const touch = isTouchEvent(event) ? (event.changedTouches[0] ?? event.touches[0]) : undefined;
 
       const clientX = touch?.clientX ?? (event as MouseEvent).clientX;
       const clientY = touch?.clientY ?? (event as MouseEvent).clientY;
@@ -151,8 +151,8 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
   }
 
   /** Validate gesture has the highest z-index in this triggered group. */
-  private _isTopLayer() {
-    const gestures = this._media.player!.el!.querySelectorAll(
+  #isTopLayer() {
+    const gestures = this.#media.player!.el!.querySelectorAll(
       '[data-media-gesture][data-triggered]',
     ) as NodeListOf<HTMLElement>;
 
@@ -163,7 +163,7 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
     );
   }
 
-  private _performAction(action: string | undefined, trigger: Event) {
+  #performAction(action: string | undefined, trigger: Event) {
     if (!action) return;
 
     const willTriggerEvent = new DOMEvent<string>('will-trigger', {
@@ -178,11 +178,11 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
     const [method, value] = action.replace(/:([a-z])/, '-$1').split(':');
 
     if (action.includes(':fullscreen')) {
-      this._media.remote.toggleFullscreen('prefer-media', trigger);
+      this.#media.remote.toggleFullscreen('prefer-media', trigger);
     } else if (action.includes('seek:')) {
-      this._media.remote.seek(peek(this._media.$state.currentTime) + (+value || 0), trigger);
+      this.#media.remote.seek(peek(this.#media.$state.currentTime) + (+value || 0), trigger);
     } else {
-      this._media.remote[kebabToCamelCase(method)](trigger);
+      this.#media.remote[kebabToCamelCase(method)](trigger);
     }
 
     this.dispatch('trigger', {

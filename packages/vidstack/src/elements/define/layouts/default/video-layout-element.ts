@@ -42,27 +42,27 @@ export class MediaVideoLayoutElement
     },
   };
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   protected onSetup() {
     // Avoid memory leaks if `keepAlive` is true. The DOM will re-render regardless.
     this.forwardKeepAlive = false;
 
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     this.classList.add('vds-video-layout');
   }
 
   protected onConnect() {
     setLayoutName('video', () => this.isMatch);
-    this._setupMenuContainer();
+    this.#setupMenuContainer();
   }
 
   render() {
-    return $signal(this._render.bind(this));
+    return $signal(this.#render.bind(this));
   }
 
-  private _setupMenuContainer() {
+  #setupMenuContainer() {
     const { menuPortal } = useDefaultLayoutContext();
 
     effect(() => {
@@ -91,9 +91,9 @@ export class MediaVideoLayoutElement
     });
   }
 
-  private _render() {
-    const { load } = this._media.$props,
-      { canLoad, streamType, nativeControls } = this._media.$state;
+  #render() {
+    const { load } = this.#media.$props,
+      { canLoad, streamType, nativeControls } = this.#media.$state;
 
     return !nativeControls() && this.isMatch
       ? load() === 'play' && !canLoad()

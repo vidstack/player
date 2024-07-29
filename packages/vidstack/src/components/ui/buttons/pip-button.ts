@@ -25,22 +25,22 @@ export interface PIPButtonEvents
 export class PIPButton extends Component<PIPButtonProps, {}, PIPButtonEvents> {
   static props: PIPButtonProps = ToggleButtonController.props;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   constructor() {
     super();
     new ToggleButtonController({
-      _isPressed: this._isPressed.bind(this),
-      _keyShortcut: 'togglePictureInPicture',
-      _onPress: this._onPress.bind(this),
+      isPresssed: this.#isPressed.bind(this),
+      keyShortcut: 'togglePictureInPicture',
+      onPress: this.#onPress.bind(this),
     });
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
-    const { pictureInPicture } = this._media.$state,
-      isSupported = this._isSupported.bind(this);
+    const { pictureInPicture } = this.#media.$state,
+      isSupported = this.#isSupported.bind(this);
 
     this.setAttributes({
       'data-active': pictureInPicture,
@@ -54,18 +54,18 @@ export class PIPButton extends Component<PIPButtonProps, {}, PIPButtonEvents> {
     setARIALabel(el, 'PiP');
   }
 
-  private _onPress(event: Event) {
-    const remote = this._media.remote;
-    this._isPressed() ? remote.exitPictureInPicture(event) : remote.enterPictureInPicture(event);
+  #onPress(event: Event) {
+    const remote = this.#media.remote;
+    this.#isPressed() ? remote.exitPictureInPicture(event) : remote.enterPictureInPicture(event);
   }
 
-  private _isPressed() {
-    const { pictureInPicture } = this._media.$state;
+  #isPressed() {
+    const { pictureInPicture } = this.#media.$state;
     return pictureInPicture();
   }
 
-  private _isSupported() {
-    const { canPictureInPicture } = this._media.$state;
+  #isSupported() {
+    const { canPictureInPicture } = this.#media.$state;
     return canPictureInPicture();
   }
 }

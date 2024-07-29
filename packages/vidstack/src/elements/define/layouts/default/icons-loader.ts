@@ -4,7 +4,7 @@ import { Icon } from '../../../icon';
 import { LayoutIconsLoader } from '../icons/layout-icons-loader';
 
 export class DefaultLayoutIconsLoader extends LayoutIconsLoader {
-  async _load() {
+  async loadIcons() {
     const paths = (await import('./icons')).icons,
       icons: Record<string, TemplateResult> = {};
 

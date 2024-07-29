@@ -57,40 +57,37 @@ export class VimeoProvider
 
   fullscreen?: MediaFullscreenAdapter;
 
-  protected _videoId = signal('');
-  protected _pro = signal(false);
-  protected _hash: string | null = null;
-  protected _currentSrc: Src<string> | null = null;
+  readonly #ctx: MediaContext;
 
-  protected _fullscreenActive = false;
+  #videoId = signal('');
+  #pro = signal(false);
+  #hash: string | null = null;
+  #currentSrc: Src<string> | null = null;
 
-  protected _seekableRange = new TimeRange(0, 0);
-  protected _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
+  #fullscreenActive = false;
 
-  protected _currentCue: VTTCue | null = null;
-  protected _chaptersTrack: TextTrack | null = null;
+  #seekableRange = new TimeRange(0, 0);
+  #timeRAF = new RAFLoop(this.#onAnimationFrame.bind(this));
 
-  protected _promises = new Map<string, DeferredPromise<any, string>[]>();
-  protected _videoInfoPromise: DeferredPromise<VimeoVideoInfo, void> | null = null;
+  #currentCue: VTTCue | null = null;
+  #chaptersTrack: TextTrack | null = null;
 
-  protected get _notify() {
-    return this._ctx.delegate._notify;
-  }
+  #promises = new Map<string, DeferredPromise<any, string>[]>();
+  #videoInfoPromise: DeferredPromise<VimeoVideoInfo, void> | null = null;
 
-  constructor(
-    iframe: HTMLIFrameElement,
-    protected _ctx: MediaContext,
-  ) {
+  constructor(iframe: HTMLIFrameElement, ctx: MediaContext) {
     super(iframe);
+
+    this.#ctx = ctx;
 
     const self = this;
     this.fullscreen = {
       get active() {
-        return self._fullscreenActive;
+        return self.#fullscreenActive;
       },
       supported: true,
-      enter: () => this._remote('requestFullscreen'),
-      exit: () => this._remote('exitFullscreen'),
+      enter: () => this.#remote('requestFullscreen'),
+      exit: () => this.#remote('exitFullscreen'),
     };
   }
 
@@ -111,137 +108,137 @@ export class VimeoProvider
   }
 
   get currentSrc(): Src<string> | null {
-    return this._currentSrc;
+    return this.#currentSrc;
   }
 
   get videoId() {
-    return this._videoId();
+    return this.#videoId();
   }
 
   get hash() {
-    return this._hash;
+    return this.#hash;
   }
 
   get isPro() {
-    return this._pro();
+    return this.#pro();
   }
 
   preconnect() {
-    preconnect(this._getOrigin());
+    preconnect(this.getOrigin());
   }
 
   override setup() {
     super.setup();
 
-    effect(this._watchVideoId.bind(this));
-    effect(this._watchVideoInfo.bind(this));
-    effect(this._watchPro.bind(this));
+    effect(this.#watchVideoId.bind(this));
+    effect(this.#watchVideoInfo.bind(this));
+    effect(this.#watchPro.bind(this));
 
-    // listenEvent(this._ctx.textTracks, 'mode-change', () => {
-    //   const track = this._ctx.textTracks.selected;
+    // listenEvent(this.#ctx.textTracks, 'mode-change', () => {
+    //   const track = this.#ctx.textTracks.selected;
     //   if (track && track.mode === 'showing' && isTrackCaptionKind(track)) {
-    //     this._remote('enableTextTrack', {
+    //     this.#remote('enableTextTrack', {
     //       language: track.language,
     //       kind: track.kind,
     //     });
     //   } else {
-    //     this._remote('disableTextTrack');
+    //     this.#remote('disableTextTrack');
     //   }
     // });
 
-    this._notify('provider-setup', this);
+    this.#ctx.notify('provider-setup', this);
   }
 
   destroy() {
-    this._reset();
+    this.#reset();
 
     this.fullscreen = undefined;
 
     // Release all pending promises.
     const message = 'provider destroyed';
-    for (const promises of this._promises.values()) {
+    for (const promises of this.#promises.values()) {
       for (const { reject } of promises) reject(message);
     }
 
-    this._promises.clear();
+    this.#promises.clear();
 
-    this._remote('destroy');
+    this.#remote('destroy');
   }
 
   async play() {
-    return this._remote('play');
+    return this.#remote('play');
   }
 
   async pause() {
-    return this._remote('pause');
+    return this.#remote('pause');
   }
 
   setMuted(muted) {
-    this._remote('setMuted', muted);
+    this.#remote('setMuted', muted);
   }
 
   setCurrentTime(time) {
-    this._remote('seekTo', time);
-    this._notify('seeking', time);
+    this.#remote('seekTo', time);
+    this.#ctx.notify('seeking', time);
   }
 
   setVolume(volume) {
-    this._remote('setVolume', volume);
+    this.#remote('setVolume', volume);
     // Always update muted after volume because setting volume resets muted state.
-    this._remote('setMuted', peek(this._ctx.$state.muted));
+    this.#remote('setMuted', peek(this.#ctx.$state.muted));
   }
 
   setPlaybackRate(rate) {
-    this._remote('setPlaybackRate', rate);
+    this.#remote('setPlaybackRate', rate);
   }
 
   async loadSource(src: Src) {
     if (!isString(src.src)) {
-      this._currentSrc = null;
-      this._hash = null;
-      this._videoId.set('');
+      this.#currentSrc = null;
+      this.#hash = null;
+      this.#videoId.set('');
       return;
     }
 
     const { videoId, hash } = resolveVimeoVideoId(src.src);
-    this._videoId.set(videoId ?? '');
-    this._hash = hash ?? null;
+    this.#videoId.set(videoId ?? '');
+    this.#hash = hash ?? null;
 
-    this._currentSrc = src as Src<string>;
+    this.#currentSrc = src as Src<string>;
   }
 
-  protected _watchVideoId() {
-    this._reset();
+  #watchVideoId() {
+    this.#reset();
 
-    const videoId = this._videoId();
+    const videoId = this.#videoId();
 
     if (!videoId) {
-      this._src.set('');
+      this.src.set('');
       return;
     }
 
-    this._src.set(`${this._getOrigin()}/video/${videoId}`);
-    this._notify('load-start');
+    this.src.set(`${this.getOrigin()}/video/${videoId}`);
+    this.#ctx.notify('load-start');
   }
 
-  protected _watchVideoInfo() {
-    const videoId = this._videoId();
+  #watchVideoInfo() {
+    const videoId = this.#videoId();
 
     if (!videoId) return;
 
     const promise = deferredPromise<VimeoVideoInfo, void>(),
       abort = new AbortController();
 
-    this._videoInfoPromise = promise;
+    this.#videoInfoPromise = promise;
 
-    getVimeoVideoInfo(videoId, abort, this._hash)
+    getVimeoVideoInfo(videoId, abort, this.#hash)
       .then((info) => {
         promise.resolve(info);
       })
       .catch((e) => {
         promise.reject();
         if (__DEV__) {
-          this._ctx.logger
+          this.#ctx.logger
             ?.warnGroup(`Failed to fetch vimeo video info for id \`${videoId}\`.`)
             .labelledLog('Error', e)
             .dispatch();
@@ -254,29 +251,29 @@ export class VimeoProvider
     };
   }
 
-  protected _watchPro() {
-    const isPro = this._pro(),
-      { $state, qualities } = this._ctx;
+  #watchPro() {
+    const isPro = this.#pro(),
+      { $state, qualities } = this.#ctx;
 
     $state.canSetPlaybackRate.set(isPro);
-    qualities[ListSymbol._setReadonly](!isPro);
+    qualities[ListSymbol.setReadonly](!isPro);
 
     if (isPro) {
       return listenEvent(qualities, 'change', () => {
         if (qualities.auto) return;
         const id = qualities.selected?.id;
-        if (id) this._remote('setQuality', id);
+        if (id) this.#remote('setQuality', id);
       });
     }
   }
 
-  protected override _getOrigin(): string {
+  protected override getOrigin(): string {
     return 'https://player.vimeo.com';
   }
 
-  protected override _buildParams(): VimeoParams {
-    const { keyDisabled } = this._ctx.$props,
-      { playsInline, nativeControls } = this._ctx.$state,
+  protected override buildParams(): VimeoParams {
+    const { keyDisabled } = this.#ctx.$props,
+      { playsInline, nativeControls } = this.#ctx.$state,
       showControls = nativeControls();
     return {
       title: this.title,
@@ -292,96 +289,96 @@ export class VimeoProvider
     };
   }
 
-  protected _onAnimationFrame() {
-    this._remote('getCurrentTime');
+  #onAnimationFrame() {
+    this.#remote('getCurrentTime');
   }
 
   // Embed will sometimes dispatch 0 at end of playback.
-  protected _preventTimeUpdates = false;
+  #preventTimeUpdates = false;
 
-  protected _onTimeUpdate(time: number, trigger: Event) {
-    if (this._preventTimeUpdates && time === 0) return;
+  #onTimeUpdate(time: number, trigger: Event) {
+    if (this.#preventTimeUpdates && time === 0) return;
 
-    const { realCurrentTime, realDuration, paused, bufferedEnd } = this._ctx.$state;
+    const { realCurrentTime, realDuration, paused, bufferedEnd } = this.#ctx.$state;
 
     if (realCurrentTime() === time) return;
 
     const prevTime = realCurrentTime();
 
-    this._notify('time-change', time, trigger);
+    this.#ctx.notify('time-change', time, trigger);
 
     // This is how we detect `seeking` early.
     if (Math.abs(prevTime - time) > 1.5) {
-      this._notify('seeking', time, trigger);
+      this.#ctx.notify('seeking', time, trigger);
 
       if (!paused() && bufferedEnd() < time) {
-        this._notify('waiting', undefined, trigger);
+        this.#ctx.notify('waiting', undefined, trigger);
       }
     }
 
     if (realDuration() - time < 0.01) {
-      this._notify('end', undefined, trigger);
-      this._preventTimeUpdates = true;
+      this.#ctx.notify('end', undefined, trigger);
+      this.#preventTimeUpdates = true;
       setTimeout(() => {
-        this._preventTimeUpdates = false;
+        this.#preventTimeUpdates = false;
       }, 500);
     }
   }
 
-  protected _onSeeked(time: number, trigger: Event) {
-    this._notify('seeked', time, trigger);
+  #onSeeked(time: number, trigger: Event) {
+    this.#ctx.notify('seeked', time, trigger);
   }
 
-  protected _onLoaded(trigger: Event) {
-    const videoId = this._videoId();
-    this._videoInfoPromise?.promise
+  #onLoaded(trigger: Event) {
+    const videoId = this.#videoId();
+    this.#videoInfoPromise?.promise
       .then((info) => {
         if (!info) return;
 
         const { title, poster, duration, pro } = info;
 
-        this._pro.set(pro);
+        this.#pro.set(pro);
 
-        this._notify('title-change', title, trigger);
-        this._notify('poster-change', poster, trigger);
-        this._notify('duration-change', duration, trigger);
+        this.#ctx.notify('title-change', title, trigger);
+        this.#ctx.notify('poster-change', poster, trigger);
+        this.#ctx.notify('duration-change', duration, trigger);
 
-        this._onReady(duration, trigger);
+        this.#onReady(duration, trigger);
       })
       .catch(() => {
-        if (videoId !== this._videoId()) return;
-        this._remote('getVideoTitle');
-        this._remote('getDuration');
+        if (videoId !== this.#videoId()) return;
+        this.#remote('getVideoTitle');
+        this.#remote('getDuration');
       });
   }
 
-  protected _onReady(duration: number, trigger: Event) {
-    const { nativeControls } = this._ctx.$state,
+  #onReady(duration: number, trigger: Event) {
+    const { nativeControls } = this.#ctx.$state,
       showEmbedControls = nativeControls();
 
-    this._seekableRange = new TimeRange(0, duration);
+    this.#seekableRange = new TimeRange(0, duration);
 
     const detail = {
       buffered: new TimeRange(0, 0),
-      seekable: this._seekableRange,
+      seekable: this.#seekableRange,
       duration,
     };
 
-    this._ctx.delegate._ready(detail, trigger);
+    this.#ctx.delegate.ready(detail, trigger);
 
     if (!showEmbedControls) {
-      this._remote('_hideOverlay');
+      this.#remote('_hideOverlay');
     }
 
-    this._remote('getQualities');
+    this.#remote('getQualities');
 
     // We can't control visibility of vimeo captions whilst getting complete info on cues.
-    // this._remote('getTextTracks');
+    // this.#remote('getTextTracks');
 
-    this._remote('getChapters');
+    this.#remote('getChapters');
   }
 
-  protected _onMethod<T extends keyof VimeoCommandData>(
+  #onMethod<T extends keyof VimeoCommandData>(
     method: T,
     data: VimeoCommandData[T],
     trigger: Event,
@@ -389,130 +386,130 @@ export class VimeoProvider
     switch (method) {
       case 'getVideoTitle':
         const videoTitle = data as string;
-        this._notify('title-change', videoTitle, trigger);
+        this.#ctx.notify('title-change', videoTitle, trigger);
         break;
       case 'getDuration':
         const duration = data as number;
-        if (!this._ctx.$state.canPlay()) {
-          this._onReady(duration, trigger);
+        if (!this.#ctx.$state.canPlay()) {
+          this.#onReady(duration, trigger);
         } else {
-          this._notify('duration-change', duration, trigger);
+          this.#ctx.notify('duration-change', duration, trigger);
         }
         break;
       case 'getCurrentTime':
         // Why isn't this narrowing type?
-        this._onTimeUpdate(data as number, trigger);
+        this.#onTimeUpdate(data as number, trigger);
         break;
       case 'getBuffered':
         if (isArray(data) && data.length) {
-          this._onLoadProgress(data[data.length - 1][1] as number, trigger);
+          this.#onLoadProgress(data[data.length - 1][1] as number, trigger);
         }
         break;
       case 'setMuted':
-        this._onVolumeChange(peek(this._ctx.$state.volume), data as boolean, trigger);
+        this.#onVolumeChange(peek(this.#ctx.$state.volume), data as boolean, trigger);
         break;
       // case 'getTextTracks':
-      //   this._onTextTracksChange(data as VimeoTextTrack[], trigger);
+      //   this.#onTextTracksChange(data as VimeoTextTrack[], trigger);
       //   break;
       case 'getChapters':
-        this._onChaptersChange(data as VimeoChapter[]);
+        this.#onChaptersChange(data as VimeoChapter[]);
         break;
       case 'getQualities':
-        this._onQualitiesChange(data as VimeoQuality[], trigger);
+        this.#onQualitiesChange(data as VimeoQuality[], trigger);
         break;
     }
 
-    this._getPromise(method)?.resolve();
+    this.#getPromise(method)?.resolve();
   }
 
-  protected _attachListeners() {
+  #attachListeners() {
     for (const type of trackedVimeoEvents) {
-      this._remote('addEventListener', type as VimeoEvent);
+      this.#remote('addEventListener', type as VimeoEvent);
     }
   }
 
-  protected _onPause(trigger: Event) {
-    this._timeRAF._stop();
-    this._notify('pause', undefined, trigger);
+  #onPause(trigger: Event) {
+    this.#timeRAF.stop();
+    this.#ctx.notify('pause', undefined, trigger);
   }
 
-  protected _onPlay(trigger: Event) {
-    this._timeRAF._start();
-    this._notify('play', undefined, trigger);
+  #onPlay(trigger: Event) {
+    this.#timeRAF.start();
+    this.#ctx.notify('play', undefined, trigger);
   }
 
-  protected _onPlayProgress(trigger: Event) {
-    const { paused } = this._ctx.$state;
-    if (!paused() && !this._preventTimeUpdates) {
-      this._notify('playing', undefined, trigger);
+  #onPlayProgress(trigger: Event) {
+    const { paused } = this.#ctx.$state;
+    if (!paused() && !this.#preventTimeUpdates) {
+      this.#ctx.notify('playing', undefined, trigger);
     }
   }
 
-  protected _onLoadProgress(buffered: number, trigger: Event) {
+  #onLoadProgress(buffered: number, trigger: Event) {
     const detail = {
       buffered: new TimeRange(0, buffered),
-      seekable: this._seekableRange,
+      seekable: this.#seekableRange,
     };
 
-    this._notify('progress', detail, trigger);
+    this.#ctx.notify('progress', detail, trigger);
   }
 
-  protected _onBufferStart(trigger: Event) {
-    this._notify('waiting', undefined, trigger);
+  #onBufferStart(trigger: Event) {
+    this.#ctx.notify('waiting', undefined, trigger);
   }
 
-  protected _onBufferEnd(trigger: Event) {
-    const { paused } = this._ctx.$state;
-    if (!paused()) this._notify('playing', undefined, trigger);
+  #onBufferEnd(trigger: Event) {
+    const { paused } = this.#ctx.$state;
+    if (!paused()) this.#ctx.notify('playing', undefined, trigger);
   }
 
-  protected _onWaiting(trigger: Event) {
+  #onWaiting(trigger: Event) {
     // Attempt to detect `play` events early.
-    const { paused } = this._ctx.$state;
+    const { paused } = this.#ctx.$state;
     if (paused()) {
-      this._notify('play', undefined, trigger);
+      this.#ctx.notify('play', undefined, trigger);
     }
 
-    this._notify('waiting', undefined, trigger);
+    this.#ctx.notify('waiting', undefined, trigger);
   }
 
-  protected _onVolumeChange(volume: number, muted: boolean, trigger: Event) {
+  #onVolumeChange(volume: number, muted: boolean, trigger: Event) {
     const detail = { volume, muted };
-    this._notify('volume-change', detail, trigger);
+    this.#ctx.notify('volume-change', detail, trigger);
   }
 
-  // protected _onTextTrackChange(track: VimeoTextTrack, trigger: Event) {
-  //   const textTrack = this._ctx.textTracks.toArray().find((t) => t.language === track.language);
+  // #onTextTrackChange(track: VimeoTextTrack, trigger: Event) {
+  //   const textTrack = this.#ctx.textTracks.toArray().find((t) => t.language === track.language);
   //   if (textTrack) textTrack.mode = track.mode;
   // }
 
-  // protected _onTextTracksChange(tracks: VimeoTextTrack[], trigger: Event) {
+  // #onTextTracksChange(tracks: VimeoTextTrack[], trigger: Event) {
   //   for (const init of tracks) {
   //     const textTrack = new TextTrack({
   //       ...init,
   //       label: init.label.replace('auto-generated', 'auto'),
   //     });
 
-  //     textTrack[TextTrackSymbol._readyState] = 2;
+  //     textTrack[TextTrackSymbol.readyState] = 2;
 
-  //     this._ctx.textTracks.add(textTrack, trigger);
+  //     this.#ctx.textTracks.add(textTrack, trigger);
   //     textTrack.setMode(init.mode, trigger);
   //   }
   // }
 
-  // protected _onCueChange(cue: VimeoTextCue, trigger: Event) {
-  //   const { textTracks, $state } = this._ctx,
+  // #onCueChange(cue: VimeoTextCue, trigger: Event) {
+  //   const { textTracks, $state } = this.#ctx,
   //     { currentTime } = $state,
   //     track = textTracks.selected;
 
-  //   if (this._currentCue) track?.removeCue(this._currentCue, trigger);
+  //   if (this.#currentCue) track?.removeCue(this.#currentCue, trigger);
 
-  //   this._currentCue = new window.VTTCue(currentTime(), Number.MAX_SAFE_INTEGER, cue.text);
-  //   track?.addCue(this._currentCue, trigger);
+  //   this.#currentCue = new window.VTTCue(currentTime(), Number.MAX_SAFE_INTEGER, cue.text);
+  //   track?.addCue(this.#currentCue, trigger);
   // }
 
-  protected _onChaptersChange(chapters: VimeoChapter[]) {
-    this._removeChapters();
+  #onChaptersChange(chapters: VimeoChapter[]) {
+    this.#removeChapters();
 
     if (!chapters.length) return;
 
@@ -520,7 +517,7 @@ export class VimeoProvider
         kind: 'chapters',
         default: true,
       }),
-      { realDuration } = this._ctx.$state;
+      { realDuration } = this.#ctx.$state;
 
     for (let i = 0; i < chapters.length; i++) {
       const chapter = chapters[i],
@@ -535,19 +532,19 @@ export class VimeoProvider
       );
     }
 
-    this._chaptersTrack = track;
-    this._ctx.textTracks.add(track);
+    this.#chaptersTrack = track;
+    this.#ctx.textTracks.add(track);
   }
 
-  protected _removeChapters() {
-    if (!this._chaptersTrack) return;
-    this._ctx.textTracks.remove(this._chaptersTrack);
-    this._chaptersTrack = null;
+  #removeChapters() {
+    if (!this.#chaptersTrack) return;
+    this.#ctx.textTracks.remove(this.#chaptersTrack);
+    this.#chaptersTrack = null;
   }
 
-  protected _onQualitiesChange(qualities: VimeoQuality[], trigger: Event) {
-    this._ctx.qualities[QualitySymbol._enableAuto] = qualities.some((q) => q.id === 'auto')
-      ? () => this._remote('setQuality', 'auto')
+  #onQualitiesChange(qualities: VimeoQuality[], trigger: Event) {
+    this.#ctx.qualities[QualitySymbol.enableAuto] = qualities.some((q) => q.id === 'auto')
+      ? () => this.#remote('setQuality', 'auto')
       : undefined;
 
     for (const quality of qualities) {
@@ -556,7 +553,7 @@ export class VimeoProvider
       const height = +quality.id.slice(0, -1);
       if (isNaN(height)) continue;
 
-      this._ctx.qualities[ListSymbol._add](
+      this.#ctx.qualities[ListSymbol.add](
         {
           id: quality.id,
           width: height * (16 / 9),
@@ -568,114 +565,114 @@ export class VimeoProvider
       );
     }
 
-    this._onQualityChange(
+    this.#onQualityChange(
       qualities.find((q) => q.active),
       trigger,
     );
   }
 
-  protected _onQualityChange({ id }: { id?: string } | undefined = {}, trigger: Event) {
+  #onQualityChange({ id }: { id?: string } | undefined = {}, trigger: Event) {
     if (!id) return;
 
     const isAuto = id === 'auto',
-      newQuality = this._ctx.qualities.getById(id);
+      newQuality = this.#ctx.qualities.getById(id);
 
     if (isAuto) {
-      this._ctx.qualities[QualitySymbol._setAuto](isAuto, trigger);
-      this._ctx.qualities[ListSymbol._select](undefined, true, trigger);
+      this.#ctx.qualities[QualitySymbol.setAuto](isAuto, trigger);
+      this.#ctx.qualities[ListSymbol.select](undefined, true, trigger);
     } else {
-      this._ctx.qualities[ListSymbol._select](newQuality ?? undefined, true, trigger);
+      this.#ctx.qualities[ListSymbol.select](newQuality ?? undefined, true, trigger);
     }
   }
 
-  protected _onEvent<T extends keyof VimeoEventPayload>(
+  #onEvent<T extends keyof VimeoEventPayload>(
     event: T,
     payload: VimeoEventPayload[T],
     trigger: Event,
   ) {
     switch (event) {
       case 'ready':
-        this._attachListeners();
+        this.#attachListeners();
         break;
       case 'loaded':
-        this._onLoaded(trigger);
+        this.#onLoaded(trigger);
         break;
       case 'play':
-        this._onPlay(trigger);
+        this.#onPlay(trigger);
         break;
       case 'playProgress':
-        this._onPlayProgress(trigger);
+        this.#onPlayProgress(trigger);
         break;
       case 'pause':
-        this._onPause(trigger);
+        this.#onPause(trigger);
         break;
       case 'loadProgress':
-        this._onLoadProgress(payload.seconds, trigger);
+        this.#onLoadProgress(payload.seconds, trigger);
         break;
       case 'waiting':
-        this._onWaiting(trigger);
+        this.#onWaiting(trigger);
         break;
       case 'bufferstart':
-        this._onBufferStart(trigger);
+        this.#onBufferStart(trigger);
         break;
       case 'bufferend':
-        this._onBufferEnd(trigger);
+        this.#onBufferEnd(trigger);
         break;
       case 'volumechange':
-        this._onVolumeChange(payload.volume, peek(this._ctx.$state.muted), trigger);
+        this.#onVolumeChange(payload.volume, peek(this.#ctx.$state.muted), trigger);
         break;
       case 'durationchange':
-        this._seekableRange = new TimeRange(0, payload.duration);
-        this._notify('duration-change', payload.duration, trigger);
+        this.#seekableRange = new TimeRange(0, payload.duration);
+        this.#ctx.notify('duration-change', payload.duration, trigger);
         break;
       case 'playbackratechange':
-        this._notify('rate-change', payload.playbackRate, trigger);
+        this.#ctx.notify('rate-change', payload.playbackRate, trigger);
         break;
       case 'qualitychange':
-        this._onQualityChange(payload, trigger);
+        this.#onQualityChange(payload, trigger);
         break;
       case 'fullscreenchange':
-        this._fullscreenActive = payload.fullscreen;
-        this._notify('fullscreen-change', payload.fullscreen, trigger);
+        this.#fullscreenActive = payload.fullscreen;
+        this.#ctx.notify('fullscreen-change', payload.fullscreen, trigger);
         break;
       case 'enterpictureinpicture':
-        this._notify('picture-in-picture-change', true, trigger);
+        this.#ctx.notify('picture-in-picture-change', true, trigger);
         break;
       case 'leavepictureinpicture':
-        this._notify('picture-in-picture-change', false, trigger);
+        this.#ctx.notify('picture-in-picture-change', false, trigger);
         break;
       case 'ended':
-        this._notify('end', undefined, trigger);
+        this.#ctx.notify('end', undefined, trigger);
         break;
       case 'error':
-        this._onError(payload, trigger);
+        this.#onError(payload, trigger);
         break;
       case 'seek':
       case 'seeked':
-        this._onSeeked(payload.seconds, trigger);
+        this.#onSeeked(payload.seconds, trigger);
         break;
       // case 'texttrackchange':
-      //   this._onTextTrackChange(payload, trigger);
+      //   this.#onTextTrackChange(payload, trigger);
       //   break;
       // case 'cuechange':
-      //   this._onCueChange(payload, trigger);
+      //   this.#onCueChange(payload, trigger);
       //   break;
     }
   }
 
-  protected _onError(error: VimeoErrorPayload, trigger: Event) {
+  #onError(error: VimeoErrorPayload, trigger: Event) {
     const { message, method } = error;
 
     if (method === 'setPlaybackRate') {
-      this._pro.set(false);
+      this.#pro.set(false);
     }
 
     if (method) {
-      this._getPromise(method as VimeoCommand)?.reject(message);
+      this.#getPromise(method as VimeoCommand)?.reject(message);
     }
 
     if (__DEV__) {
-      this._ctx.logger
+      this.#ctx.logger
         ?.errorGroup(`[vimeo]: ${message}`)
         .labelledLog('Error', error)
         .labelledLog('Provider', this)
@@ -684,27 +681,27 @@ export class VimeoProvider
     }
   }
 
-  protected override _onMessage(message: VimeoMessage, event: MessageEvent): void {
+  protected override onMessage(message: VimeoMessage, event: MessageEvent): void {
     if (message.event) {
-      this._onEvent(message.event, message.data, event);
+      this.#onEvent(message.event, message.data, event);
     } else if (message.method) {
-      this._onMethod(message.method!, message.value, event);
+      this.#onMethod(message.method!, message.value, event);
     }
   }
 
-  protected override _onLoad(): void {
+  protected override onLoad(): void {
     // no-op
   }
 
-  protected async _remote<T extends keyof VimeoCommandArg>(command: T, arg?: VimeoCommandArg[T]) {
+  async #remote<T extends keyof VimeoCommandArg>(command: T, arg?: VimeoCommandArg[T]) {
     let promise = deferredPromise<void, string>(),
-      promises = this._promises.get(command);
+      promises = this.#promises.get(command);
 
-    if (!promises) this._promises.set(command, (promises = []));
+    if (!promises) this.#promises.set(command, (promises = []));
 
     promises.push(promise);
 
-    this._postMessage({
+    this.postMessage({
       method: command,
       value: arg,
     });
@@ -712,16 +709,16 @@ export class VimeoProvider
     return promise.promise;
   }
 
-  protected _reset() {
-    this._timeRAF._stop();
-    this._seekableRange = new TimeRange(0, 0);
-    this._videoInfoPromise = null;
-    this._currentCue = null;
-    this._pro.set(false);
-    this._removeChapters();
+  #reset() {
+    this.#timeRAF.stop();
+    this.#seekableRange = new TimeRange(0, 0);
+    this.#videoInfoPromise = null;
+    this.#currentCue = null;
+    this.#pro.set(false);
+    this.#removeChapters();
   }
 
-  protected _getPromise(command: VimeoCommand) {
-    return this._promises.get(command)?.shift();
+  #getPromise(command: VimeoCommand) {
+    return this.#promises.get(command)?.shift();
   }
 }

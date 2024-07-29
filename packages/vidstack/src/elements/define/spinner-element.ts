@@ -36,11 +36,11 @@ export class Spinner extends Component<SpinnerProps> {
         track = root.firstElementChild as SVGCircleElement,
         trackFill = track.nextElementSibling as SVGCircleElement;
 
-      effect(this._update.bind(this, root, track, trackFill));
+      effect(this.#update.bind(this, root, track, trackFill));
     });
   }
 
-  private _update(root: SVGSVGElement, track: SVGCircleElement, trackFill: SVGCircleElement) {
+  #update(root: SVGSVGElement, track: SVGCircleElement, trackFill: SVGCircleElement) {
     const { size, trackWidth, fillPercent } = this.$props;
     setAttribute(root, 'width', size());
     setAttribute(root, 'height', size());

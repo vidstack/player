@@ -24,23 +24,21 @@ export function useVideoQualityOptions({
 
   return React.useMemo(() => {
     const sortedQualities = sortVideoQualities($qualities, sort === 'descending'),
-      options = sortedQualities.map<VideoQualityOption>((_quality) => {
+      options = sortedQualities.map<VideoQualityOption>((q) => {
         return {
-          quality: _quality,
-          label: _quality.height + 'p',
-          value: getQualityValue(_quality),
+          quality: q,
+          label: q.height + 'p',
+          value: getQualityValue(q),
           bitrateText:
-            _quality.bitrate && _quality.bitrate > 0
-              ? `${(_quality.bitrate / 1000000).toFixed(2)} Mbps`
-              : null,
+            q.bitrate && q.bitrate > 0 ? `${(q.bitrate / 1000000).toFixed(2)} Mbps` : null,
           get selected() {
-            return _quality === quality();
+            return q === quality();
           },
           get autoSelected() {
             return autoQuality();
           },
           select(trigger) {
-            const index = qualities().indexOf(_quality);
+            const index = qualities().indexOf(q);
             if (index >= 0) media.remote.changeQuality(index, trigger);
           },
         };

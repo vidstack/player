@@ -42,21 +42,22 @@ import { TRACKED_EVENT } from './tracked-media-events';
  * state context, and satisfying media requests.
  */
 export class MediaStateManager extends MediaPlayerController {
-  private readonly _trackedEvents = new Map<string, ME.MediaEvent>();
+  readonly #request: MediaRequestContext;
+  readonly #media: MediaContext;
+  readonly #trackedEvents = new Map<string, ME.MediaEvent>();
 
-  private _clipEnded = false;
+  #clipEnded = false;
 
-  private _playedIntervals: TimeInterval[] = [];
-  private _playedInterval: TimeInterval = [-1, -1];
+  #playedIntervals: TimeInterval[] = [];
+  #playedInterval: TimeInterval = [-1, -1];
 
-  private _firingWaiting = false;
-  private _waitingTrigger: Event | undefined;
+  #firingWaiting = false;
+  #waitingTrigger: Event | undefined;
 
-  constructor(
-    private _request: MediaRequestContext,
-    private _media: MediaContext,
-  ) {
+  constructor(request: MediaRequestContext, media: MediaContext) {
     super();
+    this.#request = request;
+    this.#media = media;
   }
 
   protected override onAttach(el: HTMLElement): void {
@@ -67,109 +68,109 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   protected override onConnect(el: HTMLElement) {
-    effect(this._watchCanSetVolume.bind(this));
+    effect(this.#watchCanSetVolume.bind(this));
 
-    this._addTextTrackListeners();
-    this._addQualityListeners();
-    this._addAudioTrackListeners();
-    this._resumePlaybackOnConnect();
+    this.#addTextTrackListeners();
+    this.#addQualityListeners();
+    this.#addAudioTrackListeners();
+    this.#resumePlaybackOnConnect();
 
-    onDispose(this._pausePlaybackOnDisconnect.bind(this));
+    onDispose(this.#pausePlaybackOnDisconnect.bind(this));
   }
 
   protected override onDestroy(): void {
-    const { audioTracks, qualities, textTracks } = this._media;
-    audioTracks[ListSymbol._reset]();
-    qualities[ListSymbol._reset]();
-    textTracks[ListSymbol._reset]();
+    const { audioTracks, qualities, textTracks } = this.#media;
+    audioTracks[ListSymbol.reset]();
+    qualities[ListSymbol.reset]();
+    textTracks[ListSymbol.reset]();
 
-    this._stopWatchingQualityResize();
+    this.#stopWatchingQualityResize();
   }
 
-  _handle(event: Event) {
+  handle(event: Event) {
     if (!this.scope) return;
     const type = event.type as keyof ME.MediaEvents;
     untrack(() => this[event.type]?.(event));
     if (!__SERVER__) {
-      if (TRACKED_EVENT.has(type)) this._trackedEvents.set(type, event as ME.MediaEvent);
+      if (TRACKED_EVENT.has(type)) this.#trackedEvents.set(type, event as ME.MediaEvent);
       this.dispatch(event);
     }
   }
 
-  private _isPlayingOnDisconnect = false;
-  private _resumePlaybackOnConnect() {
-    if (!this._isPlayingOnDisconnect) return;
+  #isPlayingOnDisconnect = false;
+  #resumePlaybackOnConnect() {
+    if (!this.#isPlayingOnDisconnect) return;
 
     requestAnimationFrame(() => {
       if (!this.scope) return;
-      this._media.remote.play(new DOMEvent<void>('dom-connect'));
+      this.#media.remote.play(new DOMEvent<void>('dom-connect'));
     });
 
-    this._isPlayingOnDisconnect = false;
+    this.#isPlayingOnDisconnect = false;
   }
 
-  private _pausePlaybackOnDisconnect() {
+  #pausePlaybackOnDisconnect() {
     // It might already be set in `pause` handler.
-    if (this._isPlayingOnDisconnect) return;
-    this._isPlayingOnDisconnect = !this.$state.paused();
-    this._media.$provider()?.pause();
+    if (this.#isPlayingOnDisconnect) return;
+    this.#isPlayingOnDisconnect = !this.$state.paused();
+    this.#media.$provider()?.pause();
   }
 
-  private _resetTracking() {
-    this._stopWaiting();
-    this._clipEnded = false;
-    this._request._replaying = false;
-    this._request._looping = false;
-    this._firingWaiting = false;
-    this._waitingTrigger = undefined;
-    this._trackedEvents.clear();
+  #resetTracking() {
+    this.#stopWaiting();
+    this.#clipEnded = false;
+    this.#request.replaying = false;
+    this.#request.looping = false;
+    this.#firingWaiting = false;
+    this.#waitingTrigger = undefined;
+    this.#trackedEvents.clear();
   }
 
-  private _satisfyRequest<T extends keyof MediaRequestQueueItems>(request: T, event: DOMEvent) {
-    const requestEvent = this._request._queue._serve(request);
+  #satisfyRequest<T extends keyof MediaRequestQueueItems>(request: T, event: DOMEvent) {
+    const requestEvent = this.#request.queue.serve(request);
     if (!requestEvent) return;
     (event as ME.MediaEvent).request = requestEvent;
     event.triggers.add(requestEvent);
   }
 
-  private _addTextTrackListeners() {
-    this._onTextTracksChange();
-    this._onTextTrackModeChange();
-    const textTracks = this._media.textTracks;
-    listenEvent(textTracks, 'add', this._onTextTracksChange.bind(this));
-    listenEvent(textTracks, 'remove', this._onTextTracksChange.bind(this));
-    listenEvent(textTracks, 'mode-change', this._onTextTrackModeChange.bind(this));
+  #addTextTrackListeners() {
+    this.#onTextTracksChange();
+    this.#onTextTrackModeChange();
+    const textTracks = this.#media.textTracks;
+    listenEvent(textTracks, 'add', this.#onTextTracksChange.bind(this));
+    listenEvent(textTracks, 'remove', this.#onTextTracksChange.bind(this));
+    listenEvent(textTracks, 'mode-change', this.#onTextTrackModeChange.bind(this));
   }
 
-  private _addQualityListeners() {
-    const qualities = this._media.qualities;
-    listenEvent(qualities, 'add', this._onQualitiesChange.bind(this));
-    listenEvent(qualities, 'remove', this._onQualitiesChange.bind(this));
-    listenEvent(qualities, 'change', this._onQualityChange.bind(this));
-    listenEvent(qualities, 'auto-change', this._onAutoQualityChange.bind(this));
-    listenEvent(qualities, 'readonly-change', this._onCanSetQualityChange.bind(this));
+  #addQualityListeners() {
+    const qualities = this.#media.qualities;
+    listenEvent(qualities, 'add', this.#onQualitiesChange.bind(this));
+    listenEvent(qualities, 'remove', this.#onQualitiesChange.bind(this));
+    listenEvent(qualities, 'change', this.#onQualityChange.bind(this));
+    listenEvent(qualities, 'auto-change', this.#onAutoQualityChange.bind(this));
+    listenEvent(qualities, 'readonly-change', this.#onCanSetQualityChange.bind(this));
   }
 
-  private _addAudioTrackListeners() {
-    const audioTracks = this._media.audioTracks;
-    listenEvent(audioTracks, 'add', this._onAudioTracksChange.bind(this));
-    listenEvent(audioTracks, 'remove', this._onAudioTracksChange.bind(this));
-    listenEvent(audioTracks, 'change', this._onAudioTrackChange.bind(this));
+  #addAudioTrackListeners() {
+    const audioTracks = this.#media.audioTracks;
+    listenEvent(audioTracks, 'add', this.#onAudioTracksChange.bind(this));
+    listenEvent(audioTracks, 'remove', this.#onAudioTracksChange.bind(this));
+    listenEvent(audioTracks, 'change', this.#onAudioTrackChange.bind(this));
   }
 
-  private _onTextTracksChange(event?: TextTrackAddEvent | TextTrackRemoveEvent) {
+  #onTextTracksChange(event?: TextTrackAddEvent | TextTrackRemoveEvent) {
     const { textTracks } = this.$state;
-    textTracks.set(this._media.textTracks.toArray());
+    textTracks.set(this.#media.textTracks.toArray());
     this.dispatch('text-tracks-change', {
       detail: textTracks(),
       trigger: event,
     });
   }
 
-  private _onTextTrackModeChange(event?: TextTrackListModeChangeEvent) {
-    if (event) this._satisfyRequest('media-text-track-change-request', event);
+  #onTextTrackModeChange(event?: TextTrackListModeChangeEvent) {
+    if (event) this.#satisfyRequest('media-text-track-change-request', event);
 
-    const current = this._media.textTracks.selected,
+    const current = this.#media.textTracks.selected,
       { textTrack } = this.$state;
 
     if (textTrack() !== current) {
@@ -181,20 +182,20 @@ export class MediaStateManager extends MediaPlayerController {
     }
   }
 
-  private _onAudioTracksChange(event?: AudioTrackAddEvent | AudioTrackRemoveEvent) {
+  #onAudioTracksChange(event?: AudioTrackAddEvent | AudioTrackRemoveEvent) {
     const { audioTracks } = this.$state;
-    audioTracks.set(this._media.audioTracks.toArray());
+    audioTracks.set(this.#media.audioTracks.toArray());
     this.dispatch('audio-tracks-change', {
       detail: audioTracks(),
       trigger: event,
     });
   }
 
-  private _onAudioTrackChange(event?: AudioTrackChangeEvent) {
+  #onAudioTrackChange(event?: AudioTrackChangeEvent) {
     const { audioTrack } = this.$state;
 
-    audioTrack.set(this._media.audioTracks.selected);
-    if (event) this._satisfyRequest('media-audio-track-change-request', event);
+    audioTrack.set(this.#media.audioTracks.selected);
+    if (event) this.#satisfyRequest('media-audio-track-change-request', event);
 
     this.dispatch('audio-track-change', {
       detail: audioTrack(),
@@ -202,20 +203,20 @@ export class MediaStateManager extends MediaPlayerController {
     });
   }
 
-  private _onQualitiesChange(event?: VideoQualityAddEvent | VideoQualityRemoveEvent) {
+  #onQualitiesChange(event?: VideoQualityAddEvent | VideoQualityRemoveEvent) {
     const { qualities } = this.$state;
-    qualities.set(this._media.qualities.toArray());
+    qualities.set(this.#media.qualities.toArray());
     this.dispatch('qualities-change', {
       detail: qualities(),
       trigger: event,
     });
   }
 
-  private _onQualityChange(event?: VideoQualityChangeEvent) {
+  #onQualityChange(event?: VideoQualityChangeEvent) {
     const { quality } = this.$state;
 
-    quality.set(this._media.qualities.selected);
-    if (event) this._satisfyRequest('media-quality-change-request', event);
+    quality.set(this.#media.qualities.selected);
+    if (event) this.#satisfyRequest('media-quality-change-request', event);
 
     this.dispatch('quality-change', {
       detail: quality(),
@@ -223,20 +224,20 @@ export class MediaStateManager extends MediaPlayerController {
     });
   }
 
-  private _onAutoQualityChange() {
-    const { qualities } = this._media,
+  #onAutoQualityChange() {
+    const { qualities } = this.#media,
       isAuto = qualities.auto;
 
     this.$state.autoQuality.set(isAuto);
 
-    if (!isAuto) this._stopWatchingQualityResize();
+    if (!isAuto) this.#stopWatchingQualityResize();
   }
 
-  private _stopQualityResizeEffect: StopEffect | null = null;
-  private _watchQualityResize() {
-    this._stopWatchingQualityResize();
-    this._stopQualityResizeEffect = effect(() => {
-      const { qualities } = this._media,
+  #stopQualityResizeEffect: StopEffect | null = null;
+  #watchQualityResize() {
+    this.#stopWatchingQualityResize();
+    this.#stopQualityResizeEffect = effect(() => {
+      const { qualities } = this.#media,
         { mediaWidth, mediaHeight } = this.$state,
         w = mediaWidth(),
         h = mediaHeight();
@@ -255,7 +256,7 @@ export class MediaStateManager extends MediaPlayerController {
       }
 
       if (selectedQuality) {
-        qualities[ListSymbol._select](
+        qualities[ListSymbol.select](
           selectedQuality,
           true,
           new DOMEvent('resize', { detail: { width: w, height: h } }),
@@ -264,16 +265,16 @@ export class MediaStateManager extends MediaPlayerController {
     });
   }
 
-  private _stopWatchingQualityResize() {
-    this._stopQualityResizeEffect?.();
-    this._stopQualityResizeEffect = null;
+  #stopWatchingQualityResize() {
+    this.#stopQualityResizeEffect?.();
+    this.#stopQualityResizeEffect = null;
   }
 
-  private _onCanSetQualityChange() {
-    this.$state.canSetQuality.set(!this._media.qualities.readonly);
+  #onCanSetQualityChange() {
+    this.$state.canSetQuality.set(!this.#media.qualities.readonly);
   }
 
-  protected _watchCanSetVolume() {
+  #watchCanSetVolume() {
     const { canSetVolume, isGoogleCastConnected } = this.$state;
 
     if (isGoogleCastConnected()) {
@@ -286,23 +287,23 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['provider-change'](event: ME.MediaProviderChangeEvent) {
-    const prevProvider = this._media.$provider(),
+    const prevProvider = this.#media.$provider(),
       newProvider = event.detail;
 
     if (prevProvider?.type === newProvider?.type) return;
 
     prevProvider?.destroy?.();
     prevProvider?.scope?.dispose();
-    this._media.$provider.set(event.detail);
+    this.#media.$provider.set(event.detail);
 
     if (prevProvider && event.detail === null) {
-      this._resetMediaState(event);
+      this.#resetMediaState(event);
     }
   }
 
   ['provider-loader-change'](event: ME.MediaProviderLoaderChangeEvent) {
     if (__DEV__) {
-      this._media.logger
+      this.#media.logger
         ?.infoGroup(`Loader change \`${event.detail?.constructor.name}\``)
         .labelledLog('Event', event)
         .dispatch();
@@ -315,24 +316,24 @@ export class MediaStateManager extends MediaPlayerController {
 
   ['auto-play-fail'](event: ME.MediaAutoPlayFailEvent) {
     this.$state.autoPlayError.set(event.detail);
-    this._resetTracking();
+    this.#resetTracking();
   }
 
   ['can-load'](event: ME.MediaCanLoadEvent) {
     this.$state.canLoad.set(true);
-    this._trackedEvents.set('can-load', event);
-    this._media.textTracks[TextTrackSymbol._canLoad]();
-    this._satisfyRequest('media-start-loading', event);
+    this.#trackedEvents.set('can-load', event);
+    this.#media.textTracks[TextTrackSymbol.canLoad]();
+    this.#satisfyRequest('media-start-loading', event);
   }
 
   ['can-load-poster'](event: ME.MediaCanLoadEvent) {
     this.$state.canLoadPoster.set(true);
-    this._trackedEvents.set('can-load-poster', event);
-    this._satisfyRequest('media-poster-start-loading', event);
+    this.#trackedEvents.set('can-load-poster', event);
+    this.#satisfyRequest('media-poster-start-loading', event);
   }
 
   ['media-type-change'](event: ME.MediaTypeChangeEvent) {
-    const sourceChangeEvent = this._trackedEvents.get('source-change');
+    const sourceChangeEvent = this.#trackedEvents.get('source-change');
     if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);
 
     const viewType = this.$state.viewType();
@@ -361,7 +362,7 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['stream-type-change'](event: ME.MediaStreamTypeChangeEvent) {
-    const sourceChangeEvent = this._trackedEvents.get('source-change');
+    const sourceChangeEvent = this.#trackedEvents.get('source-change');
     if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);
 
     const { streamType, inferredStreamType } = this.$state;
@@ -370,11 +371,11 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['rate-change'](event: ME.MediaRateChangeEvent) {
-    const { storage } = this._media,
+    const { storage } = this.#media,
       { canPlay } = this.$state;
 
     this.$state.playbackRate.set(event.detail);
-    this._satisfyRequest('media-rate-change-request', event);
+    this.#satisfyRequest('media-rate-change-request', event);
 
     if (canPlay()) {
       storage?.setPlaybackRate?.(event.detail);
@@ -393,9 +394,9 @@ export class MediaStateManager extends MediaPlayerController {
       type === 'airplay' ? 'media-airplay-request' : 'media-google-cast-request';
 
     if (isConnected) {
-      this._satisfyRequest(key, event);
+      this.#satisfyRequest(key, event);
     } else {
-      const requestEvent = this._request._queue._peek(key);
+      const requestEvent = this.#request.queue.peek(key);
       if (requestEvent) {
         event.request = requestEvent;
         event.triggers.add(requestEvent);
@@ -409,11 +410,11 @@ export class MediaStateManager extends MediaPlayerController {
 
     this.$state.sources.set(newSources);
 
-    this._onSourceQualitiesChange(prevSources, newSources, event);
+    this.#onSourceQualitiesChange(prevSources, newSources, event);
   }
 
-  private _onSourceQualitiesChange(prevSources: Src[], newSources: Src[], trigger?: Event) {
-    let { qualities } = this._media,
+  #onSourceQualitiesChange(prevSources: Src[], newSources: Src[], trigger?: Event) {
+    let { qualities } = this.#media,
       added = false,
       removed = false;
 
@@ -424,7 +425,7 @@ export class MediaStateManager extends MediaPlayerController {
       if (!exists) {
         const quality = qualities.getBySrc(prevSrc.src);
         if (quality) {
-          qualities[ListSymbol._remove](quality, trigger);
+          qualities[ListSymbol.remove](quality, trigger);
           removed = true;
         }
       }
@@ -433,7 +434,7 @@ export class MediaStateManager extends MediaPlayerController {
     // Do a complete reset if source qualities has changed.
     if (removed && !qualities.length) {
       this.$state.savedState.set(null);
-      qualities[ListSymbol._reset](trigger);
+      qualities[ListSymbol.reset](trigger);
     }
 
     // Add new qualities.
@@ -448,15 +449,15 @@ export class MediaStateManager extends MediaPlayerController {
         selected: false,
       };
 
-      qualities[ListSymbol._add](quality, trigger);
+      qualities[ListSymbol.add](quality, trigger);
       added = true;
     }
 
-    if (added && !qualities[QualitySymbol._enableAuto]) {
+    if (added && !qualities[QualitySymbol.enableAuto]) {
       // Logic for this is inside `onAutoQualityChange` method.
-      this._watchQualityResize();
-      qualities[QualitySymbol._enableAuto] = this._watchQualityResize.bind(this);
-      qualities[QualitySymbol._setAuto](true, trigger);
+      this.#watchQualityResize();
+      qualities[QualitySymbol.enableAuto] = this.#watchQualityResize.bind(this);
+      qualities[QualitySymbol.setAuto](true, trigger);
     }
   }
 
@@ -465,98 +466,98 @@ export class MediaStateManager extends MediaPlayerController {
 
     const source = event.detail;
 
-    this._resetMediaState(event, event.isQualityChange);
-    this._trackedEvents.set(event.type, event);
+    this.#resetMediaState(event, event.isQualityChange);
+    this.#trackedEvents.set(event.type, event);
 
     this.$state.source.set(source);
     this.el?.setAttribute('aria-busy', 'true');
 
     if (__DEV__) {
-      this._media.logger
+      this.#media.logger
         ?.infoGroup('📼 Media source change')
         .labelledLog('Source', source)
         .dispatch();
     }
   }
 
-  private _resetMediaState(event: Event, isSourceQualityChange = false) {
-    const { audioTracks, qualities } = this._media;
+  #resetMediaState(event: Event, isSourceQualityChange = false) {
+    const { audioTracks, qualities } = this.#media;
 
     if (!isSourceQualityChange) {
-      this._playedIntervals = [];
-      this._playedInterval = [-1, -1];
+      this.#playedIntervals = [];
+      this.#playedInterval = [-1, -1];
 
-      audioTracks[ListSymbol._reset](event);
-      qualities[ListSymbol._reset](event);
+      audioTracks[ListSymbol.reset](event);
+      qualities[ListSymbol.reset](event);
 
       softResetMediaState(this.$state, isSourceQualityChange);
 
-      this._resetTracking();
+      this.#resetTracking();
 
       return;
     }
 
     softResetMediaState(this.$state, isSourceQualityChange);
-    this._resetTracking();
+    this.#resetTracking();
   }
 
   ['abort'](event: ME.MediaAbortEvent) {
-    const sourceChangeEvent = this._trackedEvents.get('source-change');
+    const sourceChangeEvent = this.#trackedEvents.get('source-change');
     if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);
 
-    const canLoadEvent = this._trackedEvents.get('can-load');
+    const canLoadEvent = this.#trackedEvents.get('can-load');
     if (canLoadEvent && !event.triggers.hasType('can-load')) {
       event.triggers.add(canLoadEvent);
     }
   }
 
   ['load-start'](event: ME.MediaLoadStartEvent) {
-    const sourceChangeEvent = this._trackedEvents.get('source-change');
+    const sourceChangeEvent = this.#trackedEvents.get('source-change');
     if (sourceChangeEvent) event.triggers.add(sourceChangeEvent);
   }
 
   ['error'](event: ME.MediaErrorEvent) {
     this.$state.error.set(event.detail);
 
-    const abortEvent = this._trackedEvents.get('abort');
+    const abortEvent = this.#trackedEvents.get('abort');
     if (abortEvent) event.triggers.add(abortEvent);
 
     if (__DEV__) {
-      this._media.logger
+      this.#media.logger
         ?.errorGroup('Media Error')
         .labelledLog('Error', event.detail)
         .labelledLog('Event', event)
-        .labelledLog('Context', this._media)
+        .labelledLog('Context', this.#media)
         .dispatch();
     }
   }
 
   ['loaded-metadata'](event: ME.MediaLoadedMetadataEvent) {
-    const loadStartEvent = this._trackedEvents.get('load-start');
+    const loadStartEvent = this.#trackedEvents.get('load-start');
     if (loadStartEvent) event.triggers.add(loadStartEvent);
   }
 
   ['loaded-data'](event: ME.MediaLoadedDataEvent) {
-    const loadStartEvent = this._trackedEvents.get('load-start');
+    const loadStartEvent = this.#trackedEvents.get('load-start');
     if (loadStartEvent) event.triggers.add(loadStartEvent);
   }
 
   ['can-play'](event: ME.MediaCanPlayEvent) {
-    const loadedMetadata = this._trackedEvents.get('loaded-metadata');
+    const loadedMetadata = this.#trackedEvents.get('loaded-metadata');
     if (loadedMetadata) event.triggers.add(loadedMetadata);
 
-    this._onCanPlayDetail(event.detail);
+    this.#onCanPlayDetail(event.detail);
     this.el?.setAttribute('aria-busy', 'false');
   }
 
   ['can-play-through'](event: ME.MediaCanPlayThroughEvent) {
-    this._onCanPlayDetail(event.detail);
+    this.#onCanPlayDetail(event.detail);
 
-    const canPlay = this._trackedEvents.get('can-play');
+    const canPlay = this.#trackedEvents.get('can-play');
     if (canPlay) event.triggers.add(canPlay);
   }
 
-  protected _onCanPlayDetail(detail: ME.MediaCanPlayDetail) {
+  #onCanPlayDetail(detail: ME.MediaCanPlayDetail) {
     const { seekable, buffered, intrinsicDuration, canPlay } = this.$state;
 
     canPlay.set(true);
@@ -575,7 +576,7 @@ export class MediaStateManager extends MediaPlayerController {
     if (!live()) {
       const duration = !Number.isNaN(time) ? time : 0;
       intrinsicDuration.set(duration);
-      if (ended()) this._onEndPrecisionChange(event);
+      if (ended()) this.#onEndPrecisionChange(event);
     }
 
     if (providedDuration() > 0 || clipEndTime() > 0) {
@@ -624,7 +625,7 @@ export class MediaStateManager extends MediaPlayerController {
       userBehindLiveEdge,
     } = this.$state;
 
-    this._resetPlaybackIfNeeded();
+    this.#resetPlaybackIfNeeded();
 
     if (!paused()) {
       event.stopImmediatePropagation();
@@ -633,17 +634,17 @@ export class MediaStateManager extends MediaPlayerController {
 
     event.autoPlay = autoPlaying();
 
-    const waitingEvent = this._trackedEvents.get('waiting');
+    const waitingEvent = this.#trackedEvents.get('waiting');
     if (waitingEvent) event.triggers.add(waitingEvent);
 
-    this._satisfyRequest('media-play-request', event);
-    this._trackedEvents.set('play', event);
+    this.#satisfyRequest('media-play-request', event);
+    this.#trackedEvents.set('play', event);
 
     paused.set(false);
     autoPlayError.set(null);
 
     if (event.autoPlay) {
-      this._handle(
+      this.handle(
         this.createEvent('auto-play', {
           detail: { muted: muted() },
           trigger: event,
@@ -653,23 +654,23 @@ export class MediaStateManager extends MediaPlayerController {
       autoPlaying.set(false);
     }
 
-    if (ended() || this._request._replaying) {
-      this._request._replaying = false;
+    if (ended() || this.#request.replaying) {
+      this.#request.replaying = false;
       ended.set(false);
-      this._handle(this.createEvent('replay', { trigger: event }));
+      this.handle(this.createEvent('replay', { trigger: event }));
     }
 
     if (!playsInline() && viewType() === 'video' && pointer() === 'coarse') {
-      this._media.remote.enterFullscreen('prefer-media', event);
+      this.#media.remote.enterFullscreen('prefer-media', event);
     }
 
     if (live() && !userBehindLiveEdge()) {
-      this._media.remote.seekToLiveEdge(event);
+      this.#media.remote.seekToLiveEdge(event);
     }
   }
 
-  private _resetPlaybackIfNeeded(trigger?: Event) {
-    const provider = peek(this._media.$provider);
+  #resetPlaybackIfNeeded(trigger?: Event) {
+    const provider = peek(this.#media.$provider);
     if (!provider) return;
 
     const { ended, seekableStart, clipStartTime, clipEndTime, realCurrentTime, duration } =
@@ -694,20 +695,20 @@ export class MediaStateManager extends MediaPlayerController {
   ['play-fail'](event: ME.MediaPlayFailEvent) {
     const { muted, autoPlaying } = this.$state;
 
-    const playEvent = this._trackedEvents.get('play');
+    const playEvent = this.#trackedEvents.get('play');
     if (playEvent) event.triggers.add(playEvent);
 
-    this._satisfyRequest('media-play-request', event);
+    this.#satisfyRequest('media-play-request', event);
 
     const { paused, playing } = this.$state;
     paused.set(true);
     playing.set(false);
 
-    this._resetTracking();
-    this._trackedEvents.set('play-fail', event);
+    this.#resetTracking();
+    this.#trackedEvents.set('play-fail', event);
 
     if (event.autoPlay) {
-      this._handle(
+      this.handle(
         this.createEvent('auto-play-fail', {
           detail: {
             muted: muted(),
@@ -722,13 +723,13 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['playing'](event: ME.MediaPlayingEvent) {
-    const playEvent = this._trackedEvents.get('play'),
-      seekedEvent = this._trackedEvents.get('seeked');
+    const playEvent = this.#trackedEvents.get('play'),
+      seekedEvent = this.#trackedEvents.get('seeked');
 
     if (playEvent) event.triggers.add(playEvent);
     else if (seekedEvent) event.triggers.add(seekedEvent);
 
-    setTimeout(() => this._resetTracking(), 0);
+    setTimeout(() => this.#resetTracking(), 0);
 
     const {
       paused,
@@ -747,14 +748,14 @@ export class MediaStateManager extends MediaPlayerController {
     seeking.set(false);
     ended.set(false);
 
-    if (this._request._looping) {
-      this._request._looping = false;
+    if (this.#request.looping) {
+      this.#request.looping = false;
       return;
     }
 
     if (live() && !started() && currentTime() === 0) {
       const end = liveSyncPosition() ?? seekableEnd() - 2;
-      if (Number.isFinite(end)) this._media.$provider()!.setCurrentTime(end);
+      if (Number.isFinite(end)) this.#media.$provider()!.setCurrentTime(end);
     }
 
     this['started'](event);
@@ -764,37 +765,37 @@ export class MediaStateManager extends MediaPlayerController {
     const { started } = this.$state;
     if (!started()) {
       started.set(true);
-      this._handle(this.createEvent('started', { trigger: event }));
+      this.handle(this.createEvent('started', { trigger: event }));
     }
   }
 
   ['pause'](event: ME.MediaPauseEvent) {
     if (!this.el?.isConnected) {
-      this._isPlayingOnDisconnect = true;
+      this.#isPlayingOnDisconnect = true;
     }
 
-    this._satisfyRequest('media-pause-request', event);
+    this.#satisfyRequest('media-pause-request', event);
 
-    const seekedEvent = this._trackedEvents.get('seeked');
+    const seekedEvent = this.#trackedEvents.get('seeked');
     if (seekedEvent) event.triggers.add(seekedEvent);
 
     const { paused, playing } = this.$state;
     paused.set(true);
     playing.set(false);
 
-    if (this._clipEnded) {
+    if (this.#clipEnded) {
       // Should fire after pause event.
       setTimeout(() => {
-        this._handle(this.createEvent('end', { trigger: event }));
-        this._clipEnded = false;
+        this.handle(this.createEvent('end', { trigger: event }));
+        this.#clipEnded = false;
       }, 0);
     }
 
-    this._resetTracking();
+    this.#resetTracking();
   }
 
   ['time-change'](event: ME.MediaTimeChangeEvent) {
-    if (this._request._looping) {
+    if (this.#request.looping) {
       event.stopImmediatePropagation();
       return;
     }
@@ -804,19 +805,19 @@ export class MediaStateManager extends MediaPlayerController {
       endTime = clipEndTime();
 
     realCurrentTime.set(newTime);
-    this._updatePlayed();
+    this.#updatePlayed();
     waiting.set(false);
 
-    for (const track of this._media.textTracks) {
-      track[TextTrackSymbol._updateActiveCues](newTime, event);
+    for (const track of this.#media.textTracks) {
+      track[TextTrackSymbol.updateActiveCues](newTime, event);
     }
 
     if (endTime > 0 && newTime >= endTime) {
-      this._clipEnded = true;
+      this.#clipEnded = true;
       this.dispatch('media-pause-request', { trigger: event });
     }
 
-    this._saveTime();
+    this.#saveTime();
 
     this.dispatch('time-update', {
       detail: { currentTime: currentTime(), played: played() },
@@ -824,28 +825,28 @@ export class MediaStateManager extends MediaPlayerController {
     });
   }
 
-  private _updatePlayed() {
+  #updatePlayed() {
     const { currentTime, played, paused } = this.$state;
 
     if (paused()) return;
 
-    this._playedInterval = updateTimeIntervals(
-      this._playedIntervals,
-      this._playedInterval,
+    this.#playedInterval = updateTimeIntervals(
+      this.#playedIntervals,
+      this.#playedInterval,
       currentTime(),
     );
 
-    played.set(new TimeRange(this._playedIntervals));
+    played.set(new TimeRange(this.#playedIntervals));
   }
 
   // Called to update time again incase duration precision has changed.
-  private _onEndPrecisionChange(trigger?: Event) {
+  #onEndPrecisionChange(trigger?: Event) {
     const { clipStartTime, clipEndTime, duration } = this.$state,
       isClipped = clipStartTime() > 0 || clipEndTime() > 0;
 
     if (isClipped) return;
 
-    this._handle(
+    this.handle(
       this.createEvent('time-change', {
         detail: duration(),
         trigger,
@@ -853,8 +854,8 @@ export class MediaStateManager extends MediaPlayerController {
     );
   }
 
-  private _saveTime() {
-    const { storage } = this._media,
+  #saveTime() {
+    const { storage } = this.#media,
       { canPlay, realCurrentTime } = this.$state;
     if (canPlay()) {
       storage?.setTime?.(realCurrentTime());
@@ -862,25 +863,25 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['audio-gain-change'](event: ME.MediaAudioGainChangeEvent) {
-    const { storage } = this._media,
+    const { storage } = this.#media,
       { canPlay, audioGain } = this.$state;
 
     audioGain.set(event.detail);
-    this._satisfyRequest('media-audio-gain-change-request', event);
+    this.#satisfyRequest('media-audio-gain-change-request', event);
 
     if (canPlay()) storage?.setAudioGain?.(audioGain());
   }
 
   ['volume-change'](event: ME.MediaVolumeChangeEvent) {
-    const { storage } = this._media,
+    const { storage } = this.#media,
       { volume, muted, canPlay } = this.$state,
       detail = event.detail;
 
     volume.set(detail.volume);
     muted.set(detail.muted || detail.volume === 0);
 
-    this._satisfyRequest('media-volume-change-request', event);
-    this._satisfyRequest(detail.muted ? 'media-mute-request' : 'media-unmute-request', event);
+    this.#satisfyRequest('media-volume-change-request', event);
+    this.#satisfyRequest(detail.muted ? 'media-mute-request' : 'media-unmute-request', event);
 
     if (canPlay()) {
       storage?.setVolume?.(volume());
@@ -895,14 +896,14 @@ export class MediaStateManager extends MediaPlayerController {
       seeking.set(true);
       realCurrentTime.set(event.detail);
 
-      this._satisfyRequest('media-seeking-request', event);
+      this.#satisfyRequest('media-seeking-request', event);
 
       if (paused()) {
-        this._waitingTrigger = event;
-        this._fireWaiting();
+        this.#waitingTrigger = event;
+        this.#fireWaiting();
       }
 
-      this._playedInterval = [-1, -1];
+      this.#playedInterval = [-1, -1];
     },
     150,
     { leading: true },
@@ -911,24 +912,24 @@ export class MediaStateManager extends MediaPlayerController {
   ['seeked'](event: ME.MediaSeekedEvent) {
     const { seeking, currentTime, realCurrentTime, paused, seekableEnd, ended } = this.$state;
 
-    if (this._request._seeking) {
+    if (this.#request.seeking) {
       seeking.set(true);
       event.stopImmediatePropagation();
     } else if (seeking()) {
-      const waitingEvent = this._trackedEvents.get('waiting');
+      const waitingEvent = this.#trackedEvents.get('waiting');
       if (waitingEvent) event.triggers.add(waitingEvent);
 
-      const seekingEvent = this._trackedEvents.get('seeking');
+      const seekingEvent = this.#trackedEvents.get('seeking');
       if (seekingEvent && !event.triggers.has(seekingEvent)) {
         event.triggers.add(seekingEvent);
       }
 
-      if (paused()) this._stopWaiting();
+      if (paused()) this.#stopWaiting();
 
       seeking.set(false);
 
       realCurrentTime.set(event.detail);
-      this._satisfyRequest('media-seek-request', event);
+      this.#satisfyRequest('media-seek-request', event);
 
       // Only start if user initiated.
       const origin = event?.originEvent;
@@ -945,27 +946,27 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['waiting'](event: ME.MediaWaitingEvent) {
-    if (this._firingWaiting || this._request._seeking) return;
+    if (this.#firingWaiting || this.#request.seeking) return;
     event.stopImmediatePropagation();
-    this._waitingTrigger = event;
-    this._fireWaiting();
+    this.#waitingTrigger = event;
+    this.#fireWaiting();
   }
 
-  private _fireWaiting = debounce(() => {
-    if (!this._waitingTrigger) return;
+  #fireWaiting = debounce(() => {
+    if (!this.#waitingTrigger) return;
 
-    this._firingWaiting = true;
+    this.#firingWaiting = true;
 
     const { waiting, playing } = this.$state;
     waiting.set(true);
     playing.set(false);
 
-    const event = this.createEvent('waiting', { trigger: this._waitingTrigger });
-    this._trackedEvents.set('waiting', event);
+    const event = this.createEvent('waiting', { trigger: this.#waitingTrigger });
+    this.#trackedEvents.set('waiting', event);
     this.dispatch(event);
 
-    this._waitingTrigger = undefined;
-    this._firingWaiting = false;
+    this.#waitingTrigger = undefined;
+    this.#firingWaiting = false;
   }, 300);
 
   ['end'](event: Event) {
@@ -976,7 +977,7 @@ export class MediaStateManager extends MediaPlayerController {
     if (loop()) {
       setTimeout(() => {
         requestAnimationFrame(() => {
-          this._resetPlaybackIfNeeded(event);
+          this.#resetPlaybackIfNeeded(event);
           this.dispatch('media-loop-request', { trigger: event });
         });
       }, 10);
@@ -985,14 +986,14 @@ export class MediaStateManager extends MediaPlayerController {
     }
 
     // Fire after `end`
-    setTimeout(() => this._onEnded(event), 0);
+    setTimeout(() => this.#onEnded(event), 0);
   }
 
-  private _onEnded(event: Event) {
-    const { storage } = this._media,
+  #onEnded(event: Event) {
+    const { storage } = this.#media,
       { paused, seeking, ended, duration } = this.$state;
 
-    this._onEndPrecisionChange(event);
+    this.#onEndPrecisionChange(event);
 
     if (!paused()) {
       this.dispatch('pause', { trigger: event });
@@ -1006,7 +1007,7 @@ export class MediaStateManager extends MediaPlayerController {
     }
 
     ended.set(true);
-    this._resetTracking();
+    this.#resetTracking();
     storage?.setTime?.(duration(), true);
 
     this.dispatch('ended', {
@@ -1014,28 +1015,28 @@ export class MediaStateManager extends MediaPlayerController {
     });
   }
 
-  private _stopWaiting() {
-    this._fireWaiting.cancel();
+  #stopWaiting() {
+    this.#fireWaiting.cancel();
     this.$state.waiting.set(false);
   }
 
   ['fullscreen-change'](event: ME.MediaFullscreenChangeEvent) {
     const isFullscreen = event.detail;
     this.$state.fullscreen.set(isFullscreen);
-    this._satisfyRequest(
+    this.#satisfyRequest(
       isFullscreen ? 'media-enter-fullscreen-request' : 'media-exit-fullscreen-request',
       event,
     );
   }
 
   ['fullscreen-error'](event: ME.MediaFullscreenErrorEvent) {
-    this._satisfyRequest('media-enter-fullscreen-request', event);
-    this._satisfyRequest('media-exit-fullscreen-request', event);
+    this.#satisfyRequest('media-enter-fullscreen-request', event);
+    this.#satisfyRequest('media-exit-fullscreen-request', event);
   }
 
   ['orientation-change'](event: ME.MediaOrientationChangeEvent) {
     const isLocked = event.detail.lock;
-    this._satisfyRequest(
+    this.#satisfyRequest(
       isLocked ? 'media-orientation-lock-request' : 'media-orientation-unlock-request',
       event,
     );
@@ -1044,12 +1045,12 @@ export class MediaStateManager extends MediaPlayerController {
   ['picture-in-picture-change'](event: ME.MediaPIPChangeEvent) {
     const isPiP = event.detail;
     this.$state.pictureInPicture.set(isPiP);
-    this._satisfyRequest(isPiP ? 'media-enter-pip-request' : 'media-exit-pip-request', event);
+    this.#satisfyRequest(isPiP ? 'media-enter-pip-request' : 'media-exit-pip-request', event);
   }
 
   ['picture-in-picture-error'](event: ME.MediaPIPErrorEvent) {
-    this._satisfyRequest('media-enter-pip-request', event);
-    this._satisfyRequest('media-exit-pip-request', event);
+    this.#satisfyRequest('media-enter-pip-request', event);
+    this.#satisfyRequest('media-exit-pip-request', event);
   }
 
   ['title-change'](event: ME.MediaPosterChangeEvent) {

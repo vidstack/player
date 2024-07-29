@@ -41,22 +41,22 @@ export class FullscreenButton extends Component<FullscreenButtonProps, {}, Fulls
     target: 'prefer-media',
   };
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   constructor() {
     super();
     new ToggleButtonController({
-      _isPressed: this._isPressed.bind(this),
-      _keyShortcut: 'toggleFullscreen',
-      _onPress: this._onPress.bind(this),
+      isPresssed: this.#isPressed.bind(this),
+      keyShortcut: 'toggleFullscreen',
+      onPress: this.#onPress.bind(this),
     });
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
-    const { fullscreen } = this._media.$state,
-      isSupported = this._isSupported.bind(this);
+    const { fullscreen } = this.#media.$state,
+      isSupported = this.#isSupported.bind(this);
 
     this.setAttributes({
       'data-active': fullscreen,
@@ -70,21 +70,21 @@ export class FullscreenButton extends Component<FullscreenButtonProps, {}, Fulls
     setARIALabel(el, 'Fullscreen');
   }
 
-  private _onPress(event: Event) {
-    const remote = this._media.remote,
+  #onPress(event: Event) {
+    const remote = this.#media.remote,
       target = this.$props.target();
-    this._isPressed()
+    this.#isPressed()
       ? remote.exitFullscreen(target, event)
       : remote.enterFullscreen(target, event);
   }
 
-  private _isPressed() {
-    const { fullscreen } = this._media.$state;
+  #isPressed() {
+    const { fullscreen } = this.#media.$state;
     return fullscreen();
   }
 
-  private _isSupported() {
-    const { canFullscreen } = this._media.$state;
+  #isSupported() {
+    const { canFullscreen } = this.#media.$state;
     return canFullscreen();
   }
 }

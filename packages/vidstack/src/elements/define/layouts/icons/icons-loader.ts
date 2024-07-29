@@ -5,13 +5,13 @@ import { SlotObserver } from '../slot-observer';
 export type IconsRecord = Record<string, Element | TemplateResult>;
 
 export abstract class IconsLoader {
-  protected _icons: IconsRecord = {};
-  protected _loaded = false;
+  #icons: IconsRecord = {};
+  #loaded = false;
 
   readonly slots: SlotObserver;
 
-  constructor(protected _roots: HTMLElement[]) {
-    this.slots = new SlotObserver(_roots, this._insertIcons.bind(this));
+  constructor(roots: HTMLElement[]) {
+    this.slots = new SlotObserver(roots, this.#insertIcons.bind(this));
   }
 
   connect() {
@@ -19,28 +19,28 @@ export abstract class IconsLoader {
   }
 
   load() {
-    this._load().then((icons) => {
-      this._icons = icons;
-      this._loaded = true;
-      this._insertIcons();
+    this.loadIcons().then((icons) => {
+      this.#icons = icons;
+      this.#loaded = true;
+      this.#insertIcons();
     });
   }
 
-  abstract _load(): Promise<IconsRecord>;
+  abstract loadIcons(): Promise<IconsRecord>;
 
-  private *_iterate() {
-    for (const iconName of Object.keys(this._icons)) {
+  *#iterate() {
+    for (const iconName of Object.keys(this.#icons)) {
       const slotName = `${iconName}-icon`;
       for (const slot of this.slots.elements) {
         if (slot.name !== slotName) continue;
-        yield { icon: this._icons[iconName], slot };
+        yield { icon: this.#icons[iconName], slot };
       }
     }
   }
 
-  protected _insertIcons() {
-    if (!this._loaded) return;
-    for (const { icon, slot } of this._iterate()) {
+  #insertIcons() {
+    if (!this.#loaded) return;
+    for (const { icon, slot } of this.#iterate()) {
       this.slots.assign(icon, slot);
     }
   }

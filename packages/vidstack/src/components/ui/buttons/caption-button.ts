@@ -25,24 +25,24 @@ export interface CaptionButtonEvents
 export class CaptionButton extends Component<CaptionButtonProps, {}, CaptionButtonEvents> {
   static props: CaptionButtonProps = ToggleButtonController.props;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   constructor() {
     super();
     new ToggleButtonController({
-      _isPressed: this._isPressed.bind(this),
-      _keyShortcut: 'toggleCaptions',
-      _onPress: this._onPress.bind(this),
+      isPresssed: this.#isPressed.bind(this),
+      keyShortcut: 'toggleCaptions',
+      onPress: this.#onPress.bind(this),
     });
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     this.setAttributes({
-      'data-active': this._isPressed.bind(this),
-      'data-supported': () => !this._isHidden(),
-      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
+      'data-active': this.#isPressed.bind(this),
+      'data-supported': () => !this.#isHidden(),
+      'aria-hidden': $ariaBool(this.#isHidden.bind(this)),
     });
   }
 
@@ -51,18 +51,18 @@ export class CaptionButton extends Component<CaptionButtonProps, {}, CaptionButt
     setARIALabel(el, 'Captions');
   }
 
-  private _onPress(event: Event) {
-    this._media.remote.toggleCaptions(event);
+  #onPress(event: Event) {
+    this.#media.remote.toggleCaptions(event);
   }
 
-  private _isPressed() {
-    const { textTrack } = this._media.$state,
+  #isPressed() {
+    const { textTrack } = this.#media.$state,
       track = textTrack();
     return !!track && isTrackCaptionKind(track);
   }
 
-  private _isHidden() {
-    const { hasCaptions } = this._media.$state;
+  #isHidden() {
+    const { hasCaptions } = this.#media.$state;
     return !hasCaptions();
   }
 }

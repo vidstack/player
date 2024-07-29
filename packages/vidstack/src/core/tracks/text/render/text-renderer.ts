@@ -1,4 +1,4 @@
-import { effect, onDispose, peek, untrack } from 'maverick.js';
+import { effect, onDispose, untrack } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../../api/media-context';
@@ -8,113 +8,119 @@ import type { TextTrackAddEvent, TextTrackList, TextTrackRemoveEvent } from '../
 import { NativeTextRenderer } from './native-text-renderer';
 
 export class TextRenderers {
-  private _video: HTMLVideoElement | null = null;
-  private _textTracks: TextTrackList;
-  private _renderers: TextRenderer[] = [];
+  #video: HTMLVideoElement | null = null;
+  #textTracks: TextTrackList;
+  #renderers: TextRenderer[] = [];
+  #media: MediaContext;
 
-  private _nativeDisplay = false;
-  private _nativeRenderer: NativeTextRenderer | null = null;
-  private _customRenderer: TextRenderer | null = null;
+  #nativeDisplay = false;
+  #nativeRenderer: NativeTextRenderer | null = null;
+  #customRenderer: TextRenderer | null = null;
 
-  constructor(private _media: MediaContext) {
-    const textTracks = _media.textTracks;
-    this._textTracks = textTracks;
-    effect(this._watchControls.bind(this));
-    onDispose(this._detach.bind(this));
-    listenEvent(textTracks, 'add', this._onAddTrack.bind(this));
-    listenEvent(textTracks, 'remove', this._onRemoveTrack.bind(this));
-    listenEvent(textTracks, 'mode-change', this._update.bind(this));
+  constructor(media: MediaContext) {
+    this.#media = media;
+
+    const textTracks = media.textTracks;
+    this.#textTracks = textTracks;
+
+    effect(this.#watchControls.bind(this));
+
+    onDispose(this.#detach.bind(this));
+
+    listenEvent(textTracks, 'add', this.#onAddTrack.bind(this));
+    listenEvent(textTracks, 'remove', this.#onRemoveTrack.bind(this));
+    listenEvent(textTracks, 'mode-change', this.#update.bind(this));
   }
 
-  private _watchControls() {
-    const { nativeControls } = this._media.$state;
-    this._nativeDisplay = nativeControls();
-    this._update();
+  #watchControls() {
+    const { nativeControls } = this.#media.$state;
+    this.#nativeDisplay = nativeControls();
+    this.#update();
   }
 
   add(renderer: TextRenderer) {
-    this._renderers.push(renderer);
-    untrack(this._update.bind(this));
+    this.#renderers.push(renderer);
+    untrack(this.#update.bind(this));
   }
 
   remove(renderer: TextRenderer) {
     renderer.detach();
-    this._renderers.splice(this._renderers.indexOf(renderer), 1);
-    untrack(this._update.bind(this));
+    this.#renderers.splice(this.#renderers.indexOf(renderer), 1);
+    untrack(this.#update.bind(this));
   }
 
   /** @internal */
-  _attachVideo(video: HTMLVideoElement | null) {
+  attachVideo(video: HTMLVideoElement | null) {
     requestAnimationFrame(() => {
-      this._video = video;
+      this.#video = video;
 
       if (video) {
-        this._nativeRenderer = new NativeTextRenderer();
-        this._nativeRenderer.attach(video);
-        for (const track of this._textTracks) this._addNativeTrack(track);
+        this.#nativeRenderer = new NativeTextRenderer();
+        this.#nativeRenderer.attach(video);
+        for (const track of this.#textTracks) this.#addNativeTrack(track);
       }
 
-      this._update();
+      this.#update();
     });
   }
 
-  private _addNativeTrack(track: TextTrack) {
+  #addNativeTrack(track: TextTrack) {
     if (!isTrackCaptionKind(track)) return;
-    this._nativeRenderer?.addTrack(track);
+    this.#nativeRenderer?.addTrack(track);
   }
 
-  private _removeNativeTrack(track: TextTrack) {
+  #removeNativeTrack(track: TextTrack) {
     if (!isTrackCaptionKind(track)) return;
-    this._nativeRenderer?.removeTrack(track);
+    this.#nativeRenderer?.removeTrack(track);
   }
 
-  private _onAddTrack(event: TextTrackAddEvent) {
-    this._addNativeTrack(event.detail);
+  #onAddTrack(event: TextTrackAddEvent) {
+    this.#addNativeTrack(event.detail);
   }
 
-  private _onRemoveTrack(event: TextTrackRemoveEvent) {
-    this._removeNativeTrack(event.detail);
+  #onRemoveTrack(event: TextTrackRemoveEvent) {
+    this.#removeNativeTrack(event.detail);
   }
 
-  private _update() {
-    const currentTrack = this._textTracks.selected;
+  #update() {
+    const currentTrack = this.#textTracks.selected;
 
     // We identify text tracks that were embedded in HLS playlists and loaded natively (e.g., iOS
     // Safari) because we can't toggle mode to hidden and still get cue updates for some reason.
     // See `native-hls-text-tracks.ts` for discovery.
-    if (this._video && (this._nativeDisplay || currentTrack?.[TextTrackSymbol._nativeHLS])) {
-      this._customRenderer?.changeTrack(null);
-      this._nativeRenderer?.setDisplay(true);
-      this._nativeRenderer?.changeTrack(currentTrack);
+    if (this.#video && (this.#nativeDisplay || currentTrack?.[TextTrackSymbol.nativeHLS])) {
+      this.#customRenderer?.changeTrack(null);
+      this.#nativeRenderer?.setDisplay(true);
+      this.#nativeRenderer?.changeTrack(currentTrack);
       return;
     }
 
-    this._nativeRenderer?.setDisplay(false);
-    this._nativeRenderer?.changeTrack(null);
+    this.#nativeRenderer?.setDisplay(false);
+    this.#nativeRenderer?.changeTrack(null);
 
     if (!currentTrack) {
-      this._customRenderer?.changeTrack(null);
+      this.#customRenderer?.changeTrack(null);
       return;
     }
 
-    const customRenderer = this._renderers
+    const customRenderer = this.#renderers
       .sort((a, b) => a.priority - b.priority)
-      .find((renderer) => renderer.canRender(currentTrack, this._video));
+      .find((renderer) => renderer.canRender(currentTrack, this.#video));
 
-    if (this._customRenderer !== customRenderer) {
-      this._customRenderer?.detach();
-      customRenderer?.attach(this._video);
-      this._customRenderer = customRenderer ?? null;
+    if (this.#customRenderer !== customRenderer) {
+      this.#customRenderer?.detach();
+      customRenderer?.attach(this.#video);
+      this.#customRenderer = customRenderer ?? null;
     }
 
     customRenderer?.changeTrack(currentTrack);
   }
 
-  private _detach() {
-    this._nativeRenderer?.detach();
-    this._nativeRenderer = null;
-    this._customRenderer?.detach();
-    this._customRenderer = null;
+  #detach() {
+    this.#nativeRenderer?.detach();
+    this.#nativeRenderer = null;
+    this.#customRenderer?.detach();
+    this.#customRenderer = null;
   }
 }
 

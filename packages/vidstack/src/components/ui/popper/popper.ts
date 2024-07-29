@@ -4,31 +4,33 @@ import { listenEvent } from 'maverick.js/std';
 import { hasAnimation } from '../../../utils/dom';
 
 export interface PopperDelegate {
-  _showDelay?: ReadSignal<number>;
-  _trigger: ReadSignal<HTMLElement | null>;
-  _content: ReadSignal<HTMLElement | null>;
-  _listen(
+  showDelay?: ReadSignal<number>;
+  trigger: ReadSignal<HTMLElement | null>;
+  content: ReadSignal<HTMLElement | null>;
+  listen(
     trigger: HTMLElement,
     show: (trigger?: Event) => void,
     hide: (trigger?: Event) => void,
   ): void;
-  _onChange(isShowing: boolean, trigger?: Event): void;
+  onChange(isShowing: boolean, trigger?: Event): void;
 }
 
 export class Popper extends ViewController {
-  constructor(private _delegate: PopperDelegate) {
-    super();
+  #delegate: PopperDelegate;
 
-    effect(this._watchTrigger.bind(this));
+  constructor(delegate: PopperDelegate) {
+    super();
+    this.#delegate = delegate;
+    effect(this.#watchTrigger.bind(this));
   }
 
   protected override onDestroy(): void {
-    this._stopAnimationEndListener?.();
-    this._stopAnimationEndListener = null;
+    this.#stopAnimationEndListener?.();
+    this.#stopAnimationEndListener = null;
   }
 
-  private _watchTrigger() {
-    const trigger = this._delegate._trigger();
+  #watchTrigger() {
+    const trigger = this.#delegate.trigger();
 
     if (!trigger) {
       this.hide();
@@ -38,55 +40,55 @@ export class Popper extends ViewController {
     const show = this.show.bind(this),
       hide = this.hide.bind(this);
 
-    this._delegate._listen(trigger, show, hide);
+    this.#delegate.listen(trigger, show, hide);
   }
 
-  private _showTimerId = -1;
-  private _hideRafId = -1;
-  private _stopAnimationEndListener: Dispose | null = null;
+  #showTimerId = -1;
+  #hideRafId = -1;
+  #stopAnimationEndListener: Dispose | null = null;
 
   show(trigger?: Event) {
-    this._cancelShowing();
+    this.#cancelShowing();
 
-    window.cancelAnimationFrame(this._hideRafId);
-    this._hideRafId = -1;
+    window.cancelAnimationFrame(this.#hideRafId);
+    this.#hideRafId = -1;
 
-    this._stopAnimationEndListener?.();
-    this._stopAnimationEndListener = null;
+    this.#stopAnimationEndListener?.();
+    this.#stopAnimationEndListener = null;
 
-    this._showTimerId = window.setTimeout(() => {
-      this._showTimerId = -1;
+    this.#showTimerId = window.setTimeout(() => {
+      this.#showTimerId = -1;
 
-      const content = this._delegate._content();
+      const content = this.#delegate.content();
       if (content) content.style.removeProperty('display');
 
-      peek(() => this._delegate._onChange(true, trigger));
-    }, this._delegate._showDelay?.() ?? 0);
+      peek(() => this.#delegate.onChange(true, trigger));
+    }, this.#delegate.showDelay?.() ?? 0);
   }
 
   hide(trigger?: Event) {
-    this._cancelShowing();
+    this.#cancelShowing();
 
-    peek(() => this._delegate._onChange(false, trigger));
+    peek(() => this.#delegate.onChange(false, trigger));
 
-    this._hideRafId = requestAnimationFrame(() => {
-      this._cancelShowing();
-      this._hideRafId = -1;
+    this.#hideRafId = requestAnimationFrame(() => {
+      this.#cancelShowing();
+      this.#hideRafId = -1;
 
-      const content = this._delegate._content();
+      const content = this.#delegate.content();
 
       if (content) {
         const onHide = () => {
           content.style.display = 'none';
-          this._stopAnimationEndListener = null;
+          this.#stopAnimationEndListener = null;
         };
 
         const isAnimated = hasAnimation(content);
 
         if (isAnimated) {
-          this._stopAnimationEndListener?.();
+          this.#stopAnimationEndListener?.();
           const stop = listenEvent(content, 'animationend', onHide, { once: true });
-          this._stopAnimationEndListener = stop;
+          this.#stopAnimationEndListener = stop;
         } else {
           onHide();
         }
@@ -94,8 +96,8 @@ export class Popper extends ViewController {
     });
   }
 
-  private _cancelShowing() {
-    window.clearTimeout(this._showTimerId);
-    this._showTimerId = -1;
+  #cancelShowing() {
+    window.clearTimeout(this.#showTimerId);
+    this.#showTimerId = -1;
   }
 }

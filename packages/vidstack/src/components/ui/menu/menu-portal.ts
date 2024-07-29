@@ -16,13 +16,13 @@ export class MenuPortal extends Component<MenuPortalProps> {
     disabled: false,
   };
 
-  private _target: HTMLElement | null = null;
-  private _media!: MediaContext;
+  #target: HTMLElement | null = null;
+  #media!: MediaContext;
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
     provideContext(menuPortalContext, {
-      _attach: this._attachElement.bind(this),
+      attach: this.#attachElement.bind(this),
     });
   }
 
@@ -36,51 +36,50 @@ export class MenuPortal extends Component<MenuPortalProps> {
   }
 
   protected override onDestroy(): void {
-    this._target?.remove();
-    this._target = null;
+    this.#target?.remove();
+    this.#target = null;
   }
 
-  private _attachElement(el: HTMLElement | null) {
-    this._portal(false);
-    this._target = el;
+  #attachElement(el: HTMLElement | null) {
+    this.#portal(false);
+    this.#target = el;
     // Wait two animations frames: first is for connected callback, second is to allow icon
     // slots to be replaced.
     requestScopedAnimationFrame(() => {
       requestScopedAnimationFrame(() => {
         if (!this.connectScope) return;
-        effect(this._watchDisabled.bind(this));
+        effect(this.#watchDisabled.bind(this));
       });
     });
   }
 
-  private _watchDisabled() {
-    const { fullscreen } = this._media.$state,
-      { disabled } = this.$props,
-      _disabled = disabled();
-    this._portal(_disabled === 'fullscreen' ? !fullscreen() : !_disabled);
+  #watchDisabled() {
+    const { fullscreen } = this.#media.$state,
+      { disabled } = this.$props;
+    this.#portal(disabled() === 'fullscreen' ? !fullscreen() : !disabled());
   }
 
-  private _portal(shouldPortal: boolean) {
-    if (!this._target) return;
+  #portal(shouldPortal: boolean) {
+    if (!this.#target) return;
 
-    let container = this._getContainer(this.$props.container());
+    let container = this.#getContainer(this.$props.container());
     if (!container) return;
 
-    const isPortalled = this._target.parentElement === container;
-    setAttribute(this._target, 'data-portal', shouldPortal);
+    const isPortalled = this.#target.parentElement === container;
+    setAttribute(this.#target, 'data-portal', shouldPortal);
 
     if (shouldPortal) {
       if (!isPortalled) {
-        this._target.remove();
-        container!.append(this._target);
+        this.#target.remove();
+        container!.append(this.#target);
       }
-    } else if (isPortalled && this._target.parentElement === container) {
-      this._target.remove();
-      this.el?.append(this._target);
+    } else if (isPortalled && this.#target.parentElement === container) {
+      this.#target.remove();
+      this.el?.append(this.#target);
     }
   }
 
-  private _getContainer(selector: MenuPortalProps['container']) {
+  #getContainer(selector: MenuPortalProps['container']) {
     if (isHTMLElement(selector)) return selector;
     return selector ? document.querySelector<HTMLElement>(selector) : document.body;
   }
@@ -100,7 +99,7 @@ export interface MenuPortalProps {
 }
 
 export interface MenuPortalContext {
-  _attach(element: HTMLElement | null): void;
+  attach(element: HTMLElement | null): void;
 }
 
 export const menuPortalContext = createContext<MenuPortalContext | null>();

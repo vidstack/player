@@ -69,15 +69,15 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
     super.setup();
 
     if (canPlayHLSNatively(this.video)) {
-      new NativeHLSTextTracks(this.video, this._ctx);
+      new NativeHLSTextTracks(this.video, this.ctx);
     }
 
-    this._ctx.textRenderers._attachVideo(this.video);
+    this.ctx.textRenderers.attachVideo(this.video);
     onDispose(() => {
-      this._ctx.textRenderers._attachVideo(null);
+      this.ctx.textRenderers.attachVideo(null);
     });
 
-    if (this.type === 'video') this._ctx.delegate._notify('provider-setup', this);
+    if (this.type === 'video') this.ctx.notify('provider-setup', this);
   }
 
   /**
@@ -86,6 +86,6 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProviderAda
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement}
    */
   get video() {
-    return this._media as HTMLVideoElement;
+    return this.media as HTMLVideoElement;
   }
 }

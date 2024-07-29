@@ -10,44 +10,44 @@ import { defaultLayoutProps, type DefaultLayoutProps } from './props';
 export class DefaultLayout extends Component<DefaultLayoutProps> {
   static props = defaultLayoutProps;
 
-  protected _media!: MediaContext;
+  #media!: MediaContext;
 
-  protected _when = computed(() => {
+  #when = computed(() => {
     const when = this.$props.when();
-    return this._matches(when);
+    return this.#matches(when);
   });
 
-  protected _smallWhen = computed(() => {
+  #smallWhen = computed(() => {
     const when = this.$props.smallWhen();
-    return this._matches(when);
+    return this.#matches(when);
   });
 
   @prop
   get isMatch() {
-    return this._when();
+    return this.#when();
   }
 
   @prop
   get isSmallLayout() {
-    return this._smallWhen();
+    return this.#smallWhen();
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     this.setAttributes({
-      'data-match': this._when,
-      'data-sm': () => (this._smallWhen() ? '' : null),
-      'data-lg': () => (!this._smallWhen() ? '' : null),
-      'data-size': () => (this._smallWhen() ? 'sm' : 'lg'),
+      'data-match': this.#when,
+      'data-sm': () => (this.#smallWhen() ? '' : null),
+      'data-lg': () => (!this.#smallWhen() ? '' : null),
+      'data-size': () => (this.#smallWhen() ? 'sm' : 'lg'),
       'data-no-scrub-gesture': this.$props.noScrubGesture,
     });
 
     const self = this;
     provideContext(defaultLayoutContext, {
       ...this.$props,
-      when: this._when,
-      smallWhen: this._smallWhen,
+      when: this.#when,
+      smallWhen: this.#smallWhen,
       userPrefersAnnouncements: signal(true),
       userPrefersKeyboardAnimations: signal(true),
       menuPortal: signal<HTMLElement | null>(null),
@@ -58,10 +58,10 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     watchColorScheme(el, this.$props.colorScheme);
   }
 
-  protected _matches(query: 'never' | boolean | MediaPlayerQuery) {
+  #matches(query: 'never' | boolean | MediaPlayerQuery) {
     return (
       query !== 'never' &&
-      (isBoolean(query) ? query : computed(() => query(this._media.player.state))())
+      (isBoolean(query) ? query : computed(() => query(this.#media.player.state))())
     );
   }
 }

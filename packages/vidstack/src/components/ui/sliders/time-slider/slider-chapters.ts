@@ -35,105 +35,105 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     disabled: false,
   };
 
-  private _media!: MediaContext;
-  private _sliderState!: ReadSignalRecord<SliderState>;
-  private _updateScope?: Scope;
+  #media!: MediaContext;
+  #sliderState!: ReadSignalRecord<SliderState>;
+  #updateScope?: Scope;
 
-  private _titleRef: HTMLElement | null = null;
-  private _refs: HTMLElement[] = [];
+  #titleRef: HTMLElement | null = null;
+  #refs: HTMLElement[] = [];
 
-  private _$track = signal<TextTrack | null>(null);
-  private _$cues = signal<VTTCue[]>([]);
+  #$track = signal<TextTrack | null>(null);
+  #$cues = signal<VTTCue[]>([]);
 
-  private _activeIndex = signal(-1);
-  private _activePointerIndex = signal(-1);
-  private _bufferedIndex = 0;
+  #activeIndex = signal(-1);
+  #activePointerIndex = signal(-1);
+  #bufferedIndex = 0;
 
   @prop
   get cues() {
-    return this._$cues();
+    return this.#$cues();
   }
 
   @prop
   get activeCue(): VTTCue | null {
-    return this._$cues()[this._activeIndex()] || null;
+    return this.#$cues()[this.#activeIndex()] || null;
   }
 
   @prop
   get activePointerCue(): VTTCue | null {
-    return this._$cues()[this._activePointerIndex()] || null;
+    return this.#$cues()[this.#activePointerIndex()] || null;
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
-    this._sliderState = useState(TimeSlider.state);
+    this.#media = useMediaContext();
+    this.#sliderState = useState(TimeSlider.state);
   }
 
   protected override onAttach(el: HTMLElement): void {
-    watchActiveTextTrack(this._media.textTracks, 'chapters', this._setTrack.bind(this));
-    effect(this._watchSource.bind(this));
+    watchActiveTextTrack(this.#media.textTracks, 'chapters', this.#setTrack.bind(this));
+    effect(this.#watchSource.bind(this));
   }
 
   protected override onConnect(): void {
-    onDispose(() => this._reset.bind(this));
+    onDispose(() => this.#reset.bind(this));
   }
 
   protected override onDestroy(): void {
-    this._setTrack(null);
+    this.#setTrack(null);
   }
 
   @method
   setRefs(refs: HTMLElement[]) {
-    this._refs = refs;
-    this._updateScope?.dispose();
-    if (this._refs.length === 1) {
-      const el = this._refs[0];
+    this.#refs = refs;
+    this.#updateScope?.dispose();
+    if (this.#refs.length === 1) {
+      const el = this.#refs[0];
       el.style.width = '100%';
       el.style.setProperty('--chapter-fill', 'var(--slider-fill)');
       el.style.setProperty('--chapter-progress', 'var(--slider-progress)');
-    } else if (this._refs.length > 0) {
-      scoped(() => this._watch(), (this._updateScope = createScope()));
+    } else if (this.#refs.length > 0) {
+      scoped(() => this.#watch(), (this.#updateScope = createScope()));
     }
   }
 
-  private _setTrack(track: TextTrack | null) {
-    if (peek(this._$track) === track) return;
-    this._reset();
-    this._$track.set(track);
+  #setTrack(track: TextTrack | null) {
+    if (peek(this.#$track) === track) return;
+    this.#reset();
+    this.#$track.set(track);
   }
 
-  private _reset() {
-    this._refs = [];
-    this._$cues.set([]);
-    this._activeIndex.set(-1);
-    this._activePointerIndex.set(-1);
-    this._bufferedIndex = 0;
-    this._updateScope?.dispose();
+  #reset() {
+    this.#refs = [];
+    this.#$cues.set([]);
+    this.#activeIndex.set(-1);
+    this.#activePointerIndex.set(-1);
+    this.#bufferedIndex = 0;
+    this.#updateScope?.dispose();
   }
 
-  private _watch() {
-    if (!this._refs.length) return;
+  #watch() {
+    if (!this.#refs.length) return;
 
-    effect(this._watchUpdates.bind(this));
+    effect(this.#watchUpdates.bind(this));
   }
-  private _watchUpdates() {
-    const { hidden } = this._sliderState;
+  #watchUpdates() {
+    const { hidden } = this.#sliderState;
 
     if (hidden()) return;
 
-    effect(this._watchContainerWidths.bind(this));
-    effect(this._watchFillPercent.bind(this));
-    effect(this._watchPointerPercent.bind(this));
-    effect(this._watchBufferedPercent.bind(this));
+    effect(this.#watchContainerWidths.bind(this));
+    effect(this.#watchFillPercent.bind(this));
+    effect(this.#watchPointerPercent.bind(this));
+    effect(this.#watchBufferedPercent.bind(this));
   }
 
-  private _watchContainerWidths() {
-    const cues = this._$cues();
+  #watchContainerWidths() {
+    const cues = this.#$cues();
 
     if (!cues.length) return;
 
     let cue: VTTCue,
-      { clipStartTime, clipEndTime } = this._media.$state,
+      { clipStartTime, clipEndTime } = this.#media.$state,
       startTime = clipStartTime(),
       endTime = clipEndTime() || cues[cues.length - 1].endTime,
       duration = endTime - startTime,
@@ -141,30 +141,30 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
 
     for (let i = 0; i < cues.length; i++) {
       cue = cues[i];
-      if (this._refs[i]) {
+      if (this.#refs[i]) {
         const width =
           i === cues.length - 1
             ? remainingWidth
             : round(((cue.endTime - Math.max(startTime, cue.startTime)) / duration) * 100, 3);
 
-        this._refs[i].style.width = width + '%';
+        this.#refs[i].style.width = width + '%';
 
         remainingWidth -= width;
       }
     }
   }
 
-  private _watchFillPercent() {
-    let { liveEdge, clipStartTime, duration } = this._media.$state,
-      { fillPercent, value } = this._sliderState,
-      cues = this._$cues(),
+  #watchFillPercent() {
+    let { liveEdge, clipStartTime, duration } = this.#media.$state,
+      { fillPercent, value } = this.#sliderState,
+      cues = this.#$cues(),
       isLiveEdge = liveEdge(),
-      prevActiveIndex = peek(this._activeIndex),
+      prevActiveIndex = peek(this.#activeIndex),
       currentChapter = cues[prevActiveIndex];
 
     let currentActiveIndex = isLiveEdge
-      ? this._$cues.length - 1
-      : this._findActiveChapterIndex(
+      ? this.#$cues.length - 1
+      : this.#findActiveChapterIndex(
           currentChapter
             ? (currentChapter.startTime / duration()) * 100 <= peek(value)
               ? prevActiveIndex
@@ -174,44 +174,44 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
         );
 
     if (isLiveEdge || !currentChapter) {
-      this._updateFillPercents(0, cues.length, 100);
+      this.#updateFillPercents(0, cues.length, 100);
     } else if (currentActiveIndex > prevActiveIndex) {
-      this._updateFillPercents(prevActiveIndex, currentActiveIndex, 100);
+      this.#updateFillPercents(prevActiveIndex, currentActiveIndex, 100);
     } else if (currentActiveIndex < prevActiveIndex) {
-      this._updateFillPercents(currentActiveIndex + 1, prevActiveIndex + 1, 0);
+      this.#updateFillPercents(currentActiveIndex + 1, prevActiveIndex + 1, 0);
     }
 
     const percent = isLiveEdge
       ? 100
-      : this._calcPercent(
+      : this.#calcPercent(
           cues[currentActiveIndex],
           fillPercent(),
           clipStartTime(),
-          this._getEndTime(cues),
+          this.#getEndTime(cues),
         );
 
-    this._updateFillPercent(this._refs[currentActiveIndex], percent);
+    this.#updateFillPercent(this.#refs[currentActiveIndex], percent);
 
-    this._activeIndex.set(currentActiveIndex);
+    this.#activeIndex.set(currentActiveIndex);
   }
 
-  private _watchPointerPercent() {
-    let { pointing, pointerPercent } = this._sliderState;
+  #watchPointerPercent() {
+    let { pointing, pointerPercent } = this.#sliderState;
 
     if (!pointing()) {
-      this._activePointerIndex.set(-1);
+      this.#activePointerIndex.set(-1);
       return;
     }
 
-    const activeIndex = this._findActiveChapterIndex(0, pointerPercent());
-    this._activePointerIndex.set(activeIndex);
+    const activeIndex = this.#findActiveChapterIndex(0, pointerPercent());
+    this.#activePointerIndex.set(activeIndex);
   }
 
-  private _updateFillPercents(start: number, end: number, percent: number) {
-    for (let i = start; i < end; i++) this._updateFillPercent(this._refs[i], percent);
+  #updateFillPercents(start: number, end: number, percent: number) {
+    for (let i = start; i < end; i++) this.#updateFillPercent(this.#refs[i], percent);
   }
 
-  private _updateFillPercent(ref: HTMLElement | null, percent: number) {
+  #updateFillPercent(ref: HTMLElement | null, percent: number) {
     if (!ref) return;
 
     ref.style.setProperty('--chapter-fill', percent + '%');
@@ -220,60 +220,60 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     setAttribute(ref, 'data-ended', percent === 100);
   }
 
-  private _findActiveChapterIndex(startIndex: number, percent: number) {
+  #findActiveChapterIndex(startIndex: number, percent: number) {
     let chapterPercent = 0,
-      cues = this._$cues();
+      cues = this.#$cues();
 
     if (percent === 0) return 0;
     else if (percent === 100) return cues.length - 1;
 
-    let { clipStartTime } = this._media.$state,
+    let { clipStartTime } = this.#media.$state,
       startTime = clipStartTime(),
-      endTime = this._getEndTime(cues);
+      endTime = this.#getEndTime(cues);
 
     for (let i = startIndex; i < cues.length; i++) {
-      chapterPercent = this._calcPercent(cues[i], percent, startTime, endTime);
+      chapterPercent = this.#calcPercent(cues[i], percent, startTime, endTime);
       if (chapterPercent >= 0 && chapterPercent < 100) return i;
     }
 
     return 0;
   }
 
-  private _watchBufferedPercent() {
-    this._updateBufferedPercent(this._bufferedPercent());
+  #watchBufferedPercent() {
+    this.#updateBufferedPercent(this.#bufferedPercent());
   }
 
-  private _updateBufferedPercent = animationFrameThrottle((bufferedPercent: number) => {
+  #updateBufferedPercent = animationFrameThrottle((bufferedPercent: number) => {
     let percent: number,
-      cues = this._$cues(),
-      { clipStartTime } = this._media.$state,
+      cues = this.#$cues(),
+      { clipStartTime } = this.#media.$state,
       startTime = clipStartTime(),
-      endTime = this._getEndTime(cues);
+      endTime = this.#getEndTime(cues);
 
-    for (let i = this._bufferedIndex; i < this._refs.length; i++) {
-      percent = this._calcPercent(cues[i], bufferedPercent, startTime, endTime);
-      this._refs[i]?.style.setProperty('--chapter-progress', percent + '%');
+    for (let i = this.#bufferedIndex; i < this.#refs.length; i++) {
+      percent = this.#calcPercent(cues[i], bufferedPercent, startTime, endTime);
+      this.#refs[i]?.style.setProperty('--chapter-progress', percent + '%');
       if (percent < 100) {
-        this._bufferedIndex = i;
+        this.#bufferedIndex = i;
         break;
       }
     }
   });
 
-  private _bufferedPercent = computed(this._calcMediaBufferedPercent.bind(this));
-  private _calcMediaBufferedPercent() {
-    const { bufferedEnd, duration } = this._media.$state;
+  #bufferedPercent = computed(this.#calcMediaBufferedPercent.bind(this));
+  #calcMediaBufferedPercent() {
+    const { bufferedEnd, duration } = this.#media.$state;
     return round(Math.min(bufferedEnd() / Math.max(duration(), 1), 1), 3) * 100;
   }
 
-  private _getEndTime(cues: VTTCue[]) {
-    const { clipEndTime } = this._media.$state,
+  #getEndTime(cues: VTTCue[]) {
+    const { clipEndTime } = this.#media.$state,
       endTime = clipEndTime();
     return endTime > 0 ? endTime : cues[cues.length - 1]?.endTime || 0;
   }
 
-  private _calcPercent(cue: VTTCue, percent: number, startTime: number, endTime: number) {
-    const cues = this._$cues();
+  #calcPercent(cue: VTTCue, percent: number, startTime: number, endTime: number) {
+    const cues = this.#$cues();
 
     if (cues.length === 0) return 0;
 
@@ -296,9 +296,9 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     );
   }
 
-  private _fillGaps(cues: ReadonlyArray<VTTCue>) {
+  #fillGaps(cues: ReadonlyArray<VTTCue>) {
     let chapters: VTTCue[] = [],
-      { clipStartTime, clipEndTime, duration } = this._media.$state,
+      { clipStartTime, clipEndTime, duration } = this.#media.$state,
       startTime = clipStartTime(),
       endTime = clipEndTime() || Infinity;
 
@@ -338,71 +338,71 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     return chapters;
   }
 
-  private _watchSource() {
-    const { source } = this._media.$state;
+  #watchSource() {
+    const { source } = this.#media.$state;
     source();
-    this._onTrackChange();
+    this.#onTrackChange();
   }
 
-  private _onTrackChange() {
+  #onTrackChange() {
     // Might run the "load" track event after the component is destroyed.
     if (!this.scope) return;
 
     const { disabled } = this.$props;
 
     if (disabled()) {
-      this._$cues.set([]);
-      this._activeIndex.set(0);
-      this._bufferedIndex = 0;
+      this.#$cues.set([]);
+      this.#activeIndex.set(0);
+      this.#bufferedIndex = 0;
       return;
     }
 
-    const track = this._$track();
+    const track = this.#$track();
 
     if (track) {
-      const onCuesChange = this._onCuesChange.bind(this);
+      const onCuesChange = this.#onCuesChange.bind(this);
       onCuesChange();
       onDispose(listenEvent(track, 'add-cue', onCuesChange));
       onDispose(listenEvent(track, 'remove-cue', onCuesChange));
-      effect(this._watchMediaDuration.bind(this));
+      effect(this.#watchMediaDuration.bind(this));
     }
 
-    this._titleRef = this._findChapterTitleRef();
-    if (this._titleRef) effect(this._onChapterTitleChange.bind(this));
+    this.#titleRef = this.#findChapterTitleRef();
+    if (this.#titleRef) effect(this.#onChapterTitleChange.bind(this));
 
     return () => {
-      if (this._titleRef) {
-        this._titleRef.textContent = '';
-        this._titleRef = null;
+      if (this.#titleRef) {
+        this.#titleRef.textContent = '';
+        this.#titleRef = null;
       }
     };
   }
 
-  private _watchMediaDuration() {
-    this._media.$state.duration();
-    this._onCuesChange();
+  #watchMediaDuration() {
+    this.#media.$state.duration();
+    this.#onCuesChange();
   }
 
-  private _onCuesChange = debounce(
+  #onCuesChange = debounce(
     () => {
-      const track = peek(this._$track);
+      const track = peek(this.#$track);
 
       if (!this.scope || !track || !track.cues.length) return;
 
-      this._$cues.set(this._fillGaps(track.cues));
-      this._activeIndex.set(0);
-      this._bufferedIndex = 0;
+      this.#$cues.set(this.#fillGaps(track.cues));
+      this.#activeIndex.set(0);
+      this.#bufferedIndex = 0;
     },
     150,
     true,
   );
 
-  private _onChapterTitleChange() {
+  #onChapterTitleChange() {
     const cue = this.activePointerCue || this.activeCue;
-    if (this._titleRef) this._titleRef.textContent = cue?.text || '';
+    if (this.#titleRef) this.#titleRef.textContent = cue?.text || '';
   }
 
-  private _findParentSlider() {
+  #findParentSlider() {
     let node = this.el;
     while (node && node.getAttribute('role') !== 'slider') {
       node = node.parentElement;
@@ -410,8 +410,8 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     return node;
   }
 
-  private _findChapterTitleRef() {
-    const slider = this._findParentSlider();
+  #findChapterTitleRef() {
+    const slider = this.#findParentSlider();
     return slider ? slider.querySelector<HTMLElement>('[data-part="chapter-title"]') : null;
   }
 }

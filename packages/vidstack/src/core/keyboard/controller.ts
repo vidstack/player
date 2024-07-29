@@ -26,15 +26,18 @@ const MODIFIER_KEYS = new Set(['Shift', 'Alt', 'Meta', 'Ctrl']),
     'input, textarea, select, [contenteditable], [role^="menuitem"], [role="timer"]';
 
 export class MediaKeyboardController extends MediaPlayerController {
-  constructor(private _media: MediaContext) {
+  #media: MediaContext;
+
+  constructor(media: MediaContext) {
     super();
+    this.#media = media;
   }
 
   protected override onConnect(): void {
-    effect(this._onTargetChange.bind(this));
+    effect(this.#onTargetChange.bind(this));
   }
 
-  private _onTargetChange() {
+  #onTargetChange() {
     const { keyDisabled, keyTarget } = this.$props;
     if (keyDisabled()) return;
 
@@ -58,29 +61,29 @@ export class MediaKeyboardController extends MediaPlayerController {
 
     effect(() => {
       if (!$active()) return;
-      listenEvent(target, 'keyup', this._onKeyUp.bind(this));
-      listenEvent(target, 'keydown', this._onKeyDown.bind(this));
-      listenEvent(target, 'keydown', this._onPreventVideoKeys.bind(this), { capture: true });
+      listenEvent(target, 'keyup', this.#onKeyUp.bind(this));
+      listenEvent(target, 'keydown', this.#onKeyDown.bind(this));
+      listenEvent(target, 'keydown', this.#onPreventVideoKeys.bind(this), { capture: true });
     });
   }
 
-  private _onKeyUp(event: KeyboardEvent) {
+  #onKeyUp(event: KeyboardEvent) {
     const focusedEl = document.activeElement;
 
     if (!event.key || !this.$state.canSeek() || focusedEl?.matches(IGNORE_SELECTORS)) {
       return;
     }
 
-    let { method, value } = this._getMatchingMethod(event);
+    let { method, value } = this.#getMatchingMethod(event);
 
     if (!isString(value) && !isArray(value)) {
       value?.onKeyUp?.({
         event,
-        player: this._media.player,
-        remote: this._media.remote,
+        player: this.#media.player,
+        remote: this.#media.remote,
       });
 
-      value?.callback?.(event, this._media.remote);
+      value?.callback?.(event, this.#media.remote);
 
       return;
     }
@@ -88,12 +91,12 @@ export class MediaKeyboardController extends MediaPlayerController {
     if (method?.startsWith('seek')) {
       event.preventDefault();
       event.stopPropagation();
-      if (this._timeSlider) {
-        this._forwardTimeKeyboardEvent(event, method === 'seekForward');
-        this._timeSlider = null;
+      if (this.#timeSlider) {
+        this.#forwardTimeKeyboardEvent(event, method === 'seekForward');
+        this.#timeSlider = null;
       } else {
-        this._media.remote.seek(this._seekTotal!, event);
-        this._seekTotal = undefined;
+        this.#media.remote.seek(this.#seekTotal!, event);
+        this.#seekTotal = undefined;
       }
     }
 
@@ -109,7 +112,7 @@ export class MediaKeyboardController extends MediaPlayerController {
     }
   }
 
-  private _onKeyDown(event: KeyboardEvent) {
+  #onKeyDown(event: KeyboardEvent) {
     if (!event.key || MODIFIER_KEYS.has(event.key)) return;
 
     const focusedEl = document.activeElement;
@@ -121,17 +124,17 @@ export class MediaKeyboardController extends MediaPlayerController {
       return;
     }
 
-    let { method, value } = this._getMatchingMethod(event),
+    let { method, value } = this.#getMatchingMethod(event),
       isNumberPress = !event.metaKey && /^[0-9]$/.test(event.key);
 
     if (!isString(value) && !isArray(value) && !isNumberPress) {
       value?.onKeyDown?.({
         event,
-        player: this._media.player,
-        remote: this._media.remote,
+        player: this.#media.player,
+        remote: this.#media.remote,
       });
 
-      value?.callback?.(event, this._media.remote);
+      value?.callback?.(event, this.#media.remote);
 
       return;
     }
@@ -139,7 +142,7 @@ export class MediaKeyboardController extends MediaPlayerController {
     if (!method && isNumberPress) {
       event.preventDefault();
       event.stopPropagation();
-      this._media.remote.seek((this.$state.duration() / 10) * Number(event.key), event);
+      this.#media.remote.seek((this.$state.duration() / 10) * Number(event.key), event);
       return;
     }
 
@@ -151,7 +154,7 @@ export class MediaKeyboardController extends MediaPlayerController {
     switch (method) {
       case 'seekForward':
       case 'seekBackward':
-        this._seeking(event, method, method === 'seekForward');
+        this.#seeking(event, method, method === 'seekForward');
         break;
       case 'volumeUp':
       case 'volumeDown':
@@ -166,25 +169,25 @@ export class MediaKeyboardController extends MediaPlayerController {
           );
         } else {
           const value = event.shiftKey ? 0.1 : 0.05;
-          this._media.remote.changeVolume(
+          this.#media.remote.changeVolume(
             this.$state.volume() + (method === 'volumeUp' ? +value : -value),
             event,
           );
         }
         break;
       case 'toggleFullscreen':
-        this._media.remote.toggleFullscreen('prefer-media', event);
+        this.#media.remote.toggleFullscreen('prefer-media', event);
         break;
       case 'speedUp':
       case 'slowDown':
         const playbackRate = this.$state.playbackRate();
-        this._media.remote.changePlaybackRate(
+        this.#media.remote.changePlaybackRate(
           Math.max(0.25, Math.min(2, playbackRate + (method === 'speedUp' ? 0.25 : -0.25))),
           event,
         );
         break;
       default:
-        this._media.remote[method]?.(event);
+        this.#media.remote[method]?.(event);
     }
 
     this.$state.lastKeyboardAction.set({
@@ -193,16 +196,16 @@ export class MediaKeyboardController extends MediaPlayerController {
     });
   }
 
-  private _onPreventVideoKeys(event: KeyboardEvent) {
-    if (isHTMLMediaElement(event.target) && this._getMatchingMethod(event).method) {
+  #onPreventVideoKeys(event: KeyboardEvent) {
+    if (isHTMLMediaElement(event.target) && this.#getMatchingMethod(event).method) {
       event.preventDefault();
     }
   }
 
-  private _getMatchingMethod(event: KeyboardEvent) {
+  #getMatchingMethod(event: KeyboardEvent) {
     const keyShortcuts = {
       ...this.$props.keyShortcuts(),
-      ...this._media.ariaKeys,
+      ...this.#media.ariaKeys,
     };
 
     const method = Object.keys(keyShortcuts).find((method) => {
@@ -240,22 +243,22 @@ export class MediaKeyboardController extends MediaPlayerController {
     };
   }
 
-  private _seekTotal: number | undefined;
-  private _calcSeekAmount(event: KeyboardEvent, type: string) {
+  #seekTotal: number | undefined;
+  #calcSeekAmount(event: KeyboardEvent, type: string) {
     const seekBy = event.shiftKey ? 10 : 5;
-    return (this._seekTotal = Math.max(
+    return (this.#seekTotal = Math.max(
       0,
       Math.min(
-        (this._seekTotal ?? this.$state.currentTime()) +
+        (this.#seekTotal ?? this.$state.currentTime()) +
           (type === 'seekForward' ? +seekBy : -seekBy),
         this.$state.duration(),
       ),
     ));
   }
 
-  private _timeSlider: Element | null = null;
-  private _forwardTimeKeyboardEvent(event: KeyboardEvent, forward: boolean) {
-    this._timeSlider?.dispatchEvent(
+  #timeSlider: Element | null = null;
+  #forwardTimeKeyboardEvent(event: KeyboardEvent, forward: boolean) {
+    this.#timeSlider?.dispatchEvent(
       new KeyboardEvent(event.type, {
         key: !forward ? 'Left' : 'Right',
         shiftKey: event.shiftKey,
@@ -264,17 +267,17 @@ export class MediaKeyboardController extends MediaPlayerController {
     );
   }
 
-  private _seeking(event: KeyboardEvent, type: string, forward: boolean) {
+  #seeking(event: KeyboardEvent, type: string, forward: boolean) {
     if (!this.$state.canSeek()) return;
 
-    if (!this._timeSlider) {
-      this._timeSlider = this.el!.querySelector('[data-media-time-slider]');
+    if (!this.#timeSlider) {
+      this.#timeSlider = this.el!.querySelector('[data-media-time-slider]');
     }
 
-    if (this._timeSlider) {
-      this._forwardTimeKeyboardEvent(event, forward);
+    if (this.#timeSlider) {
+      this.#forwardTimeKeyboardEvent(event, forward);
     } else {
-      this._media.remote.seeking(this._calcSeekAmount(event, type), event);
+      this.#media.remote.seeking(this.#calcSeekAmount(event, type), event);
     }
   }
 }

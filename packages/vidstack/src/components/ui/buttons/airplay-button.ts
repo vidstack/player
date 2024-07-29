@@ -25,50 +25,50 @@ export interface AirPlayButtonEvents extends Pick<MediaRequestEvents, 'media-air
 export class AirPlayButton extends Component<AirPlayButtonProps, {}, AirPlayButtonEvents> {
   static props: AirPlayButtonProps = ToggleButtonController.props;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   constructor() {
     super();
     new ToggleButtonController({
-      _isPressed: this._isPressed.bind(this),
-      _onPress: this._onPress.bind(this),
+      isPresssed: this.#isPressed.bind(this),
+      onPress: this.#onPress.bind(this),
     });
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
-    const { canAirPlay, isAirPlayConnected } = this._media.$state;
+    const { canAirPlay, isAirPlayConnected } = this.#media.$state;
     this.setAttributes({
       'data-active': isAirPlayConnected,
       'data-supported': canAirPlay,
-      'data-state': this._getState.bind(this),
+      'data-state': this.#getState.bind(this),
       'aria-hidden': $ariaBool(() => !canAirPlay()),
     });
   }
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('data-media-tooltip', 'airplay');
-    setARIALabel(el, this._getDefaultLabel.bind(this));
+    setARIALabel(el, this.#getDefaultLabel.bind(this));
   }
 
-  private _onPress(event: Event) {
-    const remote = this._media.remote;
+  #onPress(event: Event) {
+    const remote = this.#media.remote;
     remote.requestAirPlay(event);
   }
 
-  private _isPressed() {
-    const { remotePlaybackType, remotePlaybackState } = this._media.$state;
+  #isPressed() {
+    const { remotePlaybackType, remotePlaybackState } = this.#media.$state;
     return remotePlaybackType() === 'airplay' && remotePlaybackState() !== 'disconnected';
   }
 
-  private _getState() {
-    const { remotePlaybackType, remotePlaybackState } = this._media.$state;
+  #getState() {
+    const { remotePlaybackType, remotePlaybackState } = this.#media.$state;
     return remotePlaybackType() === 'airplay' && remotePlaybackState();
   }
 
-  private _getDefaultLabel() {
-    const { remotePlaybackState } = this._media.$state;
+  #getDefaultLabel() {
+    const { remotePlaybackState } = this.#media.$state;
     return `AirPlay ${remotePlaybackState()}`;
   }
 }

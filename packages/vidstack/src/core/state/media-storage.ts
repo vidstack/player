@@ -63,7 +63,7 @@ export class LocalMediaStorage implements MediaStorage {
   protected playerId = 'vds-player';
   protected mediaId: string | null = null;
 
-  private _data: SavedMediaData = {
+  #data: SavedMediaData = {
     volume: null,
     muted: null,
     audioGain: null,
@@ -75,78 +75,78 @@ export class LocalMediaStorage implements MediaStorage {
   };
 
   async getVolume() {
-    return this._data.volume;
+    return this.#data.volume;
   }
 
   async setVolume(volume: number) {
-    this._data.volume = volume;
+    this.#data.volume = volume;
     this.save();
   }
 
   async getMuted() {
-    return this._data.muted;
+    return this.#data.muted;
   }
 
   async setMuted(muted: boolean) {
-    this._data.muted = muted;
+    this.#data.muted = muted;
     this.save();
   }
 
   async getTime() {
-    return this._data.time;
+    return this.#data.time;
   }
 
   async setTime(time: number, ended: boolean) {
     const shouldClear = time < 0;
 
-    this._data.time = !shouldClear ? time : null;
+    this.#data.time = !shouldClear ? time : null;
 
     if (shouldClear || ended) this.saveTime();
     else this.saveTimeThrottled();
   }
 
   async getLang() {
-    return this._data.lang;
+    return this.#data.lang;
   }
 
   async setLang(lang: string | null) {
-    this._data.lang = lang;
+    this.#data.lang = lang;
     this.save();
   }
 
   async getCaptions() {
-    return this._data.captions;
+    return this.#data.captions;
   }
 
   async setCaptions(enabled: boolean) {
-    this._data.captions = enabled;
+    this.#data.captions = enabled;
     this.save();
   }
 
   async getPlaybackRate() {
-    return this._data.rate;
+    return this.#data.rate;
   }
 
   async setPlaybackRate(rate) {
-    this._data.rate = rate;
+    this.#data.rate = rate;
     this.save();
   }
 
   async getAudioGain() {
-    return this._data.audioGain;
+    return this.#data.audioGain;
   }
 
   async setAudioGain(gain: number | null) {
-    this._data.audioGain = gain;
+    this.#data.audioGain = gain;
     this.save();
   }
 
   async getVideoQuality() {
-    return this._data.quality;
+    return this.#data.quality;
   }
 
   async setVideoQuality(quality: SerializedVideoQuality | null) {
-    this._data.quality = quality;
+    this.#data.quality = quality;
     this.save();
   }
 
@@ -157,7 +157,7 @@ export class LocalMediaStorage implements MediaStorage {
     this.playerId = playerId;
     this.mediaId = mediaId;
 
-    this._data = {
+    this.#data = {
       volume: null,
       muted: null,
       audioGain: null,
@@ -172,14 +172,14 @@ export class LocalMediaStorage implements MediaStorage {
 
   protected save() {
     if (__SERVER__ || !this.playerId) return;
-    const data = JSON.stringify({ ...this._data, time: undefined });
+    const data = JSON.stringify({ ...this.#data, time: undefined });
     localStorage.setItem(this.playerId, data);
   }
 
   protected saveTimeThrottled = throttle(this.saveTime.bind(this), 1000);
   private saveTime() {
     if (__SERVER__ || !this.mediaId) return;
-    const data = (this._data.time ?? 0).toString();
+    const data = (this.#data.time ?? 0).toString();
     localStorage.setItem(this.mediaId, data);
   }
 }

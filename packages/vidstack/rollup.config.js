@@ -5,9 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import chokidar from 'chokidar';
 import * as eslexer from 'es-module-lexer';
-import { build, transform as esbuildTransform } from 'esbuild';
+import { transform as esbuildTransform } from 'esbuild';
 import fsExtra from 'fs-extra';
-import { globbySync } from 'globby';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 import esbuildPlugin from 'rollup-plugin-esbuild';
@@ -19,9 +18,6 @@ const MODE_WATCH = process.argv.includes('-w'),
   MODE_CDN = process.argv.includes('--config-cdn'),
   MODE_PLUGINS = process.argv.includes('--config-plugins'),
   MODE_CSS = process.argv.includes('--config-css');
-
-/** @type {Record<string, string | false>} */
-const MANGLE_CACHE = !MODE_TYPES ? await buildMangleCache() : {};
 
 const NPM_EXTERNAL_PACKAGES = [
     'hls.js',
@@ -143,7 +139,8 @@ function getTypesBundles() {
 
 /**
  * @typedef {{
- *   target?: string | null;
+ *   target?: string | string[] | null;
+ *   supported?: Record<string, boolean>;
  *   type: 'dev' | 'prod' | 'server';
  *   minify?: boolean;
  * }} BundleOptions
@@ -161,7 +158,7 @@ function getNPMBundles() {
  * @param {BundleOptions}
  * @returns {import('rollup').RollupOptions}
  */
-function defineNPMBundle({ target, type, minify }) {
+function defineNPMBundle({ target, supported, type, minify }) {
   /** @type {Record<string, string>} */
   let input = {
       vidstack: 'src/index.ts',
@@ -176,8 +173,7 @@ function defineNPMBundle({ target, type, minify }) {
       'define/plyr-layout': 'src/elements/bundles/player-layouts/plyr.ts',
     },
     isProd = type === 'prod',
-    isServer = type === 'server',
-    shouldMangle = type === 'prod';
+    isServer = type === 'server';
 
   if (!isServer) {
     input = {
@@ -245,6 +241,7 @@ function defineNPMBundle({ target, type, minify }) {
       esbuildPlugin({
         tsconfig: 'tsconfig.build.json',
         target: target ?? (isServer ? 'node18' : 'esnext'),
+        supported,
         platform: isServer ? 'node' : 'browser',
         minify: minify,
         legalComments: 'none',
@@ -261,22 +258,10 @@ function defineNPMBundle({ target, type, minify }) {
           if (/node_modules.*?\.js/.test(id)) {
             return esbuildTransform(code, {
               target,
+              supported,
               platform: 'neutral',
             }).then((t) => t.code);
           }
-        },
-      },
-      shouldMangle && {
-        name: 'mangle',
-        async transform(code, id) {
-          if (id.includes('node_modules')) return null;
-          return esbuildTransform(code, {
-            target: 'esnext',
-            platform: 'neutral',
-            mangleProps: /^_/,
-            mangleCache: MANGLE_CACHE,
-            reserveProps: /^__/,
-          }).then((t) => t.code);
         },
       },
     ],
@@ -359,7 +344,7 @@ function defineCDNBundle({ dev = false, input, dir, file, legacy = false }) {
   const npm = defineNPMBundle({
     type: dev ? 'dev' : 'prod',
     minify: !dev,
-    target: 'es2020',
+    target: 'es2022',
   });
 
   return {
@@ -432,42 +417,6 @@ async function buildDefaultTheme() {
   }
 
   await fs.writeFile('styles/player/default/theme.css', defaultStyles);
-}
-
-export async function buildMangleCache() {
-  let mangleCache = JSON.parse(await fs.readFile('mangle.json', 'utf-8'));
-
-  const result = await build({
-    entryPoints: globbySync('src/**', {
-      ignoreFiles: ['*.test'],
-    }),
-    target: 'esnext',
-    bundle: true,
-    minify: false,
-    mangleProps: /^_/,
-    reserveProps: /^__/,
-    mangleCache,
-    write: false,
-    outdir: 'dist-esbuild',
-    plugins: [
-      {
-        name: 'externalize',
-        setup(build) {
-          let filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
-          build.onResolve({ filter }, (args) => ({ path: args.path, external: true }));
-        },
-      },
-    ],
-  });
-
-  mangleCache = {
-    ...mangleCache,
-    ...result.mangleCache,
-  };
-
-  await fs.writeFile('mangle.json', JSON.stringify(mangleCache, null, 2) + '\n');
-
-  return mangleCache;
 }
 
 function getProviderInputs() {

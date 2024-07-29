@@ -18,31 +18,31 @@ import { NativeAudioTracks } from './native-audio-tracks';
 export class HTMLMediaProvider implements MediaProviderAdapter {
   readonly scope = createScope();
 
-  protected _currentSrc: Src<HTMLMediaSrc> | null = null;
+  currentSrc: Src<HTMLMediaSrc> | null = null;
 
-  readonly audioGain = new AudioGain(this._media, (gain) => {
-    this._ctx.delegate._notify('audio-gain-change', gain);
+  readonly audioGain = new AudioGain(this.media, (gain) => {
+    this.ctx.notify('audio-gain-change', gain);
   });
 
   constructor(
-    protected _media: HTMLMediaElement,
-    protected _ctx: MediaContext,
+    readonly media: HTMLMediaElement,
+    protected readonly ctx: MediaContext,
   ) {}
 
   setup() {
-    new HTMLMediaEvents(this, this._ctx);
+    new HTMLMediaEvents(this, this.ctx);
 
-    if ('audioTracks' in this.media) new NativeAudioTracks(this, this._ctx);
+    if ('audioTracks' in this.media) new NativeAudioTracks(this, this.ctx);
 
     onDispose(() => {
       this.audioGain.destroy();
 
       // We need to remove all media sources incase another provider uses the same media element.
-      this._media.srcObject = null;
-      this._media.removeAttribute('src');
-      for (const source of this._media.querySelectorAll('source')) source.remove();
+      this.media.srcObject = null;
+      this.media.removeAttribute('src');
+      for (const source of this.media.querySelectorAll('source')) source.remove();
 
-      this._media.load();
+      this.media.load();
     });
   }
 
@@ -50,87 +50,79 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
     return '';
   }
 
-  get media() {
-    return this._media;
-  }
-
-  get currentSrc() {
-    return this._currentSrc;
-  }
-
   setPlaybackRate(rate: number) {
-    this._media.playbackRate = rate;
+    this.media.playbackRate = rate;
   }
 
   async play() {
-    return this._media.play();
+    return this.media.play();
   }
 
   async pause() {
-    return this._media.pause();
+    return this.media.pause();
   }
 
   setMuted(muted: boolean) {
-    this._media.muted = muted;
+    this.media.muted = muted;
   }
 
   setVolume(volume: number) {
-    this._media.volume = volume;
+    this.media.volume = volume;
   }
 
   setCurrentTime(time: number) {
-    this._media.currentTime = time;
+    this.media.currentTime = time;
   }
 
   setPlaysInline(inline: boolean) {
-    setAttribute(this._media, 'playsinline', inline);
+    setAttribute(this.media, 'playsinline', inline);
   }
 
   async loadSource({ src, type }: Src, preload?: HTMLMediaElement['preload']) {
-    this._media.preload = preload || '';
+    this.media.preload = preload || '';
 
     if (isMediaStream(src)) {
-      this._removeSource();
-      this._media.srcObject = src;
+      this.removeSource();
+      this.media.srcObject = src;
     } else {
-      this._media.srcObject = null;
+      this.media.srcObject = null;
       if (isString(src)) {
         if (type !== '?') {
-          this._appendSource({ src, type });
+          this.appendSource({ src, type });
         } else {
-          this._removeSource();
-          this._media.src = this._appendMediaFragment(src);
+          this.removeSource();
+          this.media.src = this.#appendMediaFragment(src);
         }
       } else {
-        this._removeSource();
-        this._media.src = window.URL.createObjectURL(src as MediaSource | Blob);
+        this.removeSource();
+        this.media.src = window.URL.createObjectURL(src as MediaSource | Blob);
       }
     }
 
-    this._media.load();
-    this._currentSrc = { src: src as HTMLMediaSrc, type };
+    this.media.load();
+    this.currentSrc = { src: src as HTMLMediaSrc, type };
   }
 
   /**
    * Append source so it works when requesting AirPlay since hls.js will remove it.
    */
-  protected _appendSource(src: Src<string>, defaultType?: string) {
-    const prevSource = this._media.querySelector('source[data-vds]'),
+  protected appendSource(src: Src<string>, defaultType?: string) {
+    const prevSource = this.media.querySelector('source[data-vds]'),
       source = prevSource ?? document.createElement('source');
 
-    setAttribute(source, 'src', this._appendMediaFragment(src.src));
+    setAttribute(source, 'src', this.#appendMediaFragment(src.src));
     setAttribute(source, 'type', src.type !== '?' ? src.type : defaultType);
     setAttribute(source, 'data-vds', '');
 
-    if (!prevSource) this._media.append(source);
+    if (!prevSource) this.media.append(source);
   }
 
-  protected _removeSource() {
-    this._media.querySelector('source[data-vds]')?.remove();
+  protected removeSource() {
+    this.media.querySelector('source[data-vds]')?.remove();
   }
 
-  protected _appendMediaFragment(src: string) {
-    const { clipStartTime, clipEndTime } = this._ctx.$state,
+  #appendMediaFragment(src: string) {
+    const { clipStartTime, clipEndTime } = this.ctx.$state,
       startTime = clipStartTime(),
       endTime = clipEndTime();
 

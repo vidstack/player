@@ -6,32 +6,32 @@ import { isArray, isNumber, isUndefined } from 'maverick.js/std';
 export type TimeInterval = [start: number, end: number];
 
 export class TimeRange implements TimeRanges {
-  private readonly _ranges: TimeInterval[];
+  readonly #ranges: TimeInterval[];
 
   get length() {
-    return this._ranges.length;
+    return this.#ranges.length;
   }
 
   constructor(start?: number | TimeInterval[], end?: number) {
     if (isArray(start)) {
-      this._ranges = start;
+      this.#ranges = start;
     } else if (!isUndefined(start) && !isUndefined(end)) {
-      this._ranges = [[start, end]];
+      this.#ranges = [[start, end]];
     } else {
-      this._ranges = [];
+      this.#ranges = [];
     }
   }
 
   start(index: number): number {
-    if (__DEV__) throwIfEmpty(this._ranges.length);
-    if (__DEV__) throwIfOutOfRange('start', index, this._ranges.length - 1);
-    return this._ranges[index][0] ?? Infinity;
+    if (__DEV__) throwIfEmpty(this.#ranges.length);
+    if (__DEV__) throwIfOutOfRange('start', index, this.#ranges.length - 1);
+    return this.#ranges[index][0] ?? Infinity;
   }
 
   end(index: number): number {
-    if (__DEV__) throwIfEmpty(this._ranges.length);
-    if (__DEV__) throwIfOutOfRange('end', index, this._ranges.length - 1);
-    return this._ranges[index][1] ?? Infinity;
+    if (__DEV__) throwIfEmpty(this.#ranges.length);
+    if (__DEV__) throwIfOutOfRange('end', index, this.#ranges.length - 1);
+    return this.#ranges[index][1] ?? Infinity;
   }
 }
 

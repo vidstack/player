@@ -36,21 +36,21 @@ export interface MediaLayoutProps {
 export class MediaLayoutElement extends Host(HTMLElement, MediaLayout) {
   static tagName = 'media-layout';
 
-  protected _media!: MediaContext;
+  #media!: MediaContext;
 
   protected onSetup() {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
   }
 
   protected onConnect() {
-    effect(this._watchWhen.bind(this));
+    effect(this.#watchWhen.bind(this));
   }
 
-  private _watchWhen() {
+  #watchWhen() {
     const root = this.firstElementChild,
       isTemplate = root?.localName === 'template',
       when = this.$props.when(),
-      matches = isBoolean(when) ? when : computed(() => when(this._media.player.state))();
+      matches = isBoolean(when) ? when : computed(() => when(this.#media.player.state))();
 
     if (!matches) {
       if (isTemplate) {

@@ -28,50 +28,53 @@ const VALID_KEYS = /* #__PURE__*/ new Set([
 ]);
 
 export interface MenuFocusControllerDelegate {
-  _closeMenu(trigger?: Event): void;
+  closeMenu(trigger?: Event): void;
 }
 
 export class MenuFocusController {
-  protected _index = -1;
-  protected _el: HTMLElement | null = null;
-  protected _elements: HTMLElement[] = [];
+  #index = -1;
+  #el: HTMLElement | null = null;
+  #elements: HTMLElement[] = [];
+  #delegate: MenuFocusControllerDelegate;
 
-  get _items() {
-    return this._elements;
+  get items() {
+    return this.#elements;
   }
 
-  constructor(protected _delegate: MenuFocusControllerDelegate) {}
+  constructor(delegate: MenuFocusControllerDelegate) {
+    this.#delegate = delegate;
+  }
 
-  _attachMenu(el: HTMLElement) {
-    listenEvent(el, 'focus', this._onFocus.bind(this));
+  attachMenu(el: HTMLElement) {
+    listenEvent(el, 'focus', this.#onFocus.bind(this));
 
-    this._el = el;
+    this.#el = el;
     onDispose(() => {
-      this._el = null;
+      this.#el = null;
     });
   }
 
-  _listen() {
-    if (!this._el) return;
+  listen() {
+    if (!this.#el) return;
 
-    this._update();
+    this.update();
 
-    listenEvent(this._el, 'keyup', this._onKeyUp.bind(this));
-    listenEvent(this._el, 'keydown', this._onKeyDown.bind(this));
+    listenEvent(this.#el, 'keyup', this.#onKeyUp.bind(this));
+    listenEvent(this.#el, 'keydown', this.#onKeyDown.bind(this));
 
     onDispose(() => {
-      this._index = -1;
-      this._elements = [];
+      this.#index = -1;
+      this.#elements = [];
     });
   }
 
-  _update() {
-    this._index = 0;
-    this._elements = this._getFocusableElements();
+  update() {
+    this.#index = 0;
+    this.#elements = this.#getFocusableElements();
   }
 
-  _scroll(index = this._findActiveIndex()) {
-    const element = this._elements[index];
+  scroll(index = this.#findActiveIndex()) {
+    const element = this.#elements[index];
     if (element) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -86,36 +89,36 @@ export class MenuFocusController {
     }
   }
 
-  _focusActive(scroll = true) {
-    const index = this._findActiveIndex();
-    this._focusAt(index >= 0 ? index : 0, scroll);
+  focusActive(scroll = true) {
+    const index = this.#findActiveIndex();
+    this.#focusAt(index >= 0 ? index : 0, scroll);
   }
 
-  protected _focusAt(index: number, scroll = true) {
-    this._index = index;
-    if (this._elements[index]) {
-      this._elements[index].focus({ preventScroll: true });
-      if (scroll) this._scroll(index);
+  #focusAt(index: number, scroll = true) {
+    this.#index = index;
+    if (this.#elements[index]) {
+      this.#elements[index].focus({ preventScroll: true });
+      if (scroll) this.scroll(index);
     } else {
-      this._el?.focus({ preventScroll: true });
+      this.#el?.focus({ preventScroll: true });
     }
   }
 
-  protected _findActiveIndex() {
-    return this._elements.findIndex(
+  #findActiveIndex() {
+    return this.#elements.findIndex(
       (el) =>
         document.activeElement === el ||
         (el.getAttribute('role') === 'menuitemradio' && el.getAttribute('aria-checked') === 'true'),
     );
   }
 
-  protected _onFocus() {
-    if (this._index >= 0) return;
-    this._update();
-    this._focusActive();
+  #onFocus() {
+    if (this.#index >= 0) return;
+    this.update();
+    this.focusActive();
   }
 
-  protected _validateKeyEvent(event: KeyboardEvent) {
+  #validateKeyEvent(event: KeyboardEvent) {
     const el = event.target;
 
     if (wasEnterKeyPressed(event) && el instanceof Element) {
@@ -126,55 +129,55 @@ export class MenuFocusController {
     return VALID_KEYS.has(event.key);
   }
 
-  protected _onKeyUp(event: KeyboardEvent) {
-    if (!this._validateKeyEvent(event)) return;
+  #onKeyUp(event: KeyboardEvent) {
+    if (!this.#validateKeyEvent(event)) return;
 
     event.stopPropagation();
     event.preventDefault();
   }
 
-  protected _onKeyDown(event: KeyboardEvent) {
-    if (!this._validateKeyEvent(event)) return;
+  #onKeyDown(event: KeyboardEvent) {
+    if (!this.#validateKeyEvent(event)) return;
 
     event.stopPropagation();
     event.preventDefault();
 
     switch (event.key) {
       case 'Escape':
-        this._delegate._closeMenu(event);
+        this.#delegate.closeMenu(event);
         break;
       case 'Tab':
-        this._focusAt(this._nextIndex(event.shiftKey ? -1 : +1));
+        this.#focusAt(this.#nextIndex(event.shiftKey ? -1 : +1));
         break;
       case 'ArrowUp':
-        this._focusAt(this._nextIndex(-1));
+        this.#focusAt(this.#nextIndex(-1));
         break;
       case 'ArrowDown':
-        this._focusAt(this._nextIndex(+1));
+        this.#focusAt(this.#nextIndex(+1));
         break;
       case 'Home':
       case 'PageUp':
-        this._focusAt(0);
+        this.#focusAt(0);
         break;
       case 'End':
       case 'PageDown':
-        this._focusAt(this._elements.length - 1);
+        this.#focusAt(this.#elements.length - 1);
         break;
     }
   }
 
-  protected _nextIndex(delta: number) {
-    let index = this._index;
+  #nextIndex(delta: number) {
+    let index = this.#index;
     do {
-      index = (index + delta + this._elements.length) % this._elements.length;
-    } while (this._elements[index]?.offsetParent === null);
+      index = (index + delta + this.#elements.length) % this.#elements.length;
+    } while (this.#elements[index]?.offsetParent === null);
     return index;
   }
 
-  protected _getFocusableElements() {
-    if (!this._el) return [];
+  #getFocusableElements() {
+    if (!this.#el) return [];
 
-    const focusableElements = this._el!.querySelectorAll(FOCUSABLE_ELEMENTS_SELECTOR),
+    const focusableElements = this.#el!.querySelectorAll(FOCUSABLE_ELEMENTS_SELECTOR),
       elements: HTMLElement[] = [];
 
     const is = (node: Element) => {
@@ -186,7 +189,7 @@ export class MenuFocusController {
       if (
         isHTMLElement(el) &&
         el.offsetParent !== null && // does not have display: none
-        isElementParent(this._el, el, is)
+        isElementParent(this.#el, el, is)
       ) {
         elements.push(el);
       }

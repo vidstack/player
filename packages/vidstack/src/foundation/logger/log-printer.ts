@@ -8,18 +8,18 @@ import { LogLevelColor, LogLevelValue, type LogLevel } from './log-level';
 import { ms } from './ms';
 
 export class LogPrinter extends ViewController {
-  private _level: LogLevel = __DEV__ ? 'warn' : 'silent';
-  private _lastLogged: number | undefined;
+  #level: LogLevel = __DEV__ ? 'warn' : 'silent';
+  #lastLogged: number | undefined;
 
   /**
    * The current log level.
    */
   get logLevel(): LogLevel {
-    return __DEV__ ? this._level : 'silent';
+    return __DEV__ ? this.#level : 'silent';
   }
 
   set logLevel(level) {
-    if (__DEV__) this._level = level;
+    if (__DEV__) this.#level = level;
   }
 
   protected override onConnect() {
@@ -38,7 +38,7 @@ export class LogPrinter extends ViewController {
 
       const { level = 'warn', data } = event.detail ?? {};
 
-      if (LogLevelValue[this._level] < LogLevelValue[level]) {
+      if (LogLevelValue[this.#level] < LogLevelValue[level]) {
         return;
       }
 
@@ -48,8 +48,8 @@ export class LogPrinter extends ViewController {
         data?.length === 1 && isGroupedLog(data[0])
           ? data[0].title
           : isString(data?.[0])
-          ? data![0]
-          : '';
+            ? data![0]
+            : '';
 
       console.groupCollapsed(
         `%c${level.toUpperCase()}%c ${eventTargetName}%c ${hint.slice(0, 50)}${
@@ -67,25 +67,25 @@ export class LogPrinter extends ViewController {
         print(level, ...data);
       }
 
-      this._printTimeDiff();
+      this.#printTimeDiff();
       printStackTrace();
 
       console.groupEnd();
     });
 
     onDispose(() => {
-      this._lastLogged = undefined;
+      this.#lastLogged = undefined;
     });
   }
 
-  private _printTimeDiff() {
-    labelledPrint('Time since last log', this._calcLastLogTimeDiff());
+  #printTimeDiff() {
+    labelledPrint('Time since last log', this.#calcLastLogTimeDiff());
   }
 
-  private _calcLastLogTimeDiff() {
+  #calcLastLogTimeDiff() {
     const time = performance.now();
-    const diff = time - (this._lastLogged ?? (this._lastLogged = performance.now()));
-    this._lastLogged = time;
+    const diff = time - (this.#lastLogged ?? (this.#lastLogged = performance.now()));
+    this.#lastLogged = time;
     return ms(diff);
   }
 }

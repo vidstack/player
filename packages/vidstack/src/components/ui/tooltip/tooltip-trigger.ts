@@ -22,23 +22,23 @@ export class TooltipTrigger extends Component {
     onDispose(
       requestScopedAnimationFrame(() => {
         if (!this.connectScope) return;
-        this._attach();
+        this.#attach();
         const tooltip = useContext(tooltipContext);
         onDispose(() => {
-          const button = this._getButton();
-          button && tooltip._detachTrigger(button);
+          const button = this.#getButton();
+          button && tooltip.detachTrigger(button);
         });
       }),
     );
   }
 
-  private _attach() {
-    const button = this._getButton(),
+  #attach() {
+    const button = this.#getButton(),
       tooltip = useContext(tooltipContext);
-    button && tooltip._attachTrigger(button);
+    button && tooltip.attachTrigger(button);
   }
 
-  private _getButton() {
+  #getButton() {
     const candidate = this.el!.firstElementChild;
     return (
       candidate?.localName === 'button' || candidate?.getAttribute('role') === 'button'

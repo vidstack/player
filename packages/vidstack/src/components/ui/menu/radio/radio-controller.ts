@@ -1,9 +1,9 @@
 import { createContext, type ReadSignal } from 'maverick.js';
 
 export interface RadioController {
-  _value: ReadSignal<string>;
-  _check(checked: boolean, trigger?: Event);
-  _onCheck: RadioChangeCallback | null;
+  value: ReadSignal<string>;
+  check(checked: boolean, trigger?: Event);
+  onCheck: RadioChangeCallback | null;
 }
 
 export interface RadioChangeCallback {

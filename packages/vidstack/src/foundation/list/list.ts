@@ -12,28 +12,28 @@ export class List<Item extends ListItem, Events extends ListEvents>
 {
   [index: number]: Item | undefined;
 
-  protected _items: Item[] = [];
+  protected items: Item[] = [];
 
   /** @internal */
-  protected [ListSymbol._readonly] = false;
+  protected [ListSymbol.readonly] = false;
   /** @internal */
-  protected [ListSymbol._onReset]?(trigger?: Event): void;
+  protected [ListSymbol.onReset]?(trigger?: Event): void;
   /** @internal */
-  protected [ListSymbol._onRemove]?(item: Item, trigger?: Event): void;
+  protected [ListSymbol.onRemove]?(item: Item, trigger?: Event): void;
 
   get length() {
-    return this._items.length;
+    return this.items.length;
   }
 
   get readonly() {
-    return this[ListSymbol._readonly];
+    return this[ListSymbol.readonly];
   }
 
   /**
    * Returns the index of the first occurrence of the given item, or -1 if it is not present.
    */
   indexOf(item: Item) {
-    return this._items.indexOf(item);
+    return this.items.indexOf(item);
   }
 
   /**
@@ -41,60 +41,60 @@ export class List<Item extends ListItem, Events extends ListEvents>
    */
   getById(id: string): Item | null {
     if (id === '') return null;
-    return this._items.find((item) => item.id === id) ?? null;
+    return this.items.find((item) => item.id === id) ?? null;
   }
 
   /**
    * Transform list to an array.
    */
   toArray(): Item[] {
-    return [...this._items];
+    return [...this.items];
   }
 
   [Symbol.iterator]() {
-    return this._items.values();
+    return this.items.values();
   }
 
   /** @internal */
-  [ListSymbol._add](item: Item, trigger?: Event): void {
-    const index = this._items.length;
+  [ListSymbol.add](item: Item, trigger?: Event): void {
+    const index = this.items.length;
 
     if (!('' + index in this)) {
       Object.defineProperty(this, index, {
         get() {
-          return this._items[index];
+          return this.items[index];
         },
       });
     }
 
-    if (this._items.includes(item as Item)) return;
+    if (this.items.includes(item as Item)) return;
 
-    this._items.push(item as Item);
+    this.items.push(item as Item);
     this.dispatchEvent(new DOMEvent<any>('add', { detail: item, trigger }));
   }
 
   /** @internal */
-  [ListSymbol._remove](item: Item, trigger?: Event): void {
-    const index = this._items.indexOf(item);
+  [ListSymbol.remove](item: Item, trigger?: Event): void {
+    const index = this.items.indexOf(item);
     if (index >= 0) {
-      this[ListSymbol._onRemove]?.(item, trigger);
-      this._items.splice(index, 1);
+      this[ListSymbol.onRemove]?.(item, trigger);
+      this.items.splice(index, 1);
       this.dispatchEvent(new DOMEvent<any>('remove', { detail: item, trigger }));
     }
   }
 
   /** @internal */
-  [ListSymbol._reset](trigger?: Event): void {
-    for (const item of [...this._items]) this[ListSymbol._remove](item, trigger);
-    this._items = [];
-    this[ListSymbol._setReadonly](false, trigger);
-    this[ListSymbol._onReset]?.();
+  [ListSymbol.reset](trigger?: Event): void {
+    for (const item of [...this.items]) this[ListSymbol.remove](item, trigger);
+    this.items = [];
+    this[ListSymbol.setReadonly](false, trigger);
+    this[ListSymbol.onReset]?.();
   }
 
   /** @internal */
-  [ListSymbol._setReadonly](readonly: boolean, trigger?: Event) {
-    if (this[ListSymbol._readonly] === readonly) return;
-    this[ListSymbol._readonly] = readonly;
+  [ListSymbol.setReadonly](readonly: boolean, trigger?: Event) {
+    if (this[ListSymbol.readonly] === readonly) return;
+    this[ListSymbol.readonly] = readonly;
     this.dispatchEvent(new DOMEvent<any>('readonly-change', { detail: readonly, trigger }));
   }
 }

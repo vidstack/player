@@ -15,14 +15,14 @@ import { Slider } from './slider/slider';
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-thumbnail}
  */
 export class SliderThumbnail extends Thumbnail {
-  private _slider!: StateContext<typeof sliderState>;
+  #slider!: StateContext<typeof sliderState>;
 
   protected override onAttach(el: HTMLElement) {
-    this._slider = useState(Slider.state);
+    this.#slider = useState(Slider.state);
   }
 
-  protected override _getTime() {
-    const { duration, clipStartTime } = this._media.$state;
-    return clipStartTime() + this._slider.pointerRate() * duration();
+  protected override getTime() {
+    const { duration, clipStartTime } = this.media.$state;
+    return clipStartTime() + this.#slider.pointerRate() * duration();
   }
 }

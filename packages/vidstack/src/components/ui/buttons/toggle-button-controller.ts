@@ -13,9 +13,9 @@ export interface ToggleButtonControllerProps {
 }
 
 export interface ToggleButtonDelegate {
-  _isPressed: ReadSignal<boolean>;
-  _keyShortcut?: string;
-  _onPress?(event: Event): void;
+  isPresssed: ReadSignal<boolean>;
+  keyShortcut?: string;
+  onPress?(event: Event): void;
 }
 
 export class ToggleButtonController extends ViewController<ToggleButtonControllerProps> {
@@ -23,19 +23,22 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
     disabled: false,
   };
 
-  constructor(private _delegate: ToggleButtonDelegate) {
+  #delegate: ToggleButtonDelegate;
+
+  constructor(delegate: ToggleButtonDelegate) {
     super();
+    this.#delegate = delegate;
     new FocusVisibleController();
-    if (_delegate._keyShortcut) {
-      new ARIAKeyShortcuts(_delegate._keyShortcut);
+    if (delegate.keyShortcut) {
+      new ARIAKeyShortcuts(delegate.keyShortcut);
     }
   }
 
   protected override onSetup(): void {
     const { disabled } = this.$props;
     this.setAttributes({
-      'data-pressed': this._delegate._isPressed,
-      'aria-pressed': this._isARIAPressed.bind(this),
+      'data-pressed': this.#delegate.isPresssed,
+      'aria-pressed': this.#isARIAPressed.bind(this),
       'aria-disabled': () => (disabled() ? 'true' : null),
     });
   }
@@ -47,27 +50,27 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
   }
 
   protected override onConnect(el: HTMLElement) {
-    onPress(el, this._onMaybePress.bind(this));
+    onPress(el, this.#onMaybePress.bind(this));
 
     // Prevent these events too when toggle is disabled.
     for (const type of ['click', 'touchstart'] as const) {
-      this.listen(type, this._onInteraction.bind(this), {
+      this.listen(type, this.#onInteraction.bind(this), {
         passive: true,
       });
     }
   }
 
-  protected _isARIAPressed() {
-    return ariaBool(this._delegate._isPressed());
+  #isARIAPressed() {
+    return ariaBool(this.#delegate.isPresssed());
   }
 
-  protected _onPressed(event: Event) {
-    if (isWriteSignal(this._delegate._isPressed)) {
-      this._delegate._isPressed.set((p) => !p);
+  #onPressed(event: Event) {
+    if (isWriteSignal(this.#delegate.isPresssed)) {
+      this.#delegate.isPresssed.set((p) => !p);
     }
   }
 
-  protected _onMaybePress(event: Event) {
+  #onMaybePress(event: Event) {
     const disabled = this.$props.disabled() || this.el!.hasAttribute('data-disabled');
 
     if (disabled) {
@@ -77,10 +80,10 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
     }
 
     event.preventDefault();
-    (this._delegate._onPress ?? this._onPressed).call(this, event);
+    (this.#delegate.onPress ?? this.#onPressed).call(this, event);
   }
 
-  protected _onInteraction(event: Event) {
+  #onInteraction(event: Event) {
     if (this.$props.disabled()) {
       event.preventDefault();
       event.stopImmediatePropagation();

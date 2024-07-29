@@ -10,13 +10,13 @@ const ADD = Symbol(__DEV__ ? 'LIST_ADD' : 0),
 
 /** @internal */
 export const ListSymbol = {
-  _add: ADD,
-  _remove: REMOVE,
-  _reset: RESET,
-  _select: SELECT,
-  _readonly: READONLY,
-  _setReadonly: SET_READONLY,
-  _onReset: ON_RESET,
-  _onRemove: ON_REMOVE,
-  _onUserSelect: ON_USER_SELECT,
+  add: ADD,
+  remove: REMOVE,
+  reset: RESET,
+  select: SELECT,
+  readonly: READONLY,
+  setReadonly: SET_READONLY,
+  onReset: ON_RESET,
+  onRemove: ON_REMOVE,
+  onUserSelect: ON_USER_SELECT,
 } as const;

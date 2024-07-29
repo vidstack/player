@@ -31,21 +31,21 @@ const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
 export class DASHProvider extends VideoProvider implements MediaProviderAdapter {
   protected override $$PROVIDER_TYPE = 'DASH';
 
-  private _ctor: DASHConstructor | null = null;
-  private readonly _controller = new DASHController(this.video, this._ctx);
+  #ctor: DASHConstructor | null = null;
+  readonly #controller = new DASHController(this.video, this.ctx);
 
   /**
    * The `dash.js` constructor.
    */
   get ctor() {
-    return this._ctor;
+    return this.#ctor;
   }
 
   /**
    * The current `dash.js` instance.
    */
   get instance() {
-    return this._controller.instance;
+    return this.#controller.instance;
   }
 
   /**
@@ -61,7 +61,7 @@ export class DASHProvider extends VideoProvider implements MediaProviderAdapter 
     return true;
   }
 
-  protected _library: DASHLibrary = `${JS_DELIVR_CDN}/npm/dashjs@4.7.4/dist/dash${
+  #library: DASHLibrary = `${JS_DELIVR_CDN}/npm/dashjs@4.7.4/dist/dash${
     __DEV__ ? '.all.debug.js' : '.all.min.js'
   }`;
 
@@ -71,11 +71,11 @@ export class DASHProvider extends VideoProvider implements MediaProviderAdapter 
    * @see {@link https://cdn.dashjs.org/latest/jsdoc/module-Settings.html}
    */
   get config() {
-    return this._controller._config;
+    return this.#controller.config;
   }
 
   set config(config) {
-    this._controller._config = config;
+    this.#controller.config = config;
   }
 
   /**
@@ -84,39 +84,39 @@ export class DASHProvider extends VideoProvider implements MediaProviderAdapter 
    * @defaultValue `https://cdn.jsdelivr.net/npm/dashjs@4.7.4/dist/dash.all.min.js`
    */
   get library() {
-    return this._library;
+    return this.#library;
   }
 
   set library(library) {
-    this._library = library;
+    this.#library = library;
   }
 
   preconnect(): void {
-    if (!isString(this._library)) return;
-    preconnect(this._library);
+    if (!isString(this.#library)) return;
+    preconnect(this.#library);
   }
 
   override setup() {
     super.setup();
-    new DASHLibLoader(this._library, this._ctx, (ctor) => {
-      this._ctor = ctor;
-      this._controller.setup(ctor);
-      this._ctx.delegate._notify('provider-setup', this);
-      const src = peek(this._ctx.$state.source);
+    new DASHLibLoader(this.#library, this.ctx, (ctor) => {
+      this.#ctor = ctor;
+      this.#controller.setup(ctor);
+      this.ctx.notify('provider-setup', this);
+      const src = peek(this.ctx.$state.source);
       if (src) this.loadSource(src);
     });
   }
 
   override async loadSource(src: Src, preload?: HTMLMediaElement['preload']) {
     if (!isString(src.src)) {
-      this._removeSource();
+      this.removeSource();
       return;
     }
 
-    this._media.preload = preload || '';
-    this._appendSource(src as Src<string>, 'application/x-mpegurl');
-    this._controller.loadSource(src);
-    this._currentSrc = src as Src<string>;
+    this.media.preload = preload || '';
+    this.appendSource(src as Src<string>, 'application/x-mpegurl');
+    this.#controller.loadSource(src);
+    this.currentSrc = src as Src<string>;
   }
 
   /**
@@ -124,13 +124,12 @@ export class DASHProvider extends VideoProvider implements MediaProviderAdapter 
    * attached to media.
    */
   onInstance(callback: DASHInstanceCallback): Dispose {
-    const instance = this._controller.instance;
+    const instance = this.#controller.instance;
     if (instance) callback(instance);
-    this._controller._callbacks.add(callback);
-    return () => this._controller._callbacks.delete(callback);
+    return this.#controller.onInstance(callback);
   }
 
   destroy() {
-    this._controller.destroy();
+    this.#controller.destroy();
   }
 }

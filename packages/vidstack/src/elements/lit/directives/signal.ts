@@ -4,51 +4,51 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { computed, effect, peek, type ReadSignal, type StopEffect } from 'maverick.js';
 
 class SignalDirective extends AsyncDirective {
-  protected _signal: ReadSignal<any> | null = null;
-  protected _isAttr = false;
-  protected _stop: StopEffect | null = null;
+  #signal: ReadSignal<any> | null = null;
+  #isAttr = false;
+  #stop: StopEffect | null = null;
 
   constructor(part: PartInfo) {
     super(part);
-    this._isAttr = part.type === PartType.ATTRIBUTE || part.type === PartType.BOOLEAN_ATTRIBUTE;
+    this.#isAttr = part.type === PartType.ATTRIBUTE || part.type === PartType.BOOLEAN_ATTRIBUTE;
   }
 
-  render(signal: ReadSignal<any>) {
-    if (signal !== this._signal) {
+  render(signal: ReadSignal<any> | null) {
+    if (signal !== this.#signal) {
       this.disconnected();
-      this._signal = signal;
-      if (this.isConnected) this._watch();
+      this.#signal = signal;
+      if (this.isConnected) this.#watch();
     }
 
-    return this._signal ? this._resolveValue(peek(this._signal)) : nothing;
+    return this.#signal ? this.#resolveValue(peek(this.#signal)) : nothing;
   }
 
   override reconnected() {
-    this._watch();
+    this.#watch();
   }
 
   override disconnected() {
-    this._stop?.();
-    this._stop = null;
+    this.#stop?.();
+    this.#stop = null;
   }
 
-  protected _watch() {
-    if (!this._signal) return;
-    this._stop = effect(this._onValueChange.bind(this));
+  #watch() {
+    if (!this.#signal) return;
+    this.#stop = effect(this.#onValueChange.bind(this));
   }
 
-  private _resolveValue(value: any) {
-    return this._isAttr ? ifDefined(value) : value;
+  #resolveValue(value: any) {
+    return this.#isAttr ? ifDefined(value) : value;
   }
 
-  private _setValue(value: any) {
-    this.setValue(this._resolveValue(value));
+  #setValue(value: any) {
+    this.setValue(this.#resolveValue(value));
   }
 
-  protected _onValueChange() {
+  #onValueChange() {
     if (__DEV__) {
       try {
-        this._setValue(this._signal?.());
+        this.#setValue(this.#signal?.());
       } catch (error) {
         if (
           error instanceof Error &&
@@ -70,7 +70,7 @@ class SignalDirective extends AsyncDirective {
         }
       }
     } else {
-      this._setValue(this._signal?.());
+      this.#setValue(this.#signal?.());
     }
   }
 }

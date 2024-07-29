@@ -5,12 +5,12 @@ import { isTouchPinchEvent } from '../utils/dom';
 import { MediaPlayerController } from './api/player-controller';
 
 export class MediaControls extends MediaPlayerController {
-  private _idleTimer = -2;
-  private _pausedTracking = false;
-  private _hideOnMouseLeave = signal(false);
-  private _isMouseOutside = signal(false);
-  private _focusedItem: HTMLElement | null = null;
-  private _canIdle = signal(true);
+  #idleTimer = -2;
+  #pausedTracking = false;
+  #hideOnMouseLeave = signal(false);
+  #isMouseOutside = signal(false);
+  #focusedItem: HTMLElement | null = null;
+  #canIdle = signal(true);
 
   /**
    * The default amount of delay in milliseconds while media playback is progressing without user
@@ -25,11 +25,11 @@ export class MediaControls extends MediaPlayerController {
    * not hide and be user controlled.
    */
   get canIdle() {
-    return this._canIdle();
+    return this.#canIdle();
   }
 
   set canIdle(canIdle: boolean) {
-    this._canIdle.set(canIdle);
+    this.#canIdle.set(canIdle);
   }
 
   /**
@@ -40,11 +40,11 @@ export class MediaControls extends MediaPlayerController {
    */
   get hideOnMouseLeave() {
     const { hideControlsOnMouseLeave } = this.$props;
-    return this._hideOnMouseLeave() || hideControlsOnMouseLeave();
+    return this.#hideOnMouseLeave() || hideControlsOnMouseLeave();
   }
 
   set hideOnMouseLeave(hide) {
-    this._hideOnMouseLeave.set(hide);
+    this.#hideOnMouseLeave.set(hide);
   }
 
   /**
@@ -58,9 +58,9 @@ export class MediaControls extends MediaPlayerController {
    * Show controls.
    */
   show(delay = 0, trigger?: Event) {
-    this._clearIdleTimer();
-    if (!this._pausedTracking) {
-      this._changeVisibility(true, delay, trigger);
+    this.#clearIdleTimer();
+    if (!this.#pausedTracking) {
+      this.#changeVisibility(true, delay, trigger);
     }
   }
 
@@ -68,9 +68,9 @@ export class MediaControls extends MediaPlayerController {
    * Hide controls.
    */
   hide(delay = this.defaultDelay, trigger?: Event) {
-    this._clearIdleTimer();
-    if (!this._pausedTracking) {
-      this._changeVisibility(false, delay, trigger);
+    this.#clearIdleTimer();
+    if (!this.#pausedTracking) {
+      this.#changeVisibility(false, delay, trigger);
     }
   }
 
@@ -78,36 +78,36 @@ export class MediaControls extends MediaPlayerController {
    * Whether all idle tracking on controls should be paused until resumed again.
    */
   pause(trigger?: Event) {
-    this._pausedTracking = true;
-    this._clearIdleTimer();
-    this._changeVisibility(true, 0, trigger);
+    this.#pausedTracking = true;
+    this.#clearIdleTimer();
+    this.#changeVisibility(true, 0, trigger);
   }
 
   resume(trigger?: Event) {
-    this._pausedTracking = false;
+    this.#pausedTracking = false;
     if (this.$state.paused()) return;
-    this._changeVisibility(false, this.defaultDelay, trigger);
+    this.#changeVisibility(false, this.defaultDelay, trigger);
   }
 
   protected override onConnect() {
-    effect(this._init.bind(this));
+    effect(this.#init.bind(this));
   }
 
-  private _init() {
+  #init() {
     const { viewType } = this.$state;
 
-    if (!this._canIdle()) return;
+    if (!this.#canIdle()) return;
 
     if (viewType() === 'audio') {
       this.show();
       return;
     }
 
-    effect(this._watchMouse.bind(this));
-    effect(this._watchPaused.bind(this));
+    effect(this.#watchMouse.bind(this));
+    effect(this.#watchPaused.bind(this));
 
-    const onPlay = this._onPlay.bind(this),
-      onPause = this._onPause.bind(this);
+    const onPlay = this.#onPlay.bind(this),
+      onPause = this.#onPause.bind(this);
 
     this.listen('can-play', (event) => this.show(0, event));
     this.listen('play', onPlay);
@@ -116,29 +116,29 @@ export class MediaControls extends MediaPlayerController {
     this.listen('auto-play-fail', onPause);
   }
 
-  private _watchMouse() {
+  #watchMouse() {
     const { started, pointer, paused } = this.$state;
     if (!started() || pointer() !== 'fine') return;
 
     const shouldHideOnMouseLeave = this.hideOnMouseLeave;
 
-    if (!shouldHideOnMouseLeave || !this._isMouseOutside()) {
+    if (!shouldHideOnMouseLeave || !this.#isMouseOutside()) {
       effect(() => {
-        if (!paused()) this.listen('pointermove', this._onStopIdle.bind(this));
+        if (!paused()) this.listen('pointermove', this.#onStopIdle.bind(this));
       });
     }
 
     if (shouldHideOnMouseLeave) {
-      this.listen('mouseenter', this._onMouseEnter.bind(this));
-      this.listen('mouseleave', this._onMouseLeave.bind(this));
+      this.listen('mouseenter', this.#onMouseEnter.bind(this));
+      this.listen('mouseleave', this.#onMouseLeave.bind(this));
     }
   }
 
-  private _watchPaused() {
+  #watchPaused() {
     const { paused, started, autoPlayError } = this.$state;
     if (paused() || (autoPlayError() && !started())) return;
 
-    const onStopIdle = this._onStopIdle.bind(this);
+    const onStopIdle = this.#onStopIdle.bind(this);
 
     effect(() => {
       const pointer = this.$state.pointer(),
@@ -151,36 +151,36 @@ export class MediaControls extends MediaPlayerController {
     });
   }
 
-  private _onPlay(event: Event) {
+  #onPlay(event: Event) {
     this.show(0, event);
     this.hide(undefined, event);
   }
 
-  private _onPause(event: Event) {
+  #onPause(event: Event) {
     this.show(0, event);
   }
 
-  private _onMouseEnter(event: Event) {
-    this._isMouseOutside.set(false);
+  #onMouseEnter(event: Event) {
+    this.#isMouseOutside.set(false);
     this.show(0, event);
     this.hide(undefined, event);
   }
 
-  private _onMouseLeave(event: Event) {
-    this._isMouseOutside.set(true);
+  #onMouseLeave(event: Event) {
+    this.#isMouseOutside.set(true);
     this.hide(0, event);
   }
 
-  private _clearIdleTimer() {
-    window.clearTimeout(this._idleTimer);
-    this._idleTimer = -1;
+  #clearIdleTimer() {
+    window.clearTimeout(this.#idleTimer);
+    this.#idleTimer = -1;
   }
 
-  private _onStopIdle(event: Event) {
+  #onStopIdle(event: Event) {
     if (
       // @ts-expect-error
       event.MEDIA_GESTURE ||
-      this._pausedTracking ||
+      this.#pausedTracking ||
       isTouchPinchEvent(event)
     ) {
       return;
@@ -189,12 +189,12 @@ export class MediaControls extends MediaPlayerController {
     if (isKeyboardEvent(event)) {
       if (event.key === 'Escape') {
         this.el?.focus();
-        this._focusedItem = null;
-      } else if (this._focusedItem) {
+        this.#focusedItem = null;
+      } else if (this.#focusedItem) {
         event.preventDefault();
         requestAnimationFrame(() => {
-          this._focusedItem?.focus();
-          this._focusedItem = null;
+          this.#focusedItem?.focus();
+          this.#focusedItem = null;
         });
       }
     }
@@ -203,25 +203,25 @@ export class MediaControls extends MediaPlayerController {
     this.hide(this.defaultDelay, event);
   }
 
-  private _changeVisibility(visible: boolean, delay: number, trigger?: Event) {
+  #changeVisibility(visible: boolean, delay: number, trigger?: Event) {
     if (delay === 0) {
-      this._onChange(visible, trigger);
+      this.#onChange(visible, trigger);
       return;
     }
 
-    this._idleTimer = window.setTimeout(() => {
+    this.#idleTimer = window.setTimeout(() => {
       if (!this.scope) return;
-      this._onChange(visible && !this._pausedTracking, trigger);
+      this.#onChange(visible && !this.#pausedTracking, trigger);
     }, delay);
   }
 
-  private _onChange(visible: boolean, trigger?: Event) {
+  #onChange(visible: boolean, trigger?: Event) {
     if (this.$state.controlsVisible() === visible) return;
 
     this.$state.controlsVisible.set(visible);
 
     if (!visible && document.activeElement && this.el?.contains(document.activeElement)) {
-      this._focusedItem = document.activeElement as HTMLElement;
+      this.#focusedItem = document.activeElement as HTMLElement;
       requestAnimationFrame(() => {
         this.el?.focus({ preventScroll: true });
       });

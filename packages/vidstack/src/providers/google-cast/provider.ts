@@ -29,37 +29,32 @@ export class GoogleCastProvider implements MediaProviderAdapter {
 
   readonly scope = createScope();
 
-  protected _currentSrc: Src<string> | null = null;
-  protected _state: RemotePlaybackState = 'disconnected';
-  protected _currentTime = 0;
-  protected _played = 0;
-  protected _seekableRange = new TimeRange(0, 0);
-  protected _timeRAF = new RAFLoop(this._onAnimationFrame.bind(this));
-  protected _playerEventHandlers!: Record<string, RemotePlayerEventCallback>;
-  protected _reloadInfo: { src: Src; paused: boolean; time: number } | null = null;
-  protected _isIdle = false;
+  #player: cast.framework.RemotePlayer;
+  #ctx: MediaContext;
+  #tracks: GoogleCastTracksManager;
 
-  protected _tracks = new GoogleCastTracksManager(
-    this._player,
-    this._ctx,
-    this._onNewLocalTracks.bind(this),
-  );
+  #currentSrc: Src<string> | null = null;
+  #state: RemotePlaybackState = 'disconnected';
+  #currentTime = 0;
+  #played = 0;
+  #seekableRange = new TimeRange(0, 0);
+  #timeRAF = new RAFLoop(this.#onAnimationFrame.bind(this));
+  #playerEventHandlers!: Record<string, RemotePlayerEventCallback>;
+  #reloadInfo: { src: Src; paused: boolean; time: number } | null = null;
+  #isIdle = false;
 
-  protected get _notify() {
-    return this._ctx.delegate._notify;
+  constructor(player: cast.framework.RemotePlayer, ctx: MediaContext) {
+    this.#player = player;
+    this.#ctx = ctx;
+    this.#tracks = new GoogleCastTracksManager(player, ctx, this.#onNewLocalTracks.bind(this));
   }
-
-  constructor(
-    protected _player: cast.framework.RemotePlayer,
-    protected _ctx: MediaContext,
-  ) {}
 
   get type() {
     return 'google-cast';
   }
 
   get currentSrc() {
-    return this._currentSrc;
+    return this.#currentSrc;
   }
 
   /**
@@ -68,7 +63,7 @@ export class GoogleCastProvider implements MediaProviderAdapter {
    * @see {@link https://developers.google.com/cast/docs/reference/web_sender/cast.framework.RemotePlayer}
    */
   get player() {
-    return this._player;
+    return this.#player;
   }
 
   /**
@@ -96,69 +91,69 @@ export class GoogleCastProvider implements MediaProviderAdapter {
    * Whether the current Google Cast session belongs to this provider.
    */
   get hasActiveSession() {
-    return hasActiveCastSession(this._currentSrc);
+    return hasActiveCastSession(this.#currentSrc);
   }
 
   setup() {
-    this._attachCastContextEventListeners();
-    this._attachCastPlayerEventListeners();
+    this.#attachCastContextEventListeners();
+    this.#attachCastPlayerEventListeners();
 
-    this._tracks._setup();
+    this.#tracks.setup();
 
-    this._notify('provider-setup', this);
+    this.#ctx.notify('provider-setup', this);
   }
 
-  protected _attachCastContextEventListeners() {
+  #attachCastContextEventListeners() {
     listenCastContextEvent(
       cast.framework.CastContextEventType.CAST_STATE_CHANGED,
-      this._onCastStateChange.bind(this),
+      this.#onCastStateChange.bind(this),
     );
   }
 
-  protected _attachCastPlayerEventListeners() {
+  #attachCastPlayerEventListeners() {
     const Event = cast.framework.RemotePlayerEventType,
       handlers = {
-        [Event.IS_CONNECTED_CHANGED]: this._onCastStateChange,
-        [Event.IS_MEDIA_LOADED_CHANGED]: this._onMediaLoadedChange,
-        [Event.CAN_CONTROL_VOLUME_CHANGED]: this._onCanControlVolumeChange,
-        [Event.CAN_SEEK_CHANGED]: this._onCanSeekChange,
-        [Event.DURATION_CHANGED]: this._onDurationChange,
-        [Event.IS_MUTED_CHANGED]: this._onVolumeChange,
-        [Event.VOLUME_LEVEL_CHANGED]: this._onVolumeChange,
-        [Event.IS_PAUSED_CHANGED]: this._onPausedChange,
-        [Event.LIVE_SEEKABLE_RANGE_CHANGED]: this._onProgress,
-        [Event.PLAYER_STATE_CHANGED]: this._onPlayerStateChange,
+        [Event.IS_CONNECTED_CHANGED]: this.#onCastStateChange,
+        [Event.IS_MEDIA_LOADED_CHANGED]: this.#onMediaLoadedChange,
+        [Event.CAN_CONTROL_VOLUME_CHANGED]: this.#onCanControlVolumeChange,
+        [Event.CAN_SEEK_CHANGED]: this.#onCanSeekChange,
+        [Event.DURATION_CHANGED]: this.#onDurationChange,
+        [Event.IS_MUTED_CHANGED]: this.#onVolumeChange,
+        [Event.VOLUME_LEVEL_CHANGED]: this.#onVolumeChange,
+        [Event.IS_PAUSED_CHANGED]: this.#onPausedChange,
+        [Event.LIVE_SEEKABLE_RANGE_CHANGED]: this.#onProgress,
+        [Event.PLAYER_STATE_CHANGED]: this.#onPlayerStateChange,
       };
 
-    this._playerEventHandlers = handlers;
+    this.#playerEventHandlers = handlers;
 
-    const handler = this._onRemotePlayerEvent.bind(this);
+    const handler = this.#onRemotePlayerEvent.bind(this);
 
     for (const type of keysOf(handlers)) {
-      this._player.controller!.addEventListener(type, handler);
+      this.#player.controller!.addEventListener(type, handler);
     }
 
     onDispose(() => {
       for (const type of keysOf(handlers)) {
-        this._player.controller!.removeEventListener(type, handler);
+        this.#player.controller!.removeEventListener(type, handler);
       }
     });
   }
 
   async play() {
-    if (!this._player.isPaused && !this._isIdle) return;
+    if (!this.#player.isPaused && !this.#isIdle) return;
 
-    if (this._isIdle) {
-      await this._reload(false, 0);
+    if (this.#isIdle) {
+      await this.#reload(false, 0);
       return;
     }
 
-    this._player.controller?.playOrPause();
+    this.#player.controller?.playOrPause();
   }
 
   async pause() {
-    if (this._player.isPaused) return;
-    this._player.controller?.playOrPause();
+    if (this.#player.isPaused) return;
+    this.#player.controller?.playOrPause();
   }
 
   getMediaStatus(request: chrome.cast.media.GetStatusRequest) {
@@ -168,69 +163,69 @@ export class GoogleCastProvider implements MediaProviderAdapter {
   }
 
   setMuted(muted: boolean) {
-    const hasChanged = (muted && !this._player!.isMuted) || (!muted && this._player!.isMuted);
-    if (hasChanged) this._player.controller?.muteOrUnmute();
+    const hasChanged = (muted && !this.#player!.isMuted) || (!muted && this.#player!.isMuted);
+    if (hasChanged) this.#player.controller?.muteOrUnmute();
   }
 
   setCurrentTime(time: number) {
-    this._player.currentTime = time;
-    this._notify('seeking', time);
-    this._player.controller?.seek();
+    this.#player.currentTime = time;
+    this.#ctx.notify('seeking', time);
+    this.#player.controller?.seek();
   }
 
   setVolume(volume: number) {
-    this._player.volumeLevel = volume;
-    this._player.controller?.setVolumeLevel();
+    this.#player.volumeLevel = volume;
+    this.#player.controller?.setVolumeLevel();
   }
 
   async loadSource(src: Src) {
-    if (this._reloadInfo?.src !== src) this._reloadInfo = null;
+    if (this.#reloadInfo?.src !== src) this.#reloadInfo = null;
 
     if (hasActiveCastSession(src)) {
-      this._resumeSession();
-      this._currentSrc = src as Src<string>;
+      this.#resumeSession();
+      this.#currentSrc = src as Src<string>;
       return;
     }
 
-    this._notify('load-start');
+    this.#ctx.notify('load-start');
 
-    const loadRequest = this._buildLoadRequest(src as Src<string>),
+    const loadRequest = this.#buildLoadRequest(src as Src<string>),
       errorCode = await this.session!.loadMedia(loadRequest);
 
     if (errorCode) {
-      this._currentSrc = null;
-      this._notify('error', Error(getCastErrorMessage(errorCode)));
+      this.#currentSrc = null;
+      this.#ctx.notify('error', Error(getCastErrorMessage(errorCode)));
       return;
     }
 
-    this._currentSrc = src as Src<string>;
+    this.#currentSrc = src as Src<string>;
   }
 
   destroy() {
-    this._reset();
-    this._endSession();
+    this.#reset();
+    this.#endSession();
   }
 
-  protected _reset() {
-    if (!this._reloadInfo) {
-      this._played = 0;
-      this._seekableRange = new TimeRange(0, 0);
+  #reset() {
+    if (!this.#reloadInfo) {
+      this.#played = 0;
+      this.#seekableRange = new TimeRange(0, 0);
     }
 
-    this._timeRAF._stop();
-    this._currentTime = 0;
-    this._reloadInfo = null;
+    this.#timeRAF.stop();
+    this.#currentTime = 0;
+    this.#reloadInfo = null;
   }
 
-  protected _resumeSession() {
+  #resumeSession() {
     const resumeSessionEvent = new DOMEvent('resume-session', { detail: this.session! });
-    this._onMediaLoadedChange(resumeSessionEvent);
+    this.#onMediaLoadedChange(resumeSessionEvent);
 
-    const { muted, volume, savedState } = this._ctx.$state,
+    const { muted, volume, savedState } = this.#ctx.$state,
       localState = savedState();
 
     // Set time to whatever is further ahead (local/remote).
-    this.setCurrentTime(Math.max(this._player.currentTime, localState?.currentTime ?? 0));
+    this.setCurrentTime(Math.max(this.#player.currentTime, localState?.currentTime ?? 0));
 
     this.setMuted(muted());
     this.setVolume(volume());
@@ -238,32 +233,32 @@ export class GoogleCastProvider implements MediaProviderAdapter {
     if (localState?.paused === false) this.play();
   }
 
-  protected _endSession() {
+  #endSession() {
     this.cast.endCurrentSession(true);
-    const { remotePlaybackLoader } = this._ctx.$state;
+    const { remotePlaybackLoader } = this.#ctx.$state;
     remotePlaybackLoader.set(null);
   }
 
-  protected _disconnectFromReceiver() {
-    const { savedState } = this._ctx.$state;
+  #disconnectFromReceiver() {
+    const { savedState } = this.#ctx.$state;
 
     savedState.set({
-      paused: this._player.isPaused,
-      currentTime: this._player.currentTime,
+      paused: this.#player.isPaused,
+      currentTime: this.#player.currentTime,
     });
 
-    this._endSession();
+    this.#endSession();
   }
 
-  protected _onAnimationFrame() {
-    this._onCurrentTimeChange();
+  #onAnimationFrame() {
+    this.#onCurrentTimeChange();
   }
 
-  protected _onRemotePlayerEvent(event: cast.framework.RemotePlayerChangedEvent) {
-    this._playerEventHandlers[event.type].call(this, event);
+  #onRemotePlayerEvent(event: cast.framework.RemotePlayerChangedEvent) {
+    this.#playerEventHandlers[event.type].call(this, event);
   }
 
-  protected _onCastStateChange(
+  #onCastStateChange(
     data: cast.framework.CastStateEventData | cast.framework.RemotePlayerChangedEvent,
   ) {
     const castState = this.cast.getCastState(),
@@ -274,207 +269,207 @@ export class GoogleCastProvider implements MediaProviderAdapter {
             ? 'connecting'
             : 'disconnected';
 
-    if (this._state === state) return;
+    if (this.#state === state) return;
 
     const detail = { type: 'google-cast', state } as const,
-      trigger = this._createEvent(data);
+      trigger = this.#createEvent(data);
 
-    this._state = state;
-    this._notify('remote-playback-change', detail, trigger);
+    this.#state = state;
+    this.#ctx.notify('remote-playback-change', detail, trigger);
 
     if (state === 'disconnected') {
-      this._disconnectFromReceiver();
+      this.#disconnectFromReceiver();
     }
   }
 
-  protected _onMediaLoadedChange(event: Event | cast.framework.RemotePlayerChangedEvent) {
-    const hasLoaded = !!this._player.isMediaLoaded;
+  #onMediaLoadedChange(event: Event | cast.framework.RemotePlayerChangedEvent) {
+    const hasLoaded = !!this.#player.isMediaLoaded;
     if (!hasLoaded) return;
 
-    const src = peek(this._ctx.$state.source);
+    const src = peek(this.#ctx.$state.source);
 
     // Media info not available yet due to some internal issue in cast framework.
     Promise.resolve().then(() => {
       // Check src to avoid race condition.
-      if (src !== peek(this._ctx.$state.source) || !this._player.isMediaLoaded) return;
+      if (src !== peek(this.#ctx.$state.source) || !this.#player.isMediaLoaded) return;
 
-      this._reset();
+      this.#reset();
 
-      const duration = this._player.duration;
-      this._seekableRange = new TimeRange(0, duration);
+      const duration = this.#player.duration;
+      this.#seekableRange = new TimeRange(0, duration);
 
       const detail = {
           provider: this,
           duration,
           buffered: new TimeRange(0, 0),
-          seekable: this._getSeekableRange(),
+          seekable: this.#getSeekableRange(),
         },
-        trigger = this._createEvent(event);
+        trigger = this.#createEvent(event);
 
-      this._notify('loaded-metadata', undefined, trigger);
-      this._notify('loaded-data', undefined, trigger);
-      this._notify('can-play', detail, trigger);
+      this.#ctx.notify('loaded-metadata', undefined, trigger);
+      this.#ctx.notify('loaded-data', undefined, trigger);
+      this.#ctx.notify('can-play', detail, trigger);
 
-      this._onCanControlVolumeChange();
-      this._onCanSeekChange(event);
+      this.#onCanControlVolumeChange();
+      this.#onCanSeekChange(event);
 
-      const { volume, muted } = this._ctx.$state;
+      const { volume, muted } = this.#ctx.$state;
       this.setVolume(volume());
       this.setMuted(muted());
 
-      this._timeRAF._start();
+      this.#timeRAF.start();
 
-      this._tracks._syncRemoteTracks(trigger);
-      this._tracks._syncRemoteActiveIds(trigger);
+      this.#tracks.syncRemoteTracks(trigger);
+      this.#tracks.syncRemoteActiveIds(trigger);
     });
   }
 
-  protected _onCanControlVolumeChange() {
-    this._ctx.$state.canSetVolume.set(this._player.canControlVolume);
+  #onCanControlVolumeChange() {
+    this.#ctx.$state.canSetVolume.set(this.#player.canControlVolume);
   }
 
-  protected _onCanSeekChange(event: Event | cast.framework.RemotePlayerChangedEvent) {
-    const trigger = this._createEvent(event);
-    this._notify('stream-type-change', this._getStreamType(), trigger);
+  #onCanSeekChange(event: Event | cast.framework.RemotePlayerChangedEvent) {
+    const trigger = this.#createEvent(event);
+    this.#ctx.notify('stream-type-change', this.#getStreamType(), trigger);
   }
 
-  protected _getStreamType(): MediaStreamType {
-    const streamType = this._player.mediaInfo?.streamType;
+  #getStreamType(): MediaStreamType {
+    const streamType = this.#player.mediaInfo?.streamType;
     return streamType === chrome.cast.media.StreamType.LIVE
-      ? this._player.canSeek
+      ? this.#player.canSeek
         ? 'live:dvr'
         : 'live'
       : 'on-demand';
   }
 
-  protected _onCurrentTimeChange() {
-    if (this._reloadInfo) return;
+  #onCurrentTimeChange() {
+    if (this.#reloadInfo) return;
 
-    const currentTime = this._player.currentTime;
-    if (currentTime === this._currentTime) return;
+    const currentTime = this.#player.currentTime;
+    if (currentTime === this.#currentTime) return;
 
-    this._notify('time-change', currentTime);
+    this.#ctx.notify('time-change', currentTime);
 
-    if (currentTime > this._played) {
-      this._played = currentTime;
-      this._onProgress();
+    if (currentTime > this.#played) {
+      this.#played = currentTime;
+      this.#onProgress();
     }
 
-    if (this._ctx.$state.seeking()) {
-      this._notify('seeked', currentTime);
+    if (this.#ctx.$state.seeking()) {
+      this.#ctx.notify('seeked', currentTime);
     }
 
-    this._currentTime = currentTime;
+    this.#currentTime = currentTime;
   }
 
-  protected _onDurationChange(event: cast.framework.RemotePlayerChangedEvent) {
+  #onDurationChange(event: cast.framework.RemotePlayerChangedEvent) {
     // Duration will go to 0 on end as cast player state changes to idle.
-    if (!this._player.isMediaLoaded || this._reloadInfo) return;
+    if (!this.#player.isMediaLoaded || this.#reloadInfo) return;
 
-    const duration = this._player.duration,
-      trigger = this._createEvent(event);
+    const duration = this.#player.duration,
+      trigger = this.#createEvent(event);
 
-    this._seekableRange = new TimeRange(0, duration);
-    this._notify('duration-change', duration, trigger);
+    this.#seekableRange = new TimeRange(0, duration);
+    this.#ctx.notify('duration-change', duration, trigger);
   }
 
-  protected _onVolumeChange(event: cast.framework.RemotePlayerChangedEvent) {
-    if (!this._player.isMediaLoaded) return;
+  #onVolumeChange(event: cast.framework.RemotePlayerChangedEvent) {
+    if (!this.#player.isMediaLoaded) return;
 
     const detail = {
-        muted: this._player.isMuted,
-        volume: this._player.volumeLevel,
+        muted: this.#player.isMuted,
+        volume: this.#player.volumeLevel,
       },
-      trigger = this._createEvent(event);
+      trigger = this.#createEvent(event);
 
-    this._notify('volume-change', detail, trigger);
+    this.#ctx.notify('volume-change', detail, trigger);
   }
 
-  protected _onPausedChange(event: cast.framework.RemotePlayerChangedEvent) {
-    const trigger = this._createEvent(event);
-    if (this._player.isPaused) {
-      this._notify('pause', undefined, trigger);
+  #onPausedChange(event: cast.framework.RemotePlayerChangedEvent) {
+    const trigger = this.#createEvent(event);
+    if (this.#player.isPaused) {
+      this.#ctx.notify('pause', undefined, trigger);
     } else {
-      this._notify('play', undefined, trigger);
+      this.#ctx.notify('play', undefined, trigger);
     }
   }
 
-  protected _onProgress(event?: cast.framework.RemotePlayerChangedEvent) {
+  #onProgress(event?: cast.framework.RemotePlayerChangedEvent) {
     const detail = {
-        seekable: this._getSeekableRange(),
-        buffered: new TimeRange(0, this._played),
+        seekable: this.#getSeekableRange(),
+        buffered: new TimeRange(0, this.#played),
       },
-      trigger = event ? this._createEvent(event) : undefined;
+      trigger = event ? this.#createEvent(event) : undefined;
 
-    this._notify('progress', detail, trigger);
+    this.#ctx.notify('progress', detail, trigger);
   }
 
-  protected _onPlayerStateChange(event: cast.framework.RemotePlayerChangedEvent) {
-    const state = this._player.playerState,
+  #onPlayerStateChange(event: cast.framework.RemotePlayerChangedEvent) {
+    const state = this.#player.playerState,
       PlayerState = chrome.cast.media.PlayerState;
 
-    this._isIdle = state === PlayerState.IDLE;
+    this.#isIdle = state === PlayerState.IDLE;
 
     // Handled in `onPausedChange`.
     if (state === PlayerState.PAUSED) return;
 
-    const trigger = this._createEvent(event);
+    const trigger = this.#createEvent(event);
 
     switch (state) {
       case PlayerState.PLAYING:
-        this._notify('playing', undefined, trigger);
+        this.#ctx.notify('playing', undefined, trigger);
         break;
       case PlayerState.BUFFERING:
-        this._notify('waiting', undefined, trigger);
+        this.#ctx.notify('waiting', undefined, trigger);
         break;
       case PlayerState.IDLE:
-        this._timeRAF._stop();
-        this._notify('pause');
-        this._notify('end');
+        this.#timeRAF.stop();
+        this.#ctx.notify('pause');
+        this.#ctx.notify('end');
         break;
     }
   }
 
-  protected _getSeekableRange() {
-    return this._player.liveSeekableRange
-      ? new TimeRange(this._player.liveSeekableRange.start, this._player.liveSeekableRange.end)
-      : this._seekableRange;
+  #getSeekableRange() {
+    return this.#player.liveSeekableRange
+      ? new TimeRange(this.#player.liveSeekableRange.start, this.#player.liveSeekableRange.end)
+      : this.#seekableRange;
   }
 
-  protected _createEvent(detail: Event | { type: string }) {
+  #createEvent(detail: Event | { type: string }) {
     return detail instanceof Event ? detail : new DOMEvent<any>(detail.type, { detail });
   }
 
-  protected _buildMediaInfo(src: Src<string>) {
-    const { streamType, title, poster } = this._ctx.$state;
+  #buildMediaInfo(src: Src<string>) {
+    const { streamType, title, poster } = this.#ctx.$state;
     return new GoogleCastMediaInfoBuilder(src)
-      ._setMetadata(title(), poster())
-      ._setStreamType(streamType())
-      ._setTracks(this._tracks._getLocalTextTracks())
+      .setMetadata(title(), poster())
+      .setStreamType(streamType())
+      .setTracks(this.#tracks.getLocalTextTracks())
       .build();
   }
 
-  protected _buildLoadRequest(src: Src<string>) {
-    const mediaInfo = this._buildMediaInfo(src),
+  #buildLoadRequest(src: Src<string>) {
+    const mediaInfo = this.#buildMediaInfo(src),
       request = new chrome.cast.media.LoadRequest(mediaInfo),
-      savedState = this._ctx.$state.savedState();
+      savedState = this.#ctx.$state.savedState();
 
-    request.autoplay = (this._reloadInfo?.paused ?? savedState?.paused) === false;
-    request.currentTime = this._reloadInfo?.time ?? savedState?.currentTime ?? 0;
+    request.autoplay = (this.#reloadInfo?.paused ?? savedState?.paused) === false;
+    request.currentTime = this.#reloadInfo?.time ?? savedState?.currentTime ?? 0;
 
     return request;
   }
 
-  protected async _reload(paused: boolean, time: number) {
-    const src = peek(this._ctx.$state.source);
-    this._reloadInfo = { src, paused, time };
+  async #reload(paused: boolean, time: number) {
+    const src = peek(this.#ctx.$state.source);
+    this.#reloadInfo = { src, paused, time };
     await this.loadSource(src);
   }
 
-  protected _onNewLocalTracks() {
-    this._reload(this._player.isPaused, this._player.currentTime).catch((error) => {
+  #onNewLocalTracks() {
+    this.#reload(this.#player.isPaused, this.#player.currentTime).catch((error) => {
       if (__DEV__) {
-        this._ctx.logger
+        this.#ctx.logger
           ?.errorGroup('[vidstack] cast failed to load new local tracks')
           .labelledLog('Error', error)
           .dispatch();

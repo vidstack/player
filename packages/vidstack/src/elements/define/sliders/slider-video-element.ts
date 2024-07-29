@@ -24,30 +24,30 @@ const videoTemplate = /* #__PURE__*/ createTemplate(
 export class MediaSliderVideoElement extends Host(HTMLElement, SliderVideo) {
   static tagName = 'media-slider-video';
 
-  private _media!: MediaContext;
-  private _video = this._createVideo();
+  #media!: MediaContext;
+  #video = this.#createVideo();
 
   protected onSetup(): void {
-    this._media = useMediaContext();
-    this.$state.video.set(this._video);
+    this.#media = useMediaContext();
+    this.$state.video.set(this.#video);
   }
 
   protected onConnect(): void {
-    const { canLoad } = this._media.$state,
+    const { canLoad } = this.#media.$state,
       { src, crossOrigin } = this.$state;
 
-    if (this._video.parentNode !== this) {
-      this.prepend(this._video);
+    if (this.#video.parentNode !== this) {
+      this.prepend(this.#video);
     }
 
     effect(() => {
-      setAttribute(this._video, 'crossorigin', crossOrigin());
-      setAttribute(this._video, 'preload', canLoad() ? 'auto' : 'none');
-      setAttribute(this._video, 'src', src());
+      setAttribute(this.#video, 'crossorigin', crossOrigin());
+      setAttribute(this.#video, 'preload', canLoad() ? 'auto' : 'none');
+      setAttribute(this.#video, 'src', src());
     });
   }
 
-  private _createVideo() {
+  #createVideo() {
     return cloneTemplateContent<HTMLVideoElement>(videoTemplate);
   }
 }

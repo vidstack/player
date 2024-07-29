@@ -53,49 +53,51 @@ export class TimeSlider extends Component<
 
   static state = sliderState;
 
-  private _media!: MediaContext;
-  private _dispatchSeeking!: ThrottledSeeking;
-  private _chapter = signal<TextTrack | null>(null);
+  #media!: MediaContext;
+  #dispatchSeeking!: ThrottledSeeking;
+  #chapter = signal<TextTrack | null>(null);
 
   constructor() {
     super();
 
     const { noSwipeGesture } = this.$props;
     new SliderController({
-      _swipeGesture: () => !noSwipeGesture(),
-      _getValue: this._getValue.bind(this),
-      _getStep: this._getStep.bind(this),
-      _getKeyStep: this._getKeyStep.bind(this),
-      _roundValue: this._roundValue,
-      _isDisabled: this._isDisabled.bind(this),
-      _getARIAValueNow: this._getARIAValueNow.bind(this),
-      _getARIAValueText: this._getARIAValueText.bind(this),
-      _onDragStart: this._onDragStart.bind(this),
-      _onDragValueChange: this._onDragValueChange.bind(this),
-      _onDragEnd: this._onDragEnd.bind(this),
-      _onValueChange: this._onValueChange.bind(this),
+      swipeGesture: () => !noSwipeGesture(),
+      getValue: this.#getValue.bind(this),
+      getStep: this.#getStep.bind(this),
+      getKeyStep: this.#getKeyStep.bind(this),
+      roundValue: this.#roundValue,
+      isDisabled: this.#isDisabled.bind(this),
+      aria: {
+        valueNow: this.#getARIAValueNow.bind(this),
+        valueText: this.#getARIAValueText.bind(this),
+      },
+      onDragStart: this.#onDragStart.bind(this),
+      onDragValueChange: this.#onDragValueChange.bind(this),
+      onDragEnd: this.#onDragEnd.bind(this),
+      onValueChange: this.#onValueChange.bind(this),
     });
   }
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     provideContext(sliderValueFormatContext, {
       default: 'time',
-      value: this._formatValue.bind(this),
-      time: this._formatTime.bind(this),
+      value: this.#formatValue.bind(this),
+      time: this.#formatTime.bind(this),
     });
 
     this.setAttributes({
-      'data-chapters': this._hasChapters.bind(this),
+      'data-chapters': this.#hasChapters.bind(this),
     });
 
     this.setStyles({
-      '--slider-progress': this._calcBufferedPercent.bind(this),
+      '--slider-progress': this.#calcBufferedPercent.bind(this),
     });
 
-    effect(this._watchCurrentTime.bind(this));
-    effect(this._watchSeekingThrottle.bind(this));
+    effect(this.#watchCurrentTime.bind(this));
+    effect(this.#watchSeekingThrottle.bind(this));
   }
 
   protected override onAttach(el: HTMLElement) {
@@ -104,32 +106,32 @@ export class TimeSlider extends Component<
   }
 
   protected override onConnect(el: HTMLElement) {
-    effect(this._watchPreviewing.bind(this));
-    watchActiveTextTrack(this._media.textTracks, 'chapters', this._chapter.set);
+    effect(this.#watchPreviewing.bind(this));
+    watchActiveTextTrack(this.#media.textTracks, 'chapters', this.#chapter.set);
   }
 
-  private _calcBufferedPercent() {
-    const { bufferedEnd, duration } = this._media.$state;
+  #calcBufferedPercent() {
+    const { bufferedEnd, duration } = this.#media.$state;
     return round(Math.min(bufferedEnd() / Math.max(duration(), 1), 1) * 100, 3) + '%';
   }
 
-  private _hasChapters() {
-    const { duration } = this._media.$state;
-    return this._chapter()?.cues.length && Number.isFinite(duration()) && duration() > 0;
+  #hasChapters() {
+    const { duration } = this.#media.$state;
+    return this.#chapter()?.cues.length && Number.isFinite(duration()) && duration() > 0;
   }
 
-  private _watchSeekingThrottle() {
-    this._dispatchSeeking = throttle(
-      this._seeking.bind(this),
+  #watchSeekingThrottle() {
+    this.#dispatchSeeking = throttle(
+      this.#seeking.bind(this),
       this.$props.seekingRequestThrottle(),
     );
   }
 
-  private _watchCurrentTime() {
+  #watchCurrentTime() {
     if (this.$state.hidden()) return;
 
     const { value, dragging } = this.$state,
-      newValue = this._getValue();
+      newValue = this.#getValue();
 
     if (!peek(dragging)) {
       value.set(newValue);
@@ -137,89 +139,89 @@ export class TimeSlider extends Component<
     }
   }
 
-  private _watchPreviewing() {
-    const player = this._media.player.el,
-      { _preview } = useContext(sliderContext);
-    player && _preview() && setAttribute(player, 'data-preview', this.$state.active());
+  #watchPreviewing() {
+    const player = this.#media.player.el,
+      { preview } = useContext(sliderContext);
+    player && preview() && setAttribute(player, 'data-preview', this.$state.active());
   }
 
-  private _seeking(time: number, event: Event) {
-    this._media.remote.seeking(time, event);
+  #seeking(time: number, event: Event) {
+    this.#media.remote.seeking(time, event);
   }
 
-  private _seek(time: number, percent: number, event: Event) {
-    this._dispatchSeeking.cancel();
+  #seek(time: number, percent: number, event: Event) {
+    this.#dispatchSeeking.cancel();
 
-    const { live } = this._media.$state;
+    const { live } = this.#media.$state;
     if (live() && percent >= 99) {
-      this._media.remote.seekToLiveEdge(event);
+      this.#media.remote.seekToLiveEdge(event);
       return;
     }
 
-    this._media.remote.seek(time, event);
+    this.#media.remote.seek(time, event);
   }
 
-  private _playingBeforeDragStart = false;
-  private _onDragStart(event: SliderDragStartEvent) {
+  #playingBeforeDragStart = false;
+  #onDragStart(event: SliderDragStartEvent) {
     const { pauseWhileDragging } = this.$props;
     if (pauseWhileDragging()) {
-      const { paused } = this._media.$state;
-      this._playingBeforeDragStart = !paused();
-      this._media.remote.pause(event);
+      const { paused } = this.#media.$state;
+      this.#playingBeforeDragStart = !paused();
+      this.#media.remote.pause(event);
     }
   }
 
-  private _onDragValueChange(event: SliderDragValueChangeEvent) {
-    this._dispatchSeeking(this._percentToTime(event.detail), event);
+  #onDragValueChange(event: SliderDragValueChangeEvent) {
+    this.#dispatchSeeking(this.#percentToTime(event.detail), event);
   }
 
-  private _onDragEnd(event: SliderValueChangeEvent | SliderDragEndEvent) {
+  #onDragEnd(event: SliderValueChangeEvent | SliderDragEndEvent) {
     // Ensure a seeking event is always fired before a seeked event for consistency.
-    const { seeking } = this._media.$state;
-    if (!peek(seeking)) this._seeking(this._percentToTime(event.detail), event);
+    const { seeking } = this.#media.$state;
+    if (!peek(seeking)) this.#seeking(this.#percentToTime(event.detail), event);
 
     const percent = event.detail;
-    this._seek(this._percentToTime(percent), percent, event);
+    this.#seek(this.#percentToTime(percent), percent, event);
 
     const { pauseWhileDragging } = this.$props;
-    if (pauseWhileDragging() && this._playingBeforeDragStart) {
-      this._media.remote.play(event);
-      this._playingBeforeDragStart = false;
+    if (pauseWhileDragging() && this.#playingBeforeDragStart) {
+      this.#media.remote.play(event);
+      this.#playingBeforeDragStart = false;
     }
   }
 
-  private _onValueChange(event: SliderValueChangeEvent) {
+  #onValueChange(event: SliderValueChangeEvent) {
     const { dragging } = this.$state;
     if (dragging() || !event.trigger) return;
-    this._onDragEnd(event);
+    this.#onDragEnd(event);
   }
 
   // -------------------------------------------------------------------------------------------
   // Props
   // -------------------------------------------------------------------------------------------
 
-  private _getValue() {
-    const { currentTime } = this._media.$state;
-    return this._timeToPercent(currentTime());
+  #getValue() {
+    const { currentTime } = this.#media.$state;
+    return this.#timeToPercent(currentTime());
   }
 
-  private _getStep() {
-    const value = (this.$props.step() / this._media.$state.duration()) * 100;
+  #getStep() {
+    const value = (this.$props.step() / this.#media.$state.duration()) * 100;
     return Number.isFinite(value) ? value : 1;
   }
 
-  private _getKeyStep() {
-    const value = (this.$props.keyStep() / this._media.$state.duration()) * 100;
+  #getKeyStep() {
+    const value = (this.$props.keyStep() / this.#media.$state.duration()) * 100;
     return Number.isFinite(value) ? value : 1;
   }
 
-  private _roundValue(value: number) {
+  #roundValue(value: number) {
     return round(value, 3);
   }
 
-  private _isDisabled() {
+  #isDisabled() {
     const { disabled } = this.$props,
-      { canSeek } = this._media.$state;
+      { canSeek } = this.#media.$state;
     return disabled() || !canSeek();
   }
 
@@ -227,14 +229,14 @@ export class TimeSlider extends Component<
   // ARIA
   // -------------------------------------------------------------------------------------------
 
-  private _getARIAValueNow() {
+  #getARIAValueNow() {
     const { value } = this.$state;
     return Math.round(value());
   }
 
-  private _getARIAValueText(): string {
-    const time = this._percentToTime(this.$state.value()),
-      { duration } = this._media.$state;
+  #getARIAValueText(): string {
+    const time = this.#percentToTime(this.$state.value()),
+      { duration } = this.#media.$state;
     return Number.isFinite(time)
       ? `${formatSpokenTime(time)} out of ${formatSpokenTime(duration())}`
       : 'live';
@@ -244,26 +246,26 @@ export class TimeSlider extends Component<
   // Format
   // -------------------------------------------------------------------------------------------
 
-  private _percentToTime(percent: number) {
-    const { duration } = this._media.$state;
+  #percentToTime(percent: number) {
+    const { duration } = this.#media.$state;
     return round((percent / 100) * duration(), 5);
   }
 
-  private _timeToPercent(time: number) {
-    const { liveEdge, duration } = this._media.$state,
+  #timeToPercent(time: number) {
+    const { liveEdge, duration } = this.#media.$state,
       rate = Math.max(0, Math.min(1, liveEdge() ? 1 : Math.min(time, duration()) / duration()));
     return Number.isNaN(rate) ? 0 : Number.isFinite(rate) ? rate * 100 : 100;
   }
 
-  private _formatValue(percent: number) {
-    const time = this._percentToTime(percent),
-      { live, duration } = this._media.$state;
+  #formatValue(percent: number) {
+    const time = this.#percentToTime(percent),
+      { live, duration } = this.#media.$state;
     return Number.isFinite(time) ? (live() ? time - duration() : time).toFixed(0) : 'LIVE';
   }
 
-  private _formatTime(percent: number, options?: FormatTimeOptions) {
-    const time = this._percentToTime(percent),
-      { live, duration } = this._media.$state,
+  #formatTime(percent: number, options?: FormatTimeOptions) {
+    const time = this.#percentToTime(percent),
+      { live, duration } = this.#media.$state,
       value = live() ? time - duration() : time;
 
     return Number.isFinite(time)

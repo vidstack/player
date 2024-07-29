@@ -30,68 +30,68 @@ export class Time extends Component<TimeProps, TimeState> {
     hidden: false,
   });
 
-  private _media!: MediaContext;
-  private _invert = signal<boolean | null>(null);
-  private _isVisible = signal(true);
-  private _isIntersecting = signal(true);
+  #media!: MediaContext;
+  #invert = signal<boolean | null>(null);
+  #isVisible = signal(true);
+  #isIntersecting = signal(true);
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
-    this._watchTime();
+    this.#media = useMediaContext();
+    this.#watchTime();
 
     const { type } = this.$props;
     this.setAttributes({
       'data-type': type,
-      'data-remainder': this._shouldInvert.bind(this),
+      'data-remainder': this.#shouldInvert.bind(this),
     });
 
     new IntersectionObserverController({
-      callback: this._onIntersectionChange.bind(this),
+      callback: this.#onIntersectionChange.bind(this),
     }).attach(this);
   }
 
   protected override onAttach(el: HTMLElement) {
-    if (!el.hasAttribute('role')) effect(this._watchRole.bind(this));
-    effect(this._watchTime.bind(this));
+    if (!el.hasAttribute('role')) effect(this.#watchRole.bind(this));
+    effect(this.#watchTime.bind(this));
   }
 
   protected override onConnect(el: HTMLElement): void {
-    onDispose(observeVisibility(el, this._isVisible.set));
+    onDispose(observeVisibility(el, this.#isVisible.set));
 
-    effect(this._watchHidden.bind(this));
-    effect(this._watchToggle.bind(this));
+    effect(this.#watchHidden.bind(this));
+    effect(this.#watchToggle.bind(this));
   }
 
-  private _onIntersectionChange(entries: IntersectionObserverEntry[]) {
-    this._isIntersecting.set(entries[0].isIntersecting);
+  #onIntersectionChange(entries: IntersectionObserverEntry[]) {
+    this.#isIntersecting.set(entries[0].isIntersecting);
   }
 
-  private _watchHidden() {
+  #watchHidden() {
     const { hidden } = this.$props;
-    this.$state.hidden.set(hidden() || !this._isVisible() || !this._isIntersecting());
+    this.$state.hidden.set(hidden() || !this.#isVisible() || !this.#isIntersecting());
   }
 
-  private _watchToggle() {
+  #watchToggle() {
     if (!this.$props.toggle()) {
-      this._invert.set(null);
+      this.#invert.set(null);
       return;
     }
 
     if (this.el) {
-      onPress(this.el, this._onToggle.bind(this));
+      onPress(this.el, this.#onToggle.bind(this));
     }
   }
 
-  private _watchTime() {
+  #watchTime() {
     const { hidden, timeText } = this.$state,
-      { duration } = this._media.$state;
+      { duration } = this.#media.$state;
 
     if (hidden()) return;
 
     const { type, padHours, padMinutes, showHours } = this.$props,
-      seconds = this._getSeconds(type()),
+      seconds = this.#getSeconds(type()),
       $duration = duration(),
-      shouldInvert = this._shouldInvert();
+      shouldInvert = this.#shouldInvert();
 
     if (!Number.isFinite(seconds + $duration)) {
       timeText.set('LIVE');
@@ -108,15 +108,15 @@ export class Time extends Component<TimeProps, TimeState> {
     timeText.set((shouldInvert ? '-' : '') + formattedTime);
   }
 
-  private _watchRole() {
+  #watchRole() {
     if (!this.el) return;
     const { toggle } = this.$props;
     setAttribute(this.el, 'role', toggle() ? 'timer' : null);
     setAttribute(this.el, 'tabindex', toggle() ? 0 : null);
   }
 
-  private _getSeconds(type: TimeProps['type']) {
-    const { bufferedEnd, duration, currentTime } = this._media.$state;
+  #getSeconds(type: TimeProps['type']) {
+    const { bufferedEnd, duration, currentTime } = this.#media.$state;
     switch (type) {
       case 'buffered':
         return bufferedEnd();
@@ -127,19 +127,19 @@ export class Time extends Component<TimeProps, TimeState> {
     }
   }
 
-  private _shouldInvert() {
-    return this.$props.remainder() && this._invert() !== false;
+  #shouldInvert() {
+    return this.$props.remainder() && this.#invert() !== false;
   }
 
-  private _onToggle(event: Event) {
+  #onToggle(event: Event) {
     event.preventDefault();
 
-    if (this._invert() === null) {
-      this._invert.set(!this.$props.remainder());
+    if (this.#invert() === null) {
+      this.#invert.set(!this.$props.remainder());
       return;
     }
 
-    this._invert.set((v) => !v);
+    this.#invert.set((v) => !v);
   }
 }
 

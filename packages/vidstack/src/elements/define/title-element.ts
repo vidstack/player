@@ -15,18 +15,18 @@ class Title extends Component {}
 export class MediaTitleElement extends Host(HTMLElement, Title) {
   static tagName = 'media-title';
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   protected onSetup() {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
   }
 
   protected onConnect() {
-    effect(this._watchTitle.bind(this));
+    effect(this.#watchTitle.bind(this));
   }
 
-  private _watchTitle() {
-    const { title } = this._media.$state;
+  #watchTitle() {
+    const { title } = this.#media.$state;
     this.textContent = title();
   }
 }

@@ -12,28 +12,31 @@ interface LoadHLSConstructorCallbacks {
 }
 
 export class HLSLibLoader {
-  constructor(
-    private _lib: HLSLibrary,
-    private _ctx: MediaContext,
-    private _callback: (ctor: HLSConstructor) => void,
-  ) {
-    this._startLoading();
+  #lib: HLSLibrary;
+  #ctx: MediaContext;
+  #callback: (ctor: HLSConstructor) => void;
+
+  constructor(lib: HLSLibrary, ctx: MediaContext, callback: (ctor: HLSConstructor) => void) {
+    this.#lib = lib;
+    this.#ctx = ctx;
+    this.#callback = callback;
+    this.#startLoading();
   }
 
-  private async _startLoading() {
-    if (__DEV__) this._ctx.logger?.info('🏗️ Loading HLS Library');
+  async #startLoading() {
+    if (__DEV__) this.#ctx.logger?.info('🏗️ Loading HLS Library');
 
     const callbacks: LoadHLSConstructorCallbacks = {
-      onLoadStart: this._onLoadStart.bind(this),
-      onLoaded: this._onLoaded.bind(this),
-      onLoadError: this._onLoadError.bind(this),
+      onLoadStart: this.#onLoadStart.bind(this),
+      onLoaded: this.#onLoaded.bind(this),
+      onLoadError: this.#onLoadError.bind(this),
     };
 
     // If not a string it'll return undefined.
-    let ctor = await loadHLSScript(this._lib, callbacks);
+    let ctor = await loadHLSScript(this.#lib, callbacks);
 
     // If it's not a remote source, it must of been passed in directly as a static/dynamic import.
-    if (isUndefined(ctor) && !isString(this._lib)) ctor = await importHLS(this._lib, callbacks);
+    if (isUndefined(ctor) && !isString(this.#lib)) ctor = await importHLS(this.#lib, callbacks);
 
     // We failed loading the constructor.
     if (!ctor) return null;
@@ -41,62 +44,62 @@ export class HLSLibLoader {
     // Not supported.
     if (!ctor.isSupported()) {
       const message = '[vidstack] `hls.js` is not supported in this environment';
-      if (__DEV__) this._ctx.logger?.error(message);
-      this._ctx.player.dispatch(new DOMEvent<void>('hls-unsupported'));
-      this._ctx.delegate._notify('error', { message, code: 4 });
+      if (__DEV__) this.#ctx.logger?.error(message);
+      this.#ctx.player.dispatch(new DOMEvent<void>('hls-unsupported'));
+      this.#ctx.notify('error', { message, code: 4 });
       return null;
     }
 
     return ctor;
   }
 
-  private _onLoadStart() {
+  #onLoadStart() {
     if (__DEV__) {
-      this._ctx.logger
+      this.#ctx.logger
         ?.infoGroup('Starting to load `hls.js`')
-        .labelledLog('URL', this._lib)
+        .labelledLog('URL', this.#lib)
         .dispatch();
     }
 
-    this._ctx.player.dispatch(new DOMEvent<void>('hls-lib-load-start'));
+    this.#ctx.player.dispatch(new DOMEvent<void>('hls-lib-load-start'));
   }
 
-  private _onLoaded(ctor: HLSConstructor) {
+  #onLoaded(ctor: HLSConstructor) {
     if (__DEV__) {
-      this._ctx.logger
+      this.#ctx.logger
         ?.infoGroup('Loaded `hls.js`')
-        .labelledLog('Library', this._lib)
+        .labelledLog('Library', this.#lib)
         .labelledLog('Constructor', ctor)
         .dispatch();
     }
 
-    this._ctx.player.dispatch(
+    this.#ctx.player.dispatch(
       new DOMEvent<HLSConstructor>('hls-lib-loaded', {
         detail: ctor,
       }),
     );
 
-    this._callback(ctor);
+    this.#callback(ctor);
   }
 
-  private _onLoadError(e) {
+  #onLoadError(e) {
     const error = coerceToError(e);
 
     if (__DEV__) {
-      this._ctx.logger
+      this.#ctx.logger
         ?.errorGroup('[vidstack] Failed to load `hls.js`')
-        .labelledLog('Library', this._lib)
+        .labelledLog('Library', this.#lib)
         .labelledLog('Error', e)
         .dispatch();
     }
 
-    this._ctx.player.dispatch(
+    this.#ctx.player.dispatch(
       new DOMEvent<any>('hls-lib-load-error', {
         detail: error,
       }),
     );
 
-    this._ctx.delegate._notify('error', {
+    this.#ctx.notify('error', {
       message: error.message,
       code: 4,
       error,

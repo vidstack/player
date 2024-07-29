@@ -32,18 +32,18 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     loader: null,
   });
 
-  private _media!: MediaContext;
-  private _sources!: SourceSelection;
-  private _domSources = signal<Src[]>([]);
-  private _domTracks = signal<TextTrackInit[]>([]);
+  #media!: MediaContext;
+  #sources!: SourceSelection;
+  #domSources = signal<Src[]>([]);
+  #domTracks = signal<TextTrackInit[]>([]);
 
-  private _loader: MediaProviderLoader | null = null;
+  #loader: MediaProviderLoader | null = null;
 
   protected override onSetup() {
-    this._media = useMediaContext();
-    this._sources = new SourceSelection(
-      this._domSources,
-      this._media,
+    this.#media = useMediaContext();
+    this.#sources = new SourceSelection(
+      this.#domSources,
+      this.#media,
       this.$state.loader,
       this.$props.loaders(),
     );
@@ -54,17 +54,17 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   protected override onConnect(el: HTMLElement) {
-    this._sources.connect();
-    new Tracks(this._domTracks, this._media);
+    this.#sources.connect();
+    new Tracks(this.#domTracks, this.#media);
 
-    const resize = new ResizeObserver(animationFrameThrottle(this._onResize.bind(this)));
+    const resize = new ResizeObserver(animationFrameThrottle(this.#onResize.bind(this)));
     resize.observe(el);
 
-    const mutations = new MutationObserver(this._onMutation.bind(this));
+    const mutations = new MutationObserver(this.#onMutation.bind(this));
     mutations.observe(el, { attributes: true, childList: true });
 
-    this._onResize();
-    this._onMutation();
+    this.#onResize();
+    this.#onMutation();
 
     onDispose(() => {
       resize.disconnect();
@@ -72,7 +72,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     });
   }
 
-  protected _loadRafId = -1;
+  #loadRafId = -1;
 
   @method
   load(target: HTMLElement | null | undefined) {
@@ -80,50 +80,50 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     target?.setAttribute('aria-hidden', 'true');
 
     // Use a RAF here to prevent hot reloads resetting provider.
-    window.cancelAnimationFrame(this._loadRafId);
-    this._loadRafId = requestAnimationFrame(() => this._runLoader(target));
+    window.cancelAnimationFrame(this.#loadRafId);
+    this.#loadRafId = requestAnimationFrame(() => this.#runLoader(target));
     onDispose(() => {
-      window.cancelAnimationFrame(this._loadRafId);
+      window.cancelAnimationFrame(this.#loadRafId);
     });
   }
 
-  protected _runLoader(target: HTMLElement | null | undefined) {
+  #runLoader(target: HTMLElement | null | undefined) {
     if (!this.scope) return;
 
     const loader = this.$state.loader(),
-      { $provider } = this._media;
+      { $provider } = this.#media;
 
-    if (this._loader === loader && loader?.target === target && peek($provider)) return;
+    if (this.#loader === loader && loader?.target === target && peek($provider)) return;
 
-    this._destroyProvider();
-    this._loader = loader;
+    this.#destroyProvider();
+    this.#loader = loader;
     if (loader) loader.target = target || null;
 
     if (!loader || !target) return;
 
-    loader.load(this._media).then((provider) => {
+    loader.load(this.#media).then((provider) => {
       if (!this.scope) return;
 
       // The src/loader might've changed by the time we load the provider.
       if (peek(this.$state.loader) !== loader) return;
 
-      this._media.delegate._notify('provider-change', provider);
+      this.#media.notify('provider-change', provider);
     });
   }
 
   protected override onDestroy() {
-    this._loader = null;
-    this._destroyProvider();
+    this.#loader = null;
+    this.#destroyProvider();
   }
 
-  private _destroyProvider() {
-    this._media?.delegate._notify('provider-change', null);
+  #destroyProvider() {
+    this.#media?.notify('provider-change', null);
   }
 
-  private _onResize() {
+  #onResize() {
     if (!this.el) return;
 
-    const { player, $state } = this._media,
+    const { player, $state } = this.#media,
       width = this.el.offsetWidth,
       height = this.el.offsetHeight;
 
@@ -138,7 +138,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     }
   }
 
-  private _onMutation() {
+  #onMutation() {
     const sources: Src[] = [],
       tracks: TextTrackInit[] = [],
       children = this.el!.children;
@@ -177,8 +177,8 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
       }
     }
 
-    this._domSources.set(sources);
-    this._domTracks.set(tracks);
+    this.#domSources.set(sources);
+    this.#domTracks.set(tracks);
     tick();
   }
 }

@@ -15,46 +15,46 @@ if (!__SERVER__) {
 }
 
 export class FocusVisibleController extends ViewController {
-  private _focused = signal(false);
+  #focused = signal(false);
 
   protected override onConnect(el: HTMLElement) {
     effect(() => {
       if (!$keyboard()) {
-        this._focused.set(false);
+        this.#focused.set(false);
         updateFocusAttr(el, false);
-        this.listen('pointerenter', this._onPointerEnter.bind(this));
-        this.listen('pointerleave', this._onPointerLeave.bind(this));
+        this.listen('pointerenter', this.#onPointerEnter.bind(this));
+        this.listen('pointerleave', this.#onPointerLeave.bind(this));
         return;
       }
 
       const active = document.activeElement === el;
-      this._focused.set(active);
+      this.#focused.set(active);
       updateFocusAttr(el, active);
 
-      this.listen('focus', this._onFocus.bind(this));
-      this.listen('blur', this._onBlur.bind(this));
+      this.listen('focus', this.#onFocus.bind(this));
+      this.listen('blur', this.#onBlur.bind(this));
     });
   }
 
   focused(): boolean {
-    return this._focused();
+    return this.#focused();
   }
 
-  private _onFocus() {
-    this._focused.set(true);
+  #onFocus() {
+    this.#focused.set(true);
     updateFocusAttr(this.el!, true);
   }
 
-  private _onBlur() {
-    this._focused.set(false);
+  #onBlur() {
+    this.#focused.set(false);
     updateFocusAttr(this.el!, false);
   }
 
-  private _onPointerEnter() {
+  #onPointerEnter() {
     updateHoverAttr(this.el!, true);
   }
 
-  private _onPointerLeave() {
+  #onPointerLeave() {
     updateHoverAttr(this.el!, false);
   }
 }

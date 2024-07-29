@@ -32,30 +32,32 @@ export class Slider extends Component<SliderProps, SliderState, SliderEvents, Sl
   constructor() {
     super();
     new SliderController({
-      _getStep: this.$props.step,
-      _getKeyStep: this.$props.keyStep,
-      _roundValue: Math.round,
-      _isDisabled: this.$props.disabled,
-      _getARIAValueNow: this._getARIAValueNow.bind(this),
-      _getARIAValueText: this._getARIAValueText.bind(this),
+      getStep: this.$props.step,
+      getKeyStep: this.$props.keyStep,
+      roundValue: Math.round,
+      isDisabled: this.$props.disabled,
+      aria: {
+        valueNow: this.#getARIAValueNow.bind(this),
+        valueText: this.#getARIAValueText.bind(this),
+      },
     });
   }
 
   protected override onSetup() {
-    effect(this._watchValue.bind(this));
-    effect(this._watchMinMax.bind(this));
+    effect(this.#watchValue.bind(this));
+    effect(this.#watchMinMax.bind(this));
   }
 
   // -------------------------------------------------------------------------------------------
   // Props
   // -------------------------------------------------------------------------------------------
 
-  private _getARIAValueNow() {
+  #getARIAValueNow() {
     const { value } = this.$state;
     return Math.round(value());
   }
 
-  private _getARIAValueText() {
+  #getARIAValueText() {
     const { value, max } = this.$state;
     return round((value() / max()) * 100, 2) + '%';
   }
@@ -64,12 +66,12 @@ export class Slider extends Component<SliderProps, SliderState, SliderEvents, Sl
   // Watch
   // -------------------------------------------------------------------------------------------
 
-  private _watchValue() {
+  #watchValue() {
     const { value } = this.$props;
     this.$state.value.set(value());
   }
 
-  private _watchMinMax() {
+  #watchMinMax() {
     const { min, max } = this.$props;
     this.$state.min.set(min());
     this.$state.max.set(max());

@@ -32,19 +32,22 @@ let warned = __DEV__ ? new Set<any>() : undefined;
 const sourceTypes = new Map<string, string>();
 
 export class SourceSelection {
-  private _initialize = false;
-  private _loaders: ReadSignal<MediaProviderLoader[]>;
-
-  private get _notify() {
-    return this._media.delegate._notify;
-  }
+  #initialize = false;
+  #loaders: ReadSignal<MediaProviderLoader[]>;
+  #domSources: ReadSignal<Src[]>;
+  #media: MediaContext;
+  #loader: WriteSignal<MediaProviderLoader | null>;
 
   constructor(
-    private _domSources: ReadSignal<Src[]>,
-    private _media: MediaContext,
-    private _loader: WriteSignal<MediaProviderLoader | null>,
+    domSources: ReadSignal<Src[]>,
+    media: MediaContext,
+    loader: WriteSignal<MediaProviderLoader | null>,
     customLoaders: MediaProviderLoader[] = [],
   ) {
+    this.#domSources = domSources;
+    this.#media = media;
+    this.#loader = loader;
+
     const DASH_LOADER = new DASHProviderLoader(),
       HLS_LOADER = new HLSProviderLoader(),
       VIDEO_LOADER = new VideoProviderLoader(),
@@ -53,67 +56,67 @@ export class SourceSelection {
       VIMEO_LOADER = new VimeoProviderLoader(),
       EMBED_LOADERS = [YOUTUBE_LOADER, VIMEO_LOADER];
 
-    this._loaders = computed<MediaProviderLoader[]>(() => {
-      const remoteLoader = _media.$state.remotePlaybackLoader();
+    this.#loaders = computed<MediaProviderLoader[]>(() => {
+      const remoteLoader = media.$state.remotePlaybackLoader();
 
-      const loaders = _media.$props.preferNativeHLS()
+      const loaders = media.$props.preferNativeHLS()
         ? [VIDEO_LOADER, AUDIO_LOADER, DASH_LOADER, HLS_LOADER, ...EMBED_LOADERS, ...customLoaders]
         : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER, DASH_LOADER, ...EMBED_LOADERS, ...customLoaders];
 
       return remoteLoader ? [remoteLoader, ...loaders] : loaders;
     });
 
-    const { $state } = _media;
-    $state.sources.set(normalizeSrc(_media.$props.src()));
+    const { $state } = media;
+    $state.sources.set(normalizeSrc(media.$props.src()));
 
     // Initialize.
     for (const src of $state.sources()) {
-      const loader = this._loaders().find((loader) => loader.canPlay(src));
+      const loader = this.#loaders().find((loader) => loader.canPlay(src));
       if (!loader) continue;
 
       const mediaType = loader.mediaType(src);
-      this._media.$state.source.set(src);
-      this._media.$state.mediaType.set(mediaType);
-      this._media.$state.inferredViewType.set(mediaType);
+      media.$state.source.set(src);
+      media.$state.mediaType.set(mediaType);
+      media.$state.inferredViewType.set(mediaType);
 
-      this._loader.set(loader);
-      this._initialize = true;
+      this.#loader.set(loader);
+      this.#initialize = true;
       break;
     }
   }
 
   connect() {
-    const loader = this._loader();
-    if (this._initialize) {
-      this._notifySourceChange(this._media.$state.source(), loader);
-      this._notifyLoaderChange(loader);
-      this._initialize = false;
+    const loader = this.#loader();
+    if (this.#initialize) {
+      this.#notifySourceChange(this.#media.$state.source(), loader);
+      this.#notifyLoaderChange(loader);
+      this.#initialize = false;
     }
 
-    effect(this._onSourcesChange.bind(this));
-    effect(this._onSourceChange.bind(this));
-    effect(this._onSetup.bind(this));
-    effect(this._onLoadSource.bind(this));
-    effect(this._onLoadPoster.bind(this));
+    effect(this.#onSourcesChange.bind(this));
+    effect(this.#onSourceChange.bind(this));
+    effect(this.#onSetup.bind(this));
+    effect(this.#onLoadSource.bind(this));
+    effect(this.#onLoadPoster.bind(this));
   }
 
-  private _onSourcesChange() {
-    this._notify('sources-change', [
-      ...normalizeSrc(this._media.$props.src()),
-      ...this._domSources(),
+  #onSourcesChange() {
+    this.#media.notify('sources-change', [
+      ...normalizeSrc(this.#media.$props.src()),
+      ...this.#domSources(),
     ]);
   }
 
-  private _onSourceChange() {
-    const { $state } = this._media;
+  #onSourceChange() {
+    const { $state } = this.#media;
 
     // Read sources off store here because it's normalized above.
     const sources = $state.sources(),
       currentSource = peek($state.source),
-      newSource = this._findNewSource(currentSource, sources),
+      newSource = this.#findNewSource(currentSource, sources),
       noMatch = sources[0]?.src && !newSource.src && !newSource.type;
 
-    if (__DEV__ && noMatch && !warned!.has(newSource.src) && !peek(this._loader)) {
+    if (__DEV__ && noMatch && !warned!.has(newSource.src) && !peek(this.#loader)) {
       const source = sources[0];
       console.warn(
         '[vidstack] could not find a loader for any of the given media sources,' +
@@ -149,12 +152,12 @@ export class SourceSelection {
       ).then((sources) => {
         if (abort.signal.aborted) return;
 
-        const newSource = this._findNewSource(peek($state.source), sources);
+        const newSource = this.#findNewSource(peek($state.source), sources);
 
         tick();
 
         if (!newSource.src) {
-          this._notify('error', {
+          this.#media.notify('error', {
             message: 'Failed to load resource.',
             code: 4,
           });
@@ -167,12 +170,12 @@ export class SourceSelection {
     tick();
   }
 
-  protected _findNewSource(currentSource: Src, sources: Src[]) {
+  #findNewSource(currentSource: Src, sources: Src[]) {
     let newSource: Src = { src: '', type: '' },
       newLoader: MediaProviderLoader | null = null,
       triggerEvent: DOMEvent = new DOMEvent('sources-change', { detail: { sources } }),
-      loaders = this._loaders(),
-      { started, paused, currentTime, quality, savedState } = this._media.$state;
+      loaders = this.#loaders(),
+      { started, paused, currentTime, quality, savedState } = this.#media.$state;
 
     for (const src of sources) {
       const loader = loaders.find((loader) => loader.canPlay(src));
@@ -205,56 +208,56 @@ export class SourceSelection {
     }
 
     if (!isSameSrc(currentSource, newSource)) {
-      this._notifySourceChange(newSource, newLoader, triggerEvent);
+      this.#notifySourceChange(newSource, newLoader, triggerEvent);
     }
 
-    if (newLoader !== peek(this._loader)) {
-      this._notifyLoaderChange(newLoader, triggerEvent);
+    if (newLoader !== peek(this.#loader)) {
+      this.#notifyLoaderChange(newLoader, triggerEvent);
     }
 
     return newSource;
   }
 
-  protected _notifySourceChange(src: Src, loader: MediaProviderLoader | null, trigger?: Event) {
-    this._notify('source-change', src, trigger);
-    this._notify('media-type-change', loader?.mediaType(src) || 'unknown', trigger);
+  #notifySourceChange(src: Src, loader: MediaProviderLoader | null, trigger?: Event) {
+    this.#media.notify('source-change', src, trigger);
+    this.#media.notify('media-type-change', loader?.mediaType(src) || 'unknown', trigger);
   }
 
-  protected _notifyLoaderChange(loader: MediaProviderLoader | null, trigger?: Event) {
-    this._media.$providerSetup.set(false);
-    this._notify('provider-change', null, trigger);
-    loader && peek(() => loader!.preconnect?.(this._media));
-    this._loader.set(loader);
-    this._notify('provider-loader-change', loader, trigger);
+  #notifyLoaderChange(loader: MediaProviderLoader | null, trigger?: Event) {
+    this.#media.$providerSetup.set(false);
+    this.#media.notify('provider-change', null, trigger);
+    loader && peek(() => loader!.preconnect?.(this.#media));
+    this.#loader.set(loader);
+    this.#media.notify('provider-loader-change', loader, trigger);
   }
 
-  private _onSetup() {
-    const provider = this._media.$provider();
+  #onSetup() {
+    const provider = this.#media.$provider();
 
-    if (!provider || peek(this._media.$providerSetup)) return;
+    if (!provider || peek(this.#media.$providerSetup)) return;
 
-    if (this._media.$state.canLoad()) {
+    if (this.#media.$state.canLoad()) {
       scoped(() => provider.setup(), provider.scope);
-      this._media.$providerSetup.set(true);
+      this.#media.$providerSetup.set(true);
       return;
     }
 
     peek(() => provider.preconnect?.());
   }
 
-  private _onLoadSource() {
-    if (!this._media.$providerSetup()) return;
+  #onLoadSource() {
+    if (!this.#media.$providerSetup()) return;
 
-    const provider = this._media.$provider(),
-      source = this._media.$state.source(),
-      crossOrigin = peek(this._media.$state.crossOrigin),
-      preferNativeHLS = peek(this._media.$props.preferNativeHLS);
+    const provider = this.#media.$provider(),
+      source = this.#media.$state.source(),
+      crossOrigin = peek(this.#media.$state.crossOrigin),
+      preferNativeHLS = peek(this.#media.$props.preferNativeHLS);
 
     if (isSameSrc(provider?.currentSrc, source)) {
       return;
     }
 
-    if (this._media.$state.canLoad()) {
+    if (this.#media.$state.canLoad()) {
       const abort = new AbortController();
 
       if (isHLSSrc(source)) {
@@ -265,7 +268,7 @@ export class SourceSelection {
             signal: abort.signal,
           })
             .then((streamType) => {
-              this._notify('stream-type-change', streamType);
+              this.#media.notify('stream-type-change', streamType);
             })
             .catch(noop);
         }
@@ -275,23 +278,23 @@ export class SourceSelection {
           signal: abort.signal,
         })
           .then((streamType) => {
-            this._notify('stream-type-change', streamType);
+            this.#media.notify('stream-type-change', streamType);
           })
           .catch(noop);
       } else {
-        this._notify('stream-type-change', 'on-demand');
+        this.#media.notify('stream-type-change', 'on-demand');
       }
 
       peek(() => {
-        const preload = peek(this._media.$state.preload);
+        const preload = peek(this.#media.$state.preload);
         return provider?.loadSource(source, preload).catch((error) => {
           if (__DEV__) {
-            this._media.logger
+            this.#media.logger
               ?.errorGroup('[vidstack] failed to load source')
               .labelledLog('Error', error)
               .labelledLog('Source', source)
               .labelledLog('Provider', provider)
-              .labelledLog('Media Context', { ...this._media })
+              .labelledLog('Media Context', { ...this.#media })
               .dispatch();
           }
         });
@@ -304,7 +307,7 @@ export class SourceSelection {
       isString(source.src) && preconnect(new URL(source.src).origin);
     } catch (error) {
       if (__DEV__) {
-        this._media.logger
+        this.#media.logger
           ?.infoGroup(`Failed to preconnect to source: ${source.src}`)
           .labelledLog('Error', error)
           .dispatch();
@@ -312,9 +315,9 @@ export class SourceSelection {
     }
   }
 
-  private _onLoadPoster() {
-    const loader = this._loader(),
-      { providedPoster, source, canLoadPoster } = this._media.$state;
+  #onLoadPoster() {
+    const loader = this.#loader(),
+      { providedPoster, source, canLoadPoster } = this.#media.$state;
 
     if (!loader || !loader.loadPoster || !source() || !canLoadPoster() || providedPoster()) return;
 
@@ -322,12 +325,12 @@ export class SourceSelection {
       trigger = new DOMEvent('source-change', { detail: source });
 
     loader
-      .loadPoster(source(), this._media, abort)
+      .loadPoster(source(), this.#media, abort)
       .then((url) => {
-        this._notify('poster-change', url || '', trigger);
+        this.#media.notify('poster-change', url || '', trigger);
       })
       .catch(() => {
-        this._notify('poster-change', '', trigger);
+        this.#media.notify('poster-change', '', trigger);
       });
 
     return () => {

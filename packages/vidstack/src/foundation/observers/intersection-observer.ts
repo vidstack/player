@@ -1,28 +1,30 @@
 import { onDispose, ViewController } from 'maverick.js';
 
 export class IntersectionObserverController extends ViewController {
-  private _observer: IntersectionObserver | undefined;
+  #init: IntersectionObserverInit;
+  #observer: IntersectionObserver | undefined;
 
-  constructor(private _init: IntersectionObserverInit) {
+  constructor(init: IntersectionObserverInit) {
     super();
+    this.#init = init;
   }
 
   protected override onConnect(el: HTMLElement) {
-    this._observer = new IntersectionObserver((entries) => {
-      this._init.callback?.(entries, this._observer!);
-    }, this._init);
+    this.#observer = new IntersectionObserver((entries) => {
+      this.#init.callback?.(entries, this.#observer!);
+    }, this.#init);
 
-    this._observer.observe(el);
+    this.#observer.observe(el);
 
-    onDispose(this._onDisconnect.bind(this));
+    onDispose(this.#onDisconnect.bind(this));
   }
 
   /**
    * Disconnect any active intersection observers.
    */
-  protected _onDisconnect(): void {
-    this._observer?.disconnect();
-    this._observer = undefined;
+  #onDisconnect(): void {
+    this.#observer?.disconnect();
+    this.#observer = undefined;
   }
 }
 

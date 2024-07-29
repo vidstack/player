@@ -25,7 +25,7 @@ import { cloneTemplate, requestScopedAnimationFrame } from '../../../utils/dom';
 export class MediaSliderChaptersElement extends Host(HTMLElement, SliderChapters) {
   static tagName = 'media-slider-chapters';
 
-  protected _template: HTMLTemplateElement | null = null;
+  #template: HTMLTemplateElement | null = null;
 
   protected onConnect(): void {
     // Animation frame required as some frameworks append late for some reason.
@@ -33,15 +33,15 @@ export class MediaSliderChaptersElement extends Host(HTMLElement, SliderChapters
       if (!this.connectScope) return;
       const template = this.querySelector('template') as HTMLTemplateElement | null;
       if (template) {
-        this._template = template;
-        effect(this._renderTemplate.bind(this));
+        this.#template = template;
+        effect(this.#renderTemplate.bind(this));
       }
     });
   }
 
-  private _renderTemplate() {
-    if (!this._template) return;
-    const elements = cloneTemplate(this._template, this.cues.length || 1);
+  #renderTemplate() {
+    if (!this.#template) return;
+    const elements = cloneTemplate(this.#template, this.cues.length || 1);
     this.setRefs(elements);
   }
 }

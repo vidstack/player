@@ -16,20 +16,20 @@ import {
  * @see {@link https://vidstack.io/docs/player/api/text-tracks}
  */
 export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
-  private _canLoad = false;
-  private _defaults: Record<string, TextTrack | undefined> = {};
-  private _storage: MediaStorage | null = null;
-  private _preferredLang: string | null = null;
+  #canLoad = false;
+  #defaults: Record<string, TextTrack | undefined> = {};
+  #storage: MediaStorage | null = null;
+  #preferredLang: string | null = null;
 
   /** @internal */
-  [TextTrackSymbol._crossOrigin]?: () => string | null;
+  [TextTrackSymbol.crossOrigin]?: () => string | null;
 
   constructor() {
     super();
   }
 
   get selected() {
-    const track = this._items.find((t) => t.mode === 'showing' && isTrackCaptionKind(t));
+    const track = this.items.find((t) => t.mode === 'showing' && isTrackCaptionKind(t));
     return track ?? null;
   }
 
@@ -39,12 +39,12 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   }
 
   get preferredLang() {
-    return this._preferredLang;
+    return this.#preferredLang;
   }
 
   set preferredLang(lang: string | null) {
-    this._preferredLang = lang;
-    this._saveLang(lang);
+    this.#preferredLang = lang;
+    this.#saveLang(lang);
   }
 
   add(init: TextTrackInit | TextTrack, trigger?: Event) {
@@ -52,36 +52,36 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
       track = isTrack ? init : new TextTrack(init),
       kind = init.kind === 'captions' || init.kind === 'subtitles' ? 'captions' : init.kind;
 
-    if (this._defaults[kind] && init.default) delete init.default;
+    if (this.#defaults[kind] && init.default) delete init.default;
 
-    track.addEventListener('mode-change', this._onTrackModeChangeBind);
+    track.addEventListener('mode-change', this.#onTrackModeChangeBind);
 
-    this[ListSymbol._add](track, trigger);
-    track[TextTrackSymbol._crossOrigin] = this[TextTrackSymbol._crossOrigin];
+    this[ListSymbol.add](track, trigger);
+    track[TextTrackSymbol.crossOrigin] = this[TextTrackSymbol.crossOrigin];
 
-    if (this._canLoad) track[TextTrackSymbol._canLoad]();
+    if (this.#canLoad) track[TextTrackSymbol.canLoad]();
 
-    if (init.default) this._defaults[kind] = track;
+    if (init.default) this.#defaults[kind] = track;
 
-    this._selectTracks();
+    this.#selectTracks();
 
     return this;
   }
 
   remove(track: TextTrack, trigger?: Event) {
-    this._pendingRemoval = track;
-    if (!this._items.includes(track)) return;
-    if (track === this._defaults[track.kind]) delete this._defaults[track.kind];
+    this.#pendingRemoval = track;
+    if (!this.items.includes(track)) return;
+    if (track === this.#defaults[track.kind]) delete this.#defaults[track.kind];
     track.mode = 'disabled';
-    track[TextTrackSymbol._onModeChange] = null;
-    track.removeEventListener('mode-change', this._onTrackModeChangeBind);
-    this[ListSymbol._remove](track, trigger);
-    this._pendingRemoval = null;
+    track[TextTrackSymbol.onModeChange] = null;
+    track.removeEventListener('mode-change', this.#onTrackModeChangeBind);
+    this[ListSymbol.remove](track, trigger);
+    this.#pendingRemoval = null;
     return this;
   }
 
   clear(trigger?: Event) {
-    for (const track of [...this._items]) {
+    for (const track of [...this.items]) {
       this.remove(track, trigger);
     }
 
@@ -90,25 +90,25 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
 
   getByKind(kind: TextTrackKind | TextTrackKind[]): TextTrack[] {
     const kinds = Array.isArray(kind) ? kind : [kind];
-    return this._items.filter((track) => kinds.includes(track.kind));
+    return this.items.filter((track) => kinds.includes(track.kind));
   }
 
   /** @internal */
-  [TextTrackSymbol._canLoad]() {
-    if (this._canLoad) return;
-    for (const track of this._items) track[TextTrackSymbol._canLoad]();
-    this._canLoad = true;
-    this._selectTracks();
+  [TextTrackSymbol.canLoad]() {
+    if (this.#canLoad) return;
+    for (const track of this.items) track[TextTrackSymbol.canLoad]();
+    this.#canLoad = true;
+    this.#selectTracks();
   }
 
-  private _selectTracks = debounce(async () => {
-    if (!this._canLoad) return;
+  #selectTracks = debounce(async () => {
+    if (!this.#canLoad) return;
 
-    if (!this._preferredLang && this._storage) {
-      this._preferredLang = await this._storage.getLang();
+    if (!this.#preferredLang && this.#storage) {
+      this.#preferredLang = await this.#storage.getLang();
     }
 
-    const showCaptions = await this._storage?.getCaptions(),
+    const showCaptions = await this.#storage?.getCaptions(),
       kinds: (TextTrackKind | TextTrackKind[])[] = [
         ['captions', 'subtitles'],
         'chapters',
@@ -120,37 +120,37 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
       const tracks = this.getByKind(kind);
       if (tracks.find((t) => t.mode === 'showing')) continue;
 
-      const preferredTrack = this._preferredLang
-        ? tracks.find((track) => track.language === this._preferredLang)
+      const preferredTrack = this.#preferredLang
+        ? tracks.find((track) => track.language === this.#preferredLang)
         : null;
 
       const defaultTrack = isArray(kind)
-        ? this._defaults[kind.find((kind) => this._defaults[kind]) || '']
-        : this._defaults[kind];
+        ? this.#defaults[kind.find((kind) => this.#defaults[kind]) || '']
+        : this.#defaults[kind];
 
       const track = preferredTrack ?? defaultTrack,
         isCaptionsKind = track && isTrackCaptionKind(track);
 
       if (track && (!isCaptionsKind || showCaptions !== false)) {
         track.mode = 'showing';
-        if (isCaptionsKind) this._saveCaptionsTrack(track);
+        if (isCaptionsKind) this.#saveCaptionsTrack(track);
       }
     }
   }, 300);
 
-  private _pendingRemoval: TextTrack | null = null;
-  private _onTrackModeChangeBind = this._onTrackModeChange.bind(this);
-  private _onTrackModeChange(event: TextTrackModeChangeEvent) {
+  #pendingRemoval: TextTrack | null = null;
+  #onTrackModeChangeBind = this.#onTrackModeChange.bind(this);
+  #onTrackModeChange(event: TextTrackModeChangeEvent) {
     const track = event.detail;
 
     // We need to check whether track is being removed to not mistakenly save "disabled" mode change.
-    if (this._storage && isTrackCaptionKind(track) && track !== this._pendingRemoval) {
-      this._saveCaptionsTrack(track);
+    if (this.#storage && isTrackCaptionKind(track) && track !== this.#pendingRemoval) {
+      this.#saveCaptionsTrack(track);
     }
 
     if (track.mode === 'showing') {
       const kinds = isTrackCaptionKind(track) ? ['captions', 'subtitles'] : [track.kind];
-      for (const t of this._items) {
+      for (const t of this.items) {
         if (t.mode === 'showing' && t != track && kinds.includes(t.kind)) {
           t.mode = 'disabled';
         }
@@ -165,19 +165,19 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     );
   }
 
-  private _saveCaptionsTrack(track: TextTrack) {
+  #saveCaptionsTrack(track: TextTrack) {
     if (track.mode !== 'disabled') {
-      this._saveLang(track.language);
+      this.#saveLang(track.language);
     }
-    this._storage?.setCaptions?.(track.mode === 'showing');
+    this.#storage?.setCaptions?.(track.mode === 'showing');
   }
 
-  private _saveLang(lang: string | null) {
-    this._storage?.setLang?.((this._preferredLang = lang));
+  #saveLang(lang: string | null) {
+    this.#storage?.setLang?.((this.#preferredLang = lang));
   }
 
   setStorage(storage: MediaStorage | null) {
-    this._storage = storage;
+    this.#storage = storage;
   }
 }
 

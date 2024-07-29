@@ -32,17 +32,14 @@ export class Captions extends Component<CaptionsProps> {
     exampleText: 'Captions look like this.',
   };
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
-  private static _lib = signal<typeof import('media-captions') | null>(null);
-  private get _lib() {
-    return Captions._lib;
-  }
+  static lib = signal<typeof import('media-captions') | null>(null);
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
     this.setAttributes({
-      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
+      'aria-hidden': $ariaBool(this.#isHidden.bind(this)),
     });
   }
 
@@ -51,15 +48,15 @@ export class Captions extends Component<CaptionsProps> {
   }
 
   protected override onConnect(el: HTMLElement) {
-    if (!this._lib()) {
-      import('media-captions').then((lib) => this._lib.set(lib));
+    if (!Captions.lib()) {
+      import('media-captions').then((lib) => Captions.lib.set(lib));
     }
 
-    effect(this._watchViewType.bind(this));
+    effect(this.#watchViewType.bind(this));
   }
 
-  private _isHidden() {
-    const { textTrack, remotePlaybackState, iOSControls } = this._media.$state,
+  #isHidden() {
+    const { textTrack, remotePlaybackState, iOSControls } = this.#media.$state,
       track = textTrack();
 
     return (
@@ -67,54 +64,54 @@ export class Captions extends Component<CaptionsProps> {
     );
   }
 
-  private _watchViewType() {
-    if (!this._lib()) return;
+  #watchViewType() {
+    if (!Captions.lib()) return;
 
-    const { viewType } = this._media.$state;
+    const { viewType } = this.#media.$state;
 
     if (viewType() === 'audio') {
-      return this._setupAudioView();
+      return this.#setupAudioView();
     } else {
-      return this._setupVideoView();
+      return this.#setupVideoView();
     }
   }
 
-  private _setupAudioView() {
-    effect(this._onTrackChange.bind(this));
+  #setupAudioView() {
+    effect(this.#onTrackChange.bind(this));
 
-    this._listenToFontStyleChanges(null);
+    this.#listenToFontStyleChanges(null);
 
     return () => {
       this.el!.textContent = '';
     };
   }
 
-  private _onTrackChange() {
-    if (this._isHidden()) return;
+  #onTrackChange() {
+    if (this.#isHidden()) return;
 
-    this._onCueChange();
+    this.#onCueChange();
 
-    const { textTrack } = this._media.$state;
-    listenEvent(textTrack()!, 'cue-change', this._onCueChange.bind(this));
+    const { textTrack } = this.#media.$state;
+    listenEvent(textTrack()!, 'cue-change', this.#onCueChange.bind(this));
 
-    effect(this._onUpdateTimedNodes.bind(this));
+    effect(this.#onUpdateTimedNodes.bind(this));
   }
 
-  private _onCueChange() {
+  #onCueChange() {
     this.el!.textContent = '';
 
-    if (this._hideExampleTimer >= 0) {
-      this._removeExample();
+    if (this.#hideExampleTimer >= 0) {
+      this.#removeExample();
     }
 
-    const { realCurrentTime, textTrack } = this._media.$state,
-      { renderVTTCueString } = this._lib()!,
+    const { realCurrentTime, textTrack } = this.#media.$state,
+      { renderVTTCueString } = Captions.lib()!,
       time = peek(realCurrentTime),
       activeCues = peek(textTrack)!.activeCues;
 
     for (const cue of activeCues) {
-      const displayEl = this._createCueDisplayElement(),
-        cueEl = this._createCueElement();
+      const displayEl = this.#createCueDisplayElement(),
+        cueEl = this.#createCueElement();
 
       cueEl.innerHTML = renderVTTCueString(cue, time);
 
@@ -123,76 +120,76 @@ export class Captions extends Component<CaptionsProps> {
     }
   }
 
-  private _onUpdateTimedNodes() {
-    const { realCurrentTime } = this._media.$state,
-      { updateTimedVTTCueNodes } = this._lib()!;
+  #onUpdateTimedNodes() {
+    const { realCurrentTime } = this.#media.$state,
+      { updateTimedVTTCueNodes } = Captions.lib()!;
 
     updateTimedVTTCueNodes(this.el!, realCurrentTime());
   }
 
-  private _setupVideoView() {
-    const { CaptionsRenderer } = this._lib()!,
+  #setupVideoView() {
+    const { CaptionsRenderer } = Captions.lib()!,
       renderer = new CaptionsRenderer(this.el!),
       textRenderer = new CaptionsTextRenderer(renderer);
 
-    this._media.textRenderers.add(textRenderer);
+    this.#media.textRenderers.add(textRenderer);
 
-    effect(this._watchTextDirection.bind(this, renderer));
-    effect(this._watchMediaTime.bind(this, renderer));
+    effect(this.#watchTextDirection.bind(this, renderer));
+    effect(this.#watchMediaTime.bind(this, renderer));
 
-    this._listenToFontStyleChanges(renderer);
+    this.#listenToFontStyleChanges(renderer);
 
     return () => {
       this.el!.textContent = '';
-      this._media.textRenderers.remove(textRenderer);
+      this.#media.textRenderers.remove(textRenderer);
       renderer.destroy();
     };
   }
 
-  private _watchTextDirection(renderer: CaptionsRenderer) {
+  #watchTextDirection(renderer: CaptionsRenderer) {
     renderer.dir = this.$props.textDir();
   }
 
-  private _watchMediaTime(renderer: CaptionsRenderer) {
-    if (this._isHidden()) return;
+  #watchMediaTime(renderer: CaptionsRenderer) {
+    if (this.#isHidden()) return;
 
-    const { realCurrentTime, textTrack } = this._media.$state;
+    const { realCurrentTime, textTrack } = this.#media.$state;
 
     renderer.currentTime = realCurrentTime();
 
-    if (this._hideExampleTimer >= 0 && textTrack()?.activeCues[0]) {
-      this._removeExample();
+    if (this.#hideExampleTimer >= 0 && textTrack()?.activeCues[0]) {
+      this.#removeExample();
     }
   }
 
-  private _listenToFontStyleChanges(renderer: CaptionsRenderer | null) {
-    const player = this._media.player;
+  #listenToFontStyleChanges(renderer: CaptionsRenderer | null) {
+    const player = this.#media.player;
     if (!player) return;
 
-    const onChange = this._onFontStyleChange.bind(this, renderer);
+    const onChange = this.#onFontStyleChange.bind(this, renderer);
     listenEvent(player, 'vds-font-change', onChange);
   }
 
-  private _onFontStyleChange(renderer: CaptionsRenderer | null) {
-    if (this._hideExampleTimer >= 0) {
-      this._hideExample();
+  #onFontStyleChange(renderer: CaptionsRenderer | null) {
+    if (this.#hideExampleTimer >= 0) {
+      this.#hideExample();
       return;
     }
 
-    const { textTrack } = this._media.$state;
+    const { textTrack } = this.#media.$state;
 
     if (!textTrack()?.activeCues[0]) {
-      this._showExample();
+      this.#showExample();
     } else {
       renderer?.update(true);
     }
   }
 
-  private _showExample() {
-    const display = this._createCueDisplayElement();
+  #showExample() {
+    const display = this.#createCueDisplayElement();
     setAttribute(display, 'data-example', '');
 
-    const cue = this._createCueElement();
+    const cue = this.#createCueElement();
     setAttribute(cue, 'data-example', '');
     cue.textContent = this.$props.exampleText();
 
@@ -201,28 +198,28 @@ export class Captions extends Component<CaptionsProps> {
 
     this.el?.setAttribute('data-example', '');
 
-    this._hideExample();
+    this.#hideExample();
   }
 
-  private _hideExampleTimer = -1;
-  private _hideExample() {
-    window.clearTimeout(this._hideExampleTimer);
-    this._hideExampleTimer = window.setTimeout(this._removeExample.bind(this), 2500);
+  #hideExampleTimer = -1;
+  #hideExample() {
+    window.clearTimeout(this.#hideExampleTimer);
+    this.#hideExampleTimer = window.setTimeout(this.#removeExample.bind(this), 2500);
   }
 
-  private _removeExample() {
+  #removeExample() {
     this.el?.removeAttribute('data-example');
     if (this.el?.querySelector('[data-example]')) this.el.textContent = '';
-    this._hideExampleTimer = -1;
+    this.#hideExampleTimer = -1;
   }
 
-  private _createCueDisplayElement() {
+  #createCueDisplayElement() {
     const el = document.createElement('div');
     setAttribute(el, 'data-part', 'cue-display');
     return el;
   }
 
-  private _createCueElement() {
+  #createCueElement() {
     const el = document.createElement('div');
     setAttribute(el, 'data-part', 'cue');
     return el;

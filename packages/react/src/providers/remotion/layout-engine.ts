@@ -3,53 +3,53 @@ import { animationFrameThrottle, createDisposalBin } from 'maverick.js/std';
 import type { RemotionSrc } from './types';
 
 export class RemotionLayoutEngine {
-  protected _src: RemotionSrc | null = null;
-  protected _viewport: HTMLElement | null = null;
-  protected _canvas: HTMLElement | null = null;
-  protected _container: HTMLElement | null = null;
-  protected _disposal = createDisposalBin();
+  #src: RemotionSrc | null = null;
+  #viewport: HTMLElement | null = null;
+  #canvas: HTMLElement | null = null;
+  #container: HTMLElement | null = null;
+  #disposal = createDisposalBin();
 
   constructor() {}
 
   setSrc(src: RemotionSrc | null) {
-    this._src = src;
-    this.setContainer(this._container);
+    this.#src = src;
+    this.setContainer(this.#container);
   }
 
   setContainer(container: HTMLElement | null) {
     if (__SERVER__) return;
 
-    this._disposal.empty();
+    this.#disposal.empty();
 
-    this._container = container;
-    this._canvas = container?.parentElement ?? null;
-    this._viewport = this._canvas?.parentElement ?? null;
+    this.#container = container;
+    this.#canvas = container?.parentElement ?? null;
+    this.#viewport = this.#canvas?.parentElement ?? null;
 
-    if (this._src && this._viewport) {
-      const onResize = animationFrameThrottle(this._onResize.bind(this));
+    if (this.#src && this.#viewport) {
+      const onResize = animationFrameThrottle(this.#onResize.bind(this));
 
       onResize();
       const observer = new ResizeObserver(onResize);
-      observer.observe(this._viewport);
+      observer.observe(this.#viewport);
 
-      this._disposal.add(() => observer.disconnect());
+      this.#disposal.add(() => observer.disconnect());
     }
   }
 
   destroy() {
-    this._disposal.empty();
+    this.#disposal.empty();
   }
 
-  protected _onResize(entries?: ResizeObserverEntry[]) {
-    if (!this._viewport || !this._src) return;
+  #onResize(entries?: ResizeObserverEntry[]) {
+    if (!this.#viewport || !this.#src) return;
 
-    const rect = this._getRect(this._viewport, entries?.[0]),
-      scale = this._calcScale(rect),
-      transform = this._calcTransform(rect, scale);
+    const rect = this.#getRect(this.#viewport, entries?.[0]),
+      scale = this.#calcScale(rect),
+      transform = this.#calcTransform(rect, scale);
 
-    Object.assign(this._canvas!.style, {
-      width: this._src.compositionWidth! * scale + 'px',
-      height: this._src.compositionHeight! * scale + 'px',
+    Object.assign(this.#canvas!.style, {
+      width: this.#src.compositionWidth! * scale + 'px',
+      height: this.#src.compositionHeight! * scale + 'px',
       display: 'flex',
       flexDirection: 'column',
       position: 'absolute',
@@ -58,10 +58,10 @@ export class RemotionLayoutEngine {
       overflow: 'hidden',
     });
 
-    Object.assign(this._container!.style, {
+    Object.assign(this.#container!.style, {
       position: 'absolute',
-      width: this._src.compositionWidth + 'px',
-      height: this._src.compositionHeight + 'px',
+      width: this.#src.compositionWidth + 'px',
+      height: this.#src.compositionHeight + 'px',
       display: 'flex',
       transform: `scale(${scale})`,
       marginLeft: transform.x,
@@ -70,7 +70,7 @@ export class RemotionLayoutEngine {
     });
   }
 
-  protected _getRect(el: HTMLElement, entry?: ResizeObserverEntry): LayoutRect {
+  #getRect(el: HTMLElement, entry?: ResizeObserverEntry): LayoutRect {
     const rect = el.getBoundingClientRect();
     if (!entry) return rect;
 
@@ -91,23 +91,23 @@ export class RemotionLayoutEngine {
     };
   }
 
-  protected _calcScale(rect: LayoutRect) {
-    if (!this._src) return 0;
+  #calcScale(rect: LayoutRect) {
+    if (!this.#src) return 0;
 
-    const heightRatio = rect.height / this._src.compositionHeight!,
-      widthRatio = rect.width / this._src.compositionWidth!;
+    const heightRatio = rect.height / this.#src.compositionHeight!,
+      widthRatio = rect.width / this.#src.compositionWidth!;
 
     return Math.min(heightRatio || 0, widthRatio || 0);
   }
 
-  protected _calcTransform(rect: LayoutRect, scale: number) {
-    if (!this._src) return {};
+  #calcTransform(rect: LayoutRect, scale: number) {
+    if (!this.#src) return {};
 
     const correction = 0 - (1 - scale) / 2,
-      x = correction * this._src.compositionWidth!,
-      y = correction * this._src.compositionHeight!,
-      width = this._src.compositionWidth! * scale,
-      height = this._src.compositionHeight! * scale,
+      x = correction * this.#src.compositionWidth!,
+      y = correction * this.#src.compositionHeight!,
+      width = this.#src.compositionWidth! * scale,
+      height = this.#src.compositionHeight! * scale,
       centerX = rect.width / 2 - width / 2,
       centerY = rect.height / 2 - height / 2;
 

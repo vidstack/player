@@ -181,9 +181,9 @@ export class Plyr implements PlyrProps, PlyrMethods {
     this.player.remoteControl.changeQuality(index);
   }
 
-  private _source: PlyrSource | null = null;
+  #source: PlyrSource | null = null;
   get source() {
-    return this._source;
+    return this.#source;
   }
 
   set source(source) {
@@ -205,18 +205,18 @@ export class Plyr implements PlyrProps, PlyrMethods {
     this.player.textTracks.clear();
     for (const track of tracks) this.player.textTracks.add(track);
 
-    this._source = source;
+    this.#source = source;
   }
 
-  private _ratio: string | null = null;
+  #ratio: string | null = null;
   get ratio() {
-    return this._ratio;
+    return this.#ratio;
   }
 
   set ratio(ratio) {
     if (ratio) ratio = ratio.replace(/\s*:\s*/, ' / ');
     setStyle(this.player, 'aspect-ratio', ratio ?? 'unset');
-    this._ratio = ratio;
+    this.#ratio = ratio;
   }
 
   get download() {
@@ -227,7 +227,7 @@ export class Plyr implements PlyrProps, PlyrMethods {
     this.layout.download = download;
   }
 
-  private _disposal = createDisposalBin();
+  #disposal = createDisposalBin();
 
   constructor(
     readonly target: PlyrTarget,
@@ -293,7 +293,7 @@ export class Plyr implements PlyrProps, PlyrMethods {
     }
 
     if (autoPause) {
-      this._disposal.add(listenEvent(this.player, 'play', this._onPlay.bind(this)));
+      this.#disposal.add(listenEvent(this.player, 'play', this.#onPlay.bind(this)));
     }
 
     this.ratio = ratio;
@@ -304,7 +304,7 @@ export class Plyr implements PlyrProps, PlyrMethods {
     }
 
     if (resetOnEnd) {
-      this._disposal.add(listenEvent(this.player, 'ended', this._onReset.bind(this)));
+      this.#disposal.add(listenEvent(this.player, 'ended', this.#onReset.bind(this)));
     }
 
     if (disableContextMenu) {
@@ -422,12 +422,12 @@ export class Plyr implements PlyrProps, PlyrMethods {
     }
   }
 
-  private _onPlay() {
+  #onPlay() {
     if (activePlyr !== this) activePlyr?.pause();
     activePlyr = this;
   }
 
-  private _onReset() {
+  #onReset() {
     this.currentTime = 0;
     this.paused = true;
   }
@@ -496,24 +496,24 @@ export class Plyr implements PlyrProps, PlyrMethods {
   }
 
   on<T extends keyof PlyrEvents>(type: T, callback: (event: PlyrEvents[T]) => void) {
-    this._listen(type, callback);
+    this.#listen(type, callback);
   }
 
   once<T extends keyof PlyrEvents>(type: T, callback: (event: PlyrEvents[T]) => void) {
-    this._listen(type, callback, { once: true });
+    this.#listen(type, callback, { once: true });
   }
 
   off<T extends keyof PlyrEvents>(type: T, callback: (event: PlyrEvents[T]) => void) {
-    this._listen(type, callback, { remove: true });
+    this.#listen(type, callback, { remove: true });
   }
 
-  private _listeners: {
+  #listeners: {
     type: string;
     callback: any;
     listener: any;
   }[] = [];
 
-  private _listen<T extends keyof PlyrEvents>(
+  #listen<T extends keyof PlyrEvents>(
     type: T,
     callback: (event: any) => void,
     options: { remove?: boolean; once?: boolean } = {},
@@ -556,15 +556,15 @@ export class Plyr implements PlyrProps, PlyrMethods {
     if (options.remove) {
       let index = -1;
       do {
-        index = this._listeners.findIndex((t) => t.type === type && t.callback === callback);
+        index = this.#listeners.findIndex((t) => t.type === type && t.callback === callback);
         if (index >= 0) {
-          const { listener } = this._listeners[index]!;
+          const { listener } = this.#listeners[index]!;
           this.player.removeEventListener(mappedEventType, listener);
-          this._listeners.splice(index, 1);
+          this.#listeners.splice(index, 1);
         }
       } while (index >= 0);
     } else {
-      this._listeners.push({ type, callback, listener });
+      this.#listeners.push({ type, callback, listener });
       this.player.addEventListener(mappedEventType, listener, { once: options.once });
     }
   }
@@ -574,15 +574,15 @@ export class Plyr implements PlyrProps, PlyrMethods {
   }
 
   destroy() {
-    for (const { type, listener } of this._listeners) {
+    for (const { type, listener } of this.#listeners) {
       this.player.removeEventListener(eventMap[type] ?? type, listener);
     }
 
-    this._source = null;
-    this._listeners.length = 0;
+    this.#source = null;
+    this.#listeners.length = 0;
     if (activePlyr === this) activePlyr = null;
 
-    this._disposal.empty();
+    this.#disposal.empty();
     this.player.destroy();
   }
 }
@@ -781,35 +781,39 @@ export interface PlyrSource {
 }
 
 export class PlyrFullscreenAdapter {
-  constructor(private readonly _plyr: Plyr) {}
+  readonly #plyr: Plyr;
 
-  private get _player() {
-    return this._plyr.player;
+  constructor(plyr: Plyr) {
+    this.#plyr = plyr;
+  }
+
+  get #player() {
+    return this.#plyr.player;
   }
 
   /**
    * 	Returns a boolean indicating if the current player has fullscreen enabled.
    */
   get enabled() {
-    return this._player.state.canFullscreen;
+    return this.#player.state.canFullscreen;
   }
   /**
    * Returns a boolean indicating if the current player is in fullscreen mode.
    */
   get active() {
-    return this._player.state.fullscreen;
+    return this.#player.state.fullscreen;
   }
   /**
    * Request to enter fullscreen.
    */
   enter() {
-    return this._player.requestFullscreen();
+    return this.#player.requestFullscreen();
   }
   /**
    * Request to exit fullscreen.
    */
   exit() {
-    return this._player.exitFullscreen();
+    return this.#player.exitFullscreen();
   }
   /**
    * Request to toggle fullscreen.

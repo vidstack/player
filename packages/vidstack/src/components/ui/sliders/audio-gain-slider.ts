@@ -46,10 +46,10 @@ export class AudioGainSlider extends Component<
 
   static state = sliderState;
 
-  private _media!: MediaContext;
+  #media!: MediaContext;
 
   protected override onSetup(): void {
-    this._media = useMediaContext();
+    this.#media = useMediaContext();
 
     provideContext(sliderValueFormatContext, {
       default: 'percent',
@@ -59,72 +59,74 @@ export class AudioGainSlider extends Component<
     });
 
     new SliderController({
-      _getStep: this.$props.step,
-      _getKeyStep: this.$props.keyStep,
-      _roundValue: Math.round,
-      _isDisabled: this._isDisabled.bind(this),
-      _getARIAValueNow: this._getARIAValueNow.bind(this),
-      _getARIAValueText: this._getARIAValueText.bind(this),
-      _onDragValueChange: this._onDragValueChange.bind(this),
-      _onValueChange: this._onValueChange.bind(this),
+      getStep: this.$props.step,
+      getKeyStep: this.$props.keyStep,
+      roundValue: Math.round,
+      isDisabled: this.#isDisabled.bind(this),
+      aria: {
+        valueNow: this.#getARIAValueNow.bind(this),
+        valueText: this.#getARIAValueText.bind(this),
+      },
+      onDragValueChange: this.#onDragValueChange.bind(this),
+      onValueChange: this.#onValueChange.bind(this),
     }).attach(this);
 
-    effect(this._watchMinMax.bind(this));
-    effect(this._watchAudioGain.bind(this));
+    effect(this.#watchMinMax.bind(this));
+    effect(this.#watchAudioGain.bind(this));
   }
 
   protected override onAttach(el: HTMLElement) {
     el.setAttribute('data-media-audio-gain-slider', '');
     setAttributeIfEmpty(el, 'aria-label', 'Audio Boost');
 
-    const { canSetAudioGain } = this._media.$state;
+    const { canSetAudioGain } = this.#media.$state;
     this.setAttributes({
       'data-supported': canSetAudioGain,
       'aria-hidden': $ariaBool(() => !canSetAudioGain()),
     });
   }
 
-  private _getARIAValueNow() {
+  #getARIAValueNow() {
     const { value } = this.$state;
     return Math.round(value());
   }
 
-  private _getARIAValueText() {
+  #getARIAValueText() {
     const { value } = this.$state;
     return value() + '%';
   }
 
-  private _watchMinMax() {
+  #watchMinMax() {
     const { min, max } = this.$props;
     this.$state.min.set(min());
     this.$state.max.set(max());
   }
 
-  private _watchAudioGain() {
-    const { audioGain } = this._media.$state,
+  #watchAudioGain() {
+    const { audioGain } = this.#media.$state,
       value = ((audioGain() ?? 1) - 1) * 100;
     this.$state.value.set(value);
     this.dispatch('value-change', { detail: value });
   }
 
-  private _isDisabled() {
+  #isDisabled() {
     const { disabled } = this.$props,
-      { canSetAudioGain } = this._media.$state;
+      { canSetAudioGain } = this.#media.$state;
     return disabled() || !canSetAudioGain();
   }
 
-  private _onAudioGainChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
+  #onAudioGainChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
     if (!event.trigger) return;
     const gain = round(1 + event.detail / 100, 2);
-    this._media.remote.changeAudioGain(gain, event);
+    this.#media.remote.changeAudioGain(gain, event);
   }
 
-  private _onValueChange(event: SliderValueChangeEvent): void {
-    this._onAudioGainChange(event);
+  #onValueChange(event: SliderValueChangeEvent): void {
+    this.#onAudioGainChange(event);
   }
 
-  private _onDragValueChange(event: SliderDragValueChangeEvent): void {
-    this._onAudioGainChange(event);
+  #onDragValueChange(event: SliderDragValueChangeEvent): void {
+    this.#onAudioGainChange(event);
   }
 }
 
