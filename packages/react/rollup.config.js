@@ -1,53 +1,21 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import chokidar from 'chokidar';
-import { transform as esbuildTransform } from 'esbuild';
-import fsExtra from 'fs-extra';
+import fs from 'fs-extra';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
-import esbuildPlugin from 'rollup-plugin-esbuild';
 
-import { copyPkgInfo } from '../../.scripts/copy-pkg-info.js';
+const EXTERNAL_PACKAGES = [
+  'react',
+  'react-dom',
+  'media-icons',
+  'media-captions',
+  'hls.js',
+  'dashjs',
+  /^@floating-ui/,
+  /^remotion/,
+];
 
-const MODE_WATCH = process.argv.includes('-w'),
-  MODE_TYPES = process.argv.includes('--config-types');
-
-const DIRNAME = path.dirname(fileURLToPath(import.meta.url)),
-  ROOT_DIR = path.resolve(DIRNAME, '.'),
-  DIST_NPM_DIR = path.resolve(ROOT_DIR, 'dist-npm'),
-  VIDSTACK_PKG_DIR = path.resolve(ROOT_DIR, 'node_modules/vidstack'),
-  VIDSTACK_LOCAL_PATH = path.resolve('../vidstack/src/index.ts'),
-  VIDSTACK_EXPORTS_PATH = path.resolve('../vidstack/src/exports');
-
-const NPM_EXTERNAL_PACKAGES = [
-    'react',
-    'react-dom',
-    'media-icons',
-    'media-captions',
-    'hls.js',
-    'dashjs',
-    /^@floating-ui/,
-    /^remotion/,
-  ],
-  NPM_BUNDLES = [defineNPMBundle({ dev: true }), defineNPMBundle({ dev: false })],
-  TYPES_BUNDLES = defineTypesBundle();
-
-// Styles
-if (!MODE_TYPES) {
-  if (MODE_WATCH) {
-    chokidar.watch('player/styles/**').on('all', (_, path) => {
-      if (path !== 'player/styles/default/theme.css') buildDefaultTheme();
-    });
-
-    fsExtra.copyFile('package.json', 'dist-npm/package.json');
-  }
-}
-
-export default defineConfig(
-  MODE_WATCH ? [...TYPES_BUNDLES, ...NPM_BUNDLES] : MODE_TYPES ? TYPES_BUNDLES : NPM_BUNDLES,
-);
+export default defineConfig(defineTypesBundle());
 
 /**
  * @returns {import('rollup').RollupOptions[]}
@@ -72,7 +40,7 @@ function defineTypesBundle() {
           if (id.includes('vidstack')) return 'vidstack';
         },
       },
-      external: NPM_EXTERNAL_PACKAGES,
+      external: EXTERNAL_PACKAGES,
       plugins: [
         {
           name: 'resolve-vidstack-types',
@@ -98,12 +66,12 @@ function defineTypesBundle() {
                 .map((path) => `/// <reference path="./${path}" />`)
                 .join('\n');
 
-            if (!fsExtra.existsSync('dist-npm')) {
-              fsExtra.mkdirSync('dist-npm');
+            if (!fs.existsSync('dist-npm')) {
+              fs.mkdirSync('dist-npm');
             }
 
             for (const file of globalFiles) {
-              fsExtra.copyFileSync(path.resolve(`../vidstack/npm/${file}`), `dist-npm/${file}`);
+              fs.copyFileSync(path.resolve(`../vidstack/npm/${file}`), `dist-npm/${file}`);
             }
 
             if (indexFile?.type === 'chunk') {
@@ -114,172 +82,4 @@ function defineTypesBundle() {
       ],
     },
   ];
-}
-
-/**
- * @typedef {{
- * dev?: boolean;
- * }} BundleOptions
- */
-
-/**
- * @param {BundleOptions}
- * @returns {import('rollup').RollupOptions}
- */
-function defineNPMBundle({ dev }) {
-  let alias = dev ? 'dev' : 'prod';
-
-  const target = 'es2022',
-    supported = {
-      'class-static-blocks': false,
-    };
-
-  let input = {
-    vidstack: 'src/index.ts',
-    'player/vidstack-remotion': 'src/providers/remotion/index.ts',
-    'player/vidstack-default-layout': 'src/components/layouts/default/index.ts',
-    'player/vidstack-plyr-layout': 'src/components/layouts/plyr/index.ts',
-    'player/vidstack-plyr-icons': 'src/components/layouts/plyr/icons.tsx',
-    'player/vidstack-default-components': 'src/components/layouts/default/ui.ts',
-    'player/vidstack-default-icons': 'src/components/layouts/default/icons.tsx',
-  };
-
-  if (!dev) {
-    input['vidstack-icons'] = 'src/icons.ts';
-  }
-
-  return {
-    input,
-    treeshake: true,
-    preserveEntrySignatures: 'allow-extension',
-    maxParallelFileOps: !dev ? 1 : 20,
-    external: NPM_EXTERNAL_PACKAGES,
-    output: {
-      format: 'esm',
-      compact: false,
-      minifyInternalExports: false,
-      dir: `dist-npm/${alias}`,
-      chunkFileNames: `chunks/vidstack-[hash].js`,
-      manualChunks(id) {
-        if (id.includes('node_modules')) return 'vidstack-deps';
-      },
-    },
-    plugins: [
-      {
-        name: 'vidstack-link',
-        resolveId(id) {
-          if (id === ':virtual/env') {
-            return id;
-          } else if (id === 'vidstack') {
-            return VIDSTACK_LOCAL_PATH;
-          } else if (id.startsWith('vidstack/exports')) {
-            const path = id.replace('vidstack/exports', VIDSTACK_EXPORTS_PATH);
-            return path + '.ts';
-          }
-        },
-        load(id) {
-          if (id === ':virtual/env') {
-            return 'export const IS_SERVER = typeof document === "undefined";';
-          }
-        },
-        transform(code) {
-          if (code.includes('__SERVER__')) {
-            code = code.replace(/__SERVER__/g, 'IS_SERVER');
-            return "import { IS_SERVER } from ':virtual/env';\n" + code;
-          }
-        },
-      },
-      nodeResolve({
-        exportConditions: dev
-          ? ['development', 'production', 'default']
-          : ['production', 'default'],
-      }),
-      esbuildPlugin({
-        tsconfig: 'tsconfig.build.json',
-        target,
-        supported,
-        platform: 'browser',
-        define: {
-          __DEV__: dev ? 'true' : 'false',
-        },
-      }),
-      {
-        name: 'target-syntax',
-        transform(code, id) {
-          if (/node_modules.*?\.js/.test(id)) {
-            return esbuildTransform(code, {
-              target,
-              supported,
-              platform: 'browser',
-            }).then((t) => t.code);
-          }
-        },
-      },
-      {
-        name: 'rsc-directives',
-        resolveId(id) {
-          if (id.startsWith('maverick.js')) {
-            return this.resolve('maverick.js/rsc', '', { skipSelf: true });
-          }
-        },
-        generateBundle(_, bundle) {
-          const serverChunks = new Set(),
-            neutralChunks = new Set(['vidstack-icons.js']);
-
-          for (const fileName of Object.keys(bundle)) {
-            const chunk = bundle[fileName];
-
-            if (chunk.type !== 'chunk') continue;
-
-            if (serverChunks.has(chunk.fileName)) {
-              chunk.code = `"use server"\n\n` + chunk.code;
-            } else if (!neutralChunks.has(fileName)) {
-              chunk.code = `"use client"\n\n` + chunk.code;
-            }
-          }
-        },
-      },
-      !dev && {
-        name: 'npm-artifacts',
-        async buildEnd() {
-          await copyPkgInfo();
-          await copyStyles();
-          await copyTailwind();
-          await buildDefaultTheme();
-          await fsExtra.copy('npm', 'dist-npm');
-        },
-      },
-    ],
-  };
-}
-
-async function copyStyles() {
-  const from = path.resolve(VIDSTACK_PKG_DIR, 'styles/player'),
-    to = path.resolve(DIST_NPM_DIR, 'player/styles');
-  await fsExtra.copy(from, to);
-}
-
-async function copyTailwind() {
-  const tailwindFilePath = path.resolve(VIDSTACK_PKG_DIR, 'npm/tailwind.cjs'),
-    tailwindDTSFilePath = path.resolve(VIDSTACK_PKG_DIR, 'npm/tailwind.d.cts');
-  await fsExtra.copyFile(tailwindFilePath, path.resolve(DIST_NPM_DIR, 'tailwind.cjs'));
-  await fsExtra.copyFile(tailwindDTSFilePath, path.resolve(DIST_NPM_DIR, 'tailwind.d.cts'));
-}
-
-async function buildDefaultTheme() {
-  // CSS merge.
-  let defaultStyles = await fsExtra.readFile(
-    path.resolve(DIST_NPM_DIR, 'player/styles/base.css'),
-    'utf-8',
-  );
-
-  const themeDir = path.resolve(DIST_NPM_DIR, 'player/styles/default'),
-    themeDirFiles = await fsExtra.readdir(themeDir, 'utf-8');
-
-  for (const file of themeDirFiles) {
-    if (file === 'theme.css' || file === 'layouts') continue;
-    defaultStyles += '\n' + (await fsExtra.readFile(`${themeDir}/${file}`, 'utf-8'));
-  }
-
-  await fsExtra.writeFile(`${themeDir}/theme.css`, defaultStyles);
 }

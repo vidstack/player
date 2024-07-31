@@ -4,7 +4,6 @@ import { composeRefs, createReactComponent, type ReactElementProps } from 'maver
 import { isString } from 'maverick.js/std';
 import { createPortal } from 'react-dom';
 
-import { IS_SERVER } from '../../env';
 import { useMediaState } from '../../hooks/use-media-state';
 import {
   MenuButtonInstance,
@@ -136,7 +135,7 @@ const Portal = React.forwardRef<HTMLElement, PortalProps>(
       shouldPortal = disabled === 'fullscreen' ? !fullscreen : !disabled;
 
     const target = React.useMemo(() => {
-      if (IS_SERVER) return null;
+      if (__SERVER__) return null;
       const node = isString(container) ? document.querySelector(container) : container;
       return node ?? document.body;
     }, [container]);

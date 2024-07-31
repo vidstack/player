@@ -4,12 +4,12 @@ import { fileURLToPath } from 'node:url';
 import fs from 'fs-extra';
 import { kebabToCamelCase, kebabToPascalCase } from 'maverick.js/std';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url)),
-  ROOT_DIR = path.resolve(__dirname, '..');
+const DIRNAME = path.dirname(fileURLToPath(import.meta.url));
+
+const ROOT_DIR = path.resolve(DIRNAME, '..'),
+  ICONS_DIR = path.resolve(ROOT_DIR, 'node_modules/media-icons/raw');
 
 async function buildIcons() {
-  const ICONS_DIR = path.resolve(ROOT_DIR, 'node_modules/media-icons/raw');
-
   const files = await fs.readdir(ICONS_DIR, 'utf-8'),
     icons = {},
     ignore = new Set(['.DS_Store']);

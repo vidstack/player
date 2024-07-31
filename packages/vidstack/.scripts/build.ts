@@ -1,18 +1,17 @@
-import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import chokidar from 'chokidar';
 import * as eslexer from 'es-module-lexer';
 import { build, BuildOptions, Plugin } from 'esbuild';
-import fsExtra from 'fs-extra';
+import fs from 'fs-extra';
 
 import { copyPkgInfo } from '../../../.scripts/copy-pkg-info.js';
+import { buildDefaultTheme, watchStyles } from './build-styles.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DIRNAME = path.dirname(fileURLToPath(import.meta.url));
 
-const version = JSON.parse(
-  await fs.readFile(path.resolve(__dirname, '../package.json'), 'utf-8'),
+const VERSION = JSON.parse(
+  await fs.readFile(path.resolve(DIRNAME, '../package.json'), 'utf-8'),
 ).version;
 
 const MODE_WATCH = process.argv.includes('-w'),
@@ -61,7 +60,7 @@ function getNPMBundles(): BuildOptions[] {
     {
       ...getNPMConfig({ dev: true }),
       entryPoints: getBrowserInputs(),
-      plugins: [emptyOutDir(), copyAssets()],
+      plugins: [copyAssets()],
     },
     // prod
     {
@@ -72,7 +71,7 @@ function getNPMBundles(): BuildOptions[] {
     {
       ...getNPMConfig({ server: true }),
       entryPoints: getBaseInputs(),
-      plugins: [emptyOutDir(), serverElements()],
+      plugins: [serverElements()],
     },
   ];
 }
@@ -160,7 +159,6 @@ function getBaseConfig({ dev = false, server = false }: BaseConfigOptions): Buil
       __TEST__: 'false',
       __CDN__: 'false',
     },
-    plugins: [emptyOutDir()],
   };
 }
 
@@ -279,8 +277,8 @@ function emptyOutDir(): Plugin {
     setup: (build) => {
       build.onStart(async () => {
         const { outdir } = build.initialOptions;
-        if (outdir && (await fsExtra.exists(outdir))) {
-          await fsExtra.rm(path.resolve(__dirname, `../${outdir}`), {
+        if (outdir && (await fs.exists(outdir))) {
+          await fs.rm(path.resolve(DIRNAME, `../${outdir}`), {
             recursive: true,
             force: true,
           });
@@ -296,10 +294,9 @@ function copyAssets(): Plugin {
     async setup(build) {
       build.onEnd(async () => {
         await copyPkgInfo();
-        await fsExtra.copy('npm', 'dist-npm');
-
         await buildDefaultTheme();
-        await fsExtra.copy('styles/player', 'dist-npm/player/styles');
+        await fs.copy('styles/player', 'dist-npm/player/styles');
+        await fs.copy('npm', 'dist-npm');
       });
     },
   };
@@ -311,7 +308,7 @@ function rewriteCDNChunks(): Plugin {
     name: 'rewrite-cdn-chunks',
     setup(build) {
       build.onEnd(async () => {
-        const dir = path.resolve(__dirname, '../dist-cdn'),
+        const dir = path.resolve(DIRNAME, '../dist-cdn'),
           chunks = (await fs.readdir(dir)).filter((f) => f.includes('.js'));
 
         await Promise.all(
@@ -321,7 +318,7 @@ function rewriteCDNChunks(): Plugin {
 
             const newContents = contents.replace(
               /\"\.\/(chunks|providers)\/(.*?)\"/g,
-              `"https://cdn.jsdelivr.net/npm/@vidstack/cdn@${version}/$1/$2"`,
+              `"https://cdn.jsdelivr.net/npm/@vidstack/cdn@${VERSION}/$1/$2"`,
             );
 
             await fs.writeFile(filePath, newContents, 'utf8');
@@ -357,29 +354,6 @@ function serverElements(): Plugin {
       });
     },
   };
-}
-
-async function buildDefaultTheme() {
-  // CSS merge.
-  let defaultStyles = await fs.readFile('styles/player/base.css', 'utf-8');
-
-  const themeDir = 'styles/player/default',
-    themeDirFiles = await fs.readdir(themeDir, 'utf-8');
-
-  for (const file of themeDirFiles) {
-    if (file === 'theme.css' || file === 'layouts') continue;
-    defaultStyles += '\n' + (await fs.readFile(`${themeDir}/${file}`, 'utf-8'));
-  }
-
-  await fs.writeFile('styles/player/default/theme.css', defaultStyles);
-}
-
-function watchStyles() {
-  chokidar.watch('styles/player/**').on('all', async (_, path) => {
-    if (path !== 'styles/player/default/theme.css') {
-      await buildDefaultTheme();
-    }
-  });
 }
 
 main();

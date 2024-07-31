@@ -12,16 +12,16 @@
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.tsx\" --framework react --project tsconfig.build.json",
     "dev": "pnpm clean && pnpm build:icons && pnpm build:types && pnpm watch",
-    "build": "pnpm build:icons && rollup -c",
+    "build": "pnpm build:icons && tsx .scripts/build.ts",
     "build:icons": "node .scripts/build-icons.js",
     "build:types": "tsc -p tsconfig.build.json",
     "sandbox": "node ../../.scripts/sandbox.js",
     "sandbox:build": "vite build sandbox",
-    "types": "pnpm build:icons && pnpm build:types && rollup -c --config-types",
+    "types": "pnpm build:icons && pnpm build:types && rollup -c",
     "clean": "rimraf dist-npm",
     "format": "prettier src --write --loglevel warn",
-    "watch": "pnpm watch:types & rollup -c -w",
-    "watch:types": "pnpm run build:types -w"
+    "watch": "pnpm watch:types & pnpm run build -w",
+    "watch:types": "pnpm run build:types -w & rollup -c -w"
   },
   "peerDependencies": {
     "@types/react": "^18.0.0",
@@ -68,6 +68,7 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
+      "worker": "./server/vidstack.js",
       "development": "./dev/vidstack.js",
       "default": "./prod/vidstack.js"
     },
@@ -77,16 +78,19 @@
     },
     "./player/remotion": {
       "types": "./player/remotion.d.ts",
+      "worker": "./server/vidstack-remotion.js",
       "development": "./dev/player/vidstack-remotion.js",
       "default": "./prod/player/vidstack-remotion.js"
     },
     "./player/layouts/default": {
       "types": "./player/layouts/default.d.ts",
+      "worker": "./server/vidstack-default-layout.js",
       "development": "./dev/player/vidstack-default-layout.js",
       "default": "./prod/player/vidstack-default-layout.js"
     },
     "./player/layouts/plyr": {
       "types": "./player/layouts/plyr.d.ts",
+      "worker": "./server/vidstack-plyr-layout.js",
       "development": "./dev/player/vidstack-plyr-layout.js",
       "default": "./prod/player/vidstack-plyr-layout.js"
     },

@@ -124,9 +124,9 @@ export class MediaPlayer
   static props: MediaPlayerProps = mediaPlayerProps;
   static state = mediaState;
 
-  #media: MediaContext;
-  #stateMgr: MediaStateManager;
-  #requestMgr: MediaRequestManager;
+  readonly #media: MediaContext;
+  readonly #stateMgr: MediaStateManager;
+  readonly #requestMgr: MediaRequestManager;
 
   @prop
   readonly canPlayQueue = new RequestQueue();
