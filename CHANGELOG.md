@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- do not use absolute chunk urls for legacy cdn files ([600a9a9](https://github.com/vidstack/player/commit/600a9a94b1a992258436cec8b851855b138028c8))
+- prevent focus scrolling default audio layout on play ([0f147c6](https://github.com/vidstack/player/commit/0f147c60f3a5c588c269dcc45a4fbd4b07359f1f))
+- audio mime type `audio/mp3` ([73253ce](https://github.com/vidstack/player/commit/73253cee26032ce1b33185f632684947aee6eaee))
+- volume setter prop not updating media state ([cefeafc](https://github.com/vidstack/player/commit/cefeafcd2d02a28a0a15b1e2018cb0621cb3ee4f))
+- clip start on youtube video hides poster ([b1cb41e](https://github.com/vidstack/player/commit/b1cb41ed4273aea0a391485552d9050f9fe4cc44))
+
+#### Player (React)
+
+- server render media sources ([1efe43d](https://github.com/vidstack/player/commit/1efe43dae97b5de30b54f0d36d1e3a08fa2d95dc))
+- support nextjs image in poster component ([6847417](https://github.com/vidstack/player/commit/6847417a25c50f135541867a64115e0e0cc2ea1e))
+
 ## [1.11.30-next](https://github.com/vidstack/player/releases/tag/v1.11.30-next) (2024-07-20)
 
 ### ✨ Features
