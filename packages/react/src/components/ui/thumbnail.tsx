@@ -69,7 +69,7 @@ const Img = React.forwardRef<HTMLImageElement, ImgProps>(({ children, ...props }
     <Primitive.img
       crossOrigin={$crossOrigin as '' | undefined}
       {...props}
-      src={$src}
+      src={$src || undefined}
       ref={composeRefs((img as any).set, forwardRef)}
     >
       {children}
