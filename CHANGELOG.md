@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 #### Player
 
 - use private class fields and methods ([e1f8bd5](https://github.com/vidstack/player/commit/e1f8bd5f6aa02eb61c67cce741122e2e71a9de19))
-- use events controller ([2a81ada](https://github.com/vidstack/player/commit/2a81ada293f284cd9793fdfc557febc46017687a))
+- use events controller ([c831df8](https://github.com/vidstack/player/commit/c831df87fa8c121a3356211831a5b33d221bb067))
 
 ### 🐛 Bug Fixes
 
