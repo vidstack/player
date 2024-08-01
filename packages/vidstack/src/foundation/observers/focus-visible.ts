@@ -1,5 +1,5 @@
 import { effect, signal, ViewController } from 'maverick.js';
-import { listenEvent, setAttribute } from 'maverick.js/std';
+import { EventsController, listenEvent, setAttribute } from 'maverick.js/std';
 
 export let $keyboard = signal(false);
 
@@ -19,11 +19,16 @@ export class FocusVisibleController extends ViewController {
 
   protected override onConnect(el: HTMLElement) {
     effect(() => {
+      const events = new EventsController(el);
+
       if (!$keyboard()) {
         this.#focused.set(false);
         updateFocusAttr(el, false);
-        this.listen('pointerenter', this.#onPointerEnter.bind(this));
-        this.listen('pointerleave', this.#onPointerLeave.bind(this));
+
+        events
+          .add('pointerenter', this.#onPointerEnter.bind(this))
+          .add('pointerleave', this.#onPointerLeave.bind(this));
+
         return;
       }
 
@@ -31,8 +36,7 @@ export class FocusVisibleController extends ViewController {
       this.#focused.set(active);
       updateFocusAttr(el, active);
 
-      this.listen('focus', this.#onFocus.bind(this));
-      this.listen('blur', this.#onBlur.bind(this));
+      events.add('focus', this.#onFocus.bind(this)).add('blur', this.#onBlur.bind(this));
     });
   }
 

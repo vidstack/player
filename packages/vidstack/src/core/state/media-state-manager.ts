@@ -1,7 +1,7 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
 import { effect, onDispose, peek, untrack, type StopEffect } from 'maverick.js';
-import { DOMEvent, listenEvent } from 'maverick.js/std';
+import { DOMEvent, EventsController, listenEvent } from 'maverick.js/std';
 
 import { ListSymbol } from '../../foundation/list/symbols';
 import { canChangeVolume } from '../../utils/support';
@@ -62,9 +62,11 @@ export class MediaStateManager extends MediaPlayerController {
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('aria-busy', 'true');
-    this.listen('fullscreen-change', this['fullscreen-change'].bind(this));
-    this.listen('fullscreen-error', this['fullscreen-error'].bind(this));
-    this.listen('orientation-change', this['orientation-change'].bind(this));
+
+    new EventsController(this as MediaPlayerController)
+      .add('fullscreen-change', this['fullscreen-change'].bind(this))
+      .add('fullscreen-error', this['fullscreen-error'].bind(this))
+      .add('orientation-change', this['orientation-change'].bind(this));
   }
 
   protected override onConnect(el: HTMLElement) {
@@ -136,26 +138,33 @@ export class MediaStateManager extends MediaPlayerController {
   #addTextTrackListeners() {
     this.#onTextTracksChange();
     this.#onTextTrackModeChange();
+
     const textTracks = this.#media.textTracks;
-    listenEvent(textTracks, 'add', this.#onTextTracksChange.bind(this));
-    listenEvent(textTracks, 'remove', this.#onTextTracksChange.bind(this));
-    listenEvent(textTracks, 'mode-change', this.#onTextTrackModeChange.bind(this));
+
+    new EventsController(textTracks)
+      .add('add', this.#onTextTracksChange.bind(this))
+      .add('remove', this.#onTextTracksChange.bind(this))
+      .add('mode-change', this.#onTextTrackModeChange.bind(this));
   }
 
   #addQualityListeners() {
     const qualities = this.#media.qualities;
-    listenEvent(qualities, 'add', this.#onQualitiesChange.bind(this));
-    listenEvent(qualities, 'remove', this.#onQualitiesChange.bind(this));
-    listenEvent(qualities, 'change', this.#onQualityChange.bind(this));
-    listenEvent(qualities, 'auto-change', this.#onAutoQualityChange.bind(this));
-    listenEvent(qualities, 'readonly-change', this.#onCanSetQualityChange.bind(this));
+
+    new EventsController(qualities)
+      .add('add', this.#onQualitiesChange.bind(this))
+      .add('remove', this.#onQualitiesChange.bind(this))
+      .add('change', this.#onQualityChange.bind(this))
+      .add('auto-change', this.#onAutoQualityChange.bind(this))
+      .add('readonly-change', this.#onCanSetQualityChange.bind(this));
   }
 
   #addAudioTrackListeners() {
     const audioTracks = this.#media.audioTracks;
-    listenEvent(audioTracks, 'add', this.#onAudioTracksChange.bind(this));
-    listenEvent(audioTracks, 'remove', this.#onAudioTracksChange.bind(this));
-    listenEvent(audioTracks, 'change', this.#onAudioTrackChange.bind(this));
+
+    new EventsController(audioTracks)
+      .add('add', this.#onAudioTracksChange.bind(this))
+      .add('remove', this.#onAudioTracksChange.bind(this))
+      .add('change', this.#onAudioTrackChange.bind(this));
   }
 
   #onTextTracksChange(event?: TextTrackAddEvent | TextTrackRemoveEvent) {

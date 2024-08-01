@@ -8,7 +8,7 @@ import {
   signal,
   useContext,
 } from 'maverick.js';
-import { DOMEvent, isNumber, listenEvent, setStyle } from 'maverick.js/std';
+import { DOMEvent, EventsController, isNumber, listenEvent, setStyle } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
@@ -113,8 +113,8 @@ export class ChaptersRadioGroup extends Component<
     const onCuesChange = this.#onCuesChange.bind(this, track);
 
     onCuesChange();
-    listenEvent(track, 'add-cue', onCuesChange);
-    listenEvent(track, 'remove-cue', onCuesChange);
+
+    new EventsController(track).add('add-cue', onCuesChange).add('remove-cue', onCuesChange);
 
     return () => {
       this.#cues.set([]);

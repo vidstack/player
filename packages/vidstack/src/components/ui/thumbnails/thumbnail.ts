@@ -1,5 +1,5 @@
 import { Component, effect, State } from 'maverick.js';
-import { isNull, listenEvent } from 'maverick.js/std';
+import { EventsController, isNull, listenEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaCrossOrigin } from '../../../core/api/types';
@@ -62,9 +62,12 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
 
   #watchImg() {
     const img = this.$state.img();
+
     if (!img) return;
-    listenEvent(img, 'load', this.#onLoaded.bind(this));
-    listenEvent(img, 'error', this.#onError.bind(this));
+
+    new EventsController(img)
+      .add('load', this.#onLoaded.bind(this))
+      .add('error', this.#onError.bind(this));
   }
 
   #watchCrossOrigin() {

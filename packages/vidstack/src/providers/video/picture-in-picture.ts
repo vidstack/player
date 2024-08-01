@@ -1,4 +1,4 @@
-import { listenEvent } from 'maverick.js/std';
+import { EventsController, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
 import { canUsePictureInPicture } from '../../utils/support';
@@ -18,8 +18,10 @@ export class VideoPictureInPicture implements MediaPictureInPictureAdapter {
   constructor(video: HTMLVideoElement, media: MediaContext) {
     this.#video = video;
     this.#media = media;
-    listenEvent(video, 'enterpictureinpicture', this.#onEnter.bind(this));
-    listenEvent(video, 'leavepictureinpicture', this.#onExit.bind(this));
+
+    new EventsController(video)
+      .add('enterpictureinpicture', this.#onEnter.bind(this))
+      .add('leavepictureinpicture', this.#onExit.bind(this));
   }
 
   get active() {

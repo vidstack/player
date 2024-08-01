@@ -32,14 +32,14 @@
     "media-captions": "^1.0.1"
   },
   "devDependencies": {
-    "@maverick-js/cli": "0.42.0",
+    "@maverick-js/cli": "0.43.1",
     "@types/fs-extra": "^11.0.1",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@vitejs/plugin-react": "^4.2.0",
     "esbuild": "^0.23.0",
     "fs-extra": "^11.0.0",
-    "maverick.js": "0.42.0",
+    "maverick.js": "0.43.1",
     "media-icons": "^1.1.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

@@ -14,7 +14,12 @@ import {
   type ReadSignalRecord,
   type Scope,
 } from 'maverick.js';
-import { animationFrameThrottle, listenEvent, setAttribute } from 'maverick.js/std';
+import {
+  animationFrameThrottle,
+  EventsController,
+  listenEvent,
+  setAttribute,
+} from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
@@ -361,9 +366,11 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
 
     if (track) {
       const onCuesChange = this.#onCuesChange.bind(this);
+
       onCuesChange();
-      onDispose(listenEvent(track, 'add-cue', onCuesChange));
-      onDispose(listenEvent(track, 'remove-cue', onCuesChange));
+
+      new EventsController(track).add('add-cue', onCuesChange).add('remove-cue', onCuesChange);
+
       effect(this.#watchMediaDuration.bind(this));
     }
 

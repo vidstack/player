@@ -1,5 +1,5 @@
 import { effect, peek, type ReadSignal } from 'maverick.js';
-import { isUndefined } from 'maverick.js/std';
+import { EventsController, isUndefined } from 'maverick.js/std';
 
 import {
   FullscreenController,
@@ -54,13 +54,14 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this.listen('fullscreen-change', this.#onFullscreenChange.bind(this));
   }
 
-  protected override onConnect() {
+  protected override onConnect(el: HTMLElement) {
     const names = Object.getOwnPropertyNames(Object.getPrototypeOf(this)),
-      handle = this.#handleRequest.bind(this);
+      events = new EventsController(el as unknown as MediaPlayerController),
+      handleRequest = this.#handleRequest.bind(this);
 
     for (const name of names) {
       if (name.startsWith('media-')) {
-        this.listen(name as keyof RE.MediaRequestEvents, handle);
+        events.add(name as keyof RE.MediaRequestEvents, handleRequest);
       }
     }
 

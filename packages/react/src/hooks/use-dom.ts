@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { animationFrameThrottle, createDisposalBin, listenEvent, setStyle } from 'maverick.js/std';
+import { animationFrameThrottle, EventsController, listenEvent, setStyle } from 'maverick.js/std';
 
 export function useClassName(el: HTMLElement | null, className?: string) {
   React.useEffect(() => {
@@ -34,14 +34,11 @@ export function useTransitionActive(el: Element | null) {
   React.useEffect(() => {
     if (!el) return;
 
-    const disposal = createDisposalBin();
+    const events = new EventsController(el)
+      .add('transitionstart', () => setIsActive(true))
+      .add('transitionend', () => setIsActive(false));
 
-    disposal.add(
-      listenEvent(el, 'transitionstart', () => setIsActive(true)),
-      listenEvent(el, 'transitionend', () => setIsActive(false)),
-    );
-
-    return () => disposal.empty();
+    return () => events.abort();
   }, [el]);
 
   return isActive;
@@ -53,14 +50,11 @@ export function useMouseEnter(el: Element | null) {
   React.useEffect(() => {
     if (!el) return;
 
-    const disposal = createDisposalBin();
+    const events = new EventsController(el)
+      .add('mouseenter', () => setIsMouseEnter(true))
+      .add('mouseleave', () => setIsMouseEnter(false));
 
-    disposal.add(
-      listenEvent(el, 'mouseenter', () => setIsMouseEnter(true)),
-      listenEvent(el, 'mouseleave', () => setIsMouseEnter(false)),
-    );
-
-    return () => disposal.empty();
+    return () => events.abort();
   }, [el]);
 
   return isMouseEnter;
@@ -72,14 +66,11 @@ export function useFocusIn(el: Element | null) {
   React.useEffect(() => {
     if (!el) return;
 
-    const disposal = createDisposalBin();
+    const events = new EventsController(el)
+      .add('focusin', () => setIsFocusIn(true))
+      .add('focusout', () => setIsFocusIn(false));
 
-    disposal.add(
-      listenEvent(el, 'focusin', () => setIsFocusIn(true)),
-      listenEvent(el, 'focusout', () => setIsFocusIn(false)),
-    );
-
-    return () => disposal.empty();
+    return () => events.abort();
   }, [el]);
 
   return isFocusIn;
@@ -122,6 +113,7 @@ export function useColorSchemePreference() {
     }
 
     onChange();
+
     return listenEvent(media, 'change', onChange);
   }, []);
 

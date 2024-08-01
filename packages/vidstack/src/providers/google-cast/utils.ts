@@ -1,5 +1,6 @@
+import { listenEvent } from 'maverick.js/std';
+
 import type { Src } from '../../core/api/src-types';
-import { listen } from '../../utils/dom';
 
 export function getCastFrameworkURL() {
   return 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
@@ -98,12 +99,14 @@ export function listenCastContextEvent<T extends keyof cast.framework.CastContex
   type: T,
   handler: (event: cast.framework.CastContextEvents[T]) => void,
 ) {
-  return listen(getCastContext(), type, handler);
+  // @ts-expect-error - not typed
+  return listenEvent(getCastContext(), type, handler);
 }
 
 export function listenCastSessionEvent<T extends keyof cast.framework.CastSessionEvents>(
   type: T,
   handler: (event: cast.framework.CastSessionEvents[T]) => void,
 ) {
-  return listen(getCastSession(), type, handler);
+  // @ts-expect-error - not typed
+  return listenEvent(getCastSession(), type, handler);
 }

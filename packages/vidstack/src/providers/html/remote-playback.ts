@@ -1,5 +1,5 @@
 import { effect, signal } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { EventsController, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
 import { getAndroidVersion, IS_CHROME } from '../../utils/support';
@@ -48,9 +48,10 @@ export abstract class HTMLRemotePlaybackAdapter implements MediaRemotePlaybackAd
     onStateChange();
     listenEvent(this.#media, 'playing', onStateChange);
 
+    const remoteEvents = new EventsController(this.#media.remote);
     for (const type of events) {
       // @ts-expect-error - video remote not typed
-      listenEvent(this.#media.remote, type, onStateChange);
+      remoteEvents.add(type, onStateChange);
     }
   }
 

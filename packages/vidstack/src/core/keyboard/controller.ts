@@ -1,5 +1,5 @@
 import { effect, peek, signal } from 'maverick.js';
-import { isArray, isKeyboardClick, isString, listenEvent } from 'maverick.js/std';
+import { EventsController, isArray, isKeyboardClick, isString, listenEvent } from 'maverick.js/std';
 
 import { isHTMLMediaElement } from '../../providers/type-check';
 import type { MediaContext } from '../api/media-context';
@@ -45,10 +45,11 @@ export class MediaKeyboardController extends MediaPlayerController {
       $active = signal(false);
 
     if (target === this.el) {
-      this.listen('focusin', () => $active.set(true));
-      this.listen('focusout', (event) => {
-        if (!this.el!.contains(event.target as Node)) $active.set(false);
-      });
+      new EventsController(this.el)
+        .add('focusin', () => $active.set(true))
+        .add('focusout', (event) => {
+          if (!this.el!.contains(event.target as Node)) $active.set(false);
+        });
     } else {
       if (!peek($active)) $active.set(document.querySelector('[data-media-player]') === this.el);
       listenEvent(document, 'focusin', (event) => {
@@ -61,9 +62,10 @@ export class MediaKeyboardController extends MediaPlayerController {
 
     effect(() => {
       if (!$active()) return;
-      listenEvent(target, 'keyup', this.#onKeyUp.bind(this));
-      listenEvent(target, 'keydown', this.#onKeyDown.bind(this));
-      listenEvent(target, 'keydown', this.#onPreventVideoKeys.bind(this), { capture: true });
+      new EventsController(target)
+        .add('keyup', this.#onKeyUp.bind(this))
+        .add('keydown', this.#onKeyDown.bind(this))
+        .add('keydown', this.#onPreventVideoKeys.bind(this), { capture: true });
     });
   }
 

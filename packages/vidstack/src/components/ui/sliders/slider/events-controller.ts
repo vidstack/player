@@ -6,7 +6,7 @@ import {
   ViewController,
   type ReadSignal,
 } from 'maverick.js';
-import { isNull, isNumber, listenEvent } from 'maverick.js/std';
+import { EventsController, isNull, isNumber, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../../../core/api/media-context';
 import { isTouchPinchEvent } from '../../../../utils/dom';
@@ -73,9 +73,9 @@ export class SliderEventsController extends ViewController<
     }
   }
 
-  protected override onConnect() {
-    effect(this.#attachEventListeners.bind(this));
-    effect(this.#attachPointerListeners.bind(this));
+  protected override onConnect(el: HTMLElement) {
+    effect(this.#attachEventListeners.bind(this, el));
+    effect(this.#attachPointerListeners.bind(this, el));
     if (this.#delegate.swipeGesture) effect(this.#watchSwipeGesture.bind(this));
   }
 
@@ -93,13 +93,11 @@ export class SliderEventsController extends ViewController<
 
     if (!this.#provider) return;
 
-    listenEvent(this.#provider, 'touchstart', this.#onTouchStart.bind(this), {
-      passive: true,
-    });
-
-    listenEvent(this.#provider, 'touchmove', this.#onTouchMove.bind(this), {
-      passive: false,
-    });
+    new EventsController(this.#provider)
+      .add('touchstart', this.#onTouchStart.bind(this), {
+        passive: true,
+      })
+      .add('touchmove', this.#onTouchMove.bind(this), { passive: false });
   }
 
   #provider: HTMLElement | null = null;
@@ -132,29 +130,32 @@ export class SliderEventsController extends ViewController<
     }
   }
 
-  #attachEventListeners() {
+  #attachEventListeners(el: HTMLElement) {
     const { hidden } = this.$props;
 
-    this.listen('focus', this.#onFocus.bind(this));
-    this.listen('keydown', this.#onKeyDown.bind(this));
-    this.listen('keyup', this.#onKeyUp.bind(this));
+    new EventsController(el)
+      .add('focus', this.#onFocus.bind(this))
+      .add('keyup', this.#onKeyUp.bind(this))
+      .add('keydown', this.#onKeyDown.bind(this));
 
     if (hidden() || this.#delegate.isDisabled()) return;
 
-    this.listen('pointerenter', this.#onPointerEnter.bind(this));
-    this.listen('pointermove', this.#onPointerMove.bind(this));
-    this.listen('pointerleave', this.#onPointerLeave.bind(this));
-    this.listen('pointerdown', this.#onPointerDown.bind(this));
+    new EventsController(el)
+      .add('pointerenter', this.#onPointerEnter.bind(this))
+      .add('pointermove', this.#onPointerMove.bind(this))
+      .add('pointerleave', this.#onPointerLeave.bind(this))
+      .add('pointerdown', this.#onPointerDown.bind(this));
   }
 
-  #attachPointerListeners() {
+  #attachPointerListeners(el: HTMLElement) {
     if (this.#delegate.isDisabled() || !this.$state.dragging()) return;
 
-    listenEvent(document, 'pointerup', this.#onDocumentPointerUp.bind(this), { capture: true });
-    listenEvent(document, 'pointermove', this.#onDocumentPointerMove.bind(this));
-    listenEvent(document, 'touchmove', this.#onDocumentTouchMove.bind(this), {
-      passive: false,
-    });
+    new EventsController(document)
+      .add('pointerup', this.#onDocumentPointerUp.bind(this), { capture: true })
+      .add('pointermove', this.#onDocumentPointerMove.bind(this))
+      .add('touchmove', this.#onDocumentTouchMove.bind(this), {
+        passive: false,
+      });
   }
 
   #onFocus() {

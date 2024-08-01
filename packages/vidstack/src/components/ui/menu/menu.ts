@@ -15,6 +15,7 @@ import {
   animationFrameThrottle,
   ariaBool,
   DOMEvent,
+  EventsController,
   isKeyboardEvent,
   listenEvent,
   setAttribute,
@@ -448,8 +449,9 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   #addSubmenu(menu: Menu) {
     this.#submenus.add(menu);
 
-    listenEvent(menu, 'open', this.#onSubmenuOpenBind);
-    listenEvent(menu, 'close', this.#onSubmenuCloseBind);
+    new EventsController(menu)
+      .add('open', this.#onSubmenuOpenBind)
+      .add('close', this.#onSubmenuCloseBind);
 
     onDispose(this.#removeSubmenuBind);
   }

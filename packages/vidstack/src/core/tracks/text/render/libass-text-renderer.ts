@@ -1,4 +1,4 @@
-import { DOMEvent, EventsTarget, isString, listenEvent } from 'maverick.js/std';
+import { DOMEvent, EventsController, EventsTarget, isString, listenEvent } from 'maverick.js/std';
 
 import { TextTrackSymbol } from '../symbols';
 import type { TextTrack } from '../text-track';
@@ -34,13 +34,13 @@ export class LibASSTextRenderer implements TextRenderer {
         subUrl: this.#track?.src || '',
       });
 
-      listenEvent(this.#instance, 'ready', () => {
-        const canvas = this.#instance?._canvas;
-        if (canvas) canvas.style.pointerEvents = 'none';
-      });
-
-      listenEvent(this.#instance, 'error', (event) => {
-        if (this.#track) {
+      new EventsController(this.#instance)
+        .add('ready', () => {
+          const canvas = this.#instance?._canvas;
+          if (canvas) canvas.style.pointerEvents = 'none';
+        })
+        .add('error', (event) => {
+          if (!this.#track) return;
           this.#track[TextTrackSymbol.readyState] = 3;
           this.#track.dispatchEvent(
             new DOMEvent('error', {
@@ -48,8 +48,7 @@ export class LibASSTextRenderer implements TextRenderer {
               detail: event.error,
             }),
           );
-        }
-      });
+        });
     });
   }
 

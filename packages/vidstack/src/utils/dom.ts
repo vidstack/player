@@ -17,6 +17,7 @@ import {
 } from 'maverick.js';
 import {
   animationFrameThrottle,
+  EventsController,
   isDOMNode,
   isFunction,
   isKeyboardClick,
@@ -32,16 +33,6 @@ import { round } from './number';
 export interface EventTargetLike {
   addEventListener(type: string, handler: (...args: any[]) => void): void;
   removeEventListener(type: string, handler: (...args: any[]) => void): void;
-}
-
-export function listen(
-  target: EventTargetLike | null | undefined,
-  type: string,
-  handler: (...args: any[]) => void,
-) {
-  if (!target) return;
-  // @ts-expect-error - `listenEvent` is not typed to handle this.
-  return listenEvent(target, type, handler);
 }
 
 export function isEventInside(el: HTMLElement, event: Event) {
@@ -142,12 +133,13 @@ export function onPress(
   target: EventTarget,
   handler: (event: PointerEvent | KeyboardEvent) => void,
 ) {
-  listenEvent(target, 'pointerup', (event) => {
-    if (event.button === 0 && !event.defaultPrevented) handler(event);
-  });
-  listenEvent(target, 'keydown', (event) => {
-    if (isKeyboardClick(event)) handler(event);
-  });
+  return new EventsController(target)
+    .add('pointerup', (event) => {
+      if (event.button === 0 && !event.defaultPrevented) handler(event);
+    })
+    .add('keydown', (event) => {
+      if (isKeyboardClick(event)) handler(event);
+    });
 }
 
 export function isTouchPinchEvent(event: Event) {
@@ -298,8 +290,9 @@ export function useTransitionActive($el: ReadSignal<Element | null | undefined>)
   effect(() => {
     const el = $el();
     if (!el) return;
-    listenEvent(el, 'transitionstart', () => $active.set(true));
-    listenEvent(el, 'transitionend', () => $active.set(false));
+    new EventsController(el)
+      .add('transitionstart', () => $active.set(true))
+      .add('transitionend', () => $active.set(false));
   });
 
   return $active;
@@ -394,8 +387,9 @@ export function useMouseEnter($el: ReadSignal<Element | null | undefined>) {
       return;
     }
 
-    listenEvent(el, 'mouseenter', () => $isMouseEnter.set(true));
-    listenEvent(el, 'mouseleave', () => $isMouseEnter.set(false));
+    new EventsController(el)
+      .add('mouseenter', () => $isMouseEnter.set(true))
+      .add('mouseleave', () => $isMouseEnter.set(false));
   });
 
   return $isMouseEnter;
@@ -412,8 +406,9 @@ export function useFocusIn($el: ReadSignal<Element | null | undefined>) {
       return;
     }
 
-    listenEvent(el, 'focusin', () => $isFocusIn.set(true));
-    listenEvent(el, 'focusout', () => $isFocusIn.set(false));
+    new EventsController(el)
+      .add('focusin', () => $isFocusIn.set(true))
+      .add('focusout', () => $isFocusIn.set(false));
   });
 
   return $isFocusIn;

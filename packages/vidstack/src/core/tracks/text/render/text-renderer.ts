@@ -1,5 +1,5 @@
 import { effect, onDispose, untrack } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { EventsController, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../../api/media-context';
 import { TextTrackSymbol } from '../symbols';
@@ -27,9 +27,10 @@ export class TextRenderers {
 
     onDispose(this.#detach.bind(this));
 
-    listenEvent(textTracks, 'add', this.#onAddTrack.bind(this));
-    listenEvent(textTracks, 'remove', this.#onRemoveTrack.bind(this));
-    listenEvent(textTracks, 'mode-change', this.#update.bind(this));
+    new EventsController(textTracks)
+      .add('add', this.#onAddTrack.bind(this))
+      .add('remove', this.#onRemoveTrack.bind(this))
+      .add('mode-change', this.#update.bind(this));
   }
 
   #watchControls() {

@@ -50,11 +50,11 @@ export class ToggleButtonController extends ViewController<ToggleButtonControlle
   }
 
   protected override onConnect(el: HTMLElement) {
-    onPress(el, this.#onMaybePress.bind(this));
+    const events = onPress(el, this.#onMaybePress.bind(this));
 
     // Prevent these events too when toggle is disabled.
     for (const type of ['click', 'touchstart'] as const) {
-      this.listen(type, this.#onInteraction.bind(this), {
+      events.add(type, this.#onInteraction.bind(this), {
         passive: true,
       });
     }

@@ -1,5 +1,5 @@
 import { effect, onDispose, peek } from 'maverick.js';
-import { DOMEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
+import { DOMEvent, EventsController, isNil, listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
 import type { MediaCanPlayDetail } from '../../core/api/media-events';
@@ -14,12 +14,12 @@ import type { HTMLMediaProvider } from './provider';
 export class HTMLMediaEvents {
   #provider: HTMLMediaProvider;
   #ctx: MediaContext;
-  #disposal = useDisposalBin();
   #waiting = false;
   #attachedLoadStart = false;
   #attachedCanPlay = false;
   #timeRAF = new RAFLoop(this.#onAnimationFrame.bind(this));
   #pageVisibility = new PageVisibility();
+  #events: EventsController<HTMLMediaElement>;
 
   get #media() {
     return this.#provider.media;
@@ -28,6 +28,7 @@ export class HTMLMediaEvents {
   constructor(provider: HTMLMediaProvider, ctx: MediaContext) {
     this.#provider = provider;
     this.#ctx = ctx;
+    this.#events = new EventsController(provider.media);
 
     this.#attachInitialListeners();
 
@@ -41,7 +42,8 @@ export class HTMLMediaEvents {
     this.#attachedLoadStart = false;
     this.#attachedCanPlay = false;
     this.#timeRAF.stop();
-    this.#disposal.empty();
+    this.#events.abort();
+    this.#devHandlers?.clear();
   }
 
   /**
@@ -84,18 +86,16 @@ export class HTMLMediaEvents {
       this.#ctx.logger?.info('attaching load start listeners');
     }
 
-    this.#disposal.add(
-      this.#attachEventListener('loadeddata', this.#onLoadedData),
-      this.#attachEventListener('loadedmetadata', this.#onLoadedMetadata),
-      this.#attachEventListener('canplay', this.#onCanPlay),
-      this.#attachEventListener('canplaythrough', this.#onCanPlayThrough),
-      this.#attachEventListener('durationchange', this.#onDurationChange),
-      this.#attachEventListener('play', this.#onPlay),
-      this.#attachEventListener('progress', this.#onProgress),
-      this.#attachEventListener('stalled', this.#onStalled),
-      this.#attachEventListener('suspend', this.#onSuspend),
-      this.#attachEventListener('ratechange', this.#onRateChange),
-    );
+    this.#attachEventListener('loadeddata', this.#onLoadedData);
+    this.#attachEventListener('loadedmetadata', this.#onLoadedMetadata);
+    this.#attachEventListener('canplay', this.#onCanPlay);
+    this.#attachEventListener('canplaythrough', this.#onCanPlayThrough);
+    this.#attachEventListener('durationchange', this.#onDurationChange);
+    this.#attachEventListener('play', this.#onPlay);
+    this.#attachEventListener('progress', this.#onProgress);
+    this.#attachEventListener('stalled', this.#onStalled);
+    this.#attachEventListener('suspend', this.#onSuspend);
+    this.#attachEventListener('ratechange', this.#onRateChange);
 
     this.#attachedLoadStart = true;
   }
@@ -107,27 +107,21 @@ export class HTMLMediaEvents {
       this.#ctx.logger?.info('attaching can play listeners');
     }
 
-    this.#disposal.add(
-      this.#attachEventListener('pause', this.#onPause),
-      this.#attachEventListener('playing', this.#onPlaying),
-      this.#attachEventListener('seeked', this.#onSeeked),
-      this.#attachEventListener('seeking', this.#onSeeking),
-      this.#attachEventListener('ended', this.#onEnded),
-      this.#attachEventListener('waiting', this.#onWaiting),
-    );
+    this.#attachEventListener('pause', this.#onPause);
+    this.#attachEventListener('playing', this.#onPlaying);
+    this.#attachEventListener('seeked', this.#onSeeked);
+    this.#attachEventListener('seeking', this.#onSeeking);
+    this.#attachEventListener('ended', this.#onEnded);
+    this.#attachEventListener('waiting', this.#onWaiting);
 
     this.#attachedCanPlay = true;
   }
 
-  #handlers = __DEV__ ? new Map<string, (event: Event) => void>() : undefined;
+  #devHandlers = __DEV__ ? new Map<string, (event: Event) => void>() : undefined;
   #handleDevEvent = __DEV__ ? this.#onDevEvent.bind(this) : undefined;
   #attachEventListener(eventType: keyof HTMLElementEventMap, handler: (event: Event) => void) {
-    if (__DEV__) this.#handlers!.set(eventType, handler);
-    return listenEvent(
-      this.#media,
-      eventType,
-      __DEV__ ? this.#handleDevEvent! : handler.bind(this),
-    );
+    if (__DEV__) this.#devHandlers!.set(eventType, handler);
+    this.#events.add(eventType, __DEV__ ? this.#handleDevEvent! : handler.bind(this));
   }
 
   #onDevEvent(event: Event) {
@@ -140,7 +134,7 @@ export class HTMLMediaEvents {
       .labelledLog('Media Store', { ...this.#ctx.$state })
       .dispatch();
 
-    this.#handlers!.get(event.type)?.call(this, event);
+    this.#devHandlers!.get(event.type)?.call(this, event);
   }
 
   #updateCurrentTime(time: number, trigger?: Event) {

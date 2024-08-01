@@ -1,5 +1,5 @@
 import { signal } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { EventsController, listenEvent } from 'maverick.js/std';
 
 import { IS_SAFARI } from '../../utils/support';
 
@@ -22,8 +22,11 @@ export class PageVisibility {
   #safariBeforeUnloadTimeout: any;
 
   connect() {
+    const events = new EventsController(window),
+      handlePageEvent = this.#handlePageEvent.bind(this);
+
     for (const eventType of PAGE_EVENTS) {
-      listenEvent(window, eventType, this.#handlePageEvent.bind(this));
+      events.add(eventType, handlePageEvent);
     }
 
     /**
@@ -38,7 +41,7 @@ export class PageVisibility {
      * @see https://bugs.webkit.org/show_bug.cgi?id=151234
      */
     if (IS_SAFARI) {
-      listenEvent(window, 'beforeunload', (event) => {
+      events.add('beforeunload', (event) => {
         this.#safariBeforeUnloadTimeout = setTimeout(() => {
           if (!(event.defaultPrevented || (event.returnValue as any).length > 0)) {
             this.#state.set('hidden');

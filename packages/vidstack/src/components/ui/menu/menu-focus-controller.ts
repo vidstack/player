@@ -1,5 +1,5 @@
 import { onDispose } from 'maverick.js';
-import { listenEvent, wasEnterKeyPressed } from 'maverick.js/std';
+import { EventsController, listenEvent, wasEnterKeyPressed } from 'maverick.js/std';
 
 import { isElementParent, isHTMLElement } from '../../../utils/dom';
 import { scrollIntoCenter } from '../../../utils/scroll';
@@ -59,8 +59,9 @@ export class MenuFocusController {
 
     this.update();
 
-    listenEvent(this.#el, 'keyup', this.#onKeyUp.bind(this));
-    listenEvent(this.#el, 'keydown', this.#onKeyDown.bind(this));
+    new EventsController(this.#el)
+      .add('keyup', this.#onKeyUp.bind(this))
+      .add('keydown', this.#onKeyDown.bind(this));
 
     onDispose(() => {
       this.#index = -1;

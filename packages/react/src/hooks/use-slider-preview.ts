@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { effect, signal } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { EventsController, listenEvent } from 'maverick.js/std';
 import { updateSliderPreviewPlacement, type SliderOrientation } from 'vidstack';
 
 /**
@@ -29,43 +29,32 @@ export function useSliderPreview({
 
     return effect(() => {
       if (!dragging()) {
-        listenEvent(rootRef, 'pointerenter', () => {
-          setIsVisible(true);
-          previewRef?.setAttribute('data-visible', '');
-        });
-
-        listenEvent(rootRef, 'pointerdown', (event) => {
-          dragging.set(true);
-          updatePointerValue(event);
-        });
-
-        listenEvent(rootRef, 'pointerleave', () => {
-          setIsVisible(false);
-          previewRef?.removeAttribute('data-visible');
-        });
-
-        listenEvent(rootRef, 'pointermove', (event) => {
-          updatePointerValue(event);
-        });
-
-        return;
+        new EventsController(rootRef)
+          .add('pointerenter', () => {
+            setIsVisible(true);
+            previewRef?.setAttribute('data-visible', '');
+          })
+          .add('pointerdown', (event) => {
+            dragging.set(true);
+            updatePointerValue(event);
+          })
+          .add('pointerleave', () => {
+            setIsVisible(false);
+            previewRef?.removeAttribute('data-visible');
+          })
+          .add('pointermove', updatePointerValue);
       }
 
       previewRef?.setAttribute('data-dragging', '');
 
-      listenEvent(document, 'pointerup', (event) => {
-        dragging.set(false);
-        previewRef?.removeAttribute('data-dragging');
-        updatePointerValue(event);
-      });
-
-      listenEvent(document, 'pointermove', (event) => {
-        updatePointerValue(event);
-      });
-
-      listenEvent(document, 'touchmove', (e) => e.preventDefault(), {
-        passive: false,
-      });
+      new EventsController(document)
+        .add('pointerup', (event) => {
+          dragging.set(false);
+          previewRef?.removeAttribute('data-dragging');
+          updatePointerValue(event);
+        })
+        .add('pointermove', updatePointerValue)
+        .add('touchmove', (e) => e.preventDefault(), { passive: false });
     });
   }, [rootRef]);
 

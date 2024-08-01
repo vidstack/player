@@ -1,3 +1,5 @@
+import { EventsController } from 'maverick.js/std';
+
 import { type MediaContext } from '../api/media-context';
 import type { MediaEvents } from '../api/media-events';
 import { MediaPlayerController } from '../api/player-controller';
@@ -45,9 +47,14 @@ export class MediaEventsLogger extends MediaPlayerController {
     this.#media = media;
   }
 
-  protected override onConnect(): void {
-    const handler = this.#onMediaEvent.bind(this);
-    for (const eventType of MEDIA_EVENTS!) this.listen(eventType, handler);
+  protected override onConnect(el: HTMLElement): void {
+    const events = new EventsController(el),
+      handler = this.#onMediaEvent.bind(this);
+
+    for (const eventType of MEDIA_EVENTS!) {
+      // @ts-expect-error - player events on html element
+      events.add(eventType, handler);
+    }
   }
 
   #onMediaEvent(event: Event) {

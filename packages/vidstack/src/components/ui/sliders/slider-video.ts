@@ -1,5 +1,5 @@
 import { Component, effect, prop, State, useState, type StateContext } from 'maverick.js';
-import { isNull, listenEvent, type DOMEvent } from 'maverick.js/std';
+import { EventsController, isNull, listenEvent, type DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaCrossOrigin } from '../../../core/api/types';
@@ -69,8 +69,10 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
     if (!video) return;
 
     if (video.readyState >= 2) this.#onCanPlay();
-    listenEvent(video, 'canplay', this.#onCanPlay.bind(this));
-    listenEvent(video, 'error', this.#onError.bind(this));
+
+    new EventsController(video)
+      .add('canplay', this.#onCanPlay.bind(this))
+      .add('error', this.#onError.bind(this));
   }
 
   #watchSrc() {

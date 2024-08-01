@@ -1,6 +1,6 @@
 import fscreen from 'fscreen';
 import { onDispose, ViewController } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { EventsController, listenEvent } from 'maverick.js/std';
 
 import type { FullscreenEvents } from './events';
 
@@ -28,11 +28,9 @@ export class FullscreenController
   }
 
   protected override onConnect() {
-    // @ts-expect-error
-    listenEvent(fscreen, 'fullscreenchange', this.#onChange.bind(this));
-
-    // @ts-expect-error
-    listenEvent(fscreen, 'fullscreenerror', this.#onError.bind(this));
+    new EventsController(fscreen as unknown as EventTarget)
+      .add('fullscreenchange', this.#onChange.bind(this))
+      .add('fullscreenerror', this.#onError.bind(this));
 
     onDispose(this.#onDisconnect.bind(this));
   }

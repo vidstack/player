@@ -35,9 +35,11 @@ export class NativeAudioTracks {
   constructor(provider: HTMLMediaProvider, ctx: MediaContext) {
     this.#provider = provider;
     this.#ctx = ctx;
+
     this.#nativeTracks.onaddtrack = this.#onAddNativeTrack.bind(this);
     this.#nativeTracks.onremovetrack = this.#onRemoveNativeTrack.bind(this);
     this.#nativeTracks.onchange = this.#onChangeNativeTrack.bind(this);
+
     listenEvent(this.#ctx.audioTracks, 'change', this.#onChangeTrack.bind(this));
   }
 

@@ -1,4 +1,4 @@
-import { createDisposalBin, listenEvent } from 'maverick.js/std';
+import { EventsController } from 'maverick.js/std';
 import type { CaptionsRenderer } from 'media-captions';
 
 import type { TextRenderer } from '../../../core/tracks/text/render/text-renderer';
@@ -8,8 +8,8 @@ export class CaptionsTextRenderer implements TextRenderer {
   readonly priority = 10;
 
   #track: TextTrack | null = null;
-  #disposal = createDisposalBin();
   #renderer: CaptionsRenderer;
+  #events?: EventsController<TextTrack>;
 
   constructor(renderer: CaptionsRenderer) {
     this.#renderer = renderer;
@@ -24,7 +24,8 @@ export class CaptionsTextRenderer implements TextRenderer {
   }
 
   detach(): void {
-    this.#disposal.empty();
+    this.#events?.abort();
+    this.#events = undefined;
     this.#renderer.reset();
     this.#track = null;
   }
@@ -32,25 +33,23 @@ export class CaptionsTextRenderer implements TextRenderer {
   changeTrack(track: TextTrack | null): void {
     if (!track || this.#track === track) return;
 
-    this.#disposal.empty();
+    this.#events?.abort();
+    this.#events = new EventsController(track);
 
     if (track.readyState < 2) {
       this.#renderer.reset();
-      this.#disposal.add(
-        listenEvent(track, 'load', () => this.#changeTrack(track), { once: true }),
-      );
+      this.#events.add('load', () => this.#changeTrack(track), { once: true });
     } else {
       this.#changeTrack(track);
     }
 
-    this.#disposal.add(
-      listenEvent(track, 'add-cue', (event) => {
+    this.#events
+      .add('add-cue', (event) => {
         this.#renderer.addCue(event.detail);
-      }),
-      listenEvent(track, 'remove-cue', (event) => {
+      })
+      .add('remove-cue', (event) => {
         this.#renderer.removeCue(event.detail);
-      }),
-    );
+      });
 
     this.#track = track;
   }

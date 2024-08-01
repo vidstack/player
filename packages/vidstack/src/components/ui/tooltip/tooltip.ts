@@ -1,5 +1,5 @@
 import { Component, effect, provideContext, signal } from 'maverick.js';
-import { listenEvent, setAttribute } from 'maverick.js/std';
+import { EventsController, listenEvent, setAttribute } from 'maverick.js/std';
 
 import { $keyboard, FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
@@ -39,18 +39,17 @@ export class Tooltip extends Component<TooltipProps> {
       content: this.#content,
       showDelay: showDelay,
       listen(trigger, show, hide) {
-        listenEvent(trigger, 'touchstart', (e) => e.preventDefault(), {
-          passive: false,
-        });
-
         effect(() => {
           if ($keyboard()) listenEvent(trigger, 'focus', show);
           listenEvent(trigger, 'blur', hide);
         });
 
-        listenEvent(trigger, 'mouseenter', show);
-        listenEvent(trigger, 'mouseleave', hide);
+        new EventsController(trigger)
+          .add('touchstart', (e) => e.preventDefault(), { passive: false })
+          .add('mouseenter', show)
+          .add('mouseleave', hide);
       },
+
       onChange: this.#onShowingChange.bind(this),
     });
   }

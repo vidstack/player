@@ -1,5 +1,5 @@
 import { effect, signal } from 'maverick.js';
-import { isKeyboardEvent } from 'maverick.js/std';
+import { EventsController, isKeyboardEvent } from 'maverick.js/std';
 
 import { isTouchPinchEvent } from '../utils/dom';
 import { MediaPlayerController } from './api/player-controller';
@@ -96,7 +96,7 @@ export class MediaControls extends MediaPlayerController {
   #init() {
     const { viewType } = this.$state;
 
-    if (!this.#canIdle()) return;
+    if (!this.el || !this.#canIdle()) return;
 
     if (viewType() === 'audio') {
       this.show();
@@ -109,28 +109,32 @@ export class MediaControls extends MediaPlayerController {
     const onPlay = this.#onPlay.bind(this),
       onPause = this.#onPause.bind(this);
 
-    this.listen('can-play', (event) => this.show(0, event));
-    this.listen('play', onPlay);
-
-    this.listen('pause', onPause);
-    this.listen('auto-play-fail', onPause);
+    new EventsController(this.el as unknown as MediaPlayerController)
+      .add('can-play', (event) => this.show(0, event))
+      .add('play', onPlay)
+      .add('pause', onPause)
+      .add('auto-play-fail', onPause);
   }
 
   #watchMouse() {
+    if (!this.el) return;
+
     const { started, pointer, paused } = this.$state;
     if (!started() || pointer() !== 'fine') return;
 
-    const shouldHideOnMouseLeave = this.hideOnMouseLeave;
+    const events = new EventsController(this.el),
+      shouldHideOnMouseLeave = this.hideOnMouseLeave;
 
     if (!shouldHideOnMouseLeave || !this.#isMouseOutside()) {
       effect(() => {
-        if (!paused()) this.listen('pointermove', this.#onStopIdle.bind(this));
+        if (!paused()) events.add('pointermove', this.#onStopIdle.bind(this));
       });
     }
 
     if (shouldHideOnMouseLeave) {
-      this.listen('mouseenter', this.#onMouseEnter.bind(this));
-      this.listen('mouseleave', this.#onMouseLeave.bind(this));
+      events
+        .add('mouseenter', this.#onMouseEnter.bind(this))
+        .add('mouseleave', this.#onMouseLeave.bind(this));
     }
   }
 
@@ -141,12 +145,15 @@ export class MediaControls extends MediaPlayerController {
     const onStopIdle = this.#onStopIdle.bind(this);
 
     effect(() => {
+      if (!this.el) return;
+
       const pointer = this.$state.pointer(),
         isTouch = pointer === 'coarse',
-        events = [isTouch ? 'touchend' : 'pointerup', 'keydown'] as const;
+        events = new EventsController(this.el),
+        eventTypes = [isTouch ? 'touchend' : 'pointerup', 'keydown'] as const;
 
-      for (const eventType of events) {
-        this.listen(eventType, onStopIdle, { passive: false });
+      for (const eventType of eventTypes) {
+        events.add(eventType, onStopIdle, { passive: false });
       }
     });
   }
