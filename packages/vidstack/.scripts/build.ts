@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,6 +8,8 @@ import fs from 'fs-extra';
 
 import { copyPkgInfo } from '../../../.scripts/copy-pkg-info.js';
 import { buildDefaultTheme, watchStyles } from './build-styles.js';
+
+const require = createRequire(import.meta.url);
 
 const DIRNAME = path.dirname(fileURLToPath(import.meta.url));
 
@@ -55,23 +58,25 @@ function getBuilds(): BuildOptions[] {
 }
 
 function getNPMBundles(): BuildOptions[] {
+  const plugins = [resolveMediaIcons()];
   return [
     // dev
     {
       ...getNPMConfig({ dev: true }),
       entryPoints: getBrowserInputs(),
-      plugins: [copyAssets()],
+      plugins: [...plugins, copyAssets()],
     },
     // prod
     {
       ...getNPMConfig({ dev: false }),
       entryPoints: getBrowserInputs(),
+      plugins,
     },
     // server
     {
       ...getNPMConfig({ server: true }),
       entryPoints: getBaseInputs(),
-      plugins: [serverElements()],
+      plugins: [...plugins, serverElements()],
     },
   ];
 }
@@ -159,6 +164,7 @@ function getBaseConfig({ dev = false, server = false }: BaseConfigOptions): Buil
       __TEST__: 'false',
       __CDN__: 'false',
     },
+    plugins: [resolveMediaIcons()],
   };
 }
 
@@ -283,6 +289,21 @@ function emptyOutDir(): Plugin {
             force: true,
           });
         }
+      });
+    },
+  };
+}
+
+function resolveMediaIcons(): Plugin {
+  return {
+    name: 'media-icons',
+    setup(build) {
+      build.onResolve({ filter: /media-icons\/dist/ }, ({ path, namespace }) => {
+        return {
+          path: require.resolve(path),
+          namespace,
+          external: false,
+        };
       });
     },
   };

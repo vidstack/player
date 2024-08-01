@@ -42,7 +42,7 @@ async function main() {
 }
 
 function getNPMBundles(): BuildOptions[] {
-  const defaultPlugins = [resolveVidstack(), rscDirectives()],
+  const defaultPlugins = [resolveMediaIcons(), resolveVidstack(), rscDirectives()],
     browserPlugins = [virtualEnv(), ...defaultPlugins];
   return [
     // dev
@@ -155,6 +155,21 @@ async function copyTailwindPlugin() {
     pluginDTSFile = path.resolve(VIDSTACK_PKG_DIR, 'npm/tailwind.d.cts');
   await fs.copyFile(pluginFile, path.resolve(DIST_NPM_DIR, 'tailwind.cjs'));
   await fs.copyFile(pluginDTSFile, path.resolve(DIST_NPM_DIR, 'tailwind.d.cts'));
+}
+
+function resolveMediaIcons(): Plugin {
+  return {
+    name: 'media-icons',
+    setup(build) {
+      build.onResolve({ filter: /media-icons\/dist/ }, ({ path, namespace }) => {
+        return {
+          path: require.resolve(path),
+          namespace,
+          external: false,
+        };
+      });
+    },
+  };
 }
 
 function resolveVidstack(): Plugin {
