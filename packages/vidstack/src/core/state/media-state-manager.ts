@@ -82,6 +82,7 @@ export class MediaStateManager extends MediaPlayerController {
 
   protected override onDestroy(): void {
     const { audioTracks, qualities, textTracks } = this.#media;
+
     audioTracks[ListSymbol.reset]();
     qualities[ListSymbol.reset]();
     textTracks[ListSymbol.reset]();
@@ -91,8 +92,11 @@ export class MediaStateManager extends MediaPlayerController {
 
   handle(event: Event) {
     if (!this.scope) return;
+
     const type = event.type as keyof ME.MediaEvents;
+
     untrack(() => this[event.type]?.(event));
+
     if (!__SERVER__) {
       if (TRACKED_EVENT.has(type)) this.#trackedEvents.set(type, event as ME.MediaEvent);
       this.dispatch(event);

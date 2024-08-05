@@ -1,5 +1,5 @@
 import { effect, signal } from 'maverick.js';
-import { EventsController, isKeyboardEvent } from 'maverick.js/std';
+import { DOMEvent, EventsController, isKeyboardEvent } from 'maverick.js/std';
 
 import { isTouchPinchEvent } from '../utils/dom';
 import { MediaPlayerController } from './api/player-controller';
@@ -107,12 +107,14 @@ export class MediaControls extends MediaPlayerController {
     effect(this.#watchPaused.bind(this));
 
     const onPlay = this.#onPlay.bind(this),
-      onPause = this.#onPause.bind(this);
+      onPause = this.#onPause.bind(this),
+      onEnd = this.#onEnd.bind(this);
 
     new EventsController(this.el as unknown as MediaPlayerController)
       .add('can-play', (event) => this.show(0, event))
       .add('play', onPlay)
       .add('pause', onPause)
+      .add('end', onEnd)
       .add('auto-play-fail', onPause);
   }
 
@@ -158,13 +160,20 @@ export class MediaControls extends MediaPlayerController {
     });
   }
 
-  #onPlay(event: Event) {
+  #onPlay(event: DOMEvent) {
+    // Looping.
+    if (event.triggers.hasType('ended')) return;
     this.show(0, event);
     this.hide(undefined, event);
   }
 
-  #onPause(event: Event) {
+  #onPause(event: DOMEvent) {
     this.show(0, event);
+  }
+
+  #onEnd(event: DOMEvent) {
+    const { loop } = this.$state;
+    if (loop()) this.hide(0, event);
   }
 
   #onMouseEnter(event: Event) {
