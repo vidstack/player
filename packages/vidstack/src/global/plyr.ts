@@ -270,6 +270,7 @@ export class Plyr implements PlyrProps, PlyrMethods {
       iconPrefix = 'plyr',
       keyboard = { focused: true, global: false },
       i18n = null,
+      tracks,
       ...props
     } = config;
 
@@ -399,6 +400,10 @@ export class Plyr implements PlyrProps, PlyrMethods {
       } else if (prop in this.layout) {
         this.layout[prop] = value;
       }
+    }
+
+    if (tracks) {
+      for (const track of tracks) this.player.textTracks.add(track);
     }
 
     this.player.append(this.provider, this.layout);
@@ -668,6 +673,10 @@ export interface PlyrConfig
    * @defaultValue  null
    */
   i18n: PlyrI18nConfig | null;
+  /**
+   * Text tracks to be included on initialization.
+   */
+  tracks?: TextTrackInit[];
 }
 
 export interface PlyrKeyboardConfig {
