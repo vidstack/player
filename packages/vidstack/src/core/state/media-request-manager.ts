@@ -766,10 +766,13 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this.#request.queue.delete(key);
 
     const clippedTime = seekTime + clipStartTime(),
+      isStart = Math.floor(seekTime) === Math.floor(seekableStart()),
       isEnd = Math.floor(clippedTime) === Math.floor(seekableEnd()),
-      boundTime = isEnd
-        ? seekableEnd()
-        : Math.min(Math.max(seekableStart() + 0.1, clippedTime), seekableEnd() - 0.1);
+      boundTime = isStart
+        ? seekableStart()
+        : isEnd
+          ? seekableEnd()
+          : Math.min(Math.max(seekableStart() + 0.1, clippedTime), seekableEnd() - 0.1);
 
     if (!Number.isFinite(boundTime) || !canSeek()) return;
 

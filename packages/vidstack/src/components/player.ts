@@ -530,10 +530,13 @@ export class MediaPlayer
         if (!this.#provider) return;
 
         const clippedTime = time + clipStartTime(),
+          isStart = Math.floor(time) === Math.floor(seekableStart()),
           isEnd = Math.floor(clippedTime) === Math.floor(seekableEnd()),
-          boundTime = isEnd
-            ? seekableEnd()
-            : Math.min(Math.max(seekableStart() + 0.1, clippedTime), seekableEnd() - 0.1);
+          boundTime = isStart
+            ? seekableStart()
+            : isEnd
+              ? seekableEnd()
+              : Math.min(Math.max(seekableStart() + 0.1, clippedTime), seekableEnd() - 0.1);
 
         if (Number.isFinite(boundTime)) {
           this.#provider.setCurrentTime(boundTime);
