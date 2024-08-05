@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [1.12.0-next](https://github.com/vidstack/player/releases/tag/v1.12.0-next) (2024-08-05)
 
 ### 🏎️ Performance
 
@@ -20,11 +20,15 @@ All notable changes to this project will be documented in this file.
 - audio mime type `audio/mp3` ([73253ce](https://github.com/vidstack/player/commit/73253cee26032ce1b33185f632684947aee6eaee))
 - volume setter prop not updating media state ([cefeafc](https://github.com/vidstack/player/commit/cefeafcd2d02a28a0a15b1e2018cb0621cb3ee4f))
 - clip start on youtube video hides poster ([b1cb41e](https://github.com/vidstack/player/commit/b1cb41ed4273aea0a391485552d9050f9fe4cc44))
+- do not show controls on end when looping ([5c9309d](https://github.com/vidstack/player/commit/5c9309de441830c662303401ffbec9d7a6a2b4da))
+- do not bound seeking to start ([a00a54c](https://github.com/vidstack/player/commit/a00a54cb3bfaa4226cb051e23d2e8cc16f22ca14))
+- allow tracks to be passed directly to plyr constructor ([0f26dfa](https://github.com/vidstack/player/commit/0f26dfa4487d5f055119912ad49753e2ee89a16a))
 
 #### Player (React)
 
 - server render media sources ([1efe43d](https://github.com/vidstack/player/commit/1efe43dae97b5de30b54f0d36d1e3a08fa2d95dc))
 - support nextjs image in poster component ([6847417](https://github.com/vidstack/player/commit/6847417a25c50f135541867a64115e0e0cc2ea1e))
+- empty string error on thumbnail image ([4fe90f3](https://github.com/vidstack/player/commit/4fe90f35cbd70c08689f859098b5ec9bbf2bd388))
 
 ## [1.11.30-next](https://github.com/vidstack/player/releases/tag/v1.11.30-next) (2024-07-20)
 
