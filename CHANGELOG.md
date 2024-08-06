@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.1-next](https://github.com/vidstack/player/releases/tag/v1.12.1-next) (2024-08-06)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- inject cjs shims into plugins bundle ([472c030](https://github.com/vidstack/player/commit/472c03021e3b7474f2826b9803a2ed37c8cdabef))
+- mark side effect chunks created by esbuild ([fd271de](https://github.com/vidstack/player/commit/fd271deb05cb4d603e514f85b2b28113c2702f4c))
+
 ## [1.12.0-next](https://github.com/vidstack/player/releases/tag/v1.12.0-next) (2024-08-05)
 
 ### 🏎️ Performance
