@@ -70,7 +70,7 @@ function getNPMBundles(): BuildOptions[] {
     {
       ...getNPMConfig({ dev: false }),
       entryPoints: getBrowserInputs(),
-      plugins,
+      plugins: [...plugins, sideEffects()],
     },
     // server
     {
@@ -319,6 +319,50 @@ function copyAssets(): Plugin {
         await buildDefaultTheme();
         await fs.copy('styles/player', 'dist-npm/player/styles');
         await fs.copy('npm', 'dist-npm');
+      });
+    },
+  };
+}
+
+function sideEffects(): Plugin {
+  return {
+    name: 'side-effects',
+    async setup(build) {
+      build.onEnd(async () => {
+        const { outdir } = build.initialOptions;
+        if (!outdir) return;
+
+        const dir = outdir.replace(/^.*?\//, ''),
+          files = await fs.readdir(`${outdir}/define`),
+          sideEffects = new Set<string>();
+
+        await Promise.all(
+          files.map(async (file) => {
+            const filePath = `${outdir}/define/${file}`,
+              isDirectory = (await fs.stat(filePath)).isDirectory();
+
+            if (isDirectory) return;
+
+            const code = await fs.readFile(filePath, 'utf-8');
+
+            // If there is a side effect chunk created by esbuild, it'll generally be the first import.
+            const end = code.indexOf(';'),
+              chunk = code.slice('import"../chunks/'.length, end - 1);
+
+            if (chunk.startsWith('vidstack') && chunk.endsWith('.js')) {
+              sideEffects.add(`./${dir}/chunks/${chunk}`);
+            }
+          }),
+        );
+
+        const pkgPath = 'dist-npm/package.json',
+          pkg = JSON.parse(await fs.readFile(pkgPath, 'utf-8'));
+
+        for (const chunk of sideEffects) {
+          pkg.sideEffects.push(chunk);
+        }
+
+        await fs.writeFile(pkgPath, JSON.stringify(pkg, null, 2), 'utf-8');
       });
     },
   };
