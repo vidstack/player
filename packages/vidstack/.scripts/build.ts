@@ -87,6 +87,7 @@ function getPluginsBundles(): BuildOptions[] {
       ...getBaseConfig({ dev: false, server: true }),
       entryPoints: ['src/plugins.ts'],
       outfile: 'dist-npm/plugins.js',
+      inject: ['.scripts/cjs-shims.ts'],
       external: PLUGINS_EXTERNAL_PACKAGES,
     },
   ];
