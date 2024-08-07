@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.3-next](https://github.com/vidstack/player/releases/tag/v1.12.3-next) (2024-08-07)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- remove decorators ([1acaec2](https://github.com/vidstack/player/commit/1acaec218c4bbb5e66850a6a3395bb71b33693a1))
+
 ## [1.12.2-next](https://github.com/vidstack/player/releases/tag/v1.12.2-next) (2024-08-07)
 
 ### 🐛 Bug Fixes
