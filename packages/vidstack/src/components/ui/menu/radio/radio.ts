@@ -4,7 +4,6 @@ import {
   hasProvidedContext,
   onDispose,
   peek,
-  prop,
   scoped,
   signal,
   useContext,
@@ -15,6 +14,7 @@ import type { DOMEvent } from 'maverick.js/std';
 import { FocusVisibleController } from '../../../../foundation/observers/focus-visible';
 import { $ariaBool } from '../../../../utils/aria';
 import { onPress, setAttributeIfEmpty } from '../../../../utils/dom';
+import { declare_props } from '../../../../utils/typed-decorators';
 import { menuContext } from '../menu-context';
 import { radioControllerContext, type RadioController } from './radio-controller';
 
@@ -43,7 +43,6 @@ export class Radio extends Component<RadioProps, {}, RadioEvents> {
   /**
    * Whether this radio is currently checked.
    */
-  @prop
   get checked(): boolean {
     return this.#checked();
   }
@@ -149,3 +148,5 @@ export interface RadioOption {
   label: string | ReadSignal<string>;
   value: string;
 }
+
+declare_props(Radio, ['checked']);

@@ -1,7 +1,8 @@
-import { Component, effect, hasProvidedContext, method, prop, useContext } from 'maverick.js';
+import { Component, effect, hasProvidedContext, useContext } from 'maverick.js';
 import type { DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
+import { declare_methods, declare_props } from '../../../../utils/typed-decorators';
 import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
@@ -27,12 +28,10 @@ export class AudioGainRadioGroup extends Component<
   #menu?: MenuContext;
   #controller: RadioGroupController;
 
-  @prop
   get value() {
     return this.#controller.value;
   }
 
-  @prop
   get disabled() {
     const { gains } = this.$props,
       { canSetAudioGain } = this.#media.$state;
@@ -58,7 +57,6 @@ export class AudioGainRadioGroup extends Component<
     effect(this.#watchControllerDisabled.bind(this));
   }
 
-  @method
   getOptions(): RadioOption[] {
     const { gains, normalLabel } = this.$props;
     return gains().map((gain) => ({
@@ -114,3 +112,6 @@ export interface AudioGainRadioGroupEvents {
 export interface AudioGainRadioGroupChangeEvent extends DOMEvent<number> {
   target: AudioGainRadioGroup;
 }
+
+declare_props(AudioGainRadioGroup, ['value', 'disabled']);
+declare_methods(AudioGainRadioGroup, ['getOptions']);

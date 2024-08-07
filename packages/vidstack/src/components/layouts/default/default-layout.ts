@@ -1,9 +1,10 @@
-import { Component, computed, prop, provideContext, signal } from 'maverick.js';
+import { Component, computed, provideContext, signal } from 'maverick.js';
 import { isBoolean } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaPlayerQuery } from '../../../core/api/player-state';
 import { watchColorScheme } from '../../../utils/dom';
+import { declare_props } from '../../../utils/typed-decorators';
 import { defaultLayoutContext } from './context';
 import { defaultLayoutProps, type DefaultLayoutProps } from './props';
 
@@ -22,12 +23,10 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     return this.#matches(when);
   });
 
-  @prop
   get isMatch() {
     return this.#when();
   }
 
-  @prop
   get isSmallLayout() {
     return this.#smallWhen();
   }
@@ -65,3 +64,5 @@ export class DefaultLayout extends Component<DefaultLayoutProps> {
     );
   }
 }
+
+declare_props(DefaultLayout, ['isMatch', 'isSmallLayout']);

@@ -1,7 +1,6 @@
 import {
   Component,
   computed,
-  method,
   useContext,
   useState,
   type ReadSignal,
@@ -10,6 +9,7 @@ import {
 
 import { round } from '../../../utils/number';
 import { formatTime } from '../../../utils/time';
+import { declare_methods } from '../../../utils/typed-decorators';
 import { Slider } from '../sliders/slider/slider';
 import type { SliderValueFormat } from './slider/format';
 import { sliderValueFormatContext } from './slider/format';
@@ -45,7 +45,6 @@ export class SliderValue extends Component<SliderValueProps> {
   /**
    * Returns the current value formatted as text based on prop settings.
    */
-  @method
   getValueText() {
     const {
         type,
@@ -77,6 +76,8 @@ export class SliderValue extends Component<SliderValueProps> {
     }
   }
 }
+
+declare_methods(SliderValue, ['getValueText']);
 
 export interface SliderValueProps {
   /**

@@ -1,6 +1,7 @@
-import { Component, effect, prop } from 'maverick.js';
+import { Component, effect } from 'maverick.js';
 import type { DOMEvent } from 'maverick.js/std';
 
+import { declare_props } from '../../../../utils/typed-decorators';
 import { RadioGroupController } from './radio-group-controller';
 
 /**
@@ -19,7 +20,6 @@ export class RadioGroup extends Component<RadioGroupProps, {}, RadioGroupEvents>
   /**
    * A list of radio values that belong this group.
    */
-  @prop
   get values(): string[] {
     return this.#controller.values;
   }
@@ -27,7 +27,6 @@ export class RadioGroup extends Component<RadioGroupProps, {}, RadioGroupEvents>
   /**
    * The radio value that is checked in this group.
    */
-  @prop
   get value() {
     return this.#controller.value;
   }
@@ -76,3 +75,5 @@ export interface RadioGroupEvents {
 export interface RadioGroupChangeEvent extends DOMEvent<string> {
   target: RadioGroup;
 }
+
+declare_props(RadioGroup, ['values', 'value']);

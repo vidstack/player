@@ -1,14 +1,5 @@
-import {
-  Component,
-  effect,
-  hasProvidedContext,
-  method,
-  peek,
-  prop,
-  signal,
-  useContext,
-} from 'maverick.js';
-import { DOMEvent, EventsController, isNumber, listenEvent, setStyle } from 'maverick.js/std';
+import { Component, effect, hasProvidedContext, peek, signal, useContext } from 'maverick.js';
+import { DOMEvent, EventsController, isNumber, setStyle } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
@@ -17,6 +8,7 @@ import { isCueActive, watchActiveTextTrack } from '../../../../core/tracks/text/
 import { requestScopedAnimationFrame } from '../../../../utils/dom';
 import { round } from '../../../../utils/number';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
+import { declare_methods, declare_props } from '../../../../utils/typed-decorators';
 import type { ThumbnailSrc } from '../../thumbnails/thumbnail-loader';
 import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
@@ -44,12 +36,10 @@ export class ChaptersRadioGroup extends Component<
   #track = signal<TextTrack | null>(null);
   #cues = signal<readonly VTTCue[]>([]);
 
-  @prop
   get value() {
     return this.#controller.value;
   }
 
-  @prop
   get disabled() {
     return !this.#cues()?.length;
   }
@@ -79,7 +69,6 @@ export class ChaptersRadioGroup extends Component<
     });
   }
 
-  @method
   getOptions(): ChaptersRadioOption[] {
     const { clipStartTime, clipEndTime } = this.#media.$state,
       startTime = clipStartTime(),
@@ -181,6 +170,9 @@ export class ChaptersRadioGroup extends Component<
     }
   }
 }
+
+declare_props(ChaptersRadioGroup, ['value', 'disabled']);
+declare_methods(ChaptersRadioGroup, ['getOptions']);
 
 export interface ChapterRadioGroupProps {
   /**

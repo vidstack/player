@@ -1,8 +1,9 @@
-import { Component, effect, hasProvidedContext, method, prop, useContext } from 'maverick.js';
+import { Component, effect, hasProvidedContext, useContext } from 'maverick.js';
 import type { DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { AudioTrack } from '../../../../core/tracks/audio-tracks';
+import { declare_methods, declare_props } from '../../../../utils/typed-decorators';
 import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
@@ -21,12 +22,10 @@ export class AudioRadioGroup extends Component<AudioRadioGroupProps, {}, AudioRa
   #media!: MediaContext;
   #controller: RadioGroupController;
 
-  @prop
   get value() {
     return this.#controller.value;
   }
 
-  @prop
   get disabled() {
     const { audioTracks } = this.#media.$state;
     return audioTracks().length <= 1;
@@ -51,7 +50,6 @@ export class AudioRadioGroup extends Component<AudioRadioGroupProps, {}, AudioRa
     effect(this.#watchHintText.bind(this));
   }
 
-  @method
   getOptions(): AudioRadioOption[] {
     const { audioTracks } = this.#media.$state;
     return audioTracks().map((track) => ({
@@ -97,6 +95,9 @@ export class AudioRadioGroup extends Component<AudioRadioGroupProps, {}, AudioRa
     }
   }
 }
+
+declare_props(AudioRadioGroup, ['value', 'disabled']);
+declare_methods(AudioRadioGroup, ['getOptions']);
 
 export interface AudioRadioGroupProps {
   /** The text to display when the are no audio tracks. */

@@ -1,8 +1,9 @@
-import { Component, effect, hasProvidedContext, method, prop, useContext } from 'maverick.js';
+import { Component, effect, hasProvidedContext, useContext } from 'maverick.js';
 import type { DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import { isTrackCaptionKind, TextTrack } from '../../../../core/tracks/text/text-track';
+import { declare_methods, declare_props } from '../../../../utils/typed-decorators';
 import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
@@ -25,12 +26,10 @@ export class CaptionsRadioGroup extends Component<
   #menu?: MenuContext;
   #controller: RadioGroupController;
 
-  @prop
   get value() {
     return this.#controller.value;
   }
 
-  @prop
   get disabled() {
     const { hasCaptions } = this.#media.$state;
     return !hasCaptions();
@@ -56,7 +55,6 @@ export class CaptionsRadioGroup extends Component<
     effect(this.#watchHintText.bind(this));
   }
 
-  @method
   getOptions(): CaptionsRadioOption[] {
     const { offLabel } = this.$props,
       { textTracks } = this.#media.$state;
@@ -128,6 +126,9 @@ export class CaptionsRadioGroup extends Component<
     return track.id + ':' + track.kind + '-' + track.label.toLowerCase();
   }
 }
+
+declare_props(CaptionsRadioGroup, ['value', 'disabled']);
+declare_methods(CaptionsRadioGroup, ['getOptions']);
 
 export interface CaptionsRadioGroupProps {
   /** The text to display when the captions are turned off. */

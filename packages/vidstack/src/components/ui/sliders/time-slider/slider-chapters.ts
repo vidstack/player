@@ -4,10 +4,8 @@ import {
   computed,
   createScope,
   effect,
-  method,
   onDispose,
   peek,
-  prop,
   scoped,
   signal,
   useState,
@@ -26,6 +24,7 @@ import { useMediaContext, type MediaContext } from '../../../../core/api/media-c
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { watchActiveTextTrack } from '../../../../core/tracks/text/utils';
 import { round } from '../../../../utils/number';
+import { declare_methods, declare_props } from '../../../../utils/typed-decorators';
 import type { SliderState } from '../slider/api/state';
 import { TimeSlider } from './time-slider';
 
@@ -54,17 +53,14 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   #activePointerIndex = signal(-1);
   #bufferedIndex = 0;
 
-  @prop
   get cues() {
     return this.#$cues();
   }
 
-  @prop
   get activeCue(): VTTCue | null {
     return this.#$cues()[this.#activeIndex()] || null;
   }
 
-  @prop
   get activePointerCue(): VTTCue | null {
     return this.#$cues()[this.#activePointerIndex()] || null;
   }
@@ -87,7 +83,6 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     this.#setTrack(null);
   }
 
-  @method
   setRefs(refs: HTMLElement[]) {
     this.#refs = refs;
     this.#updateScope?.dispose();
@@ -422,6 +417,9 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     return slider ? slider.querySelector<HTMLElement>('[data-part="chapter-title"]') : null;
   }
 }
+
+declare_props(SliderChapters, ['cues', 'activeCue', 'activePointerCue']);
+declare_methods(SliderChapters, ['setRefs']);
 
 export interface SliderChaptersProps {
   /**
