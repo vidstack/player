@@ -24,7 +24,7 @@ export async function buildDefaultTheme() {
   await fs.writeFile(DEFAULT_THEME_FILE, styles);
 }
 
-export function watchStyles(onChange?: () => void) {
+export function watchStyles(onChange) {
   chokidar.watch(STYLES_DIR).on('all', async (_, path) => {
     if (path.endsWith('theme.css')) return;
     await buildDefaultTheme();

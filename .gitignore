@@ -2,6 +2,7 @@ dist/
 dist-*/
 
 .tsbuildinfo
+tsconfig.tsbuildinfo
 tsconfig.build.tsbuildinfo
 tsup.config.bundled_*
 vite.config.js.timestamp-*
