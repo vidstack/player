@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.2-next](https://github.com/vidstack/player/releases/tag/v1.12.2-next) (2024-08-07)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- media session incorrectly seeks backward ([c7cf7c8](https://github.com/vidstack/player/commit/c7cf7c8c3e094f9766def326c4b2711e2b62f63e))
+- migrate back to rollup ([5b757bf](https://github.com/vidstack/player/commit/5b757bfcb5e552cad59fca42aed4a6ab80cf601c))
+
 ## [1.12.1-next](https://github.com/vidstack/player/releases/tag/v1.12.1-next) (2024-08-06)
 
 ### 🐛 Bug Fixes
