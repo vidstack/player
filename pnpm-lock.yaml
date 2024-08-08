@@ -98,6 +98,9 @@ importers:
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
+      magic-string:
+        specifier: ^0.30.11
+        version: 0.30.11
       maverick.js:
         specifier: 0.43.2
         version: 0.43.2
@@ -207,6 +210,9 @@ importers:
       just-throttle:
         specifier: ^4.2.0
         version: 4.2.0
+      magic-string:
+        specifier: ^0.30.11
+        version: 0.30.11
       maverick.js:
         specifier: 0.43.2
         version: 0.43.2

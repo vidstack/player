@@ -18,7 +18,7 @@
   },
   "scripts": {
     "analyze": "maverick analyze \"src/**/*.ts\" -p tsconfig.build.json",
-    "build": "rollup -c",
+    "build": "rollup --config rollup.config.ts --configPlugin ./build/rollup-ts.js",
     "build:css": "pnpm run build --config-css",
     "build:cdn": "rimraf dist-cdn && pnpm run build --config-cdn",
     "build:plugins": "pnpm run build --config-plugins",
@@ -62,6 +62,7 @@
     "jsdom": "^21.1.2",
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
+    "magic-string": "^0.30.11",
     "maverick.js": "0.43.2",
     "media-icons": "^1.1.5",
     "postcss": "^8.4.41",

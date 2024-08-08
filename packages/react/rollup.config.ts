@@ -2,13 +2,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import { transform as esbuild } from 'esbuild';
 import fs from 'fs-extra';
-import { defineConfig } from 'rollup';
+import { defineConfig, type Plugin, type RollupOptions } from 'rollup';
 import dts from 'rollup-plugin-dts';
 
 import { copyPkgInfo } from '../../.scripts/copy-pkg-info.js';
-import { buildDefaultTheme, watchStyles } from '../vidstack/.scripts/build-styles.js';
+import { buildDefaultTheme, watchStyles } from '../vidstack/build/build-styles.js';
+import { decorators } from '../vidstack/build/rollup-decorators';
+import typescript from '../vidstack/build/rollup-ts';
 
 const MODE_WATCH = process.argv.includes('-w'),
   MODE_TYPES = process.argv.includes('--config-types');
@@ -43,10 +44,7 @@ export default defineConfig(
   MODE_WATCH ? [...TYPES_BUNDLES, ...NPM_BUNDLES] : MODE_TYPES ? TYPES_BUNDLES : NPM_BUNDLES,
 );
 
-/**
- * @returns {import('rollup').RollupOptions[]}
- * */
-function defineTypesBundle() {
+function defineTypesBundle(): RollupOptions[] {
   return [
     {
       input: {
@@ -78,8 +76,7 @@ function defineTypesBundle() {
   ];
 }
 
-/** @returns {import('rollup').Plugin} */
-function resolveVidstackTypes() {
+function resolveVidstackTypes(): Plugin {
   return {
     name: 'resolve-vidstack-types',
     resolveId(id) {
@@ -94,8 +91,7 @@ function resolveVidstackTypes() {
   };
 }
 
-/** @returns {import('rollup').Plugin} */
-function resolveGlobalTypes() {
+function resolveGlobalTypes(): Plugin {
   return {
     name: 'globals',
     generateBundle(_, bundle) {
@@ -118,17 +114,11 @@ function resolveGlobalTypes() {
   };
 }
 
-/**
- * @typedef {{
- * dev?: boolean;
- * }} BundleOptions
- */
+interface NPMBundleOptions {
+  dev?: boolean;
+}
 
-/**
- * @param {BundleOptions}
- * @returns {import('rollup').RollupOptions}
- */
-function defineNPMBundle({ dev }) {
+function defineNPMBundle({ dev }: NPMBundleOptions): RollupOptions {
   const alias = dev ? 'dev' : 'prod';
 
   let input = {
@@ -169,60 +159,19 @@ function defineNPMBundle({ dev }) {
           : ['production', 'default'],
       }),
       typescript({
+        loader: 'tsx',
         define: {
           __DEV__: dev ? 'true' : 'false',
         },
       }),
+      decorators(),
       rscDirectives(),
       !dev && copyAssets(),
     ],
   };
 }
 
-/**
- * @param {import('esbuild').TransformOptions} options
- * @returns {import('rollup').Plugin}
- */
-function typescript(options) {
-  const include = /\.[jt]sx?$/;
-  return {
-    name: 'typescript',
-    resolveId(id, importer) {
-      if (importer && id[0] === '.') {
-        const resolvedPath = path.resolve(importer ? path.dirname(importer) : process.cwd(), id),
-          filePath = resolveFile(resolvedPath);
-
-        if (filePath) {
-          return filePath;
-        }
-
-        if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isDirectory()) {
-          return resolveFile(resolvedPath, true);
-        }
-      }
-    },
-    transform(code, id) {
-      if (!include.test(id)) return;
-      return esbuild(code, {
-        target: 'esnext',
-        loader: 'tsx',
-        sourcemap: true,
-        ...options,
-      });
-    },
-  };
-}
-
-const tsFileExtensions = ['tsx', 'ts'];
-function resolveFile(file, index = false) {
-  for (const ext of tsFileExtensions) {
-    const filePath = index ? path.join(file, `index.${ext}`) : `${file}.${ext}`;
-    if (fs.existsSync(filePath)) return filePath;
-  }
-}
-
-/** @returns {import('rollup').Plugin} */
-function resolveVidstack() {
+function resolveVidstack(): Plugin {
   return {
     name: 'vidstack-link',
     resolveId(id) {
@@ -249,8 +198,7 @@ function resolveVidstack() {
   };
 }
 
-/** @returns {import('rollup').Plugin} */
-function rscDirectives() {
+function rscDirectives(): Plugin {
   return {
     name: 'rsc-directives',
     resolveId(id) {
@@ -277,8 +225,7 @@ function rscDirectives() {
   };
 }
 
-/** @returns {import('rollup').Plugin} */
-function copyAssets() {
+function copyAssets(): Plugin {
   return {
     name: 'copy-assets',
     async buildEnd() {
