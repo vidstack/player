@@ -3,7 +3,9 @@ import {
   computed,
   effect,
   hasProvidedContext,
+  method,
   peek,
+  prop,
   useContext,
   type ReadSignal,
 } from 'maverick.js';
@@ -13,7 +15,6 @@ import { useMediaContext, type MediaContext } from '../../../../core/api/media-c
 import { sortVideoQualities } from '../../../../core/quality/utils';
 import type { VideoQuality } from '../../../../core/quality/video-quality';
 import { round } from '../../../../utils/number';
-import { declare_methods, declare_props } from '../../../../utils/typed-decorators';
 import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
@@ -38,10 +39,12 @@ export class QualityRadioGroup extends Component<
   #menu?: MenuContext;
   #controller: RadioGroupController;
 
+  @prop
   get value() {
     return this.#controller.value;
   }
 
+  @prop
   get disabled() {
     const { canSetQuality, qualities } = this.#media.$state;
     return !canSetQuality() || qualities().length <= 1;
@@ -72,6 +75,7 @@ export class QualityRadioGroup extends Component<
     effect(this.#watchHintText.bind(this));
   }
 
+  @method
   getOptions(): QualityRadioOption[] {
     const { autoLabel, hideBitrate } = this.$props;
     return [
@@ -142,9 +146,6 @@ export class QualityRadioGroup extends Component<
     return quality.height + '_' + quality.bitrate;
   }
 }
-
-declare_props(QualityRadioGroup, ['value', 'disabled']);
-declare_methods(QualityRadioGroup, ['getOptions']);
 
 export interface QualityRadioGroupProps {
   /** The text to display for the auto quality radio option. */

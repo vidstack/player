@@ -1,9 +1,8 @@
-import { Component, effect, onDispose, signal, useContext } from 'maverick.js';
+import { Component, effect, onDispose, prop, signal, useContext } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
-import { declare_props } from '../../../utils/typed-decorators';
 import { menuContext, type MenuContext } from './menu-context';
 
 /**
@@ -25,6 +24,7 @@ export class MenuButton extends Component<MenuButtonProps, {}, MenuButtonEvents>
   #menu!: MenuContext;
   #hintEl = signal<HTMLElement | null>(null);
 
+  @prop
   get expanded() {
     return this.#menu?.expanded() ?? false;
   }
@@ -93,5 +93,3 @@ export interface MenuButtonEvents {
 export interface MenuButtonSelectEvent extends DOMEvent<void> {
   target: MenuButton;
 }
-
-declare_props(MenuButton, ['expanded']);

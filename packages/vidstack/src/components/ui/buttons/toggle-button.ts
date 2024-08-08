@@ -1,6 +1,5 @@
-import { Component, signal } from 'maverick.js';
+import { Component, prop, signal } from 'maverick.js';
 
-import { declare_props } from '../../../utils/typed-decorators';
 import { ToggleButtonController } from './toggle-button-controller';
 
 export interface ToggleButtonProps {
@@ -36,6 +35,7 @@ export class ToggleButton<
   /**
    * Whether the toggle is currently in a `pressed` state.
    */
+  @prop
   get pressed() {
     return this.#pressed();
   }
@@ -47,5 +47,3 @@ export class ToggleButton<
     });
   }
 }
-
-declare_props(ToggleButton, ['pressed']);
