@@ -1,4 +1,4 @@
-import { Component, onDispose, peek, signal, State, tick } from 'maverick.js';
+import { Component, method, onDispose, peek, signal, State, tick } from 'maverick.js';
 import { animationFrameThrottle, isString, setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
@@ -6,7 +6,6 @@ import { useMediaContext, type MediaContext } from '../../core/api/media-context
 import type { Src } from '../../core/api/src-types';
 import { TextTrack, type TextTrackInit } from '../../core/tracks/text/text-track';
 import type { MediaProviderLoader } from '../../providers/types';
-import { declare_methods } from '../../utils/typed-decorators';
 import { SourceSelection } from './source-select';
 import { Tracks } from './tracks';
 
@@ -75,6 +74,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
   #loadRafId = -1;
 
+  @method
   load(target: HTMLElement | null | undefined) {
     // Hide underlying provider element from screen readers.
     target?.setAttribute('aria-hidden', 'true');
@@ -182,5 +182,3 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
     tick();
   }
 }
-
-declare_methods(MediaProvider, ['load']);

@@ -2,8 +2,10 @@ import {
   Component,
   computed,
   effect,
+  method,
   onDispose,
   peek,
+  prop,
   provideContext,
   signal,
   type WriteSignalRecord,
@@ -59,7 +61,6 @@ import type { AnyMediaProvider, MediaProviderAdapter } from '../providers/types'
 import { setAttributeIfEmpty } from '../utils/dom';
 import { clampNumber } from '../utils/number';
 import { IS_IPHONE } from '../utils/support';
-import { declare_methods, declare_props } from '../utils/typed-decorators';
 
 declare global {
   interface HTMLElementEventMap {
@@ -127,8 +128,10 @@ export class MediaPlayer
   readonly #stateMgr: MediaStateManager;
   readonly #requestMgr: MediaRequestManager;
 
+  @prop
   readonly canPlayQueue = new RequestQueue();
 
+  @prop
   readonly remoteControl: MediaRemoteControl;
 
   get #provider() {
@@ -377,6 +380,7 @@ export class MediaPlayer
   /**
    * The current media provider.
    */
+  @prop
   get provider(): AnyMediaProvider | null {
     return this.#provider;
   }
@@ -384,6 +388,7 @@ export class MediaPlayer
   /**
    * Media controls settings.
    */
+  @prop
   get controls(): MediaControls {
     return this.#requestMgr.controls;
   }
@@ -396,11 +401,13 @@ export class MediaPlayer
    * Controls the screen orientation of the current browser window and dispatches orientation
    * change events on the player.
    */
+  @prop
   readonly orientation: ScreenOrientationController;
 
   /**
    * The title of the current media.
    */
+  @prop
   get title() {
     return peek(this.$state.providedTitle);
   }
@@ -419,6 +426,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/api/video-quality}
    */
+  @prop
   get qualities(): VideoQualityList {
     return this.#media.qualities;
   }
@@ -428,6 +436,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/api/audio-tracks}
    */
+  @prop
   get audioTracks(): AudioTrackList {
     return this.#media.audioTracks;
   }
@@ -437,6 +446,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/api/text-tracks}
    */
+  @prop
   get textTracks(): TextTrackList {
     return this.#media.textTracks;
   }
@@ -445,10 +455,12 @@ export class MediaPlayer
    * Contains text renderers which are responsible for loading, parsing, and rendering text
    * tracks.
    */
+  @prop
   get textRenderers(): TextRenderers {
     return this.#media.textRenderers;
   }
 
+  @prop
   get duration() {
     return this.$state.duration();
   }
@@ -457,6 +469,7 @@ export class MediaPlayer
     this.#props.duration.set(duration);
   }
 
+  @prop
   get paused() {
     return peek(this.$state.paused);
   }
@@ -475,6 +488,7 @@ export class MediaPlayer
     } else this.canPlayQueue.enqueue('paused', () => this.#requestMgr.play());
   }
 
+  @prop
   get muted() {
     return peek(this.$state.muted);
   }
@@ -493,6 +507,7 @@ export class MediaPlayer
     });
   }
 
+  @prop
   get currentTime() {
     return peek(this.$state.currentTime);
   }
@@ -530,6 +545,7 @@ export class MediaPlayer
     });
   }
 
+  @prop
   get volume() {
     return peek(this.$state.volume);
   }
@@ -549,6 +565,7 @@ export class MediaPlayer
     });
   }
 
+  @prop
   get playbackRate() {
     return peek(this.$state.playbackRate);
   }
@@ -615,6 +632,7 @@ export class MediaPlayer
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play}
    */
+  @method
   async play(trigger?: Event) {
     return this.#requestMgr.play(trigger);
   }
@@ -625,6 +643,7 @@ export class MediaPlayer
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause}
    */
+  @method
   async pause(trigger?: Event) {
     return this.#requestMgr.pause(trigger);
   }
@@ -635,6 +654,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/api/fullscreen}
    */
+  @method
   async enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     return this.#requestMgr.enterFullscreen(target, trigger);
   }
@@ -645,6 +665,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/api/fullscreen}
    */
+  @method
   async exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     return this.#requestMgr.exitFullscreen(target, trigger);
   }
@@ -656,6 +677,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/api/picture-in-picture}
    */
+  @method
   enterPictureInPicture(trigger?: Event) {
     return this.#requestMgr.enterPictureInPicture(trigger);
   }
@@ -666,6 +688,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/api/picture-in-picture}
    */
+  @method
   exitPictureInPicture(trigger?: Event) {
     return this.#requestMgr.exitPictureInPicture(trigger);
   }
@@ -676,6 +699,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/api/live}
    */
+  @method
   seekToLiveEdge(trigger?: Event): void {
     this.#requestMgr.seekToLiveEdge(trigger);
   }
@@ -686,6 +710,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
+  @method
   startLoading(trigger?: Event): void {
     this.#media.notify('can-load', undefined, trigger);
   }
@@ -695,6 +720,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/core-concepts/loading#load-strategies}
    */
+  @method
   startLoadingPoster(trigger?: Event) {
     this.#media.notify('can-load-poster', undefined, trigger);
   }
@@ -702,6 +728,7 @@ export class MediaPlayer
   /**
    * Request Apple AirPlay picker to open.
    */
+  @method
   requestAirPlay(trigger?: Event) {
     return this.#requestMgr.requestAirPlay(trigger);
   }
@@ -710,6 +737,7 @@ export class MediaPlayer
    * Request Google Cast device picker to open. The Google Cast framework will be loaded if it
    * hasn't yet.
    */
+  @method
   requestGoogleCast(trigger?: Event) {
     return this.#requestMgr.requestGoogleCast(trigger);
   }
@@ -719,6 +747,7 @@ export class MediaPlayer
    *
    * @see {@link https://vidstack.io/docs/player/api/audio-gain}
    */
+  @method
   setAudioGain(gain: number, trigger?: Event) {
     return this.#requestMgr.setAudioGain(gain, trigger);
   }
@@ -729,37 +758,3 @@ export class MediaPlayer
     this.dispatch('destroy');
   }
 }
-
-declare_props(MediaPlayer, [
-  'canPlayQueue',
-  'remoteControl',
-  'provider',
-  'controls',
-  'orientation',
-  'title',
-  'qualities',
-  'audioTracks',
-  'textTracks',
-  'textRenderers',
-  'duration',
-  'paused',
-  'muted',
-  'currentTime',
-  'volume',
-  'playbackRate',
-]);
-
-declare_methods(MediaPlayer, [
-  'play',
-  'pause',
-  'enterFullscreen',
-  'exitFullscreen',
-  'enterPictureInPicture',
-  'exitPictureInPicture',
-  'seekToLiveEdge',
-  'startLoading',
-  'startLoadingPoster',
-  'requestAirPlay',
-  'requestGoogleCast',
-  'setAudioGain',
-]);

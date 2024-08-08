@@ -2,8 +2,10 @@ import {
   Component,
   effect,
   hasProvidedContext,
+  method,
   onDispose,
   peek,
+  prop,
   provideContext,
   signal,
   tick,
@@ -31,7 +33,6 @@ import {
   onPress,
   setAttributeIfEmpty,
 } from '../../../utils/dom';
-import { declare_methods, declare_props } from '../../../utils/typed-decorators';
 import { Popper } from '../popper/popper';
 import { sliderObserverContext } from '../sliders/slider/slider-context';
 import type { MenuButton } from './menu-button';
@@ -82,6 +83,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   /**
    * The menu trigger element.
    */
+  @prop
   get triggerElement() {
     return this.#trigger();
   }
@@ -89,6 +91,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   /**
    * The menu items element.
    */
+  @prop
   get contentElement() {
     return this.#content();
   }
@@ -96,6 +99,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   /**
    * Whether this menu is the child of another menu that contains it.
    */
+  @prop
   get isSubmenu() {
     return !!this.#parentMenu;
   }
@@ -558,6 +562,7 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
   /**
    * Open this menu. The first menu item will be focused if a `KeyboardEvent` trigger is provided
    */
+  @method
   open(trigger?: Event) {
     if (peek(this.#expanded)) return;
     this.#popper.show(trigger);
@@ -568,15 +573,13 @@ export class Menu extends Component<MenuProps, {}, MenuEvents> {
    * Close this menu. The menu button that controls this menu will be focused if a `KeyboardEvent`
    * trigger is provided
    */
+  @method
   close(trigger?: Event) {
     if (!peek(this.#expanded)) return;
     this.#popper.hide(trigger);
     tick();
   }
 }
-
-declare_props(Menu, ['triggerElement', 'contentElement', 'isSubmenu']);
-declare_methods(Menu, ['open', 'close']);
 
 export interface MenuProps {
   /**

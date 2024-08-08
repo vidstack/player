@@ -1,10 +1,9 @@
-import { Component, effect, State, useState, type StateContext } from 'maverick.js';
-import { EventsController, isNull, type DOMEvent } from 'maverick.js/std';
+import { Component, effect, prop, State, useState, type StateContext } from 'maverick.js';
+import { EventsController, isNull, listenEvent, type DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaCrossOrigin } from '../../../core/api/types';
 import { $ariaBool } from '../../../utils/aria';
-import { declare_props } from '../../../utils/typed-decorators';
 import { Slider } from './slider/slider';
 
 /**
@@ -35,6 +34,7 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
   #media!: MediaContext;
   #slider!: StateContext<typeof Slider.state>;
 
+  @prop
   get video() {
     return this.$state.video();
   }
@@ -139,8 +139,6 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
     }
   }
 }
-
-declare_props(SliderVideo, ['video']);
 
 export interface SliderVideoProps {
   /**

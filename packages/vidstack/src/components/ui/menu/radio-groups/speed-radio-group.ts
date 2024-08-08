@@ -1,8 +1,7 @@
-import { Component, effect, hasProvidedContext, useContext } from 'maverick.js';
+import { Component, effect, hasProvidedContext, method, prop, useContext } from 'maverick.js';
 import type { DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
-import { declare_methods, declare_props } from '../../../../utils/typed-decorators';
 import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';
@@ -24,10 +23,12 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
   #menu?: MenuContext;
   #controller: RadioGroupController;
 
+  @prop
   get value() {
     return this.#controller.value;
   }
 
+  @prop
   get disabled() {
     const { rates } = this.$props,
       { canSetPlaybackRate } = this.#media.$state;
@@ -53,6 +54,7 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
     effect(this.#watchControllerDisabled.bind(this));
   }
 
+  @method
   getOptions(): RadioOption[] {
     const { rates, normalLabel } = this.$props;
     return rates().map((rate) => ({
@@ -88,9 +90,6 @@ export class SpeedRadioGroup extends Component<SpeedRadioGroupProps, {}, SpeedRa
     this.dispatch('change', { detail: rate, trigger });
   }
 }
-
-declare_props(SpeedRadioGroup, ['value', 'disabled']);
-declare_methods(SpeedRadioGroup, ['getOptions']);
 
 export interface SpeedRadioGroupProps {
   /** The playback rate options to be displayed. */
