@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.4-next](https://github.com/vidstack/player/releases/tag/v1.12.4-next) (2024-08-08)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- replace sucrase with esbuild ([3a12e45](https://github.com/vidstack/player/commit/3a12e45a581ca4b0ffa5c5a05f6b525fa9a3782a))
+
 ## [1.12.3-next](https://github.com/vidstack/player/releases/tag/v1.12.3-next) (2024-08-07)
 
 ### 🐛 Bug Fixes
