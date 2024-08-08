@@ -3,13 +3,15 @@ import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import * as lexer from 'es-module-lexer';
-import { transform as esbuild } from 'esbuild';
 import fs from 'fs-extra';
-import { defineConfig } from 'rollup';
+import { defineConfig, type Plugin, type RollupOptions } from 'rollup';
 import dts from 'rollup-plugin-dts';
 
 import { copyPkgInfo } from '../../.scripts/copy-pkg-info.js';
-import { buildDefaultTheme, watchStyles } from './.scripts/build-styles.js';
+import { buildDefaultTheme, watchStyles } from './build/build-styles.js';
+import { decorators } from './build/rollup-decorators';
+import { minify } from './build/rollup-minify';
+import { typescript } from './build/rollup-ts';
 
 const MODE_WATCH = process.argv.includes('-w'),
   MODE_TYPES = process.argv.includes('--config-types'),
@@ -56,8 +58,7 @@ function isLibraryId(id) {
   return id.includes('node_modules');
 }
 
-/** @returns {import('rollup').RollupOptions[]} */
-function getTypesBundles() {
+function getTypesBundles(): RollupOptions[] {
   const input = {
     index: 'types/index.d.ts',
     elements: 'types/elements/index.d.ts',
@@ -101,8 +102,7 @@ function getTypesBundles() {
   ];
 }
 
-/** @returns {import('rollup').Plugin} */
-function resolveGlobalTypes() {
+function resolveGlobalTypes(): Plugin {
   return {
     name: 'globals',
     generateBundle(_, bundle) {
@@ -133,11 +133,11 @@ function getNPMBundles() {
   ];
 }
 
-/**
- * @param {{ type: 'dev' | 'prod' | 'server' }} options
- * @returns {import('rollup').RollupOptions}
- */
-function defineNPMBundle({ type }) {
+interface NPMBundleOptions {
+  type: 'dev' | 'prod' | 'server';
+}
+
+function defineNPMBundle({ type }: NPMBundleOptions): RollupOptions {
   const isProd = type === 'prod',
     isServer = type === 'server',
     input = isServer ? getBaseInputs() : getBrowserInputs();
@@ -176,6 +176,7 @@ function defineNPMBundle({ type }) {
           __TEST__: 'false',
         },
       }),
+      decorators(),
       // Only copy assets once in dev.
       !isProd && !isServer && copyAssets(),
       isServer && transformServerBundle(),
@@ -183,68 +184,10 @@ function defineNPMBundle({ type }) {
   };
 }
 
-/** @returns {import('rollup').Plugin} */
-function minify() {
-  return {
-    name: 'minify',
-    renderChunk(code) {
-      return esbuild(code, {
-        target: 'esnext',
-        format: 'esm',
-        platform: 'browser',
-        minify: true,
-        loader: 'js',
-        legalComments: 'none',
-      });
-    },
-  };
-}
-
-/**
- * @param {import('esbuild').TransformOptions} options
- * @returns {import('rollup').Plugin}
- */
-function typescript(options) {
-  const include = /\.[jt]sx?$/;
-  return {
-    name: 'typescript',
-    resolveId(id, importer) {
-      if (importer && id[0] === '.') {
-        const resolvedPath = path.resolve(importer ? path.dirname(importer) : process.cwd(), id),
-          filePath = resolveFile(resolvedPath);
-
-        if (filePath) {
-          return filePath;
-        }
-
-        if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isDirectory()) {
-          return resolveFile(resolvedPath, true);
-        }
-      }
-    },
-    transform(code, id) {
-      if (!include.test(id)) return;
-      return esbuild(code, {
-        target: 'esnext',
-        loader: 'ts',
-        sourcemap: true,
-        ...options,
-      });
-    },
-  };
-}
-
-function resolveFile(resolved, index = false) {
-  const filePath = index ? path.join(resolved, `index.ts`) : `${resolved}.ts`;
-  return fs.existsSync(filePath) ? filePath : null;
-}
-
 /**
  * Transform element entry points into basically no-ops server-side.
- *
- * @returns {import('rollup').Plugin}
  */
-function transformServerBundle() {
+function transformServerBundle(): Plugin {
   return {
     name: 'server-bundle',
     async transform(code, id) {
@@ -330,21 +273,21 @@ function getCDNBundles() {
   ];
 }
 
-/**
- * @typedef {{
- * dev?: boolean;
- * input: string;
- * dir: string;
- * file: string;
- * legacy?: boolean;
- * }} CDNBundleOptions
- */
+interface CDNBundleOptions {
+  dev?: boolean;
+  input: string;
+  dir: string;
+  file: string;
+  legacy?: boolean;
+}
 
-/**
- * @param {CDNBundleOptions} options
- * @returns {import('rollup').RollupOptions}
- */
-function defineCDNBundle({ dev = false, input, dir, file, legacy = false }) {
+function defineCDNBundle({
+  dev = false,
+  input,
+  dir,
+  file,
+  legacy = false,
+}: CDNBundleOptions): RollupOptions {
   const npmBundle = defineNPMBundle({
     type: dev ? 'dev' : 'prod',
   });
@@ -382,7 +325,7 @@ function defineCDNBundle({ dev = false, input, dir, file, legacy = false }) {
     },
     external: CDN_EXTERNAL_PACKAGES,
     plugins: [
-      .../** @type {import('rollup').Plugin[]} */ (npmBundle.plugins),
+      ...(npmBundle.plugins as Plugin[]),
       !dev && minify(),
       !legacy && rewriteCDNChunks(file),
     ],
@@ -391,11 +334,8 @@ function defineCDNBundle({ dev = false, input, dir, file, legacy = false }) {
 
 /**
  * This plugin rewrites chunk paths so our URL rewrites to jsDelivr work.
- *
- * @param {string} file
- * @returns {import('rollup').Plugin}
  */
-function rewriteCDNChunks(file) {
+function rewriteCDNChunks(file: string): Plugin {
   return {
     name: 'cdn-chunks',
     async generateBundle(_, bundle) {
@@ -461,8 +401,7 @@ function getBrowserInputs() {
   };
 }
 
-/** @returns {import('rollup').RollupOptions[]} */
-function getPluginsBundles() {
+function getPluginsBundles(): RollupOptions[] {
   return [
     {
       input: 'src/plugins.ts',
@@ -488,8 +427,7 @@ function getPluginsBundles() {
   ];
 }
 
-/** @returns {import('rollup').Plugin} */
-function copyAssets() {
+function copyAssets(): Plugin {
   return {
     name: 'copy-assets',
     async buildEnd() {
