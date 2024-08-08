@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.5-next](https://github.com/vidstack/player/releases/tag/v1.12.5-next) (2024-08-08)
+
+### ⏪ Revert
+
+#### Player
+
+- "remove decorators" ([0c0215d](https://github.com/vidstack/player/commit/0c0215d2cf0e384607144e934cbaf9c601af94f2))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- custom decorator parser ([ff64e78](https://github.com/vidstack/player/commit/ff64e789580db9dd0658f434decb969cdfa5c6df))
+
 ## [1.12.4-next](https://github.com/vidstack/player/releases/tag/v1.12.4-next) (2024-08-08)
 
 ### 🐛 Bug Fixes
