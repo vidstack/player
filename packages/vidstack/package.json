@@ -40,7 +40,6 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.10",
-    "@rollup/plugin-sucrase": "^5.0.2",
     "lit-html": "^2.8.0",
     "media-captions": "^1.0.4",
     "unplugin": "^1.12.0"
@@ -50,7 +49,6 @@
     "@open-wc/semantic-dom-diff": "^0.20.1",
     "@open-wc/testing-helpers": "^3.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-replace": "^5.0.7",
     "@types/fs-extra": "^11.0.4",
     "@types/fscreen": "^1.0.4",
     "autoprefixer": "^10.4.20",

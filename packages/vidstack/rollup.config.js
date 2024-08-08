@@ -2,8 +2,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import replace from '@rollup/plugin-replace';
-import sucrase from '@rollup/plugin-sucrase';
 import * as lexer from 'es-module-lexer';
 import { transform as esbuild } from 'esbuild';
 import fs from 'fs-extra';
@@ -169,23 +167,76 @@ function defineNPMBundle({ type }) {
             ? ['production', 'default']
             : ['development', 'production', 'default'],
       }),
-      sucrase({
-        disableESTransforms: true,
-        exclude: ['node_modules/**'],
-        transforms: ['typescript'],
-      }),
-      replace({
-        preventAssignment: true,
-        __DEV__: !isProd && !isServer ? 'true' : 'false',
-        __SERVER__: isServer ? 'true' : 'false',
-        __CDN__: MODE_CDN ? 'true' : 'false',
-        __TEST__: 'false',
+      typescript({
+        platform: isServer ? 'node' : 'browser',
+        define: {
+          __DEV__: !isProd && !isServer ? 'true' : 'false',
+          __SERVER__: isServer ? 'true' : 'false',
+          __CDN__: MODE_CDN ? 'true' : 'false',
+          __TEST__: 'false',
+        },
       }),
       // Only copy assets once in dev.
       !isProd && !isServer && copyAssets(),
       isServer && transformServerBundle(),
     ],
   };
+}
+
+/** @returns {import('rollup').Plugin} */
+function minify() {
+  return {
+    name: 'minify',
+    renderChunk(code) {
+      return esbuild(code, {
+        target: 'esnext',
+        format: 'esm',
+        platform: 'browser',
+        minify: true,
+        loader: 'js',
+        legalComments: 'none',
+      });
+    },
+  };
+}
+
+/**
+ * @param {import('esbuild').TransformOptions} options
+ * @returns {import('rollup').Plugin}
+ */
+function typescript(options) {
+  const include = /\.[jt]sx?$/;
+  return {
+    name: 'typescript',
+    resolveId(id, importer) {
+      if (importer && id[0] === '.') {
+        const resolvedPath = path.resolve(importer ? path.dirname(importer) : process.cwd(), id),
+          filePath = resolveFile(resolvedPath);
+
+        if (filePath) {
+          return filePath;
+        }
+
+        if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isDirectory()) {
+          return resolveFile(resolvedPath, true);
+        }
+      }
+    },
+    transform(code, id) {
+      if (!include.test(id)) return;
+      return esbuild(code, {
+        target: 'esnext',
+        loader: 'ts',
+        sourcemap: true,
+        ...options,
+      });
+    },
+  };
+}
+
+function resolveFile(resolved, index = false) {
+  const filePath = index ? path.join(resolved, `index.ts`) : `${resolved}.ts`;
+  return fs.existsSync(filePath) ? filePath : null;
 }
 
 /**
@@ -332,38 +383,36 @@ function defineCDNBundle({ dev = false, input, dir, file, legacy = false }) {
     external: CDN_EXTERNAL_PACKAGES,
     plugins: [
       .../** @type {import('rollup').Plugin[]} */ (npmBundle.plugins),
-      !dev && {
-        name: 'minify',
-        renderChunk(code) {
-          return esbuild(code, {
-            target: 'esnext',
-            format: 'esm',
-            platform: 'browser',
-            minify: true,
-            loader: 'js',
-          });
-        },
-      },
-      !legacy && {
-        // This plugin rewrites chunk paths so our URL rewrites to jsDelivr work.
-        name: 'cdn-chunks',
-        async generateBundle(_, bundle) {
-          const __dirname = path.dirname(fileURLToPath(import.meta.url)),
-            version = JSON.parse(
-              await fs.readFile(path.join(__dirname, 'package.json'), 'utf-8'),
-            ).version;
-
-          for (const chunk of Object.values(bundle)) {
-            if (chunk.type === 'chunk' && chunk.isEntry && chunk.name === file) {
-              chunk.code = chunk.code.replace(
-                /\"\.\/(chunks|providers)\/(.*?)\"/g,
-                `"https://cdn.jsdelivr.net/npm/@vidstack/cdn@${version}/$1/$2"`,
-              );
-            }
-          }
-        },
-      },
+      !dev && minify(),
+      !legacy && rewriteCDNChunks(file),
     ],
+  };
+}
+
+/**
+ * This plugin rewrites chunk paths so our URL rewrites to jsDelivr work.
+ *
+ * @param {string} file
+ * @returns {import('rollup').Plugin}
+ */
+function rewriteCDNChunks(file) {
+  return {
+    name: 'cdn-chunks',
+    async generateBundle(_, bundle) {
+      const __dirname = path.dirname(fileURLToPath(import.meta.url)),
+        version = JSON.parse(
+          await fs.readFile(path.join(__dirname, 'package.json'), 'utf-8'),
+        ).version;
+
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type === 'chunk' && chunk.isEntry && chunk.name === file) {
+          chunk.code = chunk.code.replace(
+            /\"\.\/(chunks|providers)\/(.*?)\"/g,
+            `"https://cdn.jsdelivr.net/npm/@vidstack/cdn@${version}/$1/$2"`,
+          );
+        }
+      }
+    },
   };
 }
 
@@ -427,15 +476,13 @@ function getPluginsBundles() {
       treeshake: true,
       plugins: [
         nodeResolve(),
-        sucrase({
-          disableESTransforms: true,
-          exclude: ['node_modules/**'],
-          transforms: ['typescript'],
+        typescript({
+          platform: 'node',
+          define: {
+            __DEV__: 'false',
+          },
         }),
-        replace({
-          preventAssignment: true,
-          __DEV__: 'false',
-        }),
+        minify(),
       ],
     },
   ];

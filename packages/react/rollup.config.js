@@ -2,8 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import replace from '@rollup/plugin-replace';
-import sucrase from '@rollup/plugin-sucrase';
+import { transform as esbuild } from 'esbuild';
 import fs from 'fs-extra';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
@@ -169,22 +168,57 @@ function defineNPMBundle({ dev }) {
           ? ['development', 'production', 'default']
           : ['production', 'default'],
       }),
-      sucrase({
-        production: true,
-        disableESTransforms: true,
-        exclude: ['node_modules/**'],
-        transforms: ['typescript', 'jsx'],
-        jsxPragma: 'React.createElement',
-        jsxFragmentPragma: 'React.Fragment',
-      }),
-      replace({
-        preventAssignment: true,
-        __DEV__: dev ? 'true' : 'false',
+      typescript({
+        define: {
+          __DEV__: dev ? 'true' : 'false',
+        },
       }),
       rscDirectives(),
       !dev && copyAssets(),
     ],
   };
+}
+
+/**
+ * @param {import('esbuild').TransformOptions} options
+ * @returns {import('rollup').Plugin}
+ */
+function typescript(options) {
+  const include = /\.[jt]sx?$/;
+  return {
+    name: 'typescript',
+    resolveId(id, importer) {
+      if (importer && id[0] === '.') {
+        const resolvedPath = path.resolve(importer ? path.dirname(importer) : process.cwd(), id),
+          filePath = resolveFile(resolvedPath);
+
+        if (filePath) {
+          return filePath;
+        }
+
+        if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isDirectory()) {
+          return resolveFile(resolvedPath, true);
+        }
+      }
+    },
+    transform(code, id) {
+      if (!include.test(id)) return;
+      return esbuild(code, {
+        target: 'esnext',
+        loader: 'tsx',
+        sourcemap: true,
+        ...options,
+      });
+    },
+  };
+}
+
+const tsFileExtensions = ['tsx', 'ts'];
+function resolveFile(file, index = false) {
+  for (const ext of tsFileExtensions) {
+    const filePath = index ? path.join(file, `index.${ext}`) : `${file}.${ext}`;
+    if (fs.existsSync(filePath)) return filePath;
+  }
 }
 
 /** @returns {import('rollup').Plugin} */
