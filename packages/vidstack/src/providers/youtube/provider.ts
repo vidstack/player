@@ -49,6 +49,7 @@ export class YouTubeProvider
 
   #seekingTimer = -1;
   #pausedSeeking = false;
+  #invalidPlay = false;
 
   #promises = new Map<string, DeferredPromise<any, string>[]>();
 
@@ -301,15 +302,17 @@ export class YouTubeProvider
       this.#onSeeked(trigger);
     }
 
+    if (this.#invalidPlay && isPlaying) {
+      this.pause();
+      this.#invalidPlay = false;
+      return;
+    }
+
     // Embed incorrectly plays on initial seek operation.
     if (!started() && isPlay && this.#pausedSeeking) {
       this.#playFail('invalid internal play operation');
-
-      if (isPlaying) {
-        this.pause();
-        this.#pausedSeeking = false;
-      }
-
+      this.#invalidPlay = true;
+      this.#pausedSeeking = false;
       return;
     }
 
@@ -393,6 +396,7 @@ export class YouTubeProvider
     this.#state = -1;
     this.#seekingTimer = -1;
     this.#pausedSeeking = false;
+    this.#invalidPlay = false;
   }
 
   #getPromise(command: YouTubeCommand) {
