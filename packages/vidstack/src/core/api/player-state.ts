@@ -134,10 +134,10 @@ export const mediaState = new State<MediaState>({
   },
   get seekableStart() {
     const start = getTimeRangesStart(this.seekable) ?? 0;
-    return Math.max(0, start - this.clipStartTime);
+    return Math.max(0, Math.abs(start - this.clipStartTime));
   },
   get seekableEnd() {
-    const end = this.canPlay ? getTimeRangesEnd(this.seekable) ?? Infinity : 0;
+    const end = this.canPlay ? (getTimeRangesEnd(this.seekable) ?? Infinity) : 0;
     return this.clipEndTime > 0
       ? Math.max(this.clipEndTime, Math.max(0, end - this.clipStartTime))
       : end;

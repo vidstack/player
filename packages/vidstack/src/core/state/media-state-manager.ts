@@ -686,18 +686,25 @@ export class MediaStateManager extends MediaPlayerController {
     const provider = peek(this.#media.$provider);
     if (!provider) return;
 
-    const { ended, seekableStart, clipStartTime, clipEndTime, realCurrentTime, duration } =
-      this.$state;
+    const {
+      ended,
+      seekableStart,
+      clipStartTime,
+      clipEndTime,
+      currentTime,
+      realCurrentTime,
+      duration,
+    } = this.$state;
 
     const shouldReset =
+      ended() ||
       realCurrentTime() < clipStartTime() ||
       (clipEndTime() > 0 && realCurrentTime() >= clipEndTime()) ||
-      Math.abs(realCurrentTime() - duration()) < 0.1 ||
-      ended();
+      Math.abs(currentTime() - duration()) < 0.1;
 
     if (shouldReset) {
       this.dispatch('media-seek-request', {
-        detail: (clipStartTime() > 0 ? 0 : seekableStart()) + 0.1,
+        detail: seekableStart(),
         trigger,
       });
     }
