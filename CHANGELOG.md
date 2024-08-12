@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.7-next](https://github.com/vidstack/player/releases/tag/v1.12.7-next) (2024-08-12)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- submenus not showing ([4b23c60](https://github.com/vidstack/player/commit/4b23c6055f0c661d43c37c11bce2aaa8d090b584))
+- pause without sound any invalid youtube plays ([12d2463](https://github.com/vidstack/player/commit/12d246395893faf417797f1dbca0d18515e3197a))
+
 ## [1.12.6-next](https://github.com/vidstack/player/releases/tag/v1.12.6-next) (2024-08-12)
 
 ### 🏎️ Performance
