@@ -409,7 +409,7 @@ export class MediaPlayer
    */
   @prop
   get title() {
-    return peek(this.$state.providedTitle);
+    return peek(this.$state.title);
   }
 
   set title(newTitle) {
@@ -418,7 +418,7 @@ export class MediaPlayer
       return;
     }
 
-    this.$state.providedTitle.set(newTitle);
+    this.#props.title.set(newTitle);
   }
 
   /**
