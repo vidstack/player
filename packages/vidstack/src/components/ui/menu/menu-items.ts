@@ -69,25 +69,32 @@ export class MenuItems extends Component<MenuItemsProps> {
     if (!this.el || !expanded()) return;
 
     const placement = this.$props.placement();
+    if (!placement) return;
 
-    if (placement) {
-      Object.assign(this.el.style, {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: 'max-content',
-      });
+    Object.assign(this.el.style, {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: 'max-content',
+    });
 
-      const { offset: mainOffset, alignOffset } = this.$props;
-      return autoPlacement(this.el, this.#getButton(), placement, {
+    const { offset: mainOffset, alignOffset } = this.$props;
+
+    onDispose(
+      autoPlacement(this.el, this.#getButton(), placement, {
         offsetVarName: 'media-menu',
         xOffset: alignOffset(),
         yOffset: mainOffset(),
-      });
-    } else {
-      this.el.removeAttribute('style');
-      this.el.style.display = 'none';
-    }
+      }),
+    );
+
+    onDispose(this.#hide.bind(this));
+  }
+
+  #hide() {
+    if (!this.el) return;
+    this.el.removeAttribute('style');
+    this.el.style.display = 'none';
   }
 
   #getButton() {
