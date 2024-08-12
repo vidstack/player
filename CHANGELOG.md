@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.8-next](https://github.com/vidstack/player/releases/tag/v1.12.8-next) (2024-08-12)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- title occasionally not set ([98506a2](https://github.com/vidstack/player/commit/98506a287a955abd8bf81bf124b194c296714250))
+
 ## [1.12.7-next](https://github.com/vidstack/player/releases/tag/v1.12.7-next) (2024-08-12)
 
 ### 🐛 Bug Fixes
