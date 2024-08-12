@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.6-next](https://github.com/vidstack/player/releases/tag/v1.12.6-next) (2024-08-12)
+
+### 🏎️ Performance
+
+#### Player
+
+- only auto-update placement of floating panels when showing ([5fd9db2](https://github.com/vidstack/player/commit/5fd9db2070ad3d779429c53511e45f497154aa3d))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- add `audio/m4a` mime type ([6801a84](https://github.com/vidstack/player/commit/6801a8402e2bc3f98e9763b920ed1355de48f72b))
+- audio boost not working ([0917752](https://github.com/vidstack/player/commit/091775299f9b7fd027b5bd3b34e853e69868bfed))
+- clipping broken ([95a3dad](https://github.com/vidstack/player/commit/95a3dadff298e27a7ae50553eeb2a283eca5d2fa))
+- pause youtube on frame on invalid internal play ([b72448d](https://github.com/vidstack/player/commit/b72448d4a11a555ad7aad97ddb2ffe4c60380805))
+
 ## [1.12.5-next](https://github.com/vidstack/player/releases/tag/v1.12.5-next) (2024-08-08)
 
 ### ⏪ Revert
