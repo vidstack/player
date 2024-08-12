@@ -2,6 +2,10 @@ import path from 'node:path';
 
 import { transform as esbuild } from 'esbuild';
 import fs from 'fs-extra';
+import { getTsconfig } from 'get-tsconfig';
+
+const configName = 'tsconfig.build.json',
+  configRaw = getTsconfig(process.cwd(), configName, new Map())?.config;
 
 /**
  *
@@ -32,6 +36,7 @@ export function typescript(options) {
         target: 'esnext',
         loader: 'ts',
         sourcemap: true,
+        tsconfigRaw: configRaw,
         ...options,
       });
     },

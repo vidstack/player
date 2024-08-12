@@ -98,6 +98,9 @@ importers:
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
+      get-tsconfig:
+        specifier: ^4.7.6
+        version: 4.7.6
       magic-string:
         specifier: ^0.30.11
         version: 0.30.11
@@ -195,6 +198,9 @@ importers:
       fscreen:
         specifier: ^1.2.0
         version: 1.2.0
+      get-tsconfig:
+        specifier: ^4.7.6
+        version: 4.7.6
       hls.js:
         specifier: ^1.5.14
         version: 1.5.14

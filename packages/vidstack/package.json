@@ -57,6 +57,7 @@
     "es-module-lexer": "^1.5.4",
     "esbuild": "^0.23.0",
     "fscreen": "^1.2.0",
+    "get-tsconfig": "^4.7.6",
     "hls.js": "^1.5.14",
     "jassub": "^1.7.16",
     "jsdom": "^21.1.2",
