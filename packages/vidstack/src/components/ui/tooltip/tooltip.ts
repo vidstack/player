@@ -4,7 +4,7 @@ import { EventsController, listenEvent, setAttribute } from 'maverick.js/std';
 import { $keyboard, FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { Popper } from '../popper/popper';
-import { tooltipContext } from './tooltip-context';
+import { tooltipContext, type TooltipContext } from './tooltip-context';
 
 let id = 0;
 
@@ -26,6 +26,7 @@ export class Tooltip extends Component<TooltipProps> {
 
   #trigger = signal<HTMLElement | null>(null);
   #content = signal<HTMLElement | null>(null);
+  #showing = signal(false);
 
   constructor() {
     super();
@@ -62,6 +63,7 @@ export class Tooltip extends Component<TooltipProps> {
     provideContext(tooltipContext, {
       trigger: this.#trigger,
       content: this.#content,
+      showing: this.#showing,
       attachTrigger: this.#attachTrigger.bind(this),
       detachTrigger: this.#detachTrigger.bind(this),
       attachContent: this.#attachContent.bind(this),
@@ -112,6 +114,8 @@ export class Tooltip extends Component<TooltipProps> {
     for (const el of [this.el, trigger, content]) {
       el && setAttribute(el, 'data-visible', isShowing);
     }
+
+    this.#showing.set(isShowing);
   }
 }
 

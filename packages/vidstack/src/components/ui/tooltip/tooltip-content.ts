@@ -60,6 +60,9 @@ export class TooltipContent extends Component<TooltipContentProps> {
   }
 
   #watchPlacement() {
+    const { showing } = useContext(tooltipContext);
+    if (!showing()) return;
+
     const { placement, offset: mainOffset, alignOffset } = this.$props;
     return autoPlacement(this.el, this.#getTrigger(), placement(), {
       offsetVarName: 'media-tooltip',

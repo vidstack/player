@@ -64,7 +64,9 @@ export class MenuItems extends Component<MenuItemsProps> {
   }
 
   #watchPlacement() {
-    if (!this.el) return;
+    const { expanded } = this.#menu;
+
+    if (!this.el || !expanded()) return;
 
     const placement = this.$props.placement();
 
