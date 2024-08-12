@@ -48,7 +48,6 @@ export class YouTubeProvider
   #currentSrc: Src<string> | null = null;
 
   #seekingTimer = -1;
-  #pausedSeeking = false;
   #invalidPlay = false;
 
   #promises = new Map<string, DeferredPromise<any, string>[]>();
@@ -136,7 +135,6 @@ export class YouTubeProvider
   }
 
   setCurrentTime(time: number) {
-    this.#pausedSeeking = this.#ctx.$state.paused();
     this.#remote('seekTo', time);
     this.#ctx.notify('seeking', time);
   }
@@ -278,8 +276,6 @@ export class YouTubeProvider
       },
       paused() ? 100 : 0,
     );
-
-    this.#pausedSeeking = false;
   }
 
   #onEnded(trigger: Event) {
@@ -290,10 +286,10 @@ export class YouTubeProvider
   }
 
   #onStateChange(state: YouTubePlayerStateValue, trigger: Event) {
-    const { started, paused, seeking } = this.#ctx.$state,
+    const { paused, seeking } = this.#ctx.$state,
       isPlaying = state === YouTubePlayerState.Playing,
       isBuffering = state === YouTubePlayerState.Buffering,
-      isPendingPlay = !isUndefined(this.#getPromise('playVideo')),
+      isPendingPlay = this.#isPending('playVideo'),
       isPlay = (paused() || isPendingPlay) && (isBuffering || isPlaying);
 
     if (isBuffering) this.#ctx.notify('waiting', undefined, trigger);
@@ -305,14 +301,16 @@ export class YouTubeProvider
     if (this.#invalidPlay && isPlaying) {
       this.pause();
       this.#invalidPlay = false;
+      this.setMuted(this.#ctx.$state.muted());
       return;
     }
 
-    // Embed incorrectly plays on initial seek operation.
-    if (!started() && isPlay && this.#pausedSeeking) {
-      this.#playFail('invalid internal play operation');
+    // Embed incorrectly plays on seek operations.
+    if (!isPendingPlay && isPlay) {
       this.#invalidPlay = true;
-      this.#pausedSeeking = false;
+      // Prevent any audio between time of play and playing which is when we pause so
+      // frame is loaded.
+      this.setMuted(true);
       return;
     }
 
@@ -378,7 +376,7 @@ export class YouTubeProvider
       }
     }
 
-    if (isNumber(info.volume) && isBoolean(info.muted)) {
+    if (isNumber(info.volume) && isBoolean(info.muted) && !this.#invalidPlay) {
       const detail = {
         muted: info.muted,
         volume: info.volume / 100,
@@ -395,11 +393,14 @@ export class YouTubeProvider
   #reset() {
     this.#state = -1;
     this.#seekingTimer = -1;
-    this.#pausedSeeking = false;
     this.#invalidPlay = false;
   }
 
   #getPromise(command: YouTubeCommand) {
     return this.#promises.get(command)?.shift();
+  }
+
+  #isPending(command: YouTubeCommand) {
+    return Boolean(this.#promises.get(command)?.length);
   }
 }
