@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.9-next](https://github.com/vidstack/player/releases/tag/v1.12.9-next) (2024-08-14)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- transform decorators before esbuild ([4af47b8](https://github.com/vidstack/player/commit/4af47b864cc2ec67c2020102514a63b47ba700a5))
+- unexpected token `{` in ios<17 ([5ac2894](https://github.com/vidstack/player/commit/5ac28945f26f6b0cb37e0bbffea796364848aa94))
+- youtube does not play on first request ([6677c57](https://github.com/vidstack/player/commit/6677c5717215086bfb712336e2431f42148ff005))
+
 ## [1.12.8-next](https://github.com/vidstack/player/releases/tag/v1.12.8-next) (2024-08-12)
 
 ### 🐛 Bug Fixes
