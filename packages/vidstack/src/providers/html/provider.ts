@@ -20,14 +20,16 @@ export class HTMLMediaProvider implements MediaProviderAdapter {
 
   currentSrc: Src<HTMLMediaSrc> | null = null;
 
-  readonly audioGain = new AudioGain(this.media, (gain) => {
-    this.ctx.notify('audio-gain-change', gain);
-  });
+  readonly audioGain: AudioGain;
 
   constructor(
     readonly media: HTMLMediaElement,
     protected readonly ctx: MediaContext,
-  ) {}
+  ) {
+    this.audioGain = new AudioGain(media, (gain) => {
+      this.ctx.notify('audio-gain-change', gain);
+    });
+  }
 
   setup() {
     new HTMLMediaEvents(this, this.ctx);
