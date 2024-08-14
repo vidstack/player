@@ -290,7 +290,7 @@ export class YouTubeProvider
       isPlaying = state === YouTubePlayerState.Playing,
       isBuffering = state === YouTubePlayerState.Buffering,
       isPendingPlay = this.#isPending('playVideo'),
-      isPlay = (paused() || isPendingPlay) && (isBuffering || isPlaying);
+      isPlay = paused() && (isBuffering || isPlaying);
 
     if (isBuffering) this.#ctx.notify('waiting', undefined, trigger);
 
@@ -321,12 +321,6 @@ export class YouTubeProvider
     }
 
     switch (state) {
-      case YouTubePlayerState.Unstarted:
-        // These methods will only reject if a play/pause is actually pending.
-        this.#playFail('provider rejected');
-        this.#pauseFail('provider rejected');
-        this.#ctx.notify('pause', undefined, trigger);
-        break;
       case YouTubePlayerState.Cued:
         this.#onReady(trigger);
         break;
