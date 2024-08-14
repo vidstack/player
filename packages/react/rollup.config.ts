@@ -158,13 +158,13 @@ function defineNPMBundle({ dev }: NPMBundleOptions): RollupOptions {
           ? ['development', 'production', 'default']
           : ['production', 'default'],
       }),
+      decorators(),
       typescript({
         loader: 'tsx',
         define: {
           __DEV__: dev ? 'true' : 'false',
         },
       }),
-      decorators(),
       rscDirectives(),
       !dev && copyAssets(),
     ],

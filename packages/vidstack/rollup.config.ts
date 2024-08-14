@@ -167,6 +167,7 @@ function defineNPMBundle({ type }: NPMBundleOptions): RollupOptions {
             ? ['production', 'default']
             : ['development', 'production', 'default'],
       }),
+      decorators(),
       typescript({
         platform: isServer ? 'node' : 'browser',
         define: {
@@ -176,7 +177,6 @@ function defineNPMBundle({ type }: NPMBundleOptions): RollupOptions {
           __TEST__: 'false',
         },
       }),
-      decorators(),
       // Only copy assets once in dev.
       !isProd && !isServer && copyAssets(),
       isServer && transformServerBundle(),
