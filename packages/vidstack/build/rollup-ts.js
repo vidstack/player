@@ -13,12 +13,21 @@ const configName = 'tsconfig.build.json',
  * @returns {import('rollup').Plugin}
  */
 export function typescript(options) {
-  const include = /\.[jt]sx?$/;
+  const cwd = process.cwd(),
+    include = /\.[jt]sx?$/,
+    opts = /** @type {import('esbuild').TransformOptions} */ ({
+      target: 'esnext',
+      loader: 'ts',
+      sourcemap: true,
+      tsconfigRaw: configRaw,
+      ...options,
+    });
+
   return {
     name: 'typescript',
     resolveId(id, importer) {
       if (importer && id[0] === '.') {
-        const resolvedPath = path.resolve(importer ? path.dirname(importer) : process.cwd(), id),
+        const resolvedPath = path.resolve(importer ? path.dirname(importer) : cwd, id),
           filePath = resolveFile(resolvedPath);
 
         if (filePath) {
@@ -32,13 +41,7 @@ export function typescript(options) {
     },
     transform(code, id) {
       if (!include.test(id)) return;
-      return esbuild(code, {
-        target: 'esnext',
-        loader: 'ts',
-        sourcemap: true,
-        tsconfigRaw: configRaw,
-        ...options,
-      });
+      return esbuild(code, opts);
     },
   };
 }

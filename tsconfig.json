@@ -21,8 +21,8 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2020",
-    "useDefineForClassFields": false,
+    "target": "esnext",
+    "useDefineForClassFields": true,
     "verbatimModuleSyntax": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.cjs", "**/*.mjs", "**/*.astro"],
