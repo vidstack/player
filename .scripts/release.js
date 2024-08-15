@@ -260,21 +260,17 @@ async function publishCDN(version) {
 }
 
 function getReleaseTag(version) {
-  let releaseTag = null;
-
   if (args.tag) {
-    releaseTag = args.tag;
+    return args.tag;
   } else if (version.includes('alpha')) {
-    releaseTag = 'alpha';
+    return 'alpha';
   } else if (version.includes('beta')) {
-    releaseTag = 'beta';
+    return 'beta';
   } else if (version.includes('rc')) {
-    releaseTag = 'rc';
+    return 'rc';
   } else {
-    releaseTag = isNext ? 'next' : 'latest';
+    return isNext ? 'next' : 'latest';
   }
-
-  return releaseTag;
 }
 
 if (isDryRun) console.log(kleur.cyan('\n☂️  Running in dry mode...\n'));

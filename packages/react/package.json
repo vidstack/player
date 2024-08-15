@@ -4,7 +4,7 @@
   "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
-  "types": "index.d.ts",
+  "types": "src/index.ts",
   "sideEffects": false,
   "engines": {
     "node": ">=18"
@@ -22,6 +22,7 @@
     "types": "pnpm build:icons && pnpm declarations && pnpm build:types",
     "clean": "rimraf dist-npm",
     "format": "prettier src --write --loglevel warn",
+    "link:styles": "ln -s ../vidstack/styles ./styles",
     "watch": "pnpm watch:types & pnpm run bundle -w",
     "watch:types": "pnpm run declarations -w & pnpm run build:types -w"
   },
@@ -71,6 +72,16 @@
     "url": "https://github.com/vidstack/player/issues"
   },
   "exports": {
+    ".": "./src/index.ts",
+    "./icons": "./src/icons.ts",
+    "./player/remotion": "./src/providers/remotion/index.ts",
+    "./player/layouts/default": "./src/components/layouts/default/index.ts",
+    "./player/layouts/plyr": "./src/components/layouts/plyr/index.ts",
+    "./player/styles/*": "./styles/player/*",
+    "./package.json": "./package.json"
+  },
+  "$types": "index.d.ts",
+  "$exports": {
     ".": {
       "types": "./index.d.ts",
       "worker": "./server/vidstack.js",

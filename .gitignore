@@ -44,6 +44,7 @@ packages/react/dom.d.ts
 packages/react/google-cast.d.ts
 packages/react/player/
 packages/react/tailwind*
+packages/react/styles
 
 *~
 *.sw[mnpcod]

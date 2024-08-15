@@ -7,7 +7,7 @@ import fs from 'fs-extra';
 import { defineConfig, type Plugin, type RollupOptions } from 'rollup';
 import dts from 'rollup-plugin-dts';
 
-import { copyPkgInfo } from '../../.scripts/copy-pkg-info.js';
+import { copyPkgFiles } from '../../.build/copy-pkg-files.js';
 import { buildDefaultTheme, watchStyles } from './build/build-styles.js';
 import { decorators } from './build/rollup-decorators';
 import { minify } from './build/rollup-minify';
@@ -429,9 +429,9 @@ function getPluginsBundles(): RollupOptions[] {
 
 function copyAssets(): Plugin {
   return {
-    name: 'copy-assets',
+    name: 'copy-',
     async buildEnd() {
-      await copyPkgInfo();
+      await copyPkgFiles();
       await buildDefaultTheme();
       await fs.copy('styles/player', 'dist-npm/player/styles');
       await fs.copy('npm', 'dist-npm');

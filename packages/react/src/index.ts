@@ -1,8 +1,8 @@
-export * from 'vidstack/exports/core';
-export * from 'vidstack/exports/foundation';
-export * from 'vidstack/exports/maverick';
-export * from 'vidstack/exports/providers';
-export * from 'vidstack/exports/utils';
+export * from 'vidstack/exports/core.ts';
+export * from 'vidstack/exports/foundation.ts';
+export * from 'vidstack/exports/maverick.ts';
+export * from 'vidstack/exports/providers.ts';
+export * from 'vidstack/exports/utils.ts';
 
 export {
   type TimeState,
@@ -30,7 +30,7 @@ export {
   type MediaAnnouncerWord,
   DEFAULT_AUDIO_GAINS,
   DEFAULT_PLAYBACK_RATES,
-} from 'vidstack/exports/components';
+} from 'vidstack/exports/components.ts';
 
 // Primitives
 export * from './components/primitives/instances';

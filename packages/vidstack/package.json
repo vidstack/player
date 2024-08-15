@@ -4,7 +4,7 @@
   "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
-  "types": "index.d.ts",
+  "types": "src/index.ts",
   "sideEffects": [
     "./src/global/*.ts",
     "./src/elements/bundles/**/*.ts",
@@ -96,6 +96,30 @@
     "url": "https://github.com/vidstack/player/issues"
   },
   "exports": {
+    ".": "./src/index.ts",
+    "./elements": "./src/elements/index.ts",
+    "./global/player": "./src/global/player.ts",
+    "./global/plyr": "./src/global/plyr.ts",
+    "./icons": "./src/elements/bundles/icons.ts",
+    "./player": "./src/elements/bundles/player.ts",
+    "./player/ui": "./src/elements/bundles/player-ui.ts",
+    "./player/layouts": "./src/elements/bundles/player-layouts/index.ts",
+    "./player/layouts/default": "./src/elements/bundles/player-layouts/default.ts",
+    "./player/layouts/plyr": "./src/elements/bundles/player-layouts/plyr.ts",
+    "./types/*": "./types/*",
+    "./player/styles/*": "./styles/player/*",
+    "./vue": "./npm/vue.d.ts",
+    "./svelte": "./npm/svelte.d.ts",
+    "./solid": "./npm/solid.d.ts",
+    "./bundle": {
+      "types": "./src/elements/index.ts"
+    },
+    "./exports/*": "./src/exports/*",
+    "./plugins": "./src/plugins.ts",
+    "./package.json": "./package.json"
+  },
+  "$types": "index.d.ts",
+  "$exports": {
     ".": {
       "types": "./index.d.ts",
       "worker": "./server/vidstack.js",

@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 
 const cwd = process.cwd();
 
-export function copyPkgInfo() {
+export function copyPkgFiles() {
   const pkgPath = path.resolve(cwd, 'package.json'),
     pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')),
     distDir = path.resolve(cwd, 'dist-npm');
@@ -35,9 +35,21 @@ export function copyPkgInfo() {
   // Create package.json.
   const distPkg = {};
   for (const field of validPkgFields) distPkg[field] = pkg[field];
+
+  // Use publish fields.
+  distPkg.types = pkg.$types;
+  distPkg.exports = pkg.$exports;
+
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir);
+  }
+
   fs.writeFileSync(dist('package.json'), JSON.stringify(distPkg, null, 2), 'utf-8');
 
   // Copy over license and readme.
   fs.copyFileSync(root('LICENSE'), dist('LICENSE'));
-  fs.copyFileSync(root('README.md'), dist('README.md'));
+
+  if (fs.existsSync(root('README.md'))) {
+    fs.copyFileSync(root('README.md'), dist('README.md'));
+  }
 }
