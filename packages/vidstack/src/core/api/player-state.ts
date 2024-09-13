@@ -6,7 +6,7 @@ import type { MediaProviderLoader } from '../../providers/types';
 import { canOrientScreen, IS_IPHONE } from '../../utils/support';
 import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
-import type { AudioTrack } from '../tracks/audio-tracks';
+import type { AudioTrack } from '../tracks/audio/audio-tracks';
 import { isTrackCaptionKind, type TextTrack } from '../tracks/text/text-track';
 import type { Src } from './src-types';
 import type {

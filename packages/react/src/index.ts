@@ -1,35 +1,37 @@
 export * from 'vidstack/exports/core.ts';
+export * from 'vidstack/exports/events.ts';
 export * from 'vidstack/exports/foundation.ts';
 export * from 'vidstack/exports/maverick.ts';
 export * from 'vidstack/exports/providers.ts';
 export * from 'vidstack/exports/utils.ts';
 
 export {
-  type TimeState,
-  type SliderState,
-  type PosterState,
+  DEFAULT_AUDIO_GAINS,
+  DEFAULT_PLAYBACK_RATES,
   sliderState,
-  type ThumbnailState,
-  type TimeSliderState,
+  type AudioGainSliderState,
+  type GestureAction,
+  type MediaAnnouncerState,
+  type MediaAnnouncerTranslations,
+  type MediaAnnouncerWord,
+  type MediaProviderState,
+  type MenuPlacement,
+  type MenuPlacementAlign,
+  type MenuPlacementSide,
+  type PosterState,
+  type QualitySliderState,
+  type SliderCSSVars,
+  type SliderOrientation,
+  type SliderState,
   type SliderVideoState,
   type SpeedSliderState,
-  type VolumeSliderState,
-  type QualitySliderState,
-  type MediaProviderState,
+  type ThumbnailState,
+  type TimeSliderState,
+  type TimeState,
   type TooltipPlacement,
   type TooltipPlacementAlign,
   type TooltipPlacementSide,
-  type MenuPlacement,
-  type MenuPlacementSide,
-  type MenuPlacementAlign,
-  type MediaAnnouncerState,
-  type AudioGainSliderState,
-  type GestureEventType,
-  type GestureAction,
-  type MediaAnnouncerTranslations,
-  type MediaAnnouncerWord,
-  DEFAULT_AUDIO_GAINS,
-  DEFAULT_PLAYBACK_RATES,
+  type VolumeSliderState,
 } from 'vidstack/exports/components.ts';
 
 // Primitives

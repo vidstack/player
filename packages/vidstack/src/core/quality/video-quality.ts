@@ -1,8 +1,8 @@
 import { DOMEvent } from 'maverick.js/std';
 
-import type { ListReadonlyChangeEvent } from '../../foundation/list/list';
 import { SelectList, type SelectListItem } from '../../foundation/list/select-list';
 import { ListSymbol } from '../../foundation/list/symbols';
+import type { VideoQualityListEvents } from './events';
 import { QualitySymbol } from './symbols';
 
 /**
@@ -84,47 +84,3 @@ export interface VideoQuality extends SelectListItem {
   readonly bitrate: number | null;
   readonly codec: string | null;
 }
-
-export interface VideoQualityListEvents {
-  add: VideoQualityAddEvent;
-  remove: VideoQualityRemoveEvent;
-  change: VideoQualityChangeEvent;
-  'auto-change': VideoQualityAutoChangeEvent;
-  'readonly-change': ListReadonlyChangeEvent;
-}
-
-export interface VideoQualityListEvent<T> extends DOMEvent<T> {
-  target: VideoQualityList;
-}
-
-/**
- * Fired when a video quality has been added to the list.
- *
- * @detail newQuality
- */
-export interface VideoQualityAddEvent extends VideoQualityListEvent<VideoQuality> {}
-
-/**
- * Fired when a video quality has been removed from the list.
- *
- * @detail removedQuality
- */
-export interface VideoQualityRemoveEvent extends VideoQualityListEvent<VideoQuality> {}
-
-/**
- * Fired when the selected video quality has changed.
- *
- * @detail change
- */
-export interface VideoQualityChangeEvent
-  extends VideoQualityListEvent<VideoQualityChangeEventDetail> {}
-
-export interface VideoQualityChangeEventDetail {
-  prev: VideoQuality | null;
-  current: VideoQuality;
-}
-
-/**
- * Fired when auto quality selection is enabled or disabled.
- */
-export interface VideoQualityAutoChangeEvent extends VideoQualityListEvent<boolean> {}

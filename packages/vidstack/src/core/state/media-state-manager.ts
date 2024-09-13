@@ -10,13 +10,13 @@ import * as ME from '../api/media-events';
 import { MediaPlayerController } from '../api/player-controller';
 import { softResetMediaState } from '../api/player-state';
 import { isVideoQualitySrc, type Src } from '../api/src-types';
-import { QualitySymbol } from '../quality/symbols';
 import type {
-  VideoQuality,
   VideoQualityAddEvent,
   VideoQualityChangeEvent,
   VideoQualityRemoveEvent,
-} from '../quality/video-quality';
+} from '../quality/events';
+import { QualitySymbol } from '../quality/symbols';
+import type { VideoQuality } from '../quality/video-quality';
 import {
   getTimeRangesEnd,
   TimeRange,
@@ -27,7 +27,7 @@ import type {
   AudioTrackAddEvent,
   AudioTrackChangeEvent,
   AudioTrackRemoveEvent,
-} from '../tracks/audio-tracks';
+} from '../tracks/audio/events';
 import { TextTrackSymbol } from '../tracks/text/symbols';
 import type {
   TextTrackAddEvent,

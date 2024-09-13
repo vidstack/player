@@ -14,7 +14,7 @@ import type { VideoQualityList } from '../quality/video-quality';
 import type { MediaPlayerDelegate } from '../state/media-player-delegate';
 import type { MediaStorage } from '../state/media-storage';
 import type { MediaRemoteControl } from '../state/remote-control';
-import type { AudioTrackList } from '../tracks/audio-tracks';
+import type { AudioTrackList } from '../tracks/audio/audio-tracks';
 import type { TextRenderers } from '../tracks/text/render/text-renderer';
 import type { TextTrackList } from '../tracks/text/text-tracks';
 import type { MediaPlayerProps } from './player-props';

@@ -47,7 +47,7 @@ import { MediaStateSync } from '../core/state/media-state-sync';
 import { LocalMediaStorage, type MediaStorage } from '../core/state/media-storage';
 import { NavigatorMediaSession } from '../core/state/navigator-media-session';
 import { MediaRemoteControl } from '../core/state/remote-control';
-import { AudioTrackList } from '../core/tracks/audio-tracks';
+import { AudioTrackList } from '../core/tracks/audio/audio-tracks';
 import { TextRenderers } from '../core/tracks/text/render/text-renderer';
 import { TextTrackSymbol } from '../core/tracks/text/symbols';
 import { isTrackCaptionKind } from '../core/tracks/text/text-track';

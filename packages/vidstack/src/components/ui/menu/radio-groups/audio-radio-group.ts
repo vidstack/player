@@ -2,7 +2,7 @@ import { Component, effect, hasProvidedContext, method, prop, useContext } from 
 import type { DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
-import type { AudioTrack } from '../../../../core/tracks/audio-tracks';
+import type { AudioTrack } from '../../../../core/tracks/audio/audio-tracks';
 import { menuContext, type MenuContext } from '../menu-context';
 import type { RadioOption } from '../radio/radio';
 import { RadioGroupController } from '../radio/radio-group-controller';

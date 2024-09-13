@@ -2,7 +2,7 @@ import { effect, untrack } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
-import type { AudioTrack } from '../../core/tracks/audio-tracks';
+import type { AudioTrack } from '../../core/tracks/audio/audio-tracks';
 import type { TextTrack, TextTrackInit } from '../../core/tracks/text/text-track';
 import { ListSymbol } from '../../foundation/list/symbols';
 import { getCastSessionMedia } from './utils';
