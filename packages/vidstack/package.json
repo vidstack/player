@@ -28,7 +28,7 @@
     "types": "pnpm declarations && pnpm run build:types",
     "clean": "rimraf dist-npm",
     "format": "prettier src --write --loglevel warn",
-    "sandbox": "node ../../.scripts/sandbox.js",
+    "sandbox": "node ../../.scripts/sandbox.js & pnpm run build:css -w",
     "sandbox:build": "vite build sandbox",
     "test": "vitest --run",
     "test:watch": "vitest --watch",
