@@ -16,6 +16,7 @@ import { MediaMenuElement } from '../../define/menus/menu-element';
 import { MediaMenuItemElement } from '../../define/menus/menu-item-element';
 import { MediaMenuItemsElement } from '../../define/menus/menu-items-element';
 import { MediaQualityRadioGroupElement } from '../../define/menus/quality-radio-group-element';
+import { MediaRadioElement } from '../../define/menus/radio-element';
 import { MediaSpeedRadioGroupElement } from '../../define/menus/speed-radio-group-element';
 import { MediaPosterElement } from '../../define/poster-element';
 import { MediaSliderPreviewElement } from '../../define/sliders/slider-preview-element';
@@ -57,6 +58,7 @@ defineCustomElement(MediaAudioRadioGroupElement);
 defineCustomElement(MediaCaptionsRadioGroupElement);
 defineCustomElement(MediaSpeedRadioGroupElement);
 defineCustomElement(MediaQualityRadioGroupElement);
+defineCustomElement(MediaRadioElement);
 
 // Display
 defineCustomElement(MediaTimeElement);
