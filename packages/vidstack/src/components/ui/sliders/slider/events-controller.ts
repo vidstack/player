@@ -133,14 +133,13 @@ export class SliderEventsController extends ViewController<
   #attachEventListeners(el: HTMLElement) {
     const { hidden } = this.$props;
 
-    new EventsController(el)
-      .add('focus', this.#onFocus.bind(this))
-      .add('keyup', this.#onKeyUp.bind(this))
-      .add('keydown', this.#onKeyDown.bind(this));
+    listenEvent(el, 'focus', this.#onFocus.bind(this));
 
     if (hidden() || this.#delegate.isDisabled()) return;
 
     new EventsController(el)
+      .add('keyup', this.#onKeyUp.bind(this))
+      .add('keydown', this.#onKeyDown.bind(this))
       .add('pointerenter', this.#onPointerEnter.bind(this))
       .add('pointermove', this.#onPointerMove.bind(this))
       .add('pointerleave', this.#onPointerLeave.bind(this))
