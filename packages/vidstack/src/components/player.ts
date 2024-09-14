@@ -34,7 +34,12 @@ import {
   type MediaPlayerProps,
   type MediaStateAccessors,
 } from '../core/api/player-props';
-import { mediaState, type MediaPlayerState, type MediaStore } from '../core/api/player-state';
+import {
+  boundTime,
+  mediaState,
+  type MediaPlayerState,
+  type MediaStore,
+} from '../core/api/player-state';
 import type { MediaControls } from '../core/controls';
 import { MediaKeyboardController } from '../core/keyboard/controller';
 import { VideoQualityList } from '../core/quality/video-quality';
@@ -522,24 +527,17 @@ export class MediaPlayer
 
   #queueCurrentTimeUpdate(time: number) {
     this.canPlayQueue.enqueue('currentTime', () => {
-      const { currentTime, clipStartTime, seekableStart, seekableEnd } = this.$state;
+      const { currentTime } = this.$state;
 
       if (time === peek(currentTime)) return;
 
       peek(() => {
         if (!this.#provider) return;
 
-        const clippedTime = time + clipStartTime(),
-          isStart = Math.floor(time) === Math.floor(seekableStart()),
-          isEnd = Math.floor(clippedTime) === Math.floor(seekableEnd()),
-          boundTime = isStart
-            ? seekableStart()
-            : isEnd
-              ? seekableEnd()
-              : Math.min(Math.max(seekableStart() + 0.1, clippedTime), seekableEnd() - 0.1);
+        const boundedTime = boundTime(time, this.$state);
 
-        if (Number.isFinite(boundTime)) {
-          this.#provider.setCurrentTime(boundTime);
+        if (Number.isFinite(boundedTime)) {
+          this.#provider.setCurrentTime(boundedTime);
         }
       });
     });

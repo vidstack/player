@@ -138,9 +138,9 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     if (!cues.length) return;
 
     let cue: VTTCue,
-      { clipStartTime, clipEndTime } = this.#media.$state,
-      startTime = clipStartTime(),
-      endTime = clipEndTime() || cues[cues.length - 1].endTime,
+      { seekableStart, seekableEnd } = this.#media.$state,
+      startTime = seekableStart(),
+      endTime = seekableEnd() || cues[cues.length - 1].endTime,
       duration = endTime - startTime,
       remainingWidth = 100;
 
@@ -160,7 +160,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   }
 
   #watchFillPercent() {
-    let { liveEdge, clipStartTime, duration } = this.#media.$state,
+    let { liveEdge, seekableStart, seekableEnd } = this.#media.$state,
       { fillPercent, value } = this.#sliderState,
       cues = this.#$cues(),
       isLiveEdge = liveEdge(),
@@ -171,7 +171,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
       ? this.#$cues.length - 1
       : this.#findActiveChapterIndex(
           currentChapter
-            ? (currentChapter.startTime / duration()) * 100 <= peek(value)
+            ? (currentChapter.startTime / seekableEnd()) * 100 <= peek(value)
               ? prevActiveIndex
               : 0
             : 0,
@@ -191,7 +191,7 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
       : this.#calcPercent(
           cues[currentActiveIndex],
           fillPercent(),
-          clipStartTime(),
+          seekableStart(),
           this.#getEndTime(cues),
         );
 
@@ -232,8 +232,8 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     if (percent === 0) return 0;
     else if (percent === 100) return cues.length - 1;
 
-    let { clipStartTime } = this.#media.$state,
-      startTime = clipStartTime(),
+    let { seekableStart } = this.#media.$state,
+      startTime = seekableStart(),
       endTime = this.#getEndTime(cues);
 
     for (let i = startIndex; i < cues.length; i++) {
@@ -251,8 +251,8 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   #updateBufferedPercent = animationFrameThrottle((bufferedPercent: number) => {
     let percent: number,
       cues = this.#$cues(),
-      { clipStartTime } = this.#media.$state,
-      startTime = clipStartTime(),
+      { seekableStart } = this.#media.$state,
+      startTime = seekableStart(),
       endTime = this.#getEndTime(cues);
 
     for (let i = this.#bufferedIndex; i < this.#refs.length; i++) {
@@ -272,9 +272,9 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
   }
 
   #getEndTime(cues: VTTCue[]) {
-    const { clipEndTime } = this.#media.$state,
-      endTime = clipEndTime();
-    return endTime > 0 ? endTime : cues[cues.length - 1]?.endTime || 0;
+    const { seekableEnd } = this.#media.$state,
+      endTime = seekableEnd();
+    return Number.isFinite(endTime) ? endTime : cues[cues.length - 1]?.endTime || 0;
   }
 
   #calcPercent(cue: VTTCue, percent: number, startTime: number, endTime: number) {
@@ -303,9 +303,9 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
 
   #fillGaps(cues: ReadonlyArray<VTTCue>) {
     let chapters: VTTCue[] = [],
-      { clipStartTime, clipEndTime, duration } = this.#media.$state,
-      startTime = clipStartTime(),
-      endTime = clipEndTime() || Infinity;
+      { seekableStart, seekableEnd, duration } = this.#media.$state,
+      startTime = seekableStart(),
+      endTime = seekableEnd();
 
     cues = cues.filter((cue) => cue.startTime <= endTime && cue.endTime >= startTime);
 

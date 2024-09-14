@@ -23,7 +23,7 @@ export function DefaultChaptersMenu({
   tooltip: TooltipPlacement | ReadSignal<TooltipPlacement>;
 }) {
   const { textTracks } = useMediaContext(),
-    { viewType, clipStartTime, clipEndTime } = useMediaState(),
+    { viewType, seekableStart, seekableEnd } = useMediaState(),
     {
       translations,
       thumbnails,
@@ -33,8 +33,8 @@ export function DefaultChaptersMenu({
       smallWhen: smWhen,
     } = useDefaultLayoutContext(),
     $disabled = computed(() => {
-      const $startTime = clipStartTime(),
-        $endTime = clipEndTime() || Infinity,
+      const $startTime = seekableStart(),
+        $endTime = seekableEnd(),
         $track = signal<TextTrack | null>(null);
 
       watchActiveTextTrack(textTracks, 'chapters', $track.set);

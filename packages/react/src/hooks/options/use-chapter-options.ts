@@ -17,8 +17,8 @@ export function useChapterOptions(): ChapterOptions {
   const media = useMediaContext(),
     track = useActiveTextTrack('chapters'),
     cues = useTextCues(track),
-    $startTime = useSignal(media.$state.clipStartTime),
-    $endTime = useSignal(media.$state.clipEndTime) || Infinity;
+    $startTime = useSignal(media.$state.seekableStart),
+    $endTime = useSignal(media.$state.seekableEnd);
 
   useActiveTextCues(track);
 

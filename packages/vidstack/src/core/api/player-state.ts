@@ -1,5 +1,6 @@
 import fscreen from 'fscreen';
 import { State, tick, type Store } from 'maverick.js';
+import { isNumber } from 'maverick.js/std';
 
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { MediaProviderLoader } from '../../providers/types';
@@ -99,13 +100,8 @@ export const mediaState = new State<MediaState>({
   },
   providedDuration: -1,
   intrinsicDuration: 0,
-  get realDuration() {
-    return this.providedDuration > 0 ? this.providedDuration : this.intrinsicDuration;
-  },
   get duration() {
-    return this.clipEndTime > 0
-      ? this.clipEndTime - this.clipStartTime
-      : Math.max(0, this.realDuration - this.clipStartTime);
+    return this.seekableWindow;
   },
   get title() {
     return this.providedTitle || this.inferredTitle;
@@ -126,24 +122,38 @@ export const mediaState = new State<MediaState>({
   },
   get bufferedStart() {
     const start = getTimeRangesStart(this.buffered) ?? 0;
-    return Math.max(0, start - this.clipStartTime);
+    return Math.max(start, this.clipStartTime);
   },
   get bufferedEnd() {
     const end = getTimeRangesEnd(this.buffered) ?? 0;
-    return Math.min(this.duration, Math.max(0, end - this.clipStartTime));
+    return Math.min(this.seekableEnd, Math.max(0, end - this.clipStartTime));
+  },
+  get bufferedWindow() {
+    return Math.max(0, this.bufferedEnd - this.bufferedStart);
   },
   get seekableStart() {
+    if (this.isLiveDVR && this.liveDVRWindow > 0) {
+      return Math.max(0, this.seekableEnd - this.liveDVRWindow);
+    }
+
     const start = getTimeRangesStart(this.seekable) ?? 0;
-    return Math.max(0, Math.abs(start - this.clipStartTime));
+    return Math.max(start, this.clipStartTime);
   },
   get seekableEnd() {
-    const end = this.canPlay ? (getTimeRangesEnd(this.seekable) ?? Infinity) : 0;
-    return this.clipEndTime > 0
-      ? Math.max(this.clipEndTime, Math.max(0, end - this.clipStartTime))
-      : end;
+    if (this.providedDuration > 0) return this.providedDuration;
+
+    const end =
+      this.liveSyncPosition > 0
+        ? this.liveSyncPosition
+        : this.canPlay
+          ? (getTimeRangesEnd(this.seekable) ?? Infinity)
+          : 0;
+
+    return this.clipEndTime > 0 ? Math.min(this.clipEndTime, end) : end;
   },
   get seekableWindow() {
-    return Math.max(0, this.seekableEnd - this.seekableStart);
+    const window = this.seekableEnd - this.seekableStart;
+    return !isNaN(window) ? Math.max(0, window) : Infinity;
   },
 
   // ~~ remote playback ~~
@@ -178,16 +188,16 @@ export const mediaState = new State<MediaState>({
   get canSeek() {
     return (
       /unknown|on-demand|:dvr/.test(this.streamType) &&
-      Number.isFinite(this.seekableWindow) &&
-      (!this.live || (/:dvr/.test(this.streamType) && this.seekableWindow >= this.minLiveDVRWindow))
+      Number.isFinite(this.duration) &&
+      (!this.isLiveDVR || this.duration >= this.liveDVRWindow)
     );
   },
   get live() {
-    return this.streamType.includes('live') || !Number.isFinite(this.realDuration);
+    return this.streamType.includes('live') || !Number.isFinite(this.duration);
   },
   get liveEdgeStart() {
     return this.live && Number.isFinite(this.seekableEnd)
-      ? Math.max(0, (this.liveSyncPosition ?? this.seekableEnd) - this.liveEdgeTolerance)
+      ? Math.max(0, this.seekableEnd - this.liveEdgeTolerance)
       : 0;
   },
   get liveEdge() {
@@ -200,6 +210,12 @@ export const mediaState = new State<MediaState>({
     return this.live && Number.isFinite(this.seekableEnd)
       ? this.seekableEnd - this.liveEdgeStart
       : 0;
+  },
+  get isLiveDVR() {
+    return /:dvr/.test(this.streamType);
+  },
+  get liveDVRWindow() {
+    return Math.max(this.inferredLiveDVRWindow, this.minLiveDVRWindow);
   },
 
   // ~~ internal props ~~
@@ -215,6 +231,7 @@ export const mediaState = new State<MediaState>({
   providedStreamType: 'unknown',
   inferredStreamType: 'unknown',
   liveSyncPosition: null,
+  inferredLiveDVRWindow: 0,
   savedState: null,
 });
 
@@ -239,6 +256,7 @@ const RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'inferredStreamType',
   'inferredTitle',
   'intrinsicDuration',
+  'inferredLiveDVRWindow',
   'liveSyncPosition',
   'realCurrentTime',
   'savedState',
@@ -308,6 +326,10 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/buffered}
    */
   readonly bufferedEnd: number;
+  /**
+   * The length of the buffered window in seconds from `bufferedStart` to `bufferedEnd`.
+   */
+  readonly bufferedWindow: number;
   /**
    * A `double` indicating the total playback length of the media in seconds. If no media data is
    * available, the returned value is `0`. If the media is of indefinite length (such as
@@ -402,7 +424,7 @@ export interface MediaState {
    */
   readonly canSeek: boolean;
   /**
-   * Limit playback to only play _after_ a certain time. Playback will being from this time.
+   * Limit playback to only play _after_ a certain time. Playback will begin from this time.
    *
    * @defaultValue 0
    */
@@ -524,11 +546,19 @@ export interface MediaState {
    */
   liveEdgeTolerance: number;
   /**
-   * The minimum seekable length in seconds before seeking operations are permitted.
+   * The minimum seekable length in seconds before seeking operations are permitted on live streams.
    *
-   * @defaultValue 30
+   * @defaultValue 60
    */
   minLiveDVRWindow: number;
+  /**
+   * The inferred length of the live DVR window.
+   */
+  readonly liveDVRWindow: number;
+  /**
+   * Whether the live stream has Digital Video Recording (DVR) enabled.
+   */
+  readonly isLiveDVR: boolean;
   /**
    * Whether the current stream is at the live edge. This is true if:
    *
@@ -863,8 +893,6 @@ export interface MediaState {
   /** @internal */
   intrinsicDuration: number;
   /** @internal */
-  realDuration: number;
-  /** @internal */
   providedDuration: number;
   /** @internal */
   inferredPoster: string;
@@ -876,6 +904,7 @@ export interface MediaState {
   providedStreamType: MediaStreamType;
   /** @internal */
   inferredStreamType: MediaStreamType;
+  inferredLiveDVRWindow: number;
   /** @internal */
   liveSyncPosition: number | null;
   /** @internal */
@@ -884,4 +913,28 @@ export interface MediaState {
 
 export interface MediaPlayerQuery {
   (state: MediaPlayerState): boolean;
+}
+
+export function boundTime(time: number, store: MediaStore) {
+  const clippedTime = time + store.clipStartTime(),
+    isStart = Math.floor(time) === Math.floor(store.seekableStart()),
+    isEnd = Math.floor(clippedTime) === Math.floor(store.seekableEnd());
+
+  if (isStart) {
+    return store.seekableStart();
+  }
+
+  if (isEnd) {
+    return store.seekableEnd();
+  }
+
+  if (
+    store.isLiveDVR() &&
+    store.liveDVRWindow() > 0 &&
+    clippedTime < store.seekableEnd() - store.liveDVRWindow()
+  ) {
+    return store.bufferedStart();
+  }
+
+  return Math.min(Math.max(store.seekableStart() + 0.1, clippedTime), store.seekableEnd() - 0.1);
 }
