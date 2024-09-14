@@ -277,7 +277,9 @@ export class SliderChapters extends Component<SliderChaptersProps, {}, SliderCha
     return Number.isFinite(endTime) ? endTime : cues[cues.length - 1]?.endTime || 0;
   }
 
-  #calcPercent(cue: VTTCue, percent: number, startTime: number, endTime: number) {
+  #calcPercent(cue: VTTCue | undefined, percent: number, startTime: number, endTime: number) {
+    if (!cue) return 0;
+
     const cues = this.#$cues();
 
     if (cues.length === 0) return 0;
