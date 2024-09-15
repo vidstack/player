@@ -36,6 +36,9 @@ export class YouTubeProviderLoader implements MediaProviderLoader<YouTubeProvide
     return 'video';
   }
 
+  async fetch() {
+    return (await import('./provider')).YouTubeProvider;
+  }
   async load(ctx: MediaContext): Promise<YouTubeProvider> {
     if (__SERVER__) {
       throw Error('[vidstack] can not load youtube provider server-side');
@@ -47,7 +50,9 @@ export class YouTubeProviderLoader implements MediaProviderLoader<YouTubeProvide
       );
     }
 
-    return new (await import('./provider')).YouTubeProvider(this.target, ctx);
+    const Provider = await this.fetch();
+
+    return new Provider(this.target, ctx);
   }
 
   async loadPoster(src: Src, ctx: MediaContext, abort: AbortController): Promise<string | null> {
