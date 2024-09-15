@@ -1,7 +1,8 @@
 import { listenEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../../core/api/media-context';
-import type { AudioTrack, AudioTrackChangeEvent } from '../../core/tracks/audio-tracks';
+import type { AudioTrack } from '../../core/tracks/audio/audio-tracks';
+import type { AudioTrackChangeEvent } from '../../core/tracks/audio/events';
 import { ListSymbol } from '../../foundation/list/symbols';
 import type { HTMLMediaProvider } from './provider';
 

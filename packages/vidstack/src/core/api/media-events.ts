@@ -4,7 +4,7 @@ import type { MediaPlayer } from '../../components/player';
 import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
 import type { MediaProviderAdapter, MediaProviderLoader } from '../../providers/types';
 import type { VideoQuality } from '../quality/video-quality';
-import type { AudioTrack } from '../tracks/audio-tracks';
+import type { AudioTrack } from '../tracks/audio/audio-tracks';
 import type { TextTrack } from '../tracks/text/text-track';
 import type { Src } from './src-types';
 import type {

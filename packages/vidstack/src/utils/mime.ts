@@ -18,6 +18,7 @@ export const AUDIO_TYPES = new Set<string>([
   'audio/m4a',
   'audio/m4b',
   'audio/mp4a',
+  'audio/mp4',
 ]);
 
 // https://github.com/cookpete/react-player/blob/master/src/patterns.js#L16

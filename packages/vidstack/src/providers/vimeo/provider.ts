@@ -299,7 +299,7 @@ export class VimeoProvider
   #onTimeUpdate(time: number, trigger: Event) {
     if (this.#preventTimeUpdates && time === 0) return;
 
-    const { realCurrentTime, realDuration, paused, bufferedEnd } = this.#ctx.$state;
+    const { realCurrentTime, paused, bufferedEnd, seekableEnd, live } = this.#ctx.$state;
 
     if (realCurrentTime() === time) return;
 
@@ -316,7 +316,7 @@ export class VimeoProvider
       }
     }
 
-    if (realDuration() - time < 0.01) {
+    if (!live() && seekableEnd() - time < 0.01) {
       this.#ctx.notify('end', undefined, trigger);
       this.#preventTimeUpdates = true;
       setTimeout(() => {
@@ -517,7 +517,7 @@ export class VimeoProvider
         kind: 'chapters',
         default: true,
       }),
-      { realDuration } = this.#ctx.$state;
+      { seekableEnd } = this.#ctx.$state;
 
     for (let i = 0; i < chapters.length; i++) {
       const chapter = chapters[i],
@@ -526,7 +526,7 @@ export class VimeoProvider
       track.addCue(
         new window.VTTCue(
           chapter.startTime,
-          nextChapter?.startTime ?? realDuration(),
+          nextChapter?.startTime ?? seekableEnd(),
           chapter.title,
         ),
       );

@@ -10,15 +10,16 @@ import * as ME from '../api/media-events';
 import { MediaPlayerController } from '../api/player-controller';
 import { softResetMediaState } from '../api/player-state';
 import { isVideoQualitySrc, type Src } from '../api/src-types';
-import { QualitySymbol } from '../quality/symbols';
 import type {
-  VideoQuality,
   VideoQualityAddEvent,
   VideoQualityChangeEvent,
   VideoQualityRemoveEvent,
-} from '../quality/video-quality';
+} from '../quality/events';
+import { QualitySymbol } from '../quality/symbols';
+import type { VideoQuality } from '../quality/video-quality';
 import {
   getTimeRangesEnd,
+  getTimeRangesStart,
   TimeRange,
   updateTimeIntervals,
   type TimeInterval,
@@ -27,7 +28,7 @@ import type {
   AudioTrackAddEvent,
   AudioTrackChangeEvent,
   AudioTrackRemoveEvent,
-} from '../tracks/audio-tracks';
+} from '../tracks/audio/events';
 import { TextTrackSymbol } from '../tracks/text/symbols';
 import type {
   TextTrackAddEvent,
@@ -598,14 +599,14 @@ export class MediaStateManager extends MediaPlayerController {
   }
 
   ['progress'](event: ME.MediaProgressEvent) {
-    const { buffered, bufferedEnd, seekable, seekableEnd, live, intrinsicDuration } = this.$state,
+    const { buffered, seekable } = this.$state,
       { buffered: newBuffered, seekable: newSeekable } = event.detail,
-      newBufferedEnd = getTimeRangesEnd(newBuffered) ?? Infinity,
+      newBufferedEnd = getTimeRangesEnd(newBuffered),
       hasBufferedLengthChanged = newBuffered.length !== buffered().length,
-      hasBufferedEndChanged = newBufferedEnd > bufferedEnd(),
-      newSeekableEnd = getTimeRangesEnd(newSeekable) ?? Infinity,
+      hasBufferedEndChanged = newBufferedEnd !== getTimeRangesEnd(buffered()),
+      newSeekableEnd = getTimeRangesEnd(newSeekable),
       hasSeekableLengthChanged = newSeekable.length !== seekable().length,
-      hasSeekableEndChanged = newSeekableEnd > seekableEnd();
+      hasSeekableEndChanged = newSeekableEnd !== getTimeRangesEnd(seekable());
 
     if (hasBufferedLengthChanged || hasBufferedEndChanged) {
       buffered.set(newBuffered);
@@ -613,14 +614,6 @@ export class MediaStateManager extends MediaPlayerController {
 
     if (hasSeekableLengthChanged || hasSeekableEndChanged) {
       seekable.set(newSeekable);
-    }
-
-    if (live()) {
-      intrinsicDuration.set(newSeekableEnd);
-      this.dispatch('duration-change', {
-        detail: newSeekableEnd,
-        trigger: event,
-      });
     }
   }
 
@@ -686,19 +679,12 @@ export class MediaStateManager extends MediaPlayerController {
     const provider = peek(this.#media.$provider);
     if (!provider) return;
 
-    const {
-      ended,
-      seekableStart,
-      clipStartTime,
-      clipEndTime,
-      currentTime,
-      realCurrentTime,
-      duration,
-    } = this.$state;
+    const { ended, seekableStart, clipEndTime, currentTime, realCurrentTime, duration } =
+      this.$state;
 
     const shouldReset =
       ended() ||
-      realCurrentTime() < clipStartTime() ||
+      realCurrentTime() < seekableStart() ||
       (clipEndTime() > 0 && realCurrentTime() >= clipEndTime()) ||
       Math.abs(currentTime() - duration()) < 0.1;
 
@@ -930,7 +916,7 @@ export class MediaStateManager extends MediaPlayerController {
   );
 
   ['seeked'](event: ME.MediaSeekedEvent) {
-    const { seeking, currentTime, realCurrentTime, paused, seekableEnd, ended } = this.$state;
+    const { seeking, currentTime, realCurrentTime, paused, seekableEnd, ended, live } = this.$state;
 
     if (this.#request.seeking) {
       seeking.set(true);
@@ -958,10 +944,12 @@ export class MediaStateManager extends MediaPlayerController {
       }
     }
 
-    if (Math.floor(currentTime()) !== Math.floor(seekableEnd())) {
-      ended.set(false);
-    } else {
-      this.end(event);
+    if (!live()) {
+      if (Math.floor(currentTime()) !== Math.floor(seekableEnd())) {
+        ended.set(false);
+      } else {
+        this.end(event);
+      }
     }
   }
 

@@ -62,8 +62,8 @@ importers:
         specifier: ^2.0.12
         version: 2.1.1
       typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
+        specifier: ^5.6.0
+        version: 5.6.2
 
   packages/react:
     dependencies:
@@ -127,7 +127,7 @@ importers:
         version: 4.21.2
       rollup-plugin-dts:
         specifier: ^6.1.1
-        version: 6.1.1(rollup@4.21.2)(typescript@5.5.4)
+        version: 6.1.1(rollup@4.21.2)(typescript@5.6.2)
       tslib:
         specifier: ^2.6.3
         version: 2.7.0
@@ -138,8 +138,8 @@ importers:
         specifier: ^3.13.1
         version: 3.13.1
       typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
+        specifier: ^5.6.0
+        version: 5.6.2
       vidstack:
         specifier: workspace:*
         version: link:../vidstack
@@ -236,7 +236,7 @@ importers:
         version: 4.21.2
       rollup-plugin-dts:
         specifier: ^6.1.1
-        version: 6.1.1(rollup@4.21.2)(typescript@5.5.4)
+        version: 6.1.1(rollup@4.21.2)(typescript@5.6.2)
       rollup-pluginutils:
         specifier: ^2.8.2
         version: 2.8.2
@@ -259,8 +259,8 @@ importers:
         specifier: ^3.13.1
         version: 3.13.1
       typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
+        specifier: ^5.6.0
+        version: 5.6.2
       vite:
         specifier: ^5.3.5
         version: 5.4.3(@types/node@18.19.50)
@@ -269,7 +269,7 @@ importers:
         version: 0.34.6(jsdom@21.1.2)
       vue:
         specifier: ^3.4.36
-        version: 3.5.3(typescript@5.5.4)
+        version: 3.5.3(typescript@5.6.2)
 
 packages:
   /@alloc/quick-lru@5.2.0:
@@ -2112,7 +2112,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.5.3
       '@vue/shared': 3.5.3
-      vue: 3.5.3(typescript@5.5.4)
+      vue: 3.5.3(typescript@5.6.2)
     dev: true
 
   /@vue/shared@3.5.3:
@@ -5796,7 +5796,7 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup-plugin-dts@6.1.1(rollup@4.21.2)(typescript@5.5.4):
+  /rollup-plugin-dts@6.1.1(rollup@4.21.2)(typescript@5.6.2):
     resolution:
       {
         integrity: sha512-aSHRcJ6KG2IHIioYlvAOcEq6U99sVtqDDKVhnwt70rW6tsz3tv5OSjEiWcgzfsHdLyGXZ/3b/7b/+Za3Y6r1XA==,
@@ -5808,7 +5808,7 @@ packages:
     dependencies:
       magic-string: 0.30.11
       rollup: 4.21.2
-      typescript: 5.5.4
+      typescript: 5.6.2
     optionalDependencies:
       '@babel/code-frame': 7.24.7
     dev: true
@@ -6593,10 +6593,10 @@ packages:
       mime-types: 2.1.35
     dev: true
 
-  /typescript@5.5.4:
+  /typescript@5.6.2:
     resolution:
       {
-        integrity: sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==,
+        integrity: sha512-NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==,
       }
     engines: { node: '>=14.17' }
     hasBin: true
@@ -6848,7 +6848,7 @@ packages:
       - terser
     dev: true
 
-  /vue@3.5.3(typescript@5.5.4):
+  /vue@3.5.3(typescript@5.6.2):
     resolution:
       {
         integrity: sha512-xvRbd0HpuLovYbOHXRHlSBsSvmUJbo0pzbkKTApWnQGf3/cu5Z39mQeA5cZdLRVIoNf3zI6MSoOgHUT5i2jO+Q==,
@@ -6864,7 +6864,7 @@ packages:
       '@vue/runtime-dom': 3.5.3
       '@vue/server-renderer': 3.5.3(vue@3.5.3)
       '@vue/shared': 3.5.3
-      typescript: 5.5.4
+      typescript: 5.6.2
     dev: true
 
   /w3c-xmlserializer@4.0.0:

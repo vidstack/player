@@ -4,13 +4,9 @@ import { DOMEvent, isArray } from 'maverick.js/std';
 import { List, type ListReadonlyChangeEvent } from '../../../foundation/list/list';
 import { ListSymbol } from '../../../foundation/list/symbols';
 import type { MediaStorage } from '../../state/media-storage';
+import type { TextTrackModeChangeEvent } from './events';
 import { TextTrackSymbol } from './symbols';
-import {
-  isTrackCaptionKind,
-  TextTrack,
-  type TextTrackInit,
-  type TextTrackModeChangeEvent,
-} from './text-track';
+import { isTrackCaptionKind, TextTrack, type TextTrackInit } from './text-track';
 
 /**
  * @see {@link https://vidstack.io/docs/player/api/text-tracks}

@@ -81,9 +81,9 @@ export class ChaptersRadioGroup extends Component<
 
   @method
   getOptions(): ChaptersRadioOption[] {
-    const { clipStartTime, clipEndTime } = this.#media.$state,
-      startTime = clipStartTime(),
-      endTime = clipEndTime() || Infinity;
+    const { seekableStart, seekableEnd } = this.#media.$state,
+      startTime = seekableStart(),
+      endTime = seekableEnd();
     return this.#cues().map((cue, i) => ({
       cue,
       value: i.toString(),
@@ -122,9 +122,9 @@ export class ChaptersRadioGroup extends Component<
   }
 
   #onCuesChange(track: TextTrack) {
-    const { clipStartTime, clipEndTime } = this.#media.$state,
-      startTime = clipStartTime(),
-      endTime = clipEndTime() || Infinity;
+    const { seekableStart, seekableEnd } = this.#media.$state,
+      startTime = seekableStart(),
+      endTime = seekableEnd();
     this.#cues.set(
       [...track.cues].filter((cue) => cue.startTime <= endTime && cue.endTime >= startTime),
     );
@@ -140,9 +140,9 @@ export class ChaptersRadioGroup extends Component<
       return;
     }
 
-    const { realCurrentTime, clipStartTime, clipEndTime } = this.#media.$state,
-      startTime = clipStartTime(),
-      endTime = clipEndTime() || Infinity,
+    const { realCurrentTime, seekableStart, seekableEnd } = this.#media.$state,
+      startTime = seekableStart(),
+      endTime = seekableEnd(),
       time = realCurrentTime(),
       activeCueIndex = this.#cues().findIndex((cue) => isCueActive(cue, time));
 

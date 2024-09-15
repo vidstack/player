@@ -84,11 +84,11 @@ export class MediaPlayerDelegate {
       await storage?.onLoad?.(source());
 
       const savedPlaybackTime = savedState()?.currentTime,
-        savedPlayingState = savedState()?.paused,
+        savedPausedState = savedState()?.paused,
         storageTime = await storage?.getTime(),
         startTime = savedPlaybackTime ?? storageTime ?? clipStartTime(),
         shouldAutoPlay =
-          savedPlayingState || (savedPlayingState !== false && !started() && autoPlay());
+          savedPausedState === false || (savedPausedState !== true && !started() && autoPlay());
 
       if (provider) {
         provider.setVolume((await storage?.getVolume()) ?? volume());

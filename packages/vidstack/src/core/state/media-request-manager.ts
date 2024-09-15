@@ -19,6 +19,7 @@ import type { MediaContext } from '../api/media-context';
 import type { MediaFullscreenChangeEvent } from '../api/media-events';
 import * as RE from '../api/media-request-events';
 import { MediaPlayerController } from '../api/player-controller';
+import { boundTime } from '../api/player-state';
 import { MediaControls } from '../controls';
 import type { MediaStateManager } from './media-state-manager';
 
@@ -754,8 +755,7 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   }
 
   ['media-seek-request'](event: RE.MediaSeekRequestEvent) {
-    const { seekableStart, seekableEnd, ended, canSeek, live, userBehindLiveEdge, clipStartTime } =
-        this.$state,
+    const { canSeek, ended, live, seekableEnd, userBehindLiveEdge } = this.$state,
       seekTime = event.detail;
 
     if (ended()) this.#request.replaying = true;
@@ -765,21 +765,14 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     this.#request.seeking = false;
     this.#request.queue.delete(key);
 
-    const clippedTime = seekTime + clipStartTime(),
-      isStart = Math.floor(seekTime) === Math.floor(seekableStart()),
-      isEnd = Math.floor(clippedTime) === Math.floor(seekableEnd()),
-      boundTime = isStart
-        ? seekableStart()
-        : isEnd
-          ? seekableEnd()
-          : Math.min(Math.max(seekableStart() + 0.1, clippedTime), seekableEnd() - 0.1);
+    const boundedTime = boundTime(seekTime, this.$state);
 
-    if (!Number.isFinite(boundTime) || !canSeek()) return;
+    if (!Number.isFinite(boundedTime) || !canSeek()) return;
 
     this.#request.queue.enqueue(key, event);
-    this.#$provider()!.setCurrentTime(boundTime);
+    this.#$provider()!.setCurrentTime(boundedTime);
 
-    if (live() && event.isOriginTrusted && Math.abs(seekableEnd() - boundTime) >= 2) {
+    if (live() && event.isOriginTrusted && Math.abs(seekableEnd() - boundedTime) >= 2) {
       userBehindLiveEdge.set(true);
     }
   }

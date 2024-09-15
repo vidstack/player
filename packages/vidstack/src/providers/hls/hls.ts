@@ -59,6 +59,7 @@ export class HLSController {
     this.#instance.on(ctor.Events.AUDIO_TRACK_SWITCHED, this.#onAudioSwitch.bind(this));
     this.#instance.on(ctor.Events.LEVEL_SWITCHED, this.#onLevelSwitched.bind(this));
     this.#instance.on(ctor.Events.LEVEL_LOADED, this.#onLevelLoaded.bind(this));
+    this.#instance.on(ctor.Events.LEVEL_UPDATED, this.#onLevelUpdated.bind(this));
     this.#instance.on(ctor.Events.NON_NATIVE_TEXT_TRACKS_FOUND, this.#onTracksFound.bind(this));
     this.#instance.on(ctor.Events.CUES_PARSED, this.#onCuesParsed.bind(this));
 
@@ -148,6 +149,12 @@ export class HLSController {
     if (quality) {
       const trigger = this.#createDOMEvent(eventType, data);
       this.#ctx.qualities[ListSymbol.select](quality, true, trigger);
+    }
+  }
+
+  #onLevelUpdated(eventType: string, data: HLS.LevelUpdatedData): void {
+    if (data.details.totalduration > 0) {
+      this.#ctx.$state.inferredLiveDVRWindow.set(data.details.totalduration);
     }
   }
 

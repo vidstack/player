@@ -1,4 +1,4 @@
-import { DOMEvent, EventsController, EventsTarget, isString, listenEvent } from 'maverick.js/std';
+import { DOMEvent, EventsController, EventsTarget, isString } from 'maverick.js/std';
 
 import { TextTrackSymbol } from '../symbols';
 import type { TextTrack } from '../text-track';
