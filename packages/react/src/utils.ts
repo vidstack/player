@@ -15,3 +15,13 @@ export function createVTTCue(startTime = 0, endTime = 0, text = ''): VTTCue {
 
   return new window.VTTCue(startTime, endTime, text);
 }
+
+export function appendParamsToURL(baseUrl: string, params: Record<string, any>) {
+  const url = new URL(baseUrl);
+
+  for (const key of Object.keys(params)) {
+    url.searchParams.set(key, params[key] + '');
+  }
+
+  return url.toString();
+}

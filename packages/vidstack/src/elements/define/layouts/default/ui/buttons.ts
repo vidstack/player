@@ -1,12 +1,12 @@
 import { html } from 'lit-html';
 import { ref as $ref, type RefOrCallback } from 'lit-html/directives/ref.js';
-import { isNil, noop, uppercaseFirstChar } from 'maverick.js/std';
+import { isNil, isString, noop, uppercaseFirstChar } from 'maverick.js/std';
 
 import { useDefaultLayoutContext } from '../../../../../components/layouts/default/context';
 import { i18n } from '../../../../../components/layouts/default/translations';
 import type { TooltipPlacement } from '../../../../../components/ui/tooltip/tooltip-content';
 import { useMediaState } from '../../../../../core/api/media-context';
-import { getDownloadFile } from '../../../../../utils/network';
+import { appendParamsToURL, getDownloadFile } from '../../../../../utils/network';
 import { $signal } from '../../../../lit/directives/signal';
 import { IconSlot, IconSlots } from '../slots';
 import { $i18n } from './utils';
@@ -232,7 +232,7 @@ export function DefaultDownloadButton() {
         download: $download,
       });
 
-    return file
+    return isString(file?.url)
       ? html`
           <media-tooltip class="vds-download-tooltip vds-tooltip">
             <media-tooltip-trigger>
@@ -240,7 +240,7 @@ export function DefaultDownloadButton() {
                 role="button"
                 class="vds-download-button vds-button"
                 aria-label=${$i18n(translations, 'Download')}
-                href=${file.url + `?download=${file.name}`}
+                href=${appendParamsToURL(file.url, { download: file.name })}
                 download=${file.name}
                 target="_blank"
               >

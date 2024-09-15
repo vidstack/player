@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { signal } from 'maverick.js';
 import { composeRefs, useSignal } from 'maverick.js/react';
-import { isNumber, listenEvent } from 'maverick.js/std';
+import { isNumber, isString, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 import {
   isKeyboardClick,
@@ -23,6 +23,7 @@ import { useMediaContext } from '../../../hooks/use-media-context';
 import { useMediaRemote } from '../../../hooks/use-media-remote';
 import { useMediaState } from '../../../hooks/use-media-state';
 import { isRemotionSource } from '../../../providers/remotion';
+import { appendParamsToURL } from '../../../utils';
 import { Primitive, type PrimitivePropsWithRef } from '../../primitives/nodes';
 import { AirPlayButton } from '../../ui/buttons/airplay-button';
 import { CaptionButton } from '../../ui/buttons/caption-button';
@@ -746,10 +747,10 @@ function PlyrDownloadButton() {
 
   return slot(
     'download',
-    file ? (
+    isString(file?.url) ? (
       <a
         className="plyr__controls__item plyr__control"
-        href={file.url + `?download=${file.name}`}
+        href={appendParamsToURL(file.url, { download: file.name })}
         download={file.name}
         target="_blank"
       >

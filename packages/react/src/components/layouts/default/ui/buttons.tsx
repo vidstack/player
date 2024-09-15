@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { uppercaseFirstChar } from 'maverick.js/std';
+import { isString, uppercaseFirstChar } from 'maverick.js/std';
 import { getDownloadFile, isTrackCaptionKind } from 'vidstack';
 
 import { useMediaState } from '../../../../hooks/use-media-state';
+import { appendParamsToURL } from '../../../../utils';
 import { AirPlayButton } from '../../../ui/buttons/airplay-button';
 import { CaptionButton } from '../../../ui/buttons/caption-button';
 import { FullscreenButton } from '../../../ui/buttons/fullscreen-button';
@@ -280,13 +281,13 @@ function DefaultDownloadButton() {
     }),
     downloadText = useDefaultLayoutWord('Download');
 
-  return file ? (
+  return isString(file?.url) ? (
     <DefaultTooltip content={downloadText} placement="top">
       <a
         role="button"
         className="vds-download-button vds-button"
         aria-label={downloadText}
-        href={file.url + `?download=${file.name}`}
+        href={appendParamsToURL(file.url, { download: file.name })}
         download={file.name}
         target="_blank"
       >

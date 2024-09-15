@@ -10,13 +10,13 @@ import type { Src } from '../core/api/src-types';
 import { isAudioSrc, isVideoSrc } from './mime';
 
 export function appendParamsToURL(baseUrl: string, params: Record<string, any>) {
-  const searchParams = new URLSearchParams();
+  const url = new URL(baseUrl);
 
   for (const key of Object.keys(params)) {
-    searchParams.set(key, params[key] + '');
+    url.searchParams.set(key, params[key] + '');
   }
 
-  return baseUrl + '?' + searchParams.toString();
+  return url.toString();
 }
 
 export function preconnect(

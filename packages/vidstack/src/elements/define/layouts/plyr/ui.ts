@@ -1,7 +1,7 @@
 import { html, type TemplateResult } from 'lit-html';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { computed, effect, peek, signal, type ReadSignal } from 'maverick.js';
-import { isKeyboardClick, isKeyboardEvent, listenEvent } from 'maverick.js/std';
+import { isKeyboardClick, isKeyboardEvent, isString, listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
 import {
@@ -12,7 +12,7 @@ import type { PlyrControl, PlyrMarker } from '../../../../components/layouts/ply
 import { i18n, type PlyrLayoutWord } from '../../../../components/layouts/plyr/translations';
 import { useMediaContext } from '../../../../core/api/media-context';
 import type { MediaSeekingRequestEvent } from '../../../../core/api/media-request-events';
-import { getDownloadFile } from '../../../../utils/network';
+import { appendParamsToURL, getDownloadFile } from '../../../../utils/network';
 import { $signal } from '../../../lit/directives/signal';
 
 export function PlyrAudioLayout() {
@@ -464,11 +464,11 @@ function DownloadButton() {
       }),
       $downloadText = $i18n(translations, 'Download');
 
-    return file
+    return isString(file?.url)
       ? html`
           <a
             class="plyr__controls__item plyr__control"
-            href=${file.url + `?download=${file.name}`}
+            href=${appendParamsToURL(file.url, { download: file.name })}
             download=${file.name}
             target="_blank"
           >
