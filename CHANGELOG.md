@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.10-next](https://github.com/vidstack/player/releases/tag/v1.12.10-next) (2024-09-15)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- live stream improvements ([3e9867c](https://github.com/vidstack/player/commit/3e9867c3976bc4be15f7baf4638d30164d1ef534))
+- slider should not respond to key events when disabled ([67e8169](https://github.com/vidstack/player/commit/67e8169e900d06c9fc5968a5fe44a6f62a299dce))
+- slider chapters calc might receive undefined cue ([5af7cb9](https://github.com/vidstack/player/commit/5af7cb9e0532eafd3f983b29a648f03c248fb0de))
+- default to intrinsic aspect ratio for thumbnails ([921734f](https://github.com/vidstack/player/commit/921734f7d11a33bf0968dd807b015c47d7a88a98))
+- add audio/m4a mime type (#1412) ([e129a9e](https://github.com/vidstack/player/commit/e129a9ecc52edc581e482118cd908b2e3bba8f7c))
+- plyr layout not registering radio element ([ce20ffc](https://github.com/vidstack/player/commit/ce20ffcce553763448e4c76eec8b136536bcc75e))
+- save playback state correctly on source quality change ([35b89fb](https://github.com/vidstack/player/commit/35b89fbe6981cda56c0f7fe549b82386a44f7a6c))
+- store pending load script requests ([4734549](https://github.com/vidstack/player/commit/473454929766ae9d47d3eca8ede7472bed2c78b8))
+- correctly append search params to download url ([39774ab](https://github.com/vidstack/player/commit/39774aba0a38693b6daee5ebaa213d714af902b0))
+
+#### Player (React)
+
+- include all events in react export ([0475518](https://github.com/vidstack/player/commit/047551841c44d1aa581f71afbec29bdbffef752c))
+
 ## [1.12.9-next](https://github.com/vidstack/player/releases/tag/v1.12.9-next) (2024-08-14)
 
 ### 🐛 Bug Fixes
