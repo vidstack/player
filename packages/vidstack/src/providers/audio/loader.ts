@@ -28,7 +28,12 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
   mediaType(): MediaType {
     return 'audio';
   }
-
+  async fetch() {
+    if (__SERVER__) {
+      throw Error('[vidstack] can not load video provider server-side');
+    }
+    return (await import('./provider')).AudioProvider;
+  }
   async load(ctx: MediaContext) {
     if (__SERVER__) {
       throw Error('[vidstack] can not load audio provider server-side');
@@ -40,6 +45,8 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
       );
     }
 
-    return new (await import('./provider')).AudioProvider(this.target, ctx);
+    const Provider = await this.fetch();
+
+    return new Provider(this.target, ctx);
   }
 }

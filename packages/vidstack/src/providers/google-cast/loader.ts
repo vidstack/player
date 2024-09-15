@@ -110,6 +110,13 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
     }
   }
 
+  async fetch() {
+    if (__SERVER__) {
+      throw Error('[vidstack] can not load video provider server-side');
+    }
+    return (await import('./provider')).GoogleCastProvider;
+  }
+
   async load(ctx: MediaContext) {
     if (__SERVER__) {
       throw Error('[vidstack] can not load google cast provider server-side');
@@ -118,8 +125,9 @@ export class GoogleCastLoader implements MediaProviderLoader<GoogleCastProvider>
     if (!this.#player) {
       throw Error('[vidstack] google cast player was not initialized');
     }
+    const Provider = await this.fetch();
 
-    return new (await import('./provider')).GoogleCastProvider(this.#player, ctx);
+    return new Provider(this.#player, ctx);
   }
 
   async #loadCastFramework(ctx: MediaContext) {

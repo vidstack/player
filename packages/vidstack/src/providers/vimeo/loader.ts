@@ -32,6 +32,13 @@ export class VimeoProviderLoader implements MediaProviderLoader<VimeoProvider> {
     return 'video';
   }
 
+  async fetch() {
+    if (__SERVER__) {
+      throw Error('[vidstack] can not load video provider server-side');
+    }
+    return (await import('./provider')).VimeoProvider;
+  }
+
   async load(ctx: MediaContext): Promise<VimeoProvider> {
     if (__SERVER__) {
       throw Error('[vidstack] can not load vimeo provider server-side');
@@ -43,7 +50,9 @@ export class VimeoProviderLoader implements MediaProviderLoader<VimeoProvider> {
       );
     }
 
-    return new (await import('./provider')).VimeoProvider(this.target, ctx);
+    const Provider = await this.fetch();
+
+    return new Provider(this.target, ctx);
   }
 
   async loadPoster(src: Src, ctx: MediaContext, abort: AbortController): Promise<string | null> {

@@ -17,6 +17,13 @@ export class DASHProviderLoader
     return DASHProviderLoader.supported && isDASHSrc(src);
   }
 
+  override async fetch() {
+    if (__SERVER__) {
+      throw Error('[vidstack] can not load video provider server-side');
+    }
+    return (await import('./provider')).DASHProvider;
+  }
+
   override async load(context) {
     if (__SERVER__) {
       throw Error('[vidstack] can not load dash provider server-side');
@@ -28,6 +35,8 @@ export class DASHProviderLoader
       );
     }
 
-    return new (await import('./provider')).DASHProvider(this.target, context);
+    const Provider = await this.fetch();
+
+    return new Provider(this.target, context);
   }
 }

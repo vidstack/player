@@ -1,4 +1,5 @@
 import type { Scope } from 'maverick.js';
+import type { Constructor } from 'type-fest';
 
 import type { MediaContext } from '../core/api/media-context';
 import type { MediaState } from '../core/api/player-state';
@@ -29,6 +30,7 @@ export interface MediaProviderLoader<Provider extends MediaProviderAdapter = Med
   mediaType(src?: Src): MediaType;
   preconnect?(ctx: MediaContext): void;
   load(ctx: MediaContext): Promise<Provider>;
+  fetch(): Promise<Constructor<Provider>>;
   loadPoster?(src: Src, ctx: MediaContext, abort: AbortController): Promise<string | null>;
 }
 

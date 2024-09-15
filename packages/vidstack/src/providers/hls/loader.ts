@@ -17,6 +17,13 @@ export class HLSProviderLoader
     return HLSProviderLoader.supported && isHLSSrc(src);
   }
 
+  override async fetch() {
+    if (__SERVER__) {
+      throw Error('[vidstack] can not load video provider server-side');
+    }
+    return (await import('./provider')).HLSProvider;
+  }
+
   override async load(context) {
     if (__SERVER__) {
       throw Error('[vidstack] can not load hls provider server-side');
@@ -28,6 +35,8 @@ export class HLSProviderLoader
       );
     }
 
-    return new (await import('./provider')).HLSProvider(this.target, context);
+    const Provider = await this.fetch();
+
+    return new Provider(this.target, context);
   }
 }
