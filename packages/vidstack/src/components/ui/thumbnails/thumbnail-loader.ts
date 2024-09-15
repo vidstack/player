@@ -47,7 +47,7 @@ export class ThumbnailsLoader {
       cache.set(src, cues);
 
       if (cache.size > 99) {
-        const firstKey = cache.keys().next().value;
+        const firstKey = cache.keys().next().value!;
         cache.delete(firstKey);
       }
 

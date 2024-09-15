@@ -49,6 +49,8 @@ export function loadScript(src: string): Promise<void> {
     return promise.promise;
   }
 
+  pendingRequests[src] = promise;
+
   const script = document.createElement('script');
   script.src = src;
 
