@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.11-next](https://github.com/vidstack/player/releases/tag/v1.12.11-next) (2024-09-20)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- set intrinsic thumbnail aspect ratio correctly ([7923070](https://github.com/vidstack/player/commit/792307050a49fe68ab12fe6d14367655a0b879f5))
+
 ## [1.12.10-next](https://github.com/vidstack/player/releases/tag/v1.12.10-next) (2024-09-15)
 
 ### 🐛 Bug Fixes
