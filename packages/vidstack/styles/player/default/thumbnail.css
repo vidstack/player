@@ -7,9 +7,7 @@
 :where(.vds-thumbnail) {
   --min-width: var(--media-thumbnail-min-width, 140px);
   --max-width: var(--media-thumbnail-max-width, 180px);
-  --aspect-ratio: calc(
-    var(--media-thumbnail-aspect-ratio, calc(var(--thumbnail-width) / var(--thumbnail-height)))
-  );
+  --aspect-ratio: var(--media-thumbnail-aspect-ratio, var(--thumbnail-aspect-ratio));
   display: block;
   width: var(--thumbnail-width);
   height: var(--thumbnail-height);

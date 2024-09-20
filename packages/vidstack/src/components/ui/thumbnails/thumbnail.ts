@@ -4,6 +4,7 @@ import { EventsController, isNull, listenEvent } from 'maverick.js/std';
 import { useMediaContext, type MediaContext } from '../../../core/api/media-context';
 import type { MediaCrossOrigin } from '../../../core/api/types';
 import { $ariaBool } from '../../../utils/aria';
+import { round } from '../../../utils/number';
 import { ThumbnailsLoader, type ThumbnailImage, type ThumbnailSrc } from './thumbnail-loader';
 
 /**
@@ -184,8 +185,11 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
 
     this.#style(rootEl, '--thumbnail-width', `${width * scale}px`);
     this.#style(rootEl, '--thumbnail-height', `${height * scale}px`);
+    this.#style(rootEl, '--thumbnail-aspect-ratio', String(round(width / height, 5)));
+
     this.#style(imgEl, 'width', `${imgEl.naturalWidth * scale}px`);
     this.#style(imgEl, 'height', `${imgEl.naturalHeight * scale}px`);
+
     this.#style(
       imgEl,
       'transform',
@@ -193,6 +197,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
         ? `translate(-${thumbnail.coords.x * scale}px, -${thumbnail.coords.y * scale}px)`
         : '',
     );
+
     this.#style(imgEl, 'max-width', 'none');
   }
 
