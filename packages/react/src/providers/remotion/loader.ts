@@ -28,8 +28,15 @@ export class RemotionProviderLoader implements MediaProviderLoader {
   mediaType(): MediaType {
     return 'video';
   }
-
+  async fetch() {
+    if (__SERVER__) {
+      throw Error('[vidstack] can not load video provider server-side');
+    }
+    return (await import('./provider')).RemotionProvider;
+  }
   async load(ctx: MediaContext): Promise<MediaProviderAdapter> {
-    return new (await import('./provider')).RemotionProvider(this.target, ctx);
+    const Provider = await this.fetch();
+
+    return new Provider(this.target, ctx);
   }
 }

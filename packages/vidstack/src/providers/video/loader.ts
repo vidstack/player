@@ -28,6 +28,12 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
   mediaType(): MediaType {
     return 'video';
   }
+  async fetch() {
+    if (__SERVER__) {
+      throw Error('[vidstack] can not load video provider server-side');
+    }
+    return (await import('./provider')).VideoProvider;
+  }
 
   async load(ctx: MediaContext) {
     if (__SERVER__) {
@@ -40,6 +46,8 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
       );
     }
 
-    return new (await import('./provider')).VideoProvider(this.target, ctx);
+    const Provider = await this.fetch();
+
+    return new Provider(this.target, ctx);
   }
 }
