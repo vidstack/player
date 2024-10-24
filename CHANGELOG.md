@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.12-next](https://github.com/vidstack/player/releases/tag/v1.12.12-next) (2024-10-24)
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- remove top-level usage of chrome framework API (#1480) ([c0173b0](https://github.com/vidstack/player/commit/c0173b02aa53675f5d70e65dc771a1032805f5ee))
+
 ## [1.12.11-next](https://github.com/vidstack/player/releases/tag/v1.12.11-next) (2024-09-20)
 
 ### 🐛 Bug Fixes
