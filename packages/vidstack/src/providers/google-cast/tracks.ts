@@ -7,9 +7,6 @@ import type { TextTrack, TextTrackInit } from '../../core/tracks/text/text-track
 import { ListSymbol } from '../../foundation/list/symbols';
 import { getCastSessionMedia } from './utils';
 
-const REMOTE_TRACK_TEXT_TYPE = chrome.cast.media.TrackType.TEXT,
-  REMOTE_TRACK_AUDIO_TYPE = chrome.cast.media.TrackType.AUDIO;
-
 export class GoogleCastTracksManager {
   #cast: cast.framework.RemotePlayer;
   #ctx: MediaContext;
@@ -48,13 +45,13 @@ export class GoogleCastTracksManager {
       activeLocalTextTracks = this.getLocalTextTracks().filter((track) => track.mode === 'showing');
 
     if (activeLocalAudioTrack) {
-      const remoteAudioTracks = this.#getRemoteTracks(REMOTE_TRACK_AUDIO_TYPE),
+      const remoteAudioTracks = this.#getRemoteTracks(chrome.cast.media.TrackType.AUDIO),
         remoteAudioTrack = this.#findRemoteTrack(remoteAudioTracks, activeLocalAudioTrack);
       if (remoteAudioTrack) activeIds.push(remoteAudioTrack.trackId);
     }
 
     if (activeLocalTextTracks?.length) {
-      const remoteTextTracks = this.#getRemoteTracks(REMOTE_TRACK_TEXT_TYPE);
+      const remoteTextTracks = this.#getRemoteTracks(chrome.cast.media.TrackType.TEXT);
       if (remoteTextTracks.length) {
         for (const localTrack of activeLocalTextTracks) {
           const remoteTextTrack = this.#findRemoteTrack(remoteTextTracks, localTrack);
@@ -71,7 +68,7 @@ export class GoogleCastTracksManager {
 
     if (!this.#cast.isMediaLoaded) return;
 
-    const remoteTextTracks = this.#getRemoteTracks(REMOTE_TRACK_TEXT_TYPE);
+    const remoteTextTracks = this.#getRemoteTracks(chrome.cast.media.TrackType.TEXT);
 
     // Sync local tracks with remote cast player.
     for (const localTrack of localTextTracks) {
@@ -89,8 +86,8 @@ export class GoogleCastTracksManager {
 
     const localAudioTracks = this.#getLocalAudioTracks(),
       localTextTracks = this.getLocalTextTracks(),
-      remoteAudioTracks = this.#getRemoteTracks(REMOTE_TRACK_AUDIO_TYPE),
-      remoteTextTracks = this.#getRemoteTracks(REMOTE_TRACK_TEXT_TYPE);
+      remoteAudioTracks = this.#getRemoteTracks(chrome.cast.media.TrackType.AUDIO),
+      remoteTextTracks = this.#getRemoteTracks(chrome.cast.media.TrackType.TEXT);
 
     // Sync remote audio tracks with local player.
     for (const remoteAudioTrack of remoteAudioTracks) {
