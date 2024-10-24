@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/react",
-  "version": "1.12.11",
+  "version": "1.12.12",
   "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
