@@ -89,7 +89,11 @@ export class VidstackPlayer {
     }
 
     for (const [prop, value] of Object.entries(props)) {
-      player[prop] = value;
+      if (typeof value === 'boolean') {
+        player.toggleAttribute(prop, value);
+      } else if (value != null) {
+        player.setAttribute(prop, value.toString());
+      }
     }
 
     if (tracks) {
