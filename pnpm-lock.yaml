@@ -60,7 +60,7 @@ importers:
         version: 2.11.1
       turbo:
         specifier: ^2.0.12
-        version: 2.2.3
+        version: 2.3.0
       typescript:
         specifier: ^5.6.0
         version: 5.6.3
@@ -79,7 +79,7 @@ importers:
         version: 0.43.2
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
-        version: 15.3.0(rollup@4.25.0)
+        version: 15.3.0(rollup@4.27.2)
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -91,7 +91,7 @@ importers:
         version: 18.3.1
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.3(vite@5.4.10)
+        version: 4.3.3(vite@5.4.11)
       esbuild:
         specifier: ^0.23.0
         version: 0.23.1
@@ -118,16 +118,16 @@ importers:
         version: 18.3.1(react@18.3.1)
       remotion:
         specifier: ^4.0.193
-        version: 4.0.228(react-dom@18.3.1)(react@18.3.1)
+        version: 4.0.229(react-dom@18.3.1)(react@18.3.1)
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
       rollup:
         specifier: ^4.20.0
-        version: 4.25.0
+        version: 4.27.2
       rollup-plugin-dts:
         specifier: ^6.1.1
-        version: 6.1.1(rollup@4.25.0)(typescript@5.6.3)
+        version: 6.1.1(rollup@4.27.2)(typescript@5.6.3)
       tslib:
         specifier: ^2.6.3
         version: 2.8.1
@@ -145,7 +145,7 @@ importers:
         version: link:../vidstack
       vite:
         specifier: ^5.3.5
-        version: 5.4.10(@types/node@18.19.64)
+        version: 5.4.11(@types/node@18.19.64)
 
   packages/vidstack:
     dependencies:
@@ -160,7 +160,7 @@ importers:
         version: 1.0.4
       unplugin:
         specifier: ^1.12.0
-        version: 1.15.0
+        version: 1.16.0
     devDependencies:
       '@maverick-js/cli':
         specifier: 0.43.2
@@ -173,7 +173,7 @@ importers:
         version: 3.0.1
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
-        version: 15.3.0(rollup@4.25.0)
+        version: 15.3.0(rollup@4.27.2)
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -182,7 +182,7 @@ importers:
         version: 1.0.4
       autoprefixer:
         specifier: ^10.4.20
-        version: 10.4.20(postcss@8.4.47)
+        version: 10.4.20(postcss@8.4.49)
       compute-scroll-into-view:
         specifier: ^3.1.0
         version: 3.1.0
@@ -227,16 +227,16 @@ importers:
         version: 1.1.5
       postcss:
         specifier: ^8.4.41
-        version: 8.4.47
+        version: 8.4.49
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
       rollup:
         specifier: ^4.20.0
-        version: 4.25.0
+        version: 4.27.2
       rollup-plugin-dts:
         specifier: ^6.1.1
-        version: 6.1.1(rollup@4.25.0)(typescript@5.6.3)
+        version: 6.1.1(rollup@4.27.2)(typescript@5.6.3)
       rollup-pluginutils:
         specifier: ^2.8.2
         version: 2.8.2
@@ -248,7 +248,7 @@ importers:
         version: 4.2.19
       tailwindcss:
         specifier: ^3.4.7
-        version: 3.4.14
+        version: 3.4.15
       tslib:
         specifier: ^2.6.3
         version: 2.8.1
@@ -263,13 +263,13 @@ importers:
         version: 5.6.3
       vite:
         specifier: ^5.3.5
-        version: 5.4.10(@types/node@18.19.64)
+        version: 5.4.11(@types/node@18.19.64)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6(jsdom@21.1.2)
       vue:
         specifier: ^3.4.36
-        version: 3.5.12(typescript@5.6.3)
+        version: 3.5.13(typescript@5.6.3)
 
 packages:
   /@alloc/quick-lru@5.2.0:
@@ -1315,7 +1315,7 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/plugin-node-resolve@15.3.0(rollup@4.25.0):
+  /@rollup/plugin-node-resolve@15.3.0(rollup@4.27.2):
     resolution:
       {
         integrity: sha512-9eO5McEICxMzJpDW9OnMYSv4Sta3hmt7VtBFz5zR9273suNOydOyq/FrGeGy+KsTRFm8w0SLVhzig2ILFT63Ag==,
@@ -1327,15 +1327,15 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.1.3(rollup@4.25.0)
+      '@rollup/pluginutils': 5.1.3(rollup@4.27.2)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-module: 1.0.0
       resolve: 1.22.8
-      rollup: 4.25.0
+      rollup: 4.27.2
     dev: true
 
-  /@rollup/pluginutils@5.1.3(rollup@4.25.0):
+  /@rollup/pluginutils@5.1.3(rollup@4.27.2):
     resolution:
       {
         integrity: sha512-Pnsb6f32CD2W3uCaLZIzDmeFyQ2b8UWMFI7xtwUezpcGBDVDW6y9XgAWIlARiGAo6eNF5FK5aQTr0LFyNyqq5A==,
@@ -1350,13 +1350,13 @@ packages:
       '@types/estree': 1.0.6
       estree-walker: 2.0.2
       picomatch: 4.0.2
-      rollup: 4.25.0
+      rollup: 4.27.2
     dev: true
 
-  /@rollup/rollup-android-arm-eabi@4.25.0:
+  /@rollup/rollup-android-arm-eabi@4.27.2:
     resolution:
       {
-        integrity: sha512-CC/ZqFZwlAIbU1wUPisHyV/XRc5RydFrNLtgl3dGYskdwPZdt4HERtKm50a/+DtTlKeCq9IXFEWR+P6blwjqBA==,
+        integrity: sha512-Tj+j7Pyzd15wAdSJswvs5CJzJNV+qqSUcr/aCD+jpQSBtXvGnV0pnrjoc8zFTe9fcKCatkpFpOO7yAzpO998HA==,
       }
     cpu: [arm]
     os: [android]
@@ -1364,10 +1364,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-android-arm64@4.25.0:
+  /@rollup/rollup-android-arm64@4.27.2:
     resolution:
       {
-        integrity: sha512-/Y76tmLGUJqVBXXCfVS8Q8FJqYGhgH4wl4qTA24E9v/IJM0XvJCGQVSW1QZ4J+VURO9h8YCa28sTFacZXwK7Rg==,
+        integrity: sha512-xsPeJgh2ThBpUqlLgRfiVYBEf/P1nWlWvReG+aBWfNv3XEBpa6ZCmxSVnxJgLgkNz4IbxpLy64h2gCmAAQLneQ==,
       }
     cpu: [arm64]
     os: [android]
@@ -1375,10 +1375,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-darwin-arm64@4.25.0:
+  /@rollup/rollup-darwin-arm64@4.27.2:
     resolution:
       {
-        integrity: sha512-YVT6L3UrKTlC0FpCZd0MGA7NVdp7YNaEqkENbWQ7AOVOqd/7VzyHpgIpc1mIaxRAo1ZsJRH45fq8j4N63I/vvg==,
+        integrity: sha512-KnXU4m9MywuZFedL35Z3PuwiTSn/yqRIhrEA9j+7OSkji39NzVkgxuxTYg5F8ryGysq4iFADaU5osSizMXhU2A==,
       }
     cpu: [arm64]
     os: [darwin]
@@ -1386,10 +1386,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-darwin-x64@4.25.0:
+  /@rollup/rollup-darwin-x64@4.27.2:
     resolution:
       {
-        integrity: sha512-ZRL+gexs3+ZmmWmGKEU43Bdn67kWnMeWXLFhcVv5Un8FQcx38yulHBA7XR2+KQdYIOtD0yZDWBCudmfj6lQJoA==,
+        integrity: sha512-Hj77A3yTvUeCIx/Vi+4d4IbYhyTwtHj07lVzUgpUq9YpJSEiGJj4vXMKwzJ3w5zp5v3PFvpJNgc/J31smZey6g==,
       }
     cpu: [x64]
     os: [darwin]
@@ -1397,10 +1397,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-freebsd-arm64@4.25.0:
+  /@rollup/rollup-freebsd-arm64@4.27.2:
     resolution:
       {
-        integrity: sha512-xpEIXhiP27EAylEpreCozozsxWQ2TJbOLSivGfXhU4G1TBVEYtUPi2pOZBnvGXHyOdLAUUhPnJzH3ah5cqF01g==,
+        integrity: sha512-RjgKf5C3xbn8gxvCm5VgKZ4nn0pRAIe90J0/fdHUsgztd3+Zesb2lm2+r6uX4prV2eUByuxJNdt647/1KPRq5g==,
       }
     cpu: [arm64]
     os: [freebsd]
@@ -1408,10 +1408,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-freebsd-x64@4.25.0:
+  /@rollup/rollup-freebsd-x64@4.27.2:
     resolution:
       {
-        integrity: sha512-sC5FsmZGlJv5dOcURrsnIK7ngc3Kirnx3as2XU9uER+zjfyqIjdcMVgzy4cOawhsssqzoAX19qmxgJ8a14Qrqw==,
+        integrity: sha512-duq21FoXwQtuws+V9H6UZ+eCBc7fxSpMK1GQINKn3fAyd9DFYKPJNcUhdIKOrMFjLEJgQskoMoiuizMt+dl20g==,
       }
     cpu: [x64]
     os: [freebsd]
@@ -1419,10 +1419,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-arm-gnueabihf@4.25.0:
+  /@rollup/rollup-linux-arm-gnueabihf@4.27.2:
     resolution:
       {
-        integrity: sha512-uD/dbLSs1BEPzg564TpRAQ/YvTnCds2XxyOndAO8nJhaQcqQGFgv/DAVko/ZHap3boCvxnzYMa3mTkV/B/3SWA==,
+        integrity: sha512-6npqOKEPRZkLrMcvyC/32OzJ2srdPzCylJjiTJT2c0bwwSGm7nz2F9mNQ1WrAqCBZROcQn91Fno+khFhVijmFA==,
       }
     cpu: [arm]
     os: [linux]
@@ -1430,10 +1430,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-arm-musleabihf@4.25.0:
+  /@rollup/rollup-linux-arm-musleabihf@4.27.2:
     resolution:
       {
-        integrity: sha512-ZVt/XkrDlQWegDWrwyC3l0OfAF7yeJUF4fq5RMS07YM72BlSfn2fQQ6lPyBNjt+YbczMguPiJoCfaQC2dnflpQ==,
+        integrity: sha512-V9Xg6eXtgBtHq2jnuQwM/jr2mwe2EycnopO8cbOvpzFuySCGtKlPCI3Hj9xup/pJK5Q0388qfZZy2DqV2J8ftw==,
       }
     cpu: [arm]
     os: [linux]
@@ -1441,10 +1441,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-arm64-gnu@4.25.0:
+  /@rollup/rollup-linux-arm64-gnu@4.27.2:
     resolution:
       {
-        integrity: sha512-qboZ+T0gHAW2kkSDPHxu7quaFaaBlynODXpBVnPxUgvWYaE84xgCKAPEYE+fSMd3Zv5PyFZR+L0tCdYCMAtG0A==,
+        integrity: sha512-uCFX9gtZJoQl2xDTpRdseYuNqyKkuMDtH6zSrBTA28yTfKyjN9hQ2B04N5ynR8ILCoSDOrG/Eg+J2TtJ1e/CSA==,
       }
     cpu: [arm64]
     os: [linux]
@@ -1452,10 +1452,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-arm64-musl@4.25.0:
+  /@rollup/rollup-linux-arm64-musl@4.27.2:
     resolution:
       {
-        integrity: sha512-ndWTSEmAaKr88dBuogGH2NZaxe7u2rDoArsejNslugHZ+r44NfWiwjzizVS1nUOHo+n1Z6qV3X60rqE/HlISgw==,
+        integrity: sha512-/PU9P+7Rkz8JFYDHIi+xzHabOu9qEWR07L5nWLIUsvserrxegZExKCi2jhMZRd0ATdboKylu/K5yAXbp7fYFvA==,
       }
     cpu: [arm64]
     os: [linux]
@@ -1463,10 +1463,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-powerpc64le-gnu@4.25.0:
+  /@rollup/rollup-linux-powerpc64le-gnu@4.27.2:
     resolution:
       {
-        integrity: sha512-BVSQvVa2v5hKwJSy6X7W1fjDex6yZnNKy3Kx1JGimccHft6HV0THTwNtC2zawtNXKUu+S5CjXslilYdKBAadzA==,
+        integrity: sha512-eCHmol/dT5odMYi/N0R0HC8V8QE40rEpkyje/ZAXJYNNoSfrObOvG/Mn+s1F/FJyB7co7UQZZf6FuWnN6a7f4g==,
       }
     cpu: [ppc64]
     os: [linux]
@@ -1474,10 +1474,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-riscv64-gnu@4.25.0:
+  /@rollup/rollup-linux-riscv64-gnu@4.27.2:
     resolution:
       {
-        integrity: sha512-G4hTREQrIdeV0PE2JruzI+vXdRnaK1pg64hemHq2v5fhv8C7WjVaeXc9P5i4Q5UC06d/L+zA0mszYIKl+wY8oA==,
+        integrity: sha512-DEP3Njr9/ADDln3kNi76PXonLMSSMiCir0VHXxmGSHxCxDfQ70oWjHcJGfiBugzaqmYdTC7Y+8Int6qbnxPBIQ==,
       }
     cpu: [riscv64]
     os: [linux]
@@ -1485,10 +1485,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-s390x-gnu@4.25.0:
+  /@rollup/rollup-linux-s390x-gnu@4.27.2:
     resolution:
       {
-        integrity: sha512-9T/w0kQ+upxdkFL9zPVB6zy9vWW1deA3g8IauJxojN4bnz5FwSsUAD034KpXIVX5j5p/rn6XqumBMxfRkcHapQ==,
+        integrity: sha512-NHGo5i6IE/PtEPh5m0yw5OmPMpesFnzMIS/lzvN5vknnC1sXM5Z/id5VgcNPgpD+wHmIcuYYgW+Q53v+9s96lQ==,
       }
     cpu: [s390x]
     os: [linux]
@@ -1496,10 +1496,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-x64-gnu@4.25.0:
+  /@rollup/rollup-linux-x64-gnu@4.27.2:
     resolution:
       {
-        integrity: sha512-ThcnU0EcMDn+J4B9LD++OgBYxZusuA7iemIIiz5yzEcFg04VZFzdFjuwPdlURmYPZw+fgVrFzj4CA64jSTG4Ig==,
+        integrity: sha512-PaW2DY5Tan+IFvNJGHDmUrORadbe/Ceh8tQxi8cmdQVCCYsLoQo2cuaSj+AU+YRX8M4ivS2vJ9UGaxfuNN7gmg==,
       }
     cpu: [x64]
     os: [linux]
@@ -1507,10 +1507,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-x64-musl@4.25.0:
+  /@rollup/rollup-linux-x64-musl@4.27.2:
     resolution:
       {
-        integrity: sha512-zx71aY2oQxGxAT1JShfhNG79PnjYhMC6voAjzpu/xmMjDnKNf6Nl/xv7YaB/9SIa9jDYf8RBPWEnjcdlhlv1rQ==,
+        integrity: sha512-dOlWEMg2gI91Qx5I/HYqOD6iqlJspxLcS4Zlg3vjk1srE67z5T2Uz91yg/qA8sY0XcwQrFzWWiZhMNERylLrpQ==,
       }
     cpu: [x64]
     os: [linux]
@@ -1518,10 +1518,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-win32-arm64-msvc@4.25.0:
+  /@rollup/rollup-win32-arm64-msvc@4.27.2:
     resolution:
       {
-        integrity: sha512-JT8tcjNocMs4CylWY/CxVLnv8e1lE7ff1fi6kbGocWwxDq9pj30IJ28Peb+Y8yiPNSF28oad42ApJB8oUkwGww==,
+        integrity: sha512-euMIv/4x5Y2/ImlbGl88mwKNXDsvzbWUlT7DFky76z2keajCtcbAsN9LUdmk31hAoVmJJYSThgdA0EsPeTr1+w==,
       }
     cpu: [arm64]
     os: [win32]
@@ -1529,10 +1529,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-win32-ia32-msvc@4.25.0:
+  /@rollup/rollup-win32-ia32-msvc@4.27.2:
     resolution:
       {
-        integrity: sha512-dRLjLsO3dNOfSN6tjyVlG+Msm4IiZnGkuZ7G5NmpzwF9oOc582FZG05+UdfTbz5Jd4buK/wMb6UeHFhG18+OEg==,
+        integrity: sha512-RsnE6LQkUHlkC10RKngtHNLxb7scFykEbEwOFDjr3CeCMG+Rr+cKqlkKc2/wJ1u4u990urRHCbjz31x84PBrSQ==,
       }
     cpu: [ia32]
     os: [win32]
@@ -1540,10 +1540,10 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-win32-x64-msvc@4.25.0:
+  /@rollup/rollup-win32-x64-msvc@4.27.2:
     resolution:
       {
-        integrity: sha512-/RqrIFtLB926frMhZD0a5oDa4eFIbyNEwLLloMTEjmqfwZWXywwVVOVmwTsuyhC9HKkVEZcOOi+KV4U9wmOdlg==,
+        integrity: sha512-foJM5vv+z2KQmn7emYdDLyTbkoO5bkHZE1oth2tWbQNGW7mX32d46Hz6T0MqXdWS2vBZhaEtHqdy9WYwGfiliA==,
       }
     cpu: [x64]
     os: [win32]
@@ -1943,7 +1943,7 @@ packages:
       '@types/node': 18.19.64
     dev: true
 
-  /@vitejs/plugin-react@4.3.3(vite@5.4.10):
+  /@vitejs/plugin-react@4.3.3(vite@5.4.11):
     resolution:
       {
         integrity: sha512-NooDe9GpHGqNns1i8XDERg0Vsg5SSYRhRxxyTGogUdkdNt47jal+fbuYi+Yfq6pzRCKXyoPcWisfxE6RIM3GKA==,
@@ -1957,7 +1957,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.0)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.10(@types/node@18.19.64)
+      vite: 5.4.11(@types/node@18.19.64)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2015,104 +2015,104 @@ packages:
       pretty-format: 29.7.0
     dev: true
 
-  /@vue/compiler-core@3.5.12:
+  /@vue/compiler-core@3.5.13:
     resolution:
       {
-        integrity: sha512-ISyBTRMmMYagUxhcpyEH0hpXRd/KqDU4ymofPgl2XAkY9ZhQ+h0ovEZJIiPop13UmR/54oA2cgMDjgroRelaEw==,
+        integrity: sha512-oOdAkwqUfW1WqpwSYJce06wvt6HljgY3fGeM9NcVA1HaYOij3mZG9Rkysn0OHuyUAGMbEbARIpsG+LPVlBJ5/Q==,
       }
     dependencies:
       '@babel/parser': 7.26.2
-      '@vue/shared': 3.5.12
+      '@vue/shared': 3.5.13
       entities: 4.5.0
       estree-walker: 2.0.2
       source-map-js: 1.2.1
     dev: true
 
-  /@vue/compiler-dom@3.5.12:
+  /@vue/compiler-dom@3.5.13:
     resolution:
       {
-        integrity: sha512-9G6PbJ03uwxLHKQ3P42cMTi85lDRvGLB2rSGOiQqtXELat6uI4n8cNz9yjfVHRPIu+MsK6TE418Giruvgptckg==,
+        integrity: sha512-ZOJ46sMOKUjO3e94wPdCzQ6P1Lx/vhp2RSvfaab88Ajexs0AHeV0uasYhi99WPaogmBlRHNRuly8xV75cNTMDA==,
       }
     dependencies:
-      '@vue/compiler-core': 3.5.12
-      '@vue/shared': 3.5.12
+      '@vue/compiler-core': 3.5.13
+      '@vue/shared': 3.5.13
     dev: true
 
-  /@vue/compiler-sfc@3.5.12:
+  /@vue/compiler-sfc@3.5.13:
     resolution:
       {
-        integrity: sha512-2k973OGo2JuAa5+ZlekuQJtitI5CgLMOwgl94BzMCsKZCX/xiqzJYzapl4opFogKHqwJk34vfsaKpfEhd1k5nw==,
+        integrity: sha512-6VdaljMpD82w6c2749Zhf5T9u5uLBWKnVue6XWxprDobftnletJ8+oel7sexFfM3qIxNmVE7LSFGTpv6obNyaQ==,
       }
     dependencies:
       '@babel/parser': 7.26.2
-      '@vue/compiler-core': 3.5.12
-      '@vue/compiler-dom': 3.5.12
-      '@vue/compiler-ssr': 3.5.12
-      '@vue/shared': 3.5.12
+      '@vue/compiler-core': 3.5.13
+      '@vue/compiler-dom': 3.5.13
+      '@vue/compiler-ssr': 3.5.13
+      '@vue/shared': 3.5.13
       estree-walker: 2.0.2
       magic-string: 0.30.12
-      postcss: 8.4.47
+      postcss: 8.4.49
       source-map-js: 1.2.1
     dev: true
 
-  /@vue/compiler-ssr@3.5.12:
+  /@vue/compiler-ssr@3.5.13:
     resolution:
       {
-        integrity: sha512-eLwc7v6bfGBSM7wZOGPmRavSWzNFF6+PdRhE+VFJhNCgHiF8AM7ccoqcv5kBXA2eWUfigD7byekvf/JsOfKvPA==,
+        integrity: sha512-wMH6vrYHxQl/IybKJagqbquvxpWCuVYpoUJfCqFZwa/JY1GdATAQ+TgVtgrwwMZ0D07QhA99rs/EAAWfvG6KpA==,
       }
     dependencies:
-      '@vue/compiler-dom': 3.5.12
-      '@vue/shared': 3.5.12
+      '@vue/compiler-dom': 3.5.13
+      '@vue/shared': 3.5.13
     dev: true
 
-  /@vue/reactivity@3.5.12:
+  /@vue/reactivity@3.5.13:
     resolution:
       {
-        integrity: sha512-UzaN3Da7xnJXdz4Okb/BGbAaomRHc3RdoWqTzlvd9+WBR5m3J39J1fGcHes7U3za0ruYn/iYy/a1euhMEHvTAg==,
+        integrity: sha512-NaCwtw8o48B9I6L1zl2p41OHo/2Z4wqYGGIK1Khu5T7yxrn+ATOixn/Udn2m+6kZKB/J7cuT9DbWWhRxqixACg==,
       }
     dependencies:
-      '@vue/shared': 3.5.12
+      '@vue/shared': 3.5.13
     dev: true
 
-  /@vue/runtime-core@3.5.12:
+  /@vue/runtime-core@3.5.13:
     resolution:
       {
-        integrity: sha512-hrMUYV6tpocr3TL3Ad8DqxOdpDe4zuQY4HPY3X/VRh+L2myQO8MFXPAMarIOSGNu0bFAjh1yBkMPXZBqCk62Uw==,
+        integrity: sha512-Fj4YRQ3Az0WTZw1sFe+QDb0aXCerigEpw418pw1HBUKFtnQHWzwojaukAs2X/c9DQz4MQ4bsXTGlcpGxU/RCIw==,
       }
     dependencies:
-      '@vue/reactivity': 3.5.12
-      '@vue/shared': 3.5.12
+      '@vue/reactivity': 3.5.13
+      '@vue/shared': 3.5.13
     dev: true
 
-  /@vue/runtime-dom@3.5.12:
+  /@vue/runtime-dom@3.5.13:
     resolution:
       {
-        integrity: sha512-q8VFxR9A2MRfBr6/55Q3umyoN7ya836FzRXajPB6/Vvuv0zOPL+qltd9rIMzG/DbRLAIlREmnLsplEF/kotXKA==,
+        integrity: sha512-dLaj94s93NYLqjLiyFzVs9X6dWhTdAlEAciC3Moq7gzAc13VJUdCnjjRurNM6uTLFATRHexHCTu/Xp3eW6yoog==,
       }
     dependencies:
-      '@vue/reactivity': 3.5.12
-      '@vue/runtime-core': 3.5.12
-      '@vue/shared': 3.5.12
+      '@vue/reactivity': 3.5.13
+      '@vue/runtime-core': 3.5.13
+      '@vue/shared': 3.5.13
       csstype: 3.1.3
     dev: true
 
-  /@vue/server-renderer@3.5.12(vue@3.5.12):
+  /@vue/server-renderer@3.5.13(vue@3.5.13):
     resolution:
       {
-        integrity: sha512-I3QoeDDeEPZm8yR28JtY+rk880Oqmj43hreIBVTicisFTx/Dl7JpG72g/X7YF8hnQD3IFhkky5i2bPonwrTVPg==,
+        integrity: sha512-wAi4IRJV/2SAW3htkTlB+dHeRmpTiVIK1OGLWV1yeStVSebSQQOwGwIq0D3ZIoBj2C2qpgz5+vX9iEBkTdk5YA==,
       }
     peerDependencies:
-      vue: 3.5.12
+      vue: 3.5.13
     dependencies:
-      '@vue/compiler-ssr': 3.5.12
-      '@vue/shared': 3.5.12
-      vue: 3.5.12(typescript@5.6.3)
+      '@vue/compiler-ssr': 3.5.13
+      '@vue/shared': 3.5.13
+      vue: 3.5.13(typescript@5.6.3)
     dev: true
 
-  /@vue/shared@3.5.12:
+  /@vue/shared@3.5.13:
     resolution:
       {
-        integrity: sha512-L2RPSAwUFbgZH20etwrXyVyCBu9OxRSi8T/38QsvnkJyvq2LufW2lDCOzm7t/U9C1mkhJGWYfCuFBCmIuNivrg==,
+        integrity: sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ==,
       }
     dev: true
 
@@ -2414,7 +2414,7 @@ packages:
       }
     dev: true
 
-  /autoprefixer@10.4.20(postcss@8.4.47):
+  /autoprefixer@10.4.20(postcss@8.4.49):
     resolution:
       {
         integrity: sha512-XY25y5xSv/wEoqzDyXXME4AFfkZI0P23z6Fs3YgymDnKJkCGOnkL0iTxCa85UTqaSgfcqyf3UA6+c7wUvx/16g==,
@@ -2425,11 +2425,11 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.24.2
-      caniuse-lite: 1.0.30001679
+      caniuse-lite: 1.0.30001680
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.1.1
-      postcss: 8.4.47
+      postcss: 8.4.49
       postcss-value-parser: 4.2.0
     dev: true
 
@@ -2521,8 +2521,8 @@ packages:
     engines: { node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7 }
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001679
-      electron-to-chromium: 1.5.55
+      caniuse-lite: 1.0.30001680
+      electron-to-chromium: 1.5.62
       node-releases: 2.0.18
       update-browserslist-db: 1.1.1(browserslist@4.24.2)
     dev: true
@@ -2576,10 +2576,10 @@ packages:
     engines: { node: '>= 6' }
     dev: true
 
-  /caniuse-lite@1.0.30001679:
+  /caniuse-lite@1.0.30001680:
     resolution:
       {
-        integrity: sha512-j2YqID/YwpLnKzCmBOS4tlZdWprXm3ZmQLBH9ZBXFOhoxLA46fwyBvx6toCBWBmnuwUY/qB3kEU6gFx8qgCroA==,
+        integrity: sha512-rPQy70G6AGUMnbwS1z6Xg+RkHYPAi18ihs47GH0jcxIG7wArmPgY3XbS2sRdBbxJljp3thdT8BIqv9ccCypiPA==,
       }
     dev: true
 
@@ -3140,10 +3140,10 @@ packages:
       }
     dev: true
 
-  /electron-to-chromium@1.5.55:
+  /electron-to-chromium@1.5.62:
     resolution:
       {
-        integrity: sha512-6maZ2ASDOTBtjt9FhqYPRnbvKU5tjG0IN9SztUOWYw2AzNDNpKJYLJmlK0/En4Hs/aiWnB+JZ+gW19PIGszgKg==,
+        integrity: sha512-t8c+zLmJHa9dJy96yBZRXGQYoiCEnHYgFwn1asvSPZSUdVxnB62A4RASd7k41ytG3ErFBA0TpHlKg9D9SQBmLg==,
       }
     dev: true
 
@@ -4240,10 +4240,10 @@ packages:
       }
     dev: true
 
-  /is-reference@3.0.2:
+  /is-reference@3.0.3:
     resolution:
       {
-        integrity: sha512-v3rht/LgVcsdZa3O2Nqs+NMowLOxeOm7Ay9+/ARQ2F+qEoANRcqrjAZKGN0v8ymUetZGgkp26LTnGT7H0Qo9Pg==,
+        integrity: sha512-ixkJoqQvAP88E6wLydLGGqCJsrFUnqoH6HnaczB8XmDH1oaWU+xxdptvikTgaEhtZ53Ky6YXiBuUI2WXLMCwjw==,
       }
     dependencies:
       '@types/estree': 1.0.6
@@ -4930,10 +4930,10 @@ packages:
     hasBin: true
     dev: true
 
-  /mlly@1.7.2:
+  /mlly@1.7.3:
     resolution:
       {
-        integrity: sha512-tN3dvVHYVz4DhSXinXIk7u9syPYaJvio118uomkovAtWBT+RdbP6Lfh/5Lvo519YMmwBafwlh20IPTXIStscpA==,
+        integrity: sha512-xUsx5n/mN0uQf4V548PKQ+YShA4/IW0KI1dZhrNrPCLG+xizETbHTkOa1f8/xut9JRPp8kQuMnz0oqwkTiLo/A==,
       }
     dependencies:
       acorn: 8.14.0
@@ -5279,7 +5279,7 @@ packages:
     dependencies:
       '@types/estree': 1.0.6
       estree-walker: 3.0.3
-      is-reference: 3.0.2
+      is-reference: 3.0.3
     dev: true
 
   /picocolors@1.1.1:
@@ -5337,11 +5337,11 @@ packages:
       }
     dependencies:
       confbox: 0.1.8
-      mlly: 1.7.2
+      mlly: 1.7.3
       pathe: 1.1.2
     dev: true
 
-  /postcss-import@15.1.0(postcss@8.4.47):
+  /postcss-import@15.1.0(postcss@8.4.49):
     resolution:
       {
         integrity: sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew==,
@@ -5350,13 +5350,13 @@ packages:
     peerDependencies:
       postcss: ^8.0.0
     dependencies:
-      postcss: 8.4.47
+      postcss: 8.4.49
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
       resolve: 1.22.8
     dev: true
 
-  /postcss-js@4.0.1(postcss@8.4.47):
+  /postcss-js@4.0.1(postcss@8.4.49):
     resolution:
       {
         integrity: sha512-dDLF8pEO191hJMtlHFPRa8xsizHaM82MLfNkUHdUtVEV3tgTp5oj+8qbEqYM57SLfc74KSbw//4SeJma2LRVIw==,
@@ -5366,10 +5366,10 @@ packages:
       postcss: ^8.4.21
     dependencies:
       camelcase-css: 2.0.1
-      postcss: 8.4.47
+      postcss: 8.4.49
     dev: true
 
-  /postcss-load-config@4.0.2(postcss@8.4.47):
+  /postcss-load-config@4.0.2(postcss@8.4.49):
     resolution:
       {
         integrity: sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ==,
@@ -5385,11 +5385,11 @@ packages:
         optional: true
     dependencies:
       lilconfig: 3.1.2
-      postcss: 8.4.47
+      postcss: 8.4.49
       yaml: 2.6.0
     dev: true
 
-  /postcss-nested@6.2.0(postcss@8.4.47):
+  /postcss-nested@6.2.0(postcss@8.4.49):
     resolution:
       {
         integrity: sha512-HQbt28KulC5AJzG+cZtj9kvKB93CFCdLvog1WFLf1D+xmMvPGlBstkpTEZfK5+AN9hfJocyBFCNiqyS48bpgzQ==,
@@ -5398,7 +5398,7 @@ packages:
     peerDependencies:
       postcss: ^8.2.14
     dependencies:
-      postcss: 8.4.47
+      postcss: 8.4.49
       postcss-selector-parser: 6.1.2
     dev: true
 
@@ -5420,10 +5420,10 @@ packages:
       }
     dev: true
 
-  /postcss@8.4.47:
+  /postcss@8.4.49:
     resolution:
       {
-        integrity: sha512-56rxCq7G/XfB4EkXq9Egn5GCqugWvDFjafDOThIdMBsI15iqPqR5r15TfSr1YPYeEI19YeaXMCbY6u88Y76GLQ==,
+        integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==,
       }
     engines: { node: ^10 || ^12 || >=14 }
     dependencies:
@@ -5631,10 +5631,10 @@ packages:
     engines: { node: '>= 14.16.0' }
     dev: true
 
-  /remotion@4.0.228(react-dom@18.3.1)(react@18.3.1):
+  /remotion@4.0.229(react-dom@18.3.1)(react@18.3.1):
     resolution:
       {
-        integrity: sha512-5F/4uFgK8GJmtHsd3Zy0KeJCVrJ7fFSESKCkuDEbHN18YB7wnYTZHkKYqJH+ALjnqq7E1PVkPHBjk32mVSCUJg==,
+        integrity: sha512-0M+Q+WgbXZhz325huvS64y+ySWgYDlgtHPKCH/A40bz7B/cPeIDHnR5U8daXjrD2nEj8GR/p0DlkCwJgZ8QYZg==,
       }
     peerDependencies:
       react: '>=16.8.0'
@@ -5737,7 +5737,7 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup-plugin-dts@6.1.1(rollup@4.25.0)(typescript@5.6.3):
+  /rollup-plugin-dts@6.1.1(rollup@4.27.2)(typescript@5.6.3):
     resolution:
       {
         integrity: sha512-aSHRcJ6KG2IHIioYlvAOcEq6U99sVtqDDKVhnwt70rW6tsz3tv5OSjEiWcgzfsHdLyGXZ/3b/7b/+Za3Y6r1XA==,
@@ -5748,7 +5748,7 @@ packages:
       typescript: ^4.5 || ^5.0
     dependencies:
       magic-string: 0.30.12
-      rollup: 4.25.0
+      rollup: 4.27.2
       typescript: 5.6.3
     optionalDependencies:
       '@babel/code-frame': 7.26.2
@@ -5763,34 +5763,34 @@ packages:
       estree-walker: 0.6.1
     dev: true
 
-  /rollup@4.25.0:
+  /rollup@4.27.2:
     resolution:
       {
-        integrity: sha512-uVbClXmR6wvx5R1M3Od4utyLUxrmOcEm3pAtMphn73Apq19PDtHpgZoEvqH2YnnaNUuvKmg2DgRd2Sqv+odyqg==,
+        integrity: sha512-KreA+PzWmk2yaFmZVwe6GB2uBD86nXl86OsDkt1bJS9p3vqWuEQ6HnJJ+j/mZi/q0920P99/MVRlB4L3crpF5w==,
       }
     engines: { node: '>=18.0.0', npm: '>=8.0.0' }
     hasBin: true
     dependencies:
       '@types/estree': 1.0.6
     optionalDependencies:
-      '@rollup/rollup-android-arm-eabi': 4.25.0
-      '@rollup/rollup-android-arm64': 4.25.0
-      '@rollup/rollup-darwin-arm64': 4.25.0
-      '@rollup/rollup-darwin-x64': 4.25.0
-      '@rollup/rollup-freebsd-arm64': 4.25.0
-      '@rollup/rollup-freebsd-x64': 4.25.0
-      '@rollup/rollup-linux-arm-gnueabihf': 4.25.0
-      '@rollup/rollup-linux-arm-musleabihf': 4.25.0
-      '@rollup/rollup-linux-arm64-gnu': 4.25.0
-      '@rollup/rollup-linux-arm64-musl': 4.25.0
-      '@rollup/rollup-linux-powerpc64le-gnu': 4.25.0
-      '@rollup/rollup-linux-riscv64-gnu': 4.25.0
-      '@rollup/rollup-linux-s390x-gnu': 4.25.0
-      '@rollup/rollup-linux-x64-gnu': 4.25.0
-      '@rollup/rollup-linux-x64-musl': 4.25.0
-      '@rollup/rollup-win32-arm64-msvc': 4.25.0
-      '@rollup/rollup-win32-ia32-msvc': 4.25.0
-      '@rollup/rollup-win32-x64-msvc': 4.25.0
+      '@rollup/rollup-android-arm-eabi': 4.27.2
+      '@rollup/rollup-android-arm64': 4.27.2
+      '@rollup/rollup-darwin-arm64': 4.27.2
+      '@rollup/rollup-darwin-x64': 4.27.2
+      '@rollup/rollup-freebsd-arm64': 4.27.2
+      '@rollup/rollup-freebsd-x64': 4.27.2
+      '@rollup/rollup-linux-arm-gnueabihf': 4.27.2
+      '@rollup/rollup-linux-arm-musleabihf': 4.27.2
+      '@rollup/rollup-linux-arm64-gnu': 4.27.2
+      '@rollup/rollup-linux-arm64-musl': 4.27.2
+      '@rollup/rollup-linux-powerpc64le-gnu': 4.27.2
+      '@rollup/rollup-linux-riscv64-gnu': 4.27.2
+      '@rollup/rollup-linux-s390x-gnu': 4.27.2
+      '@rollup/rollup-linux-x64-gnu': 4.27.2
+      '@rollup/rollup-linux-x64-musl': 4.27.2
+      '@rollup/rollup-win32-arm64-msvc': 4.27.2
+      '@rollup/rollup-win32-ia32-msvc': 4.27.2
+      '@rollup/rollup-win32-x64-msvc': 4.27.2
       fsevents: 2.3.3
     dev: true
 
@@ -6228,7 +6228,7 @@ packages:
       code-red: 1.0.4
       css-tree: 2.3.1
       estree-walker: 3.0.3
-      is-reference: 3.0.2
+      is-reference: 3.0.3
       locate-character: 3.0.0
       magic-string: 0.30.12
       periscopic: 3.1.0
@@ -6241,10 +6241,10 @@ packages:
       }
     dev: true
 
-  /tailwindcss@3.4.14:
+  /tailwindcss@3.4.15:
     resolution:
       {
-        integrity: sha512-IcSvOcTRcUtQQ7ILQL5quRDg7Xs93PdJEk1ZLbhhvJc7uj/OAhYOnruEiwnGgBvUtaUAJ8/mhSw1o8L2jCiENA==,
+        integrity: sha512-r4MeXnfBmSOuKUWmXe6h2CcyfzJCEk4F0pptO5jlnYSIViUkVmsawj80N5h2lO3gwcmSb4n3PuN+e+GC1Guylw==,
       }
     engines: { node: '>=14.0.0' }
     hasBin: true
@@ -6263,11 +6263,11 @@ packages:
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.1.1
-      postcss: 8.4.47
-      postcss-import: 15.1.0(postcss@8.4.47)
-      postcss-js: 4.0.1(postcss@8.4.47)
-      postcss-load-config: 4.0.2(postcss@8.4.47)
-      postcss-nested: 6.2.0(postcss@8.4.47)
+      postcss: 8.4.49
+      postcss-import: 15.1.0(postcss@8.4.49)
+      postcss-js: 4.0.1(postcss@8.4.49)
+      postcss-load-config: 4.0.2(postcss@8.4.49)
+      postcss-nested: 6.2.0(postcss@8.4.49)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.8
       sucrase: 3.35.0
@@ -6394,10 +6394,10 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /turbo-darwin-64@2.2.3:
+  /turbo-darwin-64@2.3.0:
     resolution:
       {
-        integrity: sha512-Rcm10CuMKQGcdIBS3R/9PMeuYnv6beYIHqfZFeKWVYEWH69sauj4INs83zKMTUiZJ3/hWGZ4jet9AOwhsssLyg==,
+        integrity: sha512-pji+D49PhFItyQjf2QVoLZw2d3oRGo8gJgKyOiRzvip78Rzie74quA8XNwSg/DuzM7xx6gJ3p2/LylTTlgZXxQ==,
       }
     cpu: [x64]
     os: [darwin]
@@ -6405,10 +6405,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-darwin-arm64@2.2.3:
+  /turbo-darwin-arm64@2.3.0:
     resolution:
       {
-        integrity: sha512-+EIMHkuLFqUdJYsA3roj66t9+9IciCajgj+DVek+QezEdOJKcRxlvDOS2BUaeN8kEzVSsNiAGnoysFWYw4K0HA==,
+        integrity: sha512-AJrGIL9BO41mwDF/IBHsNGwvtdyB911vp8f5mbNo1wG66gWTvOBg7WCtYQBvCo11XTenTfXPRSsAb7w3WAZb6w==,
       }
     cpu: [arm64]
     os: [darwin]
@@ -6416,10 +6416,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-linux-64@2.2.3:
+  /turbo-linux-64@2.3.0:
     resolution:
       {
-        integrity: sha512-UBhJCYnqtaeOBQLmLo8BAisWbc9v9daL9G8upLR+XGj6vuN/Nz6qUAhverN4Pyej1g4Nt1BhROnj6GLOPYyqxQ==,
+        integrity: sha512-jZqW6vc2sPJT3M/3ZmV1Cg4ecQVPqsbHncG/RnogHpBu783KCSXIndgxvUQNm9qfgBYbZDBnP1md63O4UTElhw==,
       }
     cpu: [x64]
     os: [linux]
@@ -6427,10 +6427,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-linux-arm64@2.2.3:
+  /turbo-linux-arm64@2.3.0:
     resolution:
       {
-        integrity: sha512-hJYT9dN06XCQ3jBka/EWvvAETnHRs3xuO/rb5bESmDfG+d9yQjeTMlhRXKrr4eyIMt6cLDt1LBfyi+6CQ+VAwQ==,
+        integrity: sha512-HUbDLJlvd/hxuyCNO0BmEWYQj0TugRMvSQeG8vHJH+Lq8qOgDAe7J0K73bFNbZejZQxW3C3XEiZFB3pnpO78+A==,
       }
     cpu: [arm64]
     os: [linux]
@@ -6438,10 +6438,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-windows-64@2.2.3:
+  /turbo-windows-64@2.3.0:
     resolution:
       {
-        integrity: sha512-NPrjacrZypMBF31b4HE4ROg4P3nhMBPHKS5WTpMwf7wydZ8uvdEHpESVNMOtqhlp857zbnKYgP+yJF30H3N2dQ==,
+        integrity: sha512-c5rxrGNTYDWX9QeMzWLFE9frOXnKjHGEvQMp1SfldDlbZYsloX9UKs31TzUThzfTgTiz8NYuShaXJ2UvTMnV/g==,
       }
     cpu: [x64]
     os: [win32]
@@ -6449,10 +6449,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-windows-arm64@2.2.3:
+  /turbo-windows-arm64@2.3.0:
     resolution:
       {
-        integrity: sha512-fnNrYBCqn6zgKPKLHu4sOkihBI/+0oYFr075duRxqUZ+1aLWTAGfHZLgjVeLh3zR37CVzuerGIPWAEkNhkWEIw==,
+        integrity: sha512-7qfUuYhfIVb1AZgs89DxhXK+zZez6O2ocmixEQ4hXZK7ytnBt5vaz2zGNJJKFNYIL5HX1C3tuHolnpNgDNCUIg==,
       }
     cpu: [arm64]
     os: [win32]
@@ -6460,19 +6460,19 @@ packages:
     dev: true
     optional: true
 
-  /turbo@2.2.3:
+  /turbo@2.3.0:
     resolution:
       {
-        integrity: sha512-5lDvSqIxCYJ/BAd6rQGK/AzFRhBkbu4JHVMLmGh/hCb7U3CqSnr5Tjwfy9vc+/5wG2DJ6wttgAaA7MoCgvBKZQ==,
+        integrity: sha512-/uOq5o2jwRPyaUDnwBpOR5k9mQq4c3wziBgWNWttiYQPmbhDtrKYPRBxTvA2WpgQwRIbt8UM612RMN8n/TvmHA==,
       }
     hasBin: true
     optionalDependencies:
-      turbo-darwin-64: 2.2.3
-      turbo-darwin-arm64: 2.2.3
-      turbo-linux-64: 2.2.3
-      turbo-linux-arm64: 2.2.3
-      turbo-windows-64: 2.2.3
-      turbo-windows-arm64: 2.2.3
+      turbo-darwin-64: 2.3.0
+      turbo-darwin-arm64: 2.3.0
+      turbo-linux-64: 2.3.0
+      turbo-linux-arm64: 2.3.0
+      turbo-windows-64: 2.3.0
+      turbo-windows-arm64: 2.3.0
     dev: true
 
   /type-detect@4.1.0:
@@ -6581,17 +6581,12 @@ packages:
     engines: { node: '>= 0.8' }
     dev: true
 
-  /unplugin@1.15.0:
+  /unplugin@1.16.0:
     resolution:
       {
-        integrity: sha512-jTPIs63W+DUEDW207ztbaoO7cQ4p5aVaB823LSlxpsFEU3Mykwxf3ZGC/wzxFJeZlASZYgVrWeo7LgOrqJZ8RA==,
+        integrity: sha512-5liCNPuJW8dqh3+DM6uNM2EI3MLLpCKp/KY+9pB5M2S2SR2qvvDHhKgBOaTWEbZTAws3CXfB0rKTIolWKL05VQ==,
       }
     engines: { node: '>=14.0.0' }
-    peerDependencies:
-      webpack-sources: ^3
-    peerDependenciesMeta:
-      webpack-sources:
-        optional: true
     dependencies:
       acorn: 8.14.0
       webpack-virtual-modules: 0.6.2
@@ -6646,10 +6641,10 @@ packages:
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
-      mlly: 1.7.2
+      mlly: 1.7.3
       pathe: 1.1.2
       picocolors: 1.1.1
-      vite: 5.4.10(@types/node@18.19.64)
+      vite: 5.4.11(@types/node@18.19.64)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -6662,10 +6657,10 @@ packages:
       - terser
     dev: true
 
-  /vite@5.4.10(@types/node@18.19.64):
+  /vite@5.4.11(@types/node@18.19.64):
     resolution:
       {
-        integrity: sha512-1hvaPshuPUtxeQ0hsVH3Mud0ZanOLwVTneA1EgbAM5LhaZEqyPWGRQ7BtaMvUrTDeEaC8pxtj6a6jku3x4z6SQ==,
+        integrity: sha512-c7jFQRklXua0mTzneGW9QVyxFjUgwcihC4bXEtujIo2ouWCe1Ajt/amn2PCxYnhYfd5k09JX3SB7OYWFKYqj8Q==,
       }
     engines: { node: ^18.0.0 || >=20.0.0 }
     hasBin: true
@@ -6698,8 +6693,8 @@ packages:
     dependencies:
       '@types/node': 18.19.64
       esbuild: 0.21.5
-      postcss: 8.4.47
-      rollup: 4.25.0
+      postcss: 8.4.49
+      rollup: 4.27.2
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
@@ -6760,7 +6755,7 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.9.0
       tinypool: 0.7.0
-      vite: 5.4.10(@types/node@18.19.64)
+      vite: 5.4.11(@types/node@18.19.64)
       vite-node: 0.34.6(@types/node@18.19.64)
       why-is-node-running: 2.3.0
     transitivePeerDependencies:
@@ -6774,10 +6769,10 @@ packages:
       - terser
     dev: true
 
-  /vue@3.5.12(typescript@5.6.3):
+  /vue@3.5.13(typescript@5.6.3):
     resolution:
       {
-        integrity: sha512-CLVZtXtn2ItBIi/zHZ0Sg1Xkb7+PU32bJJ8Bmy7ts3jxXTcbfsEfBivFYYWz1Hur+lalqGAh65Coin0r+HRUfg==,
+        integrity: sha512-wmeiSMxkZCSc+PM2w2VRsOYAZC8GdipNFRTsLSfodVqI9mbejKeXEGr8SckuLnrQPGe3oJN5c3K0vpoU9q/wCQ==,
       }
     peerDependencies:
       typescript: '*'
@@ -6785,11 +6780,11 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@vue/compiler-dom': 3.5.12
-      '@vue/compiler-sfc': 3.5.12
-      '@vue/runtime-dom': 3.5.12
-      '@vue/server-renderer': 3.5.12(vue@3.5.12)
-      '@vue/shared': 3.5.12
+      '@vue/compiler-dom': 3.5.13
+      '@vue/compiler-sfc': 3.5.13
+      '@vue/runtime-dom': 3.5.13
+      '@vue/server-renderer': 3.5.13(vue@3.5.13)
+      '@vue/shared': 3.5.13
       typescript: 5.6.3
     dev: true
 
