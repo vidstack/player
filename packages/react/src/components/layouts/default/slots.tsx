@@ -20,6 +20,7 @@ export type DefaultLayoutSlotName =
   | 'title'
   | 'chapterTitle'
   | 'currentTime'
+  | 'timeSeparator'
   | 'endTime'
   | 'fullscreenButton'
   | 'liveButton'
