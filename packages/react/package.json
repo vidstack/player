@@ -49,7 +49,7 @@
     "media-icons": "^1.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "remotion": "^4.0.193",
+    "remotion": "4.0.193",
     "rimraf": "^3.0.2",
     "rollup": "^4.20.0",
     "rollup-plugin-dts": "^6.1.1",

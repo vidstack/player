@@ -3,6 +3,7 @@
  * -----------------------------------------------------------------------------------------------*/
 
 import * as React from 'react';
+
 import { composeRefs } from 'maverick.js/react';
 
 /* -------------------------------------------------------------------------------------------------
@@ -20,7 +21,7 @@ const Slot = React.forwardRef<HTMLElement, SlotProps>((props, forwardedRef) => {
 
   if (slottable) {
     // the new element to render is the one passed as a child of `Slottable`
-    const newElement = slottable.props.children as React.ReactNode;
+    const newElement = (slottable.props as { children: React.ReactNode }).children;
 
     const newChildren = childrenArray.map((child) => {
       if (child === slottable) {
@@ -28,7 +29,7 @@ const Slot = React.forwardRef<HTMLElement, SlotProps>((props, forwardedRef) => {
         // in grabbing its children (`newElement.props.children`)
         if (React.Children.count(newElement) > 1) return React.Children.only(null);
         return React.isValidElement(newElement)
-          ? (newElement.props.children as React.ReactNode)
+          ? (newElement.props as { children: React.ReactNode }).children
           : null;
       } else {
         return child;
@@ -66,7 +67,7 @@ const SlotClone = React.forwardRef<any, SlotCloneProps>((props, forwardedRef) =>
 
   if (React.isValidElement(children)) {
     return React.cloneElement<any>(children, {
-      ...mergeProps(slotProps, children.props),
+      ...mergeProps(slotProps, children.props as any),
       ref: forwardedRef ? composeRefs(forwardedRef, (children as any).ref) : (children as any).ref,
     });
   }

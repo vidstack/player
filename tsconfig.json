@@ -3,6 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "alwaysStrict": true,
+    "allowImportingTsExtensions": true,
     "checkJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,

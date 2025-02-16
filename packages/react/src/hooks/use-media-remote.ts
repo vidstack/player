@@ -18,7 +18,7 @@ export function useMediaRemote(
   target?: EventTarget | null | React.RefObject<EventTarget | null>,
 ): MediaRemoteControl {
   const media = useMediaContext(),
-    remote = React.useRef<MediaRemoteControl>();
+    remote = React.useRef<MediaRemoteControl>(null!);
 
   if (!remote.current) {
     remote.current = new MediaRemoteControl();

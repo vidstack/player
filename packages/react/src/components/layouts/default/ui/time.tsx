@@ -11,7 +11,7 @@ import { DefaultLiveButton } from './buttons';
 
 interface DefaultTimeGroupSlots {
   currentTime?: React.ReactNode;
-  timeSeparator?: React.ReactNode;
+  timeDivider?: React.ReactNode;
   endTime?: React.ReactNode;
 }
 

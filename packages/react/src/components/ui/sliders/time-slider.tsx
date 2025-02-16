@@ -143,7 +143,7 @@ interface ChapterTracksProps {
 function ChapterTracks({ instance, children }: ChapterTracksProps) {
   const $cues = useSignal(() => instance.cues, instance),
     refs = React.useRef<HTMLElement[]>([]),
-    emptyCue = React.useRef<VTTCue>(),
+    emptyCue = React.useRef<VTTCue>(null!),
     { $chapters } = React.useContext(TimeSliderContext);
 
   if (!emptyCue.current) {
@@ -365,7 +365,7 @@ const VideoProvider = React.forwardRef<HTMLVideoElement, VideoProviderProps>(
         playsInline
         preload={$canLoad ? 'auto' : 'none'}
         crossOrigin={$crossOrigin || undefined}
-        ref={composeRefs(video.set as React.Ref<HTMLVideoElement>, forwardRef)}
+        ref={composeRefs(video.set as any, forwardRef)}
       >
         {children}
       </Primitive.video>

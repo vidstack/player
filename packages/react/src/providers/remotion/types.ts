@@ -2,7 +2,7 @@ import type * as React from 'react';
 
 export interface RemotionSrc<InputProps extends RemotionInputProps = RemotionInputProps> {
   /** React component which is generally a Remotion video. */
-  src: React.ComponentType;
+  src: React.ComponentType<unknown>;
   /** Remotion source type. */
   type: 'video/remotion';
   /**
