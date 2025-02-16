@@ -212,11 +212,10 @@ async function publishPackage(pkgName, version, runIfNotDry) {
   step(`Publishing ${pkgName}...`);
 
   try {
-    await runIfNotDry(
-      'yarn',
-      ['publish', '--new-version', version, '--tag', getReleaseTag(version), '--access', 'public'],
-      { cwd: distDir, stdio: 'pipe' },
-    );
+    await runIfNotDry('npm', ['publish', '--tag', getReleaseTag(version), '--access', 'public'], {
+      cwd: distDir,
+      stdio: 'pipe',
+    });
     console.log(kleur.green(`\n✅ Successfully published ${pkgName}@${version}`));
   } catch (e) {
     if (/** @type {any} */ (e).stderr.match(/previously published/)) {
@@ -250,11 +249,10 @@ async function publishCDN(version) {
 
   fs.writeFileSync(cdnPkgPath, JSON.stringify(packageJson, null, 2));
 
-  await runIfNotDry(
-    'yarn',
-    ['publish', '--new-version', version, '--tag', getReleaseTag(version), '--access', 'public'],
-    { cwd: cdnDir, stdio: 'pipe' },
-  );
+  await runIfNotDry('npm', ['publish', '--tag', getReleaseTag(version), '--access', 'public'], {
+    cwd: cdnDir,
+    stdio: 'pipe',
+  });
 
   console.log(kleur.green(`\n✅ Successfully published @vidstack/cdn@${version}`));
 }
