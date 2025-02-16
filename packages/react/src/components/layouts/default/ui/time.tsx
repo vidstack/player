@@ -23,7 +23,7 @@ function DefaultTimeGroup({ slots }: { slots?: DefaultTimeGroupSlots }) {
   return (
     <div className="vds-time-group">
       {slot(slots, 'currentTime', <Time className="vds-time" type="current" />)}
-      {slot(slots, 'timeSeparator', <div className="vds-time-divider">/</div>)}
+      {slot(slots, 'timeDivider', <div className="vds-time-divider">/</div>)}
       {slot(slots, 'endTime', <Time className="vds-time" type="duration" />)}
     </div>
   );
