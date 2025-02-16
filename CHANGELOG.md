@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.13-next](https://github.com/vidstack/player/releases/tag/v1.12.13-next) (2025-02-16)
+
+### ✨ Features
+
+#### Player
+
+- support youtube short urls (#1573) ([9f9f800](https://github.com/vidstack/player/commit/9f9f8000f443948dab67b9188778c716a2f5c079))
+
+#### Player (React)
+
+- allow react ^19.0.0 (#1574) ([602432d](https://github.com/vidstack/player/commit/602432d075efdd108796519fb76d23a4cb131c8d))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- autoplay for reduced motion (#1532) ([6e44e76](https://github.com/vidstack/player/commit/6e44e760409f503c9355a6b2687c0f77fe4e5934))
+- ctrl+0 causes a jump to the beginning of the video (#1493) ([3391749](https://github.com/vidstack/player/commit/339174970015b8f91615a41cf1e0a8c5ee268d2e))
+- add `timeDivider` slot to default layout (#1581) ([fc86c72](https://github.com/vidstack/player/commit/fc86c72e414c72c97c4bc9180e2332b70b712c07))
+- resolve internal type errors ([b58d1a6](https://github.com/vidstack/player/commit/b58d1a6a7c60a996f3516b3dfdd03cc8bcf70482))
+
 ## [1.12.12-next](https://github.com/vidstack/player/releases/tag/v1.12.12-next) (2024-10-24)
 
 ### 🐛 Bug Fixes
@@ -67,6 +88,12 @@ All notable changes to this project will be documented in this file.
 
 ## [1.12.6-next](https://github.com/vidstack/player/releases/tag/v1.12.6-next) (2024-08-12)
 
+### ⏪ Revert
+
+#### Player
+
+- "remove decorators" ([0c0215d](https://github.com/vidstack/player/commit/0c0215d2cf0e384607144e934cbaf9c601af94f2))
+
 ### 🏎️ Performance
 
 #### Player
@@ -77,24 +104,11 @@ All notable changes to this project will be documented in this file.
 
 #### Player
 
+- custom decorator parser ([ff64e78](https://github.com/vidstack/player/commit/ff64e789580db9dd0658f434decb969cdfa5c6df))
 - add `audio/m4a` mime type ([6801a84](https://github.com/vidstack/player/commit/6801a8402e2bc3f98e9763b920ed1355de48f72b))
 - audio boost not working ([0917752](https://github.com/vidstack/player/commit/091775299f9b7fd027b5bd3b34e853e69868bfed))
 - clipping broken ([95a3dad](https://github.com/vidstack/player/commit/95a3dadff298e27a7ae50553eeb2a283eca5d2fa))
 - pause youtube on frame on invalid internal play ([b72448d](https://github.com/vidstack/player/commit/b72448d4a11a555ad7aad97ddb2ffe4c60380805))
-
-## [1.12.5-next](https://github.com/vidstack/player/releases/tag/v1.12.5-next) (2024-08-08)
-
-### ⏪ Revert
-
-#### Player
-
-- "remove decorators" ([0c0215d](https://github.com/vidstack/player/commit/0c0215d2cf0e384607144e934cbaf9c601af94f2))
-
-### 🐛 Bug Fixes
-
-#### Player
-
-- custom decorator parser ([ff64e78](https://github.com/vidstack/player/commit/ff64e789580db9dd0658f434decb969cdfa5c6df))
 
 ## [1.12.4-next](https://github.com/vidstack/player/releases/tag/v1.12.4-next) (2024-08-08)
 
@@ -417,17 +431,13 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-#### Player
-
-- invalid styles dir in cdn bundle ([c285fc7](https://github.com/vidstack/player/commit/c285fc73a1a334adfb7f1398b3c136b8c4702b63))
-
-## [1.11.9-next](https://github.com/vidstack/player/releases/tag/v1.11.9-next) (2024-04-04)
-
-### 🐛 Bug Fixes
-
 #### Core
 
 - analyze file missing in npm dist ([f45e93d](https://github.com/vidstack/player/commit/f45e93d38832df2e80f6e6631a45c97c7a3dd440))
+
+#### Player
+
+- invalid styles dir in cdn bundle ([c285fc7](https://github.com/vidstack/player/commit/c285fc73a1a334adfb7f1398b3c136b8c4702b63))
 
 ## [1.11.8-next](https://github.com/vidstack/player/releases/tag/v1.11.8-next) (2024-04-04)
 
