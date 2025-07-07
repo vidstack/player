@@ -273,9 +273,10 @@ export class VimeoProvider
 
   protected override buildParams(): VimeoParams {
     const { keyDisabled } = this.#ctx.$props,
-      { playsInline, nativeControls } = this.#ctx.$state,
+      { playsInline, nativeControls, loop } = this.#ctx.$state,
       showControls = nativeControls();
-    return {
+
+    const params: VimeoParams = {
       title: this.title,
       byline: this.byline,
       color: this.color,
@@ -287,6 +288,14 @@ export class VimeoProvider
       playsinline: playsInline(),
       dnt: !this.cookies,
     };
+
+    // Add loop support for Vimeo
+    if (loop()) {
+      params.loop = true;
+      params.autopause = false;
+    }
+
+    return params;
   }
 
   #onAnimationFrame() {
