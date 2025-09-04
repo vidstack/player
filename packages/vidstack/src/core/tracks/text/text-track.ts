@@ -54,6 +54,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   #regions: VTTRegion[] = [];
   #cues: VTTCue[] = [];
   #activeCues: VTTCue[] = [];
+  #cueIds = new Set<string>();
 
   /** @internal */
   [TextTrackSymbol.readyState]: TextTrackReadyState = 0;
@@ -128,6 +129,12 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   }
 
   addCue(cue: VTTCue, trigger?: Event): void {
+    // deduplicate cues with the same id
+    if (cue.id) {
+      if (this.#cueIds.has(cue.id)) return;
+      this.#cueIds.add(cue.id);
+    }
+
     let i = 0,
       length = this.#cues.length;
 
