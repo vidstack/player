@@ -159,6 +159,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     const index = this.#cues.indexOf(cue);
     if (index >= 0) {
       const isActive = this.#activeCues.includes(cue);
+      if (cue.id) this.#cueIds.delete(cue.id);
       this.#cues.splice(index, 1);
       this[TextTrackSymbol.native]?.track.removeCue(cue);
       this.dispatchEvent(new DOMEvent<VTTCue>('remove-cue', { detail: cue, trigger }));
