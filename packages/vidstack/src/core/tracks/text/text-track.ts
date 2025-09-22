@@ -54,6 +54,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   #regions: VTTRegion[] = [];
   #cues: VTTCue[] = [];
   #activeCues: VTTCue[] = [];
+  #cueIds = new Set<string>();
 
   /** @internal */
   [TextTrackSymbol.readyState]: TextTrackReadyState = 0;
@@ -128,6 +129,12 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   }
 
   addCue(cue: VTTCue, trigger?: Event): void {
+    // deduplicate cues with the same id
+    if (cue.id) {
+      if (this.#cueIds.has(cue.id)) return;
+      this.#cueIds.add(cue.id);
+    }
+
     let i = 0,
       length = this.#cues.length;
 
@@ -152,6 +159,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     const index = this.#cues.indexOf(cue);
     if (index >= 0) {
       const isActive = this.#activeCues.includes(cue);
+      if (cue.id) this.#cueIds.delete(cue.id);
       this.#cues.splice(index, 1);
       this[TextTrackSymbol.native]?.track.removeCue(cue);
       this.dispatchEvent(new DOMEvent<VTTCue>('remove-cue', { detail: cue, trigger }));
