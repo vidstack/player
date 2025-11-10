@@ -13,7 +13,7 @@ export type YouTubeCommand =
 export interface YouTubeCommandArg {
   playVideo: void;
   pauseVideo: void;
-  seekTo: number;
+  seekTo: [number, boolean];
   mute: void;
   unMute: void;
   setVolume: number;
