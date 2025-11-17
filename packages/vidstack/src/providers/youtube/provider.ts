@@ -135,7 +135,7 @@ export class YouTubeProvider
   }
 
   setCurrentTime(time: number) {
-    this.#remote('seekTo', time);
+    this.#remote('seekTo', [time, true]);
     this.#ctx.notify('seeking', time);
   }
 
@@ -207,10 +207,12 @@ export class YouTubeProvider
 
     promises.push(promise);
 
+    const args = Array.isArray(arg) ? arg : arg ? [arg] : undefined;
+
     this.postMessage({
       event: 'command',
       func: command,
-      args: arg ? [arg] : undefined,
+      args,
     });
 
     return promise.promise;
