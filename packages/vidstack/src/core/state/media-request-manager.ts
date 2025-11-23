@@ -11,6 +11,7 @@ import { RequestQueue } from '../../foundation/queue/request-queue';
 import type { GoogleCastPromptError } from '../../providers/google-cast/events';
 import type { GoogleCastLoader } from '../../providers/google-cast/loader';
 import type { MediaProviderAdapter } from '../../providers/types';
+import { prefersReducedMotion } from '../../utils/aria';
 import { coerceToError } from '../../utils/error';
 import { canGoogleCastSrc } from '../../utils/mime';
 import { preconnect } from '../../utils/network';
@@ -22,7 +23,6 @@ import { MediaPlayerController } from '../api/player-controller';
 import { boundTime } from '../api/player-state';
 import { MediaControls } from '../controls';
 import type { MediaStateManager } from './media-state-manager';
-import { prefersReducedMotion } from '../../utils/aria';
 
 /**
  * This class is responsible for listening to media request events and calling the appropriate
@@ -338,7 +338,45 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
       this.#request.queue.enqueue('media-exit-pip-request', trigger);
     }
 
-    return await this.#$provider()!.pictureInPicture!.exit();
+    try {
+      // Try browser's native Picture-in-Picture API first (most reliable)
+      if (document?.pictureInPictureElement && document.exitPictureInPicture) {
+        await document.exitPictureInPicture();
+        return;
+      }
+
+      // Fallback to provider if available
+      const provider = this.#$provider();
+      if (provider?.pictureInPicture) {
+        await provider.pictureInPicture.exit();
+        return;
+      }
+
+      // Last resort: find and exit any video in PiP mode
+      const videoElements = document?.querySelectorAll?.('video') || [];
+      for (const video of videoElements) {
+        if (video === document.pictureInPictureElement) {
+          if (document.exitPictureInPicture) {
+            await document.exitPictureInPicture();
+            return;
+          }
+        }
+        // WebKit Safari support
+        if ((video as any).webkitPresentationMode === 'picture-in-picture') {
+          (video as any).webkitSetPresentationMode('inline');
+          return;
+        }
+      }
+    } catch (error) {
+      if (__DEV__) {
+        const { logger } = this.#media;
+        logger
+          ?.errorGroup('[vidstack] failed to force exit picture-in-picture')
+          .labelledLog('Error', error)
+          .labelledLog('Media Context', { ...this.#media })
+          .dispatch();
+      }
+    }
   }
 
   #throwIfPIPNotSupported() {
