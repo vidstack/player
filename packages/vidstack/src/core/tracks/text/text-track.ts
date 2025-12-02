@@ -217,7 +217,12 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
         this.#parseJSON(init.content!, VTTCue, VTTRegion);
         if (this.readyState !== 3) this.#ready();
       } else {
-        parseText(init.content!, { type: init.type as 'vtt' }).then(({ cues, regions }) => {
+        const content = init
+          .content!.split('\n')
+          .map((line) => line.trim())
+          .join('\n')
+          .trim();
+        parseText(content, { type: init.type as 'vtt' }).then(({ cues, regions }) => {
           this.#cues = cues;
           this.#regions = regions;
           this.#ready();
