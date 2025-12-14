@@ -112,13 +112,13 @@ importers:
         version: 1.1.5
       react:
         specifier: ^19.0.0
-        version: 19.2.1
+        version: 19.2.3
       react-dom:
         specifier: ^19.0.0
-        version: 19.2.1(react@19.2.1)
+        version: 19.2.3(react@19.2.3)
       remotion:
         specifier: 4.0.193
-        version: 4.0.193(react-dom@19.2.1)(react@19.2.1)
+        version: 4.0.193(react-dom@19.2.3)(react@19.2.3)
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
@@ -248,7 +248,7 @@ importers:
         version: 4.2.20
       tailwindcss:
         specifier: ^3.4.7
-        version: 3.4.18(tsx@4.21.0)
+        version: 3.4.19(tsx@4.21.0)
       tslib:
         specifier: ^2.6.3
         version: 2.8.1
@@ -2767,7 +2767,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.28.1
-      caniuse-lite: 1.0.30001759
+      caniuse-lite: 1.0.30001760
       fraction.js: 5.3.4
       normalize-range: 0.1.2
       picocolors: 1.1.1
@@ -2790,10 +2790,10 @@ packages:
       }
     dev: true
 
-  /baseline-browser-mapping@2.9.4:
+  /baseline-browser-mapping@2.9.7:
     resolution:
       {
-        integrity: sha512-ZCQ9GEWl73BVm8bu5Fts8nt7MHdbt5vY9bP6WGnUh+r3l8M7CgfyTlwsgCbMC66BNxPr6Xoce3j66Ms5YUQTNA==,
+        integrity: sha512-k9xFKplee6KIio3IDbwj+uaCLpqzOwakOgmqzPezM0sFJlFKcg30vk2wOiAJtkTSfx0SSQDSe8q+mWA/fSH5Zg==,
       }
     hasBin: true
     dev: true
@@ -2862,9 +2862,9 @@ packages:
     engines: { node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7 }
     hasBin: true
     dependencies:
-      baseline-browser-mapping: 2.9.4
-      caniuse-lite: 1.0.30001759
-      electron-to-chromium: 1.5.266
+      baseline-browser-mapping: 2.9.7
+      caniuse-lite: 1.0.30001760
+      electron-to-chromium: 1.5.267
       node-releases: 2.0.27
       update-browserslist-db: 1.2.2(browserslist@4.28.1)
     dev: true
@@ -2926,10 +2926,10 @@ packages:
     engines: { node: '>= 6' }
     dev: true
 
-  /caniuse-lite@1.0.30001759:
+  /caniuse-lite@1.0.30001760:
     resolution:
       {
-        integrity: sha512-Pzfx9fOKoKvevQf8oCXoyNRQ5QyxJj+3O0Rqx2V5oxT61KGx8+n6hV/IUyJeifUci2clnmmKVpvtiqRzgiWjSw==,
+        integrity: sha512-7AAMPcueWELt1p3mi13HR/LHH0TJLT11cnwDJEs3xA4+CK/PLKeO9Kl1oru24htkyUKtkGCvAx4ohB0Ttry8Dw==,
       }
     dev: true
 
@@ -3490,10 +3490,10 @@ packages:
       }
     dev: true
 
-  /electron-to-chromium@1.5.266:
+  /electron-to-chromium@1.5.267:
     resolution:
       {
-        integrity: sha512-kgWEglXvkEfMH7rxP5OSZZwnaDWT7J9EoZCujhnpLbfi0bbNtRkgdX2E3gt0Uer11c61qCYktB3hwkAS325sJg==,
+        integrity: sha512-0Drusm6MVRXSOJpGbaSVgcQsuB4hEkMpHXaVstcPmhu5LIedxs1xNK/nIxmQIU/RPC0+1/o0AVZfBTkTNJOdUw==,
       }
     dev: true
 
@@ -5955,15 +5955,15 @@ packages:
       unpipe: 1.0.0
     dev: true
 
-  /react-dom@19.2.1(react@19.2.1):
+  /react-dom@19.2.3(react@19.2.3):
     resolution:
       {
-        integrity: sha512-ibrK8llX2a4eOskq1mXKu/TGZj9qzomO+sNfO98M6d9zIPOEhlBkMkBUBLd1vgS0gQsLDBzA+8jJBVXDnfHmJg==,
+        integrity: sha512-yELu4WmLPw5Mr/lmeEpox5rw3RETacE++JgHqQzd2dg+YbJuat3jH4ingc+WPZhxaoFzdv9y33G+F7Nl5O0GBg==,
       }
     peerDependencies:
-      react: ^19.2.1
+      react: ^19.2.3
     dependencies:
-      react: 19.2.1
+      react: 19.2.3
       scheduler: 0.27.0
     dev: true
 
@@ -5982,10 +5982,10 @@ packages:
     engines: { node: '>=0.10.0' }
     dev: true
 
-  /react@19.2.1:
+  /react@19.2.3:
     resolution:
       {
-        integrity: sha512-DGrYcCWK7tvYMnWh79yrPHt+vdx9tY+1gPZa7nJQtO/p8bLTDaHp4dzwEhQB7pZ4Xe3ok4XKuEPrVuc+wlpkmw==,
+        integrity: sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==,
       }
     engines: { node: '>=0.10.0' }
     dev: true
@@ -6017,7 +6017,7 @@ packages:
     engines: { node: '>= 14.18.0' }
     dev: true
 
-  /remotion@4.0.193(react-dom@19.2.1)(react@19.2.1):
+  /remotion@4.0.193(react-dom@19.2.3)(react@19.2.3):
     resolution:
       {
         integrity: sha512-3p3fM9iE1guyYerCgcWf1ygHoHxJoIar5kWp3EJkkPFEHy7w9Xqj+hQBu0C3Gfp08b2BJFweFrhHmOeRZ87qrQ==,
@@ -6026,8 +6026,8 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      react: 19.2.1
-      react-dom: 19.2.1(react@19.2.1)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
     dev: true
 
   /require-directory@2.1.1:
@@ -6658,10 +6658,10 @@ packages:
       }
     dev: true
 
-  /tailwindcss@3.4.18(tsx@4.21.0):
+  /tailwindcss@3.4.19(tsx@4.21.0):
     resolution:
       {
-        integrity: sha512-6A2rnmW5xZMdw11LYjhcI5846rt9pbLSabY5XPxo+XWdxwZaFEn47Go4NzFiHu9sNNmr/kXivP1vStfvMaK1GQ==,
+        integrity: sha512-3ofp+LL8E+pK/JuPLPggVAIaEuhvIz4qNcf3nA1Xn2o/7fb7s/TYpHhwGDv1ZU3PkBluUVaF8PyCHcm48cKLWQ==,
       }
     engines: { node: '>=14.0.0' }
     hasBin: true
