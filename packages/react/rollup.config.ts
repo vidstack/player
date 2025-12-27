@@ -30,7 +30,11 @@ const NPM_EXTERNAL_PACKAGES = [
     /^@floating-ui/,
     /^remotion/,
   ],
-  NPM_BUNDLES = [defineNPMBundle({ dev: true }), defineNPMBundle({ dev: false })],
+  NPM_BUNDLES = [
+    defineNPMBundle({ type: 'server' }),
+    defineNPMBundle({ type: 'dev' }),
+    defineNPMBundle({ type: 'prod' }),
+  ],
   TYPES_BUNDLES = defineTypesBundle();
 
 if (!MODE_TYPES) {
@@ -115,11 +119,12 @@ function resolveGlobalTypes(): Plugin {
 }
 
 interface NPMBundleOptions {
-  dev?: boolean;
+  type: 'dev' | 'prod' | 'server';
 }
 
-function defineNPMBundle({ dev }: NPMBundleOptions): RollupOptions {
-  const alias = dev ? 'dev' : 'prod';
+function defineNPMBundle({ type }: NPMBundleOptions): RollupOptions {
+  const isProd = type === 'prod',
+    isServer = type === 'server';
 
   let input = {
     vidstack: 'src/index.ts',
@@ -131,7 +136,7 @@ function defineNPMBundle({ dev }: NPMBundleOptions): RollupOptions {
     'player/vidstack-default-icons': 'src/components/layouts/default/icons.tsx',
   };
 
-  if (!dev) {
+  if (isProd) {
     input['vidstack-icons'] = 'src/icons.ts';
   }
 
@@ -139,13 +144,13 @@ function defineNPMBundle({ dev }: NPMBundleOptions): RollupOptions {
     input,
     treeshake: true,
     preserveEntrySignatures: 'allow-extension',
-    maxParallelFileOps: !dev ? 1 : 20,
+    maxParallelFileOps: isProd ? 1 : 20,
     external: NPM_EXTERNAL_PACKAGES,
     output: {
       format: 'esm',
       compact: false,
       minifyInternalExports: false,
-      dir: `dist-npm/${alias}`,
+      dir: `dist-npm/${type}`,
       chunkFileNames: `chunks/vidstack-[hash].js`,
       manualChunks(id) {
         if (id.includes('node_modules')) return 'vidstack-deps';
@@ -154,19 +159,23 @@ function defineNPMBundle({ dev }: NPMBundleOptions): RollupOptions {
     plugins: [
       env(),
       nodeResolve({
-        exportConditions: dev
-          ? ['development', 'production', 'default']
-          : ['production', 'default'],
+        exportConditions: isServer
+          ? ['node', 'default', 'development']
+          : isProd
+            ? ['production', 'default']
+            : ['development', 'production', 'default'],
       }),
       decorators(),
       typescript({
         loader: 'tsx',
+        platform: isServer ? 'node' : 'browser',
         define: {
-          __DEV__: dev ? 'true' : 'false',
+          __DEV__: !isProd && !isServer ? 'true' : 'false',
+          __SERVER__: isServer ? 'true' : 'false',
         },
       }),
       rscDirectives(),
-      !dev && copyAssets(),
+      isProd && copyAssets(),
     ],
   };
 }
@@ -224,7 +233,7 @@ function copyAssets(): Plugin {
   return {
     name: 'copy-assets',
     async buildEnd() {
-      await copyPkgFiles();
+      copyPkgFiles();
       await copyStyles();
       await copyTailwind();
       await buildDefaultTheme();
