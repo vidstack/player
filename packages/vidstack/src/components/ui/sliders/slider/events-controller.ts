@@ -103,6 +103,7 @@ export class SliderEventsController extends ViewController<
   #provider: HTMLElement | null = null;
   #touch: Touch | null = null;
   #touchStartValue: number | null = null;
+  #touchCount: number | null = null
   #onTouchStart(event: TouchEvent) {
     this.#touch = event.touches[0];
   }
@@ -151,8 +152,8 @@ export class SliderEventsController extends ViewController<
 
     new EventsController(document)
       .add('pointerup', this.#onDocumentPointerUp.bind(this), { capture: true })
-      .add('pointermove', this.#onDocumentPointerMove.bind(this))
-      .add('touchmove', this.#onDocumentTouchMove.bind(this), {
+      .add('touchmove', this.#onDocumentPointerMove.bind(this))
+      .add('touchstart', this.#onDocumentTouchStart.bind(this), {
         passive: false,
       });
   }
@@ -187,10 +188,16 @@ export class SliderEventsController extends ViewController<
     }
   }
 
-  #getPointerValue(event: PointerEvent) {
+  #getPointerValue(event: PointerEvent, isTouch: boolean) {
     let thumbPositionRate: number,
       rect = this.el!.getBoundingClientRect(),
       { min, max } = this.$state;
+
+    let clientX = event.clientX;
+    if (isTouch) {
+      clientX = event.touches[0].clientX
+    }
+
 
     if (this.$props.orientation() === 'vertical') {
       const { bottom: trackBottom, height: trackHeight } = rect;
@@ -198,14 +205,14 @@ export class SliderEventsController extends ViewController<
     } else {
       if (this.#touch && isNumber(this.#touchStartValue)) {
         const { width } = this.#provider!.getBoundingClientRect(),
-          rate = (event.clientX - this.#touch.clientX) / width,
+          rate = (clientX - this.#touch.clientX) / width,
           range = max() - min(),
           diff = range * Math.abs(rate);
         thumbPositionRate =
           (rate < 0 ? this.#touchStartValue - diff : this.#touchStartValue + diff) / range;
       } else {
         const { left: trackLeft, width: trackWidth } = rect;
-        thumbPositionRate = (event.clientX - trackLeft) / trackWidth;
+        thumbPositionRate = (clientX - trackLeft) / trackWidth;
       }
     }
 
@@ -360,6 +367,10 @@ export class SliderEventsController extends ViewController<
 
   #onDocumentPointerUp(event: PointerEvent) {
     if (event.button !== 0) return;
+    if (this.#touchCount && this.#touchCount > 1) {
+      this.#touchCount -= 1;
+      return;
+    }
 
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -369,13 +380,14 @@ export class SliderEventsController extends ViewController<
     this.#onStopDragging(value, event);
   }
 
-  #onDocumentTouchMove(event: TouchEvent) {
+  #onDocumentTouchStart(event: TouchEvent) {
+    this.#touchCount = event.touches.length;
     event.preventDefault();
   }
 
   #onDocumentPointerMove = throttle(
     (event: PointerEvent) => {
-      this.#updatePointerValue(this.#getPointerValue(event), event);
+      this.#updatePointerValue(this.#getPointerValue(event, true), event);
     },
     20,
     { leading: true },
