@@ -406,6 +406,7 @@ export class VimeoProvider
         }
         break;
       case 'setMuted':
+      case 'getMuted':
         this.#onVolumeChange(peek(this.#ctx.$state.volume), data as boolean, trigger);
         break;
       // case 'getTextTracks':
@@ -433,8 +434,11 @@ export class VimeoProvider
     this.#ctx.notify('pause', undefined, trigger);
   }
 
-  #onPlay(trigger: Event) {
+  async #onPlay(trigger: Event) {
     this.#timeRAF.start();
+    // Get actual muted state from Vimeo BEFORE notifying play.
+    // This ensures auto-play event has correct muted value when browser forces muting.
+    await this.#remote('getMuted');
     this.#ctx.notify('play', undefined, trigger);
   }
 
@@ -463,10 +467,12 @@ export class VimeoProvider
     if (!paused()) this.#ctx.notify('playing', undefined, trigger);
   }
 
-  #onWaiting(trigger: Event) {
+  async #onWaiting(trigger: Event) {
     // Attempt to detect `play` events early.
     const { paused } = this.#ctx.$state;
     if (paused()) {
+      // Sync muted state before notifying play - important for autoplay policy detection
+      await this.#remote('getMuted');
       this.#ctx.notify('play', undefined, trigger);
     }
 

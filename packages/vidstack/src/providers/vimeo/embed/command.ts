@@ -16,6 +16,7 @@ export type VimeoCommand =
   | 'getCurrentTime'
   | 'getDuration'
   | 'getFullscreen'
+  | 'getMuted'
   | 'getPictureInPicture'
   | 'getPlayed'
   | 'getQualities'
@@ -72,6 +73,7 @@ export interface VimeoCommandArg {
   getSeekable: void;
   getSeeking: void;
   getFullscreen: void;
+  getMuted: void;
   getPictureInPicture: void;
   destroy: void;
   loadVideo: number;
@@ -108,6 +110,7 @@ export interface VimeoCommandData {
   getSeekable: number[];
   getSeeking: boolean;
   getFullscreen: boolean;
+  getMuted: boolean;
   getPictureInPicture: boolean;
   destroy: void;
   loadVideo: void;
