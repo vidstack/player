@@ -168,7 +168,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
           ...mediaProps,
           controls: $nativeControls ? true : null,
           crossOrigin: typeof $crossOrigin === 'boolean' ? '' : $crossOrigin,
-          poster: $mediaType === 'video' && $nativeControls && $poster ? $poster : null,
+          poster: $mediaType === 'video' && $poster ? $poster : null,
           suppressHydrationWarning: true,
           children: !hasMounted
             ? $sources.map(({ src, type }) =>
