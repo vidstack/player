@@ -47,7 +47,25 @@ liveSrcButton?.addEventListener('click', () => changeSource('live'));
 youtubeSrcButton?.addEventListener('click', () => changeSource('youtube'));
 vimeoSrcButton?.addEventListener('click', () => changeSource('vimeo'));
 
-changeSource('audio');
+// URL query param support for testing
+// ?src=vimeo|youtube|hls|video|audio|live|dash
+// ?autoplay - enable autoplay
+// ?muted - start muted
+const params = new URLSearchParams(window.location.search);
+
+if (params.has('autoplay')) player.autoplay = true;
+if (params.has('muted')) player.muted = true;
+
+const srcParam = params.get('src');
+changeSource(srcParam || 'audio');
+
+player.addEventListener('auto-play', (e) => {
+  console.log('[auto-play]', e.detail);
+});
+
+player.addEventListener('auto-play-fail', (e) => {
+  console.log('[auto-play-fail]', e.detail);
+});
 
 function changeSource(type: string) {
   switch (type) {
