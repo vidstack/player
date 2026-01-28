@@ -101,7 +101,7 @@
 }
 
 iframe.vds-youtube[data-no-controls] {
-  height: 1000%;
+  height: 100%;
 }
 
 .vds-blocker {
