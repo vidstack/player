@@ -101,7 +101,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
     });
   }, [isGoogleCast]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     setHasMounted(true);
   }, []);
 
