@@ -4,7 +4,7 @@ import { Host } from 'maverick.js/element';
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { watchCueTextChange } from '../../core/tracks/text/utils';
 
-interface ChapterTitleProps {
+export interface ChapterTitleProps {
   /**
    * Specify text to be displayed when no chapter title is available.
    */
