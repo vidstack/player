@@ -176,13 +176,15 @@ export class HLSController {
 
     this.#ctx.notify('duration-change', duration, trigger);
 
-    const media = this.#instance!.media!;
+    const media = this.#instance?.media;
 
-    if (this.#instance!.currentLevel === -1) {
+    if (!media) return;
+
+    if (this.#instance?.currentLevel === -1) {
       this.#ctx.qualities[QualitySymbol.setAuto](true, trigger);
     }
 
-    for (const remoteTrack of this.#instance!.audioTracks) {
+    for (const remoteTrack of this.#instance?.audioTracks ?? []) {
       const localTrack = {
         id: remoteTrack.id.toString(),
         label: remoteTrack.name,
@@ -193,7 +195,7 @@ export class HLSController {
       this.#ctx.audioTracks[ListSymbol.add](localTrack, trigger);
     }
 
-    for (const level of this.#instance!.levels) {
+    for (const level of this.#instance?.levels ?? []) {
       const videoQuality = {
         id: level.id?.toString() ?? level.height + 'p',
         width: level.width,

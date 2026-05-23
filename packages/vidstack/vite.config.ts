@@ -41,7 +41,7 @@ export default defineConfig({
 function legacyPlugin() {
   return {
     name: 'legacy',
-    enforce: 'pre',
+    enforce: 'pre' as const,
     async transform(code, id) {
       if (/\.(j|t)s/.test(id)) {
         return (

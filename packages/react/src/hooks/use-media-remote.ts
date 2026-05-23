@@ -31,6 +31,11 @@ export function useMediaRemote(
 
     remote.current!.setPlayer(player ?? null);
     remote.current!.setTarget(ref ?? null);
+
+    return () => {
+      remote.current!.setPlayer(null);
+      remote.current!.setTarget(null);
+    };
   }, [media, target && 'current' in target ? target.current : target]);
 
   return remote.current;

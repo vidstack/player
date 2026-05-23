@@ -20,8 +20,10 @@ import { MediaProviderInstance } from './primitives/instances';
 
 const MediaProviderBridge = createReactComponent(MediaProviderInstance);
 
-export interface MediaProviderProps
-  extends Omit<ReactElementProps<MediaProviderInstance>, 'loaders'> {
+export interface MediaProviderProps extends Omit<
+  ReactElementProps<MediaProviderInstance>,
+  'loaders'
+> {
   loaders?: Array<{ new (): MediaProviderLoader }>;
   iframeProps?: React.IframeHTMLAttributes<HTMLIFrameElement>;
   mediaProps?: React.HTMLAttributes<HTMLMediaElement>;
@@ -94,6 +96,13 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
     [googleCastIconPaths, setGoogleCastIconPaths] = React.useState(''),
     [hasMounted, setHasMounted] = React.useState(false);
 
+  const onProviderLoad = React.useCallback(
+    (el: HTMLElement | null) => {
+      provider.load(el);
+    },
+    [provider],
+  );
+
   React.useEffect(() => {
     if (!isGoogleCast || googleCastIconPaths) return;
     import('media-icons/dist/icons/chromecast.js').then((mod) => {
@@ -107,12 +116,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
 
   if (isGoogleCast) {
     return (
-      <div
-        className="vds-google-cast"
-        ref={(el) => {
-          provider.load(el);
-        }}
-      >
+      <div className="vds-google-cast" ref={onProviderLoad}>
         <Icon paths={googleCastIconPaths} />
         {$remoteInfo?.deviceName ? (
           <span className="vds-google-cast-info">
@@ -127,12 +131,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
   if (isRemotion) {
     return (
       <div data-remotion-canvas>
-        <div
-          data-remotion-container
-          ref={(el) => {
-            provider.load(el);
-          }}
-        >
+        <div data-remotion-container ref={onProviderLoad}>
           {isRemotionProvider($provider) && $providerSetup
             ? React.createElement($provider.render)
             : null}
@@ -155,9 +154,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
           tabIndex: !$nativeControls ? -1 : undefined,
           'aria-hidden': 'true',
           'data-no-controls': !$nativeControls ? '' : undefined,
-          ref(el: HTMLElement) {
-            provider.load(el);
-          },
+          ref: onProviderLoad,
         }),
         !$nativeControls && !isAudioView
           ? React.createElement('div', { className: 'vds-blocker' })
@@ -177,9 +174,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
                 ) : null,
               )
             : null,
-          ref(el: HTMLMediaElement) {
-            provider.load(el);
-          },
+          ref: onProviderLoad as React.RefCallback<HTMLMediaElement>,
         })
       : null;
 }

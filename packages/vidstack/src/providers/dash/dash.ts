@@ -221,9 +221,7 @@ export class DASHController {
       (type) => type && canPlayVideoType(media, type),
     );
 
-    const videoQuality = videoQualities.filter(
-      (track) => supportedVideoMimeType === track.mimeType,
-    )[0];
+    const videoQuality = videoQualities.find((track) => supportedVideoMimeType === track.mimeType);
 
     let audioTracks = (this.#instance.getTracksForTypeFromManifest as DashGetMediaTracks)(
       'audio',
@@ -236,22 +234,24 @@ export class DASHController {
 
     audioTracks = audioTracks.filter((track) => supportedAudioMimeType === track.mimeType);
 
-    videoQuality.bitrateList.forEach((bitrate, index) => {
-      const quality = {
-        id: bitrate.id?.toString() ?? `dash-bitrate-${index}`,
-        width: bitrate.width ?? 0,
-        height: bitrate.height ?? 0,
-        bitrate: bitrate.bandwidth ?? 0,
-        codec: videoQuality.codec,
-        index,
-      };
+    if (videoQuality) {
+      videoQuality.bitrateList.forEach((bitrate, index) => {
+        const quality = {
+          id: bitrate.id?.toString() ?? `dash-bitrate-${index}`,
+          width: bitrate.width ?? 0,
+          height: bitrate.height ?? 0,
+          bitrate: bitrate.bandwidth ?? 0,
+          codec: videoQuality.codec,
+          index,
+        };
 
-      this.#ctx.qualities[ListSymbol.add](quality, trigger);
-    });
+        this.#ctx.qualities[ListSymbol.add](quality, trigger);
+      });
 
-    if (isNumber(videoQuality.index)) {
-      const quality = this.#ctx.qualities[videoQuality.index];
-      if (quality) this.#ctx.qualities[ListSymbol.select](quality, true, trigger);
+      if (isNumber(videoQuality.index)) {
+        const quality = this.#ctx.qualities[videoQuality.index];
+        if (quality) this.#ctx.qualities[ListSymbol.select](quality, true, trigger);
+      }
     }
 
     audioTracks.forEach((audioTrack: DASH.MediaInfo, index) => {

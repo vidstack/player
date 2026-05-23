@@ -27,36 +27,35 @@ export function useSliderPreview({
       setPointerValue(getPointerValue(rootRef, event, orientation));
     }
 
-    return effect(() => {
-      if (!dragging()) {
-        new EventsController(rootRef)
-          .add('pointerenter', () => {
-            setIsVisible(true);
-            previewRef?.setAttribute('data-visible', '');
-          })
-          .add('pointerdown', (event) => {
-            dragging.set(true);
-            updatePointerValue(event);
-          })
-          .add('pointerleave', () => {
-            setIsVisible(false);
-            previewRef?.removeAttribute('data-visible');
-          })
-          .add('pointermove', updatePointerValue);
-      }
+    const rootEvents = new EventsController(rootRef)
+      .add('pointerenter', () => {
+        setIsVisible(true);
+        previewRef?.setAttribute('data-visible', '');
+      })
+      .add('pointerdown', (event) => {
+        dragging.set(true);
+        updatePointerValue(event);
+      })
+      .add('pointerleave', () => {
+        setIsVisible(false);
+        previewRef?.removeAttribute('data-visible');
+      })
+      .add('pointermove', updatePointerValue);
 
-      previewRef?.setAttribute('data-dragging', '');
+    const docEvents = new EventsController(document)
+      .add('pointerup', (event) => {
+        dragging.set(false);
+        previewRef?.removeAttribute('data-dragging');
+        updatePointerValue(event);
+      })
+      .add('pointermove', updatePointerValue)
+      .add('touchmove', (e) => e.preventDefault(), { passive: false });
 
-      new EventsController(document)
-        .add('pointerup', (event) => {
-          dragging.set(false);
-          previewRef?.removeAttribute('data-dragging');
-          updatePointerValue(event);
-        })
-        .add('pointermove', updatePointerValue)
-        .add('touchmove', (e) => e.preventDefault(), { passive: false });
-    });
-  }, [rootRef]);
+    return () => {
+      rootEvents.abort();
+      docEvents.abort();
+    };
+  }, [rootRef, orientation]);
 
   React.useEffect(() => {
     if (previewRef) {

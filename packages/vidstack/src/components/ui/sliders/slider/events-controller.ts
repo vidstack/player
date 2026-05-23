@@ -197,7 +197,7 @@ export class SliderEventsController extends ViewController<
       thumbPositionRate = (trackBottom - event.clientY) / trackHeight;
     } else {
       if (this.#touch && isNumber(this.#touchStartValue)) {
-        const { width } = this.#provider!.getBoundingClientRect(),
+        const { width } = this.#provider?.getBoundingClientRect() ?? { width: 0 },
           rate = (event.clientX - this.#touch.clientX) / width,
           range = max() - min(),
           diff = range * Math.abs(rate);

@@ -5,7 +5,11 @@ export function timedPromise<Resolved, Rejected>(callback: () => Rejected | void
 
   setTimeout(() => {
     const rejection = callback();
-    if (rejection) promise.reject(rejection);
+    if (rejection) {
+      promise.reject(rejection);
+    } else {
+      promise.resolve(undefined as Resolved);
+    }
   }, ms);
 
   return promise;

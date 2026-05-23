@@ -35,8 +35,8 @@ export class FullscreenController
     onDispose(this.#onDisconnect.bind(this));
   }
 
-  async #onDisconnect() {
-    if (CAN_FULLSCREEN) await this.exit();
+  #onDisconnect() {
+    if (CAN_FULLSCREEN) this.exit().catch(() => {});
   }
 
   #onChange(event: Event) {

@@ -81,7 +81,7 @@ export function useActive(el: Element | null) {
     isFocusIn = useFocusIn(el),
     prevMouseEnter = React.useRef(false);
 
-  if (prevMouseEnter.current && !isMouseEnter) return false;
+  if (prevMouseEnter.current && !isMouseEnter && !isFocusIn) return false;
 
   prevMouseEnter.current = isMouseEnter;
   return isMouseEnter || isFocusIn;

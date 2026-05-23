@@ -157,7 +157,7 @@ export class HTMLMediaEvents {
     this.#ctx.notify('abort', undefined, event);
   }
 
-  #onEmptied() {
+  #onEmptied(event: Event) {
     this.#ctx.notify('emptied', undefined, event);
   }
 
@@ -190,7 +190,7 @@ export class HTMLMediaEvents {
   }
 
   #onPlay(event: Event) {
-    if (!this.#ctx.$state.canPlay) return;
+    if (!this.#ctx.$state.canPlay()) return;
     this.#ctx.notify('play', undefined, event);
   }
 
