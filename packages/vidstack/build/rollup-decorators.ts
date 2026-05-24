@@ -1,5 +1,5 @@
 import MagicString from 'magic-string';
-import type { Plugin } from 'rollup';
+import type { Plugin } from 'rolldown';
 import * as ts from 'typescript';
 
 export function decorators(): Plugin {
