@@ -2,6 +2,7 @@
 
 import { transform } from 'esbuild';
 import { defineConfig } from 'vite';
+import type { Plugin } from 'vite';
 
 const SERVER = !!process.env.SERVER;
 
@@ -38,7 +39,7 @@ export default defineConfig({
   plugins: [legacyPlugin()],
 });
 
-function legacyPlugin() {
+function legacyPlugin(): Plugin {
   return {
     name: 'legacy',
     enforce: 'pre',
