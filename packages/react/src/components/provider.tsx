@@ -96,6 +96,10 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
     [googleCastIconPaths, setGoogleCastIconPaths] = React.useState(''),
     [hasMounted, setHasMounted] = React.useState(false);
 
+  const loadProviderRef = React.useCallback((el: HTMLElement | null) => {
+    provider.load(el);
+  }, [provider]);
+
   React.useEffect(() => {
     if (!isGoogleCast || googleCastIconPaths) return;
     import('media-icons/dist/icons/chromecast.js').then((mod) => {
@@ -111,9 +115,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
     return (
       <div
         className="vds-google-cast"
-        ref={(el) => {
-          provider.load(el);
-        }}
+        ref={loadProviderRef}
       >
         <Icon paths={googleCastIconPaths} />
         {$remoteInfo?.deviceName ? (
@@ -131,9 +133,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
       <div data-remotion-canvas>
         <div
           data-remotion-container
-          ref={(el) => {
-            provider.load(el);
-          }}
+          ref={loadProviderRef}
         >
           {isRemotionProvider($provider) && $providerSetup
             ? React.createElement($provider.render)
@@ -157,9 +157,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
           tabIndex: !$nativeControls ? -1 : undefined,
           'aria-hidden': 'true',
           'data-no-controls': !$nativeControls ? '' : undefined,
-          ref(el: HTMLElement) {
-            provider.load(el);
-          },
+          ref: loadProviderRef,
         }),
         !$nativeControls && !isAudioView
           ? React.createElement('div', { className: 'vds-blocker' })
@@ -179,9 +177,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
                 ) : null,
               )
             : null,
-          ref(el: HTMLMediaElement) {
-            provider.load(el);
-          },
+          ref: loadProviderRef,
         })
       : null;
 }
