@@ -221,9 +221,7 @@ export class DASHController {
       (type) => type && canPlayVideoType(media, type),
     );
 
-    const videoQuality = videoQualities.find(
-      (track) => supportedVideoMimeType === track.mimeType,
-    );
+    const videoQuality = videoQualities.find((track) => supportedVideoMimeType === track.mimeType);
 
     let audioTracks = (this.#instance.getTracksForTypeFromManifest as DashGetMediaTracks)(
       'audio',
