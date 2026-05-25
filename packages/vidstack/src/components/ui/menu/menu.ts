@@ -588,11 +588,10 @@ export interface MenuProps {
   showDelay: number;
 }
 
-export interface MenuEvents
-  extends Pick<
-    MediaRequestEvents,
-    'media-pause-controls-request' | 'media-resume-controls-request'
-  > {
+export interface MenuEvents extends Pick<
+  MediaRequestEvents,
+  'media-pause-controls-request' | 'media-resume-controls-request'
+> {
   open: MenuOpenEvent;
   close: MenuCloseEvent;
 }

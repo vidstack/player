@@ -5,7 +5,8 @@ import * as React from 'react';
  * -----------------------------------------------------------------------------------------------*/
 
 export interface RootProps
-  extends React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>,
+  extends
+    React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>,
     React.RefAttributes<SVGElement | SVGSVGElement> {
   /**
    * The horizontal (width) and vertical (height) length of the spinner.
@@ -49,7 +50,8 @@ const Root = React.forwardRef<SVGElement | SVGSVGElement, RootProps>(
  * -----------------------------------------------------------------------------------------------*/
 
 export interface TrackProps
-  extends React.PropsWithoutRef<React.SVGProps<SVGCircleElement>>,
+  extends
+    React.PropsWithoutRef<React.SVGProps<SVGCircleElement>>,
     React.RefAttributes<SVGCircleElement> {}
 
 const Track = React.forwardRef<SVGCircleElement, TrackProps>(
@@ -74,7 +76,8 @@ const Track = React.forwardRef<SVGCircleElement, TrackProps>(
  * -----------------------------------------------------------------------------------------------*/
 
 export interface TrackFillProps
-  extends React.PropsWithoutRef<React.SVGProps<SVGCircleElement>>,
+  extends
+    React.PropsWithoutRef<React.SVGProps<SVGCircleElement>>,
     React.RefAttributes<SVGCircleElement> {
   /**
    * The percentage of the track that should be filled.

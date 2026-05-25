@@ -10,7 +10,8 @@ import type { MediaEvents } from './media-events';
 import type { MediaRequestEvents } from './media-request-events';
 
 export interface MediaPlayerEvents
-  extends MediaEvents,
+  extends
+    MediaEvents,
     MediaRequestEvents,
     MediaUserEvents,
     LoggerEvents,

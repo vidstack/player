@@ -54,5 +54,6 @@ export type PrimitivePropsWithRef<E extends React.ElementType> = Omit<
       | undefined;
   };
 
-interface PrimitiveForwardRefComponent<E extends React.ElementType>
-  extends React.ForwardRefExoticComponent<PrimitivePropsWithRef<E>> {}
+interface PrimitiveForwardRefComponent<
+  E extends React.ElementType,
+> extends React.ForwardRefExoticComponent<PrimitivePropsWithRef<E>> {}

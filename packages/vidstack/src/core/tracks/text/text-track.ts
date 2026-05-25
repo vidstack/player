@@ -21,7 +21,8 @@ import { isCueActive } from './utils';
 export type TextTrackReadyState = 0 | 1 | 2 | 3;
 
 export interface VTTCueInit
-  extends Omit<Partial<VTTCue>, 'startTime' | 'endTime' | 'text'>,
+  extends
+    Omit<Partial<VTTCue>, 'startTime' | 'endTime' | 'text'>,
     Pick<VTTCue, 'startTime' | 'endTime' | 'text'> {}
 
 export interface VTTRegionInit extends Omit<Partial<VTTRegion>, 'id'>, Pick<VTTRegion, 'id'> {}

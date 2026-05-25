@@ -292,8 +292,7 @@ export interface HLSAudioTrackLoadedEvent extends HLSMediaEvent<HLS.AudioTrackLo
  *
  * @detail data
  */
-export interface HLSSubtitleTracksUpdatedEvent
-  extends HLSMediaEvent<HLS.SubtitleTracksUpdatedData> {}
+export interface HLSSubtitleTracksUpdatedEvent extends HLSMediaEvent<HLS.SubtitleTracksUpdatedData> {}
 
 /**
  * Fired to notify that subtitle tracks were cleared as a result of stopping the media.
@@ -326,8 +325,7 @@ export interface HLSSubtitleTrackLoadedEvent extends HLSMediaEvent<HLS.SubtitleT
  *
  * @detail data
  */
-export interface HLSSubtitleFragProcessedEvent
-  extends HLSMediaEvent<HLS.SubtitleFragProcessedData> {}
+export interface HLSSubtitleFragProcessedEvent extends HLSMediaEvent<HLS.SubtitleFragProcessedData> {}
 
 /**
  * Fired when a set of `VTTCue`'s to be managed externally has been parsed.
@@ -341,8 +339,7 @@ export interface HLSCuesParsedEvent extends HLSMediaEvent<HLS.CuesParsedData> {}
  *
  * @detail data
  */
-export interface HLSNonNativeTextTracksFoundEvent
-  extends HLSMediaEvent<HLS.NonNativeTextTracksData> {}
+export interface HLSNonNativeTextTracksFoundEvent extends HLSMediaEvent<HLS.NonNativeTextTracksData> {}
 
 /**
  * Fired when the first timestamp is found.
@@ -363,8 +360,7 @@ export interface HLSFragLoadingEvent extends HLSMediaEvent<HLS.FragLoadingData> 
  *
  * @detail data
  */
-export interface HLSFragLoadEmergencyAbortedEvent
-  extends HLSMediaEvent<HLS.FragLoadEmergencyAbortedData> {}
+export interface HLSFragLoadEmergencyAbortedEvent extends HLSMediaEvent<HLS.FragLoadEmergencyAbortedData> {}
 
 /**
  * Fired when fragment loading is completed.
@@ -385,8 +381,7 @@ export interface HLSFragDecryptedEvent extends HLSMediaEvent<HLS.FragDecryptedDa
  *
  * @detail data
  */
-export interface HLSFragParsingInitSegmentEvent
-  extends HLSMediaEvent<HLS.FragParsingInitSegmentData> {}
+export interface HLSFragParsingInitSegmentEvent extends HLSMediaEvent<HLS.FragParsingInitSegmentData> {}
 
 /**
  * Fired when parsing sei text is completed.

@@ -80,13 +80,13 @@ function DefaultSpeedMenuSection() {
 function getSpeedMin() {
   const { playbackRates } = useDefaultLayoutContext(),
     rates = playbackRates();
-  return isArray(rates) ? rates[0] ?? 0 : rates.min;
+  return isArray(rates) ? (rates[0] ?? 0) : rates.min;
 }
 
 function getSpeedMax() {
   const { playbackRates } = useDefaultLayoutContext(),
     rates = playbackRates();
-  return isArray(rates) ? rates[rates.length - 1] ?? 2 : rates.max;
+  return isArray(rates) ? (rates[rates.length - 1] ?? 2) : rates.max;
 }
 
 function getSpeedStep() {

@@ -12,8 +12,10 @@ import {
 
 export interface CaptionButtonProps extends ToggleButtonControllerProps {}
 
-export interface CaptionButtonEvents
-  extends Pick<MediaRequestEvents, 'media-text-track-change-request'> {}
+export interface CaptionButtonEvents extends Pick<
+  MediaRequestEvents,
+  'media-text-track-change-request'
+> {}
 
 /**
  * A button for toggling the showing state of the captions.

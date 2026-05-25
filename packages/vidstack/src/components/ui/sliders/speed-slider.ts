@@ -141,7 +141,6 @@ export interface SpeedSliderProps extends SliderControllerProps {
 export interface SpeedSliderState extends SliderState {}
 
 export interface SpeedSliderEvents
-  extends SliderEvents,
-    Pick<MediaRequestEvents, 'media-rate-change-request'> {}
+  extends SliderEvents, Pick<MediaRequestEvents, 'media-rate-change-request'> {}
 
 export interface SpeedSliderCSSVars extends SliderCSSVars {}

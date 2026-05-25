@@ -69,16 +69,18 @@ export class SelectList<
   }
 }
 
-export interface SelectListEvents<Item extends SelectListItem = SelectListItem>
-  extends ListEvents<Item> {
+export interface SelectListEvents<
+  Item extends SelectListItem = SelectListItem,
+> extends ListEvents<Item> {
   change: SelectListChangeEvent<Item>;
 }
 
 /**
  * @detail change
  */
-export interface SelectListChangeEvent<Item extends SelectListItem>
-  extends DOMEvent<SelectListChangeEventDetail<Item>> {}
+export interface SelectListChangeEvent<Item extends SelectListItem> extends DOMEvent<
+  SelectListChangeEventDetail<Item>
+> {}
 
 export interface SelectListChangeEventDetail<Item extends SelectListItem> {
   prev: Item | null;

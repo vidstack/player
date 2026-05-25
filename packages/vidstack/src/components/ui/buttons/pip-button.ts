@@ -11,8 +11,10 @@ import {
 
 export interface PIPButtonProps extends ToggleButtonControllerProps {}
 
-export interface PIPButtonEvents
-  extends Pick<MediaRequestEvents, 'media-enter-pip-request' | 'media-exit-pip-request'> {}
+export interface PIPButtonEvents extends Pick<
+  MediaRequestEvents,
+  'media-enter-pip-request' | 'media-exit-pip-request'
+> {}
 
 /**
  * A button for toggling the picture-in-picture (PIP) mode of the player.

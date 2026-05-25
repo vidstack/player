@@ -10,8 +10,10 @@ import {
 
 export interface PlayButtonProps extends ToggleButtonControllerProps {}
 
-export interface PlayButtonEvents
-  extends Pick<MediaRequestEvents, 'media-play-request' | 'media-pause-request'> {}
+export interface PlayButtonEvents extends Pick<
+  MediaRequestEvents,
+  'media-play-request' | 'media-pause-request'
+> {}
 
 /**
  * A button for toggling the playback state (play/pause) of the current media.

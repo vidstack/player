@@ -20,8 +20,10 @@ import { MediaProviderInstance } from './primitives/instances';
 
 const MediaProviderBridge = createReactComponent(MediaProviderInstance);
 
-export interface MediaProviderProps
-  extends Omit<ReactElementProps<MediaProviderInstance>, 'loaders'> {
+export interface MediaProviderProps extends Omit<
+  ReactElementProps<MediaProviderInstance>,
+  'loaders'
+> {
   loaders?: Array<{ new (): MediaProviderLoader }>;
   iframeProps?: React.IframeHTMLAttributes<HTMLIFrameElement>;
   mediaProps?: React.HTMLAttributes<HTMLMediaElement>;

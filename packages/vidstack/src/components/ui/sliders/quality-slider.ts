@@ -142,7 +142,6 @@ export interface QualitySliderProps extends SliderControllerProps {}
 export interface QualitySliderState extends SliderState {}
 
 export interface QualitySliderEvents
-  extends SliderEvents,
-    Pick<MediaRequestEvents, 'media-quality-change-request'> {}
+  extends SliderEvents, Pick<MediaRequestEvents, 'media-quality-change-request'> {}
 
 export interface QualitySliderCSSVars extends SliderCSSVars {}

@@ -16,5 +16,4 @@ export interface ScreenOrientationChangeEventDetail {
  *
  * @detail orientation
  */
-export interface ScreenOrientationChangeEvent
-  extends DOMEvent<ScreenOrientationChangeEventDetail> {}
+export interface ScreenOrientationChangeEvent extends DOMEvent<ScreenOrientationChangeEventDetail> {}

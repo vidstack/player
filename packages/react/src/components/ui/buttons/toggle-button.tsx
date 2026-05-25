@@ -11,8 +11,10 @@ import { Primitive } from '../../primitives/nodes';
 
 const ToggleButtonBridge = createReactComponent(ToggleButtonInstance);
 
-export interface ToggleButtonProps
-  extends ReactElementProps<ToggleButtonInstance, HTMLButtonElement> {
+export interface ToggleButtonProps extends ReactElementProps<
+  ToggleButtonInstance,
+  HTMLButtonElement
+> {
   asChild?: boolean;
   children?: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;

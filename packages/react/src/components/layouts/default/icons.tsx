@@ -117,8 +117,9 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
   },
 };
 
-export interface DefaultLayoutIconProps
-  extends React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> {}
+export interface DefaultLayoutIconProps extends React.PropsWithoutRef<
+  React.SVGProps<SVGSVGElement>
+> {}
 
 export interface DefaultLayoutIcon {
   (props: DefaultLayoutIconProps): React.ReactNode;

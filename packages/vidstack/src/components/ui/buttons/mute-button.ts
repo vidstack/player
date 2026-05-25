@@ -10,8 +10,10 @@ import {
 
 export interface MuteButtonProps extends ToggleButtonControllerProps {}
 
-export interface MuteButtonEvents
-  extends Pick<MediaRequestEvents, 'media-mute-request' | 'media-unmute-request'> {}
+export interface MuteButtonEvents extends Pick<
+  MediaRequestEvents,
+  'media-mute-request' | 'media-unmute-request'
+> {}
 
 /**
  * A button for toggling the muted state of the player.

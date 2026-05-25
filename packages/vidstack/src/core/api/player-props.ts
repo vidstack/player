@@ -51,8 +51,10 @@ export const mediaPlayerProps: MediaPlayerProps = {
   storage: null,
 };
 
-export interface MediaStateAccessors
-  extends Pick<MediaState, 'paused' | 'muted' | 'volume' | 'currentTime' | 'playbackRate'> {}
+export interface MediaStateAccessors extends Pick<
+  MediaState,
+  'paused' | 'muted' | 'volume' | 'currentTime' | 'playbackRate'
+> {}
 
 export type PlayerSrc = MediaSrc | MediaSrc[];
 

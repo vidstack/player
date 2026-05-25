@@ -308,7 +308,8 @@ interface ThrottledSeeking {
 export interface TimeSliderState extends SliderState {}
 
 export interface TimeSliderEvents
-  extends SliderEvents,
+  extends
+    SliderEvents,
     Pick<
       MediaRequestEvents,
       | 'media-play-request'

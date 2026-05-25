@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 export interface IconProps
-  extends React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>,
+  extends
+    React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>,
     React.RefAttributes<SVGElement | SVGSVGElement> {
   /**
    * The horizontal (width) and vertical (height) length of the underlying `<svg>` element.
