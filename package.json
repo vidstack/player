@@ -13,6 +13,7 @@
     "changelog": "pnpm exec git cliff --output CHANGELOG.md",
     "clean": "turbo run clean",
     "format": "turbo run format --parallel",
+    "format:check": "turbo run format:check --parallel",
     "test": "turbo run test --parallel",
     "preinstall": "npx only-allow pnpm",
     "release": "pnpm build && node .scripts/release.js --next",

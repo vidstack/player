@@ -25,6 +25,7 @@
     "types": "pnpm build:icons && pnpm declarations && pnpm build:types",
     "clean": "rimraf dist-npm",
     "format": "oxfmt src",
+    "format:check": "oxfmt --check src",
     "link:styles": "ln -s ../vidstack/styles ./styles",
     "watch": "pnpm watch:types & pnpm run bundle --watch",
     "watch:types": "pnpm run declarations -w & pnpm run build:types --watch"
