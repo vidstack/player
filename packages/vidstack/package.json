@@ -47,7 +47,7 @@
     "unplugin": "^1.12.0"
   },
   "devDependencies": {
-    "@maverick-js/cli": "0.43.2",
+    "@maverick-js/cli": "0.44.1",
     "@open-wc/semantic-dom-diff": "^0.20.1",
     "@open-wc/testing-helpers": "^3.0.1",
     "@types/fs-extra": "^11.0.4",
@@ -64,7 +64,7 @@
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
     "magic-string": "^0.30.11",
-    "maverick.js": "0.43.2",
+    "maverick.js": "0.44.1",
     "media-icons": "^1.1.5",
     "postcss": "^8.4.41",
     "rimraf": "^3.0.2",
