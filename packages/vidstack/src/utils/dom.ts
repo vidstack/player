@@ -369,10 +369,11 @@ export function useActive($el: ReadSignal<Element | null | undefined>) {
   let prevMouseEnter = false;
 
   return computed(() => {
-    const isMouseEnter = $isMouseEnter();
-    if (prevMouseEnter && !isMouseEnter) return false;
+    const isMouseEnter = $isMouseEnter(),
+      isFocusIn = $isFocusedIn();
+    if (prevMouseEnter && !isMouseEnter && !isFocusIn) return false;
     prevMouseEnter = isMouseEnter;
-    return isMouseEnter || $isFocusedIn();
+    return isMouseEnter || isFocusIn;
   });
 }
 
