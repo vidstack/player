@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.1-next](https://github.com/vidstack/player/releases/tag/v1.13.1-next) (2026-05-25)
+
+### 🐛 Bug Fixes
+
+#### Vidstack
+
+- design tweaks ([8e5ee19](https://github.com/vidstack/player/commit/8e5ee194e141cffc4d13b3238088e1a463087e56))
+
 ## [1.13.0-next](https://github.com/vidstack/player/releases/tag/v1.13.0-next) (2026-05-25)
 
 ### ✨ Features
