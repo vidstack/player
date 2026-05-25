@@ -1,6 +1,6 @@
 import fscreen from 'fscreen';
 import { onDispose, ViewController } from 'maverick.js';
-import { EventsController, listenEvent } from 'maverick.js/std';
+import { EventsController, listenEvent, noop } from 'maverick.js/std';
 
 import type { FullscreenEvents } from './events';
 
@@ -35,8 +35,8 @@ export class FullscreenController
     onDispose(this.#onDisconnect.bind(this));
   }
 
-  async #onDisconnect() {
-    if (CAN_FULLSCREEN) await this.exit();
+  #onDisconnect() {
+    if (CAN_FULLSCREEN) void this.exit().catch(noop);
   }
 
   #onChange(event: Event) {
