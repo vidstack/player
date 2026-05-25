@@ -508,7 +508,9 @@ export class MediaPlayer
 
   #queueMutedUpdate(muted: boolean) {
     this.canPlayQueue.enqueue('muted', () => {
-      if (this.#provider) this.#provider.setMuted(muted);
+      peek(() => {
+        if (this.#provider) this.#provider.setMuted(muted);
+      });
     });
   }
 
