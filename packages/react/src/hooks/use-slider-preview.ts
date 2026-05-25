@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { effect, signal } from 'maverick.js';
-import { EventsController, listenEvent } from 'maverick.js/std';
+import { EventsController } from 'maverick.js/std';
 import { updateSliderPreviewPlacement, type SliderOrientation } from 'vidstack';
 
 /**
@@ -20,43 +19,64 @@ export function useSliderPreview({
   React.useEffect(() => {
     if (!rootRef) return;
 
-    const dragging = signal(false);
+    const root = rootRef;
+    let isDragging = false,
+      dragEvents: EventsController<Document> | null = null;
 
     function updatePointerValue(event: PointerEvent) {
-      if (!rootRef) return;
-      setPointerValue(getPointerValue(rootRef, event, orientation));
+      setPointerValue(getPointerValue(root, event, orientation));
     }
 
-    return effect(() => {
-      if (!dragging()) {
-        new EventsController(rootRef)
-          .add('pointerenter', () => {
-            setIsVisible(true);
-            previewRef?.setAttribute('data-visible', '');
-          })
-          .add('pointerdown', (event) => {
-            dragging.set(true);
-            updatePointerValue(event);
-          })
-          .add('pointerleave', () => {
-            setIsVisible(false);
-            previewRef?.removeAttribute('data-visible');
-          })
-          .add('pointermove', updatePointerValue);
-      }
+    function setVisible(visible: boolean) {
+      setIsVisible(visible);
+      previewRef?.toggleAttribute('data-visible', visible);
+    }
 
-      previewRef?.setAttribute('data-dragging', '');
+    function setDragging(dragging: boolean) {
+      isDragging = dragging;
+      previewRef?.toggleAttribute('data-dragging', dragging);
+    }
 
-      new EventsController(document)
-        .add('pointerup', (event) => {
-          dragging.set(false);
-          previewRef?.removeAttribute('data-dragging');
-          updatePointerValue(event);
-        })
+    function onPointerDown(event: PointerEvent) {
+      if (isDragging) return;
+
+      setDragging(true);
+      updatePointerValue(event);
+
+      dragEvents = new EventsController(document)
+        .add('pointerup', onPointerUp)
         .add('pointermove', updatePointerValue)
         .add('touchmove', (e) => e.preventDefault(), { passive: false });
-    });
-  }, [rootRef]);
+    }
+
+    function onPointerUp(event: PointerEvent) {
+      setDragging(false);
+      updatePointerValue(event);
+
+      dragEvents?.abort();
+      dragEvents = null;
+    }
+
+    const rootEvents = new EventsController(root)
+      .add('pointerenter', () => setVisible(true))
+      .add('pointerdown', onPointerDown)
+      .add('pointerleave', () => {
+        if (!isDragging) setVisible(false);
+      })
+      .add('pointermove', (event) => {
+        if (!isDragging) updatePointerValue(event);
+      });
+
+    return () => {
+      rootEvents.abort();
+      dragEvents?.abort();
+
+      if (previewRef) {
+        previewRef.removeAttribute('data-visible');
+        previewRef.removeAttribute('data-dragging');
+      }
+    };
+  }, [rootRef, previewRef, orientation]);
 
   React.useEffect(() => {
     if (previewRef) {
