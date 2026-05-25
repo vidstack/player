@@ -111,7 +111,7 @@ export class SliderController extends ViewController<
 
   #watchHidden() {
     const { hidden } = this.$props;
-    this.$state.hidden.set(hidden() || !this.#isVisible() || !this.#isIntersecting.bind(this));
+    this.$state.hidden.set(hidden() || !this.#isVisible() || !this.#isIntersecting());
   }
 
   #watchValue() {
