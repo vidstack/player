@@ -29,6 +29,7 @@
     "types": "pnpm declarations && pnpm run build:types",
     "clean": "rimraf dist-npm",
     "format": "oxfmt src",
+    "format:check": "oxfmt --check src",
     "sandbox": "node ../../.scripts/sandbox.js & pnpm run build:css -w",
     "sandbox:build": "vite build sandbox",
     "test": "vitest --run",

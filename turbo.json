@@ -33,6 +33,9 @@
     "format": {
       "inputs": ["src/**"]
     },
+    "format:check": {
+      "inputs": ["src/**", ".oxfmtrc.json"]
+    },
     "test": {
       "inputs": ["src/**"]
     }
