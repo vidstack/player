@@ -84,6 +84,7 @@ export class SliderEventsController extends ViewController<
 
     if (pointer() !== 'coarse' || !this.#delegate.swipeGesture!()) {
       this.#provider = null;
+      this.#resetTouchState();
       return;
     }
 
@@ -91,7 +92,10 @@ export class SliderEventsController extends ViewController<
       'media-provider,[data-media-provider]',
     ) as HTMLElement | null;
 
-    if (!this.#provider) return;
+    if (!this.#provider) {
+      this.#resetTouchState();
+      return;
+    }
 
     new EventsController(this.#provider)
       .add('touchstart', this.#onTouchStart.bind(this), {
@@ -103,6 +107,12 @@ export class SliderEventsController extends ViewController<
   #provider: HTMLElement | null = null;
   #touch: Touch | null = null;
   #touchStartValue: number | null = null;
+
+  #resetTouchState() {
+    this.#touch = null;
+    this.#touchStartValue = null;
+  }
+
   #onTouchStart(event: TouchEvent) {
     this.#touch = event.touches[0];
   }
@@ -196,14 +206,16 @@ export class SliderEventsController extends ViewController<
       const { bottom: trackBottom, height: trackHeight } = rect;
       thumbPositionRate = (trackBottom - event.clientY) / trackHeight;
     } else {
-      if (this.#touch && isNumber(this.#touchStartValue)) {
-        const { width } = this.#provider!.getBoundingClientRect(),
+      if (this.#touch && isNumber(this.#touchStartValue) && this.#provider) {
+        const { width } = this.#provider.getBoundingClientRect(),
           rate = (event.clientX - this.#touch.clientX) / width,
           range = max() - min(),
           diff = range * Math.abs(rate);
         thumbPositionRate =
           (rate < 0 ? this.#touchStartValue - diff : this.#touchStartValue + diff) / range;
       } else {
+        if (this.#touch && isNumber(this.#touchStartValue)) this.#resetTouchState();
+
         const { left: trackLeft, width: trackWidth } = rect;
         thumbPositionRate = (event.clientX - trackLeft) / trackWidth;
       }
@@ -267,8 +279,7 @@ export class SliderEventsController extends ViewController<
     const event = this.createEvent('drag-end', { detail: value, trigger });
     this.dispatch(event);
     this.#delegate.onDragEnd?.(event);
-    this.#touch = null;
-    this.#touchStartValue = null;
+    this.#resetTouchState();
     this.#observer?.onDragEnd?.();
   }
 
