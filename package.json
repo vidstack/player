@@ -17,13 +17,14 @@
     "preinstall": "npx only-allow pnpm",
     "release": "pnpm build && node .scripts/release.js --next",
     "release:dry": "pnpm run release --dry",
-    "validate": "turbo run build format test"
+    "typecheck": "turbo run typecheck",
+    "validate": "turbo run build format test typecheck"
   },
   "devDependencies": {
     "@types/node": "^18.19.43",
+    "@typescript/native-preview": "beta",
     "chokidar": "^3.6.0",
     "enquirer": "^2.4.1",
-    "esbuild": "^0.23.0",
     "execa": "^6.1.0",
     "fs-extra": "^11.2.0",
     "git-cliff": "^1.4.0",
@@ -35,8 +36,9 @@
     "rimraf": "^3.0.2",
     "semver": "^7.6.3",
     "simple-git-hooks": "^2.11.1",
+    "tsdown": "^0.22.0",
     "turbo": "^2.0.12",
-    "typescript": "^5.6.0"
+    "typescript": "^6.0.0"
   },
   "simple-git-hooks": {
     "pre-commit": "npx --no-install lint-staged"

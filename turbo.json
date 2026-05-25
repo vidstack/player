@@ -5,6 +5,7 @@
       "dependsOn": ["clean"],
       "outputs": [
         "dist-npm/analyze.json",
+        "dist-npm/elements.json",
         "dist-npm/vscode.html-data.json",
         "dist-npm/vue.d.ts",
         "dist-npm/svelte.d.ts",
@@ -24,6 +25,10 @@
     "types": {
       "dependsOn": ["clean"],
       "outputs": ["types/**", "dist-npm/**/*.d.ts", "tsconfig.build.tsbuildinfo"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["src/**", "tsconfig.json", "tsconfig.build.json"]
     },
     "format": {
       "inputs": ["src/**"]
