@@ -15,9 +15,9 @@
   background: none;
   outline: none;
   border: none;
-  border-radius: var(--media-button-border-radius, 8px);
-  width: var(--media-button-size, 40px);
-  height: var(--media-button-size, 40px);
+  border-radius: var(--media-button-border-radius, 9999%);
+  width: var(--media-button-size, 38px);
+  height: var(--media-button-size, 38px);
   transition: transform 0.2s ease-out;
   contain: layout style;
   cursor: pointer;
@@ -46,8 +46,8 @@
 }
 
 :where(.vds-button .vds-icon) {
-  width: var(--media-button-icon-size, 80%);
-  height: var(--media-button-icon-size, 80%);
+  width: var(--media-button-icon-size, 70%);
+  height: var(--media-button-icon-size, 70%);
   border-radius: var(--media-button-border-radius, 8px);
 }
 
@@ -55,7 +55,7 @@
   display: flex !important;
 }
 
-:where(.vds-button[aria-hidden='true']) {
+:where(.vds-button[aria-hidden="true"]) {
   display: none !important;
 }
 
@@ -69,7 +69,7 @@
     transition: var(--media-button-hover-transition, transform 0.2s ease-in);
   }
 
-  .vds-button[aria-expanded='true'] {
+  .vds-button[aria-expanded="true"] {
     transform: unset;
   }
 }
@@ -77,7 +77,10 @@
 @media (pointer: coarse) {
   .vds-button:hover {
     border-radius: var(--media-button-touch-hover-border-radius, 100%);
-    background-color: var(--media-button-touch-hover-bg, rgb(255 255 255 / 0.2));
+    background-color: var(
+      --media-button-touch-hover-bg,
+      rgb(255 255 255 / 0.2)
+    );
   }
 }
 
