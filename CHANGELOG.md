@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.0-next](https://github.com/vidstack/player/releases/tag/v1.13.0-next) (2026-05-25)
+
+### ✨ Features
+
+#### Sandbox
+
+- add URL params support for testing (#1744) ([55c3b7a](https://github.com/vidstack/player/commit/55c3b7aed5c9a9d90b67419b15481de295ed7a11))
+
+### 🐛 Bug Fixes
+
+#### Player
+
+- < and > have no effect on playback speed (#1494) ([cd9eb42](https://github.com/vidstack/player/commit/cd9eb42dea841b1dc9dbcb7e2d1cbdb490ee1199))
+
+#### React
+
+- use useLayoutEffect for hasMounted to prevent source element race condition (#1751) ([0ddb9c8](https://github.com/vidstack/player/commit/0ddb9c81ef19f24b694c366d17bb923e4fe1fa24))
+- add worker/server target to build script (#1738) ([73b9d6c](https://github.com/vidstack/player/commit/73b9d6c8b3e1aeeb692eb16a9a1ec6a793175107))
+- keep `useActive` active state while focused (#1808) ([2026f24](https://github.com/vidstack/player/commit/2026f24d213dbade6a6a5e9c0bc4f5ce1a773045))
+- clean up slider preview listeners (#1807) ([2174bda](https://github.com/vidstack/player/commit/2174bdaf3656c8b1869d5c82c9b640b120707247))
+- clear media remote references on cleanup (#1803) ([6ea4f95](https://github.com/vidstack/player/commit/6ea4f9512452351dccb87d712421498e29701d1f))
+- track active text track dependency (#1802) ([0e71148](https://github.com/vidstack/player/commit/0e7114820e946d80470f3a4e047bfa908c6ac19c))
+- stabilize media outlet provider refs (#1799) ([9018acc](https://github.com/vidstack/player/commit/9018acc4e0d04e8c890af6a268c2938800a41947))
+
+#### Vidstack
+
+- pass emptied event to notify (#1812) ([935ac43](https://github.com/vidstack/player/commit/935ac438d329679418d33957f01d3e312abd6d70))
+- read slider intersection signal (#1811) ([b1f546c](https://github.com/vidstack/player/commit/b1f546c1c77e6dd47821f39c2ab3fa879c6df7e8))
+- resolve timed promise without rejection (#1810) ([affb7ce](https://github.com/vidstack/player/commit/affb7cebc3bb9b3d833ee87168954d0e7a4610d5))
+- read canPlay signal in html play event (#1809) ([89d3c22](https://github.com/vidstack/player/commit/89d3c229aef81867f1eeed3dadc110845dd1c9fd))
+- guard stale hls instance callbacks (#1806) ([20e07b3](https://github.com/vidstack/player/commit/20e07b32bb31a5c07def29ec4b68537296b3da5e))
+- guard dash video quality lookup (#1805) ([37d8850](https://github.com/vidstack/player/commit/37d885058e1d1a064f830a68abbff89482b946ee))
+- guard slider swipe provider access (#1804) ([cbe2006](https://github.com/vidstack/player/commit/cbe2006458a8c6ccc67b974e2dd25cf6ff5947be))
+- type legacy vite plugin (#1801) ([275dbd7](https://github.com/vidstack/player/commit/275dbd73cb2e7391b512d7cec40d6092b7d975b6))
+- avoid tracked provider read in muted queue (#1800) ([036221a](https://github.com/vidstack/player/commit/036221aca6bcab63630dae09e78328645450d235))
+- handle fullscreen dispose rejection (#1798) ([bbb0f04](https://github.com/vidstack/player/commit/bbb0f04ccb5debaab1b509903a1e2d7bb90678df))
+
+#### Vimeo
+
+- report correct muted state in auto-play event (#1745) ([8c731d7](https://github.com/vidstack/player/commit/8c731d73cb94ae0d73a4d11bd3afe23bbe502fd4))
+
+#### Youtube
+
+- add `allowSeekAhead` parameter to `seekTo` command (#1722) ([a4d664f](https://github.com/vidstack/player/commit/a4d664f66bdf287ac37c9786748031caf385d72c))
+
 ## [1.12.13-next](https://github.com/vidstack/player/releases/tag/v1.12.13-next) (2025-02-16)
 
 ### ✨ Features
@@ -1485,3 +1530,4 @@ All notable changes to this project will be documented in this file.
 #### React
 
 - small layout tweaks and fixes ([716e22c](https://github.com/vidstack/player/commit/716e22c936319c744fb7347573e2b8ba9c748d5c))
+
