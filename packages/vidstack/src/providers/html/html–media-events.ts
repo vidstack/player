@@ -157,7 +157,7 @@ export class HTMLMediaEvents {
     this.#ctx.notify('abort', undefined, event);
   }
 
-  #onEmptied() {
+  #onEmptied(event: Event) {
     this.#ctx.notify('emptied', undefined, event);
   }
 
