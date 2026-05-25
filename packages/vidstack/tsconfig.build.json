@@ -3,6 +3,7 @@
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "types",
+    "rootDir": "src",
     "paths": {}
   },
   "exclude": ["src/**/*.test.ts", "src/test-utils"]
