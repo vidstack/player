@@ -10,8 +10,10 @@ import { createComputed, createEffect } from '../../../../hooks/use-signals';
 import { Primitive, type PrimitivePropsWithRef } from '../../../primitives/nodes';
 import type { DefaultKeyboardDisplayIcons } from '../icons';
 
-export interface DefaultKeyboardDisplayProps
-  extends Omit<PrimitivePropsWithRef<'div'>, 'disabled'> {
+export interface DefaultKeyboardDisplayProps extends Omit<
+  PrimitivePropsWithRef<'div'>,
+  'disabled'
+> {
   icons: Partial<DefaultKeyboardDisplayIcons>;
 }
 

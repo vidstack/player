@@ -11,8 +11,10 @@ import type { RemotionErrorRenderer, RemotionLoadingRenderer, RemotionSrc } from
 import { REMOTION_PROVIDER_ID, RemotionContextProvider } from './context';
 import { ErrorBoundary } from './error-boundary';
 
-export interface RemotionThumbnailProps
-  extends Omit<PrimitivePropsWithRef<'div'>, 'children' | 'onError'> {
+export interface RemotionThumbnailProps extends Omit<
+  PrimitivePropsWithRef<'div'>,
+  'children' | 'onError'
+> {
   /** The video frame to display. */
   frame: number;
   /**
@@ -135,8 +137,10 @@ const RemotionThumbnail = React.forwardRef<HTMLElement, RemotionThumbnailProps>(
 RemotionThumbnail.displayName = 'RemotionThumbnail';
 export default RemotionThumbnail;
 
-interface RemotionThumbnailUIProps
-  extends Pick<RemotionThumbnailProps, 'renderLoading' | 'errorFallback' | 'onError'> {
+interface RemotionThumbnailUIProps extends Pick<
+  RemotionThumbnailProps,
+  'renderLoading' | 'errorFallback' | 'onError'
+> {
   inputProps?: RemotionSrc['inputProps'];
 }
 

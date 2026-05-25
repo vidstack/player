@@ -174,8 +174,7 @@ export interface DASHDvbFontDownloadAddedEvent extends DASHMediaEvent<DASH.dvbFo
  *
  * @detail data
  */
-export interface DASHDvbFontDownloadCompleteEvent
-  extends DASHMediaEvent<DASH.dvbFontDownloadComplete> {}
+export interface DASHDvbFontDownloadCompleteEvent extends DASHMediaEvent<DASH.dvbFontDownloadComplete> {}
 
 /**
  * Triggered when a font signalled by a DVB Font Download could not be successfully downloaded, so
@@ -183,8 +182,7 @@ export interface DASHDvbFontDownloadCompleteEvent
  *
  * @detail data
  */
-export interface DASHDvbFontDownloadFailedEvent
-  extends DASHMediaEvent<DASH.dvbFontDownloadFailed> {}
+export interface DASHDvbFontDownloadFailedEvent extends DASHMediaEvent<DASH.dvbFontDownloadFailed> {}
 
 /**
  * Triggered when a dynamic stream changed to static (transition phase between Live and -Demand).
@@ -205,8 +203,7 @@ export interface DASHErrorEvent extends DASHMediaEvent<DASH.ErrorEvent> {}
  *
  * @detail data
  */
-export interface DASHFragmentLoadingCompletedEvent
-  extends DASHMediaEvent<DASH.FragmentLoadingCompletedEvent> {}
+export interface DASHFragmentLoadingCompletedEvent extends DASHMediaEvent<DASH.FragmentLoadingCompletedEvent> {}
 
 /**
  * Triggered when a partial fragment download has completed.
@@ -224,8 +221,7 @@ export interface DASHFragmentLoadingStartedEvent extends DASHMediaEvent<void> {}
  *
  * @detail data
  */
-export interface DASHFragmentLoadingAbandonedEvent
-  extends DASHMediaEvent<DASH.FragmentLoadingAbandonedEvent> {}
+export interface DASHFragmentLoadingAbandonedEvent extends DASHMediaEvent<DASH.FragmentLoadingAbandonedEvent> {}
 
 /**
  * Triggered when Debug logger methods are called.
@@ -297,24 +293,21 @@ export interface DASHPeriodSwitchCompletedEvent extends DASHMediaEvent<DASH.Peri
  *
  * @detail data
  */
-export interface DASHQualityChangeRequestedEvent
-  extends DASHMediaEvent<DASH.QualityChangeRequestedEvent> {}
+export interface DASHQualityChangeRequestedEvent extends DASHMediaEvent<DASH.QualityChangeRequestedEvent> {}
 
 /**
  * Triggered when the new ABR quality is being rendered on-screen.
  *
  * @detail data
  */
-export interface DASHQualityChangeRenderedEvent
-  extends DASHMediaEvent<DASH.QualityChangeRenderedEvent> {}
+export interface DASHQualityChangeRenderedEvent extends DASHMediaEvent<DASH.QualityChangeRenderedEvent> {}
 
 /**
  * Triggered when the new track is being rendered.
  *
  * @detail data
  */
-export interface DASHTrackChangeRenderedEvent
-  extends DASHMediaEvent<DASH.TrackChangeRenderedEvent> {}
+export interface DASHTrackChangeRenderedEvent extends DASHMediaEvent<DASH.TrackChangeRenderedEvent> {}
 
 /**
  * Triggered when a stream (period) is being loaded.
@@ -409,8 +402,7 @@ export interface DASHCaptionRenderedEvent extends DASHMediaEvent<DASH.CaptionRen
  *
  * @detail data
  */
-export interface DASHCaptionContainerResizeEvent
-  extends DASHMediaEvent<DASH.CaptionContainerResizeEvent> {}
+export interface DASHCaptionContainerResizeEvent extends DASHMediaEvent<DASH.CaptionContainerResizeEvent> {}
 
 /**
  * Sent when enough data is available that the media can be played, at least for a couple of
@@ -479,8 +471,7 @@ export interface DASHPlaybackProgressEvent extends DASHMediaEvent<void> {}
  *
  * @detail data
  */
-export interface DASHPlaybackRateChangedEvent
-  extends DASHMediaEvent<DASH.PlaybackRateChangedEvent> {}
+export interface DASHPlaybackRateChangedEvent extends DASHMediaEvent<DASH.PlaybackRateChangedEvent> {}
 
 /**
  * Sent when a seek operation completes.
@@ -512,8 +503,7 @@ export interface DASHPlaybackStartedEvent extends DASHMediaEvent<DASH.PlaybackSt
  *
  * @detail data
  */
-export interface DASHPlaybackTimeUpdatedEvent
-  extends DASHMediaEvent<DASH.PlaybackTimeUpdatedEvent> {}
+export interface DASHPlaybackTimeUpdatedEvent extends DASHMediaEvent<DASH.PlaybackTimeUpdatedEvent> {}
 
 /**
  * Sent when the video element reports that the volume has changed.
@@ -559,8 +549,7 @@ export interface DASHRepresentationSwitchEvent extends DASHMediaEvent<void> {}
  *
  * @detail data
  */
-export interface DASHAdaptationSetRemovedNoCapabilitiesEvent
-  extends DASHMediaEvent<DASH.AdaptationSetRemovedNoCapabilitiesEvent> {}
+export interface DASHAdaptationSetRemovedNoCapabilitiesEvent extends DASHMediaEvent<DASH.AdaptationSetRemovedNoCapabilitiesEvent> {}
 
 /**
  * Triggered when a content steering request has completed.

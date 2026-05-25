@@ -13,8 +13,10 @@ const GoogleCastButtonBridge = createReactComponent(GoogleCastButtonInstance, {
   domEventsRegex: /^onMedia/,
 });
 
-export interface GoogleCastButtonProps
-  extends ReactElementProps<GoogleCastButtonInstance, HTMLButtonElement> {
+export interface GoogleCastButtonProps extends ReactElementProps<
+  GoogleCastButtonInstance,
+  HTMLButtonElement
+> {
   asChild?: boolean;
   children?: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;

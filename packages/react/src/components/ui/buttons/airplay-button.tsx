@@ -13,8 +13,10 @@ const AirPlayButtonBridge = createReactComponent(AirPlayButtonInstance, {
   domEventsRegex: /^onMedia/,
 });
 
-export interface AirPlayButtonProps
-  extends ReactElementProps<AirPlayButtonInstance, HTMLButtonElement> {
+export interface AirPlayButtonProps extends ReactElementProps<
+  AirPlayButtonInstance,
+  HTMLButtonElement
+> {
   asChild?: boolean;
   children?: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;

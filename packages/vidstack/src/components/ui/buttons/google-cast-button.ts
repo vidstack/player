@@ -11,8 +11,10 @@ import {
 
 export interface GoogleCastButtonProps extends ToggleButtonControllerProps {}
 
-export interface GoogleCastButtonEvents
-  extends Pick<MediaRequestEvents, 'media-google-cast-request'> {}
+export interface GoogleCastButtonEvents extends Pick<
+  MediaRequestEvents,
+  'media-google-cast-request'
+> {}
 
 /**
  * A button for requesting remote playback via Google Cast.

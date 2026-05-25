@@ -1,5 +1,4 @@
 import '../elements/bundles/player';
-
 import { defineCustomElement } from 'maverick.js/element';
 import { isString, kebabToCamelCase } from 'maverick.js/std';
 

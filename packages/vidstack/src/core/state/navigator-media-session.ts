@@ -53,7 +53,8 @@ export class NavigatorMediaSession extends MediaPlayerController {
         this.dispatch('media-seek-request', {
           detail: isNumber(details.seekTime)
             ? details.seekTime
-            : this.$state.currentTime() + (details.seekOffset ?? (details.action === "seekforward" ? 10 : -10)),
+            : this.$state.currentTime() +
+              (details.seekOffset ?? (details.action === 'seekforward' ? 10 : -10)),
           trigger,
         });
         break;

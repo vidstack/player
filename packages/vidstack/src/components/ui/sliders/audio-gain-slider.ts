@@ -144,7 +144,6 @@ export interface AudioGainSliderProps extends SliderControllerProps {
 export interface AudioGainSliderState extends SliderState {}
 
 export interface AudioGainSliderEvents
-  extends SliderEvents,
-    Pick<MediaRequestEvents, 'media-audio-gain-change-request'> {}
+  extends SliderEvents, Pick<MediaRequestEvents, 'media-audio-gain-change-request'> {}
 
 export interface AudioGainSliderCSSVars extends SliderCSSVars {}

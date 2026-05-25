@@ -34,8 +34,7 @@ export interface VideoQualityRemoveEvent extends VideoQualityListEvent<VideoQual
  *
  * @detail change
  */
-export interface VideoQualityChangeEvent
-  extends VideoQualityListEvent<VideoQualityChangeEventDetail> {}
+export interface VideoQualityChangeEvent extends VideoQualityListEvent<VideoQualityChangeEventDetail> {}
 
 export interface VideoQualityChangeEventDetail {
   prev: VideoQuality | null;

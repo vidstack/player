@@ -1,0 +1,59 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "useTabs": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "sortImports": {
+    "ignoreCase": true,
+    "newlinesBetween": true,
+    "customGroups": [
+      { "groupName": "clsx", "elementNamePattern": ["clsx"] },
+      { "groupName": "react", "elementNamePattern": ["react"] },
+      { "groupName": "next", "elementNamePattern": ["next", "next/**"] },
+      { "groupName": "icons", "elementNamePattern": ["~*icons*"] },
+      { "groupName": "media", "elementNamePattern": ["**.webp", "**.mp4", "**.png"] },
+      { "groupName": "alias", "elementNamePattern": ["$*"] }
+    ],
+    "groups": [
+      "clsx",
+      "react",
+      "next",
+      "icons",
+      "style",
+      "builtin",
+      "external",
+      "media",
+      "alias",
+      ["parent", "sibling", "index"],
+      "unknown"
+    ]
+  },
+  "sortTailwindcss": true,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    ".code",
+    "globals.d.ts",
+    "*.png",
+    "*.jpeg",
+    "*.mp4",
+    "*.mp3",
+    "*.vtt",
+    "*.ico",
+    "*.toml",
+    "**/partials/markup",
+    "**/partials/import",
+    "**/dist",
+    "**/dist-npm",
+    "**/dist-cdn",
+    "**/types",
+    ".gitignore",
+    ".gitkeep",
+    ".prettierignore",
+    ".oxfmtrc.json",
+    "mangle.json",
+    "pnpm-lock.yaml",
+    "CHANGELOG.md"
+  ]
+}

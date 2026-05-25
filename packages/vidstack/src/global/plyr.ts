@@ -1,6 +1,5 @@
 import '../elements/bundles/player';
 import '../elements/bundles/player-layouts/plyr';
-
 import {
   createDisposalBin,
   DOMEvent,
@@ -128,9 +127,9 @@ export class Plyr implements PlyrProps, PlyrMethods {
 
     return Boolean(
       media.mozHasAudio ||
-        media.webkitAudioDecodedByteCount ||
-        media.audioTracks?.length ||
-        this.player.audioTracks.length,
+      media.webkitAudioDecodedByteCount ||
+      media.audioTracks?.length ||
+      this.player.audioTracks.length,
     );
   }
 
@@ -595,8 +594,7 @@ export class Plyr implements PlyrProps, PlyrMethods {
 export type PlyrTarget = string | HTMLElement | NodeList | HTMLElement[];
 
 export interface PlyrConfig
-  extends Partial<Omit<MediaPlayerProps, 'controls'>>,
-    Partial<PlyrLayoutProps> {
+  extends Partial<Omit<MediaPlayerProps, 'controls'>>, Partial<PlyrLayoutProps> {
   /**
    * Completely disable Plyr. This would allow you to do a User Agent check or similar to
    * programmatically enable or disable Plyr for a certain UA.
@@ -711,20 +709,19 @@ export interface PlyrStorageConfig {
 
 export interface PlyrI18nConfig extends Partial<PlyrLayoutTranslations> {}
 
-export interface PlyrProps
-  extends Pick<
-    MediaPlayerState,
-    | 'playing'
-    | 'paused'
-    | 'ended'
-    | 'currentTime'
-    | 'seeking'
-    | 'duration'
-    | 'volume'
-    | 'muted'
-    | 'loop'
-    | 'poster'
-  > {
+export interface PlyrProps extends Pick<
+  MediaPlayerState,
+  | 'playing'
+  | 'paused'
+  | 'ended'
+  | 'currentTime'
+  | 'seeking'
+  | 'duration'
+  | 'volume'
+  | 'muted'
+  | 'loop'
+  | 'poster'
+> {
   /**
    * Returns a boolean indicating if the current player is HTML5.
    */
@@ -894,11 +891,10 @@ export interface PlyrMethods extends Pick<MediaPlayerElement, 'play' | 'pause' |
   supports(type: string): boolean;
 }
 
-export interface PlyrEvents
-  extends Pick<
-    ME.MediaEvents,
-    'ended' | 'pause' | 'play' | 'playing' | 'progress' | 'seeked' | 'seeking'
-  > {
+export interface PlyrEvents extends Pick<
+  ME.MediaEvents,
+  'ended' | 'pause' | 'play' | 'playing' | 'progress' | 'seeked' | 'seeking'
+> {
   captionsdisabled: ME.MediaTextTrackChangeEvent;
   captionsenabled: ME.MediaTextTrackChangeEvent;
   controlshidden: ME.MediaControlsChangeEvent;

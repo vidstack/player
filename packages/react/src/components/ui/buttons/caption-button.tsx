@@ -13,8 +13,10 @@ const CaptionButtonBridge = createReactComponent(CaptionButtonInstance, {
   domEventsRegex: /^onMedia/,
 });
 
-export interface CaptionButtonProps
-  extends ReactElementProps<CaptionButtonInstance, HTMLButtonElement> {
+export interface CaptionButtonProps extends ReactElementProps<
+  CaptionButtonInstance,
+  HTMLButtonElement
+> {
   asChild?: boolean;
   children?: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;

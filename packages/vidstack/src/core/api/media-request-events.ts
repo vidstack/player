@@ -59,11 +59,10 @@ export interface MediaPosterStartLoadingRequestEvent extends DOMEvent<void> {}
  * @bubbles
  * @composed
  */
-export interface MediaTextTrackChangeRequestEvent
-  extends DOMEvent<{
-    index: number;
-    mode: TextTrackMode;
-  }> {}
+export interface MediaTextTrackChangeRequestEvent extends DOMEvent<{
+  index: number;
+  mode: TextTrackMode;
+}> {}
 
 /**
  * Fired when requesting the media to be muted.

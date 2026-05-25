@@ -5,7 +5,9 @@
   "license": "MIT",
   "type": "module",
   "types": "src/index.ts",
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -21,7 +23,7 @@
     "sandbox:build": "vite build sandbox",
     "types": "pnpm build:icons && pnpm declarations && pnpm build:types",
     "clean": "rimraf dist-npm",
-    "format": "prettier src --write --loglevel warn",
+    "format": "oxfmt src",
     "link:styles": "ln -s ../vidstack/styles ./styles",
     "watch": "pnpm watch:types & pnpm run bundle -w",
     "watch:types": "pnpm run declarations -w & pnpm run build:types -w"

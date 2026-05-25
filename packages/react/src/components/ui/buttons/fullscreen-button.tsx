@@ -13,8 +13,10 @@ const FullscreenButtonBridge = createReactComponent(FullscreenButtonInstance, {
   domEventsRegex: /^onMedia/,
 });
 
-export interface FullscreenButtonProps
-  extends ReactElementProps<FullscreenButtonInstance, HTMLButtonElement> {
+export interface FullscreenButtonProps extends ReactElementProps<
+  FullscreenButtonInstance,
+  HTMLButtonElement
+> {
   asChild?: boolean;
   children?: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;

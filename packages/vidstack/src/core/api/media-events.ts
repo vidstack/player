@@ -205,8 +205,7 @@ export interface MediaRemotePlaybackChangeEventDetail {
  * Fired when the remote playback state (`connecting`, `connected`, `disconnected`) and type
  * (`airplay`, `google-cast`) has changed.
  */
-export interface MediaRemotePlaybackChangeEvent
-  extends MediaEvent<MediaRemotePlaybackChangeEventDetail> {}
+export interface MediaRemotePlaybackChangeEvent extends MediaEvent<MediaRemotePlaybackChangeEventDetail> {}
 
 /**
  * Fired when the `source` property has changed value.

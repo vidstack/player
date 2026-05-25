@@ -139,7 +139,6 @@ export interface VolumeSliderProps extends SliderControllerProps {}
 export interface VolumeSliderState extends SliderState {}
 
 export interface VolumeSliderEvents
-  extends SliderEvents,
-    Pick<MediaRequestEvents, 'media-volume-change-request'> {}
+  extends SliderEvents, Pick<MediaRequestEvents, 'media-volume-change-request'> {}
 
 export interface VolumeSliderCSSVars extends SliderCSSVars {}

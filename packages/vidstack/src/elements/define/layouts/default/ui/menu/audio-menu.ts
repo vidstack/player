@@ -119,13 +119,13 @@ function DefaultAudioGainSlider() {
 function getGainMin() {
   const { audioGains } = useDefaultLayoutContext(),
     gains = audioGains();
-  return isArray(gains) ? gains[0] ?? 0 : gains.min;
+  return isArray(gains) ? (gains[0] ?? 0) : gains.min;
 }
 
 function getGainMax() {
   const { audioGains } = useDefaultLayoutContext(),
     gains = audioGains();
-  return isArray(gains) ? gains[gains.length - 1] ?? 300 : gains.max;
+  return isArray(gains) ? (gains[gains.length - 1] ?? 300) : gains.max;
 }
 
 function getGainStep() {

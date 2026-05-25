@@ -21,11 +21,10 @@ export interface FullscreenButtonProps extends ToggleButtonControllerProps {
   target: MediaFullscreenRequestTarget | undefined;
 }
 
-export interface FullscreenButtonEvents
-  extends Pick<
-    MediaRequestEvents,
-    'media-enter-fullscreen-request' | 'media-exit-fullscreen-request'
-  > {}
+export interface FullscreenButtonEvents extends Pick<
+  MediaRequestEvents,
+  'media-enter-fullscreen-request' | 'media-exit-fullscreen-request'
+> {}
 
 /**
  * A button for toggling the fullscreen mode of the player.

@@ -27,7 +27,7 @@
     "declarations": "tsc -p tsconfig.build.json",
     "types": "pnpm declarations && pnpm run build:types",
     "clean": "rimraf dist-npm",
-    "format": "prettier src --write --loglevel warn",
+    "format": "oxfmt src",
     "sandbox": "node ../../.scripts/sandbox.js & pnpm run build:css -w",
     "sandbox:build": "vite build sandbox",
     "test": "vitest --run",
