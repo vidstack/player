@@ -96,9 +96,12 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
     [googleCastIconPaths, setGoogleCastIconPaths] = React.useState(''),
     [hasMounted, setHasMounted] = React.useState(false);
 
-  const loadProviderRef = React.useCallback((el: HTMLElement | null) => {
-    provider.load(el);
-  }, [provider]);
+  const loadProviderRef = React.useCallback(
+    (el: HTMLElement | null) => {
+      provider.load(el);
+    },
+    [provider],
+  );
 
   React.useEffect(() => {
     if (!isGoogleCast || googleCastIconPaths) return;
@@ -113,10 +116,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
 
   if (isGoogleCast) {
     return (
-      <div
-        className="vds-google-cast"
-        ref={loadProviderRef}
-      >
+      <div className="vds-google-cast" ref={loadProviderRef}>
         <Icon paths={googleCastIconPaths} />
         {$remoteInfo?.deviceName ? (
           <span className="vds-google-cast-info">
@@ -131,10 +131,7 @@ function MediaOutlet({ provider, mediaProps, iframeProps }: MediaOutletProps) {
   if (isRemotion) {
     return (
       <div data-remotion-canvas>
-        <div
-          data-remotion-container
-          ref={loadProviderRef}
-        >
+        <div data-remotion-container ref={loadProviderRef}>
           {isRemotionProvider($provider) && $providerSetup
             ? React.createElement($provider.render)
             : null}
