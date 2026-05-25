@@ -13,7 +13,7 @@ export function useActiveTextTrack(kind: TextTrackKind | TextTrackKind[]): TextT
 
   React.useEffect(() => {
     return watchActiveTextTrack(media.textTracks, kind, setTrack);
-  }, [kind]);
+  }, [media.textTracks, kind]);
 
   return track;
 }
