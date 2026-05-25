@@ -25,12 +25,18 @@ export function useMediaRemote(
   }
 
   React.useEffect(() => {
-    const ref = target && 'current' in target ? target.current : target,
+    const currentRemote = remote.current!,
+      ref = target && 'current' in target ? target.current : target,
       isPlayerRef = ref instanceof MediaPlayerInstance,
       player = isPlayerRef ? ref : media?.player;
 
-    remote.current!.setPlayer(player ?? null);
-    remote.current!.setTarget(ref ?? null);
+    currentRemote.setPlayer(player ?? null);
+    currentRemote.setTarget(ref ?? null);
+
+    return () => {
+      currentRemote.setPlayer(null);
+      currentRemote.setTarget(null);
+    };
   }, [media, target && 'current' in target ? target.current : target]);
 
   return remote.current;
