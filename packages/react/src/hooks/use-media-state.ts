@@ -54,5 +54,5 @@ export function useMediaStore(
     );
   }
 
-  return useSignalRecord(ref?.current ? ref.current.$state : $state || initialMediaStore);
+  return useSignalRecord(ref?.current?.$state || $state || initialMediaStore);
 }
