@@ -268,17 +268,15 @@ export class MediaPlayer
   #skipTitleUpdate = false;
   #watchTitle() {
     const el = this.$el,
+      { ariaLabel } = this.$props,
       { title, live, viewType, providedTitle } = this.$state,
       isLive = live(),
       type = uppercaseFirstChar(viewType()),
       typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media',
-      currentTitle = title();
+      currentTitle = title(),
+      label = ariaLabel() || `${typeText} Player` + (currentTitle ? ` - ${currentTitle}` : '');
 
-    setAttribute(
-      this.el!,
-      'aria-label',
-      `${typeText} Player` + (currentTitle ? ` - ${currentTitle}` : ''),
-    );
+    setAttribute(this.el!, 'aria-label', label);
 
     // Title attribute is removed to prevent popover interfering with user hovering over player.
     if (!__SERVER__ && el?.hasAttribute('title')) {
