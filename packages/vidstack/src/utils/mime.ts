@@ -81,7 +81,9 @@ export function isDASHSrc({ src, type }: Src): boolean {
 }
 
 export function canGoogleCastSrc(src: Src): boolean {
-  return isString(src.src) && (isAudioSrc(src) || isVideoSrc(src) || isHLSSrc(src));
+  return (
+    isString(src.src) && (isAudioSrc(src) || isVideoSrc(src) || isHLSSrc(src) || isDASHSrc(src))
+  );
 }
 
 export function isMediaStream(src: unknown): src is MediaStream {
