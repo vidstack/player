@@ -7,6 +7,8 @@ const infoCache = new Map<string, VimeoVideoInfo>();
 
 const pendingFetch = new Map<string, Promise<VimeoVideoInfo>>();
 
+const posterMaxSize = 1920;
+
 export function resolveVimeoVideoId(src: string) {
   const matches = src.match(videoIdRE);
   return { videoId: matches?.[1], hash: matches?.[2] };
@@ -33,15 +35,12 @@ export async function getVimeoVideoInfo(
     })
     .then((response) => response.json())
     .then((data: VimeoOEmbedData) => {
-      const thumnailRegex = /vimeocdn.com\/video\/(.*)?_/,
-        thumbnailId = data?.thumbnail_url?.match(thumnailRegex)?.[1],
-        poster = thumbnailId ? `https://i.vimeocdn.com/video/${thumbnailId}_1920x1080.webp` : '',
-        info = {
-          title: data?.title ?? '',
-          duration: data?.duration ?? 0,
-          poster,
-          pro: data.account_type !== 'basic',
-        };
+      const info = {
+        title: data?.title ?? '',
+        duration: data?.duration ?? 0,
+        poster: resolveVimeoPoster(data),
+        pro: data.account_type !== 'basic',
+      };
 
       infoCache.set(videoId, info);
       return info;
@@ -50,4 +49,36 @@ export async function getVimeoVideoInfo(
 
   pendingFetch.set(videoId, promise);
   return promise;
+}
+
+function resolveVimeoPoster(data: VimeoOEmbedData) {
+  const thumbnailUrl = data?.thumbnail_url ?? '',
+    thumbnailId = thumbnailUrl.match(/vimeocdn\.com\/video\/([^_/?#]+)_/)?.[1];
+
+  if (!thumbnailId) return thumbnailUrl;
+
+  const dimensions = resolvePosterDimensions(data);
+
+  return dimensions
+    ? `https://i.vimeocdn.com/video/${thumbnailId}_${dimensions.width}x${dimensions.height}.webp`
+    : thumbnailUrl;
+}
+
+function resolvePosterDimensions(data: VimeoOEmbedData) {
+  const width = data.width || data.thumbnail_width,
+    height = data.height || data.thumbnail_height;
+
+  if (!width || !height) return null;
+
+  if (width > height) {
+    return {
+      width: posterMaxSize,
+      height: Math.round((posterMaxSize * height) / width),
+    };
+  }
+
+  return {
+    width: Math.round((posterMaxSize * width) / height),
+    height: posterMaxSize,
+  };
 }
