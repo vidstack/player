@@ -48,12 +48,13 @@ export class MediaAudioLayoutElement
 
     this.#media = useMediaContext();
 
-    this.classList.add('vds-audio-layout');
+    this.#addLayoutClass();
 
     this.#setupWatchScrubbing();
   }
 
   protected onConnect() {
+    this.#addLayoutClass();
     setLayoutName('audio', () => this.isMatch);
     this.#setupMenuContainer();
   }
@@ -64,6 +65,10 @@ export class MediaAudioLayoutElement
 
   #render() {
     return this.isMatch ? Layout() : null;
+  }
+
+  #addLayoutClass() {
+    this.classList.add('vds-audio-layout');
   }
 
   #setupMenuContainer() {

@@ -50,16 +50,21 @@ export class MediaVideoLayoutElement
 
     this.#media = useMediaContext();
 
-    this.classList.add('vds-video-layout');
+    this.#addLayoutClass();
   }
 
   protected onConnect() {
+    this.#addLayoutClass();
     setLayoutName('video', () => this.isMatch);
     this.#setupMenuContainer();
   }
 
   render() {
     return $signal(this.#render.bind(this));
+  }
+
+  #addLayoutClass() {
+    this.classList.add('vds-video-layout');
   }
 
   #setupMenuContainer() {
