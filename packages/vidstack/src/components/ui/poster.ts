@@ -5,6 +5,10 @@ import { useMediaContext, type MediaContext } from '../../core/api/media-context
 import type { MediaCrossOrigin } from '../../core/api/types';
 import { preconnect } from '../../utils/network';
 
+export type PosterImageLoading = 'eager' | 'lazy';
+export type PosterImageDecoding = 'async' | 'auto' | 'sync';
+export type PosterImageFetchPriority = 'auto' | 'high' | 'low';
+
 export interface PosterProps {
   /**
    * The URL of the poster image resource.
@@ -22,6 +26,24 @@ export interface PosterProps {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
    */
   crossOrigin: true | MediaCrossOrigin | null;
+  /**
+   * Indicates how the browser should load the poster image.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/loading}
+   */
+  loading: PosterImageLoading | null;
+  /**
+   * Provides a hint to the browser for how the poster image should be decoded.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/decoding}
+   */
+  decoding: PosterImageDecoding | null;
+  /**
+   * Indicates the relative priority to use when fetching the poster image.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/fetchPriority}
+   */
+  fetchPriority: PosterImageFetchPriority | null;
 }
 
 export interface PosterState {
@@ -49,6 +71,9 @@ export class Poster extends Component<PosterProps, PosterState> {
     src: null,
     alt: null,
     crossOrigin: null,
+    loading: null,
+    decoding: null,
+    fetchPriority: null,
   };
 
   static state = new State<PosterState>({
