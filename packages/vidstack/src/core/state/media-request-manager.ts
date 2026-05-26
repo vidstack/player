@@ -247,15 +247,19 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
 
     userBehindLiveEdge.set(false);
 
-    if (peek(() => !live() || liveEdge() || !canSeek())) return;
+    if (peek(() => !live() || (canSeek() && liveEdge()))) return;
 
     const provider = peek(this.#$provider);
     throwIfNotReadyForPlayback(provider, peek(canPlay));
 
+    const end = seekableEnd() - 2,
+      time = Math.min(end, liveSyncPosition() ?? end);
+
+    if (!Number.isFinite(time)) return;
+
     if (trigger) this.#request.queue.enqueue('media-seek-request', trigger);
 
-    const end = seekableEnd() - 2;
-    provider!.setCurrentTime(Math.min(end, liveSyncPosition() ?? end));
+    provider!.setCurrentTime(time);
   }
 
   #wasPIPActive = false;
@@ -673,12 +677,10 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
   ['media-live-edge-request'](event: RE.MediaLiveEdgeRequestEvent) {
     const { live, liveEdge, canSeek } = this.$state;
 
-    if (!live() || liveEdge() || !canSeek()) return;
-
-    this.#request.queue.enqueue('media-seek-request', event);
+    if (!live() || (canSeek() && liveEdge())) return;
 
     try {
-      this.seekToLiveEdge();
+      this.seekToLiveEdge(event);
     } catch (error) {
       this.#request.queue.delete('media-seek-request');
       if (__DEV__) {
