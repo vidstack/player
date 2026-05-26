@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.0-next](https://github.com/vidstack/player/releases/tag/v1.14.0-next) (2026-05-26)
+
+### ✨ Features
+
+#### Vidstack
+
+- update maverick to 0.44.1 ([b0f119c](https://github.com/vidstack/player/commit/b0f119c7cdb12738940b85ab838521cede0b9dff))
+
+### 🐛 Bug Fixes
+
+#### React
+
+- guard media store fallback ref (#1813) ([77b740f](https://github.com/vidstack/player/commit/77b740f81c183e526237931878bd7427b7a7fe83))
+- suppress Plyr layout hydration warning (#1823) ([ec13a62](https://github.com/vidstack/player/commit/ec13a627397875c73095be4556fddefe11139d28))
+- avoid React 19 element ref warning (#1815) ([faf718f](https://github.com/vidstack/player/commit/faf718f0c19e56b951393cba18e37a1ade7320fb))
+
+#### Vidstack
+
+- export missing public types (#1816) ([68674f8](https://github.com/vidstack/player/commit/68674f8807e412c58d669cf1ed0531c754f03b30))
+- allow casting dash sources (#1814) ([69a5a66](https://github.com/vidstack/player/commit/69a5a66f5afa82ef37d6e5047e5b61720cc915cb))
+- reapply caption styles on remount (#1817) ([4a1e036](https://github.com/vidstack/player/commit/4a1e036d234f55d2f7448db09646391289d8fe04))
+- preserve Vimeo poster aspect ratio (#1818) ([b26843e](https://github.com/vidstack/player/commit/b26843ee86994528422f2b39cf0927b9ef8f4045))
+- ignore scroll movement for touch gestures (#1819) ([2744171](https://github.com/vidstack/player/commit/274417177df35008713ad2cba95489053a98bc2f))
+- support custom player aria label (#1821) ([5fc780e](https://github.com/vidstack/player/commit/5fc780e408535ff7ebdc44c883e544a9674b1163))
+- preserve sub-second seek targets (#1824) ([923e7c7](https://github.com/vidstack/player/commit/923e7c75c5e428d1f9ee9e4821cb1769f6cdabeb))
+- handle zero-offset thumbnail sprites (#1825) ([6a06296](https://github.com/vidstack/player/commit/6a06296a1c1aec7ed0a38c49937dd69118993543))
+- preserve default layout classes in Svelte (#1828) ([b6eee75](https://github.com/vidstack/player/commit/b6eee75acb4139f078572e2d4a0db9148b9e9889))
+- load CDN externals from jsDelivr (#1820) ([8d3962b](https://github.com/vidstack/player/commit/8d3962b53fc7f90334af23c853ff80e35a139012))
+- preload adjacent thumbnail sprites (#1827) ([d4950f5](https://github.com/vidstack/player/commit/d4950f50feaddd5d5c8826961afdfa2ff29faf08))
+
 ## [1.13.1-next](https://github.com/vidstack/player/releases/tag/v1.13.1-next) (2026-05-25)
 
 ### 🐛 Bug Fixes
