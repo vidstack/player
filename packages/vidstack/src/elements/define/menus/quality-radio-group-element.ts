@@ -31,7 +31,14 @@ import { renderMenuItemsTemplate } from './_template';
 export class MediaQualityRadioGroupElement extends Host(HTMLElement, QualityRadioGroup) {
   static tagName = 'media-quality-radio-group';
 
+  #connectedRanOnce: Boolean = false;
+
   protected onConnect(): void {
+    // onConnect can run more than once (eg, Phoenix LiveView after navigation)
+    if (this.#connectedRanOnce) return;
+
+    this.#connectedRanOnce = true;
+
     renderMenuItemsTemplate(this, (el, option) => {
       const bitrate = (option as QualityRadioOption).bitrate,
         bitrateEl = el.querySelector('[data-part="bitrate"]');
