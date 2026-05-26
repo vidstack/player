@@ -32,6 +32,7 @@ export type { DASHProvider } from '../providers/dash/provider';
 export type { GoogleCastLoader } from '../providers/google-cast/loader';
 export type { GoogleCastProvider } from '../providers/google-cast/provider';
 export type * from '../providers/google-cast/events';
+export type * from '../providers/google-cast/types';
 
 // Vimeo
 export { VimeoProviderLoader } from '../providers/vimeo/loader';

@@ -77,3 +77,8 @@ export type {
   PlyrLayoutTranslations,
 } from '../components/layouts/plyr/translations';
 export { usePlyrLayoutClasses } from '../components/layouts/plyr/plyr-layout';
+
+// Elements
+export type { ChapterTitleProps } from '../elements/define/chapter-title-element';
+export type { MediaLayoutProps } from '../elements/define/layouts/layout-element';
+export type { SpinnerProps } from '../elements/define/spinner-element';
