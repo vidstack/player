@@ -66,10 +66,15 @@ const SlotClone = React.forwardRef<any, SlotCloneProps>((props, forwardedRef) =>
   const { children, ...slotProps } = props;
 
   if (React.isValidElement(children)) {
-    return React.cloneElement<any>(children, {
-      ...mergeProps(slotProps, children.props as any),
-      ref: forwardedRef ? composeRefs(forwardedRef, (children as any).ref) : (children as any).ref,
-    });
+    const childrenRef = getElementRef(children),
+      props = mergeProps(slotProps, children.props as any);
+
+    // Do not pass `ref` to React.Fragment for React 19 compatibility.
+    if (children.type !== React.Fragment) {
+      props.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+    }
+
+    return React.cloneElement<any>(children, props);
   }
 
   return React.Children.count(children) > 1 ? React.Children.only(null) : null;
@@ -124,6 +129,22 @@ function mergeProps(slotProps: AnyProps, childProps: AnyProps) {
   }
 
   return { ...slotProps, ...overrideProps };
+}
+
+function getElementRef(element: React.ReactElement) {
+  // React <=18 in DEV warns when reading `props.ref`, so read from the element instead.
+  let getter = Object.getOwnPropertyDescriptor(element.props, 'ref')?.get,
+    mayWarn = getter && 'isReactWarning' in getter && getter.isReactWarning;
+
+  if (mayWarn) return (element as any).ref;
+
+  // React 19 in DEV warns when reading `element.ref`, so read from props instead.
+  getter = Object.getOwnPropertyDescriptor(element, 'ref')?.get;
+  mayWarn = getter && 'isReactWarning' in getter && getter.isReactWarning;
+
+  if (mayWarn) return (element.props as { ref?: React.Ref<unknown> }).ref;
+
+  return (element.props as { ref?: React.Ref<unknown> }).ref || (element as any).ref;
 }
 
 const Root = Slot;
