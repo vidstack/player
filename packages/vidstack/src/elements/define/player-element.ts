@@ -18,6 +18,7 @@ export class MediaPlayerElement extends Host(HTMLElement, MediaPlayer) {
   static tagName = 'media-player';
 
   static override attrs: Attributes<MediaPlayerProps> = {
+    ariaLabel: 'aria-label',
     autoPlay: 'autoplay',
     crossOrigin: 'crossorigin',
     playsInline: 'playsinline',

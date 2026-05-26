@@ -13,6 +13,7 @@ import type { MediaLoadingStrategy, MediaPosterLoadingStrategy } from './types';
 export const mediaPlayerProps: MediaPlayerProps = {
   artist: '',
   artwork: null,
+  ariaLabel: '',
   autoplay: false,
   autoPlay: false,
   clipStartTime: 0,
@@ -58,6 +59,8 @@ export interface MediaStateAccessors extends Pick<
 
 export type PlayerSrc = MediaSrc | MediaSrc[];
 
+export type MediaPlayerAriaLabel = string;
+
 export interface MediaPlayerProps
   // Prefer picking off the `MediaStore` type to ensure docs are kept in-sync.
   extends Pick<
@@ -84,6 +87,11 @@ export interface MediaPlayerProps
     | 'liveEdgeTolerance'
     | 'minLiveDVRWindow'
   > {
+  /**
+   * A custom ARIA label for the player root. By default, the player will generate a label using
+   * the current media type, live state, and title.
+   */
+  ariaLabel: MediaPlayerAriaLabel;
   /** @deprecated - Use `autoPlay` */
   autoplay: boolean;
   /** @deprecated - Use `crossOrigin` */
