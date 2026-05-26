@@ -111,6 +111,7 @@ const PlyrLayout = React.forwardRef<HTMLElement, PlyrLayoutElementProps>(
           className={
             __SERVER__ ? `plyr plyr--full-ui plyr--${$viewType} ${className || ''}` : undefined
           }
+          suppressHydrationWarning
           ref={composeRefs(setEl, forwardRef) as any}
         >
           {$viewType === 'audio' ? (
