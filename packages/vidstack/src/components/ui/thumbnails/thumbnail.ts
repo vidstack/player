@@ -7,6 +7,10 @@ import { $ariaBool } from '../../../utils/aria';
 import { round } from '../../../utils/number';
 import { ThumbnailsLoader, type ThumbnailImage, type ThumbnailSrc } from './thumbnail-loader';
 
+const PRELOAD_SPRITE_BATCH_SIZE = 2,
+  MAX_PRELOADED_SPRITES = 32,
+  preloadedSprites = new Map<string, HTMLImageElement>();
+
 /**
  * Used to load and display a preview thumbnail at the given `time`.
  *
@@ -58,6 +62,7 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     effect(this.#watchCrossOrigin.bind(this));
     effect(this.#onLoadStart.bind(this));
     effect(this.#onFindActiveThumbnail.bind(this));
+    effect(this.#onPreloadNextSprites.bind(this));
     effect(this.#resize.bind(this));
   }
 
@@ -153,6 +158,29 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
     src.set(activeImage?.url.href || '');
   }
 
+  #onPreloadNextSprites() {
+    if (__SERVER__) return;
+
+    const images = this.#loader.$images(),
+      activeThumbnail = this.$state.activeThumbnail();
+
+    if (!activeThumbnail) return;
+
+    const activeIndex = images.indexOf(activeThumbnail);
+
+    if (activeIndex < 0) return;
+
+    const activeSrc = activeThumbnail.url.href,
+      crossOrigin = this.$state.crossOrigin(),
+      startIndex = activeIndex + 1,
+      endIndex = Math.min(startIndex + PRELOAD_SPRITE_BATCH_SIZE, images.length);
+
+    for (let i = startIndex; i < endIndex; i++) {
+      const src = images[i].url.href;
+      if (src !== activeSrc) preloadSprite(src, crossOrigin);
+    }
+  }
+
   #resize() {
     if (!this.scope || this.$state.hidden()) return;
 
@@ -241,4 +269,28 @@ export interface ThumbnailState {
   loading: boolean;
   error: ErrorEvent | null;
   hidden: boolean;
+}
+
+function preloadSprite(src: string, crossOrigin: MediaCrossOrigin | null) {
+  const key = `${src}::${crossOrigin}`;
+
+  if (preloadedSprites.has(key)) {
+    const image = preloadedSprites.get(key)!;
+    preloadedSprites.delete(key);
+    preloadedSprites.set(key, image);
+    return;
+  }
+
+  const image = new Image();
+
+  image.decoding = 'async';
+  image.crossOrigin = crossOrigin;
+  image.src = src;
+
+  preloadedSprites.set(key, image);
+
+  if (preloadedSprites.size > MAX_PRELOADED_SPRITES) {
+    const firstKey = preloadedSprites.keys().next().value!;
+    preloadedSprites.delete(firstKey);
+  }
 }
