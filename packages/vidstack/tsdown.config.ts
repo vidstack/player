@@ -27,6 +27,11 @@ const NPM_EXTERNAL_PACKAGES = [
     /^lit-html/,
   ],
   CDN_EXTERNAL_PACKAGES = ['media-captions', 'media-icons', 'media-icons/element'],
+  CDN_EXTERNAL_PATHS = {
+    'media-icons': 'https://cdn.jsdelivr.net/npm/media-icons@1.1.5/dist/lazy.js/+esm',
+    'media-icons/element': 'https://cdn.jsdelivr.net/npm/media-icons@1.1.5/dist/cdn.js/+esm',
+    'media-captions': 'https://cdn.jsdelivr.net/npm/media-captions@1.0.4/dist/prod.js/+esm',
+  },
   PLUGINS_EXTERNAL_PACKAGES = ['vite', 'rollup', /webpack/, /rspack/, 'esbuild', 'unplugin'];
 
 if (!MODE_TYPES && MODE_WATCH) {
@@ -250,15 +255,7 @@ function defineCDNBundle({
       entryFileNames: (chunk: { name: string }) =>
         chunk.name === file ? `[name].js` : `[name]-[hash].js`,
       minifyInternalExports: false,
-      paths: {
-        'media-icons': legacy
-          ? 'https://cdn.jsdelivr.net/npm/media-icons@next/dist/lazy.js'
-          : 'https://cdn.vidstack.io/icons',
-        'media-captions': legacy
-          ? 'https://cdn.jsdelivr.net/npm/media-captions@next/dist/prod.js'
-          : 'https://cdn.vidstack.io/captions',
-        'media-icons/element': 'https://cdn.vidstack.io/icons',
-      },
+      paths: CDN_EXTERNAL_PATHS,
       codeSplitting: dev ? false : { groups: [{ name: 'frameworks', test: /node_modules/ }] },
     },
     plugins: [decorators() as any, !legacy && (rewriteCDNChunks(file) as any)].filter(
