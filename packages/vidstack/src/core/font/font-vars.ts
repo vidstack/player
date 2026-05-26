@@ -14,6 +14,7 @@ export function updateFontCssVars() {
 
   const { player } = useMediaContext();
   players.add(player);
+  applyFontCssVars(player);
   onDispose(() => players.delete(player));
 
   if (!isWatchingVars) {
@@ -21,16 +22,14 @@ export function updateFontCssVars() {
       for (const type of keysOf(FONT_SIGNALS)) {
         const $value = FONT_SIGNALS[type],
           defaultValue = FONT_DEFAULTS[type],
-          varName = `--media-user-${camelToKebabCase(type)}`,
           storageKey = `vds-player:${camelToKebabCase(type)}`;
 
         effect(() => {
           const value = $value(),
-            isDefaultVarValue = value === defaultValue,
-            varValue = !isDefaultVarValue ? getCssVarValue(player, type, value) : null;
+            isDefaultVarValue = value === defaultValue;
 
           for (const player of players) {
-            player.el?.style.setProperty(varName, varValue);
+            setFontCssVar(player, type, value);
           }
 
           if (isDefaultVarValue) {
@@ -46,11 +45,28 @@ export function updateFontCssVars() {
   }
 }
 
-function getCssVarValue(player: MediaPlayer, type: FontSignal, value: string) {
+function applyFontCssVars(player: MediaPlayer) {
+  for (const type of keysOf(FONT_SIGNALS)) {
+    setFontCssVar(player, type, FONT_SIGNALS[type]());
+  }
+}
+
+function setFontCssVar(player: MediaPlayer, type: FontSignal, value: string) {
+  const defaultValue = FONT_DEFAULTS[type],
+    varName = `--media-user-${camelToKebabCase(type)}`,
+    varValue = value !== defaultValue ? getCssVarValue(type, value) : null;
+
+  if (type === 'fontFamily') {
+    const fontVariant = value === 'capitals' ? 'small-caps' : null;
+    player.el?.style.setProperty('--media-user-font-variant', fontVariant);
+  }
+
+  player.el?.style.setProperty(varName, varValue);
+}
+
+function getCssVarValue(type: FontSignal, value: string) {
   switch (type) {
     case 'fontFamily':
-      const fontVariant = value === 'capitals' ? 'small-caps' : '';
-      player.el?.style.setProperty('--media-user-font-variant', fontVariant);
       return getFontFamilyCSSVarValue(value);
     case 'fontSize':
     case 'textOpacity':
