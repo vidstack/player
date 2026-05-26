@@ -917,8 +917,8 @@ export interface MediaPlayerQuery {
 
 export function boundTime(time: number, store: MediaStore) {
   const clippedTime = time + store.clipStartTime(),
-    isStart = Math.floor(time) === Math.floor(store.seekableStart()),
-    isEnd = Math.floor(clippedTime) === Math.floor(store.seekableEnd());
+    isStart = clippedTime <= store.seekableStart(),
+    isEnd = clippedTime >= store.seekableEnd();
 
   if (isStart) {
     return store.seekableStart();
