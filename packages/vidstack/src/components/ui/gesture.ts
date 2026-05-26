@@ -11,6 +11,11 @@ import {
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
 import { isTouchPinchEvent } from '../../utils/dom';
 
+interface TouchPoint {
+  x: number;
+  y: number;
+}
+
 /**
  * This component enables actions to be performed on the media based on user gestures.
  *
@@ -25,6 +30,7 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
 
   #media!: MediaContext;
   #provider: HTMLElement | null = null;
+  #touchStart: TouchPoint | null = null;
 
   protected override onSetup(): void {
     this.#media = useMediaContext();
@@ -60,6 +66,11 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
     if (eventType === 'pointerup' || eventType === 'pointerdown') {
       const pointer = this.#media.$state.pointer();
       if (pointer === 'coarse') {
+        if (eventType === 'pointerup') {
+          listenEvent(this.#provider, 'touchstart', this.#onTouchStart.bind(this), {
+            passive: true,
+          });
+        }
         eventType = eventType === 'pointerup' ? 'touchend' : 'touchstart';
       }
     }
@@ -80,6 +91,7 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
       this.$props.disabled() ||
       (isPointerEvent(event) && (event.button !== 0 || this.#media.activeMenu)) ||
       (isTouchEvent(event) && this.#media.activeMenu) ||
+      this.#isTouchScroll(event) ||
       isTouchPinchEvent(event) ||
       !this.#inBounds(event)
     ) {
@@ -113,6 +125,29 @@ export class Gesture extends Component<GestureProps, {}, GestureEvents> {
     }
 
     this.#presses++;
+  }
+
+  #onTouchStart(event: TouchEvent) {
+    if (isTouchPinchEvent(event)) {
+      this.#touchStart = null;
+      return;
+    }
+
+    const touch = event.changedTouches[0] ?? event.touches[0];
+    this.#touchStart = touch ? { x: touch.clientX, y: touch.clientY } : null;
+  }
+
+  #isTouchScroll(event: Event) {
+    if (!isTouchEvent(event) || event.type !== 'touchend') return false;
+
+    const touch = event.changedTouches[0] ?? event.touches[0],
+      start = this.#touchStart;
+
+    this.#touchStart = null;
+
+    if (!touch || !start) return false;
+
+    return Math.abs(touch.clientX - start.x) > 10 || Math.abs(touch.clientY - start.y) > 10;
   }
 
   #handleEvent(event: Event) {
