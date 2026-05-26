@@ -149,8 +149,8 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
       activeImage = images[activeIndex];
     }
 
-    activeThumbnail.set(activeImage);
     src.set(activeImage?.url.href || '');
+    activeThumbnail.set(activeImage);
   }
 
   #resize() {
