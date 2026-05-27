@@ -21,6 +21,7 @@ export function DefaultSpeedMenu() {
         ${DefaultMenuButton({
           label: () => i18n(translations, 'Speed'),
           icon: 'menu-speed-up',
+          hint: () => (playbackRate() === 1 ? i18n(translations, 'Normal') : playbackRate() + 'x'),
         })}
         <media-menu-items class="vds-menu-items">
           ${DefaultMenuSection({

@@ -33,7 +33,7 @@ function DefaultSpeedMenu({ slots }: DefaultSpeedMenuProps) {
 
   return (
     <Menu.Root className="vds-speed-menu vds-menu">
-      <DefaultMenuButton label={label} Icon={Icons.Menu.SpeedUp} />
+      <DefaultMenuButton label={label} hint={value} Icon={Icons.Menu.SpeedUp} />
       <Menu.Content className="vds-menu-items">
         {slot(slots, 'speedMenuItemsStart', null)}
 
