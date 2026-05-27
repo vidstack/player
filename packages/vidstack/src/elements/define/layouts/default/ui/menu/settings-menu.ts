@@ -14,7 +14,8 @@ import { DefaultAccessibilityMenu } from './accessibility-menu';
 import { DefaultAudioMenu } from './audio-menu';
 import { DefaultCaptionsMenu } from './captions-menu';
 import { MenuPortal } from './menu-portal';
-import { DefaultPlaybackMenu } from './playback-menu';
+import { DefaultQualityMenu } from './quality-menu';
+import { DefaultSpeedMenu } from './speed-menu';
 
 export function DefaultSettingsMenu({
   placement,
@@ -64,7 +65,8 @@ export function DefaultSettingsMenu({
           }
 
           return [
-            DefaultPlaybackMenu(),
+            DefaultSpeedMenu(),
+            DefaultQualityMenu(),
             DefaultAccessibilityMenu(),
             DefaultAudioMenu(),
             DefaultCaptionsMenu(),

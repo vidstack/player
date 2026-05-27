@@ -22,6 +22,7 @@ interface DefaultAudioMenuProps {
 function DefaultAudioMenu({ slots }: DefaultAudioMenuProps) {
   const label = useDefaultLayoutWord('Audio'),
     $canSetAudioGain = useMediaState('canSetAudioGain'),
+    $audioTrack = useMediaState('audioTrack'),
     $audioTracks = useMediaState('audioTracks'),
     { noAudioGain, icons: Icons } = useDefaultLayoutContext(),
     hasGainSlider = $canSetAudioGain && !noAudioGain,
@@ -31,7 +32,7 @@ function DefaultAudioMenu({ slots }: DefaultAudioMenuProps) {
 
   return (
     <Menu.Root className="vds-audio-menu vds-menu">
-      <DefaultMenuButton label={label} Icon={Icons.Menu.Audio} />
+      <DefaultMenuButton label={label} hint={$audioTrack?.label} Icon={Icons.Menu.Audio} />
       <Menu.Content className="vds-menu-items">
         {slot(slots, 'audioMenuItemsStart', null)}
         <DefaultAudioTracksMenu />

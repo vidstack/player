@@ -19,6 +19,7 @@ import fsEnter from 'media-icons/dist/icons/fullscreen.js';
 import menuAudio from 'media-icons/dist/icons/music.js';
 import mute from 'media-icons/dist/icons/mute.js';
 import menuOpacityDown from 'media-icons/dist/icons/no-eye.js';
+import odometer from 'media-icons/dist/icons/odometer.js';
 import pause from 'media-icons/dist/icons/pause.js';
 import pipExit from 'media-icons/dist/icons/picture-in-picture-exit.js';
 import pipEnter from 'media-icons/dist/icons/picture-in-picture.js';
@@ -27,6 +28,7 @@ import menuPlayback from 'media-icons/dist/icons/playback-speed-circle.js';
 import replay from 'media-icons/dist/icons/replay.js';
 import seekBackward from 'media-icons/dist/icons/seek-backward-10.js';
 import seekForward from 'media-icons/dist/icons/seek-forward-10.js';
+import settingsMenu from 'media-icons/dist/icons/settings-menu.js';
 import settings from 'media-icons/dist/icons/settings.js';
 import volumeHigh from 'media-icons/dist/icons/volume-high.js';
 import volumeLow from 'media-icons/dist/icons/volume-low.js';
@@ -58,11 +60,11 @@ export const icons = {
   'menu-audio-boost-up': volumeHigh,
   'menu-audio-boost-down': volumeLow,
   'menu-playback': menuPlayback,
-  'menu-speed-up': fastForward,
-  'menu-speed-down': fastBackward,
+  'menu-speed-up': odometer,
+  'menu-speed-down': odometer,
   'menu-captions': menuCaptions,
-  'menu-quality-up': arrowUp,
-  'menu-quality-down': arrowDown,
+  'menu-quality-up': settingsMenu,
+  'menu-quality-down': settingsMenu,
   'menu-radio-check': menuRadioCheck,
   'menu-font-size-up': arrowUp,
   'menu-font-size-down': arrowDown,

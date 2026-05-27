@@ -20,6 +20,7 @@ import enterFullscreenIconPaths from 'media-icons/dist/icons/fullscreen.js';
 import musicIconPaths from 'media-icons/dist/icons/music.js';
 import muteIconPaths from 'media-icons/dist/icons/mute.js';
 import noEyeIconPaths from 'media-icons/dist/icons/no-eye.js';
+import odometerIconPaths from 'media-icons/dist/icons/odometer.js';
 import pauseIconPaths from 'media-icons/dist/icons/pause.js';
 import exitPIPIconPaths from 'media-icons/dist/icons/picture-in-picture-exit.js';
 import enterPIPIconPaths from 'media-icons/dist/icons/picture-in-picture.js';
@@ -28,6 +29,7 @@ import playbackIconPaths from 'media-icons/dist/icons/playback-speed-circle.js';
 import replayIconPaths from 'media-icons/dist/icons/replay.js';
 import seekBackwardIconPaths from 'media-icons/dist/icons/seek-backward-10.js';
 import seekForwardIconPaths from 'media-icons/dist/icons/seek-forward-10.js';
+import settingsMenuIconPaths from 'media-icons/dist/icons/settings-menu.js';
 import settingsIconPaths from 'media-icons/dist/icons/settings.js';
 import volumeHighIconPaths from 'media-icons/dist/icons/volume-high.js';
 import volumeLowIconPaths from 'media-icons/dist/icons/volume-low.js';
@@ -90,10 +92,10 @@ export const defaultLayoutIcons: DefaultLayoutIcons = {
     Settings: createIcon(settingsIconPaths),
     AudioBoostUp: createIcon(volumeHighIconPaths),
     AudioBoostDown: createIcon(volumeLowIconPaths),
-    SpeedUp: createIcon(fastForwardIconPaths),
-    SpeedDown: createIcon(fastBackwardIconPaths),
-    QualityUp: createIcon(arrowUpIconPaths),
-    QualityDown: createIcon(arrowDownIconPaths),
+    SpeedUp: createIcon(odometerIconPaths),
+    SpeedDown: createIcon(odometerIconPaths),
+    QualityUp: createIcon(settingsMenuIconPaths),
+    QualityDown: createIcon(settingsMenuIconPaths),
     FontSizeUp: createIcon(arrowUpIconPaths),
     FontSizeDown: createIcon(arrowDownIconPaths),
     OpacityUp: createIcon(eyeIconPaths),
