@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.0-next](https://github.com/vidstack/player/releases/tag/v1.15.0-next) (2026-05-27)
+
+### ✨ Features
+
+#### Vidstack
+
+- redesign default layout settings menu (#1829) ([8a87877](https://github.com/vidstack/player/commit/8a878777a4d6d4c095e77839f239f256368026c5))
+
 ## [1.14.0-next](https://github.com/vidstack/player/releases/tag/v1.14.0-next) (2026-05-26)
 
 ### ✨ Features
