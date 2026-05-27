@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.1-next](https://github.com/vidstack/player/releases/tag/v1.15.1-next) (2026-05-27)
+
+### ✨ Features
+
+#### Vidstack
+
+- add speed hint to menu button ([61118e7](https://github.com/vidstack/player/commit/61118e72de20d45e302ac5beb19dd5fed52f2ef9))
+
 ## [1.15.0-next](https://github.com/vidstack/player/releases/tag/v1.15.0-next) (2026-05-27)
 
 ### ✨ Features
