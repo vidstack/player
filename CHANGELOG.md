@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.2-next](https://github.com/vidstack/player/releases/tag/v1.15.2-next) (2026-05-27)
+
+### 🐛 Bug Fixes
+
+#### Vidstack
+
+- bundle lit-html and @floating-ui in CDN builds ([169b34c](https://github.com/vidstack/player/commit/169b34c2f6fccb135fafdda430e2de56de491590))
+
 ## [1.15.1-next](https://github.com/vidstack/player/releases/tag/v1.15.1-next) (2026-05-27)
 
 ### ✨ Features
