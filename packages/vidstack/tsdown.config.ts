@@ -240,6 +240,7 @@ function defineCDNBundle({
     outDir: dir,
     deps: {
       neverBundle: CDN_EXTERNAL_PACKAGES,
+      alwaysBundle: [/^lit-html/, /^@floating-ui/],
     },
     define: {
       ...(base.define as Record<string, string>),
