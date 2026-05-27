@@ -13,7 +13,7 @@ import { DefaultMenuSliderItem, DefaultSliderParts, DefaultSliderSteps } from '.
 export function DefaultAudioMenu() {
   return $signal(() => {
     const { noAudioGain, translations } = useDefaultLayoutContext(),
-      { audioTracks, canSetAudioGain } = useMediaState(),
+      { audioTrack, audioTracks, canSetAudioGain } = useMediaState(),
       $disabled = computed(() => {
         const hasGainSlider = canSetAudioGain() && !noAudioGain();
         return !hasGainSlider && audioTracks().length <= 1;
@@ -26,6 +26,7 @@ export function DefaultAudioMenu() {
         ${DefaultMenuButton({
           label: () => i18n(translations, 'Audio'),
           icon: 'menu-audio',
+          hint: () => audioTrack()?.label ?? '',
         })}
         <media-menu-items class="vds-menu-items">
           ${[DefaultAudioTracksMenu(), DefaultAudioBoostSection()]}

@@ -14,7 +14,8 @@ import { DefaultTooltip } from '../tooltip';
 import { DefaultAccessibilityMenu } from './accessibility-menu';
 import { DefaultAudioMenu } from './audio-menu';
 import { DefaultCaptionMenu } from './captions-menu';
-import { DefaultPlaybackMenu } from './playback-menu';
+import { DefaultQualityMenu } from './quality-menu';
+import { DefaultSpeedMenu } from './speed-menu';
 import { useParentDialogEl } from './utils';
 
 export interface DefaultMediaMenuProps {
@@ -68,7 +69,8 @@ function DefaultSettingsMenu({
         <>
           {slot(slots, 'settingsMenuItemsStart', null)}
           {slot(slots, 'settingsMenuStartItems', null)}
-          <DefaultPlaybackMenu slots={slots} />
+          <DefaultSpeedMenu slots={slots} />
+          <DefaultQualityMenu slots={slots} />
           <DefaultAccessibilityMenu slots={slots} />
           <DefaultAudioMenu slots={slots} />
           <DefaultCaptionMenu slots={slots} />
