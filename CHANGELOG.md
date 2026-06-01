@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.3-next](https://github.com/vidstack/player/releases/tag/v1.15.3-next) (2026-06-01)
+
+### 🐛 Bug Fixes
+
+#### React
+
+- transform JSX in package builds (#1835) ([2fd2c8b](https://github.com/vidstack/player/commit/2fd2c8be728b95983e528575c3d2cd8331ed70d7))
+
+#### Vidstack
+
+- rewrite CDN asset references (#1834) ([12287b4](https://github.com/vidstack/player/commit/12287b414d2e8cdde75430233b12b8177caa0102))
+
 ## [1.15.2-next](https://github.com/vidstack/player/releases/tag/v1.15.2-next) (2026-05-27)
 
 ### 🐛 Bug Fixes
