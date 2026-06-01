@@ -65,7 +65,14 @@ export * from '../components/ui/time';
 export * from '../components/ui/thumbnails/thumbnail';
 export * from '../components/ui/thumbnails/thumbnail-loader';
 
+// Spinner
+export type { SpinnerProps } from '../elements/define/spinner-element';
+
+// Chapter Title
+export type { ChapterTitleProps } from '../elements/define/chapter-title-element';
+
 // Layouts
+export type { MediaLayoutProps } from '../elements/define/layouts/layout-element';
 export type { DefaultLayoutProps } from '../components/layouts/default/props';
 export type {
   DefaultLayoutWord,
