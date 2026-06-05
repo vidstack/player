@@ -38,6 +38,8 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   #domTracks = signal<TextTrackInit[]>([]);
 
   #loader: MediaProviderLoader | null = null;
+  #target: HTMLElement | null = null;
+  #connected = false;
 
   protected override onSetup() {
     this.#media = useMediaContext();
@@ -54,6 +56,7 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
   }
 
   protected override onConnect(el: HTMLElement) {
+    this.#connected = true;
     this.#sources.connect();
     new Tracks(this.#domTracks, this.#media);
 
@@ -65,8 +68,10 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
     this.#onResize();
     this.#onMutation();
+    if (this.#target) this.load(this.#target);
 
     onDispose(() => {
+      this.#connected = false;
       resize.disconnect();
       mutations.disconnect();
     });
@@ -76,8 +81,12 @@ export class MediaProvider extends Component<MediaProviderProps, MediaProviderSt
 
   @method
   load(target: HTMLElement | null | undefined) {
+    this.#target = target || null;
+
     // Hide underlying provider element from screen readers.
     target?.setAttribute('aria-hidden', 'true');
+
+    if (!this.#connected) return;
 
     // Use a RAF here to prevent hot reloads resetting provider.
     window.cancelAnimationFrame(this.#loadRafId);
