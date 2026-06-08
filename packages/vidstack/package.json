@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.10",
+    "fscreen": "^1.2.0",
     "lit-html": "^2.8.0",
     "media-captions": "^1.0.4",
     "unplugin": "^1.12.0"
@@ -57,7 +58,6 @@
     "dashjs": "^4.7.4",
     "es-module-lexer": "^1.5.4",
     "esbuild": "^0.28.0",
-    "fscreen": "^1.2.0",
     "hls.js": "^1.5.14",
     "jassub": "^1.7.16",
     "jsdom": "^21.1.2",
