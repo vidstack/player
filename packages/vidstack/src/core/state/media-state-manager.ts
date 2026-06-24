@@ -690,7 +690,7 @@ export class MediaStateManager extends MediaPlayerController {
 
     if (shouldReset) {
       this.dispatch('media-seek-request', {
-        detail: seekableStart(),
+        detail: 0,
         trigger,
       });
     }
