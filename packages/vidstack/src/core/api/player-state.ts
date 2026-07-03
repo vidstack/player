@@ -4,7 +4,7 @@ import { isNumber } from 'maverick.js/std';
 
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { MediaProviderLoader } from '../../providers/types';
-import { canOrientScreen, IS_IPHONE } from '../../utils/support';
+import { canOrientScreen, IS_IPAD, IS_IPHONE } from '../../utils/support';
 import type { VideoQuality } from '../quality/video-quality';
 import { getTimeRangesEnd, getTimeRangesStart, TimeRange } from '../time-ranges';
 import type { AudioTrack } from '../tracks/audio/audio-tracks';
@@ -42,9 +42,9 @@ export const mediaState = new State<MediaState>({
   controls: false,
   get iOSControls() {
     return (
-      IS_IPHONE &&
       this.mediaType === 'video' &&
-      (!this.playsInline || (!fscreen.fullscreenEnabled && this.fullscreen))
+      ((IS_IPHONE && !this.playsInline) ||
+        ((IS_IPHONE || IS_IPAD) && !fscreen.fullscreenEnabled && this.fullscreen))
     );
   },
   get nativeControls() {
