@@ -3,6 +3,11 @@ import { isFunction, isUndefined, waitTimeout } from 'maverick.js/std';
 export const UA = __SERVER__ ? '' : navigator?.userAgent.toLowerCase() || '';
 export const IS_IOS = !__SERVER__ && /iphone|ipad|ipod|ios|crios|fxios/i.test(UA);
 export const IS_IPHONE = !__SERVER__ && /(iphone|ipod)/gi.test(navigator?.platform || '');
+
+/** iPads report a Mac platform/UA since iPadOS 13. **/
+const IS_TOUCH_MAC = navigator?.platform === 'MacIntel' && navigator?.maxTouchPoints > 1;
+export const IS_IPAD = !__SERVER__ && (/ipad/.test(UA) || IS_TOUCH_MAC);
+
 export const IS_CHROME = !__SERVER__ && !!window.chrome;
 export const IS_IOS_CHROME = !__SERVER__ && /crios/i.test(UA);
 export const IS_SAFARI = !__SERVER__ && (!!window.safari || IS_IOS);
