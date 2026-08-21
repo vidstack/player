@@ -47,6 +47,8 @@ export class SliderValue extends Component<SliderValueProps> {
    */
   @method
   getValueText() {
+    if (!this.scope || !this.#slider || !this.#format) return '';
+
     const {
         type,
         format: $format,
