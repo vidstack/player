@@ -25,7 +25,14 @@ import { renderMenuItemsTemplate } from './_template';
 export class MediaSpeedRadioGroupElement extends Host(HTMLElement, SpeedRadioGroup) {
   static tagName = 'media-speed-radio-group';
 
+  #connectedRanOnce: Boolean = false;
+
   protected onConnect(): void {
+    // onConnect can run more than once (eg, Phoenix LiveView after navigation)
+    if (this.#connectedRanOnce) return;
+
+    this.#connectedRanOnce = true;
+
     renderMenuItemsTemplate(this);
   }
 }
