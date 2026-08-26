@@ -27,6 +27,16 @@ export class NativeHLSTextTracks {
     // Skip tracks the `NativeTextRenderer` has added.
     if (!nativeTrack || findTextTrackElement(this.#video, nativeTrack)) return;
 
+    // Skip tracks created by a JS playback engine. dash.js adds its text tracks via
+    // `addTextTrack()` (marked with `manualMode`) and the DASH provider registers them
+    // from `TEXT_TRACKS_ADDED`; adopting them here as well binds two `TextTrack`s to one
+    // native track, and the single-showing rule then oscillates against the native
+    // renderer sync until the call stack overflows (or the page hangs).
+    if ('manualMode' in nativeTrack) return;
+    for (const existing of this.#ctx.textTracks) {
+      if (existing[TextTrackSymbol.native]?.track === nativeTrack) return;
+    }
+
     const track = new VdsTextTrack({
       id: nativeTrack.id,
       kind: nativeTrack.kind,
