@@ -5,6 +5,7 @@ import { isKeyboardClick } from 'maverick.js/std';
 import { useDefaultLayoutContext } from '../../../../../../../components/layouts/default/context';
 import type { DefaultLayoutWord } from '../../../../../../../components/layouts/default/translations';
 import { $ariaBool } from '../../../../../../../utils/aria';
+import { LocalStorage } from '../../../../../../../utils/storage';
 import { $signal } from '../../../../../../lit/directives/signal';
 import { $i18n } from '../../utils';
 
@@ -22,7 +23,7 @@ export function DefaultMenuCheckbox({
   onChange(checked: boolean, trigger?: Event): void;
 }) {
   const { translations } = useDefaultLayoutContext(),
-    savedValue = storageKey ? localStorage.getItem(storageKey) : null,
+    savedValue = storageKey ? LocalStorage.getItem(storageKey) : null,
     $checked = signal(!!(savedValue ?? defaultChecked)),
     $active = signal(false),
     $ariaChecked = $signal($ariaBool($checked)),
@@ -37,7 +38,7 @@ export function DefaultMenuCheckbox({
   function onPress(event?: PointerEvent) {
     if (event?.button === 1) return;
     $checked.set((checked) => !checked);
-    if (storageKey) localStorage.setItem(storageKey, $checked() ? '1' : '');
+    if (storageKey) LocalStorage.setItem(storageKey, $checked() ? '1' : '');
     onChange($checked(), event);
     $active.set(false);
   }
