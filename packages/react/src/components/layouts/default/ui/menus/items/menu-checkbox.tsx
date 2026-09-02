@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { isBoolean, isKeyboardClick } from 'maverick.js/std';
+import { LocalStorage } from 'vidstack';
 
 export interface DefaultMenuCheckboxProps {
   label: string;
@@ -21,7 +22,7 @@ function DefaultMenuCheckbox({
     [isActive, setIsActive] = React.useState(false);
 
   React.useEffect(() => {
-    const savedValue = storageKey ? localStorage.getItem(storageKey) : null,
+    const savedValue = storageKey ? LocalStorage.getItem(storageKey) : null,
       checked = !!(savedValue ?? defaultChecked);
     setIsChecked(checked);
     onChange?.(checked);
@@ -37,7 +38,7 @@ function DefaultMenuCheckbox({
     const toggledCheck = !isChecked;
 
     setIsChecked(toggledCheck);
-    if (storageKey) localStorage.setItem(storageKey, toggledCheck ? '1' : '');
+    if (storageKey) LocalStorage.setItem(storageKey, toggledCheck ? '1' : '');
 
     onChange?.(toggledCheck, event?.nativeEvent);
 

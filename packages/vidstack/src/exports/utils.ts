@@ -1,6 +1,9 @@
 // Network
 export { getDownloadFile, type FileDownloadInfo } from '../utils/network';
 
+// Storage
+export { LocalStorage } from '../utils/storage';
+
 // Time
 export { formatTime, formatSpokenTime } from '../utils/time';
 

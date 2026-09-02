@@ -1,6 +1,7 @@
 import throttle from 'just-throttle';
 import type { MaybeStopEffect } from 'maverick.js';
 
+import { LocalStorage } from '../../utils/storage';
 import type { Src } from '../api/src-types';
 
 export interface MediaStorage {
@@ -151,8 +152,8 @@ export class LocalMediaStorage implements MediaStorage {
   }
 
   onChange(src: Src, mediaId: string | null, playerId = 'vds-player') {
-    const savedData = playerId ? localStorage.getItem(playerId) : null,
-      savedTime = mediaId ? localStorage.getItem(mediaId) : null;
+    const savedData = playerId ? LocalStorage.getItem(playerId) : null,
+      savedTime = mediaId ? LocalStorage.getItem(mediaId) : null;
 
     this.playerId = playerId;
     this.mediaId = mediaId;
@@ -173,14 +174,14 @@ export class LocalMediaStorage implements MediaStorage {
   protected save() {
     if (__SERVER__ || !this.playerId) return;
     const data = JSON.stringify({ ...this.#data, time: undefined });
-    localStorage.setItem(this.playerId, data);
+    LocalStorage.setItem(this.playerId, data);
   }
 
   protected saveTimeThrottled = throttle(this.saveTime.bind(this), 1000);
   private saveTime() {
     if (__SERVER__ || !this.mediaId) return;
     const data = (this.#data.time ?? 0).toString();
-    localStorage.setItem(this.mediaId, data);
+    LocalStorage.setItem(this.mediaId, data);
   }
 }
 
