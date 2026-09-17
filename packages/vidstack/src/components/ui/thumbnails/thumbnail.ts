@@ -44,9 +44,9 @@ export class Thumbnail extends Component<ThumbnailProps, ThumbnailState> {
 
   protected override onSetup(): void {
     this.media = useMediaContext();
-    this.#loader = ThumbnailsLoader.create(this.$props.src, this.$state.crossOrigin);
-
     this.#watchCrossOrigin();
+
+    this.#loader = ThumbnailsLoader.create(this.$props.src, this.$state.crossOrigin);
 
     this.setAttributes({
       'data-loading': this.#isLoading.bind(this),
