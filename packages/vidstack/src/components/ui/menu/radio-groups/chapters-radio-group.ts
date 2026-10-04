@@ -14,7 +14,7 @@ import type { VTTCue } from 'media-captions';
 import { useMediaContext, type MediaContext } from '../../../../core/api/media-context';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { isCueActive, watchActiveTextTrack } from '../../../../core/tracks/text/utils';
-import { requestScopedAnimationFrame } from '../../../../utils/dom';
+import { getLang, requestScopedAnimationFrame } from '../../../../utils/dom';
 import { round } from '../../../../utils/number';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
 import type { ThumbnailSrc } from '../../thumbnails/thumbnail-loader';
@@ -91,6 +91,7 @@ export class ChaptersRadioGroup extends Component<
       startTime: formatTime(Math.max(0, cue.startTime - startTime)),
       duration: formatSpokenTime(
         Math.min(endTime, cue.endTime) - Math.max(startTime, cue.startTime),
+        getLang(this.el),
       ),
     }));
   }

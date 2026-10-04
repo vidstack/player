@@ -78,8 +78,14 @@ function DefaultTimeSlider() {
   const [instance, setInstance] = React.useState<TimeSliderInstance | null>(null),
     [width, setWidth] = React.useState(0),
     $src = useMediaState('currentSrc'),
-    { thumbnails, sliderChaptersMinWidth, disableTimeSlider, seekStep, noScrubGesture } =
-      useDefaultLayoutContext(),
+    {
+      thumbnails,
+      sliderChaptersMinWidth,
+      disableTimeSlider,
+      seekStep,
+      noScrubGesture,
+      translations,
+    } = useDefaultLayoutContext(),
     label = useDefaultLayoutWord('Seek'),
     $RemotionSliderThumbnail = useSignal(RemotionSliderThumbnail);
 
@@ -97,6 +103,7 @@ function DefaultTimeSlider() {
       disabled={disableTimeSlider}
       noSwipeGesture={noScrubGesture}
       keyStep={seekStep}
+      translations={translations}
       ref={setInstance}
     >
       <TimeSlider.Chapters

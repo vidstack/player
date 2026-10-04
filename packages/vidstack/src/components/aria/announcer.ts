@@ -2,7 +2,7 @@ import { Component, effect, peek, State, tick } from 'maverick.js';
 import { isString, setAttribute, type DOMEvent } from 'maverick.js/std';
 
 import { useMediaContext, type MediaContext } from '../../core/api/media-context';
-import { setAttributeIfEmpty } from '../../utils/dom';
+import { getLang, setAttributeIfEmpty } from '../../utils/dom';
 import { formatSpokenTime } from '../../utils/time';
 
 /**
@@ -105,7 +105,7 @@ export class MediaAnnouncer extends Component<
 
         if (seconds >= 1) {
           const isForward = newTime >= this.#startedSeekingAt,
-            spokenTime = formatSpokenTime(seconds);
+            spokenTime = formatSpokenTime(seconds, getLang(this.el));
 
           this.#setLabel(
             `${this.#translate(isForward ? 'Seek Forward' : 'Seek Backward')} ${spokenTime}`,

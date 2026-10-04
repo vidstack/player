@@ -98,6 +98,18 @@ describe(formatSpokenTime.name, function () {
     expect(formatSpokenTime(5025)).to.equal('1 hour 23 min 45 sec');
     expect(formatSpokenTime(45296)).to.equal('12 hour 34 min 56 sec');
   });
+
+  it('it should spell out spoken time in the given language', function () {
+    expect(formatSpokenTime(0, 'en')).to.equal('0 seconds');
+    expect(formatSpokenTime(83, 'en')).to.equal('1 minute, 23 seconds');
+    expect(formatSpokenTime(3605, 'en')).to.equal('1 hour, 5 seconds');
+    expect(formatSpokenTime(120, 'ar')).to.equal('دقيقتان');
+    expect(formatSpokenTime(65, 'he')).to.equal('1 דקה, 5 שניות');
+  });
+
+  it('it should fall back to the unlocalized form for an invalid language', function () {
+    expect(formatSpokenTime(83, '%%')).to.equal('1 min 23 sec');
+  });
 });
 
 describe(formatHtml5Duration.name, function () {

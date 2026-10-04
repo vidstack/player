@@ -87,6 +87,7 @@ export function DefaultTimeSlider() {
       key-step=${$signal(seekStep)}
       ?disabled=${$isDisabled}
       ?no-swipe-gesture=${$signal(noScrubGesture)}
+      .translations=${$signal(translations)}
       ${ref($ref.set)}
     >
       <media-slider-chapters class="vds-slider-chapters" ?disabled=${$isChaptersDisabled}>

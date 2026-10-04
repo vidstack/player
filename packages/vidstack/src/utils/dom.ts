@@ -63,6 +63,13 @@ export function scheduleRafJob(job: () => void) {
   return () => rafJobs.delete(job);
 }
 
+/**
+ * The language of the given element, from its closest `lang` attribute.
+ */
+export function getLang(el: Element | null | undefined): string | null {
+  return el?.closest('[lang]')?.getAttribute('lang') || null;
+}
+
 export function setAttributeIfEmpty(target: Element, name: string, value: string) {
   if (!target.hasAttribute(name)) target.setAttribute(name, value);
 }

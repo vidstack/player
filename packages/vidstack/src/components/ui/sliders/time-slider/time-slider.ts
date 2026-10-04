@@ -6,7 +6,7 @@ import { useMediaContext, type MediaContext } from '../../../../core/api/media-c
 import type { MediaRequestEvents } from '../../../../core/api/media-request-events';
 import type { TextTrack } from '../../../../core/tracks/text/text-track';
 import { watchActiveTextTrack } from '../../../../core/tracks/text/utils';
-import { setAttributeIfEmpty } from '../../../../utils/dom';
+import { getLang, setAttributeIfEmpty } from '../../../../utils/dom';
 import { round } from '../../../../utils/number';
 import { formatSpokenTime, formatTime, type FormatTimeOptions } from '../../../../utils/time';
 import type { SliderCSSVars } from '../slider/api/cssvars';
@@ -49,6 +49,7 @@ export class TimeSlider extends Component<
     pauseWhileDragging: false,
     noSwipeGesture: false,
     seekingRequestThrottle: 100,
+    translations: null,
   };
 
   static state = sliderState;
@@ -236,10 +237,15 @@ export class TimeSlider extends Component<
 
   #getARIAValueText(): string {
     const time = this.#percentToTime(this.$state.value()),
-      { duration } = this.#media.$state;
+      { duration } = this.#media.$state,
+      lang = getLang(this.el);
     return Number.isFinite(time)
-      ? `${formatSpokenTime(time)} out of ${formatSpokenTime(duration())}`
-      : 'live';
+      ? `${formatSpokenTime(time, lang)} ${this.#translate('out of')} ${formatSpokenTime(duration(), lang)}`
+      : this.#translate('live');
+  }
+
+  #translate(word: TimeSliderWord) {
+    return this.$props.translations()?.[word] ?? word;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -298,7 +304,17 @@ export interface TimeSliderProps extends SliderControllerProps {
    * seek backwards or forwards, without directly interacting with time slider.
    */
   noSwipeGesture: boolean;
+  /**
+   * Translations for the words in the slider's accessible value text.
+   */
+  translations: Partial<TimeSliderTranslations> | null;
 }
+
+export type TimeSliderWord = 'out of' | 'live';
+
+export type TimeSliderTranslations = {
+  [word in TimeSliderWord]: string;
+};
 
 interface ThrottledSeeking {
   (time: number, event: Event): void;

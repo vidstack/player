@@ -86,14 +86,28 @@ export function formatTime(
 }
 
 /**
- * Formats the given `duration` into human spoken form.
+ * Formats the given `duration` into human spoken form. Given a `lang`, the units are spelled out in
+ * that language by `Intl.DurationFormat` (CLDR plurals included) where the browser supports it.
  *
  * @param duration - The length of time to parse in seconds.
- * @example `2 hour 3 min 4 sec`
+ * @param lang - A BCP 47 language tag, e.g. the closest `lang` attribute of the component.
+ * @example `2 hour 3 min 4 sec`, or `2 hours, 3 minutes, 4 seconds` for `en`
  */
-export function formatSpokenTime(duration: number): string {
+export function formatSpokenTime(duration: number, lang?: string | null): string {
   const spokenParts: string[] = [];
   const { hours, minutes, seconds } = parseTime(duration);
+
+  const DurationFormat = (Intl as any).DurationFormat;
+  if (lang && DurationFormat) {
+    try {
+      return new DurationFormat(lang, {
+        style: 'long',
+        secondsDisplay: hours > 0 || minutes > 0 ? 'auto' : 'always',
+      }).format({ hours, minutes, seconds });
+    } catch {
+      // An invalid language tag falls back to the unlocalized form below.
+    }
+  }
 
   if (hours > 0) {
     spokenParts.push(`${hours} hour`);
