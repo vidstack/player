@@ -389,3 +389,19 @@
   color: var(--media-slider-chapter-title-color, #f5f5f5);
   background-color: var(--media-slider-chapter-title-bg);
 }
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Right-to-left
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+/* Horizontal sliders run from right (min) to left (max). The preview is mirrored back so its
+ * text and thumbnail read normally. `scale` leaves the `transform` set on these elements alone. */
+:where(.vds-slider:not([aria-orientation='vertical']):dir(rtl)) {
+  scale: -1 1;
+}
+
+:where(.vds-slider:not([aria-orientation='vertical']):dir(rtl) .vds-slider-preview) {
+  scale: -1 1;
+}

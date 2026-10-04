@@ -415,7 +415,7 @@
   user-select: none;
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: flex-start;
   width: 100%;
   appearance: none;
   border: 0;
@@ -469,7 +469,7 @@
 :where(.vds-menu-item[aria-expanded='true']) {
   position: sticky;
   top: calc(-1 * var(--root-padding));
-  left: 0;
+  inset-inline-start: 0;
   width: 100%;
   z-index: 10;
   backdrop-filter: blur(4px);
@@ -495,7 +495,7 @@
   --size: var(--item-icon-size);
   width: var(--size);
   height: var(--size);
-  margin-right: var(--media-menu-item-icon-spacing, 6px);
+  margin-inline-end: var(--media-menu-item-icon-spacing, 6px);
 }
 
 :where(.vds-menu-open-icon, .vds-menu-close-icon) {
@@ -511,17 +511,17 @@
 }
 
 :where(.vds-menu-items .vds-menu-open-icon) {
-  margin-right: 0;
+  margin-inline-end: 0;
 }
 
 :where(.vds-menu-items) :where(.vds-menu-item-hint, .vds-menu-open-icon) {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 :where(.vds-menu-items) :where(.vds-menu-item-hint + .vds-menu-open-icon),
 :where(.vds-menu-item-hint + media-icon .vds-menu-open-icon),
 :where(.vds-menu-item-hint + slot > .vds-menu-open-icon) {
-  margin-left: 2px;
+  margin-inline-start: 2px;
 }
 
 :where(.vds-menu-item[aria-hidden='true']),
@@ -542,7 +542,11 @@
 
 :where(.vds-menu-item[aria-expanded='true'] .vds-menu-close-icon) {
   display: inline !important;
-  margin-left: calc(-1 * var(--item-padding) / 2);
+  margin-inline-start: calc(-1 * var(--item-padding) / 2);
+}
+
+:where(.vds-menu-open-icon, .vds-menu-close-icon):dir(rtl) {
+  transform: scaleX(-1);
 }
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -615,6 +619,21 @@
 
 :where(.vds-menu-checkbox[aria-checked='true'][data-active])::after {
   transform: translateX(var(--checkbox-gap));
+}
+
+:where(.vds-menu-checkbox:dir(rtl))::after {
+  right: 0;
+  transform: translateX(calc(-1 * var(--checkbox-gap)));
+}
+
+:where(.vds-menu-checkbox[aria-checked='true']:dir(rtl))::after {
+  transform: translateX(
+    calc(-1 * (var(--checkbox-width) - var(--checkbox-diameter) - var(--checkbox-gap)))
+  );
+}
+
+:where(.vds-menu-checkbox[aria-checked='true'][data-active]:dir(rtl))::after {
+  transform: translateX(calc(-1 * var(--checkbox-gap)));
 }
 
 /*
@@ -699,11 +718,11 @@
 .vds-radio {
   cursor: pointer;
   contain: content;
-  padding-left: calc(var(--item-icon-size) + var(--item-padding));
+  padding-inline-start: calc(var(--item-icon-size) + var(--item-padding));
 }
 
 .vds-radio[aria-checked='true'] {
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 
 .vds-radio .vds-icon {
@@ -713,11 +732,11 @@
 
 .vds-radio[aria-checked='true'] .vds-icon {
   display: inline-block;
-  margin-left: 6px;
+  margin-inline-start: 6px;
 }
 
 :where(.vds-radio-hint) {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /*
@@ -849,7 +868,7 @@
 }
 
 .vds-chapter-radio[aria-checked='true'] {
-  padding-left: var(--item-padding);
+  padding-inline-start: var(--item-padding);
 }
 
 :where(.vds-chapter-radio:last-child) {
@@ -858,7 +877,7 @@
 
 .vds-chapter-radio[aria-checked='true'] {
   background-color: var(--chapter-active-bg);
-  border-left: var(--chapter-active-border-left);
+  border-inline-start: var(--chapter-active-border-left);
 }
 
 :where(.vds-chapter-radio[aria-checked='true']):after {
@@ -867,7 +886,7 @@
   height: var(--media-chapters-progress-height, 4px);
   position: absolute;
   bottom: 0;
-  left: 0;
+  inset-inline-start: 0;
 }
 
 .vds-chapter-radio[aria-checked='true']:after {
@@ -876,7 +895,7 @@
 }
 
 .vds-chapters-radio-group :where(.vds-thumbnail) {
-  margin-right: var(--media-chapters-thumbnail-gap, 12px);
+  margin-inline-end: var(--media-chapters-thumbnail-gap, 12px);
   flex-shrink: 0;
   min-width: var(--media-chapters-thumbnail-min-width, 100px);
   min-height: var(--media-chapters-thumbnail-min-height, 56px);
@@ -946,7 +965,7 @@
 
 :where(.vds-chapters-radio-group:not([data-thumbnails]) .vds-chapter-radio-start-time) {
   margin-top: 0;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 :where(.vds-chapters-radio-group:not([data-thumbnails]) .vds-chapter-radio-duration) {

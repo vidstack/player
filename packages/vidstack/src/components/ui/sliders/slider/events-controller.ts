@@ -197,6 +197,15 @@ export class SliderEventsController extends ViewController<
     }
   }
 
+  /**
+   * A horizontal slider in a right-to-left context runs from right (min) to left (max).
+   */
+  #isRTL() {
+    return (
+      this.$props.orientation() !== 'vertical' && getComputedStyle(this.el!).direction === 'rtl'
+    );
+  }
+
   #getPointerValue(event: PointerEvent) {
     let thumbPositionRate: number,
       rect = this.el!.getBoundingClientRect(),
@@ -208,7 +217,7 @@ export class SliderEventsController extends ViewController<
     } else {
       if (this.#touch && isNumber(this.#touchStartValue) && this.#provider) {
         const { width } = this.#provider.getBoundingClientRect(),
-          rate = (event.clientX - this.#touch.clientX) / width,
+          rate = ((event.clientX - this.#touch.clientX) / width) * (this.#isRTL() ? -1 : 1),
           range = max() - min(),
           diff = range * Math.abs(rate);
         thumbPositionRate =
@@ -216,8 +225,10 @@ export class SliderEventsController extends ViewController<
       } else {
         if (this.#touch && isNumber(this.#touchStartValue)) this.#resetTouchState();
 
-        const { left: trackLeft, width: trackWidth } = rect;
-        thumbPositionRate = (event.clientX - trackLeft) / trackWidth;
+        const { left: trackLeft, right: trackRight, width: trackWidth } = rect;
+        thumbPositionRate = this.#isRTL()
+          ? (trackRight - event.clientX) / trackWidth
+          : (event.clientX - trackLeft) / trackWidth;
       }
     }
 
@@ -357,7 +368,9 @@ export class SliderEventsController extends ViewController<
       keyStep = this.#delegate.getKeyStep();
 
     const modifiedStep = !shiftKey ? keyStep : keyStep * shiftKeyMultiplier(),
-      direction = Number(SliderKeyDirection[key]),
+      direction =
+        Number(SliderKeyDirection[key]) *
+        (this.#isRTL() && /^(Arrow)?(Left|Right)$/.test(key) ? -1 : 1),
       diff = modifiedStep * direction,
       currentValue = this.#repeatedKeys ? pointerValue() : (this.#delegate.getValue?.() ?? value()),
       steps = (currentValue + diff) / step;
