@@ -46,10 +46,12 @@ export function copyPkgFiles() {
 
   fs.writeFileSync(dist('package.json'), JSON.stringify(distPkg, null, 2), 'utf-8');
 
-  // Copy over license and readme.
+  // Copy over license, readme, and agent guide.
   fs.copyFileSync(root('LICENSE'), dist('LICENSE'));
 
-  if (fs.existsSync(root('README.md'))) {
-    fs.copyFileSync(root('README.md'), dist('README.md'));
+  for (const file of ['README.md', 'AGENTS.md']) {
+    if (fs.existsSync(root(file))) {
+      fs.copyFileSync(root(file), dist(file));
+    }
   }
 }
