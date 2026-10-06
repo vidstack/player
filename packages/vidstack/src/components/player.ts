@@ -121,6 +121,8 @@ declare global {
  * @attr data-focus - Whether player is being keyboard focused.
  * @attr data-hocus - Whether player is being keyboard focused or hovered over.
  * @docs {@link https://www.vidstack.io/docs/player/components/media/player}
+ * @deprecated Vidstack is deprecated in favour of Video.js 10 (https://videojs.org) and receives
+ * security fixes only until January 2028. Migration guide: https://videojs.org/docs/framework/html/guides/migrate-from-vidstack
  */
 export class MediaPlayer
   extends Component<MediaPlayerProps, MediaPlayerState, MediaPlayerEvents>
@@ -233,6 +235,8 @@ export class MediaPlayer
   }
 
   protected override onConnect(el: HTMLElement) {
+    logDeprecationNotice();
+
     if (IS_IPHONE) setAttribute(el, 'data-iphone', '');
 
     const pointerQuery = window.matchMedia('(pointer: coarse)');
@@ -755,4 +759,16 @@ export class MediaPlayer
     this.#media.remote.setPlayer(null);
     this.dispatch('destroy');
   }
+}
+
+let hasLoggedDeprecationNotice = false;
+
+// Logged once per page whatever the log level, so developers and coding agents reading the console
+// see it. Production builds default to a silent log level, which would hide it.
+function logDeprecationNotice() {
+  if (hasLoggedDeprecationNotice) return;
+  hasLoggedDeprecationNotice = true;
+  console.info(
+    '[vidstack] Vidstack is deprecated in favour of Video.js 10, from the teams behind Vidstack, Plyr, Media Chrome, and Video.js. Security fixes only until January 2028. Migration guides: https://videojs.org/docs/framework/react/guides/migrate-from-vidstack (React) and https://videojs.org/docs/framework/html/guides/migrate-from-vidstack (web components and other frameworks)',
+  );
 }

@@ -1,7 +1,7 @@
 {
   "name": "@vidstack/react",
   "version": "1.15.6",
-  "description": "UI component library for building high-quality, accessible video and audio experiences on the web.",
+  "description": "Deprecated in favour of Video.js 10 (https://videojs.org); security fixes only until January 2028. UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
   "types": "src/index.ts",
@@ -151,6 +151,7 @@
     "vds",
     "video",
     "videojs",
+    "video.js",
     "vidstack",
     "vime",
     "vimeo",
