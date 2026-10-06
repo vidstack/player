@@ -1,0 +1,96 @@
+name: Maintenance triage
+
+on:
+  issues:
+    types: [opened]
+  # Runs in the base repository's context so fork PRs get secrets. Never check out or run PR code here.
+  pull_request_target:
+    types: [opened]
+  # Classify an existing issue or PR by hand. A dry run only logs the decision.
+  workflow_dispatch:
+    inputs:
+      number:
+        description: Issue or pull request number
+        required: true
+        type: number
+      dry_run:
+        description: Log the decision without commenting, labelling, or closing
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: maintenance-triage-${{ github.event.issue.number || github.event.pull_request.number || inputs.number }}
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Leave maintainers, collaborators, and bots (including Dependabot) alone.
+    if: >-
+      github.event_name == 'workflow_dispatch' || (
+        !contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
+          github.event.issue.author_association || github.event.pull_request.author_association) &&
+        (github.event.issue.user.type || github.event.pull_request.user.type) != 'Bot'
+      )
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/maintenance
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch item
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ inputs.number }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER" > "$RUNNER_TEMP/item.json"
+          echo "ITEM_PATH=$RUNNER_TEMP/item.json" >> "$GITHUB_ENV"
+
+      - name: Classify
+        id: classify
+        working-directory: ${{ runner.temp }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cp "$GITHUB_WORKSPACE/.github/maintenance/triage.mjs" .
+          npm install --no-save --no-package-lock --silent @anthropic-ai/sdk@0.131.0 zod@4.6.5
+          node triage.mjs
+
+      - name: Respond
+        if: github.event_name != 'workflow_dispatch' || !inputs.dry_run
+        uses: actions/github-script@v7
+        env:
+          SECURITY: ${{ steps.classify.outputs.security }}
+          NUMBER: ${{ steps.classify.outputs.number }}
+          PULL_REQUEST: ${{ steps.classify.outputs.pull_request }}
+        with:
+          script: |
+            const fs = require('node:fs');
+            const number = Number(process.env.NUMBER);
+            const isPullRequest = process.env.PULL_REQUEST === 'true';
+            const read = (name) => fs.readFileSync(`.github/maintenance/${name}.md`, 'utf8');
+            const target = { ...context.repo, issue_number: number };
+
+            if (process.env.SECURITY === 'true') {
+              await github.rest.issues.addLabels({ ...target, labels: ['security'] });
+              await github.rest.issues.createComment({ ...target, body: read('security') });
+              return;
+            }
+
+            await github.rest.issues.createComment({ ...target, body: read(isPullRequest ? 'pull-request' : 'issue') });
+
+            if (isPullRequest) {
+              await github.rest.pulls.update({ ...context.repo, pull_number: number, state: 'closed' });
+            } else {
+              await github.rest.issues.update({ ...target, state: 'closed', state_reason: 'not_planned' });
+            }
