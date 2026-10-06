@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { isBoolean, isKeyboardClick } from 'maverick.js/std';
-import { LocalStorage } from 'vidstack';
+import { LocalStorage } from 'vidstack/exports/storage.ts';
 
 export interface DefaultMenuCheckboxProps {
   label: string;
