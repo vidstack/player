@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.7-next](https://github.com/vidstack/player/releases/tag/v1.15.7-next) (2026-10-06)
+
+### 🐛 Bug Fixes
+
+#### Vidstack
+
+- resolve thumbnail cross-origin before creating loader (#1861) ([cda89df](https://github.com/vidstack/player/commit/cda89dfdd3d5ddb0002a473d0a16802b1d43651b))
+- correct slider video preview error handling (#1864) ([fefe1eb](https://github.com/vidstack/player/commit/fefe1ebd78ab691d6d797511bd87c8844c482069))
+- guard localStorage access when unavailable (#1857) ([3c57c04](https://github.com/vidstack/player/commit/3c57c04e84318455513981dc45a1c0ce7ac797e2))
+
 ## [1.15.6-next](https://github.com/vidstack/player/releases/tag/v1.15.6-next) (2026-06-10)
 
 ### 🐛 Bug Fixes
