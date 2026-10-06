@@ -96,7 +96,7 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
 
   #hasError() {
     const { error } = this.$state;
-    return !isNull(error);
+    return !isNull(error());
   }
 
   #watchHidden() {
@@ -120,6 +120,8 @@ export class SliderVideo extends Component<SliderVideoProps, SliderVideoState, S
   }
 
   #onError(event: ErrorEvent) {
+    if (event.target === this) return;
+
     const { canPlay, error } = this.$state;
     canPlay.set(false);
     error.set(event);
