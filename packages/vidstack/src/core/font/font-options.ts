@@ -2,6 +2,7 @@ import { signal, type WriteSignal } from 'maverick.js';
 import { camelToKebabCase, isString } from 'maverick.js/std';
 
 import type { DefaultLayoutTranslations } from '../../components/layouts/default/translations';
+import { LocalStorage } from '../../utils/storage';
 
 export const FONT_COLOR_OPTION: FontOption = {
   type: 'color',
@@ -67,7 +68,7 @@ export type FontSignal = keyof typeof FONT_DEFAULTS;
 
 if (!__SERVER__) {
   for (const type of Object.keys(FONT_SIGNALS)) {
-    const value = localStorage.getItem(`vds-player:${camelToKebabCase(type)}`);
+    const value = LocalStorage.getItem(`vds-player:${camelToKebabCase(type)}`);
     if (isString(value)) FONT_SIGNALS[type].set(value);
   }
 }

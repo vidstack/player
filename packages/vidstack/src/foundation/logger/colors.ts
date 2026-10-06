@@ -1,3 +1,5 @@
+import { LocalStorage } from '../../utils/storage';
+
 const LOCAL_STORAGE_KEY = '@vidstack/log-colors';
 
 const savedColors = init();
@@ -10,7 +12,7 @@ export function saveLogColor(key: string, { color = generateColor(), overwrite =
   if (!__DEV__) return;
   if (!savedColors.has(key) || overwrite) {
     savedColors.set(key, color);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(Object.entries(savedColors)));
+    LocalStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(Object.entries(savedColors)));
   }
 }
 

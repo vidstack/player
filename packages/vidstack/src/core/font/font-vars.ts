@@ -3,6 +3,7 @@ import { camelToKebabCase, keysOf } from 'maverick.js/std';
 
 import type { MediaPlayer } from '../../components/player';
 import { hexToRgb } from '../../utils/color';
+import { LocalStorage } from '../../utils/storage';
 import { useMediaContext } from '../api/media-context';
 import { FONT_DEFAULTS, FONT_SIGNALS, type FontSignal } from './font-options';
 
@@ -33,9 +34,9 @@ export function updateFontCssVars() {
           }
 
           if (isDefaultVarValue) {
-            localStorage.removeItem(storageKey);
+            LocalStorage.removeItem(storageKey);
           } else {
-            localStorage.setItem(storageKey, value);
+            LocalStorage.setItem(storageKey, value);
           }
         });
       }
