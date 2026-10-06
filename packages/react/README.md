@@ -1,5 +1,8 @@
 # Vidstack React
 
+> [!IMPORTANT]
+> **Vidstack is in security-only maintenance** until January 2028, and succeeded by [Video.js 10](https://videojs.org?utm_source=vidstack). Migrate to `@videojs/react` with the [migration guide](https://videojs.org/docs/framework/react/guides/migrate-from-vidstack?utm_source=vidstack). To migrate with a coding agent, paste the prompt from the guide's [AI Quickstart](https://videojs.org/docs/framework/react/guides/migrate-from-vidstack?utm_source=vidstack#ai-quickstart) section.
+
 [![package-badge]][package]
 [![discord-badge]][discord]
 

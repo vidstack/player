@@ -13,6 +13,8 @@ import type { MediaPlayerProps } from '../../core/api/player-props';
  *   <!-- Other components that use/manage media state here. -->
  * </media-player>
  * ```
+ * @deprecated Vidstack is deprecated in favour of Video.js 10 (https://videojs.org) and receives
+ * security fixes only until January 2028. Migration guide: https://videojs.org/docs/framework/html/guides/migrate-from-vidstack
  */
 export class MediaPlayerElement extends Host(HTMLElement, MediaPlayer) {
   static tagName = 'media-player';

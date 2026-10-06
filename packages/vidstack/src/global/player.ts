@@ -16,6 +16,10 @@ import { PlyrLayout } from './layouts/plyr';
 
 const LAYOUT_LOADED = Symbol();
 
+/**
+ * @deprecated Vidstack is deprecated in favour of Video.js 10 (https://videojs.org) and receives
+ * security fixes only until January 2028. Migration guide: https://videojs.org/docs/framework/html/guides/migrate-from-vidstack
+ */
 export class VidstackPlayer {
   static async create({ target, layout, tracks, ...props }: VidstackPlayerConfig) {
     if (__SERVER__) {

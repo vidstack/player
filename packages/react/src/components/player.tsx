@@ -44,6 +44,8 @@ export interface MediaPlayerProps extends Omit<ReactElementProps<MediaPlayerInst
  *   <MediaProvider />
  * </MediaPlayer>
  * ```
+ * @deprecated Vidstack is deprecated in favour of Video.js 10 (https://videojs.org) and receives
+ * security fixes only until January 2028. Migration guide: https://videojs.org/docs/framework/react/guides/migrate-from-vidstack
  */
 const MediaPlayer = React.forwardRef<MediaPlayerInstance, MediaPlayerProps>(
   ({ aspectRatio, children, ...props }, forwardRef) => {
