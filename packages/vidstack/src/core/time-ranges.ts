@@ -1,5 +1,5 @@
 /**
- * @see https://github.com/videojs/video.js/blob/main/src/js/utils/time-ranges.js
+ * @see https://github.com/videojs/videojs-v8/blob/main/src/js/utils/time.js
  */
 import { isArray, isNumber, isUndefined } from 'maverick.js/std';
 
