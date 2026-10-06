@@ -1,6 +1,6 @@
 {
   "name": "vidstack",
-  "version": "1.15.6",
+  "version": "1.15.7",
   "description": "Deprecated in favour of Video.js 10 (https://videojs.org); security fixes only until January 2028. UI component library for building high-quality, accessible video and audio experiences on the web.",
   "license": "MIT",
   "type": "module",
