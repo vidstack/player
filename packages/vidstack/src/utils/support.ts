@@ -83,8 +83,8 @@ export function canPlayHLSNatively(video?: HTMLVideoElement | null): boolean {
  * @see {@link https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture}
  */
 export function canUsePictureInPicture(video: HTMLVideoElement | null): boolean {
-  if (__SERVER__) return false;
-  return !!document.pictureInPictureEnabled && !video?.disablePictureInPicture;
+  if (__SERVER__ || !video) return false;
+  return !!document.pictureInPictureEnabled && !video.disablePictureInPicture;
 }
 
 /**

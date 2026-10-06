@@ -22,12 +22,22 @@ export class HLSProviderLoader
       throw Error('[vidstack] can not load hls provider server-side');
     }
 
-    if (__DEV__ && !this.target) {
+    const target = this.target;
+
+    if (__DEV__ && !target) {
       throw Error(
         '[vidstack] `<video>` element was not found - did you forget to include `<media-provider>`?',
       );
     }
 
-    return new (await import('./provider')).HLSProvider(this.target, context);
+    const { HLSProvider } = await import('./provider');
+
+    if (!target) {
+      throw Error(
+        '[vidstack] `<video>` element was not found - did you forget to include `<media-provider>`?',
+      );
+    }
+
+    return new HLSProvider(target, context);
   }
 }
