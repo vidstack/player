@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: ❓ Get Help
-    about: Having a hard time with something? Open a question in discussions to get help.
-    url: https://github.com/vidstack/player/discussions/new?category=q-a
-  - name: 💬 Chat
-    about: Like to chat with the community about something general? Join our Discord channel.
-    url: https://discord.gg/QAjfh2gZE4
+  - name: 🔒 Report a Security Vulnerability
+    about: Vidstack is in security-only maintenance. Report vulnerabilities privately, not in a public issue.
+    url: https://github.com/vidstack/player/security/advisories/new
+  - name: 🚚 Migrate to Video.js 10
+    about: New features and fixes happen in Video.js 10. The migration guide maps Vidstack onto it.
+    url: https://videojs.org/docs/framework/html/guides/migrate-from-vidstack?utm_source=vidstack
+  - name: ✨ Feature Requests and Questions
+    about: Ask in the Video.js 10 discussions, where the teams behind Vidstack now work.
+    url: https://github.com/videojs/v10/discussions

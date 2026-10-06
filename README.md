@@ -1,5 +1,13 @@
 # Vidstack Player
 
+> [!IMPORTANT]
+> **Vidstack is in security-only maintenance.** We'll merge priority security patches into 1.x until January 2028, and nothing else. The teams behind Vidstack, Plyr, Media Chrome, and Video.js now focus their work on [Video.js 10](https://videojs.org?utm_source=vidstack).
+>
+> - **Migrate:** [React guide](https://videojs.org/docs/framework/react/guides/migrate-from-vidstack?utm_source=vidstack) · [Web components and other frameworks](https://videojs.org/docs/framework/html/guides/migrate-from-vidstack?utm_source=vidstack)
+> - **With a coding agent:** paste the prompt from the guide's AI Quickstart section into your agent: [React](https://videojs.org/docs/framework/react/guides/migrate-from-vidstack?utm_source=vidstack#ai-quickstart) · [Web components and other frameworks](https://videojs.org/docs/framework/html/guides/migrate-from-vidstack?utm_source=vidstack#ai-quickstart)
+> - **Questions:** [videojs/v10 discussions](https://github.com/videojs/v10/discussions)
+> - **Security reports:** [SECURITY.md](./SECURITY.md)
+
 [![package-badge]][package]
 [![react-package-badge]][react-package]
 [![discord-badge]][discord]

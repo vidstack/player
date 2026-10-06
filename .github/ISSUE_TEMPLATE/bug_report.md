@@ -4,6 +4,9 @@ about: If you're sure it's a bug, or confirmed it via discord/discussions then c
 labels: bug
 ---
 
+> [!IMPORTANT]
+> Vidstack is in security-only maintenance until January 2028, so bug reports that aren't about security are closed. Don't post vulnerability details here; report them privately as described in [SECURITY.md](https://github.com/vidstack/player/blob/main/SECURITY.md). For everything else, see [Video.js 10](https://videojs.org?utm_source=vidstack).
+
 ### Current Behavior:
 
 <!-- A concise description of what you're experiencing. -->

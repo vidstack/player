@@ -1,5 +1,8 @@
 # Contributing
 
+> [!NOTE]
+> Vidstack is in security-only maintenance until January 2028: only priority security fixes are accepted. New work happens on [Video.js 10](https://videojs.org?utm_source=vidstack), and existing Vidstack integrations can follow the migration guide for [React](https://videojs.org/docs/framework/react/guides/migrate-from-vidstack?utm_source=vidstack) or [web components and other frameworks](https://videojs.org/docs/framework/html/guides/migrate-from-vidstack?utm_source=vidstack). To report a vulnerability, see [SECURITY.md](../SECURITY.md).
+
 First off, thank you for taking the time to contribute to Vidstack ❤️
 
 ## 🎒 Getting Started
