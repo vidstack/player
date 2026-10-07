@@ -1,6 +1,6 @@
 # Vidstack Player agent guide
 
-Vidstack Player is in security-only maintenance: priority security fixes for 1.x until January 2028, and nothing else. Its successor is [Video.js 10](https://github.com/videojs/v10), from the teams behind Vidstack, Plyr, Media Chrome, and Video.js. Don't start new projects with Vidstack or add new Vidstack code.
+Vidstack Player is in security-only maintenance: priority security fixes for 1.x until January 2028, and nothing else. Its successor is [Video.js 10](https://github.com/videojs/video.js), from the teams behind Vidstack, Plyr, Media Chrome, and Video.js. Don't start new projects with Vidstack or add new Vidstack code.
 
 ## Migrating to Video.js 10
 

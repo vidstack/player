@@ -5,7 +5,7 @@
 >
 > - **Migrate:** [React guide](https://videojs.org/docs/framework/react/guides/migrate-from-vidstack?utm_source=vidstack) · [Web components and other frameworks](https://videojs.org/docs/framework/html/guides/migrate-from-vidstack?utm_source=vidstack)
 > - **With a coding agent:** paste the prompt from the guide's AI Quickstart section into your agent: [React](https://videojs.org/docs/framework/react/guides/migrate-from-vidstack?utm_source=vidstack#ai-quickstart) · [Web components and other frameworks](https://videojs.org/docs/framework/html/guides/migrate-from-vidstack?utm_source=vidstack#ai-quickstart)
-> - **Questions:** [videojs/v10 discussions](https://github.com/videojs/v10/discussions)
+> - **Questions:** [videojs/video.js discussions](https://github.com/videojs/video.js/discussions)
 > - **Security reports:** [SECURITY.md](./SECURITY.md)
 
 [![package-badge]][package]
